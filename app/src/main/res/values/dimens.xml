@@ -1,0 +1,40 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="vertical_margin_16">16dp</dimen>
+    <dimen name="horizontal_margin_16">16dp</dimen>
+    <dimen name="vertical_margin_48">48dp</dimen>
+    <dimen name="horizontal_margin_48">48dp</dimen>
+    <dimen name="bottom_nav_bar_height">56dp</dimen>
+    <dimen name="navigation_bar_height_vertical">56dp</dimen>
+    <dimen name="text_size_10">10sp</dimen>
+    <dimen name="text_size_12">12sp</dimen>
+    <dimen name="text_size_14">14sp</dimen>
+    <dimen name="text_size_16">16sp</dimen>
+    <dimen name="text_size_20">20sp</dimen>
+    <dimen name="text_size_24">24sp</dimen>
+    <dimen name="text_size_34">34sp</dimen>
+    <dimen name="navigation_bar_y_drawable_padding">-5dip</dimen>
+    <dimen name="navigation_bar_y_top_padding">7dip</dimen>
+    <!-- Edit Text Shape redius -->
+    <dimen name="edit_text_shape_radius">23dp</dimen>
+    <dimen name="button_shape_radius">18dp</dimen>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="nav_header_vertical_spacing">16dp</dimen>
+    <dimen name="nav_header_height">160dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="padding_16">16dp</dimen>
+    <dimen name="padding_10">10dp</dimen>
+    <dimen name="padding_5">5dp</dimen>
+    <dimen name="elevation_5">5dp</dimen>
+    <dimen name="grid_layout_margin">10dp</dimen>
+    <dimen name="radius_3">3dp</dimen>
+    <dimen name="margin_2">2dp</dimen>
+    <dimen name="margin_5">5dp</dimen>
+    <dimen name="margin_10">10dp</dimen>
+    <dimen name="padding_8">8dp</dimen>
+    <dimen name="margin_20">20dp</dimen>
+    <dimen name="padding_2">2dp</dimen>
+
+</resources>

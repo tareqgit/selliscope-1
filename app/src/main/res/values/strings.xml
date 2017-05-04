@@ -1,0 +1,46 @@
+<resources>
+    <string name="app_name">Selliscope</string>
+    <string name="target">Target</string>
+    <string name="dashboard">Dashboard</string>
+    <string name="target_navigation_item">Target</string>
+    <string name="dashboard_navigation_item">Dashboard</string>
+    <string name="title_activity_login">Sign in</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password (optional)</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email
+        completions."
+    </string>
+    <string name="sign_in">Sign In</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="title_activity_home">HomeActivity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="name">Name</string>
+    <string name="completed">Completed</string>
+    <string name="sales_target">SALES TARGET</string>
+    <string name="remaining">Remaining</string>
+    <string name="title_activity_route">Route</string>
+    <!-- Page Titles -->
+    <string name="route">Route</string>
+    <string name="outle">Outlet</string>
+    <string name="home">Home</string>
+    <string name="title_activity_add_outlet">" "</string>
+    <!-- Spinner title -->
+    <string name="sp_thana_title">Thana</string>
+    <string name="sp_outlet_type">Type</string>
+    <string name="title">About Us</string>
+    <string name="content">ICT Incubator,\nSoftware Technology Park (4th Floor), Janata Tower,\nKawranbazar, Dhaka 1215, Bangladesh\ninfo@humaclab.com\nMobile: +8801711505322</string>
+    <string name="agree">Ok</string>
+</resources>

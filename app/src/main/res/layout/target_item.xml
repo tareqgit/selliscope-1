@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cv_target_item"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?android:attr/selectableItemBackground"
+    android:clickable="true"
+    android:focusable="true"
+    app:cardCornerRadius="@dimen/radius_3"
+    app:cardElevation="@dimen/elevation_5">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?android:attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true"
+        android:padding="10dp">
+
+
+        <ImageView
+            android:id="@+id/icon_target"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginBottom="@dimen/margin_5"
+            android:src="@drawable/ic_target_sales" />
+
+        <TextView
+            android:id="@+id/tv_target_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_5"
+            android:layout_marginLeft="5dp"
+            android:layout_toRightOf="@id/icon_target"
+            android:text="@string/sales_target"
+            android:textStyle="bold" />
+
+
+        <TextView
+            android:id="@+id/tv_completed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="@string/completed" />
+
+        <TextView
+            android:id="@+id/tv_target_achieved"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_completed"
+            android:layout_marginTop="@dimen/margin_20"
+            android:text="0.0"
+            android:textColor="@color/colorPrimary"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv_target_total"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_target_label"
+            android:layout_centerHorizontal="true"
+            android:text="0.0" />
+
+
+        <com.eralp.circleprogressview.CircleProgressView
+            android:id="@+id/circle_progress_view"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_below="@id/tv_target_total"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/margin_10"
+            app:cpv_background_circle_color="@color/red"
+            app:cpv_circle_color="@color/colorPrimary"
+            app:cpv_text_color="@color/colorPrimary"
+            app:cpv_text_size="15" />
+
+        <TextView
+            android:id="@+id/tv_remaining"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:text="@string/remaining" />
+
+        <TextView
+            android:id="@+id/tv_target_remaining"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/tv_remaining"
+            android:layout_marginTop="@dimen/margin_20"
+            android:text="0.0"
+            android:textColor="@color/red"
+            android:textStyle="bold" />
+
+    </RelativeLayout>
+</android.support.v7.widget.CardView>

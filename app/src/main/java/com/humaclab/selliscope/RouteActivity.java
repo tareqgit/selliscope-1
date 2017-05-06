@@ -19,6 +19,8 @@ import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -170,7 +172,7 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
                                     new LatLng(outlets.get(i).outletLatitude,
                                             outlets.get(i).outletLongitude))
                                     .icon(vectorToBitmap(
-                                            R.drawable.store_location_marker,0))
+                                            R.drawable.store_location_marker, 0))
                                     .title(outlets.get(i).outletName));
                         }
 
@@ -223,5 +225,20 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
     public void onLocationChanged(Location location) {
         mMap.clear();
         getLocation();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_gps) {
+            getLocation();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_route, menu);
+        return super.onCreateOptionsMenu(menu);
     }
 }

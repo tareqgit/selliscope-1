@@ -42,7 +42,7 @@ public class SendLocationDataService extends Service {
                         startService(new Intent(SendLocationDataService.this,
                                 UserTrackingService.class));
                     }
-                }, 0, 5, TimeUnit.MINUTES);
+                }, 0, 2, TimeUnit.MINUTES);
         return super.onStartCommand(intent, flags, startId);
     }
 

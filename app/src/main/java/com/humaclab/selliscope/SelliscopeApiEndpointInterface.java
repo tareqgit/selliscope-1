@@ -1,6 +1,9 @@
 package com.humaclab.selliscope;
 
+import com.humaclab.selliscope.model.BrandResponse;
+import com.humaclab.selliscope.model.CategoryResponse;
 import com.humaclab.selliscope.model.CreateOutlet;
+import com.humaclab.selliscope.model.ProductResponse;
 import com.humaclab.selliscope.model.UserLocation;
 
 import okhttp3.ResponseBody;
@@ -19,6 +22,15 @@ public interface SelliscopeApiEndpointInterface {
 
     @GET("outlet")
     Call<ResponseBody> getOutlets();
+
+    @GET("product/category")
+    Call<CategoryResponse> getCategories();
+
+    @GET("product/brand")
+    Call<BrandResponse> getBrands();
+
+    @GET("product")
+    Call<ProductResponse> getProducts();
 
     @POST("visit/store")
     Call<ResponseBody> sendUserLocation(@Body UserLocation userLocation);

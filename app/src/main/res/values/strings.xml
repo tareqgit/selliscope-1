@@ -35,6 +35,7 @@
     <!-- Page Titles -->
     <string name="route">Route</string>
     <string name="outle">Outlet</string>
+    <string name="products">Products</string>
     <string name="home">Home</string>
     <string name="title_activity_add_outlet">" "</string>
     <!-- Spinner title -->

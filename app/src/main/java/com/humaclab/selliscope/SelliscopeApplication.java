@@ -2,11 +2,13 @@ package com.humaclab.selliscope;
 
 import android.app.Application;
 
+import com.crashlytics.android.Crashlytics;
 import com.facebook.stetho.Stetho;
 import com.facebook.stetho.okhttp3.StethoInterceptor;
 import com.humaclab.selliscope.Utils.ApiLinks;
 import com.humaclab.selliscope.Utils.HttpAuthInterceptor;
 
+import io.fabric.sdk.android.Fabric;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
@@ -27,6 +29,7 @@ public class SelliscopeApplication extends Application {
             Timber.plant(new Timber.DebugTree());
         }
         Stetho.initializeWithDefaults(this);
+        Fabric.with(this, new Crashlytics());
     }
 
 

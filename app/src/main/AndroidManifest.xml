@@ -18,6 +18,9 @@
         <meta-data
             android:name="com.google.android.awareness.API_KEY"
             android:value="@string/google_maps_key" />
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="e6a7c4e5c614921fba122eb267a78139f3fa74f6" />
 
         <activity
             android:name=".SplashScreenActivity"
@@ -42,7 +45,8 @@
             android:name=".SendLocationDataService"
             android:exported="false" />
 
-        <activity android:name=".PrivacyPolicyActivity"></activity>
+        <activity android:name=".PrivacyPolicyActivity" />
+        <activity android:name=".ProductActivity" />
     </application>
 
 </manifest>

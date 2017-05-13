@@ -22,6 +22,13 @@
             android:name="io.fabric.ApiKey"
             android:value="e6a7c4e5c614921fba122eb267a78139f3fa74f6" />
 
+        <service
+            android:name=".UserTrackingService"
+            android:exported="false" />
+        <service
+            android:name=".SendLocationDataService"
+            android:exported="false" />
+
         <activity
             android:name=".SplashScreenActivity"
             android:theme="@style/SplashScreenTheme">
@@ -37,16 +44,11 @@
         <activity android:name=".OutletActivity" />
         <activity android:name=".AddOutletActivity" />
         <activity android:name=".OutletDetailsActivity" />
-
-        <service
-            android:name=".UserTrackingService"
-            android:exported="false" />
-        <service
-            android:name=".SendLocationDataService"
-            android:exported="false" />
-
         <activity android:name=".PrivacyPolicyActivity" />
         <activity android:name=".ProductActivity" />
+        <activity
+            android:name=".OrderActivity"
+            android:screenOrientation="landscape" />
     </application>
 
 </manifest>

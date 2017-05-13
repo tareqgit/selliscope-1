@@ -34,7 +34,7 @@ public class ProductResponse {
         public Brand brand;
 
         @SerializedName("discount")
-        public String discount;
+        public int discount;
         @SerializedName("offer")
         public String offer;
     }

@@ -142,7 +142,8 @@
                                     android:imeOptions="actionDone"
                                     android:inputType="number"
                                     android:text="1"
-                                    android:textAlignment="center" />
+                                    android:textAlignment="center"
+                                    android:textColor="#000" />
 
                                 <Button
                                     android:id="@+id/btn_increase"
@@ -162,7 +163,8 @@
                                 android:layout_weight="1"
                                 android:padding="@dimen/margin_10"
                                 android:text="Price"
-                                android:textAlignment="center" />
+                                android:textAlignment="center"
+                                android:textColor="#000" />
 
                             <TextView
                                 android:id="@+id/tv_amount"
@@ -172,7 +174,8 @@
                                 android:layout_weight="1"
                                 android:padding="@dimen/margin_10"
                                 android:text="Amt"
-                                android:textAlignment="center" />
+                                android:textAlignment="center"
+                                android:textColor="#000" />
 
                             <TextView
                                 android:layout_width="wrap_content"

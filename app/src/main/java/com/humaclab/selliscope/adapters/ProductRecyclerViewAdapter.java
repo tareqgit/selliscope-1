@@ -1,6 +1,7 @@
 package com.humaclab.selliscope.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.humaclab.selliscope.OrderActivity;
 import com.humaclab.selliscope.R;
 import com.humaclab.selliscope.model.ProductResponse;
 
@@ -37,7 +39,7 @@ public class ProductRecyclerViewAdapter extends RecyclerView.Adapter<ProductRecy
 
     @Override
     public void onBindViewHolder(ProductsViewHolder holder, int position) {
-        ProductResponse.ProductResult productResult = productResultList.get(position);
+        final ProductResponse.ProductResult productResult = productResultList.get(position);
         holder.tv_product_name.setText(productResult.name);
         holder.tv_category.setText(productResult.category.name);
         holder.tv_brand.setText(productResult.brand.name);
@@ -53,6 +55,16 @@ public class ProductRecyclerViewAdapter extends RecyclerView.Adapter<ProductRecy
                 .placeholder(R.drawable.ic_outlet_bnw)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(holder.iv_product);
+
+        holder.btn_order.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, OrderActivity.class);
+                intent.putExtra("productName", productResult.name);
+                intent.putExtra("productID", productResult.id);
+                context.startActivity(intent);
+            }
+        });
     }
 
     @Override

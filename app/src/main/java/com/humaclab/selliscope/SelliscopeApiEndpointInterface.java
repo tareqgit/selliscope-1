@@ -3,6 +3,7 @@ package com.humaclab.selliscope;
 import com.humaclab.selliscope.model.BrandResponse;
 import com.humaclab.selliscope.model.CategoryResponse;
 import com.humaclab.selliscope.model.CreateOutlet;
+import com.humaclab.selliscope.model.Order;
 import com.humaclab.selliscope.model.ProductResponse;
 import com.humaclab.selliscope.model.UserLocation;
 
@@ -52,4 +53,7 @@ public interface SelliscopeApiEndpointInterface {
 
     @POST("outlet/store")
     Call<ResponseBody> createOutlet(@Body CreateOutlet createOutlet);
+
+    @POST("order/store")
+    Call<Order.OrderResponse> addOrder(@Body Order order);
 }

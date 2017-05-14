@@ -1,0 +1,375 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context="com.humaclab.selliscope.OrderActivity">
+
+        <include layout="@layout/toolbar_layout" />
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="@dimen/margin_10">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Outlet"
+                    android:textSize="17sp" />
+
+                <Spinner
+                    android:id="@+id/sp_outlet"
+                    style="@style/spinner_style"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clickable="true" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_10"
+                    android:orientation="vertical">
+
+                    <TableLayout
+                        android:id="@+id/tbl_orders"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:focusableInTouchMode="false">
+
+                        <TableRow
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="#ddd">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="1dp"
+                                android:layout_weight="1"
+                                android:background="#fff"
+                                android:padding="@dimen/margin_10"
+                                android:text="Product"
+                                android:textAlignment="center" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="1dp"
+                                android:background="#fff"
+                                android:padding="@dimen/margin_10"
+                                android:text="Qty."
+                                android:textAlignment="center" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="1dp"
+                                android:layout_weight="1"
+                                android:background="#fff"
+                                android:padding="@dimen/margin_10"
+                                android:text="Price"
+                                android:textAlignment="center" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="1dp"
+                                android:layout_weight="1"
+                                android:background="#fff"
+                                android:padding="@dimen/margin_10"
+                                android:text="Amt"
+                                android:textAlignment="center" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="1dp"
+                                android:background="#fff"
+                                android:drawableLeft="@drawable/remove"
+                                android:drawableTint="#d50000"
+                                android:gravity="center"
+                                android:padding="@dimen/margin_10"
+                                android:textAlignment="center" />
+                        </TableRow>
+
+                        <TableRow
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <Spinner
+                                android:id="@+id/sp_product"
+                                style="@style/spinner_style"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="1dp"
+                                android:layout_weight="1"
+                                android:clickable="true"
+                                android:padding="@dimen/margin_10" />
+
+                            <LinearLayout
+                                android:layout_width="100dp"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="1dp"
+                                android:orientation="horizontal"
+                                android:paddingLeft="@dimen/margin_10"
+                                android:paddingRight="@dimen/margin_10">
+
+                                <Button
+                                    android:id="@+id/btn_decrease"
+                                    android:layout_width="60dp"
+                                    android:layout_height="30dp"
+                                    android:layout_weight="1"
+                                    android:background="#fff"
+                                    android:text="-"
+                                    android:textSize="20sp" />
+
+                                <EditText
+                                    android:id="@+id/et_qty"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:hint="Qty."
+                                    android:imeOptions="actionDone"
+                                    android:inputType="number"
+                                    android:text="1"
+                                    android:textAlignment="center" />
+
+                                <Button
+                                    android:id="@+id/btn_increase"
+                                    android:layout_width="60dp"
+                                    android:layout_height="30dp"
+                                    android:layout_weight="1"
+                                    android:background="#fff"
+                                    android:text="+"
+                                    android:textSize="20sp" />
+                            </LinearLayout>
+
+                            <TextView
+                                android:id="@+id/tv_price"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="1dp"
+                                android:layout_weight="1"
+                                android:padding="@dimen/margin_10"
+                                android:text="Price"
+                                android:textAlignment="center" />
+
+                            <TextView
+                                android:id="@+id/tv_amount"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="1dp"
+                                android:layout_weight="1"
+                                android:padding="@dimen/margin_10"
+                                android:text="Amt"
+                                android:textAlignment="center" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="1dp"
+                                android:drawableTint="#d50000"
+                                android:gravity="center"
+                                android:padding="@dimen/margin_10"
+                                android:textAlignment="center" />
+                        </TableRow>
+                    </TableLayout>
+                    <!--<LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="#ddd"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="1dp"
+                            android:layout_weight="2"
+                            android:background="#fff"
+                            android:padding="@dimen/margin_10"
+                            android:text="Product"
+                            android:textAlignment="center" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="1dp"
+                            android:layout_weight="2"
+                            android:background="#fff"
+                            android:padding="@dimen/margin_10"
+                            android:text="Qty."
+                            android:textAlignment="center" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="1dp"
+                            android:layout_weight="2"
+                            android:background="#fff"
+                            android:padding="@dimen/margin_10"
+                            android:text="Price"
+                            android:textAlignment="center" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="1dp"
+                            android:layout_weight="2"
+                            android:background="#fff"
+                            android:padding="@dimen/margin_10"
+                            android:text="Amt"
+                            android:textAlignment="center" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="1dp"
+                            android:layout_weight="1"
+                            android:background="#fff"
+                            android:padding="@dimen/margin_10"
+                            android:drawableLeft="@drawable/remove"
+                            android:drawableTint="#d50000"
+                            android:gravity="center"
+                            android:textAlignment="center" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="1dp"
+                            android:orientation="horizontal">
+
+                            <Spinner
+                                android:id="@+id/sp_product"
+                                style="@style/spinner_style"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:clickable="true"
+                                android:padding="@dimen/margin_10" />
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="horizontal"
+                                android:paddingLeft="@dimen/margin_10"
+                                android:paddingRight="@dimen/margin_10">
+
+                                <Button
+                                    android:id="@+id/btn_decrease"
+                                    android:layout_width="60dp"
+                                    android:layout_height="30dp"
+                                    android:layout_weight="1"
+                                    android:background="#fff"
+                                    android:text="-"
+                                    android:textSize="20sp" />
+
+                                <EditText
+                                    android:id="@+id/et_qty"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:hint="Qty."
+                                    android:imeOptions="actionDone"
+                                    android:inputType="number"
+                                    android:text="1"
+                                    android:textAlignment="center" />
+
+                                <Button
+                                    android:id="@+id/btn_increase"
+                                    android:layout_width="60dp"
+                                    android:layout_height="30dp"
+                                    android:layout_weight="1"
+                                    android:background="#fff"
+                                    android:text="+"
+                                    android:textSize="20sp" />
+                            </LinearLayout>
+
+                            <TextView
+                                android:id="@+id/tv_price"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:padding="@dimen/margin_10"
+                                android:text="Price"
+                                android:textAlignment="center" />
+
+                            <TextView
+                                android:id="@+id/tv_amount"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:padding="@dimen/margin_10"
+                                android:text="Amt"
+                                android:textAlignment="center" />
+
+                            <Button
+                                android:id="@+id/btn_remove"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:drawableRight="@drawable/remove"
+                                android:drawableTint="#d50000"
+                                android:gravity="center"
+                                android:padding="@dimen/margin_10"
+                                android:textAlignment="center" />
+                        </LinearLayout>
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="#ddd" />
+                    </LinearLayout>-->
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right"
+                    android:layout_marginRight="100dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Total Amount: "
+                        android:textAlignment="center"
+                        android:textColor="#000000" />
+
+                    <TextView
+                        android:id="@+id/tv_total_amt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="start"
+                        android:text="Total"
+                        android:textAlignment="textStart" />
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/btn_order"
+                    style="@style/Widget.AppCompat.Button.Colored"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_margin="10dp"
+                    android:text="Order"
+                    android:textAllCaps="false" />
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
+</layout>

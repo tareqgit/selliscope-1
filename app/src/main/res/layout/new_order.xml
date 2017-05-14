@@ -1,0 +1,91 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <Spinner
+            android:id="@+id/sp_product"
+            style="@style/spinner_style"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="1dp"
+            android:layout_weight="1"
+            android:clickable="true"
+            android:padding="@dimen/margin_10" />
+
+        <LinearLayout
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="1dp"
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/margin_10"
+            android:paddingRight="@dimen/margin_10">
+
+            <Button
+                android:id="@+id/btn_decrease"
+                android:layout_width="60dp"
+                android:layout_height="30dp"
+                android:textColor="#000"
+                android:layout_weight="1"
+                android:background="#fff"
+                android:text="-"
+                android:textSize="20sp" />
+
+            <EditText
+                android:id="@+id/et_qty"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#000"
+                android:layout_weight="1"
+                android:hint="Qty."
+                android:imeOptions="actionDone"
+                android:inputType="number"
+                android:text="1"
+                android:textAlignment="center" />
+
+            <Button
+                android:id="@+id/btn_increase"
+                android:textColor="#000"
+                android:layout_width="60dp"
+                android:layout_height="30dp"
+                android:layout_weight="1"
+                android:background="#fff"
+                android:text="+"
+                android:textSize="20sp" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_price"
+            android:layout_width="wrap_content"
+            android:textColor="#000"
+            android:layout_height="wrap_content"
+            android:layout_margin="1dp"
+            android:layout_weight="1"
+            android:padding="@dimen/margin_10"
+            android:text="Price"
+            android:textAlignment="center" />
+
+        <TextView
+            android:id="@+id/tv_amount"
+            android:layout_width="wrap_content"
+            android:textColor="#000"
+            android:layout_height="wrap_content"
+            android:layout_margin="1dp"
+            android:layout_weight="1"
+            android:padding="@dimen/margin_10"
+            android:text="Amt"
+            android:textAlignment="center" />
+
+        <TextView
+            android:id="@+id/btn_remove"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="1dp"
+            android:drawableLeft="@drawable/remove"
+            android:drawableTint="#d50000"
+            android:gravity="center"
+            android:padding="@dimen/margin_10"
+            android:textAlignment="center" />
+    </TableRow>
+</layout>

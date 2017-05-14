@@ -60,6 +60,7 @@ public class ProductRecyclerViewAdapter extends RecyclerView.Adapter<ProductRecy
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, OrderActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 intent.putExtra("productName", productResult.name);
                 intent.putExtra("productID", productResult.id);
                 context.startActivity(intent);
@@ -84,6 +85,7 @@ public class ProductRecyclerViewAdapter extends RecyclerView.Adapter<ProductRecy
             tv_category = (TextView) itemView.findViewById(R.id.tv_category);
             tv_brand = (TextView) itemView.findViewById(R.id.tv_brand);
             tv_price = (TextView) itemView.findViewById(R.id.tv_price);
+            btn_order = (Button) itemView.findViewById(R.id.btn_order);
         }
     }
 }

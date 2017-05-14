@@ -276,8 +276,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_add_order) {
             final int[] qty = {1}, selectedPosition = {0};
-            final LayoutInflater inflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-//            LinearLayout row = (LinearLayout) inflater.inflate(R.layout.new_order, null);
+            final LayoutInflater inflater = (LayoutInflater) OrderActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             final NewOrderBinding newOrder = DataBindingUtil.inflate(inflater, R.layout.new_order, null, true);
             newOrder.spProduct.setAdapter(new ArrayAdapter<>(getApplicationContext(), R.layout.spinner_item, productName));
             newOrder.spProduct.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

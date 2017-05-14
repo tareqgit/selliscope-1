@@ -15,7 +15,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -25,7 +24,6 @@ import com.google.gson.Gson;
 import com.humaclab.selliscope.Utils.DatabaseHandler;
 import com.humaclab.selliscope.Utils.NetworkUtility;
 import com.humaclab.selliscope.Utils.SessionManager;
-import com.humaclab.selliscope.adapters.OutletRecyclerViewAdapter;
 import com.humaclab.selliscope.databinding.ActivityOrderBinding;
 import com.humaclab.selliscope.databinding.NewOrderBinding;
 import com.humaclab.selliscope.model.Order;
@@ -35,14 +33,18 @@ import com.humaclab.selliscope.model.ProductResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import timber.log.Timber;
 
 public class OrderActivity extends AppCompatActivity implements View.OnClickListener {
+    private ScheduledExecutorService scheduler;
+
     private ActivityOrderBinding binding;
     private SelliscopeApiEndpointInterface apiService;
     private DatabaseHandler databaseHandler;
@@ -52,7 +54,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
     private List<Double> productPrice = new ArrayList<>();
 
     private int selectedPosition = 0, tableRowCount = 2;
-    private double totalAmount = 0;
+    private double totalAmt = 0, totalDiscnt = 0, grandTotal = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +78,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                 selectedPosition = position;
                 binding.tvPrice.setText(String.valueOf(productPrice.get(position)));
                 binding.tvAmount.setText(String.valueOf(productPrice.get(position)));
+                binding.etDiscount.setText(String.valueOf(productDiscount.get(position)));
                 binding.etQty.setText("1");
             }
 
@@ -92,8 +95,6 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 binding.tvAmount.setText(String.valueOf(Integer.parseInt(s.toString()) * productPrice.get(selectedPosition)));
-                totalAmount = Integer.parseInt(s.toString()) * productPrice.get(selectedPosition);
-                binding.tvTotalAmt.setText(String.valueOf(totalAmount));
             }
 
             @Override
@@ -109,8 +110,37 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                     Toast.LENGTH_SHORT).show();
         }
 
-        binding.tvTotalAmt.setText(String.valueOf(totalAmount));
         binding.btnOrder.setOnClickListener(this);
+
+        scheduler = Executors.newSingleThreadScheduledExecutor();
+        scheduler.scheduleAtFixedRate(new Runnable() {
+            public void run() {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        double totalAmount = 0;
+                        double totalDiscount = 0;
+                        for (int i = 1; i < binding.tblOrders.getChildCount(); i++) {
+                            View view = binding.tblOrders.getChildAt(i);
+                            if (view instanceof TableRow) {
+                                TableRow row = (TableRow) view;
+                                TextView tvTotalAmount = (TextView) row.findViewById(R.id.tv_amount);
+                                totalAmount += Double.parseDouble(tvTotalAmount.getText().toString());
+                                EditText tvTotalDiscnt = (EditText) row.findViewById(R.id.et_discount);
+                                if (!tvTotalDiscnt.getText().toString().equals(""))
+                                    totalDiscount += Double.parseDouble(tvTotalDiscnt.getText().toString());
+                            }
+                        }
+                        totalAmt = totalAmount;
+                        totalDiscnt = totalDiscount;
+                        grandTotal = totalAmount - totalDiscount;
+                        binding.tvTotalAmt.setText(String.valueOf(totalAmt));
+                        binding.tvTotalDiscnt.setText(String.valueOf(totalDiscnt));
+                        binding.tvTotalGr.setText(String.valueOf(grandTotal));
+                    }
+                });
+            }
+        }, 0, 1, TimeUnit.SECONDS);
     }
 
     private void getProducts() {
@@ -200,21 +230,16 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                 binding.etQty.setText(String.valueOf(qty + 1));
                 qty = qty + 1;
                 binding.tvAmount.setText(String.valueOf(qty * productPrice.get(selectedPosition)));
-                totalAmount = qty * productPrice.get(selectedPosition);
-                binding.tvTotalAmt.setText(String.valueOf(totalAmount));
                 break;
             case R.id.btn_decrease:
                 if (qty > 1) {
                     binding.etQty.setText(String.valueOf(qty - 1));
                     qty = qty - 1;
                     binding.tvAmount.setText(String.valueOf(qty * productPrice.get(selectedPosition)));
-                    totalAmount = qty * productPrice.get(selectedPosition);
-                    binding.tvTotalAmt.setText(String.valueOf(totalAmount));
                 } else {
                     binding.etQty.setText("1");
                     qty = 1;
                     binding.tvAmount.setText(String.valueOf(qty * productPrice.get(selectedPosition)));
-                    binding.tvTotalAmt.setText(String.valueOf(productPrice.get(selectedPosition)));
                 }
                 break;
             case R.id.btn_order:
@@ -229,11 +254,12 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                         Order.NewOrder.Product product = new Order.NewOrder.Product();
                         TableRow row = (TableRow) view;
                         Spinner sp = (Spinner) row.findViewById(R.id.sp_product);
-                        EditText et = (EditText) row.findViewById(R.id.et_qty);
+                        EditText etQty = (EditText) row.findViewById(R.id.et_qty);
+                        EditText etDiscount = (EditText) row.findViewById(R.id.et_discount);
 
                         product.id = productID.get(sp.getSelectedItemPosition());
-                        product.discount = productDiscount.get(sp.getSelectedItemPosition());
-                        product.qty = Integer.parseInt(et.getText().toString());
+                        product.discount = Integer.parseInt(etDiscount.getText().toString());
+                        product.qty = Integer.parseInt(etQty.getText().toString());
                         products.add(product);
                     }
                 }
@@ -285,6 +311,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                     selectedPosition[0] = position;
                     newOrder.tvPrice.setText(String.valueOf(productPrice.get(position)));
                     newOrder.tvAmount.setText(String.valueOf(productPrice.get(position)));
+                    newOrder.etDiscount.setText(String.valueOf(productDiscount.get(position)));
                     newOrder.etQty.setText("1");
                     qty[0] = 1;
                 }
@@ -356,5 +383,11 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
 
     public void cancelOrder(View view) {
         finish();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        scheduler.shutdown();
     }
 }

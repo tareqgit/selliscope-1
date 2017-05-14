@@ -67,6 +67,19 @@
             android:textAlignment="center"
             android:textColor="#000" />
 
+        <EditText
+            android:id="@+id/et_discount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="1dp"
+            android:layout_weight="-2"
+            android:hint="Discount"
+            android:inputType="numberDecimal"
+            android:padding="@dimen/margin_10"
+            android:text="0.0"
+            android:textAlignment="center"
+            android:textColor="#000" />
+
         <TextView
             android:id="@+id/tv_amount"
             android:layout_width="wrap_content"
@@ -74,7 +87,7 @@
             android:layout_margin="1dp"
             android:layout_weight="1"
             android:padding="@dimen/margin_10"
-            android:text="Amt"
+            android:text="0.0"
             android:textAlignment="center"
             android:textColor="#000" />
 

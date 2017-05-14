@@ -80,6 +80,16 @@
                                 android:textAlignment="center" />
 
                             <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="1dp"
+                                android:layout_weight="-2"
+                                android:background="#fff"
+                                android:padding="@dimen/margin_10"
+                                android:text="Discount"
+                                android:textAlignment="center" />
+
+                            <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_margin="1dp"
@@ -166,6 +176,19 @@
                                 android:textAlignment="center"
                                 android:textColor="#000" />
 
+                            <EditText
+                                android:id="@+id/et_discount"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_margin="1dp"
+                                android:layout_weight="-2"
+                                android:hint="Discount"
+                                android:inputType="numberDecimal"
+                                android:padding="@dimen/margin_10"
+                                android:text="0.0"
+                                android:textAlignment="center"
+                                android:textColor="#000" />
+
                             <TextView
                                 android:id="@+id/tv_amount"
                                 android:layout_width="match_parent"
@@ -173,7 +196,7 @@
                                 android:layout_margin="1dp"
                                 android:layout_weight="1"
                                 android:padding="@dimen/margin_10"
-                                android:text="Amt"
+                                android:text="0.0"
                                 android:textAlignment="center"
                                 android:textColor="#000" />
 
@@ -345,23 +368,76 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="right"
-                    android:layout_marginRight="100dp"
-                    android:orientation="horizontal">
+                    android:orientation="vertical">
 
-                    <TextView
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Total Amount: "
-                        android:textAlignment="center"
-                        android:textColor="#000000" />
+                        android:layout_gravity="right"
+                        android:layout_marginRight="50dp"
+                        android:orientation="horizontal">
 
-                    <TextView
-                        android:id="@+id/tv_total_amt"
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Total : "
+                            android:textAlignment="center"
+                            android:textColor="#000000" />
+
+                        <TextView
+                            android:id="@+id/tv_total_amt"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="start"
+                            android:text="Total"
+                            android:textAlignment="textStart" />
+                    </LinearLayout>
+
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="start"
-                        android:text="Total"
-                        android:textAlignment="textStart" />
+                        android:layout_gravity="right"
+                        android:layout_marginRight="50dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Discount : "
+                            android:textAlignment="center"
+                            android:textColor="#000000" />
+
+                        <TextView
+                            android:id="@+id/tv_total_discnt"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="start"
+                            android:text="Discount"
+                            android:textAlignment="textStart" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right"
+                        android:layout_marginRight="50dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Gr. Total : "
+                            android:textAlignment="center"
+                            android:textColor="#000000" />
+
+                        <TextView
+                            android:id="@+id/tv_total_gr"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="start"
+                            android:text="Gr. Total"
+                            android:textAlignment="textStart" />
+                    </LinearLayout>
                 </LinearLayout>
 
                 <LinearLayout

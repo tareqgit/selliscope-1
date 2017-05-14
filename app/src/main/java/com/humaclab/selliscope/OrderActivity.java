@@ -252,9 +252,8 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                     public void onResponse(Call<Order.OrderResponse> call, Response<Order.OrderResponse> response) {
                         if (response.code() == 201) {
                             System.out.println(new Gson().toJson(response.body()));
-                            Toast.makeText(OrderActivity.this, "Order created successfully", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(OrderActivity.this, "Order created successfully", Toast.LENGTH_LONG).show();
                             finish();
-                            startActivity(getIntent());
                         } else if (response.code() == 401) {
                             System.out.println(new Gson().toJson(response.body()));
                             Toast.makeText(OrderActivity.this, "Invalid Response from server.", Toast.LENGTH_SHORT).show();
@@ -354,5 +353,9 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_order, menu);
         return super.onCreateOptionsMenu(menu);
+    }
+
+    public void cancelOrder(View view) {
+        finish();
     }
 }

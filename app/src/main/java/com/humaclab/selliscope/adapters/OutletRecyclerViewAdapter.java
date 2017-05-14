@@ -1,6 +1,7 @@
 package com.humaclab.selliscope.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
@@ -22,6 +23,7 @@ import com.google.android.gms.awareness.snapshot.LocationResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.gson.Gson;
+import com.humaclab.selliscope.OrderActivity;
 import com.humaclab.selliscope.R;
 import com.humaclab.selliscope.SelliscopeApiEndpointInterface;
 import com.humaclab.selliscope.SelliscopeApplication;
@@ -101,6 +103,15 @@ public class OutletRecyclerViewAdapter extends
                                 "data. Please, try again later!", Toast.LENGTH_SHORT).show();
                     }
                 });
+            }
+        });
+        holder.orderButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, OrderActivity.class);
+                intent.putExtra("outletName", outlet.outletName);
+                intent.putExtra("outletID", outlet.outletId);
+                context.startActivity(intent);
             }
         });
     }
@@ -200,7 +211,7 @@ public class OutletRecyclerViewAdapter extends
     public class OutletViewHolder extends RecyclerView.ViewHolder {
         CardView cardView;
         TextView tvOutletName, tvOutletAddress, tvOutletOwnerName, tvOutletContactNumber;
-        Button checkInButton;
+        Button checkInButton, orderButton;
         ProgressBar pbCheckIn;
 
 
@@ -212,6 +223,7 @@ public class OutletRecyclerViewAdapter extends
             tvOutletContactNumber = (TextView) itemView.findViewById(R.id.tv_outlet_contact_number);
             tvOutletOwnerName = (TextView) itemView.findViewById(R.id.tv_owner_name);
             checkInButton = (Button) itemView.findViewById(R.id.btn_check_in);
+            orderButton = (Button) itemView.findViewById(R.id.btn_order);
             pbCheckIn = (ProgressBar) itemView.findViewById(R.id.pb_check_in);
         }
     }

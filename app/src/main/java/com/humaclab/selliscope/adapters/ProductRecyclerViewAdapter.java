@@ -56,16 +56,20 @@ public class ProductRecyclerViewAdapter extends RecyclerView.Adapter<ProductRecy
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(holder.iv_product);
 
-        holder.btn_order.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(context, OrderActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.putExtra("productName", productResult.name);
-                intent.putExtra("productID", productResult.id);
-                context.startActivity(intent);
-            }
-        });
+        try {
+            holder.btn_order.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(context, OrderActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.putExtra("productName", productResult.name);
+                    intent.putExtra("productID", productResult.id);
+                    context.startActivity(intent);
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

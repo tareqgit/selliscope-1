@@ -4,6 +4,7 @@ import com.humaclab.selliscope.model.AddNewOrder;
 import com.humaclab.selliscope.model.BrandResponse;
 import com.humaclab.selliscope.model.CategoryResponse;
 import com.humaclab.selliscope.model.CreateOutlet;
+import com.humaclab.selliscope.model.OrderResponse;
 import com.humaclab.selliscope.model.ProductResponse;
 import com.humaclab.selliscope.model.UserLocation;
 
@@ -32,6 +33,9 @@ public interface SelliscopeApiEndpointInterface {
 
     @GET("product")
     Call<ProductResponse> getProducts();
+
+    @GET("order")
+    Call<OrderResponse> getOrders();
 
     @POST("visit/store")
     Call<ResponseBody> sendUserLocation(@Body UserLocation userLocation);

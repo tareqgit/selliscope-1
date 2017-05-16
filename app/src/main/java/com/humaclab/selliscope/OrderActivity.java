@@ -26,7 +26,7 @@ import com.humaclab.selliscope.Utils.NetworkUtility;
 import com.humaclab.selliscope.Utils.SessionManager;
 import com.humaclab.selliscope.databinding.ActivityOrderBinding;
 import com.humaclab.selliscope.databinding.NewOrderBinding;
-import com.humaclab.selliscope.model.Order;
+import com.humaclab.selliscope.model.AddNewOrder;
 import com.humaclab.selliscope.model.Outlets;
 import com.humaclab.selliscope.model.ProductResponse;
 
@@ -243,15 +243,15 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                 }
                 break;
             case R.id.btn_order:
-                Order order = new Order();
-                Order.NewOrder newOrder = new Order.NewOrder();
-                List<Order.NewOrder.Product> products = new ArrayList<>();
+                AddNewOrder addNewOrder = new AddNewOrder();
+                AddNewOrder.NewOrder newOrder = new AddNewOrder.NewOrder();
+                List<AddNewOrder.NewOrder.Product> products = new ArrayList<>();
                 newOrder.outletId = outletID.get(binding.spOutlet.getSelectedItemPosition());
 
                 for (int i = 1; i < binding.tblOrders.getChildCount(); i++) {
                     View view = binding.tblOrders.getChildAt(i);
                     if (view instanceof TableRow) {
-                        Order.NewOrder.Product product = new Order.NewOrder.Product();
+                        AddNewOrder.NewOrder.Product product = new AddNewOrder.NewOrder.Product();
                         TableRow row = (TableRow) view;
                         Spinner sp = (Spinner) row.findViewById(R.id.sp_product);
                         EditText etQty = (EditText) row.findViewById(R.id.et_qty);
@@ -265,20 +265,20 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                 }
 
                 newOrder.products = products;
-                order.newOrder = newOrder;
+                addNewOrder.newOrder = newOrder;
 
                 apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(),
                         sessionManager.getUserPassword(), false)
                         .create(SelliscopeApiEndpointInterface.class);
-                System.out.println(new Gson().toJson(order));
+                System.out.println(new Gson().toJson(addNewOrder));
 
-                Call<Order.OrderResponse> call = apiService.addOrder(order);
-                call.enqueue(new Callback<Order.OrderResponse>() {
+                Call<AddNewOrder.OrderResponse> call = apiService.addOrder(addNewOrder);
+                call.enqueue(new Callback<AddNewOrder.OrderResponse>() {
                     @Override
-                    public void onResponse(Call<Order.OrderResponse> call, Response<Order.OrderResponse> response) {
+                    public void onResponse(Call<AddNewOrder.OrderResponse> call, Response<AddNewOrder.OrderResponse> response) {
                         if (response.code() == 201) {
                             System.out.println(new Gson().toJson(response.body()));
-                            Toast.makeText(OrderActivity.this, "Order created successfully", Toast.LENGTH_LONG).show();
+                            Toast.makeText(OrderActivity.this, "AddNewOrder created successfully", Toast.LENGTH_LONG).show();
                             finish();
                         } else if (response.code() == 401) {
                             System.out.println(new Gson().toJson(response.body()));
@@ -290,7 +290,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                     }
 
                     @Override
-                    public void onFailure(Call<Order.OrderResponse> call, Throwable t) {
+                    public void onFailure(Call<AddNewOrder.OrderResponse> call, Throwable t) {
                         t.printStackTrace();
                     }
                 });

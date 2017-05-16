@@ -79,6 +79,11 @@ public class DashboardFragment extends Fragment {
                                                 OrderActivity.class));
                                         break;
                                     }
+                                    case 6: {
+                                        getActivity().startActivity(new Intent(getActivity(),
+                                                OrderListActivity.class));
+                                        break;
+                                    }
                                     default: {
                                         Toast.makeText(getActivity(), "Please upgrade your package" +
                                                         " to use this feature",

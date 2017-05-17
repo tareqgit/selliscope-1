@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <LinearLayout
@@ -99,16 +100,16 @@
                                 android:text="Amt"
                                 android:textAlignment="center" />
 
-                            <TextView
+                            <ImageView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_margin="1dp"
                                 android:background="#fff"
-                                android:drawableLeft="@drawable/remove"
-                                android:drawableTint="#d50000"
                                 android:gravity="center"
                                 android:padding="@dimen/margin_10"
-                                android:textAlignment="center" />
+                                android:textAlignment="center"
+                                android:tint="#d50000"
+                                app:srcCompat="@drawable/remove" />
                         </TableRow>
 
                         <TableRow

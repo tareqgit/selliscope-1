@@ -59,7 +59,6 @@ public class OrderListActivity extends AppCompatActivity {
         } else {
             Toast.makeText(this, "Connect to Wifi or Mobile Data", Toast.LENGTH_SHORT).show();
         }
-        loadOrders();
     }
 
     private void loadOrders() {

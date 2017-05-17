@@ -1,6 +1,7 @@
 package com.humaclab.selliscope;
 
 import android.app.Application;
+import android.support.v7.app.AppCompatDelegate;
 
 import com.crashlytics.android.Crashlytics;
 import com.facebook.stetho.Stetho;
@@ -20,6 +21,10 @@ import timber.log.Timber;
  */
 
 public class SelliscopeApplication extends Application {
+    static {
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+    }
+
     private static Retrofit retrofitInstance;
 
     @Override
@@ -40,7 +45,7 @@ public class SelliscopeApplication extends Application {
      */
 
     public static Retrofit getRetrofitInstance(String email, String password, boolean
-                                               isForLogin) {
+            isForLogin) {
         if (retrofitInstance == null || isForLogin) {
 
             OkHttpClient client = new OkHttpClient.Builder()

@@ -7,13 +7,13 @@
 
         <Spinner
             android:id="@+id/sp_product"
-            style="@style/spinner_style"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="1dp"
             android:layout_weight="1"
             android:clickable="true"
-            android:padding="@dimen/margin_10" />
+            android:padding="@dimen/margin_10"
+            android:spinnerMode="dropdown" />
 
         <LinearLayout
             android:layout_width="100dp"

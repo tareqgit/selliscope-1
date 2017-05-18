@@ -1,6 +1,7 @@
 package com.humaclab.selliscope.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
 import android.support.v7.widget.RecyclerView;
@@ -9,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.humaclab.selliscope.BR;
+import com.humaclab.selliscope.OrderDetailsActivity;
 import com.humaclab.selliscope.R;
 import com.humaclab.selliscope.model.OrderResponse;
 
@@ -60,7 +62,10 @@ public class OrderListRecyclerAdapter extends RecyclerView.Adapter<OrderListRecy
 
         @Override
         public void onClick(View v) {
-
+            Intent intent = new Intent(context, OrderDetailsActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.putExtra("orderList", orderLists.get(getLayoutPosition()));
+            context.startActivity(intent);
         }
     }
 }

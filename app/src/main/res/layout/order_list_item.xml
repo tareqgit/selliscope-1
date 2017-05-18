@@ -12,8 +12,8 @@
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:elevation="5dp"
         android:layout_margin="5dp"
+        android:elevation="5dp"
         app:cardCornerRadius="5dp">
 
         <LinearLayout
@@ -27,29 +27,48 @@
                 android:layout_weight="1"
                 android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/tv_outlet_name_order_id"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="10dp"
-                    android:text='@{orderDetails.outletName +" ("+orderDetails.orderId+")"}'
-                    android:textColor="#000"
-                    android:textSize="18sp" />
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tv_outlet_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:padding="10dp"
+                        android:text='@{orderDetails.outletName}'
+                        android:textColor="#000"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:id="@+id/tv_order_id"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:layout_weight="1"
+                        android:padding="10dp"
+                        android:text='@{"Order id: " + orderDetails.orderId}'
+                        android:textAlignment="textEnd"
+                        android:textColor="#000"
+                        android:textSize="18sp" />
+                </LinearLayout>
 
                 <TextView
                     android:id="@+id/tv_order_date"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="10dp"
-                    android:text='@{orderDetails.orderDate}'
+                    android:text='@{"Order Date: " + orderDetails.orderDate}'
                     android:textSize="17sp" />
             </LinearLayout>
 
-            <TextView
+            <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:background="@drawable/next" />
+                app:srcCompat="@drawable/next" />
         </LinearLayout>
     </android.support.v7.widget.CardView>
 </layout>

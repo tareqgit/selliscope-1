@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+        <variable
+            name="product"
+            type="com.humaclab.selliscope.model.OrderResponse.Product" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#ddd"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_margin=".5dp"
+            android:layout_weight="1"
+            android:background="#fff"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="@{product.name}"
+            android:textAlignment="center" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_margin=".5dp"
+            android:layout_weight="1"
+            android:background="#fff"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="@{product.price}"
+            android:textAlignment="center" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_margin=".5dp"
+            android:layout_weight="1"
+            android:background="#fff"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="@{Integer.toString(product.qty)}"
+            android:textAlignment="center" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_margin=".5dp"
+            android:layout_weight="1"
+            android:background="#fff"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="@{product.discount}"
+            android:textAlignment="center" />
+
+        <TextView
+            android:id="@+id/tv_total"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_margin=".5dp"
+            android:layout_weight="1"
+            android:background="#fff"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="@{product.amount}"
+            android:textAlignment="center" />
+    </LinearLayout>
+</layout>

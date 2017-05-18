@@ -49,6 +49,8 @@
         <activity
             android:name=".OrderActivity"
             android:screenOrientation="landscape" />
+        <activity android:name=".OrderListActivity" />
+        <activity android:name=".OrderDetailsActivity" />
     </application>
 
 </manifest>

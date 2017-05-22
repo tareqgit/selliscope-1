@@ -79,6 +79,11 @@ public class DashboardFragment extends Fragment {
                                                 OrderActivity.class));
                                         break;
                                     }
+                                    case 4: {
+                                        getActivity().startActivity(new Intent(getActivity(),
+                                                DueActivity.class));
+                                        break;
+                                    }
                                     case 6: {
                                         getActivity().startActivity(new Intent(getActivity(),
                                                 OrderListActivity.class));

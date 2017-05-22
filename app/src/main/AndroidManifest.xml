@@ -51,6 +51,7 @@
             android:screenOrientation="landscape" />
         <activity android:name=".OrderListActivity" />
         <activity android:name=".OrderDetailsActivity" />
+        <activity android:name=".PaymentActivity" />
     </application>
 
 </manifest>

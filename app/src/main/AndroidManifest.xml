@@ -52,6 +52,7 @@
         <activity android:name=".OrderListActivity" />
         <activity android:name=".OrderDetailsActivity" />
         <activity android:name=".PaymentActivity" />
+        <activity android:name=".DueActivity" />
     </application>
 
 </manifest>

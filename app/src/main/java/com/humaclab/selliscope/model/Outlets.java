@@ -4,25 +4,26 @@ import android.support.annotation.Nullable;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by Miaki on 3/18/17.
  */
 
-public class Outlets {
-    public static class Successful {
+public class Outlets implements Serializable {
+    public static class Successful implements Serializable {
         @SerializedName("error")
         public boolean error;
         @SerializedName("result")
         public OutletsResult outletsResult;
 
-        public class OutletsResult {
+        public class OutletsResult implements Serializable {
             @SerializedName("outlet")
             public List<Outlet> outlets;
         }
 
-        public class Outlet {
+        public class Outlet implements Serializable {
             @SerializedName("id")
             public int outletId;
             @SerializedName("type")

@@ -24,6 +24,7 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.gson.Gson;
 import com.humaclab.selliscope.OrderActivity;
+import com.humaclab.selliscope.OutletDetailsActivity;
 import com.humaclab.selliscope.R;
 import com.humaclab.selliscope.SelliscopeApiEndpointInterface;
 import com.humaclab.selliscope.SelliscopeApplication;
@@ -48,28 +49,23 @@ import static com.humaclab.selliscope.RouteActivity.checkPermission;
  * Created by Nahid on 3/12/2017.
  */
 
-public class OutletRecyclerViewAdapter extends
-        RecyclerView.Adapter<OutletRecyclerViewAdapter.OutletViewHolder> {
+public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecyclerViewAdapter.OutletViewHolder> {
 
     private Context context;
     private Outlets.Successful.OutletsResult outletItems;
     GoogleApiClient googleApiClient;
     SelliscopeApiEndpointInterface apiService;
 
-    public OutletRecyclerViewAdapter(Context context,
-                                     Outlets.Successful.OutletsResult outletItems) {
+    public OutletRecyclerViewAdapter(Context context, Outlets.Successful.OutletsResult outletItems) {
         this.outletItems = outletItems;
         this.context = context;
     }
 
     @Override
     public OutletViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View layoutView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.outlet_item, parent, false);
-        OutletViewHolder outletViewHolder = new OutletViewHolder(layoutView);
-        return outletViewHolder;
+        View layoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.outlet_item, parent, false);
+        return new OutletViewHolder(layoutView);
     }
-
 
     @Override
     public void onBindViewHolder(final OutletViewHolder holder, final int position) {
@@ -225,6 +221,16 @@ public class OutletRecyclerViewAdapter extends
             checkInButton = (Button) itemView.findViewById(R.id.btn_check_in);
             orderButton = (Button) itemView.findViewById(R.id.btn_order);
             pbCheckIn = (ProgressBar) itemView.findViewById(R.id.pb_check_in);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(context, OutletDetailsActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent.putExtra("outletDetails", outletItems.outlets.get(getLayoutPosition()));
+                    context.startActivity(intent);
+                }
+            });
         }
     }
 }

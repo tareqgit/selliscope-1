@@ -1,8 +1,11 @@
 package com.humaclab.selliscope;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -10,11 +13,13 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -34,6 +39,7 @@ import com.humaclab.selliscope.model.Login;
 import com.humaclab.selliscope.model.OutletTypes;
 import com.humaclab.selliscope.model.Thanas;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,8 +51,10 @@ import retrofit2.Response;
 import timber.log.Timber;
 
 public class AddOutletActivity extends AppCompatActivity {
+    private final int CAMERA_REQUEST = 3214;
     private EditText outletName, outletAddress, outletOwner, outletContactNumber;
     private Spinner outletType, district, thana;
+    private ImageView iv_outlet;
     private Button submit, cancel;
     private String email, password;
     private OutletTypeAdapter outletTypeAdapter;
@@ -61,6 +69,7 @@ public class AddOutletActivity extends AppCompatActivity {
     boolean isValidPhone = true;
     double latitude, longitude = 0.0;
     int outletTypeId, thanaId = -1;
+    private String outletImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,6 +107,16 @@ public class AddOutletActivity extends AppCompatActivity {
         cancel = (Button) findViewById(R.id.btn_cancel);
         getDistricts(email, password);
         getOutletTypes(email, password);
+
+        iv_outlet = (ImageView) findViewById(R.id.iv_outlet);
+        iv_outlet.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                startActivityForResult(cameraIntent, CAMERA_REQUEST);
+            }
+        });
+
         district.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -204,7 +223,7 @@ public class AddOutletActivity extends AppCompatActivity {
                 .create(SelliscopeApiEndpointInterface.class);
         List<CreateOutlet.Outlet> outlet = new ArrayList<>();
         outlet.add(new CreateOutlet.Outlet(outletTypeId, outletName,
-                ownerName, address, thanaId, phone, latitude, longitude));
+                ownerName, address, thanaId, phone, latitude, longitude,outletImage));
 
         Call<ResponseBody> call = apiService.createOutlet(new CreateOutlet(outlet));
         call.enqueue(new Callback<ResponseBody>() {
@@ -397,6 +416,18 @@ public class AddOutletActivity extends AppCompatActivity {
     public static boolean checkPermission(final Context context) {
         return ActivityCompat.checkSelfPermission(context,
                 Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            Bitmap photo = (Bitmap) data.getExtras().get("data");
+            assert photo != null;
+            photo.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+            outletImage = Base64.encodeToString(outputStream.toByteArray(), Base64.DEFAULT);
+            iv_outlet.setImageBitmap(photo);
+        }
     }
 
     @Override

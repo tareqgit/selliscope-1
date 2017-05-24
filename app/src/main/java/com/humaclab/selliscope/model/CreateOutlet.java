@@ -22,7 +22,7 @@ public class CreateOutlet {
     public static class Outlet {
         public Outlet(int outletTypeId, String outletName, String ownerName, String address,
                       int outletThanaId, String outletPhoneNumber, double outletLatitude,
-                      double outletLongitude) {
+                      double outletLongitude, String outletImage) {
             this.outletTypeId = outletTypeId;
             this.outletName = outletName;
             this.ownerName = ownerName;
@@ -31,6 +31,7 @@ public class CreateOutlet {
             this.outletPhoneNumber = outletPhoneNumber;
             this.outletLatitude = outletLatitude;
             this.outletLongitude = outletLongitude;
+            this.outletImage = outletImage;
         }
 
         @SerializedName("type_id")
@@ -49,6 +50,8 @@ public class CreateOutlet {
         double outletLatitude;
         @SerializedName("longitude")
         double outletLongitude;
+        @SerializedName("image")
+        String outletImage;
     }
 
     public static class Successful {

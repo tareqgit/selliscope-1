@@ -28,8 +28,6 @@ public class Outlets implements Serializable {
             public int outletId;
             @SerializedName("type")
             public String outletType;
-            @SerializedName("color")
-            public String color;
             @SerializedName("name")
             public String outletName;
             @SerializedName("owner")

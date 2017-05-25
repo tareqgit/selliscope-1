@@ -14,10 +14,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.gms.awareness.Awareness;
 import com.google.android.gms.awareness.snapshot.LocationResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -70,7 +73,12 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
     @Override
     public void onBindViewHolder(final OutletViewHolder holder, final int position) {
         final Outlets.Successful.Outlet outlet = outletItems.outlets.get(position);
-        holder.tvOutletName.setTextColor(Color.parseColor(outlet.color));
+        Glide.with(context).load(outlet.outletImgUrl)
+                .thumbnail(0.5f)
+                .crossFade()
+                .placeholder(R.drawable.ic_outlet_bnw)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(holder.iv_outlet);
         holder.tvOutletName.setText(outlet.outletName);
         holder.tvOutletAddress.setText(outlet.outletAddress);
         holder.tvOutletContactNumber.setText(outlet.phone);
@@ -206,6 +214,7 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
 
     public class OutletViewHolder extends RecyclerView.ViewHolder {
         CardView cardView;
+        ImageView iv_outlet;
         TextView tvOutletName, tvOutletAddress, tvOutletOwnerName, tvOutletContactNumber;
         Button checkInButton, orderButton;
         ProgressBar pbCheckIn;
@@ -213,6 +222,7 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
 
         public OutletViewHolder(View itemView) {
             super(itemView);
+            iv_outlet = (ImageView) itemView.findViewById(R.id.iv_outlet);
             cardView = (CardView) itemView.findViewById(R.id.cv_outlet_item);
             tvOutletName = (TextView) itemView.findViewById(R.id.tv_outlet_name);
             tvOutletAddress = (TextView) itemView.findViewById(R.id.tv_outlet_address);

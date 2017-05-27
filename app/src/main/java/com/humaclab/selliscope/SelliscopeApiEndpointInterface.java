@@ -5,6 +5,7 @@ import com.humaclab.selliscope.model.BrandResponse;
 import com.humaclab.selliscope.model.CategoryResponse;
 import com.humaclab.selliscope.model.CreateOutlet;
 import com.humaclab.selliscope.model.OrderResponse;
+import com.humaclab.selliscope.model.PaymentResponse;
 import com.humaclab.selliscope.model.ProductResponse;
 import com.humaclab.selliscope.model.UserLocation;
 
@@ -13,6 +14,7 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 /**
@@ -58,6 +60,11 @@ public interface SelliscopeApiEndpointInterface {
     @POST("outlet/store")
     Call<ResponseBody> createOutlet(@Body CreateOutlet createOutlet);
 
+    @POST("outlet/{id}/update")
+    Call<ResponseBody> updateOutlet(@Path("id") int outletID, @Body CreateOutlet createOutlet);
+
     @POST("order/store")
     Call<AddNewOrder.OrderResponse> addOrder(@Body AddNewOrder order);
+    @POST("payment/collect")
+    Call<PaymentResponse.PaymentSucessfull> payNow(@Body PaymentResponse payment);
 }

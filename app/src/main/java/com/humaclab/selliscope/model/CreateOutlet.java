@@ -50,7 +50,7 @@ public class CreateOutlet {
         double outletLatitude;
         @SerializedName("longitude")
         double outletLongitude;
-        @SerializedName("image")
+        @SerializedName("img")
         String outletImage;
     }
 

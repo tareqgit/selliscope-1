@@ -48,7 +48,9 @@ public class OutletDetailsActivity extends AppCompatActivity {
         binding.btnCallCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent(getApplicationContext(), CallCardActivity.class);
+                intent.putExtra("outletDetails", outlet);
+                startActivity(intent);
             }
         });
     }

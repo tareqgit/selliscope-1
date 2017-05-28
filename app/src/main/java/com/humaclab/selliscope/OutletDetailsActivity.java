@@ -1,5 +1,6 @@
 package com.humaclab.selliscope;
 
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -39,7 +40,9 @@ public class OutletDetailsActivity extends AppCompatActivity {
         binding.btnEditOutlet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent(getApplicationContext(), EditOutletActivity.class);
+                intent.putExtra("outletDetails", outlet);
+                startActivity(intent);
             }
         });
         binding.btnCallCard.setOnClickListener(new View.OnClickListener() {

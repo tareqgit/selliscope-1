@@ -57,7 +57,8 @@ public interface SelliscopeApiEndpointInterface {
     @GET("target")
     Call<ResponseBody> getTargets();
 
-    @POST("outlet/store")
+//    @POST("outlet/store")
+    @POST("outlet/upload")
     Call<ResponseBody> createOutlet(@Body CreateOutlet createOutlet);
 
     @POST("outlet/{id}/update")

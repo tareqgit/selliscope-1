@@ -228,11 +228,12 @@ public class EditOutletActivity extends AppCompatActivity {
                            double latitude, double longitude) {
         apiService = SelliscopeApplication.getRetrofitInstance(email, password, false)
                 .create(SelliscopeApiEndpointInterface.class);
-        List<CreateOutlet.Outlet> outlet = new ArrayList<>();
+       /* List<CreateOutlet.Outlet> outlet = new ArrayList<>();
         outlet.add(new CreateOutlet.Outlet(outletTypeId, outletName,
-                ownerName, address, thanaId, phone, latitude, longitude, outletImage));
+                ownerName, address, thanaId, phone, latitude, longitude, outletImage));*/
 
-        Call<ResponseBody> call = apiService.createOutlet(new CreateOutlet(outlet));
+        Call<ResponseBody> call = apiService.createOutlet(new CreateOutlet(outletTypeId, outletName,
+                ownerName, address, thanaId, phone, latitude, longitude, outletImage));
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -241,9 +242,9 @@ public class EditOutletActivity extends AppCompatActivity {
                 System.out.println("Response: " + new Gson().toJson(response.body()));
                 if (response.code() == 201) {
                     try {
-                        CreateOutlet.Successful createOutletResult =
+                        CreateOutlet createOutletResult =
                                 gson.fromJson(response.body().string()
-                                        , CreateOutlet.Successful.class);
+                                        , CreateOutlet.class);
                         Toast.makeText(EditOutletActivity.this, createOutletResult.result,
                                 Toast.LENGTH_SHORT).show();
 

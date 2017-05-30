@@ -221,32 +221,25 @@ public class AddOutletActivity extends AppCompatActivity {
                            double latitude, double longitude) {
         apiService = SelliscopeApplication.getRetrofitInstance(email, password, false)
                 .create(SelliscopeApiEndpointInterface.class);
-        List<CreateOutlet.Outlet> outlet = new ArrayList<>();
-        outlet.add(new CreateOutlet.Outlet(outletTypeId, outletName,
-                ownerName, address, thanaId, phone, latitude, longitude,outletImage));
 
-        Call<ResponseBody> call = apiService.createOutlet(new CreateOutlet(outlet));
+        Call<ResponseBody> call = apiService.createOutlet(new CreateOutlet(outletTypeId, outletName, ownerName, address, thanaId, phone, latitude, longitude, outletImage));
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 Gson gson = new Gson();
+                System.out.println("Response code: " + response.code());
+
                 if (response.code() == 201) {
                     try {
-                        CreateOutlet.Successful createOutletResult =
-                                gson.fromJson(response.body().string()
-                                        , CreateOutlet.Successful.class);
-                        Toast.makeText(AddOutletActivity.this, createOutletResult.result,
-                                Toast.LENGTH_SHORT).show();
-
+                        CreateOutlet createOutletResult = gson.fromJson(response.body().string(), CreateOutlet.class);
+                        Toast.makeText(AddOutletActivity.this, createOutletResult.result, Toast.LENGTH_SHORT).show();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                 } else if (response.code() == 401) {
-                    Toast.makeText(AddOutletActivity.this,
-                            "Invalid Response from server.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddOutletActivity.this, "Invalid Response from server.", Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(AddOutletActivity.this,
-                            "Server Error! Try Again Later!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddOutletActivity.this, "Server Error! Try Again Later!", Toast.LENGTH_SHORT).show();
                 }
             }
 

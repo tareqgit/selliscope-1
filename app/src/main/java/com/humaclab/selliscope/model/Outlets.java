@@ -48,7 +48,7 @@ public class Outlets implements Serializable {
             @SerializedName("longitude")
             public Double outletLongitude;
             @SerializedName("due")
-            public Double outletDue;
+            public String outletDue;
         }
     }
 
@@ -58,5 +58,4 @@ public class Outlets implements Serializable {
         @SerializedName("result")
         public String result;
     }
-
 }

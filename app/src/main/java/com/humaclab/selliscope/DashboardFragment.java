@@ -42,10 +42,10 @@ public class DashboardFragment extends Fragment {
         dashboadItems.add(new DashboardItem("Outlet", R.drawable.ic_outlet));
         dashboadItems.add(new DashboardItem("Product", R.drawable.ic_products));
         dashboadItems.add(new DashboardItem("Order", R.drawable.ic_order));
-        dashboadItems.add(new DashboardItem("Due", R.drawable.ic_due));
-        dashboadItems.add(new DashboardItem("Insights", R.drawable.ic_insights));
         dashboadItems.add(new DashboardItem("View Orders", R.drawable.ic_view_orders));
         dashboadItems.add(new DashboardItem("Payment", R.drawable.ic_payments));
+        dashboadItems.add(new DashboardItem("Due", R.drawable.ic_due));
+        dashboadItems.add(new DashboardItem("Insights", R.drawable.ic_insights));
         gridLayoutManager = new GridLayoutManager(activity, itemNumber);
         recyclerView.setLayoutManager(gridLayoutManager);
         dashboardRecyclerViewAdapter = new DashboardRecyclerViewAdapter(activity, dashboadItems);
@@ -81,17 +81,17 @@ public class DashboardFragment extends Fragment {
                                     }
                                     case 4: {
                                         getActivity().startActivity(new Intent(getActivity(),
-                                                DueActivity.class));
+                                                OrderListActivity.class));
+                                        break;
+                                    }
+                                    case 5: {
+                                        getActivity().startActivity(new Intent(getActivity(),
+                                                PaymentActivity.class));
                                         break;
                                     }
                                     case 6: {
                                         getActivity().startActivity(new Intent(getActivity(),
-                                                OrderListActivity.class));
-                                        break;
-                                    }
-                                    case 7: {
-                                        getActivity().startActivity(new Intent(getActivity(),
-                                                PaymentActivity.class));
+                                                DueActivity.class));
                                         break;
                                     }
                                     default: {
@@ -99,8 +99,6 @@ public class DashboardFragment extends Fragment {
                                                         " to use this feature",
                                                 Toast.LENGTH_SHORT).show();
                                     }
-
-
                                 }
                             }
 

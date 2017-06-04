@@ -4,6 +4,7 @@ import com.humaclab.selliscope.model.AddNewOrder;
 import com.humaclab.selliscope.model.BrandResponse;
 import com.humaclab.selliscope.model.CategoryResponse;
 import com.humaclab.selliscope.model.CreateOutlet;
+import com.humaclab.selliscope.model.DeliverProductResponse;
 import com.humaclab.selliscope.model.OrderResponse;
 import com.humaclab.selliscope.model.PaymentResponse;
 import com.humaclab.selliscope.model.ProductResponse;
@@ -65,6 +66,10 @@ public interface SelliscopeApiEndpointInterface {
 
     @POST("order/store")
     Call<AddNewOrder.OrderResponse> addOrder(@Body AddNewOrder order);
+
     @POST("payment/collect")
     Call<PaymentResponse.PaymentSucessfull> payNow(@Body PaymentResponse payment);
+
+    @POST("delivery/store")
+    Call<DeliverProductResponse> deliverProduct(@Body DeliverProductResponse deliverProduct);
 }

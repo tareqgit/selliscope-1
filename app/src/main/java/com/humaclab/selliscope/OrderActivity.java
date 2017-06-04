@@ -328,6 +328,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
 
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    qty[0] = Integer.parseInt(s.toString());
                     newOrder.tvAmount.setText(String.valueOf(Integer.parseInt(s.toString()) * productPrice.get(selectedPosition[0])));
                 }
 

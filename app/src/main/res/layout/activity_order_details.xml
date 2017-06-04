@@ -20,139 +20,178 @@
             layout="@layout/toolbar_layout" />
 
         <LinearLayout
-            android:id="@+id/linearLayout2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_above="@+id/btn_deliver"
             android:layout_below="@+id/include"
             android:orientation="vertical">
 
             <LinearLayout
+                android:id="@+id/linearLayout2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tv_outlet_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:padding="5dp"
+                        android:text='@{orderDetails.outletName}'
+                        android:textColor="#000"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:id="@+id/tv_order_id"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:layout_weight="1"
+                        android:padding="5dp"
+                        android:text='@{"Order id: " + orderDetails.orderId}'
+                        android:textAlignment="textEnd"
+                        android:textColor="#000"
+                        android:textSize="18sp" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tv_order_date"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp"
+                    android:text='@{"Order Date: " + orderDetails.orderDate}'
+                    android:textSize="17sp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:layout_marginBottom="5dp"
+                    android:background="#ddd" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linearLayout3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#ddd"
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/tv_outlet_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_margin=".5dp"
                     android:layout_weight="1"
+                    android:background="#fff"
                     android:padding="10dp"
-                    android:text='@{orderDetails.outletName}'
+                    android:text="Items"
+                    android:textAlignment="center"
                     android:textColor="#000"
-                    android:textSize="18sp" />
+                    android:textStyle="bold" />
+
+                <!--<TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin=".5dp"
+                    android:layout_weight="1"
+                    android:background="#fff"
+                    android:padding="10dp"
+                    android:text="Price"
+                    android:textAlignment="center"
+                    android:textColor="#000"
+                    android:textStyle="bold" />-->
 
                 <TextView
-                    android:id="@+id/tv_order_id"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="end"
+                    android:layout_margin=".5dp"
                     android:layout_weight="1"
+                    android:background="#fff"
                     android:padding="10dp"
-                    android:text='@{"Order id: " + orderDetails.orderId}'
-                    android:textAlignment="textEnd"
+                    android:text="O.Qty."
+                    android:textAlignment="center"
                     android:textColor="#000"
-                    android:textSize="18sp" />
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin=".5dp"
+                    android:layout_weight="1"
+                    android:background="#fff"
+                    android:padding="10dp"
+                    android:text="D.Qty."
+                    android:textAlignment="center"
+                    android:textColor="#000"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin=".5dp"
+                    android:layout_weight="1"
+                    android:background="#fff"
+                    android:padding="10dp"
+                    android:text="Deliver"
+                    android:textAlignment="center"
+                    android:textColor="#000"
+                    android:textStyle="bold" />
+
+                <!--<TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin=".5dp"
+                    android:layout_weight="1"
+                    android:background="#fff"
+                    android:padding="10dp"
+                    android:text="Disc."
+                    android:textAlignment="center"
+                    android:textColor="#000"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin=".5dp"
+                    android:layout_weight="1"
+                    android:background="#fff"
+                    android:padding="10dp"
+                    android:text="Total"
+                    android:textAlignment="center"
+                    android:textColor="#000"
+                    android:textStyle="bold" />-->
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/tv_order_date"
+            <android.support.v4.widget.SwipeRefreshLayout
+                android:id="@+id/srl_order_details"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="10dp"
-                android:text='@{"Order Date: " + orderDetails.orderDate}'
-                android:textSize="17sp" />
+                android:layout_height="wrap_content">
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:layout_marginBottom="10dp"
-                android:background="#ddd" />
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/rv_order_details"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+            </android.support.v4.widget.SwipeRefreshLayout>
         </LinearLayout>
 
-
-        <LinearLayout
-            android:id="@+id/linearLayout3"
+        <!--<Button
+            android:id="@+id/btn_deliver"
+            style="@android:style/Widget.Button.Small"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/linearLayout2"
-            android:background="#ddd"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin=".5dp"
-                android:layout_weight="1"
-                android:background="#fff"
-                android:padding="10dp"
-                android:text="Items"
-                android:textAlignment="center"
-                android:textColor="#000"
-                android:textStyle="bold" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin=".5dp"
-                android:layout_weight="1"
-                android:background="#fff"
-                android:padding="10dp"
-                android:text="Price"
-                android:textAlignment="center"
-                android:textColor="#000"
-                android:textStyle="bold" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin=".5dp"
-                android:layout_weight="1"
-                android:background="#fff"
-                android:padding="10dp"
-                android:text="Qty."
-                android:textAlignment="center"
-                android:textColor="#000"
-                android:textStyle="bold" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin=".5dp"
-                android:layout_weight="1"
-                android:background="#fff"
-                android:padding="10dp"
-                android:text="Disc."
-                android:textAlignment="center"
-                android:textColor="#000"
-                android:textStyle="bold" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin=".5dp"
-                android:layout_weight="1"
-                android:background="#fff"
-                android:padding="10dp"
-                android:text="Total"
-                android:textAlignment="center"
-                android:textColor="#000"
-                android:textStyle="bold" />
-        </LinearLayout>
-
-        <android.support.v4.widget.SwipeRefreshLayout
-            android:id="@+id/srl_order_details"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/linearLayout"
-            android:layout_below="@+id/linearLayout3">
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/rv_order_details"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-        </android.support.v4.widget.SwipeRefreshLayout>
-
-        <LinearLayout
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/button_shape"
+            android:text="Deliver Product"
+            android:textColor="#fff" />-->
+        <!--<LinearLayout
             android:id="@+id/linearLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -256,6 +295,6 @@
                     android:text=""
                     android:textAlignment="textStart" />
             </LinearLayout>
-        </LinearLayout>
+        </LinearLayout>-->
     </RelativeLayout>
 </layout>

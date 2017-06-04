@@ -7,13 +7,26 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.humaclab.selliscope.BR;
 import com.humaclab.selliscope.R;
+import com.humaclab.selliscope.SelliscopeApiEndpointInterface;
+import com.humaclab.selliscope.SelliscopeApplication;
+import com.humaclab.selliscope.Utils.SessionManager;
+import com.humaclab.selliscope.model.DeliverProductResponse;
 import com.humaclab.selliscope.model.OrderResponse;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by tonmoy on 5/18/17.
@@ -22,10 +35,16 @@ import java.util.List;
 public class OrderDetailsRecyclerAdapter extends RecyclerView.Adapter<OrderDetailsRecyclerAdapter.OrderDetailsViewHolder> {
     private Context context;
     private List<OrderResponse.Product> products;
+    private OrderResponse.OrderList orderList;
 
-    public OrderDetailsRecyclerAdapter(Context context, List<OrderResponse.Product> products) {
+    /*public OrderDetailsRecyclerAdapter(Context context, List<OrderResponse.Product> products) {
         this.context = context;
         this.products = products;
+    }*/
+    public OrderDetailsRecyclerAdapter(Context context, OrderResponse.OrderList orderList) {
+        this.context = context;
+        this.orderList = orderList;
+        this.products = this.orderList.productList;
     }
 
     @Override
@@ -35,10 +54,78 @@ public class OrderDetailsRecyclerAdapter extends RecyclerView.Adapter<OrderDetai
     }
 
     @Override
-    public void onBindViewHolder(OrderDetailsViewHolder holder, int position) {
-        OrderResponse.Product product = products.get(position);
+    public void onBindViewHolder(final OrderDetailsViewHolder holder, int position) {
+        final OrderResponse.Product product = products.get(position);
         holder.getBinding().setVariable(BR.product, product);
         holder.getBinding().executePendingBindings();
+
+        final int[] qty = {Integer.parseInt(holder.et_qty.getText().toString())};
+        holder.btn_increase.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (qty[0] < product.qty) {
+                    holder.et_qty.setText(String.valueOf(qty[0] + 1));
+                    qty[0] = qty[0] + 1;
+                } else {
+                    holder.et_qty.setText("1");
+                    qty[0] = 1;
+                }
+            }
+        });
+        holder.btn_decrease.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (qty[0] > 1) {
+                    holder.et_qty.setText(String.valueOf(qty[0] - 1));
+                    qty[0] = qty[0] - 1;
+                } else {
+                    holder.et_qty.setText("0");
+                    qty[0] = 0;
+                }
+            }
+        });
+        holder.btn_deliver.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DeliverProductResponse deliverProductResponse = new DeliverProductResponse();
+                DeliverProductResponse.Order order = new DeliverProductResponse.Order();
+                DeliverProductResponse.Order.Product product1 = new DeliverProductResponse.Order.Product();
+//                deliverProductResponse.order.products = new ArrayList<>();
+
+                order.products = new ArrayList<>();
+                product1.productId = product.productId;
+                product1.qty = Integer.parseInt(holder.et_qty.getText().toString());
+                order.products.add(product1);
+                order.orderId = orderList.orderId;
+                order.outletId = orderList.outletId;
+                deliverProductResponse.order = order;
+
+                //Deliver api request
+                SessionManager sessionManager = new SessionManager(context);
+                SelliscopeApiEndpointInterface apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(),
+                        sessionManager.getUserPassword(), false).create(SelliscopeApiEndpointInterface.class);
+                Call<DeliverProductResponse> call = apiService.deliverProduct(deliverProductResponse);
+                call.enqueue(new Callback<DeliverProductResponse>() {
+                    @Override
+                    public void onResponse(Call<DeliverProductResponse> call, Response<DeliverProductResponse> response) {
+                        if (response.code() == 200) {
+                            Toast.makeText(context, "Product delivered successfully", Toast.LENGTH_SHORT).show();
+                        } else if (response.code() == 401) {
+                            Toast.makeText(context, "Invalid Response from server.", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(context, "Server Error! Try Again Later!", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<DeliverProductResponse> call, Throwable t) {
+                        t.printStackTrace();
+                    }
+                });
+                System.out.println("Deliver: " + new Gson().toJson(deliverProductResponse));
+                //Deliver api request
+            }
+        });
     }
 
     @Override
@@ -48,10 +135,16 @@ public class OrderDetailsRecyclerAdapter extends RecyclerView.Adapter<OrderDetai
 
     public class OrderDetailsViewHolder extends RecyclerView.ViewHolder {
         private ViewDataBinding binding;
+        private Button btn_decrease, btn_increase, btn_deliver;
+        private EditText et_qty;
 
         public OrderDetailsViewHolder(View itemView) {
             super(itemView);
             binding = DataBindingUtil.bind(itemView);
+            btn_decrease = (Button) itemView.findViewById(R.id.btn_decrease);
+            btn_increase = (Button) itemView.findViewById(R.id.btn_increase);
+            btn_deliver = (Button) itemView.findViewById(R.id.btn_deliver);
+            et_qty = (EditText) itemView.findViewById(R.id.et_qty);
         }
 
         public ViewDataBinding getBinding() {

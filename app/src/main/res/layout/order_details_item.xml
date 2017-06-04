@@ -26,7 +26,7 @@
             android:text="@{product.name}"
             android:textAlignment="center" />
 
-        <TextView
+        <!--<TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
@@ -36,7 +36,7 @@
             android:gravity="center"
             android:padding="10dp"
             android:text="@{product.price}"
-            android:textAlignment="center" />
+            android:textAlignment="center" />-->
 
         <TextView
             android:layout_width="match_parent"
@@ -50,7 +50,7 @@
             android:text="@{Integer.toString(product.qty)}"
             android:textAlignment="center" />
 
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
@@ -58,11 +58,53 @@
             android:layout_weight="1"
             android:background="#fff"
             android:gravity="center"
-            android:padding="10dp"
-            android:text="@{product.discount}"
-            android:textAlignment="center" />
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/margin_10"
+            android:paddingRight="@dimen/margin_10">
 
-        <TextView
+            <Button
+                android:id="@+id/btn_decrease"
+                android:layout_width="80dp"
+                android:layout_height="30dp"
+                android:layout_weight="1"
+                android:background="#ddd"
+                android:text="-"
+                android:textColor="#000"
+                android:textSize="20sp" />
+
+            <EditText
+                android:id="@+id/et_qty"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="Qty."
+                android:imeOptions="actionDone"
+                android:inputType="number"
+                android:text="0"
+                android:textAlignment="center"
+                android:textColor="#000" />
+
+            <Button
+                android:id="@+id/btn_increase"
+                android:layout_width="80dp"
+                android:layout_height="30dp"
+                android:layout_weight="1"
+                android:background="#ddd"
+                android:text="+"
+                android:textColor="#000"
+                android:textSize="20sp" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btn_deliver"
+            style="@android:style/Widget.Button.Small"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/button_shape"
+            android:text="Deliver"
+            android:textColor="#fff" />
+        <!--<TextView
             android:id="@+id/tv_total"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -73,6 +115,6 @@
             android:gravity="center"
             android:padding="10dp"
             android:text="@{product.amount}"
-            android:textAlignment="center" />
+            android:textAlignment="center" />-->
     </LinearLayout>
 </layout>

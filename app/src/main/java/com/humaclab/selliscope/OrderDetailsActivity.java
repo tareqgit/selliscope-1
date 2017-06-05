@@ -10,7 +10,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.humaclab.selliscope.Utils.NetworkUtility;
-import com.humaclab.selliscope.adapters.OrderDetailsRecyclerAdapter;
+import com.humaclab.selliscope.adapters.DeliveryRecyclerAdapter;
 import com.humaclab.selliscope.databinding.ActivityOrderDetailsBinding;
 import com.humaclab.selliscope.model.OrderResponse;
 
@@ -54,7 +54,7 @@ public class OrderDetailsActivity extends AppCompatActivity {
     private void loadOrderDetails() {
         if (binding.srlOrderDetails.isRefreshing())
             binding.srlOrderDetails.setRefreshing(false);
-        binding.rvOrderDetails.setAdapter(new OrderDetailsRecyclerAdapter(OrderDetailsActivity.this, orderList));
+        binding.rvOrderDetails.setAdapter(new DeliveryRecyclerAdapter(OrderDetailsActivity.this, orderList));
     }
 
     @Override

@@ -3,13 +3,13 @@ package com.humaclab.selliscope.adapters;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -32,16 +32,16 @@ import retrofit2.Response;
  * Created by tonmoy on 5/18/17.
  */
 
-public class OrderDetailsRecyclerAdapter extends RecyclerView.Adapter<OrderDetailsRecyclerAdapter.OrderDetailsViewHolder> {
+public class DeliveryRecyclerAdapter extends RecyclerView.Adapter<DeliveryRecyclerAdapter.OrderDetailsViewHolder> {
     private Context context;
     private List<OrderResponse.Product> products;
     private OrderResponse.OrderList orderList;
 
-    /*public OrderDetailsRecyclerAdapter(Context context, List<OrderResponse.Product> products) {
+    /*public DeliveryRecyclerAdapter(Context context, List<OrderResponse.Product> products) {
         this.context = context;
         this.products = products;
     }*/
-    public OrderDetailsRecyclerAdapter(Context context, OrderResponse.OrderList orderList) {
+    public DeliveryRecyclerAdapter(Context context, OrderResponse.OrderList orderList) {
         this.context = context;
         this.orderList = orderList;
         this.products = this.orderList.productList;
@@ -108,8 +108,9 @@ public class OrderDetailsRecyclerAdapter extends RecyclerView.Adapter<OrderDetai
                 call.enqueue(new Callback<DeliverProductResponse>() {
                     @Override
                     public void onResponse(Call<DeliverProductResponse> call, Response<DeliverProductResponse> response) {
-                        if (response.code() == 200) {
+                        if (response.code() == 201) {
                             holder.btn_deliver.setEnabled(false);
+                            holder.btn_deliver.setBackgroundColor(Color.parseColor("#dddddd"));
                             Toast.makeText(context, "Product delivered successfully", Toast.LENGTH_SHORT).show();
                         } else if (response.code() == 401) {
                             Toast.makeText(context, "Invalid Response from server.", Toast.LENGTH_SHORT).show();

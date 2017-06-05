@@ -26,7 +26,7 @@ public class OrderDetailsActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("");
         TextView toolbarTitle = (TextView) findViewById(R.id.tv_toolbar_title);
-        toolbarTitle.setText("Order Details");
+        toolbarTitle.setText("Delivery Product");
         setSupportActionBar(toolbar);
 
         orderList = (OrderResponse.OrderList) getIntent().getSerializableExtra("orderList");

@@ -109,6 +109,7 @@ public class OrderDetailsRecyclerAdapter extends RecyclerView.Adapter<OrderDetai
                     @Override
                     public void onResponse(Call<DeliverProductResponse> call, Response<DeliverProductResponse> response) {
                         if (response.code() == 200) {
+                            holder.btn_deliver.setEnabled(false);
                             Toast.makeText(context, "Product delivered successfully", Toast.LENGTH_SHORT).show();
                         } else if (response.code() == 401) {
                             Toast.makeText(context, "Invalid Response from server.", Toast.LENGTH_SHORT).show();

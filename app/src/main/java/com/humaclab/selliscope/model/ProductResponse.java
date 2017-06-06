@@ -35,8 +35,15 @@ public class ProductResponse {
 
         @SerializedName("discount")
         public int discount;
-        @SerializedName("offer")
-        public String offer;
+        @SerializedName("promotion")
+        public Promotion promotion;
+
+        public static class Promotion {
+            @SerializedName("discount")
+            public String discount;
+            @SerializedName("qty")
+            public int qty;
+        }
     }
 
     public static class Category {

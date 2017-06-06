@@ -44,7 +44,7 @@ public class DashboardFragment extends Fragment {
         dashboadItems.add(new DashboardItem("Order", R.drawable.ic_order));
         dashboadItems.add(new DashboardItem("View Orders", R.drawable.ic_view_orders));
         dashboadItems.add(new DashboardItem("Payment", R.drawable.ic_payments));
-        dashboadItems.add(new DashboardItem("Due", R.drawable.ic_due));
+        dashboadItems.add(new DashboardItem("Inspection", R.drawable.ic_inspection));
         dashboadItems.add(new DashboardItem("Insights", R.drawable.ic_insights));
         gridLayoutManager = new GridLayoutManager(activity, itemNumber);
         recyclerView.setLayoutManager(gridLayoutManager);
@@ -90,8 +90,8 @@ public class DashboardFragment extends Fragment {
                                         break;
                                     }
                                     case 6: {
-                                        getActivity().startActivity(new Intent(getActivity(),
-                                                DueActivity.class));
+                                        Toast.makeText(getActivity(), "This feature is under development.",
+                                                Toast.LENGTH_SHORT).show();
                                         break;
                                     }
                                     default: {

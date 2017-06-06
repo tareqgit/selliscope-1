@@ -44,5 +44,14 @@ public class CallCardActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        binding.cvDueCollection.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(CallCardActivity.this, DueActivity.class);
+                intent.putExtra("outletName", outlet.outletName);
+                intent.putExtra("outletID", outlet.outletId);
+                startActivity(intent);
+            }
+        });
     }
 }

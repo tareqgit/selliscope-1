@@ -94,7 +94,11 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                binding.tvAmount.setText(String.valueOf(Integer.parseInt(s.toString()) * productPrice.get(selectedPosition)));
+                try {
+                    binding.tvAmount.setText(String.valueOf(Integer.parseInt(s.toString()) * productPrice.get(selectedPosition)));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
 
             @Override
@@ -328,8 +332,12 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
 
                 @Override
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    qty[0] = Integer.parseInt(s.toString());
-                    newOrder.tvAmount.setText(String.valueOf(Integer.parseInt(s.toString()) * productPrice.get(selectedPosition[0])));
+                    try {
+                        qty[0] = Integer.parseInt(s.toString());
+                        newOrder.tvAmount.setText(String.valueOf(Integer.parseInt(s.toString()) * productPrice.get(selectedPosition[0])));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
 
                 @Override

@@ -23,6 +23,8 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.gms.awareness.Awareness;
 import com.google.android.gms.awareness.snapshot.LocationResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -104,9 +106,17 @@ public class EditOutletActivity extends AppCompatActivity {
         toolbar.setTitle("Add Outlet");
         setSupportActionBar(toolbar);
         outletName = (EditText) findViewById(R.id.et_outlet_name);
+        outletName.setText(outlet.outletName);
+
         outletAddress = (EditText) findViewById(R.id.et_outlet_address);
+        outletAddress.setText(outlet.outletAddress);
+
         outletOwner = (EditText) findViewById(R.id.et_outlet_owner_name);
+        outletOwner.setText(outlet.ownerName);
+
         outletContactNumber = (EditText) findViewById(R.id.et_outlet_contact_number);
+        outletContactNumber.setText(outlet.phone);
+
         district = (Spinner) findViewById(R.id.sp_district);
         thana = (Spinner) findViewById(R.id.sp_thana);
         outletType = (Spinner) findViewById(R.id.sp_outlet_type);
@@ -116,6 +126,13 @@ public class EditOutletActivity extends AppCompatActivity {
         getOutletTypes(email, password);
 
         iv_outlet = (ImageView) findViewById(R.id.iv_outlet);
+        Glide.with(getApplicationContext()).load(outlet.outletImgUrl)
+                .thumbnail(0.5f)
+                .crossFade()
+                .placeholder(R.drawable.ic_outlet_bnw)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(iv_outlet);
+
         iv_outlet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -223,16 +240,16 @@ public class EditOutletActivity extends AppCompatActivity {
         });
     }
 
-    private void addOutlet(String email, String password, int outletTypeId, String outletName,
-                           String ownerName, String address, int thanaId, String phone,
-                           double latitude, double longitude) {
+    private void editOutlet(String email, String password, int outletTypeId, String outletName,
+                            String ownerName, String address, int thanaId, String phone,
+                            double latitude, double longitude) {
         apiService = SelliscopeApplication.getRetrofitInstance(email, password, false)
                 .create(SelliscopeApiEndpointInterface.class);
        /* List<CreateOutlet.Outlet> outlet = new ArrayList<>();
         outlet.add(new CreateOutlet.Outlet(outletTypeId, outletName,
                 ownerName, address, thanaId, phone, latitude, longitude, outletImage));*/
 
-        Call<ResponseBody> call = apiService.createOutlet(new CreateOutlet(outletTypeId, outletName,
+        Call<ResponseBody> call = apiService.updateOutlet(outlet.outletId, new CreateOutlet(outletTypeId, outletName,
                 ownerName, address, thanaId, phone, latitude, longitude, outletImage));
         call.enqueue(new Callback<ResponseBody>() {
             @Override

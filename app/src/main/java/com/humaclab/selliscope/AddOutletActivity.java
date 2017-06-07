@@ -233,6 +233,8 @@ public class AddOutletActivity extends AppCompatActivity {
                     try {
                         CreateOutlet createOutletResult = gson.fromJson(response.body().string(), CreateOutlet.class);
                         Toast.makeText(AddOutletActivity.this, createOutletResult.result, Toast.LENGTH_SHORT).show();
+                        submit.setEnabled(false);
+                        finish();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }

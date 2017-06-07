@@ -1,5 +1,6 @@
 package com.humaclab.selliscope;
 
+import android.app.Dialog;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -17,6 +18,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -50,6 +52,8 @@ public class ProductActivity extends AppCompatActivity {
     private List<Integer> categoryID = new ArrayList<>(), brandID = new ArrayList<>();
     private DatabaseHandler databaseHandler;
     private Paint paint = new Paint();
+
+    private List<ProductResponse.ProductResult> productResult = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -142,6 +146,7 @@ public class ProductActivity extends AppCompatActivity {
                             srl_product.setRefreshing(false);
 
                         List<ProductResponse.ProductResult> products = response.body().result.productResults;
+                        productResult = products;
                         //for removing previous data
                         databaseHandler.removeProductCategoryBrand();
                         for (ProductResponse.ProductResult result : products) {
@@ -297,7 +302,7 @@ public class ProductActivity extends AppCompatActivity {
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
                 int position = viewHolder.getAdapterPosition();
-
+                showProductPromotion(position);
             }
 
             @Override
@@ -329,5 +334,27 @@ public class ProductActivity extends AppCompatActivity {
         };
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
         itemTouchHelper.attachToRecyclerView(rv_product);
+    }
+
+    private void showProductPromotion(int position) {
+        final Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.product_promotion_dialog);
+        dialog.setTitle("Product Promotion");
+        TextView tv_product_description = (TextView) dialog.findViewById(R.id.tv_product_promotion);
+        try {
+            tv_product_description.setText(productResult.get(position).promotion.discount);
+        } catch (Exception e) {
+            e.printStackTrace();
+            tv_product_description.setText("This product has no promotion offer yet.");
+        }
+        Button btn_ok = (Button) dialog.findViewById(R.id.btn_ok);
+        btn_ok.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
     }
 }

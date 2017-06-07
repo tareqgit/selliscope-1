@@ -145,7 +145,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/tv_outlet_type" />
 
             <Button
-                android:id="@+id/btn_add_outlet"
+                android:id="@+id/btn_update_outlet"
                 style="@style/Widget.AppCompat.Button.Colored"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -155,7 +155,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="32dp"
                 android:elevation="5dp"
-                android:text="Done"
+                android:text="Update"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
@@ -178,7 +178,7 @@
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/btn_add_outlet"
+                app:layout_constraintTop_toBottomOf="@+id/btn_update_outlet"
                 app:layout_constraintVertical_bias="0.0" />
 
             <TextView

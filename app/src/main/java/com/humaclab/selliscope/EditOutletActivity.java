@@ -120,7 +120,7 @@ public class EditOutletActivity extends AppCompatActivity {
         district = (Spinner) findViewById(R.id.sp_district);
         thana = (Spinner) findViewById(R.id.sp_thana);
         outletType = (Spinner) findViewById(R.id.sp_outlet_type);
-        submit = (Button) findViewById(R.id.btn_add_outlet);
+        submit = (Button) findViewById(R.id.btn_update_outlet);
         cancel = (Button) findViewById(R.id.btn_cancel);
         getDistricts(email, password);
         getOutletTypes(email, password);
@@ -227,27 +227,22 @@ public class EditOutletActivity extends AppCompatActivity {
                         && outletTypeId != -1 && thanaId != -1) {
                     Timber.d("addOutletRun");
                     if (NetworkUtility.isNetworkAvailable(EditOutletActivity.this)) {
-                        /*addOutlet(email, password, outletTypeId, outletName.getText().toString().trim(),
+                        updatedOutlet(email, password, outletTypeId, outletName.getText().toString().trim(),
                                 outletOwner.getText().toString().trim(),
                                 outletAddress.getText().toString().trim(), thanaId,
-                                outletContactNumber.getText().toString().trim(), latitude, longitude);*/
+                                outletContactNumber.getText().toString().trim(), latitude, longitude);
                     } else
                         Toast.makeText(EditOutletActivity.this, "Connect to Wifi or Mobile Data",
                                 Toast.LENGTH_SHORT).show();
                 }
-
             }
         });
     }
 
-    private void editOutlet(String email, String password, int outletTypeId, String outletName,
-                            String ownerName, String address, int thanaId, String phone,
-                            double latitude, double longitude) {
-        apiService = SelliscopeApplication.getRetrofitInstance(email, password, false)
-                .create(SelliscopeApiEndpointInterface.class);
-       /* List<CreateOutlet.Outlet> outlet = new ArrayList<>();
-        outlet.add(new CreateOutlet.Outlet(outletTypeId, outletName,
-                ownerName, address, thanaId, phone, latitude, longitude, outletImage));*/
+    private void updatedOutlet(String email, String password, int outletTypeId, String outletName,
+                               String ownerName, String address, int thanaId, String phone,
+                               double latitude, double longitude) {
+        apiService = SelliscopeApplication.getRetrofitInstance(email, password, false).create(SelliscopeApiEndpointInterface.class);
 
         Call<ResponseBody> call = apiService.updateOutlet(outlet.outletId, new CreateOutlet(outletTypeId, outletName,
                 ownerName, address, thanaId, phone, latitude, longitude, outletImage));

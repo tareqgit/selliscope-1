@@ -91,12 +91,15 @@ public class OutletActivity extends AppCompatActivity {
                     try {
                         Outlets.Successful getOutletListSuccessful = gson.fromJson(response.body()
                                 .string(), Outlets.Successful.class);
-                        Timber.d(getOutletListSuccessful.outletsResult.outlets.get(0).ownerName);
-                        if (swipeRefreshLayout.isRefreshing())
-                            swipeRefreshLayout.setRefreshing(false);
-                        outletRecyclerViewAdapter = new OutletRecyclerViewAdapter(
-                                OutletActivity.this, getOutletListSuccessful.outletsResult);
-                        recyclerView.setAdapter(outletRecyclerViewAdapter);
+                        if (!getOutletListSuccessful.outletsResult.outlets.isEmpty()) {
+                            if (swipeRefreshLayout.isRefreshing())
+                                swipeRefreshLayout.setRefreshing(false);
+                            outletRecyclerViewAdapter = new OutletRecyclerViewAdapter(
+                                    OutletActivity.this, getOutletListSuccessful.outletsResult);
+                            recyclerView.setAdapter(outletRecyclerViewAdapter);
+                        } else {
+                            Toast.makeText(getApplicationContext(), "You don't have any outlet in your list.", Toast.LENGTH_LONG).show();
+                        }
                     } catch (IOException e) {
                         e.printStackTrace();
                     }

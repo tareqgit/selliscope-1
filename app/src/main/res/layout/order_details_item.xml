@@ -98,9 +98,9 @@
         <Button
             android:id="@+id/btn_deliver"
             style="@android:style/Widget.Button.Small"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_width="80dp"
+            android:layout_height="30dp"
+            android:layout_margin="10dp"
             android:background="@drawable/button_shape"
             android:text="Deliver"
             android:textColor="#fff" />

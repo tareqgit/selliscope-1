@@ -5,15 +5,15 @@
     <data>
 
         <variable
-            name="orderDetails"
-            type="com.humaclab.selliscope.model.OrderResponse.OrderList" />
+            name="deliveryDetails"
+            type="com.humaclab.selliscope.model.DeliveryResponse.DeliveryList" />
     </data>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        tools:context="com.humaclab.selliscope.OrderDetailsActivity">
+        tools:context="com.humaclab.selliscope.DeliveryDetailsActivity">
 
         <include
             android:id="@+id/include"
@@ -42,7 +42,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:padding="5dp"
-                        android:text='@{orderDetails.outletName}'
+                        android:text='@{deliveryDetails.outletName}'
                         android:textColor="#000"
                         android:textSize="18sp" />
 
@@ -53,7 +53,7 @@
                         android:layout_gravity="end"
                         android:layout_weight="1"
                         android:padding="5dp"
-                        android:text='@{"Order id: " + orderDetails.orderId}'
+                        android:text='@{"Order id: " + deliveryDetails.deliveryId}'
                         android:textAlignment="textEnd"
                         android:textColor="#000"
                         android:textSize="18sp" />
@@ -64,7 +64,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="5dp"
-                    android:text='@{"Order Date: " + orderDetails.orderDate}'
+                    android:text='@{"Order Date: " + deliveryDetails.deliveryDate}'
                     android:textSize="17sp" />
 
                 <View
@@ -136,6 +136,18 @@
                     android:layout_weight="1"
                     android:background="#fff"
                     android:padding="10dp"
+                    android:text="Rm.Qty."
+                    android:textAlignment="center"
+                    android:textColor="#000"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin=".5dp"
+                    android:layout_weight="1"
+                    android:background="#fff"
+                    android:padding="10dp"
                     android:text="Deliver"
                     android:textAlignment="center"
                     android:textColor="#000"
@@ -167,12 +179,12 @@
             </LinearLayout>
 
             <android.support.v4.widget.SwipeRefreshLayout
-                android:id="@+id/srl_order_details"
+                android:id="@+id/srl_delivery_details"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
                 <android.support.v7.widget.RecyclerView
-                    android:id="@+id/rv_order_details"
+                    android:id="@+id/rv_delivery_details"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" />
             </android.support.v4.widget.SwipeRefreshLayout>
@@ -263,7 +275,7 @@
                     android:paddingRight="10dp"
                     android:paddingStart="5dp"
                     android:paddingTop="10dp"
-                    android:text='@{orderDetails.amount}'
+                    android:text='@{deliveryDetails.amount}'
                     android:textAlignment="textStart" />
 
                 <TextView
@@ -277,7 +289,7 @@
                     android:paddingRight="10dp"
                     android:paddingStart="5dp"
                     android:paddingTop="10dp"
-                    android:text='@{orderDetails.discount}'
+                    android:text='@{deliveryDetails.discount}'
                     android:textAlignment="textStart" />
 
                 <TextView

@@ -11,36 +11,36 @@ import android.widget.Toast;
 
 import com.humaclab.selliscope.Utils.NetworkUtility;
 import com.humaclab.selliscope.adapters.DeliveryRecyclerAdapter;
-import com.humaclab.selliscope.databinding.ActivityOrderDetailsBinding;
-import com.humaclab.selliscope.model.OrderResponse;
+import com.humaclab.selliscope.databinding.ActivityDeliveryDetailsBinding;
+import com.humaclab.selliscope.model.DeliveryResponse;
 
-public class OrderDetailsActivity extends AppCompatActivity {
-    private ActivityOrderDetailsBinding binding;
+public class DeliveryDetailsActivity extends AppCompatActivity {
+    private ActivityDeliveryDetailsBinding binding;
 
-    private OrderResponse.OrderList orderList;
+    private DeliveryResponse.DeliveryList deliveryList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_order_details);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_delivery_details);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("");
         TextView toolbarTitle = (TextView) findViewById(R.id.tv_toolbar_title);
         toolbarTitle.setText("Delivery Product");
         setSupportActionBar(toolbar);
 
-        orderList = (OrderResponse.OrderList) getIntent().getSerializableExtra("orderList");
+        deliveryList = (DeliveryResponse.DeliveryList) getIntent().getSerializableExtra("deliveryList");
 
-        binding.rvOrderDetails.setLayoutManager(new LinearLayoutManager(this));
-        binding.setVariable(BR.orderDetails, orderList);
+        binding.rvDeliveryDetails.setLayoutManager(new LinearLayoutManager(this));
+        binding.setVariable(BR.deliveryDetails, deliveryList);
 
-        binding.srlOrderDetails.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        binding.srlDeliveryDetails.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if (NetworkUtility.isNetworkAvailable(OrderDetailsActivity.this)) {
+                if (NetworkUtility.isNetworkAvailable(DeliveryDetailsActivity.this)) {
                     loadOrderDetails();
                 } else {
-                    Toast.makeText(OrderDetailsActivity.this, "Connect to Wifi or Mobile Data", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(DeliveryDetailsActivity.this, "Connect to Wifi or Mobile Data", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -52,9 +52,9 @@ public class OrderDetailsActivity extends AppCompatActivity {
     }
 
     private void loadOrderDetails() {
-        if (binding.srlOrderDetails.isRefreshing())
-            binding.srlOrderDetails.setRefreshing(false);
-        binding.rvOrderDetails.setAdapter(new DeliveryRecyclerAdapter(OrderDetailsActivity.this, orderList));
+        if (binding.srlDeliveryDetails.isRefreshing())
+            binding.srlDeliveryDetails.setRefreshing(false);
+        binding.rvDeliveryDetails.setAdapter(new DeliveryRecyclerAdapter(DeliveryDetailsActivity.this, deliveryList));
     }
 
     @Override

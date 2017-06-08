@@ -4,17 +4,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.humaclab.selliscope.OrderListActivity">
+    tools:context="com.humaclab.selliscope.DeliveryListActivity">
 
     <include layout="@layout/toolbar_layout" />
 
     <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/srl_order"
+        android:id="@+id/srl_delivery"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/rv_order_list"
+            android:id="@+id/rv_delivery_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
     </android.support.v4.widget.SwipeRefreshLayout>

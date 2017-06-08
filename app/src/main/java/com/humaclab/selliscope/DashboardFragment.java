@@ -42,7 +42,7 @@ public class DashboardFragment extends Fragment {
         dashboadItems.add(new DashboardItem("Outlet", R.drawable.ic_outlet));
         dashboadItems.add(new DashboardItem("Product", R.drawable.ic_products));
         dashboadItems.add(new DashboardItem("Order", R.drawable.ic_order));
-        dashboadItems.add(new DashboardItem("View Orders", R.drawable.ic_view_orders));
+        dashboadItems.add(new DashboardItem("Deliveries", R.drawable.ic_view_orders));
         dashboadItems.add(new DashboardItem("Payment", R.drawable.ic_payments));
         dashboadItems.add(new DashboardItem("Inspection", R.drawable.ic_inspection));
         dashboadItems.add(new DashboardItem("Insights", R.drawable.ic_insights));
@@ -81,7 +81,7 @@ public class DashboardFragment extends Fragment {
                                     }
                                     case 4: {
                                         getActivity().startActivity(new Intent(getActivity(),
-                                                OrderListActivity.class));
+                                                DeliveryListActivity.class));
                                         break;
                                     }
                                     case 5: {

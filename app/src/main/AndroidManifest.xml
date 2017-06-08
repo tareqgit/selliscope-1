@@ -49,9 +49,9 @@
         <activity
             android:name=".OrderActivity"
             android:screenOrientation="landscape" />
-        <activity android:name=".OrderListActivity" />
+        <activity android:name=".DeliveryListActivity" />
         <activity
-            android:name=".OrderDetailsActivity"
+            android:name=".DeliveryDetailsActivity"
             android:screenOrientation="landscape" />
         <activity android:name=".PaymentActivity" />
         <activity android:name=".DueActivity" />

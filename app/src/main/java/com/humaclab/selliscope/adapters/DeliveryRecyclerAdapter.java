@@ -19,7 +19,7 @@ import com.humaclab.selliscope.SelliscopeApiEndpointInterface;
 import com.humaclab.selliscope.SelliscopeApplication;
 import com.humaclab.selliscope.Utils.SessionManager;
 import com.humaclab.selliscope.model.DeliverProductResponse;
-import com.humaclab.selliscope.model.OrderResponse;
+import com.humaclab.selliscope.model.DeliveryResponse;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,30 +32,26 @@ import retrofit2.Response;
  * Created by tonmoy on 5/18/17.
  */
 
-public class DeliveryRecyclerAdapter extends RecyclerView.Adapter<DeliveryRecyclerAdapter.OrderDetailsViewHolder> {
+public class DeliveryRecyclerAdapter extends RecyclerView.Adapter<DeliveryRecyclerAdapter.DeliveryDetailsViewHolder> {
     private Context context;
-    private List<OrderResponse.Product> products;
-    private OrderResponse.OrderList orderList;
+    private List<DeliveryResponse.Product> products;
+    private DeliveryResponse.DeliveryList deliveryList;
 
-    /*public DeliveryRecyclerAdapter(Context context, List<OrderResponse.Product> products) {
+    public DeliveryRecyclerAdapter(Context context, DeliveryResponse.DeliveryList deliveryList) {
         this.context = context;
-        this.products = products;
-    }*/
-    public DeliveryRecyclerAdapter(Context context, OrderResponse.OrderList orderList) {
-        this.context = context;
-        this.orderList = orderList;
-        this.products = this.orderList.productList;
+        this.deliveryList = deliveryList;
+        this.products = this.deliveryList.productList;
     }
 
     @Override
-    public OrderDetailsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.order_details_item, parent, false);
-        return new OrderDetailsViewHolder(view);
+    public DeliveryDetailsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.delivery_details_item, parent, false);
+        return new DeliveryDetailsViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(final OrderDetailsViewHolder holder, int position) {
-        final OrderResponse.Product product = products.get(position);
+    public void onBindViewHolder(final DeliveryDetailsViewHolder holder, int position) {
+        final DeliveryResponse.Product product = products.get(position);
         holder.getBinding().setVariable(BR.product, product);
         holder.getBinding().executePendingBindings();
 
@@ -96,8 +92,8 @@ public class DeliveryRecyclerAdapter extends RecyclerView.Adapter<DeliveryRecycl
                 product1.productId = product.productId;
                 product1.qty = Integer.parseInt(holder.et_qty.getText().toString());
                 order.products.add(product1);
-                order.orderId = orderList.orderId;
-                order.outletId = orderList.outletId;
+                order.orderId = deliveryList.deliveryId;
+                order.outletId = deliveryList.outletId;
                 deliverProductResponse.order = order;
 
                 //Deliver api request
@@ -135,12 +131,12 @@ public class DeliveryRecyclerAdapter extends RecyclerView.Adapter<DeliveryRecycl
         return products.size();
     }
 
-    public class OrderDetailsViewHolder extends RecyclerView.ViewHolder {
+    public class DeliveryDetailsViewHolder extends RecyclerView.ViewHolder {
         private ViewDataBinding binding;
         private Button btn_decrease, btn_increase, btn_deliver;
         private EditText et_qty;
 
-        public OrderDetailsViewHolder(View itemView) {
+        public DeliveryDetailsViewHolder(View itemView) {
             super(itemView);
             binding = DataBindingUtil.bind(itemView);
             btn_decrease = (Button) itemView.findViewById(R.id.btn_decrease);

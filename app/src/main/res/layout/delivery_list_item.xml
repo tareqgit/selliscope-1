@@ -5,8 +5,8 @@
     <data>
 
         <variable
-            name="orderDetails"
-            type="com.humaclab.selliscope.model.OrderResponse.OrderList" />
+            name="deliveryDetails"
+            type="com.humaclab.selliscope.model.DeliveryResponse.DeliveryList" />
     </data>
 
     <android.support.v7.widget.CardView
@@ -38,7 +38,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:padding="10dp"
-                        android:text='@{orderDetails.outletName}'
+                        android:text='@{deliveryDetails.outletName}'
                         android:textColor="#000"
                         android:textSize="18sp" />
 
@@ -49,7 +49,7 @@
                         android:layout_gravity="end"
                         android:layout_weight="1"
                         android:padding="10dp"
-                        android:text='@{"Order id: " + orderDetails.orderId}'
+                        android:text='@{"Order id: " + deliveryDetails.deliveryId}'
                         android:textAlignment="textEnd"
                         android:textColor="#000"
                         android:textSize="18sp" />
@@ -60,7 +60,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="10dp"
-                    android:text='@{"Order Date: " + orderDetails.orderDate}'
+                    android:text='@{"Order Date: " + deliveryDetails.deliveryDate}'
                     android:textSize="17sp" />
             </LinearLayout>
 

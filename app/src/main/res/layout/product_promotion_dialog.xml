@@ -4,7 +4,7 @@
     android:layout_height="match_parent">
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
@@ -23,7 +23,6 @@
             android:id="@+id/tv_product_promotion"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:padding="10dp"
             android:text="Promotion Description"
             android:textAlignment="center"

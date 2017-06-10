@@ -1,5 +1,6 @@
 package com.humaclab.selliscope.adapters;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
@@ -56,6 +57,46 @@ public class ProductRecyclerViewAdapter extends RecyclerView.Adapter<ProductRecy
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(holder.iv_product);
 
+        holder.iv_product_promo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final Dialog dialog = new Dialog(v.getContext());
+                dialog.setCancelable(false);
+                dialog.setContentView(R.layout.product_promotion_dialog);
+                dialog.setTitle("Product Promotion");
+                TextView tv_product_description = (TextView) dialog.findViewById(R.id.tv_product_promotion);
+                TextView tv_product_usp = (TextView) dialog.findViewById(R.id.tv_product_usp);
+                TextView tv_product_tips = (TextView) dialog.findViewById(R.id.tv_product_tips);
+                try {
+                    tv_product_description.setText(productResult.promotion.discount);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    tv_product_description.setText("This product has no Promotion offer yet.");
+                }
+                try {
+                    tv_product_usp.setText(productResult.pitch.usp);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    tv_product_usp.setText("This product has no USP yet.");
+                }
+                try {
+                    tv_product_tips.setText(productResult.pitch.tips);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    tv_product_tips.setText("This product has no Tips yet.");
+                }
+                Button btn_ok = (Button) dialog.findViewById(R.id.btn_ok);
+                btn_ok.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });
+
+                dialog.show();
+            }
+        });
+
         try {
             holder.btn_order.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -79,12 +120,13 @@ public class ProductRecyclerViewAdapter extends RecyclerView.Adapter<ProductRecy
 
     public class ProductsViewHolder extends RecyclerView.ViewHolder {
         TextView tv_product_name, tv_category, tv_brand, tv_price;
-        ImageView iv_product;
+        ImageView iv_product, iv_product_promo;
         Button btn_order;
 
         public ProductsViewHolder(View itemView) {
             super(itemView);
             iv_product = (ImageView) itemView.findViewById(R.id.iv_product);
+            iv_product_promo = (ImageView) itemView.findViewById(R.id.iv_product_promo);
             tv_product_name = (TextView) itemView.findViewById(R.id.tv_product_name);
             tv_category = (TextView) itemView.findViewById(R.id.tv_category);
             tv_brand = (TextView) itemView.findViewById(R.id.tv_brand);

@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -331,14 +332,29 @@ public class ProductActivity extends AppCompatActivity {
 
     private void showProductPromotion(int position) {
         final Dialog dialog = new Dialog(this);
+        dialog.setCancelable(false);
         dialog.setContentView(R.layout.product_promotion_dialog);
         dialog.setTitle("Product Promotion");
         TextView tv_product_description = (TextView) dialog.findViewById(R.id.tv_product_promotion);
+        TextView tv_product_usp = (TextView) dialog.findViewById(R.id.tv_product_usp);
+        TextView tv_product_tips = (TextView) dialog.findViewById(R.id.tv_product_tips);
         try {
             tv_product_description.setText(productResult.get(position).promotion.discount);
         } catch (Exception e) {
             e.printStackTrace();
-            tv_product_description.setText("This product has no promotion offer yet.");
+            tv_product_description.setText("This product has no Promotion offer yet.");
+        }
+        try {
+            tv_product_usp.setText(productResult.get(position).pitch.usp);
+        } catch (Exception e) {
+            e.printStackTrace();
+            tv_product_usp.setText("This product has no USP yet.");
+        }
+        try {
+            tv_product_tips.setText(productResult.get(position).pitch.tips);
+        } catch (Exception e) {
+            e.printStackTrace();
+            tv_product_tips.setText("This product has no Tips yet.");
         }
         Button btn_ok = (Button) dialog.findViewById(R.id.btn_ok);
         btn_ok.setOnClickListener(new View.OnClickListener() {

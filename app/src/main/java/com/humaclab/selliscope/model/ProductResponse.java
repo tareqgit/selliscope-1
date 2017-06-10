@@ -37,12 +37,21 @@ public class ProductResponse {
         public int discount;
         @SerializedName("promotion")
         public Promotion promotion;
+        @SerializedName("pitch")
+        public Pitch pitch;
 
         public static class Promotion {
             @SerializedName("discount")
             public String discount;
             @SerializedName("qty")
             public int qty;
+        }
+
+        public static class Pitch {
+            @SerializedName("usp")
+            public String usp;
+            @SerializedName("tips")
+            public String tips;
         }
     }
 

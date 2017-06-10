@@ -122,7 +122,7 @@ public class ProductActivity extends AppCompatActivity {
         //Populating spinner
 
         //init swipe
-        initSwipe();
+//        initSwipe();
     }
 
     private void getProducts() {
@@ -296,7 +296,7 @@ public class ProductActivity extends AppCompatActivity {
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
                 int position = viewHolder.getAdapterPosition();
-                showProductPromotion(position);
+                showProductPromotionAndPitch(position);
             }
 
             @Override
@@ -330,7 +330,7 @@ public class ProductActivity extends AppCompatActivity {
         itemTouchHelper.attachToRecyclerView(rv_product);
     }
 
-    private void showProductPromotion(int position) {
+    private void showProductPromotionAndPitch(int position) {
         final Dialog dialog = new Dialog(this);
         dialog.setCancelable(false);
         dialog.setContentView(R.layout.product_promotion_dialog);

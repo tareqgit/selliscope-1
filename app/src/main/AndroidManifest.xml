@@ -57,6 +57,7 @@
         <activity android:name=".DueActivity" />
         <activity android:name=".EditOutletActivity" />
         <activity android:name=".CallCardActivity" />
+        <activity android:name=".InspectionActivity" />
     </application>
 
 </manifest>

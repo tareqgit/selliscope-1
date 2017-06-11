@@ -14,7 +14,7 @@ import com.humaclab.selliscope.Utils.DatabaseHandler;
 import com.humaclab.selliscope.Utils.NetworkUtility;
 import com.humaclab.selliscope.Utils.SessionManager;
 import com.humaclab.selliscope.adapters.DueRecyclerViewAdapter;
-import com.humaclab.selliscope.model.OrderResponse;
+import com.humaclab.selliscope.model.Payment;
 
 import java.util.List;
 
@@ -36,7 +36,7 @@ public class DueActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("");
         TextView toolbarTitle = (TextView) findViewById(R.id.tv_toolbar_title);
-        toolbarTitle.setText("Payment");
+        toolbarTitle.setText("Dues");
         setSupportActionBar(toolbar);
 
         databaseHandler = new DatabaseHandler(this);
@@ -65,17 +65,17 @@ public class DueActivity extends AppCompatActivity {
         SessionManager sessionManager = new SessionManager(DueActivity.this);
         apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(),
                 sessionManager.getUserPassword(), false).create(SelliscopeApiEndpointInterface.class);
-        Call<OrderResponse> call = apiService.getOrders();
-        call.enqueue(new Callback<OrderResponse>() {
+        Call<Payment> call = apiService.getPayment();
+        call.enqueue(new Callback<Payment>() {
             @Override
-            public void onResponse(Call<OrderResponse> call, Response<OrderResponse> response) {
+            public void onResponse(Call<Payment> call, Response<Payment> response) {
                 if (response.code() == 200) {
                     try {
                         if (srl_due.isRefreshing())
                             srl_due.setRefreshing(false);
 
                         System.out.println("Response " + new Gson().toJson(response.body()));
-                        List<OrderResponse.OrderList> orders = response.body().result.orderList;
+                        List<Payment.OrderList> orders = response.body().result.orderList;
 
                         rv_due.setAdapter(new DueRecyclerViewAdapter(getApplication(), orders));
                     } catch (Exception e) {
@@ -91,7 +91,7 @@ public class DueActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<OrderResponse> call, Throwable t) {
+            public void onFailure(Call<Payment> call, Throwable t) {
                 t.printStackTrace();
             }
         });

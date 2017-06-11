@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 
 import com.humaclab.selliscope.BR;
 import com.humaclab.selliscope.R;
-import com.humaclab.selliscope.model.OrderResponse;
+import com.humaclab.selliscope.model.Payment;
 
 import java.util.List;
 
@@ -20,9 +20,9 @@ import java.util.List;
 
 public class DueRecyclerViewAdapter extends RecyclerView.Adapter<DueRecyclerViewAdapter.DueViewHolder> {
     private Context context;
-    private List<OrderResponse.OrderList> orderLists;
+    private List<Payment.OrderList> orderLists;
 
-    public DueRecyclerViewAdapter(Context context, List<OrderResponse.OrderList> orderLists) {
+    public DueRecyclerViewAdapter(Context context, List<Payment.OrderList> orderLists) {
         this.context = context;
         this.orderLists = orderLists;
     }
@@ -35,8 +35,8 @@ public class DueRecyclerViewAdapter extends RecyclerView.Adapter<DueRecyclerView
 
     @Override
     public void onBindViewHolder(DueViewHolder holder, int position) {
-        OrderResponse.OrderList orderList = orderLists.get(position);
-        holder.getBinding().setVariable(BR.orders, orderList);
+        Payment.OrderList orderList = orderLists.get(position);
+        holder.getBinding().setVariable(BR.payments, orderList);
         holder.getBinding().executePendingBindings();
     }
 

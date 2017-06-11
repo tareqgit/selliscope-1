@@ -93,6 +93,10 @@ public class DashboardFragment extends Fragment {
                                         Toast.makeText(getActivity(), "This feature is under development.",
                                                 Toast.LENGTH_SHORT).show();
                                         break;
+                                    }case 7: {
+                                        Toast.makeText(getActivity(), "This feature is under development.",
+                                                Toast.LENGTH_SHORT).show();
+                                        break;
                                     }
                                     default: {
                                         Toast.makeText(getActivity(), "Please upgrade your package" +

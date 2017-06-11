@@ -20,10 +20,9 @@ import com.humaclab.selliscope.R;
 import com.humaclab.selliscope.SelliscopeApiEndpointInterface;
 import com.humaclab.selliscope.SelliscopeApplication;
 import com.humaclab.selliscope.Utils.SessionManager;
-import com.humaclab.selliscope.model.OrderResponse;
+import com.humaclab.selliscope.model.Payment;
 import com.humaclab.selliscope.model.PaymentResponse;
 
-import java.io.IOException;
 import java.util.List;
 
 import retrofit2.Call;
@@ -36,11 +35,11 @@ import retrofit2.Response;
 
 public class PaymentRecyclerViewAdapter extends RecyclerView.Adapter<PaymentRecyclerViewAdapter.PaymentViewHolder> {
     private Context context;
-    private List<OrderResponse.OrderList> orderLists;
+    private List<Payment.OrderList> orderLists;
     private SelliscopeApiEndpointInterface apiService;
     private ProgressDialog pd;
 
-    public PaymentRecyclerViewAdapter(Context context, List<OrderResponse.OrderList> orderLists) {
+    public PaymentRecyclerViewAdapter(Context context, List<Payment.OrderList> orderLists) {
         this.context = context;
         this.orderLists = orderLists;
     }
@@ -56,8 +55,8 @@ public class PaymentRecyclerViewAdapter extends RecyclerView.Adapter<PaymentRecy
 
     @Override
     public void onBindViewHolder(final PaymentViewHolder holder, final int position) {
-        final OrderResponse.OrderList orderList = orderLists.get(position);
-        holder.getBinding().setVariable(BR.orders, orderList);
+        final Payment.OrderList orderList = orderLists.get(position);
+        holder.getBinding().setVariable(BR.payments, orderList);
         holder.getBinding().executePendingBindings();
         holder.btn_pay.setOnClickListener(new View.OnClickListener() {
             @Override

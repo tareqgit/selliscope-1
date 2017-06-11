@@ -6,8 +6,8 @@
     <data>
 
         <variable
-            name="orders"
-            type="com.humaclab.selliscope.model.OrderResponse.OrderList" />
+            name="payments"
+            type="com.humaclab.selliscope.model.Payment.OrderList" />
     </data>
 
     <android.support.v7.widget.CardView
@@ -39,7 +39,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:padding="10dp"
-                    android:text="@{orders.outletName}"
+                    android:text="@{payments.outletName}"
                     android:textColor="#000" />
 
                 <TextView
@@ -48,7 +48,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:padding="10dp"
-                    android:text='@{"Order ID#" + Integer.toString(orders.orderId)}' />
+                    android:text='@{"Order ID#" + Integer.toString(payments.orderId)}' />
 
                 <TextView
                     android:id="@+id/tv_order_date"
@@ -56,7 +56,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:padding="5dp"
-                    android:text='@{"Date: " + orders.orderDate}' />
+                    android:text='@{"Date: " + payments.orderDate}' />
             </LinearLayout>
 
             <View
@@ -99,7 +99,7 @@
                         android:paddingRight="10dp"
                         android:paddingStart="5dp"
                         android:paddingTop="10dp"
-                        android:text="@{orders.amount}" />
+                        android:text="@{payments.amount}" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -132,7 +132,7 @@
                         android:paddingRight="10dp"
                         android:paddingStart="5dp"
                         android:paddingTop="10dp"
-                        android:text="@{orders.discount}" />
+                        android:text="@{payments.discount}" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -155,7 +155,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:padding="5dp"
-                    android:text='@{Double.toString(Double.parseDouble(orders.amount.replace(",","")) - Double.parseDouble(orders.discount.replace(",","")))}' />
+                    android:text='@{Double.toString(Double.parseDouble(payments.amount.replace(",","")) - Double.parseDouble(payments.discount.replace(",","")))}' />
             </LinearLayout>
 
             <LinearLayout

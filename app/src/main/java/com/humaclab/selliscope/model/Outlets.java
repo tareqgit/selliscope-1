@@ -18,12 +18,12 @@ public class Outlets implements Serializable {
         @SerializedName("result")
         public OutletsResult outletsResult;
 
-        public class OutletsResult implements Serializable {
+        public static class OutletsResult implements Serializable {
             @SerializedName("outlet")
             public List<Outlet> outlets;
         }
 
-        public class Outlet implements Serializable {
+        public static class Outlet implements Serializable {
             @SerializedName("id")
             public int outletId;
             @SerializedName("type")

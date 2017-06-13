@@ -48,6 +48,9 @@ public interface SelliscopeApiEndpointInterface {
     @GET("delivery")
     Call<DeliveryResponse> getDelivery();
 
+    @GET("delivery")
+    Call<DeliveryResponse> getDelivery(@Query("outlet_id") String outletID);
+
     @POST("visit/store")
     Call<ResponseBody> sendUserLocation(@Body UserLocation userLocation);
 

@@ -10,13 +10,18 @@ import android.support.annotation.NonNull;
 
 import com.google.android.gms.maps.internal.IMapFragmentDelegate;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.gson.Gson;
 import com.humaclab.selliscope.dbmodel.Target;
 import com.humaclab.selliscope.dbmodel.UserVisit;
+import com.humaclab.selliscope.model.DeliveryResponse;
+import com.humaclab.selliscope.model.Outlets;
 import com.humaclab.selliscope.model.ProductResponse;
 import com.humaclab.selliscope.model.Targets;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import retrofit2.http.PUT;
 
@@ -34,6 +39,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String TABLE_PRODUCT = "product";
     private static final String TABLE_CATEGORY = "category";
     private static final String TABLE_BRAND = "brand";
+    private static final String TABLE_DELIVERY = "delivery";
+    private static final String TABLE_DELIVERY_PRODUCT = "delivery_product";
 
     // Target Table Columns names
     private static final String KEY_TARGET_ID = "targetId";
@@ -58,6 +65,22 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String KEY_CATEGORY_NAME = "cat_name";
     private static final String KEY_BRAND_ID = "brand_id";
     private static final String KEY_BRAND_NAME = "brand_name";
+
+    //delivery table column names
+    private static final String KEY_ORDER_ID = "order_id";
+    private static final String KEY_OUTLET_ID = "outlet_id";
+    private static final String KEY_OUTLET_NAME = "outlet_name";
+    private static final String KEY_DISCOUNT = "discount";
+    private static final String KEY_AMOUNT = "amount";
+    private static final String KEY_ORDER_DATE = "order_date";
+
+    //delivery_product table column names
+    private static final String KEY_DELIVERY_PRODUCT_ID = "delivery_product_id";
+    private static final String KEY_DELIVERY_PRODUCT_NAME = "delivery_product_name";
+    private static final String KEY_DELIVERY_PRODUCT_PRICE = "delivery_product_price";
+    private static final String KEY_DELIVERY_PRODUCT_DISCOUNT = "delivery_product_discount";
+    private static final String KEY_DELIVERY_PRODUCT_AMOUNT = "delivery_product_amount";
+    private static final String KEY_DELIVERY_PRODUCT_QTY = "delivery_product_qty";
 
     public DatabaseHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -96,11 +119,31 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + KEY_BRAND_ID + " INTEGER PRIMARY KEY,"
                 + KEY_BRAND_NAME + " TEXT"
                 + ")";
+        String CREATE_DELIVERY_TABLE = "CREATE TABLE " + TABLE_DELIVERY + "("
+                + KEY_OUTLET_ID + " INTEGER,"
+                + KEY_ORDER_ID + " INTEGER,"
+                + KEY_OUTLET_NAME + " TEXT,"
+                + KEY_DISCOUNT + " TEXT,"
+                + KEY_AMOUNT + " TEXT,"
+                + KEY_ORDER_DATE + " TEXT"
+                + ")";
+        String CREATE_DELIVERY_PRODUCT_TABLE = "CREATE TABLE " + TABLE_DELIVERY_PRODUCT + "("
+                + KEY_DELIVERY_PRODUCT_ID + " INTEGER,"
+                + KEY_ORDER_ID + " INTEGER,"
+                + KEY_OUTLET_ID + " INTEGER,"
+                + KEY_DELIVERY_PRODUCT_NAME + " TEXT,"
+                + KEY_DELIVERY_PRODUCT_PRICE + " TEXT,"
+                + KEY_DELIVERY_PRODUCT_DISCOUNT + " TEXT,"
+                + KEY_DELIVERY_PRODUCT_AMOUNT + " TEXT,"
+                + KEY_DELIVERY_PRODUCT_QTY + " INTEGER"
+                + ")";
         db.execSQL(CREATE_TARGET_TABLE);
         db.execSQL(CREATE_TARGET_USER_VISITS);
         db.execSQL(CREATE_PRODUCT_TABLE);
         db.execSQL(CREATE_CATEGORY_TABLE);
         db.execSQL(CREATE_BRAND_TABLE);
+        db.execSQL(CREATE_DELIVERY_TABLE);
+        db.execSQL(CREATE_DELIVERY_PRODUCT_TABLE);
     }
 
     // Upgrading database
@@ -112,6 +155,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_PRODUCT);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_CATEGORY);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_BRAND);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_DELIVERY);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_DELIVERY_PRODUCT);
         // Create tables again
         onCreate(db);
     }
@@ -328,5 +373,136 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             } while (cursor.moveToNext());
         }
         return brandList;
+    }
+
+    public void removeDeliveryAndDeliveryProduct() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_DELIVERY, KEY_ORDER_ID + " > ?",
+                new String[]{String.valueOf(-1)});
+        db.delete(TABLE_DELIVERY_PRODUCT, KEY_DELIVERY_PRODUCT_ID + " > ?",
+                new String[]{String.valueOf(-1)});
+        db.close();
+    }
+
+    public void addDeliveryList(List<DeliveryResponse.DeliveryList> delivers) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        ContentValues product_values = new ContentValues();
+
+        try {
+            for (DeliveryResponse.DeliveryList deliveryList : delivers) {
+                values.clear();
+                values.put(KEY_ORDER_ID, deliveryList.deliveryId);
+                values.put(KEY_OUTLET_ID, deliveryList.outletId);
+                values.put(KEY_OUTLET_NAME, deliveryList.outletName);
+                values.put(KEY_DISCOUNT, deliveryList.discount);
+                values.put(KEY_AMOUNT, deliveryList.amount);
+                values.put(KEY_ORDER_DATE, deliveryList.deliveryDate);
+
+                try {
+                    db.insert(TABLE_DELIVERY, null, values);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                for (DeliveryResponse.Product product : deliveryList.productList) {
+                    product_values.clear();
+                    product_values.put(KEY_ORDER_ID, deliveryList.deliveryId);
+                    product_values.put(KEY_OUTLET_ID, deliveryList.outletId);
+                    product_values.put(KEY_DELIVERY_PRODUCT_ID, product.productId);
+                    product_values.put(KEY_DELIVERY_PRODUCT_NAME, product.name);
+                    product_values.put(KEY_DELIVERY_PRODUCT_PRICE, product.price);
+                    product_values.put(KEY_DELIVERY_PRODUCT_QTY, product.qty);
+                    product_values.put(KEY_DELIVERY_PRODUCT_AMOUNT, product.amount);
+                    product_values.put(KEY_DELIVERY_PRODUCT_DISCOUNT, product.discount);
+                    try {
+                        db.insert(TABLE_DELIVERY_PRODUCT, null, product_values);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        db.close(); // Closing database connection
+    }
+
+    public Map<String, List<String>> getOutlets() {
+        Map<String, List<String>> outlets = new HashMap<>();
+        List<String> outletID = new ArrayList<>();
+        List<String> outletName = new ArrayList<>();
+        outletID.add("0");
+        outletName.add("Select outlet");
+
+        // Select All Query
+        String selectQuery = "SELECT distinct " + KEY_OUTLET_NAME + "," + KEY_OUTLET_ID + " FROM " + TABLE_DELIVERY + " ORDER BY " + KEY_OUTLET_NAME + " ASC";
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                cursor.getColumnNames();
+                outletID.add(String.valueOf(cursor.getInt(cursor.getColumnIndex(KEY_OUTLET_ID))));
+                outletName.add(cursor.getString(cursor.getColumnIndex(KEY_OUTLET_NAME)));
+            } while (cursor.moveToNext());
+        }
+        outlets.put("outletID", outletID);
+        outlets.put("outletName", outletName);
+        return outlets;
+    }
+
+    public List<DeliveryResponse.DeliveryList> getDeliveries(int outletID) {
+        // Select All Query
+        List<DeliveryResponse.DeliveryList> deliveryList = new ArrayList<>();
+        List<DeliveryResponse.Product> productList = new ArrayList<>();
+
+        String deliveryQuery;
+        String productQuery;
+        if (outletID != 0) {
+            deliveryQuery = "SELECT * FROM " + TABLE_DELIVERY + " WHERE " + KEY_OUTLET_ID + "=" + outletID;
+            productQuery = "SELECT * FROM " + TABLE_DELIVERY_PRODUCT + " WHERE " + KEY_OUTLET_ID + "=" + outletID;
+        } else {
+            deliveryQuery = "SELECT * FROM " + TABLE_DELIVERY;
+            productQuery = "SELECT * FROM " + TABLE_DELIVERY_PRODUCT;
+        }
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor deliveryCursor = db.rawQuery(deliveryQuery, null);
+        Cursor productCursor = db.rawQuery(productQuery, null);
+
+        // looping through all rows and adding to list
+        if (deliveryCursor.moveToFirst()) {
+            do {
+                DeliveryResponse.DeliveryList deliveryList1 = new DeliveryResponse.DeliveryList();
+                deliveryList1.deliveryId = deliveryCursor.getInt(deliveryCursor.getColumnIndex(KEY_ORDER_ID));
+                deliveryList1.outletId = deliveryCursor.getInt(deliveryCursor.getColumnIndex(KEY_OUTLET_ID));
+                deliveryList1.outletName = deliveryCursor.getString(deliveryCursor.getColumnIndex(KEY_OUTLET_NAME));
+                deliveryList1.amount = deliveryCursor.getString(deliveryCursor.getColumnIndex(KEY_AMOUNT));
+                deliveryList1.deliveryDate = deliveryCursor.getString(deliveryCursor.getColumnIndex(KEY_ORDER_DATE));
+                deliveryList1.discount = deliveryCursor.getString(deliveryCursor.getColumnIndex(KEY_DISCOUNT));
+
+                if (productCursor.moveToFirst()) {
+                    do {
+                        DeliveryResponse.Product product = new DeliveryResponse.Product();
+                        product.productId = productCursor.getInt(productCursor.getColumnIndex(KEY_DELIVERY_PRODUCT_ID));
+                        product.name = productCursor.getString(productCursor.getColumnIndex(KEY_DELIVERY_PRODUCT_NAME));
+                        product.amount = productCursor.getString(productCursor.getColumnIndex(KEY_DELIVERY_PRODUCT_AMOUNT));
+                        product.discount = productCursor.getString(productCursor.getColumnIndex(KEY_DELIVERY_PRODUCT_DISCOUNT));
+                        product.price = productCursor.getString(productCursor.getColumnIndex(KEY_DELIVERY_PRODUCT_PRICE));
+                        product.qty = productCursor.getInt(productCursor.getColumnIndex(KEY_DELIVERY_PRODUCT_QTY));
+                        productList.add(product);
+                    } while (productCursor.moveToNext());
+                }
+                deliveryList1.productList = productList;
+                deliveryList.add(deliveryList1);
+            } while (deliveryCursor.moveToNext());
+        }
+
+        System.out.println("Searched order: " + deliveryQuery);
+        System.out.println("Searched order: " + productQuery);
+        System.out.println("Searched order: " + new Gson().toJson(deliveryList));
+
+        return deliveryList;
     }
 }

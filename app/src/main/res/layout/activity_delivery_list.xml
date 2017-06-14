@@ -8,6 +8,14 @@
 
     <include layout="@layout/toolbar_layout" />
 
+    <Spinner
+        android:id="@+id/sp_outlet_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"
+        android:padding="10dp" />
+
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/srl_delivery"
         android:layout_width="match_parent"

@@ -58,6 +58,10 @@
         <activity android:name=".EditOutletActivity" />
         <activity android:name=".CallCardActivity" />
         <activity android:name=".InspectionActivity" />
+        <activity android:name=".SellsReturnActivity" />
+        <activity
+            android:name=".SellsReturnDetailsActivity"
+            android:screenOrientation="landscape" />
     </application>
 
 </manifest>

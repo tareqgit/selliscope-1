@@ -50,4 +50,11 @@
         <item>Cash</item>
         <item>Cheque</item>
     </string-array>
+
+    <string-array name="returnCause">
+        <item>Select cause of return</item>
+        <item>Damaged product</item>
+        <item>Change of product (For example, returning 1 Litre coke bottle for ordering 2.25 liter coke bottle)</item>
+        <item> Cancellation of order while delivery</item>
+    </string-array>
 </resources>

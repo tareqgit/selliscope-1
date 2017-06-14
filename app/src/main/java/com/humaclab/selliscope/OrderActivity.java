@@ -282,7 +282,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                     public void onResponse(Call<AddNewOrder.OrderResponse> call, Response<AddNewOrder.OrderResponse> response) {
                         if (response.code() == 201) {
                             System.out.println(new Gson().toJson(response.body()));
-                            Toast.makeText(OrderActivity.this, "AddNewOrder created successfully", Toast.LENGTH_LONG).show();
+                            Toast.makeText(OrderActivity.this, "Order created successfully", Toast.LENGTH_LONG).show();
                             finish();
                         } else if (response.code() == 401) {
                             System.out.println(new Gson().toJson(response.body()));

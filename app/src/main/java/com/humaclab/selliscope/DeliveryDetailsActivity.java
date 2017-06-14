@@ -38,20 +38,20 @@ public class DeliveryDetailsActivity extends AppCompatActivity {
             @Override
             public void onRefresh() {
                 if (NetworkUtility.isNetworkAvailable(DeliveryDetailsActivity.this)) {
-                    loadOrderDetails();
+                    loadDeliveryDetails();
                 } else {
                     Toast.makeText(DeliveryDetailsActivity.this, "Connect to Wifi or Mobile Data", Toast.LENGTH_SHORT).show();
                 }
             }
         });
         if (NetworkUtility.isNetworkAvailable(this)) {
-            loadOrderDetails();
+            loadDeliveryDetails();
         } else {
             Toast.makeText(this, "Connect to Wifi or Mobile Data", Toast.LENGTH_SHORT).show();
         }
     }
 
-    private void loadOrderDetails() {
+    private void loadDeliveryDetails() {
         if (binding.srlDeliveryDetails.isRefreshing())
             binding.srlDeliveryDetails.setRefreshing(false);
         binding.rvDeliveryDetails.setAdapter(new DeliveryRecyclerAdapter(DeliveryDetailsActivity.this, deliveryList));

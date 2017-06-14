@@ -125,8 +125,9 @@ public class DeliveryListActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 try {
-                    rv_delivery_list.setAdapter(new DeliveryListRecyclerAdapter(getApplication(),
-                            databaseHandler.getDeliveries(Integer.parseInt(outletIDs.get(position)))));
+                    if (position != 0)
+                        rv_delivery_list.setAdapter(new DeliveryListRecyclerAdapter(getApplication(),
+                                databaseHandler.getDeliveries(Integer.parseInt(outletIDs.get(position)))));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

@@ -84,6 +84,7 @@
         </LinearLayout>
 
         <Spinner
+            android:id="@+id/sp_return_cause"
             style="@style/Base.Widget.AppCompat.DropDownItem.Spinner"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

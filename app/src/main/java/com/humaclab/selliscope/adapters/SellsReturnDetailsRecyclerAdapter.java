@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -20,6 +21,7 @@ import com.humaclab.selliscope.SelliscopeApplication;
 import com.humaclab.selliscope.Utils.SessionManager;
 import com.humaclab.selliscope.model.DeliverProductResponse;
 import com.humaclab.selliscope.model.DeliveryResponse;
+import com.humaclab.selliscope.model.SellsReturnResponse;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,10 +82,10 @@ public class SellsReturnDetailsRecyclerAdapter extends RecyclerView.Adapter<Sell
                 }
             }
         });
-        holder.btn_deliver.setOnClickListener(new View.OnClickListener() {
+        holder.btn_return.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DeliverProductResponse deliverProductResponse = new DeliverProductResponse();
+                /*DeliverProductResponse deliverProductResponse = new DeliverProductResponse();
                 DeliverProductResponse.Order order = new DeliverProductResponse.Order();
                 DeliverProductResponse.Order.Product product1 = new DeliverProductResponse.Order.Product();
 //                deliverProductResponse.order.products = new ArrayList<>();
@@ -94,19 +96,24 @@ public class SellsReturnDetailsRecyclerAdapter extends RecyclerView.Adapter<Sell
                 order.products.add(product1);
                 order.orderId = deliveryList.deliveryId;
                 order.outletId = deliveryList.outletId;
-                deliverProductResponse.order = order;
+                deliverProductResponse.order = order;*/
+
+                SellsReturnResponse.SellsReturn sellsReturn = new SellsReturnResponse.SellsReturn();
+                sellsReturn.orderID = deliveryList.deliveryId;
+                sellsReturn.productID = product.productId;
+                sellsReturn.cause = holder.sp_return_cause.getSelectedItem().toString();
 
                 //Deliver api request
                 SessionManager sessionManager = new SessionManager(context);
                 SelliscopeApiEndpointInterface apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(),
                         sessionManager.getUserPassword(), false).create(SelliscopeApiEndpointInterface.class);
-                Call<DeliverProductResponse> call = apiService.deliverProduct(deliverProductResponse);
-                call.enqueue(new Callback<DeliverProductResponse>() {
+                Call<SellsReturnResponse> call = apiService.returnProduct(sellsReturn);
+                call.enqueue(new Callback<SellsReturnResponse>() {
                     @Override
-                    public void onResponse(Call<DeliverProductResponse> call, Response<DeliverProductResponse> response) {
+                    public void onResponse(Call<SellsReturnResponse> call, Response<SellsReturnResponse> response) {
                         if (response.code() == 201) {
-                            holder.btn_deliver.setEnabled(false);
-                            holder.btn_deliver.setBackgroundColor(Color.parseColor("#dddddd"));
+                            holder.btn_return.setEnabled(false);
+                            holder.btn_return.setBackgroundColor(Color.parseColor("#dddddd"));
                             Toast.makeText(context, "Product delivered successfully", Toast.LENGTH_SHORT).show();
                         } else if (response.code() == 401) {
                             Toast.makeText(context, "Invalid Response from server.", Toast.LENGTH_SHORT).show();
@@ -116,12 +123,12 @@ public class SellsReturnDetailsRecyclerAdapter extends RecyclerView.Adapter<Sell
                     }
 
                     @Override
-                    public void onFailure(Call<DeliverProductResponse> call, Throwable t) {
+                    public void onFailure(Call<SellsReturnResponse> call, Throwable t) {
                         t.printStackTrace();
                     }
                 });
-                System.out.println("Deliver: " + new Gson().toJson(deliverProductResponse));
-                //Deliver api request
+                System.out.println("Deliver: " + new Gson().toJson(sellsReturn));
+                //Sells return api request
             }
         });
     }
@@ -133,7 +140,8 @@ public class SellsReturnDetailsRecyclerAdapter extends RecyclerView.Adapter<Sell
 
     public class SellsReturnDetailsViewHolder extends RecyclerView.ViewHolder {
         private ViewDataBinding binding;
-        private Button btn_decrease, btn_increase, btn_deliver;
+        private Button btn_decrease, btn_increase, btn_return;
+        private Spinner sp_return_cause;
         private EditText et_qty;
 
         public SellsReturnDetailsViewHolder(View itemView) {
@@ -141,7 +149,8 @@ public class SellsReturnDetailsRecyclerAdapter extends RecyclerView.Adapter<Sell
             binding = DataBindingUtil.bind(itemView);
             btn_decrease = (Button) itemView.findViewById(R.id.btn_decrease);
             btn_increase = (Button) itemView.findViewById(R.id.btn_increase);
-            btn_deliver = (Button) itemView.findViewById(R.id.btn_deliver);
+            btn_return = (Button) itemView.findViewById(R.id.btn_return);
+            sp_return_cause = (Spinner) itemView.findViewById(R.id.sp_return_cause);
             et_qty = (EditText) itemView.findViewById(R.id.et_qty);
         }
 

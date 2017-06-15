@@ -55,6 +55,12 @@
         <item>Select cause of return</item>
         <item>Damaged product</item>
         <item>Change of product (For example, returning 1 Litre coke bottle for ordering 2.25 liter coke bottle)</item>
-        <item> Cancellation of order while delivery</item>
+        <item>Cancellation of order while delivery</item>
+        <item>Incorrect Product or Size Ordered</item>
+        <item>Product No Longer Needed</item>
+        <item>Product Did Not Match Description on Catalog</item>
+        <item>Late Delivery of Items</item>
+        <item>Wrong item ordered</item>
+        <item>Faulty product</item>
     </string-array>
 </resources>

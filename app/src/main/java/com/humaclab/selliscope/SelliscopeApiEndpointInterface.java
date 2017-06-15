@@ -10,6 +10,7 @@ import com.humaclab.selliscope.model.OrderResponse;
 import com.humaclab.selliscope.model.Payment;
 import com.humaclab.selliscope.model.PaymentResponse;
 import com.humaclab.selliscope.model.ProductResponse;
+import com.humaclab.selliscope.model.SellsReturnResponse;
 import com.humaclab.selliscope.model.UserLocation;
 
 import okhttp3.ResponseBody;
@@ -83,4 +84,7 @@ public interface SelliscopeApiEndpointInterface {
 
     @POST("delivery/store")
     Call<DeliverProductResponse> deliverProduct(@Body DeliverProductResponse deliverProduct);
+
+    @POST("return/store")
+    Call<SellsReturnResponse> returnProduct(@Body SellsReturnResponse.SellsReturn returnProduct);
 }

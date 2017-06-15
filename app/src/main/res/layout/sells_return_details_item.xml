@@ -94,7 +94,7 @@
             android:entries="@array/returnCause" />
 
         <Button
-            android:id="@+id/btn_deliver"
+            android:id="@+id/btn_return"
             style="@android:style/Widget.Button.Small"
             android:layout_width="match_parent"
             android:layout_height="30dp"

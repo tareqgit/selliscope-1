@@ -53,6 +53,15 @@ public class CallCardActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+        binding.cvInspection.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(CallCardActivity.this, InspectionActivity.class);
+                intent.putExtra("outletName", outlet.outletName);
+                intent.putExtra("outletID", outlet.outletId);
+                startActivity(intent);
+            }
+        });
         binding.cvSellsReturn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

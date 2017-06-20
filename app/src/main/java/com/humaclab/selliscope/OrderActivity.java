@@ -231,73 +231,85 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
         int qty = Integer.parseInt(binding.etQty.getText().toString());
         switch (v.getId()) {
             case R.id.btn_increase:
-                binding.etQty.setText(String.valueOf(qty + 1));
-                qty = qty + 1;
-                binding.tvAmount.setText(String.valueOf(qty * productPrice.get(selectedPosition)));
+                try {
+                    binding.etQty.setText(String.valueOf(qty + 1));
+                    qty = qty + 1;
+                    binding.tvAmount.setText(String.valueOf(qty * productPrice.get(selectedPosition)));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 break;
             case R.id.btn_decrease:
-                if (qty > 1) {
-                    binding.etQty.setText(String.valueOf(qty - 1));
-                    qty = qty - 1;
-                    binding.tvAmount.setText(String.valueOf(qty * productPrice.get(selectedPosition)));
-                } else {
-                    binding.etQty.setText("1");
-                    qty = 1;
-                    binding.tvAmount.setText(String.valueOf(qty * productPrice.get(selectedPosition)));
+                try {
+                    if (qty > 1) {
+                        binding.etQty.setText(String.valueOf(qty - 1));
+                        qty = qty - 1;
+                        binding.tvAmount.setText(String.valueOf(qty * productPrice.get(selectedPosition)));
+                    } else {
+                        binding.etQty.setText("1");
+                        qty = 1;
+                        binding.tvAmount.setText(String.valueOf(qty * productPrice.get(selectedPosition)));
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
                 break;
             case R.id.btn_order:
-                AddNewOrder addNewOrder = new AddNewOrder();
-                AddNewOrder.NewOrder newOrder = new AddNewOrder.NewOrder();
-                List<AddNewOrder.NewOrder.Product> products = new ArrayList<>();
-                newOrder.outletId = outletID.get(binding.spOutlet.getSelectedItemPosition());
+                try {
+                    AddNewOrder addNewOrder = new AddNewOrder();
+                    AddNewOrder.NewOrder newOrder = new AddNewOrder.NewOrder();
+                    List<AddNewOrder.NewOrder.Product> products = new ArrayList<>();
+                    newOrder.outletId = outletID.get(binding.spOutlet.getSelectedItemPosition());
 
-                for (int i = 1; i < binding.tblOrders.getChildCount(); i++) {
-                    View view = binding.tblOrders.getChildAt(i);
-                    if (view instanceof TableRow) {
-                        AddNewOrder.NewOrder.Product product = new AddNewOrder.NewOrder.Product();
-                        TableRow row = (TableRow) view;
-                        Spinner sp = (Spinner) row.findViewById(R.id.sp_product);
-                        EditText etQty = (EditText) row.findViewById(R.id.et_qty);
-                        EditText etDiscount = (EditText) row.findViewById(R.id.et_discount);
+                    for (int i = 1; i < binding.tblOrders.getChildCount(); i++) {
+                        View view = binding.tblOrders.getChildAt(i);
+                        if (view instanceof TableRow) {
+                            AddNewOrder.NewOrder.Product product = new AddNewOrder.NewOrder.Product();
+                            TableRow row = (TableRow) view;
+                            Spinner sp = (Spinner) row.findViewById(R.id.sp_product);
+                            EditText etQty = (EditText) row.findViewById(R.id.et_qty);
+                            EditText etDiscount = (EditText) row.findViewById(R.id.et_discount);
 
-                        product.id = productID.get(sp.getSelectedItemPosition());
-                        product.discount = Integer.parseInt(etDiscount.getText().toString());
-                        product.qty = Integer.parseInt(etQty.getText().toString());
-                        products.add(product);
-                    }
-                }
-
-                newOrder.products = products;
-                addNewOrder.newOrder = newOrder;
-
-                apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(),
-                        sessionManager.getUserPassword(), false)
-                        .create(SelliscopeApiEndpointInterface.class);
-                System.out.println(new Gson().toJson(addNewOrder));
-
-                Call<AddNewOrder.OrderResponse> call = apiService.addOrder(addNewOrder);
-                call.enqueue(new Callback<AddNewOrder.OrderResponse>() {
-                    @Override
-                    public void onResponse(Call<AddNewOrder.OrderResponse> call, Response<AddNewOrder.OrderResponse> response) {
-                        if (response.code() == 201) {
-                            System.out.println(new Gson().toJson(response.body()));
-                            Toast.makeText(OrderActivity.this, "Order created successfully", Toast.LENGTH_LONG).show();
-                            finish();
-                        } else if (response.code() == 401) {
-                            System.out.println(new Gson().toJson(response.body()));
-                            Toast.makeText(OrderActivity.this, "Invalid Response from server.", Toast.LENGTH_SHORT).show();
-                        } else {
-                            System.out.println(new Gson().toJson(response.body()));
-                            Toast.makeText(OrderActivity.this, "Server Error! Try Again Later!", Toast.LENGTH_SHORT).show();
+                            product.id = productID.get(sp.getSelectedItemPosition());
+                            product.discount = Integer.parseInt(etDiscount.getText().toString());
+                            product.qty = Integer.parseInt(etQty.getText().toString());
+                            products.add(product);
                         }
                     }
 
-                    @Override
-                    public void onFailure(Call<AddNewOrder.OrderResponse> call, Throwable t) {
-                        t.printStackTrace();
-                    }
-                });
+                    newOrder.products = products;
+                    addNewOrder.newOrder = newOrder;
+
+                    apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(),
+                            sessionManager.getUserPassword(), false)
+                            .create(SelliscopeApiEndpointInterface.class);
+                    System.out.println(new Gson().toJson(addNewOrder));
+
+                    Call<AddNewOrder.OrderResponse> call = apiService.addOrder(addNewOrder);
+                    call.enqueue(new Callback<AddNewOrder.OrderResponse>() {
+                        @Override
+                        public void onResponse(Call<AddNewOrder.OrderResponse> call, Response<AddNewOrder.OrderResponse> response) {
+                            if (response.code() == 201) {
+                                System.out.println(new Gson().toJson(response.body()));
+                                Toast.makeText(OrderActivity.this, "Order created successfully", Toast.LENGTH_LONG).show();
+                                finish();
+                            } else if (response.code() == 401) {
+                                System.out.println(new Gson().toJson(response.body()));
+                                Toast.makeText(OrderActivity.this, "Invalid Response from server.", Toast.LENGTH_SHORT).show();
+                            } else {
+                                System.out.println(new Gson().toJson(response.body()));
+                                Toast.makeText(OrderActivity.this, "Server Error! Try Again Later!", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<AddNewOrder.OrderResponse> call, Throwable t) {
+                            t.printStackTrace();
+                        }
+                    });
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 break;
         }
     }

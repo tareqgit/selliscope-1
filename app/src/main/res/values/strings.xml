@@ -63,4 +63,27 @@
         <item>Wrong item ordered</item>
         <item>Faulty product</item>
     </string-array>
+    <string-array name="promotion_type">
+        <item>Select Promotion Type</item>
+        <item>Banner</item>
+        <item>Outlet Visit</item>
+        <item>Check Memo</item>
+        <item>Drive focus SKU</item>
+    </string-array>
+    <string-array name="is_damaged">
+        <item>Is damaged?</item>
+        <item>Yes</item>
+        <item>No</item>
+    </string-array>
+    <string-array name="visibility">
+        <item>Select Visibility</item>
+        <item>Visible</item>
+        <item>Not Visible</item>
+    </string-array>
+    <string-array name="condition">
+        <item>Select Condition</item>
+        <item>Good</item>
+        <item>Bad</item>
+        <item>Moderate</item>
+    </string-array>
 </resources>

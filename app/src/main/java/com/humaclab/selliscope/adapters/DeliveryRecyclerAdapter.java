@@ -5,6 +5,8 @@ import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,6 +56,33 @@ public class DeliveryRecyclerAdapter extends RecyclerView.Adapter<DeliveryRecycl
         final DeliveryResponse.Product product = products.get(position);
         holder.getBinding().setVariable(BR.product, product);
         holder.getBinding().executePendingBindings();
+
+        /*holder.et_qty.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                int qty = Integer.parseInt(s.toString());
+                try {
+                    if (qty > product.qty) {
+                        holder.et_qty.setText(String.valueOf(product.qty));
+                    } else if (qty < 0) {
+                        holder.et_qty.setText("0");
+                    } else {
+                        holder.et_qty.setText(String.valueOf(qty));
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });*/
 
         final int[] qty = {Integer.parseInt(holder.et_qty.getText().toString())};
         holder.btn_increase.setOnClickListener(new View.OnClickListener() {

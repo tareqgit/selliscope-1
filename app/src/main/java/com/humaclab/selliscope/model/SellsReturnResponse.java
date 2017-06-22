@@ -25,7 +25,7 @@ public class SellsReturnResponse implements Serializable {
         @SerializedName("product_id")
         public int productID;
         @SerializedName("qty")
-        public int quentity;
+        public int quantity;
         @SerializedName("cause")
         public String cause;
     }

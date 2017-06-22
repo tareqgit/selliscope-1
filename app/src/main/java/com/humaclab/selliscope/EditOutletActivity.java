@@ -63,8 +63,8 @@ public class EditOutletActivity extends AppCompatActivity {
     private OutletTypeAdapter outletTypeAdapter;
     private ThanaAdapter thanaAdapter;
     private DistrictAdapter districtAdapter;
-    SelliscopeApiEndpointInterface apiService;
-    SessionManager sessionManager;
+    private SelliscopeApiEndpointInterface apiService;
+    private SessionManager sessionManager;
     private GoogleApiClient googleApiClient;
     boolean isValidOutletName = true;
     boolean isValidOwnerName = true;

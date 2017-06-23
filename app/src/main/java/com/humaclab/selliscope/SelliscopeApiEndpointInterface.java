@@ -85,6 +85,6 @@ public interface SelliscopeApiEndpointInterface {
     @POST("delivery/store")
     Call<DeliverProductResponse> deliverProduct(@Body DeliverProductResponse deliverProduct);
 
-    @POST("return/store")
+    @POST("return-product")
     Call<SellsReturnResponse> returnProduct(@Body SellsReturnResponse.SellsReturn returnProduct);
 }

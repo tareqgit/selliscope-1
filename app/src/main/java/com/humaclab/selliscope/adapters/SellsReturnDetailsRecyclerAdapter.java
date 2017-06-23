@@ -99,8 +99,10 @@ public class SellsReturnDetailsRecyclerAdapter extends RecyclerView.Adapter<Sell
                 deliverProductResponse.order = order;*/
 
                 SellsReturnResponse.SellsReturn sellsReturn = new SellsReturnResponse.SellsReturn();
+                sellsReturn.outletID = deliveryList.outletId;
                 sellsReturn.orderID = deliveryList.deliveryId;
                 sellsReturn.productID = product.productId;
+                sellsReturn.quantity = Integer.parseInt(holder.et_qty.getText().toString());
                 sellsReturn.cause = holder.sp_return_cause.getSelectedItem().toString();
 
                 //Deliver api request
@@ -114,7 +116,7 @@ public class SellsReturnDetailsRecyclerAdapter extends RecyclerView.Adapter<Sell
                         if (response.code() == 201) {
                             holder.btn_return.setEnabled(false);
                             holder.btn_return.setBackgroundColor(Color.parseColor("#dddddd"));
-                            Toast.makeText(context, "Product delivered successfully", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(context, "Product returned successfully", Toast.LENGTH_SHORT).show();
                         } else if (response.code() == 401) {
                             Toast.makeText(context, "Invalid Response from server.", Toast.LENGTH_SHORT).show();
                         } else {
@@ -127,7 +129,6 @@ public class SellsReturnDetailsRecyclerAdapter extends RecyclerView.Adapter<Sell
                         t.printStackTrace();
                     }
                 });
-                System.out.println("Deliver: " + new Gson().toJson(sellsReturn));
                 //Sells return api request
             }
         });

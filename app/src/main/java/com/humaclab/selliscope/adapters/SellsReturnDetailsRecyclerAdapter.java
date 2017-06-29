@@ -105,7 +105,7 @@ public class SellsReturnDetailsRecyclerAdapter extends RecyclerView.Adapter<Sell
                 sellsReturn.quantity = Integer.parseInt(holder.et_qty.getText().toString());
                 sellsReturn.cause = holder.sp_return_cause.getSelectedItem().toString();
 
-                //Deliver api request
+                //Sells return api request
                 SessionManager sessionManager = new SessionManager(context);
                 SelliscopeApiEndpointInterface apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(),
                         sessionManager.getUserPassword(), false).create(SelliscopeApiEndpointInterface.class);

@@ -6,6 +6,7 @@ import com.humaclab.selliscope.model.CategoryResponse;
 import com.humaclab.selliscope.model.CreateOutlet;
 import com.humaclab.selliscope.model.DeliverProductResponse;
 import com.humaclab.selliscope.model.DeliveryResponse;
+import com.humaclab.selliscope.model.InspectionResponse;
 import com.humaclab.selliscope.model.OrderResponse;
 import com.humaclab.selliscope.model.Payment;
 import com.humaclab.selliscope.model.PaymentResponse;
@@ -87,4 +88,7 @@ public interface SelliscopeApiEndpointInterface {
 
     @POST("return-product")
     Call<SellsReturnResponse> returnProduct(@Body SellsReturnResponse.SellsReturn returnProduct);
+
+    @POST("inspection/store")
+    Call<InspectionResponse> inspectOutlet(@Body InspectionResponse.Inspection inspection);
 }

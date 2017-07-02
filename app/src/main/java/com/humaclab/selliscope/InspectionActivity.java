@@ -60,7 +60,11 @@ public class InspectionActivity extends AppCompatActivity {
                 inspection.condition = binding.spCondition.getSelectedItem().toString();
                 inspection.iDamaged = binding.spIsDamaged.getSelectedItem().toString().equals("Yes");
                 inspection.outletID = outletID;
-                inspection.quantity = Integer.parseInt(binding.etQty.getText().toString());
+                try {
+                    inspection.quantity = Integer.parseInt(binding.etQty.getText().toString());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 inspection.promotionType = binding.spPromotionType.getSelectedItem().toString();
 
                 SessionManager sessionManager = new SessionManager(InspectionActivity.this);

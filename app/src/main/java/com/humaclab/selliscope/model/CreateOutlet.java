@@ -1,10 +1,6 @@
 package com.humaclab.selliscope.model;
 
-import android.support.annotation.Nullable;
-
 import com.google.gson.annotations.SerializedName;
-
-import java.util.List;
 
 /**
  * Created by dipu_ on 3/25/2017.

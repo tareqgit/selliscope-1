@@ -2,6 +2,7 @@ package com.humaclab.selliscope;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -71,6 +72,8 @@ public class AddOutletActivity extends AppCompatActivity {
     int outletTypeId, thanaId = -1;
     private String outletImage;
 
+    private ProgressDialog pd;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,6 +94,8 @@ public class AddOutletActivity extends AppCompatActivity {
             }
         });
         sessionManager = new SessionManager(this);
+        pd = new ProgressDialog(this);
+
         email = sessionManager.getUserEmail();
         password = sessionManager.getUserPassword();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -219,6 +224,10 @@ public class AddOutletActivity extends AppCompatActivity {
     private void addOutlet(String email, String password, int outletTypeId, String outletName,
                            String ownerName, String address, int thanaId, String phone,
                            double latitude, double longitude) {
+        pd.setMessage("Creating outlet......");
+        pd.setCancelable(false);
+        pd.show();
+
         apiService = SelliscopeApplication.getRetrofitInstance(email, password, false)
                 .create(SelliscopeApiEndpointInterface.class);
 
@@ -228,8 +237,9 @@ public class AddOutletActivity extends AppCompatActivity {
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 Gson gson = new Gson();
                 System.out.println("Response code: " + response.code());
-
+                pd.dismiss();
                 if (response.code() == 201) {
+                    Toast.makeText(AddOutletActivity.this, "Outlet created successfully", Toast.LENGTH_SHORT).show();
                     try {
                         CreateOutlet createOutletResult = gson.fromJson(response.body().string(), CreateOutlet.class);
                         Toast.makeText(AddOutletActivity.this, createOutletResult.result, Toast.LENGTH_SHORT).show();

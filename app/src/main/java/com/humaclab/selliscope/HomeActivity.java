@@ -105,9 +105,7 @@ public class HomeActivity extends AppCompatActivity
             fragmentManager.beginTransaction()
                     .replace(content_fragment, fragment)
                     .commit();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

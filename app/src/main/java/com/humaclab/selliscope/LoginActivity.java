@@ -36,6 +36,12 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        //View version
+        TextView tv_selliscope_version = (TextView) findViewById(R.id.tv_selliscope_version);
+        tv_selliscope_version.setText("Version - " + BuildConfig.VERSION_NAME);
+        //View version
+
         loginProgresssBar = (ProgressBar) findViewById(R.id.pb_login);
         forgotPassword = (TextView) findViewById(R.id.tv_forgot_password);
         email = (EditText) findViewById(R.id.et_email);
@@ -53,13 +59,13 @@ public class LoginActivity extends AppCompatActivity {
                 } else if (!isValidEmail(email.getText().toString().trim())) {
                     email.setError("Invalid email address!");
                     isValidEmail = false;
-                }else{
+                } else {
                     isValidEmail = true;
                 }
                 if (password.getText().toString().trim().isEmpty()) {
                     password.setError("Password is required!");
                     isValidPassword = false;
-                }else {
+                } else {
                     isValidPassword = true;
                 }
                 if (isValidEmail && isValidPassword) {

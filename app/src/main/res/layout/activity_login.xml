@@ -81,4 +81,16 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="31dp"
         android:visibility="invisible" />
+
+    <TextView
+        android:id="@+id/tv_selliscope_version"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/btn_sign_in"
+        android:layout_centerHorizontal="true"
+        android:padding="10dp"
+        android:text="Verison"
+        android:textAlignment="center"
+        android:textColor="#ddd"
+        android:textSize="16sp" />
 </RelativeLayout>

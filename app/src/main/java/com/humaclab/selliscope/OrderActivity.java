@@ -116,6 +116,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
 
         binding.btnOrder.setOnClickListener(this);
 
+        //For calculate total discount, amount and grand total in 1 second interval
         scheduler = Executors.newSingleThreadScheduledExecutor();
         scheduler.scheduleAtFixedRate(new Runnable() {
             public void run() {
@@ -145,6 +146,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                 });
             }
         }, 0, 1, TimeUnit.SECONDS);
+        //For calculate total discount, amount and grand total in 1 second interval
     }
 
     private void getProducts() {
@@ -204,6 +206,13 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                             outletID.add(outlet.outletId);
                         }
                         binding.spOutlet.setAdapter(new ArrayAdapter<>(getApplication(), R.layout.spinner_item, outletName));
+
+                        //if this activity called from outlet activity
+                        if (getIntent().hasExtra("outletID")) {
+                            int position = outletID.indexOf(getIntent().getIntExtra("outletID", 0));
+                            binding.spOutlet.setSelection(position);
+                        }
+                        //if this activity called from outlet activity
                     } catch (IOException e) {
                         e.printStackTrace();
                     }

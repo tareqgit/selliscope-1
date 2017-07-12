@@ -1,6 +1,7 @@
 package com.humaclab.selliscope;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
@@ -26,6 +27,7 @@ import retrofit2.Response;
 
 public class InspectionActivity extends AppCompatActivity {
     private ActivityInspectionBinding binding;
+    private ProgressDialog pd;
 
     private final int CAMERA_REQUEST = 3214;
     private String promotionImage;
@@ -37,6 +39,8 @@ public class InspectionActivity extends AppCompatActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_inspection);
 
         outletID = getIntent().getIntExtra("outletID", 0);
+
+        pd = new ProgressDialog(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("");
@@ -55,6 +59,10 @@ public class InspectionActivity extends AppCompatActivity {
         binding.btnSubmitInspection.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                pd.setMessage("Submitting your inspection......");
+                pd.setCancelable(false);
+                pd.show();
+
                 InspectionResponse.Inspection inspection = new InspectionResponse.Inspection();
                 inspection.image = promotionImage;
                 inspection.condition = binding.spCondition.getSelectedItem().toString();
@@ -74,6 +82,7 @@ public class InspectionActivity extends AppCompatActivity {
                 call.enqueue(new Callback<InspectionResponse>() {
                     @Override
                     public void onResponse(Call<InspectionResponse> call, Response<InspectionResponse> response) {
+                        pd.dismiss();
                         if (response.code() == 201) {
                             Toast.makeText(InspectionActivity.this, "Inspection sent successfully", Toast.LENGTH_SHORT).show();
                             finish();
@@ -86,6 +95,7 @@ public class InspectionActivity extends AppCompatActivity {
 
                     @Override
                     public void onFailure(Call<InspectionResponse> call, Throwable t) {
+                        pd.dismiss();
                         t.printStackTrace();
                     }
                 });

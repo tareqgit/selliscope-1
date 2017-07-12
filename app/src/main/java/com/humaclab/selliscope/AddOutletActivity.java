@@ -245,6 +245,7 @@ public class AddOutletActivity extends AppCompatActivity {
                         Toast.makeText(AddOutletActivity.this, createOutletResult.result, Toast.LENGTH_SHORT).show();
                         submit.setEnabled(false);
                         finish();
+                        startActivity(new Intent(AddOutletActivity.this, OutletActivity.class));
                     } catch (IOException e) {
                         e.printStackTrace();
                     }

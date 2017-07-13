@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Base64;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,27 +19,33 @@ import com.google.gson.Gson;
 import com.humaclab.selliscope.Utils.SessionManager;
 import com.humaclab.selliscope.databinding.ActivityInspectionBinding;
 import com.humaclab.selliscope.model.InspectionResponse;
+import com.humaclab.selliscope.model.Outlets;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class InspectionActivity extends AppCompatActivity {
+    private SelliscopeApiEndpointInterface apiService;
     private ActivityInspectionBinding binding;
     private ProgressDialog pd;
 
     private final int CAMERA_REQUEST = 3214;
     private String promotionImage;
-    private int outletID;
+
+    private List<Integer> outletIDs;
+    private List<String> outletNames;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_inspection);
-
-        outletID = getIntent().getIntExtra("outletID", 0);
 
         pd = new ProgressDialog(this);
 
@@ -47,6 +54,8 @@ public class InspectionActivity extends AppCompatActivity {
         TextView toolbarTitle = (TextView) findViewById(R.id.tv_toolbar_title);
         toolbarTitle.setText("Inspection");
         setSupportActionBar(toolbar);
+
+        getOutlets();
 
         binding.ivTakeImage.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -67,7 +76,7 @@ public class InspectionActivity extends AppCompatActivity {
                 inspection.image = promotionImage;
                 inspection.condition = binding.spCondition.getSelectedItem().toString();
                 inspection.iDamaged = binding.spIsDamaged.getSelectedItem().toString().equals("Yes");
-                inspection.outletID = outletID;
+                inspection.outletID = outletIDs.get(binding.spOutlets.getSelectedItemPosition());
                 try {
                     inspection.quantity = Integer.parseInt(binding.etQty.getText().toString());
                 } catch (Exception e) {
@@ -99,6 +108,51 @@ public class InspectionActivity extends AppCompatActivity {
                         t.printStackTrace();
                     }
                 });
+            }
+        });
+    }
+
+    void getOutlets() {
+        SessionManager sessionManager = new SessionManager(InspectionActivity.this);
+        apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(),
+                sessionManager.getUserPassword(), false)
+                .create(SelliscopeApiEndpointInterface.class);
+        Call<ResponseBody> call = apiService.getOutlets();
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                Gson gson = new Gson();
+                if (response.code() == 200) {
+                    try {
+                        Outlets.Successful getOutletListSuccessful = gson.fromJson(response.body()
+                                .string(), Outlets.Successful.class);
+                        if (!getOutletListSuccessful.outletsResult.outlets.isEmpty()) {
+                            outletIDs = new ArrayList<>();
+                            outletNames = new ArrayList<>();
+
+                            for (Outlets.Successful.Outlet outlet : getOutletListSuccessful.outletsResult.outlets) {
+                                outletIDs.add(outlet.outletId);
+                                outletNames.add(outlet.outletName);
+                            }
+                            binding.spOutlets.setAdapter(new ArrayAdapter<>(InspectionActivity.this, R.layout.spinner_item, outletNames));
+                            if (getIntent().hasExtra("outletName")) {
+                                binding.spOutlets.setSelection(outletNames.indexOf(getIntent().getStringExtra("outletName")));
+                            }
+                        } else {
+                            Toast.makeText(getApplicationContext(), "You don't have any outlet in your list.", Toast.LENGTH_LONG).show();
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } else if (response.code() == 401) {
+                    Toast.makeText(InspectionActivity.this, "Invalid Response from server.", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(InspectionActivity.this, "Server Error! Try Again Later!", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
             }
         });
     }

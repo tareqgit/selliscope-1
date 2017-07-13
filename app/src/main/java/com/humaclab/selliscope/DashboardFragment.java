@@ -29,8 +29,6 @@ public class DashboardFragment extends Fragment {
     private DashboardRecyclerViewAdapter dashboardRecyclerViewAdapter;
     private int itemNumber = 2;
     private Activity activity;
-    FragmentManager fragmentManager;
-
     @Override
     public View onCreateView(LayoutInflater inflater,
                              ViewGroup container,
@@ -90,10 +88,11 @@ public class DashboardFragment extends Fragment {
                                         break;
                                     }
                                     case 6: {
-                                        Toast.makeText(getActivity(), "This feature is under development.",
-                                                Toast.LENGTH_SHORT).show();
+                                        getActivity().startActivity(new Intent(getActivity(),
+                                                InspectionActivity.class));
                                         break;
-                                    }case 7: {
+                                    }
+                                    case 7: {
                                         Toast.makeText(getActivity(), "This feature is under development.",
                                                 Toast.LENGTH_SHORT).show();
                                         break;

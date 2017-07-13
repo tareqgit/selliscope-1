@@ -41,7 +41,7 @@
                         android:layout_margin="5dp"
                         android:layout_weight="1"
                         android:elevation="10dp"
-                        app:cardCornerRadius="10dp">
+                        app:cardCornerRadius="5dp">
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -76,7 +76,7 @@
                         android:layout_margin="5dp"
                         android:layout_weight="1"
                         android:elevation="10dp"
-                        app:cardCornerRadius="10dp">
+                        app:cardCornerRadius="5dp">
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -117,7 +117,7 @@
                         android:layout_margin="5dp"
                         android:layout_weight="1"
                         android:elevation="10dp"
-                        app:cardCornerRadius="10dp">
+                        app:cardCornerRadius="5dp">
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -152,7 +152,7 @@
                         android:layout_margin="5dp"
                         android:layout_weight="1"
                         android:elevation="10dp"
-                        app:cardCornerRadius="10dp">
+                        app:cardCornerRadius="5dp">
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -164,7 +164,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_horizontal"
-                                android:src="@drawable/ic_insights" />
+                                app:srcCompat="@drawable/ic_inspection" />
 
                             <TextView
                                 android:layout_width="match_parent"
@@ -193,7 +193,7 @@
                         android:layout_gravity="center"
                         android:layout_margin="5dp"
                         android:elevation="10dp"
-                        app:cardCornerRadius="10dp">
+                        app:cardCornerRadius="5dp">
 
                         <LinearLayout
                             android:layout_width="match_parent"

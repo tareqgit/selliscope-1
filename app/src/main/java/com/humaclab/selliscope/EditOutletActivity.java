@@ -2,6 +2,7 @@ package com.humaclab.selliscope;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -71,6 +72,7 @@ public class EditOutletActivity extends AppCompatActivity {
     double latitude, longitude = 0.0;
     int outletTypeId, thanaId = -1;
     private String outletImage;
+    private ProgressDialog pd;
 
     private Outlets.Successful.Outlet outlet;
 
@@ -95,6 +97,7 @@ public class EditOutletActivity extends AppCompatActivity {
             }
         });
 
+        pd = new ProgressDialog(this);
         outlet = (Outlets.Successful.Outlet) getIntent().getSerializableExtra("outletDetails");
 
         sessionManager = new SessionManager(this);
@@ -240,17 +243,20 @@ public class EditOutletActivity extends AppCompatActivity {
     private void updatedOutlet(String email, String password, int outletTypeId, String outletName,
                                String ownerName, String address, int thanaId, String phone,
                                double latitude, double longitude) {
-        apiService = SelliscopeApplication.getRetrofitInstance(email, password, false).create(SelliscopeApiEndpointInterface.class);
+        pd.setMessage("Outlet updating.....");
+        pd.setCancelable(false);
+        pd.show();
 
+        apiService = SelliscopeApplication.getRetrofitInstance(email, password, false).create(SelliscopeApiEndpointInterface.class);
         Call<ResponseBody> call = apiService.updateOutlet(outlet.outletId,
                 new CreateOutlet(outletTypeId, outletName, ownerName, address, thanaId, phone, latitude, longitude, outletImage));
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                pd.dismiss();
                 Gson gson = new Gson();
                 System.out.println("Response code: " + response.code());
-                System.out.println("Response: " + new Gson().toJson(response.body()));
-                if (response.code() == 201) {
+                if (response.code() == 202) {
                     try {
                         CreateOutlet createOutletResult =
                                 gson.fromJson(response.body().string()
@@ -268,12 +274,15 @@ public class EditOutletActivity extends AppCompatActivity {
                     Toast.makeText(EditOutletActivity.this,
                             "Server Error! Try Again Later!", Toast.LENGTH_SHORT).show();
                 }
+
+                finish();
+                startActivity(new Intent(EditOutletActivity.this, OutletActivity.class));
             }
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
+                pd.dismiss();
                 Log.d("Response", t.toString());
-
             }
         });
     }

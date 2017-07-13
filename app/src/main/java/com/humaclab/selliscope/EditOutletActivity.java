@@ -44,8 +44,6 @@ import com.humaclab.selliscope.model.Thanas;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -244,8 +242,8 @@ public class EditOutletActivity extends AppCompatActivity {
                                double latitude, double longitude) {
         apiService = SelliscopeApplication.getRetrofitInstance(email, password, false).create(SelliscopeApiEndpointInterface.class);
 
-        Call<ResponseBody> call = apiService.updateOutlet(outlet.outletId, new CreateOutlet(outletTypeId, outletName,
-                ownerName, address, thanaId, phone, latitude, longitude, outletImage));
+        Call<ResponseBody> call = apiService.updateOutlet(outlet.outletId,
+                new CreateOutlet(outletTypeId, outletName, ownerName, address, thanaId, phone, latitude, longitude, outletImage));
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -274,7 +272,6 @@ public class EditOutletActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-                //Toast.makeText(LoginActivity.this, t.toString(), Toast.LENGTH_SHORT).show();
                 Log.d("Response", t.toString());
 
             }
@@ -298,6 +295,15 @@ public class EditOutletActivity extends AppCompatActivity {
                         districtAdapter = new DistrictAdapter(EditOutletActivity.this,
                                 districtListSuccessful.districtResult.districts);
                         district.setAdapter(districtAdapter);
+
+                        //For selecting previous district
+                        int position = 0;
+                        for (int i = 0; i < districtListSuccessful.districtResult.districts.size(); i++) {
+                            if (districtListSuccessful.districtResult.districts.get(i).districtName.equals(outlet.district))
+                                position = i;
+                        }
+                        district.setSelection(position);
+                        //For selecting previous district
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -319,7 +325,59 @@ public class EditOutletActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-                //Toast.makeText(LoginActivity.this, t.toString(), Toast.LENGTH_SHORT).show();
+                Log.d("Response", t.toString());
+
+            }
+        });
+    }
+
+    void getThanas(String email, String password, int districtId) {
+        apiService = SelliscopeApplication.getRetrofitInstance(email, password, false)
+                .create(SelliscopeApiEndpointInterface.class);
+        Call<ResponseBody> call = apiService.getThanas(districtId);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                Gson gson = new Gson();
+                Timber.d("Response " + response.code() + " " + response.body().toString());
+                if (response.code() == 200) {
+                    try {
+                        Thanas.Successful thanaListSuccessful
+                                = gson.fromJson(response.body().string()
+                                , Thanas.Successful.class);
+                        thanaAdapter = new ThanaAdapter(EditOutletActivity.this,
+                                thanaListSuccessful.thanaResult.thanas);
+                        thana.setAdapter(thanaAdapter);
+
+                        //For selecting previous thana
+                        int position = 0;
+                        for (int i = 0; i < thanaListSuccessful.thanaResult.thanas.size(); i++) {
+                            if (thanaListSuccessful.thanaResult.thanas.get(i).thanaName.equals(outlet.thana))
+                                position = i;
+                        }
+                        thana.setSelection(position);
+                        //For selecting previous thana
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } else if (response.code() == 401) {
+                    try {
+                        Login.Unsuccessful loginUnsuccessful = gson
+                                .fromJson(response.errorBody().string()
+                                        , Login.Unsuccessful.class);
+                        Toast.makeText(EditOutletActivity.this,
+                                loginUnsuccessful.result, Toast.LENGTH_SHORT).show();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    Toast.makeText(EditOutletActivity.this,
+                            "Server Error! Try Again Later!", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
                 Log.d("Response", t.toString());
 
             }
@@ -350,51 +408,6 @@ public class EditOutletActivity extends AppCompatActivity {
                     try {
                         Login.Unsuccessful loginUnsuccessful = gson.fromJson(response.errorBody().string()
                                 , Login.Unsuccessful.class);
-                        Toast.makeText(EditOutletActivity.this,
-                                loginUnsuccessful.result, Toast.LENGTH_SHORT).show();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                } else {
-                    Toast.makeText(EditOutletActivity.this,
-                            "Server Error! Try Again Later!", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                //Toast.makeText(LoginActivity.this, t.toString(), Toast.LENGTH_SHORT).show();
-                Log.d("Response", t.toString());
-
-            }
-        });
-    }
-
-    void getThanas(String email, String password, int districtId) {
-        apiService = SelliscopeApplication.getRetrofitInstance(email, password, false)
-                .create(SelliscopeApiEndpointInterface.class);
-        Call<ResponseBody> call = apiService.getThanas(districtId);
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                Gson gson = new Gson();
-                Timber.d("Response " + response.code() + " " + response.body().toString());
-                if (response.code() == 200) {
-                    try {
-                        Thanas.Successful thanaListSuccessful
-                                = gson.fromJson(response.body().string()
-                                , Thanas.Successful.class);
-                        thanaAdapter = new ThanaAdapter(EditOutletActivity.this,
-                                thanaListSuccessful.thanaResult.thanas);
-                        thana.setAdapter(thanaAdapter);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                } else if (response.code() == 401) {
-                    try {
-                        Login.Unsuccessful loginUnsuccessful = gson
-                                .fromJson(response.errorBody().string()
-                                        , Login.Unsuccessful.class);
                         Toast.makeText(EditOutletActivity.this,
                                 loginUnsuccessful.result, Toast.LENGTH_SHORT).show();
                     } catch (IOException e) {

@@ -39,7 +39,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".LoginActivity" />
-        <activity android:name=".HomeActivity" />
+        <activity
+            android:name=".HomeActivity"
+            android:configChanges="orientation|screenSize" />
         <activity android:name=".RouteActivity" />
         <activity android:name=".OutletActivity" />
         <activity android:name=".AddOutletActivity" />
@@ -62,7 +64,7 @@
         <activity
             android:name=".SellsReturnDetailsActivity"
             android:screenOrientation="landscape" />
-        <activity android:name=".ProfileActivity"/>
+        <activity android:name=".ProfileActivity" />
     </application>
 
 </manifest>

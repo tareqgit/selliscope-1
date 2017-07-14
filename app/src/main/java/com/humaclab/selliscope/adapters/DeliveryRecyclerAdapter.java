@@ -1,12 +1,11 @@
 package com.humaclab.selliscope.adapters;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,6 +38,8 @@ public class DeliveryRecyclerAdapter extends RecyclerView.Adapter<DeliveryRecycl
     private List<DeliveryResponse.Product> products;
     private DeliveryResponse.DeliveryList deliveryList;
 
+    private ProgressDialog pd;
+
     public DeliveryRecyclerAdapter(Context context, DeliveryResponse.DeliveryList deliveryList) {
         this.context = context;
         this.deliveryList = deliveryList;
@@ -57,32 +58,9 @@ public class DeliveryRecyclerAdapter extends RecyclerView.Adapter<DeliveryRecycl
         holder.getBinding().setVariable(BR.product, product);
         holder.getBinding().executePendingBindings();
 
-        /*holder.et_qty.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                int qty = Integer.parseInt(s.toString());
-                try {
-                    if (qty > product.qty) {
-                        holder.et_qty.setText(String.valueOf(product.qty));
-                    } else if (qty < 0) {
-                        holder.et_qty.setText("0");
-                    } else {
-                        holder.et_qty.setText(String.valueOf(qty));
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });*/
+        pd = new ProgressDialog(context);
+        pd.setMessage("Delivering your product....");
+        pd.setCancelable(false);
 
         final int[] qty = {Integer.parseInt(holder.et_qty.getText().toString())};
         holder.btn_increase.setOnClickListener(new View.OnClickListener() {
@@ -112,10 +90,10 @@ public class DeliveryRecyclerAdapter extends RecyclerView.Adapter<DeliveryRecycl
         holder.btn_deliver.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                pd.show();
                 DeliverProductResponse deliverProductResponse = new DeliverProductResponse();
                 DeliverProductResponse.Order order = new DeliverProductResponse.Order();
                 DeliverProductResponse.Order.Product product1 = new DeliverProductResponse.Order.Product();
-//                deliverProductResponse.order.products = new ArrayList<>();
 
                 order.products = new ArrayList<>();
                 product1.productId = product.productId;
@@ -126,30 +104,39 @@ public class DeliveryRecyclerAdapter extends RecyclerView.Adapter<DeliveryRecycl
                 deliverProductResponse.order = order;
 
                 //Deliver api request
-                SessionManager sessionManager = new SessionManager(context);
-                SelliscopeApiEndpointInterface apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(),
-                        sessionManager.getUserPassword(), false).create(SelliscopeApiEndpointInterface.class);
-                Call<DeliverProductResponse> call = apiService.deliverProduct(deliverProductResponse);
-                call.enqueue(new Callback<DeliverProductResponse>() {
-                    @Override
-                    public void onResponse(Call<DeliverProductResponse> call, Response<DeliverProductResponse> response) {
-                        if (response.code() == 201) {
-                            holder.btn_deliver.setEnabled(false);
-                            holder.btn_deliver.setBackgroundColor(Color.parseColor("#dddddd"));
-                            Toast.makeText(context, "Product delivered successfully", Toast.LENGTH_SHORT).show();
-                        } else if (response.code() == 401) {
-                            Toast.makeText(context, "Invalid Response from server.", Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(context, "Server Error! Try Again Later!", Toast.LENGTH_SHORT).show();
+                if (Integer.parseInt(holder.et_qty.getText().toString()) != 0) {
+                    SessionManager sessionManager = new SessionManager(context);
+                    SelliscopeApiEndpointInterface apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(),
+                            sessionManager.getUserPassword(), false).create(SelliscopeApiEndpointInterface.class);
+                    Call<DeliverProductResponse> call = apiService.deliverProduct(deliverProductResponse);
+                    System.out.println("Delivery : " + new Gson().toJson(deliverProductResponse));
+                    call.enqueue(new Callback<DeliverProductResponse>() {
+                        @Override
+                        public void onResponse(Call<DeliverProductResponse> call, Response<DeliverProductResponse> response) {
+                            pd.dismiss();
+                            if (response.code() == 201) {
+                                holder.btn_deliver.setEnabled(false);
+                                holder.btn_deliver.setBackgroundColor(Color.parseColor("#dddddd"));
+                                Toast.makeText(context, "Product delivered successfully", Toast.LENGTH_SHORT).show();
+                            } else if (response.code() == 200) {
+                                Toast.makeText(context, response.body().result, Toast.LENGTH_LONG).show();
+                            } else if (response.code() == 401) {
+                                Toast.makeText(context, "Invalid Response from server.", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(context, "Server Error! Try Again Later!", Toast.LENGTH_SHORT).show();
+                            }
                         }
-                    }
 
-                    @Override
-                    public void onFailure(Call<DeliverProductResponse> call, Throwable t) {
-                        t.printStackTrace();
-                    }
-                });
-                System.out.println("Deliver: " + new Gson().toJson(deliverProductResponse));
+                        @Override
+                        public void onFailure(Call<DeliverProductResponse> call, Throwable t) {
+                            pd.dismiss();
+                            t.printStackTrace();
+                        }
+                    });
+                } else {
+                    pd.dismiss();
+                    Toast.makeText(context, "You cannot deliver 0 amount of product.", Toast.LENGTH_LONG).show();
+                }
                 //Deliver api request
             }
         });

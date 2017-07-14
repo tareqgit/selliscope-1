@@ -46,6 +46,8 @@ public class DeliveryResponse implements Serializable {
         public String price;
         @SerializedName("qty")
         public int qty;
+        @SerializedName("dQty")
+        public String dQty;
         @SerializedName("amount")
         public String amount;
         @SerializedName("discount")

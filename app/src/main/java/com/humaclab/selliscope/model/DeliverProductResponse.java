@@ -10,6 +10,8 @@ import java.util.List;
  */
 
 public class DeliverProductResponse implements Serializable {
+    @SerializedName("result")
+    public String result;
     @SerializedName("order")
     public Order order;
 

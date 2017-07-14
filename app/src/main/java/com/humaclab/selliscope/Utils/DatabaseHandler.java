@@ -5,25 +5,16 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.location.Location;
-import android.support.annotation.NonNull;
-
-import com.google.android.gms.maps.internal.IMapFragmentDelegate;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.humaclab.selliscope.dbmodel.Target;
 import com.humaclab.selliscope.dbmodel.UserVisit;
 import com.humaclab.selliscope.model.DeliveryResponse;
-import com.humaclab.selliscope.model.Outlets;
 import com.humaclab.selliscope.model.ProductResponse;
-import com.humaclab.selliscope.model.Targets;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import retrofit2.http.PUT;
 
 /**
  * Created by dipu_ on 4/21/2017.
@@ -412,7 +403,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                     product_values.put(KEY_DELIVERY_PRODUCT_ID, product.productId);
                     product_values.put(KEY_DELIVERY_PRODUCT_NAME, product.name);
                     product_values.put(KEY_DELIVERY_PRODUCT_PRICE, product.price);
-                    product_values.put(KEY_DELIVERY_PRODUCT_QTY, product.qty);
+                    product_values.put(KEY_DELIVERY_PRODUCT_QTY, product.qty - Integer.parseInt(product.dQty));
                     product_values.put(KEY_DELIVERY_PRODUCT_AMOUNT, product.amount);
                     product_values.put(KEY_DELIVERY_PRODUCT_DISCOUNT, product.discount);
                     try {

@@ -26,18 +26,6 @@
             android:text="@{product.name}"
             android:textAlignment="center" />
 
-        <!--<TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:layout_margin=".5dp"
-            android:layout_weight="1"
-            android:background="#fff"
-            android:gravity="center"
-            android:padding="10dp"
-            android:text="@{product.price}"
-            android:textAlignment="center" />-->
-
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -47,7 +35,7 @@
             android:background="#fff"
             android:gravity="center"
             android:padding="10dp"
-            android:text="@{Integer.toString(product.qty)}"
+            android:text="@{Integer.toString(product.qty - Integer.parseInt(product.dQty))}"
             android:textAlignment="center" />
 
         <LinearLayout
@@ -104,17 +92,5 @@
             android:background="@drawable/button_shape"
             android:text="Deliver"
             android:textColor="#fff" />
-        <!--<TextView
-            android:id="@+id/tv_total"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:layout_margin=".5dp"
-            android:layout_weight="1"
-            android:background="#fff"
-            android:gravity="center"
-            android:padding="10dp"
-            android:text="@{product.amount}"
-            android:textAlignment="center" />-->
     </LinearLayout>
 </layout>

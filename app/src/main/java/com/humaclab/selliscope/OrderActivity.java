@@ -1,5 +1,6 @@
 package com.humaclab.selliscope;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.support.v7.app.AppCompatActivity;
@@ -47,6 +48,9 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
 
     private ActivityOrderBinding binding;
     private SelliscopeApiEndpointInterface apiService;
+
+    private ProgressDialog pd;
+
     private DatabaseHandler databaseHandler;
     private SessionManager sessionManager;
     private List<String> productName = new ArrayList<>(), outletName = new ArrayList<>();
@@ -62,6 +66,8 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
         binding = DataBindingUtil.setContentView(this, R.layout.activity_order);
         databaseHandler = new DatabaseHandler(this);
         sessionManager = new SessionManager(OrderActivity.this);
+
+        pd = new ProgressDialog(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("");
@@ -264,6 +270,10 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                 }
                 break;
             case R.id.btn_order:
+                pd.setMessage("Creating order....");
+                pd.setCancelable(false);
+                pd.show();
+
                 try {
                     AddNewOrder addNewOrder = new AddNewOrder();
                     AddNewOrder.NewOrder newOrder = new AddNewOrder.NewOrder();
@@ -298,6 +308,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                     call.enqueue(new Callback<AddNewOrder.OrderResponse>() {
                         @Override
                         public void onResponse(Call<AddNewOrder.OrderResponse> call, Response<AddNewOrder.OrderResponse> response) {
+                            pd.dismiss();
                             if (response.code() == 201) {
                                 System.out.println(new Gson().toJson(response.body()));
                                 Toast.makeText(OrderActivity.this, "Order created successfully", Toast.LENGTH_LONG).show();
@@ -313,6 +324,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
 
                         @Override
                         public void onFailure(Call<AddNewOrder.OrderResponse> call, Throwable t) {
+                            pd.dismiss();
                             t.printStackTrace();
                         }
                     });

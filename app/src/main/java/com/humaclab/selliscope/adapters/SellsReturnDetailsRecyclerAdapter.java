@@ -13,17 +13,14 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
 import com.humaclab.selliscope.BR;
 import com.humaclab.selliscope.R;
 import com.humaclab.selliscope.SelliscopeApiEndpointInterface;
 import com.humaclab.selliscope.SelliscopeApplication;
 import com.humaclab.selliscope.Utils.SessionManager;
-import com.humaclab.selliscope.model.DeliverProductResponse;
 import com.humaclab.selliscope.model.DeliveryResponse;
 import com.humaclab.selliscope.model.SellsReturnResponse;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -31,7 +28,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * Created by tonmoy on 5/18/17.
+ * Created by Leon on 5/18/17.
  */
 
 public class SellsReturnDetailsRecyclerAdapter extends RecyclerView.Adapter<SellsReturnDetailsRecyclerAdapter.SellsReturnDetailsViewHolder> {
@@ -85,19 +82,6 @@ public class SellsReturnDetailsRecyclerAdapter extends RecyclerView.Adapter<Sell
         holder.btn_return.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                /*DeliverProductResponse deliverProductResponse = new DeliverProductResponse();
-                DeliverProductResponse.Order order = new DeliverProductResponse.Order();
-                DeliverProductResponse.Order.Product product1 = new DeliverProductResponse.Order.Product();
-//                deliverProductResponse.order.products = new ArrayList<>();
-
-                order.products = new ArrayList<>();
-                product1.productId = product.productId;
-                product1.qty = Integer.parseInt(holder.et_qty.getText().toString());
-                order.products.add(product1);
-                order.orderId = deliveryList.deliveryId;
-                order.outletId = deliveryList.outletId;
-                deliverProductResponse.order = order;*/
-
                 SellsReturnResponse.SellsReturn sellsReturn = new SellsReturnResponse.SellsReturn();
                 sellsReturn.outletID = deliveryList.outletId;
                 sellsReturn.orderID = deliveryList.deliveryId;

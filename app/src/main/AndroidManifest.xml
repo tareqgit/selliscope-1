@@ -12,12 +12,25 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <meta-data
+
+        <!--For debug APK-->
+        <!--<meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
         <meta-data
             android:name="com.google.android.awareness.API_KEY"
-            android:value="@string/google_maps_key" />
+            android:value="@string/google_maps_key" />-->
+        <!--For debug APK-->
+
+        <!--For signed APK-->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyBK2WoJsm3VjSlFFexSK_6ZVcjlbYmaU5g" />
+        <meta-data
+            android:name="com.google.android.awareness.API_KEY"
+            android:value="AIzaSyBK2WoJsm3VjSlFFexSK_6ZVcjlbYmaU5g" />
+        <!--For signed APK-->
+
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="e6a7c4e5c614921fba122eb267a78139f3fa74f6" />
@@ -64,7 +77,6 @@
         <activity
             android:name=".SellsReturnDetailsActivity"
             android:screenOrientation="landscape" />
-        <activity android:name=".ProfileActivity" />
     </application>
 
 </manifest>

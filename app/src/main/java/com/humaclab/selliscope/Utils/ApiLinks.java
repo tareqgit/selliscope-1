@@ -5,5 +5,6 @@ package com.humaclab.selliscope.Utils;
  */
 
 public class ApiLinks {
-    public static final String BASE_URL = "http://139.59.107.229/api/v1/";
+//    public static final String BASE_URL = "http://139.59.107.229/api/v1/";
+    public static final String BASE_URL = "http://devsnet.com/api/v1/";
 }

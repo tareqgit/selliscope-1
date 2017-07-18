@@ -33,7 +33,7 @@
 
         <meta-data
             android:name="io.fabric.ApiKey"
-            android:value="e6a7c4e5c614921fba122eb267a78139f3fa74f6" />
+            android:value="c2bca7824e6a758388318ecf6635fd2e8e11979a" />
 
         <service
             android:name=".UserTrackingService"

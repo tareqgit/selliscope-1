@@ -16,10 +16,10 @@
         <!--For debug APK-->
         <!--<meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="@string/google_maps_key" />
+            android:value="AIzaSyBZ5heET41mdUTW5UOouLZFn56kGsAocbM" />
         <meta-data
             android:name="com.google.android.awareness.API_KEY"
-            android:value="@string/google_maps_key" />-->
+            android:value="AIzaSyBZ5heET41mdUTW5UOouLZFn56kGsAocbM" />-->
         <!--For debug APK-->
 
         <!--For signed APK-->

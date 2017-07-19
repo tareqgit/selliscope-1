@@ -13,6 +13,7 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
+
     <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/iv_profile_pic"
         android:layout_width="56dp"
@@ -28,5 +29,17 @@
         android:textColor="@color/white"
         android:textSize="@dimen/text_size_16"
         android:textStyle="bold"
-        tool:text="Nahidul Islam"/>
+        tool:text="Nahidul Islam" />
+
+    <TextView
+        android:id="@+id/tv_selliscope_version"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:text="Verison"
+        android:textAlignment="center"
+        android:textColor="#b5d0fd"
+        android:textSize="16sp" />
 </LinearLayout>

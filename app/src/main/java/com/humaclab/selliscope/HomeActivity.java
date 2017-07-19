@@ -36,13 +36,9 @@ import permissions.dispatcher.RuntimePermissions;
 import static com.humaclab.selliscope.R.id.content_fragment;
 
 @RuntimePermissions
-public class HomeActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
-    FragmentManager fragmentManager;
-    TextView toolbarTitle;
-    TextView userName;
-    ImageView profilePicture;
-    SessionManager sessionManager;
+public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+    private FragmentManager fragmentManager;
+    private SessionManager sessionManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +47,7 @@ public class HomeActivity extends AppCompatActivity
         sessionManager = new SessionManager(this);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("");
-        toolbarTitle = (TextView) findViewById(R.id.tv_toolbar_title);
+        TextView toolbarTitle = (TextView) findViewById(R.id.tv_toolbar_title);
         toolbarTitle.setText(getResources().getString(R.string.home));
         setSupportActionBar(toolbar);
         HomeActivityPermissionsDispatcher.startUserTrackingServiceWithCheck(this);
@@ -88,15 +84,17 @@ public class HomeActivity extends AppCompatActivity
         drawer.addDrawerListener(toggle);
         toggle.syncState();
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        userName = (TextView) navigationView.getHeaderView(0)
+        TextView userName = (TextView) navigationView.getHeaderView(0)
                 .findViewById(R.id.tv_user_name);
-        profilePicture = (ImageView) navigationView.getHeaderView(0)
+        ImageView profilePicture = (ImageView) navigationView.getHeaderView(0)
                 .findViewById(R.id.iv_profile_pic);
         userName.setText(sessionManager.getUserDetails().get("userName"));
         Picasso.with(this)
                 .load(sessionManager.getUserDetails().get("profilePictureUrl"))
                 .into(profilePicture);
         navigationView.setNavigationItemSelectedListener(this);
+        TextView tv_selliscope_version = (TextView) navigationView.getHeaderView(0).findViewById(R.id.tv_selliscope_version);
+        tv_selliscope_version.setText("Version - " + BuildConfig.VERSION_NAME);
     }
 
     private void getFragment(Class createFragment) {

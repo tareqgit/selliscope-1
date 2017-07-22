@@ -26,22 +26,17 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import timber.log.Timber;
 
 public class OutletActivity extends AppCompatActivity {
-    SelliscopeApiEndpointInterface apiService;
-    LinearLayoutManager linearLayoutManager;
-    RecyclerView recyclerView;
-    OutletRecyclerViewAdapter outletRecyclerViewAdapter;
-    private TextView toolbarTitle;
+    private RecyclerView recyclerView;
+    private OutletRecyclerViewAdapter outletRecyclerViewAdapter;
     private SwipeRefreshLayout swipeRefreshLayout;
-    FloatingActionButton addOutlet;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_outlet);
-        addOutlet = (FloatingActionButton) findViewById(R.id.fab_add_outlet);
+        FloatingActionButton addOutlet = (FloatingActionButton) findViewById(R.id.fab_add_outlet);
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.srl_outlet);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -55,7 +50,7 @@ public class OutletActivity extends AppCompatActivity {
         });
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("");
-        toolbarTitle = (TextView) findViewById(R.id.tv_toolbar_title);
+        TextView toolbarTitle = (TextView) findViewById(R.id.tv_toolbar_title);
         toolbarTitle.setText(getResources().getString(R.string.outle));
         setSupportActionBar(toolbar);
         addOutlet.setOnClickListener(new View.OnClickListener() {
@@ -65,7 +60,7 @@ public class OutletActivity extends AppCompatActivity {
             }
         });
         recyclerView = (RecyclerView) findViewById(R.id.rv_outlet);
-        linearLayoutManager = new LinearLayoutManager(this);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
         });
@@ -79,7 +74,7 @@ public class OutletActivity extends AppCompatActivity {
 
     void getOutlets() {
         SessionManager sessionManager = new SessionManager(OutletActivity.this);
-        apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(),
+        SelliscopeApiEndpointInterface apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(),
                 sessionManager.getUserPassword(), false)
                 .create(SelliscopeApiEndpointInterface.class);
         Call<ResponseBody> call = apiService.getOutlets();

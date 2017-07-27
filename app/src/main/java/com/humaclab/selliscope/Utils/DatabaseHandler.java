@@ -5,10 +5,12 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
 import com.google.gson.Gson;
 import com.humaclab.selliscope.dbmodel.Target;
 import com.humaclab.selliscope.dbmodel.UserVisit;
 import com.humaclab.selliscope.model.DeliveryResponse;
+import com.humaclab.selliscope.model.Outlets;
 import com.humaclab.selliscope.model.ProductResponse;
 
 import java.util.ArrayList;
@@ -32,6 +34,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String TABLE_BRAND = "brand";
     private static final String TABLE_DELIVERY = "delivery";
     private static final String TABLE_DELIVERY_PRODUCT = "delivery_product";
+    private static final String TABLE_OUTLET = "outlet";
 
     // Target Table Columns names
     private static final String KEY_TARGET_ID = "targetId";
@@ -72,6 +75,20 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String KEY_DELIVERY_PRODUCT_DISCOUNT = "delivery_product_discount";
     private static final String KEY_DELIVERY_PRODUCT_AMOUNT = "delivery_product_amount";
     private static final String KEY_DELIVERY_PRODUCT_QTY = "delivery_product_qty";
+
+    //Outlet table
+    //Outlet name and id are declared before
+    private static final String KEY_OUTLET_TYPE = "outlet_type";
+    private static final String KEY_OUTLET_OWNER_NAME = "outlet_owner_name";
+    private static final String KEY_OUTLET_ADDRESS = "outlet_address";
+    private static final String KEY_OUTLET_DISTRICT = "outlet_district";
+    private static final String KEY_OUTLET_THANA = "outlet_thana";
+    private static final String KEY_OUTLET_PHONE = "outlet_phone";
+    private static final String KEY_OUTLET_IMAGE = "outlet_image";
+    private static final String KEY_OUTLET_LONGITUDE = "outlet_longitude";
+    private static final String KEY_OUTLET_LATITUDE = "outlet_latitude";
+    private static final String KEY_OUTLET_DUE = "outlet_due";
+
 
     public DatabaseHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -128,6 +145,21 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + KEY_DELIVERY_PRODUCT_AMOUNT + " TEXT,"
                 + KEY_DELIVERY_PRODUCT_QTY + " INTEGER"
                 + ")";
+
+        String CREATE_OUTLET_TABLE = "CREATE TABLE " + TABLE_OUTLET + "("
+                + KEY_OUTLET_ID + " INTEGER  PRIMARY KEY,"
+                + KEY_OUTLET_NAME + " TEXT,"
+                + KEY_OUTLET_TYPE + " TEXT,"
+                + KEY_OUTLET_OWNER_NAME + " TEXT,"
+                + KEY_OUTLET_ADDRESS + " TEXT,"
+                + KEY_OUTLET_DISTRICT + " TEXT,"
+                + KEY_OUTLET_THANA + " TEXT,"
+                + KEY_OUTLET_PHONE + " TEXT,"
+                + KEY_OUTLET_IMAGE + " TEXT,"
+                + KEY_OUTLET_LATITUDE + " TEXT,"
+                + KEY_OUTLET_LONGITUDE + " TEXT,"
+                + KEY_OUTLET_DUE + " TEXT"
+                + ")";
         db.execSQL(CREATE_TARGET_TABLE);
         db.execSQL(CREATE_TARGET_USER_VISITS);
         db.execSQL(CREATE_PRODUCT_TABLE);
@@ -135,6 +167,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL(CREATE_BRAND_TABLE);
         db.execSQL(CREATE_DELIVERY_TABLE);
         db.execSQL(CREATE_DELIVERY_PRODUCT_TABLE);
+        db.execSQL(CREATE_OUTLET_TABLE);
     }
 
     // Upgrading database
@@ -496,4 +529,67 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         return deliveryList;
     }
+
+    //For outlet
+    public void addOutlet(List<Outlets.Successful.Outlet> outletList) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        try {
+            for (Outlets.Successful.Outlet outlet : outletList) {
+                values.put(KEY_OUTLET_ID, outlet.outletId);
+                values.put(KEY_OUTLET_NAME, outlet.outletName);
+                values.put(KEY_OUTLET_TYPE, outlet.outletType);
+                values.put(KEY_OUTLET_OWNER_NAME, outlet.ownerName);
+                values.put(KEY_OUTLET_ADDRESS, outlet.outletAddress);
+                values.put(KEY_OUTLET_DISTRICT, outlet.district);
+                values.put(KEY_OUTLET_THANA, outlet.thana);
+                values.put(KEY_OUTLET_PHONE, outlet.phone);
+                values.put(KEY_OUTLET_IMAGE, outlet.outletImgUrl);
+                values.put(KEY_OUTLET_LONGITUDE, outlet.outletLatitude);
+                values.put(KEY_OUTLET_LATITUDE, outlet.outletLongitude);
+                values.put(KEY_OUTLET_DUE, outlet.outletDue);
+            }
+
+            try {
+                db.insert(TABLE_OUTLET, null, values);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        db.close();
+    }
+
+    public List<Outlets.Successful.Outlet> getAllOutlet() {
+        List<Outlets.Successful.Outlet> outletList = new ArrayList<>();
+        // Select All Query
+        String selectQuery = "SELECT *  FROM " + TABLE_OUTLET + " ORDER BY " + KEY_OUTLET_NAME + " ASC";
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                cursor.getColumnNames();
+                Outlets.Successful.Outlet outlet = new Outlets.Successful.Outlet();
+                outlet.outletId = cursor.getInt(cursor.getColumnIndex(KEY_OUTLET_ID));
+                outlet.outletName = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_NAME));
+                outlet.outletType = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_TYPE));
+                outlet.ownerName = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_OWNER_NAME));
+                outlet.outletAddress = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_ADDRESS));
+                outlet.district = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_DISTRICT));
+                outlet.thana = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_THANA));
+                outlet.phone = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_PHONE));
+                outlet.outletImgUrl = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_IMAGE));
+                outlet.outletLongitude = Double.parseDouble(cursor.getString(cursor.getColumnIndex(KEY_OUTLET_LONGITUDE)));
+                outlet.outletLatitude = Double.parseDouble(cursor.getString(cursor.getColumnIndex(KEY_OUTLET_LATITUDE)));
+                outlet.outletDue = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_DUE));
+
+                outletList.add(outlet);
+            } while (cursor.moveToNext());
+        }
+        return outletList;
+    }
+    //For outlet
 }

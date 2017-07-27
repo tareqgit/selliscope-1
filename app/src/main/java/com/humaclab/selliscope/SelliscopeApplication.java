@@ -11,7 +11,6 @@ import com.humaclab.selliscope.Utils.HttpAuthInterceptor;
 
 import io.fabric.sdk.android.Fabric;
 import okhttp3.OkHttpClient;
-import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import timber.log.Timber;

@@ -9,6 +9,8 @@ import com.facebook.stetho.okhttp3.StethoInterceptor;
 import com.humaclab.selliscope.Utils.ApiLinks;
 import com.humaclab.selliscope.Utils.HttpAuthInterceptor;
 
+import java.util.concurrent.TimeUnit;
+
 import io.fabric.sdk.android.Fabric;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
@@ -49,6 +51,8 @@ public class SelliscopeApplication extends Application {
 
             OkHttpClient client = new OkHttpClient.Builder()
                     .addInterceptor(new HttpAuthInterceptor(email, password))
+                    .connectTimeout(100000, TimeUnit.SECONDS)
+                    .readTimeout(100000, TimeUnit.SECONDS)
                     .addNetworkInterceptor(new StethoInterceptor())
                     .build();
 

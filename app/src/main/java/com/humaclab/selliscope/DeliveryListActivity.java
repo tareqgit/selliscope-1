@@ -1,8 +1,8 @@
 package com.humaclab.selliscope;
 
+import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -20,8 +20,6 @@ import com.humaclab.selliscope.Utils.SessionManager;
 import com.humaclab.selliscope.adapters.DeliveryListRecyclerAdapter;
 import com.humaclab.selliscope.model.DeliveryResponse;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -80,15 +78,18 @@ public class DeliveryListActivity extends AppCompatActivity {
         call.enqueue(new Callback<DeliveryResponse>() {
             @Override
             public void onResponse(Call<DeliveryResponse> call, Response<DeliveryResponse> response) {
+                System.out.println("Response " + new Gson().toJson(response.body()));
                 if (response.code() == 200) {
                     try {
                         if (srl_delivery.isRefreshing())
                             srl_delivery.setRefreshing(false);
 
-                        System.out.println("Response " + new Gson().toJson(response.body()));
                         List<DeliveryResponse.DeliveryList> delivers = response.body().result.deliveryList;
-
-                        rv_delivery_list.setAdapter(new DeliveryListRecyclerAdapter(getApplication(), delivers));
+                        if (!delivers.isEmpty()) {
+                            rv_delivery_list.setAdapter(new DeliveryListRecyclerAdapter(getApplication(), delivers));
+                        } else {
+                            Toast.makeText(getApplicationContext(), "You don't have any deliveries yet.", Toast.LENGTH_LONG).show();
+                        }
                         storeDeliveriesIntoLocal(delivers);
                     } catch (Exception e) {
                         e.printStackTrace();

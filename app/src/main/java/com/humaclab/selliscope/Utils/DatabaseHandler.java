@@ -355,6 +355,36 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return productList;
     }
 
+    public int getSizeOfProduct() {
+        List<ProductResponse.ProductResult> productList = new ArrayList<>();
+        // Select All Query
+        String selectQuery = "SELECT  * FROM " + TABLE_PRODUCT + " ORDER BY " + KEY_PRODUCT_NAME + " ASC";
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                cursor.getColumnNames();
+                ProductResponse.ProductResult products = new ProductResponse.ProductResult();
+                products.category = new ProductResponse.Category();
+                products.brand = new ProductResponse.Brand();
+
+                products.id = cursor.getInt(cursor.getColumnIndex(KEY_PRODUCT_ID));
+                products.name = cursor.getString(cursor.getColumnIndex(KEY_PRODUCT_NAME));
+                products.price = cursor.getString(cursor.getColumnIndex(KEY_PRODUCT_PRICE));
+                products.img = cursor.getString(cursor.getColumnIndex(KEY_PRODUCT_IMAGE));
+                products.category.id = cursor.getInt(cursor.getColumnIndex(KEY_CATEGORY_ID));
+                products.category.name = cursor.getString(cursor.getColumnIndex(KEY_CATEGORY_NAME));
+                products.brand.id = cursor.getInt(cursor.getColumnIndex(KEY_BRAND_ID));
+                products.brand.name = cursor.getString(cursor.getColumnIndex(KEY_BRAND_NAME));
+                productList.add(products);
+            } while (cursor.moveToNext());
+        }
+        return productList.size();
+    }
+
     public List<ProductResponse.Category> getCategory() {
         List<ProductResponse.Category> categoryList = new ArrayList<>();
         // Select All Query

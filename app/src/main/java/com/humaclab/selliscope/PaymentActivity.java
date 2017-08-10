@@ -1,8 +1,8 @@
 package com.humaclab.selliscope;
 
+import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -14,7 +14,6 @@ import com.humaclab.selliscope.Utils.DatabaseHandler;
 import com.humaclab.selliscope.Utils.NetworkUtility;
 import com.humaclab.selliscope.Utils.SessionManager;
 import com.humaclab.selliscope.adapters.PaymentRecyclerViewAdapter;
-import com.humaclab.selliscope.model.OrderResponse;
 import com.humaclab.selliscope.model.Payment;
 
 import java.util.List;
@@ -77,8 +76,11 @@ public class PaymentActivity extends AppCompatActivity {
 
                         System.out.println("Response " + new Gson().toJson(response.body()));
                         List<Payment.OrderList> orders = response.body().result.orderList;
-
-                        rv_payment.setAdapter(new PaymentRecyclerViewAdapter(getApplication(), orders));
+                        if (!orders.isEmpty()) {
+                            rv_payment.setAdapter(new PaymentRecyclerViewAdapter(getApplication(), orders));
+                        } else {
+                            Toast.makeText(getApplicationContext(), "You don't have any due payments.", Toast.LENGTH_LONG).show();
+                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

@@ -15,7 +15,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.res.ResourcesCompat;
-import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -41,7 +40,6 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
-import com.humaclab.selliscope.Utils.CustomBitmapDescriptorFactory;
 import com.humaclab.selliscope.Utils.SessionManager;
 import com.humaclab.selliscope.model.Outlets;
 
@@ -122,8 +120,8 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
                             if (locationResult.getStatus().isSuccess()) {
                                 Location location = locationResult.getLocation();
                                 if (mMap != null) {
-                                    LatLng currentLocation = new LatLng(location.getLatitude(),
-                                            location.getLongitude());
+                                    LatLng currentLocation = new LatLng(Double.parseDouble(String.format("%.04f", location.getLatitude())),
+                                            Double.parseDouble(String.format("%.04f", location.getLongitude())));
                                     mMap.addMarker(new MarkerOptions().position(currentLocation)
                                             .title("You are here!")
                                             .icon(BitmapDescriptorFactory.fromResource(
@@ -135,7 +133,6 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
                                     mMap.animateCamera(yourLocation);
                                     getVisits();
                                 }
-
                             } else {
                                 Timber.d("Didn't get Location Data");
                             }
@@ -197,6 +194,7 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
         });
 
     }
+
     private BitmapDescriptor vectorToBitmap(@DrawableRes int id, @ColorInt int color) {
         Drawable vectorDrawable = ResourcesCompat.getDrawable(getResources(), id, null);
         Bitmap bitmap = Bitmap.createBitmap(vectorDrawable.getIntrinsicWidth(),

@@ -365,7 +365,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        showProductDialog();
+        showProductSelectionDialog();
         if (item.getItemId() == R.id.action_add_order) {
             final int[] qty = {1}, selectedPosition = {0};
             final LayoutInflater inflater = (LayoutInflater) OrderActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -446,7 +446,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
         return super.onOptionsItemSelected(item);
     }
 
-    private void showProductDialog() {
+    private void showProductSelectionDialog() {
         final AlertDialog builder = new AlertDialog.Builder(this).create();
         View dialogView = LayoutInflater.from(this).inflate(R.layout.product_catgeory_item, null);
         builder.setView(dialogView);

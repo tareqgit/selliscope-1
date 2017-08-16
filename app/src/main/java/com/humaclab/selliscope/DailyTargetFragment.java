@@ -11,16 +11,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.gson.Gson;
 import com.humaclab.selliscope.Utils.DatabaseHandler;
 import com.humaclab.selliscope.Utils.NetworkUtility;
 import com.humaclab.selliscope.Utils.SessionManager;
 import com.humaclab.selliscope.Utils.VerticalSpaceItemDecoration;
-import com.humaclab.selliscope.adapters.OutletRecyclerViewAdapter;
 import com.humaclab.selliscope.adapters.TargetRecyclerViewAdapter;
 import com.humaclab.selliscope.dbmodel.Target;
-import com.humaclab.selliscope.model.Outlets;
 import com.humaclab.selliscope.model.TargetItem;
 import com.humaclab.selliscope.model.Targets;
 
@@ -32,7 +29,6 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import timber.log.Timber;
 
 /**
  * Created by Miaki on 2/27/17.

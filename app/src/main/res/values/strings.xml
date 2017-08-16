@@ -42,9 +42,6 @@
     <!-- Spinner title -->
     <string name="sp_thana_title">Thana</string>
     <string name="sp_outlet_type">Type</string>
-    <string name="title">About Us</string>
-    <string name="content">ICT Incubator,\nSoftware Technology Park (4th Floor), Janata Tower,\nKawranbazar, Dhaka 1215, Bangladesh\ninfo@humaclab.com\nMobile: +8801711505322</string>
-    <string name="agree">Ok</string>
 
     <string-array name="paymentType">
         <item>Cash</item>

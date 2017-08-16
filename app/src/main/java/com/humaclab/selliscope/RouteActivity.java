@@ -2,6 +2,7 @@ package com.humaclab.selliscope;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -15,6 +16,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.res.ResourcesCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -23,7 +25,6 @@ import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.android.gms.awareness.Awareness;
 import com.google.android.gms.awareness.snapshot.LocationResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -102,11 +103,16 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
         if (isGPSEnabled()) {
             getLocation();
         } else {
-            new MaterialDialog.Builder(this)
-                    .title("Enable GPS")
-                    .content("Enable GPS to get current location.")
-                    .positiveText(R.string.agree)
-                    .show();
+            final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+            alertDialog.setTitle("Enable GPS");
+            alertDialog.setMessage("Enable GPS to get current location.");
+            alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, "OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    alertDialog.dismiss();
+                }
+            });
+            alertDialog.show();
         }
     }
 

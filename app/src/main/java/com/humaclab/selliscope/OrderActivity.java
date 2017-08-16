@@ -9,7 +9,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -33,14 +32,12 @@ import com.humaclab.selliscope.model.AddNewOrder;
 import com.humaclab.selliscope.model.Outlets;
 import com.humaclab.selliscope.model.ProductResponse;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -166,6 +163,13 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
             productPrice.add(Double.parseDouble(result.price.replace(",", "")));
         }
         binding.spProduct.setAdapter(new ArrayAdapter<>(getApplicationContext(), R.layout.spinner_item, productName));
+        //if this activity called from product activity
+        if (getIntent().hasExtra("productID")) {
+            int position = productID.indexOf(getIntent().getIntExtra("productID", 0));
+            binding.spProduct.setSelection(position);
+        }
+        //if this activity called from product activity
+
         /*
         SessionManager sessionManager = new SessionManager(OrderActivity.this);
         apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(),
@@ -218,7 +222,8 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
             binding.spOutlet.setSelection(position);
         }
         //if this activity called from outlet activity
-       /* SessionManager sessionManager = new SessionManager(OrderActivity.this);
+
+        /* SessionManager sessionManager = new SessionManager(OrderActivity.this);
         apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(),
                 sessionManager.getUserPassword(), false)
                 .create(SelliscopeApiEndpointInterface.class);

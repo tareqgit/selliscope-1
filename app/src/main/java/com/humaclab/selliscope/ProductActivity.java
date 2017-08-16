@@ -14,7 +14,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.humaclab.selliscope.Utils.DatabaseHandler;
-import com.humaclab.selliscope.Utils.NetworkUtility;
 import com.humaclab.selliscope.Utils.SessionManager;
 import com.humaclab.selliscope.adapters.ProductRecyclerViewAdapter;
 import com.humaclab.selliscope.model.BrandResponse;
@@ -57,24 +56,24 @@ public class ProductActivity extends AppCompatActivity {
         srl_product.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if (NetworkUtility.isNetworkAvailable(ProductActivity.this)) {
+                /*if (NetworkUtility.isNetworkAvailable(ProductActivity.this)) {
                     getCategory();
                     getBrand();
                     getProducts();
-                } else {
-                    getFromLocal();
-                    Toast.makeText(ProductActivity.this, "Connect to Wifi or Mobile Data", Toast.LENGTH_SHORT).show();
-                }
+                } else {*/
+                getFromLocal();
+                    /*Toast.makeText(ProductActivity.this, "Connect to Wifi or Mobile Data", Toast.LENGTH_SHORT).show();
+                }*/
             }
         });
-        if (NetworkUtility.isNetworkAvailable(this)) {
+        /*if (NetworkUtility.isNetworkAvailable(this)) {
             getCategory();
             getBrand();
             getProducts();
-        } else {
-            getFromLocal();
-            Toast.makeText(this, "Connect to Wifi or Mobile Data", Toast.LENGTH_SHORT).show();
-        }
+        } else {*/
+        getFromLocal();
+        /*Toast.makeText(this, "Connect to Wifi or Mobile Data", Toast.LENGTH_SHORT).show();
+        }*/
 
         //Populating spinner
         sp_category.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -124,10 +123,9 @@ public class ProductActivity extends AppCompatActivity {
                         if (srl_product.isRefreshing())
                             srl_product.setRefreshing(false);
 
+                        getFromLocal();
                         List<ProductResponse.ProductResult> products = response.body().result.productResults;
                         if (products.size() == databaseHandler.getSizeOfProduct()) {
-                            getFromLocal();
-                        } else {
                             //for removing previous data
                             databaseHandler.removeProductCategoryBrand();
                             for (ProductResponse.ProductResult result : products) {
@@ -149,95 +147,6 @@ public class ProductActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<ProductResponse> call, Throwable t) {
-                t.printStackTrace();
-            }
-        });
-    }
-
-    private void getCategory() {
-        SessionManager sessionManager = new SessionManager(ProductActivity.this);
-        apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(),
-                sessionManager.getUserPassword(), false)
-                .create(SelliscopeApiEndpointInterface.class);
-        Call<CategoryResponse> call = apiService.getCategories();
-        call.enqueue(new Callback<CategoryResponse>() {
-            @Override
-            public void onResponse(Call<CategoryResponse> call, Response<CategoryResponse> response) {
-                if (response.code() == 200) {
-                    try {
-                        if (srl_product.isRefreshing())
-                            srl_product.setRefreshing(false);
-
-                        List<CategoryResponse.CategoryResult> categories = response.body().result.categoryResults;
-                        categoryName.clear();
-                        categoryName.add("Select Category");
-                        categoryID.clear();
-                        categoryID.add(0);
-                        for (CategoryResponse.CategoryResult result : categories) {
-                            categoryName.add(result.name);
-                            categoryID.add(result.id);
-                            databaseHandler.addCategory(result.id, result.name);
-                        }
-                        sp_category.setAdapter(new ArrayAdapter<>(getApplicationContext(), R.layout.spinner_item, categoryName));
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                } else if (response.code() == 401) {
-                    Toast.makeText(ProductActivity.this,
-                            "Invalid Response from server.", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(ProductActivity.this,
-                            "Server Error! Try Again Later!", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<CategoryResponse> call, Throwable t) {
-                t.printStackTrace();
-            }
-        });
-
-    }
-
-    private void getBrand() {
-        SessionManager sessionManager = new SessionManager(ProductActivity.this);
-        apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(),
-                sessionManager.getUserPassword(), false)
-                .create(SelliscopeApiEndpointInterface.class);
-        Call<BrandResponse> call = apiService.getBrands();
-        call.enqueue(new Callback<BrandResponse>() {
-            @Override
-            public void onResponse(Call<BrandResponse> call, Response<BrandResponse> response) {
-                if (response.code() == 200) {
-                    try {
-                        if (srl_product.isRefreshing())
-                            srl_product.setRefreshing(false);
-
-                        List<BrandResponse.BrandResult> brands = response.body().result.brandResults;
-                        brandName.clear();
-                        brandName.add("Select Brand");
-                        brandID.clear();
-                        brandID.add(0);
-                        for (BrandResponse.BrandResult result : brands) {
-                            brandName.add(result.name);
-                            brandID.add(result.id);
-                            databaseHandler.addBrand(result.id, result.name);
-                        }
-                        sp_brand.setAdapter(new ArrayAdapter<>(getApplicationContext(), R.layout.spinner_item, brandName));
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                } else if (response.code() == 401) {
-                    Toast.makeText(ProductActivity.this,
-                            "Invalid Response from server.", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(ProductActivity.this,
-                            "Server Error! Try Again Later!", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<BrandResponse> call, Throwable t) {
                 t.printStackTrace();
             }
         });

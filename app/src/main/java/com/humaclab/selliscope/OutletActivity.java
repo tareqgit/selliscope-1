@@ -8,34 +8,28 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
+import com.humaclab.selliscope.Utils.DatabaseHandler;
 import com.humaclab.selliscope.Utils.NetworkUtility;
-import com.humaclab.selliscope.Utils.SessionManager;
 import com.humaclab.selliscope.Utils.VerticalSpaceItemDecoration;
 import com.humaclab.selliscope.adapters.OutletRecyclerViewAdapter;
 import com.humaclab.selliscope.model.Outlets;
-
-import java.io.IOException;
-
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class OutletActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private OutletRecyclerViewAdapter outletRecyclerViewAdapter;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private DatabaseHandler databaseHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_outlet);
+        databaseHandler = new DatabaseHandler(this);
+
         FloatingActionButton addOutlet = (FloatingActionButton) findViewById(R.id.fab_add_outlet);
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.srl_outlet);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -68,11 +62,10 @@ public class OutletActivity extends AppCompatActivity {
         if (NetworkUtility.isNetworkAvailable(this))
             getOutlets();
         else
-            Toast.makeText(this, "Connect to Wifi or Mobile Data",
-                    Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Connect to Wifi or Mobile Data", Toast.LENGTH_SHORT).show();
     }
 
-    void getOutlets() {
+    /*void getOutlets() {
         SessionManager sessionManager = new SessionManager(OutletActivity.this);
         SelliscopeApiEndpointInterface apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(),
                 sessionManager.getUserPassword(), false)
@@ -114,6 +107,18 @@ public class OutletActivity extends AppCompatActivity {
 
             }
         });
+    }*/
 
+    void getOutlets() {
+        Outlets.Successful.OutletsResult outletsResult = databaseHandler.getAllOutlet();
+
+        if (!outletsResult.outlets.isEmpty()) {
+            if (swipeRefreshLayout.isRefreshing())
+                swipeRefreshLayout.setRefreshing(false);
+            outletRecyclerViewAdapter = new OutletRecyclerViewAdapter(OutletActivity.this, outletsResult);
+            recyclerView.setAdapter(outletRecyclerViewAdapter);
+        } else {
+            Toast.makeText(getApplicationContext(), "You don't have any outlet in your list.", Toast.LENGTH_LONG).show();
+        }
     }
 }

@@ -3,8 +3,9 @@ package com.humaclab.selliscope;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -16,6 +17,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -156,6 +158,15 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void getProducts() {
+        List<ProductResponse.ProductResult> products = databaseHandler.getProduct(0, 0);
+        for (ProductResponse.ProductResult result : products) {
+            productName.add(result.name);
+            productID.add(result.id);
+            productDiscount.add(result.discount);
+            productPrice.add(Double.parseDouble(result.price.replace(",", "")));
+        }
+        binding.spProduct.setAdapter(new ArrayAdapter<>(getApplicationContext(), R.layout.spinner_item, productName));
+        /*
         SessionManager sessionManager = new SessionManager(OrderActivity.this);
         apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(),
                 sessionManager.getUserPassword(), false)
@@ -190,11 +201,24 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
             public void onFailure(Call<ProductResponse> call, Throwable t) {
                 t.printStackTrace();
             }
-        });
+        });*/
     }
 
     private void getOutlets() {
-        SessionManager sessionManager = new SessionManager(OrderActivity.this);
+        Outlets.Successful.OutletsResult outletsResult = databaseHandler.getAllOutlet();
+        for (Outlets.Successful.Outlet outlet : outletsResult.outlets) {
+            outletName.add(outlet.outletName);
+            outletID.add(outlet.outletId);
+        }
+        binding.spOutlet.setAdapter(new ArrayAdapter<>(getApplication(), R.layout.spinner_item, outletName));
+
+        //if this activity called from outlet activity
+        if (getIntent().hasExtra("outletID")) {
+            int position = outletID.indexOf(getIntent().getIntExtra("outletID", 0));
+            binding.spOutlet.setSelection(position);
+        }
+        //if this activity called from outlet activity
+       /* SessionManager sessionManager = new SessionManager(OrderActivity.this);
         apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(),
                 sessionManager.getUserPassword(), false)
                 .create(SelliscopeApiEndpointInterface.class);
@@ -237,8 +261,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                 Log.d("Response", t.toString());
 
             }
-        });
-
+        });*/
     }
 
     @Override
@@ -337,6 +360,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        showProductDialog();
         if (item.getItemId() == R.id.action_add_order) {
             final int[] qty = {1}, selectedPosition = {0};
             final LayoutInflater inflater = (LayoutInflater) OrderActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -415,6 +439,22 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void showProductDialog() {
+        final AlertDialog builder = new AlertDialog.Builder(this).create();
+        View dialogView = LayoutInflater.from(this).inflate(R.layout.product_catgeory_item, null);
+        builder.setView(dialogView);
+
+        ImageView civ_cancel = (ImageView) dialogView.findViewById(R.id.civ_cancel);
+        civ_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                builder.dismiss();
+            }
+        });
+        builder.setCancelable(false);
+        builder.show();
     }
 
     @Override

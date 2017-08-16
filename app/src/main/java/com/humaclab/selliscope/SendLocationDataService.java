@@ -45,11 +45,4 @@ public class SendLocationDataService extends Service {
                 }, 0, 2, TimeUnit.MINUTES);
         return super.onStartCommand(intent, flags, startId);
     }
-
-    public boolean isGPSEnabled() {
-
-        LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-
-        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-    }
 }

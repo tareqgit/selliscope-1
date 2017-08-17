@@ -8,7 +8,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -19,6 +22,7 @@ import com.humaclab.selliscope.adapters.OutletRecyclerViewAdapter;
 import com.humaclab.selliscope.model.Outlets;
 
 public class OutletActivity extends AppCompatActivity {
+    private EditText tv_search_outlet;
     private RecyclerView recyclerView;
     private OutletRecyclerViewAdapter outletRecyclerViewAdapter;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -63,6 +67,26 @@ public class OutletActivity extends AppCompatActivity {
             getOutlets();
         else
             Toast.makeText(this, "Connect to Wifi or Mobile Data", Toast.LENGTH_SHORT).show();
+
+        tv_search_outlet = (EditText) findViewById(R.id.tv_search_outlet);
+        tv_search_outlet.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                Outlets.Successful.OutletsResult outletsResult = databaseHandler.getSearchedOutlet(String.valueOf(s));
+                outletRecyclerViewAdapter = new OutletRecyclerViewAdapter(OutletActivity.this, outletsResult);
+                recyclerView.setAdapter(outletRecyclerViewAdapter);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
     }
 
     /*void getOutlets() {

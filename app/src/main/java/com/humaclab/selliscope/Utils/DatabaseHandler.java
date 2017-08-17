@@ -598,7 +598,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         Outlets.Successful.OutletsResult outletsResult = new Outlets.Successful.OutletsResult();
         List<Outlets.Successful.Outlet> outletList = new ArrayList<>();
         // Select All Query
-        String selectQuery = "SELECT *  FROM " + TABLE_OUTLET + " ORDER BY " + KEY_OUTLET_NAME + " ASC";
+        String selectQuery = "SELECT * FROM " + TABLE_OUTLET + " ORDER BY " + KEY_OUTLET_NAME + " ASC";
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
 
@@ -630,7 +630,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public int getSizeOfOutlet() {
         List<Outlets.Successful.Outlet> outletList = new ArrayList<>();
         // Select All Query
-        String selectQuery = "SELECT *  FROM " + TABLE_OUTLET + " ORDER BY " + KEY_OUTLET_NAME + " ASC";
+        String selectQuery = "SELECT * FROM " + TABLE_OUTLET + " ORDER BY " + KEY_OUTLET_NAME + " ASC";
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
 
@@ -656,6 +656,39 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             } while (cursor.moveToNext());
         }
         return outletList.size();
+    }
+
+    public Outlets.Successful.OutletsResult getSearchedOutlet(String outletName) {
+        Outlets.Successful.OutletsResult outletsResult = new Outlets.Successful.OutletsResult();
+        List<Outlets.Successful.Outlet> outletList = new ArrayList<>();
+        // Select All Query
+        String selectQuery = "SELECT * FROM " + TABLE_OUTLET + " WHERE " + KEY_OUTLET_NAME + " LIKE \"" + outletName + "%\" ORDER BY " + KEY_OUTLET_NAME + " ASC";
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                cursor.getColumnNames();
+                Outlets.Successful.Outlet outlet = new Outlets.Successful.Outlet();
+                outlet.outletId = cursor.getInt(cursor.getColumnIndex(KEY_OUTLET_ID));
+                outlet.outletName = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_NAME));
+                outlet.outletType = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_TYPE));
+                outlet.ownerName = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_OWNER_NAME));
+                outlet.outletAddress = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_ADDRESS));
+                outlet.district = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_DISTRICT));
+                outlet.thana = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_THANA));
+                outlet.phone = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_PHONE));
+                outlet.outletImgUrl = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_IMAGE));
+                outlet.outletLongitude = Double.parseDouble(cursor.getString(cursor.getColumnIndex(KEY_OUTLET_LONGITUDE)));
+                outlet.outletLatitude = Double.parseDouble(cursor.getString(cursor.getColumnIndex(KEY_OUTLET_LATITUDE)));
+                outlet.outletDue = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_DUE));
+
+                outletList.add(outlet);
+            } while (cursor.moveToNext());
+        }
+        outletsResult.outlets = outletList;
+        return outletsResult;
     }
     //For outlet
 }

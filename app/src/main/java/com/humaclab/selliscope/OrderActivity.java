@@ -4,7 +4,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -16,7 +15,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -365,7 +363,6 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        showProductSelectionDialog();
         if (item.getItemId() == R.id.action_add_order) {
             final int[] qty = {1}, selectedPosition = {0};
             final LayoutInflater inflater = (LayoutInflater) OrderActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -444,22 +441,6 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
             return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    private void showProductSelectionDialog() {
-        final AlertDialog builder = new AlertDialog.Builder(this).create();
-        View dialogView = LayoutInflater.from(this).inflate(R.layout.product_catgeory_item, null);
-        builder.setView(dialogView);
-
-        ImageView civ_cancel = (ImageView) dialogView.findViewById(R.id.civ_cancel);
-        civ_cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                builder.dismiss();
-            }
-        });
-        builder.setCancelable(false);
-        builder.show();
     }
 
     @Override

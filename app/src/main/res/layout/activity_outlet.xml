@@ -7,9 +7,18 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:focusableInTouchMode="true"
         android:orientation="vertical">
 
         <include layout="@layout/toolbar_layout" />
+
+        <EditText
+            android:id="@+id/tv_search_outlet"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableRight="@drawable/places_ic_search"
+            android:hint="Seach outlet"
+            android:textSize="17sp" />
 
         <android.support.v4.widget.SwipeRefreshLayout
             android:id="@+id/srl_outlet"

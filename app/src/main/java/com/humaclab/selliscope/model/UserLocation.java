@@ -8,6 +8,7 @@ import java.util.List;
 
 /**
  * Created by Miaki on 3/19/17.
+ * Updated by Leon on 8/20/17.
  */
 
 public class UserLocation {
@@ -16,37 +17,41 @@ public class UserLocation {
 
     public UserLocation(List<Visit> visits) {
         this.visits = visits;
-
     }
 
     public static class Visit {
-        public Visit(double latitude, double longitude) {
-            this.latitude = latitude;
-            this.longitude = longitude;
-        }
-
-        public Visit(double latutude, double longitude, String timeStamp) {
-            this.latitude = latutude;
-            this.longitude = longitude;
-            this.timeStamp = timeStamp;
-        }
-
-        public Visit(double latitude, double longitude, int outletId) {
-            this.latitude = latitude;
-            this.longitude = longitude;
-            this.outletId = outletId;
-        }
-
         @SerializedName("latitude")
         public double latitude;
         @SerializedName("longitude")
         public double longitude;
+        @SerializedName("formatted_address")
+        public String address;
         @Nullable
         @SerializedName("created_at")
         public String timeStamp;
         @Nullable
         @SerializedName("outlet_id")
         public int outletId;
+
+        public Visit(double latitude, double longitude) {
+            this.latitude = latitude;
+            this.longitude = longitude;
+            this.address = address;
+        }
+
+        public Visit(double latitude, double longitude, String address, String timeStamp) {
+            this.latitude = latitude;
+            this.longitude = longitude;
+            this.address = address;
+            this.timeStamp = timeStamp;
+        }
+
+        public Visit(double latitude, double longitude, String address, int outletId) {
+            this.latitude = latitude;
+            this.longitude = longitude;
+            this.address = address;
+            this.outletId = outletId;
+        }
     }
 
     public static class Successful {

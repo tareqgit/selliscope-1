@@ -2,7 +2,6 @@ package com.humaclab.selliscope.adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -31,6 +30,7 @@ import com.humaclab.selliscope.OutletDetailsActivity;
 import com.humaclab.selliscope.R;
 import com.humaclab.selliscope.SelliscopeApiEndpointInterface;
 import com.humaclab.selliscope.SelliscopeApplication;
+import com.humaclab.selliscope.Utils.GetAddressFromLatLang;
 import com.humaclab.selliscope.Utils.NetworkUtility;
 import com.humaclab.selliscope.Utils.SessionManager;
 import com.humaclab.selliscope.model.Outlets;
@@ -54,10 +54,10 @@ import static com.humaclab.selliscope.RouteActivity.checkPermission;
 
 public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecyclerViewAdapter.OutletViewHolder> {
 
-    private Context context;
-    private Outlets.Successful.OutletsResult outletItems;
     GoogleApiClient googleApiClient;
     SelliscopeApiEndpointInterface apiService;
+    private Context context;
+    private Outlets.Successful.OutletsResult outletItems;
 
     public OutletRecyclerViewAdapter(Context context, Outlets.Successful.OutletsResult outletItems) {
         this.outletItems = outletItems;
@@ -167,8 +167,7 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
                 sessionManager.getUserPassword(), false)
                 .create(SelliscopeApiEndpointInterface.class);
         List<UserLocation.Visit> userLocationVisits = new ArrayList<>();
-        userLocationVisits.add(new UserLocation.Visit(location.getLatitude(),
-                location.getLongitude(), outletId));
+        userLocationVisits.add(new UserLocation.Visit(location.getLatitude(), location.getLongitude(), GetAddressFromLatLang.getAddressFromLatLan(context, location.getLatitude(), location.getLongitude()), outletId));
         Call<ResponseBody> call = apiService.sendUserLocation(new UserLocation(userLocationVisits));
         call.enqueue(new Callback<ResponseBody>() {
             @Override

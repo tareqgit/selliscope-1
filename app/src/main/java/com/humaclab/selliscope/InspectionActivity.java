@@ -5,9 +5,8 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Base64;
 import android.view.View;
@@ -32,11 +31,10 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class InspectionActivity extends AppCompatActivity {
+    private final int CAMERA_REQUEST = 3214;
     private SelliscopeApiEndpointInterface apiService;
     private ActivityInspectionBinding binding;
     private ProgressDialog pd;
-
-    private final int CAMERA_REQUEST = 3214;
     private String promotionImage;
 
     private List<Integer> outletIDs;

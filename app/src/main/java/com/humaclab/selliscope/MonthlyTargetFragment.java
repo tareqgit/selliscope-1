@@ -15,9 +15,7 @@ import com.google.gson.Gson;
 import com.humaclab.selliscope.Utils.NetworkUtility;
 import com.humaclab.selliscope.Utils.SessionManager;
 import com.humaclab.selliscope.Utils.VerticalSpaceItemDecoration;
-import com.humaclab.selliscope.adapters.OutletRecyclerViewAdapter;
 import com.humaclab.selliscope.adapters.TargetRecyclerViewAdapter;
-import com.humaclab.selliscope.model.Outlets;
 import com.humaclab.selliscope.model.TargetItem;
 import com.humaclab.selliscope.model.Targets;
 
@@ -28,19 +26,18 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import timber.log.Timber;
 
 /**
  * Created by Miaki on 2/27/17.
  */
 
 public class MonthlyTargetFragment extends Fragment {
+    private static final String KEY_POSITION = "position";
     SelliscopeApiEndpointInterface apiService;
     SwipeRefreshLayout swipeRefreshLayout;
-    private static final String KEY_POSITION = "position";
+    RecyclerView recyclerView;
     private TargetRecyclerViewAdapter targetRecyclerViewAdapter;
     private List<TargetItem> targetItems;
-    RecyclerView recyclerView;
 
     public static MonthlyTargetFragment newInstance(int position) {
         MonthlyTargetFragment frag = new MonthlyTargetFragment();

@@ -1,13 +1,8 @@
 package com.humaclab.selliscope;
 
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
-import android.location.Location;
-import android.location.LocationManager;
 import android.os.IBinder;
-
-import com.humaclab.selliscope.Utils.NetworkUtility;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;

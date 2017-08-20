@@ -9,10 +9,8 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.humaclab.selliscope.R;
-import com.humaclab.selliscope.model.Districts;
 import com.humaclab.selliscope.model.Thanas;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -20,9 +18,9 @@ import java.util.List;
  */
 
 public class ThanaAdapter extends ArrayAdapter<Thanas.Successful.Thana> {
+    LayoutInflater layoutInflater;
     private Activity activity;
     private List<Thanas.Successful.Thana> thanas;
-    LayoutInflater layoutInflater;
 
     public ThanaAdapter(Activity activity, List<Thanas.Successful.Thana>
             thanas) {

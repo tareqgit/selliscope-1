@@ -21,7 +21,8 @@ public class HttpAuthInterceptor implements Interceptor {
         this.httpPassword = httpPassword;
     }
 
-    @Override public Response intercept(Chain chain) throws IOException {
+    @Override
+    public Response intercept(Chain chain) throws IOException {
         Request newRequest = chain.request().newBuilder()
                 .addHeader("Authorization", getAuthorizationValue())
                 .build();

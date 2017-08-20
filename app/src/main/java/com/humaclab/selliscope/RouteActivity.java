@@ -59,10 +59,15 @@ import timber.log.Timber;
 public class RouteActivity extends AppCompatActivity implements OnMapReadyCallback,
         LocationSource.OnLocationChangedListener {
 
+    SelliscopeApiEndpointInterface apiService;
     private GoogleMap mMap;
     private TextView toolbarTitle;
     private GoogleApiClient googleApiClient;
-    SelliscopeApiEndpointInterface apiService;
+
+    public static boolean checkPermission(final Context context) {
+        return ActivityCompat.checkSelfPermission(context,
+                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -147,11 +152,6 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
         } else {
             Timber.d("Location Permission is not enabled.");
         }
-    }
-
-    public static boolean checkPermission(final Context context) {
-        return ActivityCompat.checkSelfPermission(context,
-                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
     }
 
     void getVisits() {

@@ -35,14 +35,14 @@ import retrofit2.Response;
  */
 
 public class DailyTargetFragment extends Fragment {
+    private static final String KEY_POSITION = "position";
     SelliscopeApiEndpointInterface apiService;
     SwipeRefreshLayout swipeRefreshLayout;
-    private static final String KEY_POSITION = "position";
-    private TargetRecyclerViewAdapter targetRecyclerViewAdapter;
-    private List<TargetItem> targetItems;
     RecyclerView recyclerView;
     DatabaseHandler dbHandler;
     List<Target> targets;
+    private TargetRecyclerViewAdapter targetRecyclerViewAdapter;
+    private List<TargetItem> targetItems;
 
     public static DailyTargetFragment newInstance(int position) {
         DailyTargetFragment frag = new DailyTargetFragment();

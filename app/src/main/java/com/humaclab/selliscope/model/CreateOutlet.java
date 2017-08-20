@@ -25,7 +25,10 @@ public class CreateOutlet {
     public double outletLongitude;
     @SerializedName("img")
     public String outletImage;
-
+    @SerializedName("error")
+    public boolean error;
+    @SerializedName("result")
+    public String result;
     public CreateOutlet(int outletTypeId, String outletName, String ownerName, String address,
                         int outletThanaId, String outletPhoneNumber, double outletLatitude,
                         double outletLongitude, String outletImage) {
@@ -39,9 +42,4 @@ public class CreateOutlet {
         this.outletLongitude = outletLongitude;
         this.outletImage = outletImage;
     }
-
-    @SerializedName("error")
-    public boolean error;
-    @SerializedName("result")
-    public String result;
 }

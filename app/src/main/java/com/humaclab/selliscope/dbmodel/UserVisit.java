@@ -24,16 +24,16 @@ public class UserVisit {
         return latitude;
     }
 
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
     public int getVisitId() {
         return visitId;
     }
 
     public void setVisitId(int visitId) {
         this.visitId = visitId;
-    }
-
-    public void setLatitude(double latitude) {
-        this.latitude = latitude;
     }
 
     public double getLongitude() {

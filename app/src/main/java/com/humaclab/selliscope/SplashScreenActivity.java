@@ -7,6 +7,7 @@ import com.humaclab.selliscope.Utils.SessionManager;
 
 public class SplashScreenActivity extends AppCompatActivity {
     private SessionManager sessionManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

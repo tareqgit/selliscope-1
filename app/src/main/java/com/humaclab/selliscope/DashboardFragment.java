@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -29,6 +28,7 @@ public class DashboardFragment extends Fragment {
     private DashboardRecyclerViewAdapter dashboardRecyclerViewAdapter;
     private int itemNumber = 2;
     private Activity activity;
+
     @Override
     public View onCreateView(LayoutInflater inflater,
                              ViewGroup container,

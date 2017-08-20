@@ -46,6 +46,7 @@ public class OutletDetails {
             public String updatedAt;
         }
     }
+
     public static class Unsuccessful {
         @SerializedName("error")
         public boolean error;

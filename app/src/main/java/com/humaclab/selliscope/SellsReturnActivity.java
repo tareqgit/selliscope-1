@@ -1,8 +1,8 @@
 package com.humaclab.selliscope;
 
+import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -12,7 +12,6 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.humaclab.selliscope.Utils.NetworkUtility;
 import com.humaclab.selliscope.Utils.SessionManager;
-import com.humaclab.selliscope.adapters.DeliveryListRecyclerAdapter;
 import com.humaclab.selliscope.adapters.SellsReturnRecyclerAdapter;
 import com.humaclab.selliscope.model.DeliveryResponse;
 

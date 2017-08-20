@@ -21,6 +21,7 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.gson.Gson;
 import com.humaclab.selliscope.Utils.CurrentTimeUtilityClass;
 import com.humaclab.selliscope.Utils.DatabaseHandler;
+import com.humaclab.selliscope.Utils.GetAddressFromLatLang;
 import com.humaclab.selliscope.Utils.NetworkUtility;
 import com.humaclab.selliscope.Utils.SessionManager;
 import com.humaclab.selliscope.dbmodel.UserVisit;
@@ -40,6 +41,11 @@ public class UserTrackingService extends Service {
     GoogleApiClient googleApiClient;
     SelliscopeApiEndpointInterface apiService;
     DatabaseHandler dbHandler;
+
+    public static boolean checkPermission(final Context context) {
+        return ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                || ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED;
+    }
 
     @Override
     public void onCreate() {
@@ -73,7 +79,6 @@ public class UserTrackingService extends Service {
     public IBinder onBind(Intent intent) {
         return null;
     }
-
 
     private void getLocation() {
         if (checkPermission(getApplicationContext())) {
@@ -128,7 +133,7 @@ public class UserTrackingService extends Service {
                 sessionManager.getUserPassword(), false)
                 .create(SelliscopeApiEndpointInterface.class);
         List<UserLocation.Visit> userLocationVisits = new ArrayList<>();
-        userLocationVisits.add(new UserLocation.Visit(latitude, longitude, timeStamp));
+        userLocationVisits.add(new UserLocation.Visit(latitude, longitude, GetAddressFromLatLang.getAddressFromLatLan(getApplicationContext(), latitude, longitude), timeStamp));
         Call<ResponseBody> call = apiService.sendUserLocation(new UserLocation(userLocationVisits));
         call.enqueue(new Callback<ResponseBody>() {
             @Override
@@ -163,11 +168,6 @@ public class UserTrackingService extends Service {
 
             }
         });
-    }
-
-    public static boolean checkPermission(final Context context) {
-        return ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
-                || ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED;
     }
 
     @Override

@@ -8,11 +8,11 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.location.Location;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Base64;
 import android.util.Log;
@@ -54,6 +54,12 @@ import timber.log.Timber;
 
 public class EditOutletActivity extends AppCompatActivity {
     private final int CAMERA_REQUEST = 3214;
+    boolean isValidOutletName = true;
+    boolean isValidOwnerName = true;
+    boolean isValidAddress = true;
+    boolean isValidPhone = true;
+    double latitude, longitude = 0.0;
+    int outletTypeId, thanaId = -1;
     private EditText outletName, outletAddress, outletOwner, outletContactNumber;
     private Spinner outletType, district, thana;
     private ImageView iv_outlet;
@@ -65,16 +71,15 @@ public class EditOutletActivity extends AppCompatActivity {
     private SelliscopeApiEndpointInterface apiService;
     private SessionManager sessionManager;
     private GoogleApiClient googleApiClient;
-    boolean isValidOutletName = true;
-    boolean isValidOwnerName = true;
-    boolean isValidAddress = true;
-    boolean isValidPhone = true;
-    double latitude, longitude = 0.0;
-    int outletTypeId, thanaId = -1;
     private String outletImage;
     private ProgressDialog pd;
 
     private Outlets.Successful.Outlet outlet;
+
+    public static boolean checkPermission(final Context context) {
+        return ActivityCompat.checkSelfPermission(context,
+                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -455,11 +460,6 @@ public class EditOutletActivity extends AppCompatActivity {
         } else {
             Timber.d("Location Permission is not enabled.");
         }
-    }
-
-    public static boolean checkPermission(final Context context) {
-        return ActivityCompat.checkSelfPermission(context,
-                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
     }
 
     @Override

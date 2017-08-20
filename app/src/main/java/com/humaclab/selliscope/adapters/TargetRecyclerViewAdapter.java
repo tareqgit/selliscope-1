@@ -1,20 +1,16 @@
 package com.humaclab.selliscope.adapters;
 
 import android.content.Context;
-import android.graphics.Rect;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.eralp.circleprogressview.CircleProgressView;
-import com.eralp.circleprogressview.ProgressAnimationListener;
 import com.humaclab.selliscope.R;
-import com.humaclab.selliscope.model.DashboardItem;
 import com.humaclab.selliscope.model.Targets;
 
 import java.util.List;

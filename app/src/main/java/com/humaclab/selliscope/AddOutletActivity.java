@@ -42,8 +42,6 @@ import com.humaclab.selliscope.model.Thanas;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -53,6 +51,14 @@ import timber.log.Timber;
 
 public class AddOutletActivity extends AppCompatActivity {
     private final int CAMERA_REQUEST = 3214;
+    SelliscopeApiEndpointInterface apiService;
+    SessionManager sessionManager;
+    boolean isValidOutletName = true;
+    boolean isValidOwnerName = true;
+    boolean isValidAddress = true;
+    boolean isValidPhone = true;
+    double latitude, longitude = 0.0;
+    int outletTypeId, thanaId = -1;
     private EditText outletName, outletAddress, outletOwner, outletContactNumber;
     private Spinner outletType, district, thana;
     private ImageView iv_outlet;
@@ -61,18 +67,15 @@ public class AddOutletActivity extends AppCompatActivity {
     private OutletTypeAdapter outletTypeAdapter;
     private ThanaAdapter thanaAdapter;
     private DistrictAdapter districtAdapter;
-    SelliscopeApiEndpointInterface apiService;
-    SessionManager sessionManager;
     private GoogleApiClient googleApiClient;
-    boolean isValidOutletName = true;
-    boolean isValidOwnerName = true;
-    boolean isValidAddress = true;
-    boolean isValidPhone = true;
-    double latitude, longitude = 0.0;
-    int outletTypeId, thanaId = -1;
     private String outletImage;
 
     private ProgressDialog pd;
+
+    public static boolean checkPermission(final Context context) {
+        return ActivityCompat.checkSelfPermission(context,
+                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -417,11 +420,6 @@ public class AddOutletActivity extends AppCompatActivity {
         } else {
             Timber.d("Location Permission is not enabled.");
         }
-    }
-
-    public static boolean checkPermission(final Context context) {
-        return ActivityCompat.checkSelfPermission(context,
-                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
     }
 
     @Override

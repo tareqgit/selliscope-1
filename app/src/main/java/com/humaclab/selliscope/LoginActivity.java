@@ -32,6 +32,14 @@ public class LoginActivity extends AppCompatActivity {
     SessionManager sessionManager;
     ProgressBar loginProgresssBar;
 
+    public final static boolean isValidEmail(CharSequence target) {
+        if (target == null) {
+            return false;
+        } else {
+            return android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches();
+        }
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -134,13 +142,5 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-    }
-
-    public final static boolean isValidEmail(CharSequence target) {
-        if (target == null) {
-            return false;
-        } else {
-            return android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches();
-        }
     }
 }

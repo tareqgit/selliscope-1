@@ -17,27 +17,23 @@ import java.util.HashMap;
 
 
 public class SessionManager {
-    // Shared Preferences
-    SharedPreferences pref;
-
-    // Editor for Shared preferences
-    Editor editor;
-
-    // Context
-    Context _context;
-
-    // Shared pref mode
-    int PRIVATE_MODE = 0;
-
+    public static final String KEY_USER_NAME = "userName";
+    public static final String KEY_USER_EMAIL = "email";
+    public static final String KEY_USER_PASSWORD = "password";
+    public static final String KEY_USER_PROFILE_PIC_URL = "profilePictureUrl";
     // Sharedpref file name
     private static final String PREF_NAME = "SelliscopePref";
 
     // All Shared Preferences Keys
     private static final String IS_LOGGED_IN = "IsLoggedIn";
-    public static final String KEY_USER_NAME = "userName";
-    public static final String KEY_USER_EMAIL = "email";
-    public static final String KEY_USER_PASSWORD = "password";
-    public static final String KEY_USER_PROFILE_PIC_URL = "profilePictureUrl";
+    // Shared Preferences
+    SharedPreferences pref;
+    // Editor for Shared preferences
+    Editor editor;
+    // Context
+    Context _context;
+    // Shared pref mode
+    int PRIVATE_MODE = 0;
 
     // Constructor
     public SessionManager(Context context) {

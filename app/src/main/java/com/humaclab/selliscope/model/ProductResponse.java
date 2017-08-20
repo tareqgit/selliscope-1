@@ -14,11 +14,6 @@ public class ProductResponse {
     @SerializedName("result")
     public Products result;
 
-    public class Products {
-        @SerializedName("products")
-        public List<ProductResult> productResults;
-    }
-
     public static class ProductResult {
         @SerializedName("id")
         public int id;
@@ -67,5 +62,10 @@ public class ProductResponse {
         public int id;
         @SerializedName("name")
         public String name;
+    }
+
+    public class Products {
+        @SerializedName("products")
+        public List<ProductResult> productResults;
     }
 }

@@ -22,22 +22,11 @@ import timber.log.Timber;
  */
 
 public class SelliscopeApplication extends Application {
+    private static Retrofit retrofitInstance;
+
     static {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
     }
-
-    private static Retrofit retrofitInstance;
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        if (BuildConfig.DEBUG) {
-            Timber.plant(new Timber.DebugTree());
-        }
-        Stetho.initializeWithDefaults(this);
-        Fabric.with(this, new Crashlytics());
-    }
-
 
     /**
      * @param email
@@ -64,5 +53,15 @@ public class SelliscopeApplication extends Application {
                     .build();
         }
         return retrofitInstance;
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        if (BuildConfig.DEBUG) {
+            Timber.plant(new Timber.DebugTree());
+        }
+        Stetho.initializeWithDefaults(this);
+        Fabric.with(this, new Crashlytics());
     }
 }

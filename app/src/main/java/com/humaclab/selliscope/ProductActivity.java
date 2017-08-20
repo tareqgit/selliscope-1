@@ -16,8 +16,6 @@ import android.widget.Toast;
 import com.humaclab.selliscope.Utils.DatabaseHandler;
 import com.humaclab.selliscope.Utils.SessionManager;
 import com.humaclab.selliscope.adapters.ProductRecyclerViewAdapter;
-import com.humaclab.selliscope.model.BrandResponse;
-import com.humaclab.selliscope.model.CategoryResponse;
 import com.humaclab.selliscope.model.ProductResponse;
 
 import java.util.ArrayList;

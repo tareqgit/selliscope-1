@@ -18,9 +18,9 @@ import java.util.List;
  */
 
 public class DistrictAdapter extends ArrayAdapter<Districts.Successful.District> {
+    LayoutInflater layoutInflater;
     private Activity activity;
     private List<Districts.Successful.District> districts;
-    LayoutInflater layoutInflater;
 
     public DistrictAdapter(Activity activity, List<Districts.Successful.District>
             districts) {

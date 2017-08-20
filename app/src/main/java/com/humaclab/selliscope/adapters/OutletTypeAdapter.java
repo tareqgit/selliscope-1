@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.humaclab.selliscope.R;
 import com.humaclab.selliscope.model.OutletTypes;
+
 import java.util.List;
 
 /**
@@ -17,9 +18,9 @@ import java.util.List;
  */
 
 public class OutletTypeAdapter extends ArrayAdapter<OutletTypes.Successful.OutletType> {
+    LayoutInflater layoutInflater;
     private Activity activity;
     private List<OutletTypes.Successful.OutletType> outletTypes;
-    LayoutInflater layoutInflater;
 
     public OutletTypeAdapter(Activity activity, List<OutletTypes.Successful.OutletType>
             outletTypes) {

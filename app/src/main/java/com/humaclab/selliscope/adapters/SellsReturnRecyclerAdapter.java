@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.humaclab.selliscope.BR;
-import com.humaclab.selliscope.DeliveryDetailsActivity;
 import com.humaclab.selliscope.R;
 import com.humaclab.selliscope.SellsReturnDetailsActivity;
 import com.humaclab.selliscope.model.DeliveryResponse;

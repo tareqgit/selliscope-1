@@ -20,10 +20,11 @@ import java.util.Map;
 
 /**
  * Created by dipu_ on 4/21/2017.
+ * Updated by Leon on 8/20/2017.
  */
 
 public class DatabaseHandler extends SQLiteOpenHelper {
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
     private static final String DATABASE_NAME = "selliscopedb";
 
     // Database Tables
@@ -181,6 +182,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_BRAND);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_DELIVERY);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_DELIVERY_PRODUCT);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_OUTLET);
         // Create tables again
         onCreate(db);
     }

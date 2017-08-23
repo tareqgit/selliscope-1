@@ -1,4 +1,4 @@
-package com.humaclab.selliscope;
+package com.humaclab.selliscope.Service;
 
 import android.app.Service;
 import android.content.Intent;
@@ -37,7 +37,7 @@ public class SendLocationDataService extends Service {
                         startService(new Intent(SendLocationDataService.this,
                                 UserTrackingService.class));
                     }
-                }, 0, 2, TimeUnit.MINUTES);
+                }, 0, 1, TimeUnit.MINUTES);
         return super.onStartCommand(intent, flags, startId);
     }
 }

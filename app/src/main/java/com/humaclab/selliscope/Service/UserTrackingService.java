@@ -40,9 +40,9 @@ import retrofit2.Response;
 import timber.log.Timber;
 
 public class UserTrackingService extends Service {
-    GoogleApiClient googleApiClient;
-    SelliscopeApiEndpointInterface apiService;
-    DatabaseHandler dbHandler;
+    private GoogleApiClient googleApiClient;
+    private SelliscopeApiEndpointInterface apiService;
+    private DatabaseHandler dbHandler;
 
     public static boolean checkPermission(final Context context) {
         return ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
@@ -95,10 +95,12 @@ public class UserTrackingService extends Service {
                         Timber.d("Latitude: " + latitude
                                 + "Longitude: " + longitude);
                         if (NetworkUtility.isNetworkAvailable(UserTrackingService.this)) {
-                            sendUserLocation(location.getLatitude(),
-                                    location.getLongitude(),
-                                    CurrentTimeUtilityClass
-                                            .getCurrentTimeStamp(), false, -1);
+                            sendUserLocation(
+                                    latitude,
+                                    longitude,
+                                    CurrentTimeUtilityClass.getCurrentTimeStamp(),
+                                    false,
+                                    -1);
                             List<UserVisit> userVisits = dbHandler.getUSerVisits();
                             if (!userVisits.isEmpty())
                                 for (UserVisit userVisit : userVisits) {
@@ -128,8 +130,7 @@ public class UserTrackingService extends Service {
         }
     }
 
-    private void sendUserLocation(double latitude, double longitude, String timeStamp
-            , final boolean fromDB, final int visitId) {
+    private void sendUserLocation(double latitude, double longitude, String timeStamp, final boolean fromDB, final int visitId) {
         SessionManager sessionManager = new SessionManager(UserTrackingService.this);
         apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(),
                 sessionManager.getUserPassword(), false)

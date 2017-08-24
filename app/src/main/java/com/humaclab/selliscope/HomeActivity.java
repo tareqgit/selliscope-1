@@ -22,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.humaclab.selliscope.Service.SendLocationDataService;
 import com.humaclab.selliscope.Utils.DatabaseHandler;
 import com.humaclab.selliscope.Utils.SessionManager;
 import com.humaclab.selliscope.model.BrandResponse;

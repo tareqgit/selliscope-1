@@ -36,6 +36,8 @@
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="c2bca7824e6a758388318ecf6635fd2e8e11979a" />
+
+        <!--Services and Receivers-->
         <receiver
             android:name=".Receiver.StartBootReceiver"
             android:enabled="true"
@@ -48,6 +50,23 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </receiver>
+
+        <service
+            android:name=".Service.FcmInstanceIdServices"
+            android:exported="false"
+            android:permission="android.permission.RECEIVE_BOOT_COMPLETED">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+            </intent-filter>
+        </service>
+        <service
+            android:name=".Service.FcmGetLocationService"
+            android:exported="false"
+            android:permission="android.permission.RECEIVE_BOOT_COMPLETED">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
 
         <service
             android:name=".Service.UserTrackingService"
@@ -67,6 +86,7 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </service>
+        <!--Services and Receivers-->
 
         <activity
             android:name=".SplashScreenActivity"

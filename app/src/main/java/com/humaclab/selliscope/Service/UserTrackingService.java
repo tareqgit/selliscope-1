@@ -18,6 +18,7 @@ import com.google.android.gms.awareness.Awareness;
 import com.google.android.gms.awareness.snapshot.LocationResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.location.LocationServices;
 import com.google.gson.Gson;
 import com.humaclab.selliscope.SelliscopeApiEndpointInterface;
 import com.humaclab.selliscope.SelliscopeApplication;
@@ -60,8 +61,8 @@ public class UserTrackingService extends Service {
         Timber.d("User Tracking Service OnStartCommand");
         googleApiClient = new GoogleApiClient.Builder(UserTrackingService.this)
                 .addApi(Awareness.API)
+                .addApi(LocationServices.API)
                 .build();
-        googleApiClient.connect();
         googleApiClient.registerConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
             @Override
             public void onConnected(@Nullable Bundle bundle) {
@@ -73,6 +74,8 @@ public class UserTrackingService extends Service {
 
             }
         });
+        googleApiClient.connect();
+
         return super.onStartCommand(intent, flags, startId);
     }
 

@@ -50,7 +50,7 @@ public class InstantLocation implements Serializable {
 
                                 locationDetails.setLatitude(latitude);
                                 locationDetails.setLongitude(longitude);
-                                locationDetails.setDateTime(CurrentTimeUtilityClass.getCurrentTimeStamp());
+                                locationDetails.setTimeStamp(CurrentTimeUtilityClass.getCurrentTimeStamp());
                                 locationDetails.setAddress(GetAddressFromLatLang.getAddressFromLatLan(context, latitude, longitude));
                             } else {
                                 Timber.d("Didn't get Location Data");
@@ -83,10 +83,10 @@ public class InstantLocation implements Serializable {
         private double latitude;
         @SerializedName("longitude")
         private double longitude;
-        @SerializedName("address")
+        @SerializedName("formatted_address")
         private String address;
-        @SerializedName("timestamp")
-        private String dateTime;
+        @SerializedName("created_at")
+        private String timeStamp;
 
         public double getLatitude() {
             return latitude;
@@ -112,12 +112,12 @@ public class InstantLocation implements Serializable {
             this.address = address;
         }
 
-        public String getDateTime() {
-            return dateTime;
+        public String getTimeStamp() {
+            return timeStamp;
         }
 
-        public void setDateTime(String dateTime) {
-            this.dateTime = dateTime;
+        public void setTimeStamp(String timeStamp) {
+            this.timeStamp = timeStamp;
         }
     }
 }

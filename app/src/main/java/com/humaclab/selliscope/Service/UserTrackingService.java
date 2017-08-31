@@ -1,4 +1,4 @@
-package com.humaclab.selliscope;
+package com.humaclab.selliscope.Service;
 
 import android.Manifest;
 import android.app.Service;
@@ -18,7 +18,10 @@ import com.google.android.gms.awareness.Awareness;
 import com.google.android.gms.awareness.snapshot.LocationResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.location.LocationServices;
 import com.google.gson.Gson;
+import com.humaclab.selliscope.SelliscopeApiEndpointInterface;
+import com.humaclab.selliscope.SelliscopeApplication;
 import com.humaclab.selliscope.Utils.CurrentTimeUtilityClass;
 import com.humaclab.selliscope.Utils.DatabaseHandler;
 import com.humaclab.selliscope.Utils.GetAddressFromLatLang;
@@ -38,9 +41,9 @@ import retrofit2.Response;
 import timber.log.Timber;
 
 public class UserTrackingService extends Service {
-    GoogleApiClient googleApiClient;
-    SelliscopeApiEndpointInterface apiService;
-    DatabaseHandler dbHandler;
+    private GoogleApiClient googleApiClient;
+    private SelliscopeApiEndpointInterface apiService;
+    private DatabaseHandler dbHandler;
 
     public static boolean checkPermission(final Context context) {
         return ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
@@ -58,8 +61,8 @@ public class UserTrackingService extends Service {
         Timber.d("User Tracking Service OnStartCommand");
         googleApiClient = new GoogleApiClient.Builder(UserTrackingService.this)
                 .addApi(Awareness.API)
+                .addApi(LocationServices.API)
                 .build();
-        googleApiClient.connect();
         googleApiClient.registerConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
             @Override
             public void onConnected(@Nullable Bundle bundle) {
@@ -71,6 +74,8 @@ public class UserTrackingService extends Service {
 
             }
         });
+        googleApiClient.connect();
+
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -87,16 +92,18 @@ public class UserTrackingService extends Service {
                 public void onResult(@NonNull LocationResult locationResult) {
                     if (locationResult.getStatus().isSuccess()) {
                         Location location = locationResult.getLocation();
-                        double latitude = Double.parseDouble(String.format("%.04f", location.getLatitude()));
-                        double longitude = Double.parseDouble(String.format("%.04f", location.getLongitude()));
+                        double latitude = Double.parseDouble(String.format("%.05f", location.getLatitude()));
+                        double longitude = Double.parseDouble(String.format("%.05f", location.getLongitude()));
 
                         Timber.d("Latitude: " + latitude
                                 + "Longitude: " + longitude);
                         if (NetworkUtility.isNetworkAvailable(UserTrackingService.this)) {
-                            sendUserLocation(location.getLatitude(),
-                                    location.getLongitude(),
-                                    CurrentTimeUtilityClass
-                                            .getCurrentTimeStamp(), false, -1);
+                            sendUserLocation(
+                                    latitude,
+                                    longitude,
+                                    CurrentTimeUtilityClass.getCurrentTimeStamp(),
+                                    false,
+                                    -1);
                             List<UserVisit> userVisits = dbHandler.getUSerVisits();
                             if (!userVisits.isEmpty())
                                 for (UserVisit userVisit : userVisits) {
@@ -117,7 +124,7 @@ public class UserTrackingService extends Service {
                         }
                     } else {
                         Timber.d("Didn't get Location Data");
-                        stopSelf();
+//                        stopSelf();
                     }
                 }
             });
@@ -126,8 +133,7 @@ public class UserTrackingService extends Service {
         }
     }
 
-    private void sendUserLocation(double latitude, double longitude, String timeStamp
-            , final boolean fromDB, final int visitId) {
+    private void sendUserLocation(double latitude, double longitude, String timeStamp, final boolean fromDB, final int visitId) {
         SessionManager sessionManager = new SessionManager(UserTrackingService.this);
         apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(),
                 sessionManager.getUserPassword(), false)
@@ -148,7 +154,7 @@ public class UserTrackingService extends Service {
                         Timber.d("Result:" + userLocationSuccess.result);
                         if (fromDB)
                             dbHandler.deleteUserVisit(visitId);
-                        stopSelf();
+//                        stopSelf();
                     } catch (IOException e) {
                         Timber.d("Error:" + e.toString());
                         e.printStackTrace();

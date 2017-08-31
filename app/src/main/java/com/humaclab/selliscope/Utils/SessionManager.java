@@ -21,19 +21,21 @@ public class SessionManager {
     public static final String KEY_USER_EMAIL = "email";
     public static final String KEY_USER_PASSWORD = "password";
     public static final String KEY_USER_PROFILE_PIC_URL = "profilePictureUrl";
+    public static final String KEY_FCM_TOKEN = "fcmToken";
+
     // Sharedpref file name
     private static final String PREF_NAME = "SelliscopePref";
 
     // All Shared Preferences Keys
     private static final String IS_LOGGED_IN = "IsLoggedIn";
     // Shared Preferences
-    SharedPreferences pref;
+    private SharedPreferences pref;
     // Editor for Shared preferences
-    Editor editor;
+    private Editor editor;
     // Context
-    Context _context;
+    private Context _context;
     // Shared pref mode
-    int PRIVATE_MODE = 0;
+    private int PRIVATE_MODE = 0;
 
     // Constructor
     public SessionManager(Context context) {
@@ -112,5 +114,13 @@ public class SessionManager {
      **/
     public boolean isLoggedIn() {
         return pref.getBoolean(IS_LOGGED_IN, false);
+    }
+
+    public String getFcmToken() {
+        return pref.getString(KEY_FCM_TOKEN, "Sorry token has not been generated yet!");
+    }
+
+    public void setFcmToken(String fcmToken) {
+        editor.putString(KEY_FCM_TOKEN, fcmToken);
     }
 }

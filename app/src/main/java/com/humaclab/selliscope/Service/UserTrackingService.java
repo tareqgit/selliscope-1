@@ -92,8 +92,8 @@ public class UserTrackingService extends Service {
                 public void onResult(@NonNull LocationResult locationResult) {
                     if (locationResult.getStatus().isSuccess()) {
                         Location location = locationResult.getLocation();
-                        double latitude = Double.parseDouble(String.format("%.04f", location.getLatitude()));
-                        double longitude = Double.parseDouble(String.format("%.04f", location.getLongitude()));
+                        double latitude = Double.parseDouble(String.format("%.05f", location.getLatitude()));
+                        double longitude = Double.parseDouble(String.format("%.05f", location.getLongitude()));
 
                         Timber.d("Latitude: " + latitude
                                 + "Longitude: " + longitude);
@@ -124,7 +124,7 @@ public class UserTrackingService extends Service {
                         }
                     } else {
                         Timber.d("Didn't get Location Data");
-                        stopSelf();
+//                        stopSelf();
                     }
                 }
             });
@@ -154,7 +154,7 @@ public class UserTrackingService extends Service {
                         Timber.d("Result:" + userLocationSuccess.result);
                         if (fromDB)
                             dbHandler.deleteUserVisit(visitId);
-                        stopSelf();
+//                        stopSelf();
                     } catch (IOException e) {
                         Timber.d("Error:" + e.toString());
                         e.printStackTrace();

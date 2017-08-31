@@ -93,17 +93,17 @@
                     android:textColor="#000"
                     android:textStyle="bold" />
 
-                <!--<TextView
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin=".5dp"
                     android:layout_weight="1"
                     android:background="#fff"
                     android:padding="10dp"
-                    android:text="Price"
+                    android:text="Godwon"
                     android:textAlignment="center"
                     android:textColor="#000"
-                    android:textStyle="bold" />-->
+                    android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -140,30 +140,6 @@
                     android:textAlignment="center"
                     android:textColor="#000"
                     android:textStyle="bold" />
-
-                <!--<TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin=".5dp"
-                    android:layout_weight="1"
-                    android:background="#fff"
-                    android:padding="10dp"
-                    android:text="Disc."
-                    android:textAlignment="center"
-                    android:textColor="#000"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin=".5dp"
-                    android:layout_weight="1"
-                    android:background="#fff"
-                    android:padding="10dp"
-                    android:text="Total"
-                    android:textAlignment="center"
-                    android:textColor="#000"
-                    android:textStyle="bold" />-->
             </LinearLayout>
 
             <android.support.v4.widget.SwipeRefreshLayout
@@ -177,123 +153,5 @@
                     android:layout_height="match_parent" />
             </android.support.v4.widget.SwipeRefreshLayout>
         </LinearLayout>
-
-        <!--<Button
-            android:id="@+id/btn_deliver"
-            style="@android:style/Widget.Button.Small"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="5dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:background="@drawable/button_shape"
-            android:text="Deliver Product"
-            android:textColor="#fff" />-->
-        <!--<LinearLayout
-            android:id="@+id/linearLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:orientation="horizontal">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="end"
-                    android:paddingBottom="10dp"
-                    android:paddingEnd="5dp"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="5dp"
-                    android:paddingStart="10dp"
-                    android:paddingTop="10dp"
-                    android:text="Sub Total: "
-                    android:textAlignment="textEnd"
-                    android:textColor="#000" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="end"
-                    android:paddingBottom="10dp"
-                    android:paddingEnd="5dp"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="5dp"
-                    android:paddingStart="10dp"
-                    android:paddingTop="10dp"
-                    android:text="Order Discount: "
-                    android:textAlignment="textEnd"
-                    android:textColor="#000" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="end"
-                    android:paddingBottom="10dp"
-                    android:paddingEnd="5dp"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="5dp"
-                    android:paddingStart="10dp"
-                    android:paddingTop="10dp"
-                    android:text="Grand Total: "
-                    android:textAlignment="textEnd"
-                    android:textColor="#000" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="3"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/tv_sub_total"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="start"
-                    android:paddingBottom="10dp"
-                    android:paddingEnd="10dp"
-                    android:paddingLeft="5dp"
-                    android:paddingRight="10dp"
-                    android:paddingStart="5dp"
-                    android:paddingTop="10dp"
-                    android:text='@{deliveryDetails.amount}'
-                    android:textAlignment="textStart" />
-
-                <TextView
-                    android:id="@+id/tv_discount"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="start"
-                    android:paddingBottom="10dp"
-                    android:paddingEnd="10dp"
-                    android:paddingLeft="5dp"
-                    android:paddingRight="10dp"
-                    android:paddingStart="5dp"
-                    android:paddingTop="10dp"
-                    android:text='@{deliveryDetails.discount}'
-                    android:textAlignment="textStart" />
-
-                <TextView
-                    android:id="@+id/tv_total"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="start"
-                    android:paddingBottom="10dp"
-                    android:paddingEnd="10dp"
-                    android:paddingLeft="5dp"
-                    android:paddingRight="10dp"
-                    android:paddingStart="5dp"
-                    android:paddingTop="10dp"
-                    android:text=""
-                    android:textAlignment="textStart" />
-            </LinearLayout>
-        </LinearLayout>-->
     </RelativeLayout>
 </layout>

@@ -4,7 +4,6 @@ import android.content.Context;
 import android.location.Address;
 import android.location.Geocoder;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
@@ -18,7 +17,6 @@ public class GetAddressFromLatLang {
      * @param latitude  String
      * @param longitude String
      * @return address String
-     * @throws IOException
      */
     public static String getAddressFromLatLan(Context context, double latitude, double longitude) {
         String address = "";
@@ -46,10 +44,10 @@ public class GetAddressFromLatLang {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        System.out.println("Location address: " + address + ", " + city + ", " + state + ", " + country + ", " + postalCode + ", " + knownName);
+        /*System.out.println("Location address: " + address + ", " + city + ", " + state + ", " + country + ", " + postalCode + ", " + knownName);
         System.out.println("Location address: " + address + ", " + city + ", " + state + ", " + country);
         System.out.println("Location address: " + address + ", " + city);
-        System.out.println("Location address: " + address);
+        System.out.println("Location address: " + address);*/
 
         return address;
     }

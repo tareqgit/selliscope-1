@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "549109950382",
+    "firebase_url": "https://selliscope-976ac.firebaseio.com",
+    "project_id": "selliscope-976ac",
+    "storage_bucket": "selliscope-976ac.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:549109950382:android:04ade098b734696c",
+        "android_client_info": {
+          "package_name": "com.humaclab.selliscope"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "549109950382-8ttueqomljr2pap9448kqdiof1bnm17m.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.humaclab.selliscope",
+            "certificate_hash": "bf4985fdf63f665a71ca385946458c86dd3dff59"
+          }
+        },
+        {
+          "client_id": "549109950382-43c45u132q3o9hfccha6o4odckm2qreh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCQ-h7Um4JK5QnHXSkx5jH-Q1dXOEx6dNk"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "549109950382-43c45u132q3o9hfccha6o4odckm2qreh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

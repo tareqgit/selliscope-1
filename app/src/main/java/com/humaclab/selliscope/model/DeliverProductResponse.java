@@ -20,6 +20,8 @@ public class DeliverProductResponse implements Serializable {
         public int orderId;
         @SerializedName("outlet_id")
         public int outletId;
+        @SerializedName("godown_id")
+        public int godownId;
         @SerializedName("products")
         public List<Product> products;
 

@@ -9,8 +9,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -21,6 +23,7 @@ import com.humaclab.selliscope.SelliscopeApplication;
 import com.humaclab.selliscope.Utils.SessionManager;
 import com.humaclab.selliscope.model.DeliverProductResponse;
 import com.humaclab.selliscope.model.DeliveryResponse;
+import com.humaclab.selliscope.model.GodownRespons;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,13 +40,17 @@ public class DeliveryRecyclerAdapter extends RecyclerView.Adapter<DeliveryRecycl
     private Context context;
     private List<DeliveryResponse.Product> products;
     private DeliveryResponse.DeliveryList deliveryList;
+    private List<GodownRespons.Godown> godownList;
+    private List<Integer> godownId = new ArrayList<>();
+    private List<String> godownName = new ArrayList<>();
 
     private ProgressDialog pd;
 
-    public DeliveryRecyclerAdapter(Context context, DeliveryResponse.DeliveryList deliveryList) {
+    public DeliveryRecyclerAdapter(Context context, DeliveryResponse.DeliveryList deliveryList, List<GodownRespons.Godown> godownList) {
         this.context = context;
         this.deliveryList = deliveryList;
         this.products = this.deliveryList.productList;
+        this.godownList = godownList;
     }
 
     @Override
@@ -62,6 +69,20 @@ public class DeliveryRecyclerAdapter extends RecyclerView.Adapter<DeliveryRecycl
         pd.setMessage("Delivering your product....");
         pd.setCancelable(false);
 
+        //For godwon spinner
+        godownId.clear();
+        godownId.add(0);
+        godownName.clear();
+        godownName.add("Select Godown");
+        for (GodownRespons.Godown godown : godownList) {
+            godownId.add(godown.getId());
+            godownName.add(godown.getName());
+        }
+        holder.sp_godown.setAdapter(new ArrayAdapter<>(context, R.layout.spinner_item, godownName));
+        holder.sp_godown.setSelection(0);
+        //For godwon spinner
+
+        //For qty increase and decrease
         final int[] qty = {Integer.parseInt(holder.et_qty.getText().toString())};
         holder.btn_increase.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,57 +108,65 @@ public class DeliveryRecyclerAdapter extends RecyclerView.Adapter<DeliveryRecycl
                 }
             }
         });
+        //For qty increase and decrease
+
         holder.btn_deliver.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                pd.show();
-                DeliverProductResponse deliverProductResponse = new DeliverProductResponse();
-                DeliverProductResponse.Order order = new DeliverProductResponse.Order();
-                DeliverProductResponse.Order.Product product1 = new DeliverProductResponse.Order.Product();
+                if (holder.sp_godown.getSelectedItemPosition() != 0) {
 
-                order.products = new ArrayList<>();
-                product1.productId = product.productId;
-                product1.qty = Integer.parseInt(holder.et_qty.getText().toString());
-                order.products.add(product1);
-                order.orderId = deliveryList.deliveryId;
-                order.outletId = deliveryList.outletId;
-                deliverProductResponse.order = order;
+                    pd.show();
+                    DeliverProductResponse deliverProductResponse = new DeliverProductResponse();
+                    DeliverProductResponse.Order order = new DeliverProductResponse.Order();
+                    DeliverProductResponse.Order.Product product1 = new DeliverProductResponse.Order.Product();
 
-                //Deliver api request
-                if (Integer.parseInt(holder.et_qty.getText().toString()) != 0) {
-                    SessionManager sessionManager = new SessionManager(context);
-                    SelliscopeApiEndpointInterface apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(),
-                            sessionManager.getUserPassword(), false).create(SelliscopeApiEndpointInterface.class);
-                    Call<DeliverProductResponse> call = apiService.deliverProduct(deliverProductResponse);
-                    System.out.println("Delivery : " + new Gson().toJson(deliverProductResponse));
-                    call.enqueue(new Callback<DeliverProductResponse>() {
-                        @Override
-                        public void onResponse(Call<DeliverProductResponse> call, Response<DeliverProductResponse> response) {
-                            pd.dismiss();
-                            if (response.code() == 201) {
-                                holder.btn_deliver.setEnabled(false);
-                                holder.btn_deliver.setBackgroundColor(Color.parseColor("#dddddd"));
-                                Toast.makeText(context, "Product delivered successfully", Toast.LENGTH_SHORT).show();
-                            } else if (response.code() == 200) {
-                                Toast.makeText(context, response.body().result, Toast.LENGTH_LONG).show();
-                            } else if (response.code() == 401) {
-                                Toast.makeText(context, "Invalid Response from server.", Toast.LENGTH_SHORT).show();
-                            } else {
-                                Toast.makeText(context, "Server Error! Try Again Later!", Toast.LENGTH_SHORT).show();
+                    order.products = new ArrayList<>();
+                    product1.productId = product.productId;
+                    product1.qty = Integer.parseInt(holder.et_qty.getText().toString());
+                    order.products.add(product1);
+                    order.orderId = deliveryList.deliveryId;
+                    order.outletId = deliveryList.outletId;
+                    order.godownId = godownId.get(holder.sp_godown.getSelectedItemPosition());
+                    deliverProductResponse.order = order;
+
+                    //Deliver api request
+                    if (Integer.parseInt(holder.et_qty.getText().toString()) != 0) {
+                        SessionManager sessionManager = new SessionManager(context);
+                        SelliscopeApiEndpointInterface apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(),
+                                sessionManager.getUserPassword(), false).create(SelliscopeApiEndpointInterface.class);
+                        Call<DeliverProductResponse> call = apiService.deliverProduct(deliverProductResponse);
+                        System.out.println("Delivery : " + new Gson().toJson(deliverProductResponse));
+                        call.enqueue(new Callback<DeliverProductResponse>() {
+                            @Override
+                            public void onResponse(Call<DeliverProductResponse> call, Response<DeliverProductResponse> response) {
+                                pd.dismiss();
+                                if (response.code() == 201) {
+                                    holder.btn_deliver.setEnabled(false);
+                                    holder.btn_deliver.setBackgroundColor(Color.parseColor("#dddddd"));
+                                    Toast.makeText(context, "Product delivered successfully", Toast.LENGTH_SHORT).show();
+                                } else if (response.code() == 200) {
+                                    Toast.makeText(context, response.body().result, Toast.LENGTH_LONG).show();
+                                } else if (response.code() == 401) {
+                                    Toast.makeText(context, "Invalid Response from server.", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(context, "Server Error! Try Again Later!", Toast.LENGTH_SHORT).show();
+                                }
                             }
-                        }
 
-                        @Override
-                        public void onFailure(Call<DeliverProductResponse> call, Throwable t) {
-                            pd.dismiss();
-                            t.printStackTrace();
-                        }
-                    });
+                            @Override
+                            public void onFailure(Call<DeliverProductResponse> call, Throwable t) {
+                                pd.dismiss();
+                                t.printStackTrace();
+                            }
+                        });
+                    } else {
+                        pd.dismiss();
+                        Toast.makeText(context, "You cannot deliver 0 amount of product.", Toast.LENGTH_LONG).show();
+                    }
+                    //Deliver api request
                 } else {
-                    pd.dismiss();
-                    Toast.makeText(context, "You cannot deliver 0 amount of product.", Toast.LENGTH_LONG).show();
+                    Toast.makeText(context, "Please select a godown.", Toast.LENGTH_SHORT).show();
                 }
-                //Deliver api request
             }
         });
     }
@@ -149,12 +178,14 @@ public class DeliveryRecyclerAdapter extends RecyclerView.Adapter<DeliveryRecycl
 
     public class DeliveryDetailsViewHolder extends RecyclerView.ViewHolder {
         private ViewDataBinding binding;
+        private Spinner sp_godown;
         private Button btn_decrease, btn_increase, btn_deliver;
         private EditText et_qty;
 
         public DeliveryDetailsViewHolder(View itemView) {
             super(itemView);
             binding = DataBindingUtil.bind(itemView);
+            sp_godown = (Spinner) itemView.findViewById(R.id.sp_godown);
             btn_decrease = (Button) itemView.findViewById(R.id.btn_decrease);
             btn_increase = (Button) itemView.findViewById(R.id.btn_increase);
             btn_deliver = (Button) itemView.findViewById(R.id.btn_deliver);

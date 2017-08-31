@@ -10,14 +10,25 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.humaclab.selliscope.Utils.NetworkUtility;
+import com.humaclab.selliscope.Utils.SessionManager;
 import com.humaclab.selliscope.adapters.DeliveryRecyclerAdapter;
 import com.humaclab.selliscope.databinding.ActivityDeliveryDetailsBinding;
 import com.humaclab.selliscope.model.DeliveryResponse;
+import com.humaclab.selliscope.model.GodownRespons;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class DeliveryDetailsActivity extends AppCompatActivity {
+    private SelliscopeApiEndpointInterface apiService;
     private ActivityDeliveryDetailsBinding binding;
 
     private DeliveryResponse.DeliveryList deliveryList;
+    private List<GodownRespons.Godown> godownList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +65,34 @@ public class DeliveryDetailsActivity extends AppCompatActivity {
     private void loadDeliveryDetails() {
         if (binding.srlDeliveryDetails.isRefreshing())
             binding.srlDeliveryDetails.setRefreshing(false);
-        binding.rvDeliveryDetails.setAdapter(new DeliveryRecyclerAdapter(DeliveryDetailsActivity.this, deliveryList));
+        binding.rvDeliveryDetails.setAdapter(new DeliveryRecyclerAdapter(DeliveryDetailsActivity.this, deliveryList, loadGodown()));
+    }
+
+    private List<GodownRespons.Godown> loadGodown() {
+        SessionManager sessionManager = new SessionManager(DeliveryDetailsActivity.this);
+        apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(), sessionManager.getUserPassword(), false).create(SelliscopeApiEndpointInterface.class);
+
+        Call<GodownRespons> call = apiService.getGodown();
+        call.enqueue(new Callback<GodownRespons>() {
+            @Override
+            public void onResponse(Call<GodownRespons> call, Response<GodownRespons> response) {
+                if (response.code() == 200) {
+                    if (binding.srlDeliveryDetails.isRefreshing())
+                        binding.srlDeliveryDetails.setRefreshing(false);
+                    godownList = response.body().getResult().getGodownList();
+                } else if (response.code() == 401) {
+                    Toast.makeText(DeliveryDetailsActivity.this, "Invalid Response from server.", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(DeliveryDetailsActivity.this, "Server Error! Try Again Later!", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<GodownRespons> call, Throwable t) {
+                t.printStackTrace();
+            }
+        });
+        return godownList;
     }
 
     @Override

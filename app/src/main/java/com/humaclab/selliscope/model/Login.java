@@ -4,6 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 /**
  * Created by Nahid on 3/5/2017.
+ * Updated by Leon on 3/9/2017.
  */
 
 public class Login {
@@ -16,6 +17,8 @@ public class Login {
         public class LoginResult {
             @SerializedName("user")
             public User user;
+            @SerializedName("client_id")
+            public String clientId;
             @SerializedName("module")
             public String[] modules;
             @SerializedName("theme")

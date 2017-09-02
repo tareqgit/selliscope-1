@@ -107,8 +107,13 @@ public class LoginActivity extends AppCompatActivity {
                                 , Login.Successful.class);
                         Timber.d("Login Successful");
 
-                        sessionManager.createLoginSession(loginSuccessful.result.user.name,
-                                loginSuccessful.result.user.profilePictureUrl, email, password);
+                        sessionManager.createLoginSession(
+                                loginSuccessful.result.user.name,
+                                loginSuccessful.result.clientId,
+                                loginSuccessful.result.user.profilePictureUrl,
+                                email,
+                                password
+                        );
                         loginProgresssBar.setVisibility(View.INVISIBLE);
                         startActivity(new Intent(LoginActivity.this, HomeActivity.class));
                         finish();

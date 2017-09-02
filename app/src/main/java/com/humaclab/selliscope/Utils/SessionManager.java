@@ -20,6 +20,7 @@ public class SessionManager {
     public static final String KEY_USER_NAME = "userName";
     public static final String KEY_USER_EMAIL = "email";
     public static final String KEY_USER_PASSWORD = "password";
+    public static final String KEY_CLIENT_ID = "client_id";
     public static final String KEY_USER_PROFILE_PIC_URL = "profilePictureUrl";
     public static final String KEY_FCM_TOKEN = "fcmToken";
 
@@ -47,10 +48,11 @@ public class SessionManager {
     /**
      * Create login session
      */
-    public void createLoginSession(String userName, String userProfilePicUrl,
+    public void createLoginSession(String userName, String clientId, String userProfilePicUrl,
                                    String email, String password) {
         editor.putBoolean(IS_LOGGED_IN, true);
         editor.putString(KEY_USER_NAME, userName);
+        editor.putString(KEY_CLIENT_ID, clientId);
         editor.putString(KEY_USER_PROFILE_PIC_URL, userProfilePicUrl);
         editor.putString(KEY_USER_EMAIL, email);
         editor.putString(KEY_USER_PASSWORD, password);

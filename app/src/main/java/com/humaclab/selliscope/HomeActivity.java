@@ -28,7 +28,9 @@ import com.humaclab.selliscope.Utils.SessionManager;
 import com.humaclab.selliscope.model.BrandResponse;
 import com.humaclab.selliscope.model.CategoryResponse;
 import com.humaclab.selliscope.model.Outlets;
-import com.humaclab.selliscope.model.ProductResponse;
+import com.humaclab.selliscope.model.VariantProduct.ProductsItem;
+import com.humaclab.selliscope.model.VariantProduct.VariantItem;
+import com.humaclab.selliscope.model.VariantProduct.VariantProductResponse;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
@@ -137,19 +139,35 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         final SessionManager sessionManager = new SessionManager(this);
         if (sessionManager.isLoggedIn()) {
             apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(), sessionManager.getUserPassword(), false).create(SelliscopeApiEndpointInterface.class);
-            Call<ProductResponse> call = apiService.getProducts();
-            call.enqueue(new Callback<ProductResponse>() {
+            Call<VariantProductResponse> call = apiService.getProducts();
+            call.enqueue(new Callback<VariantProductResponse>() {
                 @Override
-                public void onResponse(Call<ProductResponse> call, Response<ProductResponse> response) {
+                public void onResponse(Call<VariantProductResponse> call, Response<VariantProductResponse> response) {
                     if (response.code() == 200) {
                         try {
-                            List<ProductResponse.ProductResult> products = response.body().result.productResults;
+                            List<ProductsItem> products = response.body().getResult().getProducts();
                             if (products.size() != databaseHandler.getSizeOfProduct()) {
                                 //for removing previous data
                                 databaseHandler.removeProductCategoryBrand();
-                                for (ProductResponse.ProductResult result : products) {
-                                    databaseHandler.addProduct(result.id, result.name, result.price, result.img, result.brand.id, result.brand.name, result.category.id, result.category.name);
+                                for (ProductsItem result : products) {
+                                    databaseHandler.addProduct(
+                                            result.getId(),
+                                            result.getName(),
+                                            result.getPrice(),
+                                            result.getImg(),
+                                            Integer.parseInt(result.getBrand().getId()),
+                                            result.getBrand().getName(),
+                                            Integer.parseInt(result.getCategory().getId()),
+                                            result.getCategory().getName()
+                                    );
                                 }
+                                databaseHandler.removeVariantCategories();
+                                for (VariantItem item : response.body().getResult().getVariant())
+                                    databaseHandler.setVariantCategories(
+                                            item.getId(),
+                                            item.getName(),
+                                            item.getType()
+                                    );
                                 getCategory();
                                 getBrand();
                             }
@@ -157,14 +175,14 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                             e.printStackTrace();
                         }
                     } else if (response.code() == 401) {
-                        Toast.makeText(getApplicationContext(), "Invalid Response from server on Application.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "Invalid VariantProductResponse from server on Application.", Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(getApplicationContext(), "Server Error! Try Again Later on Application!", Toast.LENGTH_SHORT).show();
                     }
                 }
 
                 @Override
-                public void onFailure(Call<ProductResponse> call, Throwable t) {
+                public void onFailure(Call<VariantProductResponse> call, Throwable t) {
                     t.printStackTrace();
                 }
             });

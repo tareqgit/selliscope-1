@@ -11,19 +11,13 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.humaclab.selliscope.Utils.DatabaseHandler;
-import com.humaclab.selliscope.Utils.SessionManager;
 import com.humaclab.selliscope.adapters.ProductRecyclerViewAdapter;
 import com.humaclab.selliscope.model.ProductResponse;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class ProductActivity extends AppCompatActivity {
     private SelliscopeApiEndpointInterface apiService;
@@ -107,7 +101,7 @@ public class ProductActivity extends AppCompatActivity {
         //Populating spinner
     }
 
-    private void getProducts() {
+    /*private void getProducts() {
         final SessionManager sessionManager = new SessionManager(ProductActivity.this);
         apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(),
                 sessionManager.getUserPassword(), false)
@@ -148,7 +142,7 @@ public class ProductActivity extends AppCompatActivity {
                 t.printStackTrace();
             }
         });
-    }
+    }*/
 
     private void getFromLocal() {
         if (srl_product.isRefreshing())

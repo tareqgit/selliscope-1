@@ -12,6 +12,7 @@ import com.humaclab.selliscope.dbmodel.UserVisit;
 import com.humaclab.selliscope.model.DeliveryResponse;
 import com.humaclab.selliscope.model.Outlets;
 import com.humaclab.selliscope.model.ProductResponse;
+import com.humaclab.selliscope.model.VariantProduct.VariantItem;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,13 +25,14 @@ import java.util.Map;
  */
 
 public class DatabaseHandler extends SQLiteOpenHelper {
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
     private static final String DATABASE_NAME = "selliscopedb";
 
     // Database Tables
     private static final String TABLE_TARGET = "targets";
     private static final String TABLE_USER_VISITS = "userVisits";
     private static final String TABLE_PRODUCT = "product";
+    private static final String TABLE_VARIANT_CATEGORY = "variant_category";
     private static final String TABLE_CATEGORY = "category";
     private static final String TABLE_BRAND = "brand";
     private static final String TABLE_DELIVERY = "delivery";
@@ -60,6 +62,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String KEY_CATEGORY_NAME = "cat_name";
     private static final String KEY_BRAND_ID = "brand_id";
     private static final String KEY_BRAND_NAME = "brand_name";
+
+    //product variant column name
+    private static final String KEY_VARIANT_CATEGORY_ID = "variant_category_id";
+    private static final String KEY_VARIANT_CATEGORY_NAME = "variant_category_name";
+    private static final String KEY_VARIANT_CATEGORY_TYPE = "variant_category_type";
 
     //delivery table column names
     private static final String KEY_ORDER_ID = "order_id";
@@ -120,6 +127,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + KEY_BRAND_ID + " INTEGER,"
                 + KEY_BRAND_NAME + " TEXT"
                 + ")";
+        String CREATE_VARIANT_CATEGORY_TABLE = "CREATE TABLE " + TABLE_VARIANT_CATEGORY + "("
+                + KEY_VARIANT_CATEGORY_ID + " INTEGER PRIMARY KEY,"
+                + KEY_VARIANT_CATEGORY_NAME + " TEXT,"
+                + KEY_VARIANT_CATEGORY_TYPE + " TEXT"
+                + ")";
         String CREATE_CATEGORY_TABLE = "CREATE TABLE " + TABLE_CATEGORY + "("
                 + KEY_CATEGORY_ID + " INTEGER PRIMARY KEY,"
                 + KEY_CATEGORY_NAME + " TEXT"
@@ -164,6 +176,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL(CREATE_TARGET_TABLE);
         db.execSQL(CREATE_TARGET_USER_VISITS);
         db.execSQL(CREATE_PRODUCT_TABLE);
+        db.execSQL(CREATE_VARIANT_CATEGORY_TABLE);
         db.execSQL(CREATE_CATEGORY_TABLE);
         db.execSQL(CREATE_BRAND_TABLE);
         db.execSQL(CREATE_DELIVERY_TABLE);
@@ -178,6 +191,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_TARGET);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_USER_VISITS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_PRODUCT);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_VARIANT_CATEGORY);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_CATEGORY);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_BRAND);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_DELIVERY);
@@ -693,4 +707,58 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return outletsResult;
     }
     //For outlet
+
+    //Product Variant
+    public boolean isVariantExists() {
+        String selectQuery = "SELECT  * FROM " + TABLE_VARIANT_CATEGORY;
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        db.close();
+        return cursor.getColumnCount() != 0;
+    }
+
+    public List<VariantItem> getVariantCategories() {
+        String selectQuery = "SELECT  * FROM " + TABLE_VARIANT_CATEGORY + " ORDER BY " + KEY_VARIANT_CATEGORY_NAME + " ASC";
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        List<VariantItem> variantCategories = new ArrayList<>();
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                cursor.getColumnNames();
+                VariantItem item = new VariantItem();
+                item.setId(cursor.getInt(cursor.getColumnIndex(KEY_VARIANT_CATEGORY_ID)));
+                item.setName(cursor.getString(cursor.getColumnIndex(KEY_VARIANT_CATEGORY_NAME)));
+                item.setType(cursor.getString(cursor.getColumnIndex(KEY_VARIANT_CATEGORY_TYPE)));
+                variantCategories.add(item);
+            } while (cursor.moveToNext());
+        }
+        db.close();
+        return variantCategories;
+    }
+
+    public void setVariantCategories(int variantId, String variantName, String variantType) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(KEY_VARIANT_CATEGORY_ID, variantId);
+        values.put(KEY_VARIANT_CATEGORY_NAME, variantName);
+        values.put(KEY_VARIANT_CATEGORY_TYPE, variantType);
+        try {
+            db.insert(TABLE_VARIANT_CATEGORY, null, values);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        db.close();
+    }
+
+    public void removeVariantCategories() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_VARIANT_CATEGORY, KEY_VARIANT_CATEGORY_ID + " > ?",
+                new String[]{String.valueOf(-1)});
+        db.close();
+    }
+    //Product Variant
 }

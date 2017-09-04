@@ -11,9 +11,10 @@ import com.humaclab.selliscope.model.InspectionResponse;
 import com.humaclab.selliscope.model.OrderResponse;
 import com.humaclab.selliscope.model.Payment;
 import com.humaclab.selliscope.model.PaymentResponse;
-import com.humaclab.selliscope.model.ProductResponse;
 import com.humaclab.selliscope.model.SellsReturnResponse;
 import com.humaclab.selliscope.model.UserLocation;
+import com.humaclab.selliscope.model.VariantList.VariantListResponse;
+import com.humaclab.selliscope.model.VariantProduct.VariantProductResponse;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -26,7 +27,9 @@ import retrofit2.http.Query;
 
 /**
  * Created by Nahid on 3/5/2017.
+ * Updated by Leon on 9/3/2017.
  */
+
 public interface SelliscopeApiEndpointInterface {
     @POST("login")
     Call<ResponseBody> getUser();
@@ -40,8 +43,13 @@ public interface SelliscopeApiEndpointInterface {
     @GET("product/brand")
     Call<BrandResponse> getBrands();
 
-    @GET("product")
-    Call<ProductResponse> getProducts();
+    /*@GET("product")
+    Call<ProductResponse> getProducts();*/
+    @GET("variant-product")
+    Call<VariantProductResponse> getProducts();
+
+    @GET("variant-product/variant/{id}/{cat_id}/{variant}")
+    Call<VariantListResponse> getVariants(@Path("id") int productId, @Path("cat_id") int variantCatId, @Path("variant") String variantName);
 
     @GET("order")
     Call<OrderResponse> getOrders();

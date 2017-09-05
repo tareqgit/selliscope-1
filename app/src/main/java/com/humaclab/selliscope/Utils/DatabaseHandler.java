@@ -719,8 +719,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     public List<VariantItem> getVariantCategories() {
-        String selectQuery = "SELECT  * FROM " + TABLE_VARIANT_CATEGORY + " ORDER BY " + KEY_VARIANT_CATEGORY_NAME + " ASC";
-
+        String selectQuery = "SELECT  * FROM " + TABLE_VARIANT_CATEGORY;
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
 

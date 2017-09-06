@@ -29,7 +29,6 @@ import com.humaclab.selliscope.model.BrandResponse;
 import com.humaclab.selliscope.model.CategoryResponse;
 import com.humaclab.selliscope.model.Outlets;
 import com.humaclab.selliscope.model.VariantProduct.ProductsItem;
-import com.humaclab.selliscope.model.VariantProduct.VariantItem;
 import com.humaclab.selliscope.model.VariantProduct.VariantProductResponse;
 import com.squareup.picasso.Picasso;
 
@@ -150,24 +149,37 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                                 //for removing previous data
                                 databaseHandler.removeProductCategoryBrand();
                                 for (ProductsItem result : products) {
-                                    databaseHandler.addProduct(
-                                            result.getId(),
-                                            result.getName(),
-                                            result.getPrice(),
-                                            result.getImg(),
-                                            Integer.parseInt(result.getBrand().getId()),
-                                            result.getBrand().getName(),
-                                            Integer.parseInt(result.getCategory().getId()),
-                                            result.getCategory().getName()
-                                    );
+                                    if (result.getGodown() == null) {
+                                        databaseHandler.addProduct(
+                                                result.getId(),
+                                                result.getName(),
+                                                result.getPrice(),
+                                                result.getImg(),
+                                                Integer.parseInt(result.getBrand().getId()),
+                                                result.getBrand().getName(),
+                                                Integer.parseInt(result.getCategory().getId()),
+                                                result.getCategory().getName(),
+                                                ""
+                                        );
+                                    } else {
+                                        databaseHandler.addProduct(
+                                                result.getId(),
+                                                result.getName(),
+                                                result.getPrice(),
+                                                result.getImg(),
+                                                Integer.parseInt(result.getBrand().getId()),
+                                                result.getBrand().getName(),
+                                                Integer.parseInt(result.getCategory().getId()),
+                                                result.getCategory().getName(),
+                                                result.getGodown().get(0).getStock()
+                                        );
+                                    }
                                 }
                                 databaseHandler.removeVariantCategories();
-                                for (VariantItem item : response.body().getResult().getVariant())
-                                    databaseHandler.setVariantCategories(
-                                            item.getId(),
-                                            item.getName(),
-                                            item.getType()
-                                    );
+                                databaseHandler.setVariantCategories(
+                                        response.body().getResult().getVariant(),
+                                        response.body().getResult().getProducts()
+                                );
                                 getCategory();
                                 getBrand();
                             }

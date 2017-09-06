@@ -13,7 +13,6 @@ import com.humaclab.selliscope.model.Payment;
 import com.humaclab.selliscope.model.PaymentResponse;
 import com.humaclab.selliscope.model.SellsReturnResponse;
 import com.humaclab.selliscope.model.UserLocation;
-import com.humaclab.selliscope.model.VariantList.VariantListResponse;
 import com.humaclab.selliscope.model.VariantProduct.VariantProductResponse;
 
 import okhttp3.ResponseBody;
@@ -47,9 +46,6 @@ public interface SelliscopeApiEndpointInterface {
     Call<ProductResponse> getProducts();*/
     @GET("variant-product")
     Call<VariantProductResponse> getProducts();
-
-    @GET("variant-product/variant/{id}/{cat_id}/{variant}")
-    Call<VariantListResponse> getVariants(@Path("id") int productId, @Path("cat_id") int variantCatId, @Path("variant") String variantName);
 
     @GET("order")
     Call<OrderResponse> getOrders();

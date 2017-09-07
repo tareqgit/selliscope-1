@@ -28,6 +28,7 @@ public class DeliveryDetailsActivity extends AppCompatActivity {
     private ActivityDeliveryDetailsBinding binding;
 
     private DeliveryResponse.DeliveryList deliveryList;
+    private DeliveryRecyclerAdapter deliveryRecyclerAdapter;
     private List<GodownRespons.Godown> godownList = new ArrayList<>();
 
     @Override
@@ -65,10 +66,10 @@ public class DeliveryDetailsActivity extends AppCompatActivity {
     private void loadDeliveryDetails() {
         if (binding.srlDeliveryDetails.isRefreshing())
             binding.srlDeliveryDetails.setRefreshing(false);
-        binding.rvDeliveryDetails.setAdapter(new DeliveryRecyclerAdapter(DeliveryDetailsActivity.this, deliveryList, loadGodown()));
+        loadGodown();
     }
 
-    private List<GodownRespons.Godown> loadGodown() {
+    private void loadGodown() {
         SessionManager sessionManager = new SessionManager(DeliveryDetailsActivity.this);
         apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(), sessionManager.getUserPassword(), false).create(SelliscopeApiEndpointInterface.class);
 
@@ -80,6 +81,8 @@ public class DeliveryDetailsActivity extends AppCompatActivity {
                     if (binding.srlDeliveryDetails.isRefreshing())
                         binding.srlDeliveryDetails.setRefreshing(false);
                     godownList = response.body().getResult().getGodownList();
+
+                    binding.rvDeliveryDetails.setAdapter(new DeliveryRecyclerAdapter(DeliveryDetailsActivity.this, deliveryList, godownList));
                 } else if (response.code() == 401) {
                     Toast.makeText(DeliveryDetailsActivity.this, "Invalid Response from server.", Toast.LENGTH_SHORT).show();
                 } else {
@@ -92,7 +95,6 @@ public class DeliveryDetailsActivity extends AppCompatActivity {
                 t.printStackTrace();
             }
         });
-        return godownList;
     }
 
     @Override

@@ -824,8 +824,27 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.close();
     }
 
-    public void getVariants(int variantCatId, String variantCatName, int productId) {
-        String query = "SELECT DISTINCT " + KEY_VARIANT_CATEGORY_NAME + " FROM " + TABLE_VARIANT_DETAILS + " WHERE " + KEY_VARIANT_CATEGORY_ID + "=" + variantCatId + " AND " + KEY_PRODUCT_ID + "=" + productId;
+    public List<String> getVariants(int variantCatId, int productId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "SELECT DISTINCT " + KEY_VARIANT_DETAILS_NAME
+                + "," + KEY_VARIANT_CATEGORY_NAME
+                + "," + KEY_VARIANT_CATEGORY_ID
+//                + "," + KEY_VARIANT_ROW
+                + " FROM " + TABLE_VARIANT_DETAILS + " WHERE " + KEY_VARIANT_CATEGORY_ID + "=" + variantCatId + " AND " + KEY_PRODUCT_ID + "=" + productId;
+
+
+        Cursor cursor = db.rawQuery(query, null);
+
+        List<String> variantNames = new ArrayList<>();
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                cursor.getColumnNames();
+                variantNames.add(cursor.getString(cursor.getColumnIndex(KEY_VARIANT_DETAILS_NAME)));
+            } while (cursor.moveToNext());
+        }
+        db.close();
+        return variantNames;
     }
 
     public void removeVariantCategories() {

@@ -8,15 +8,19 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -31,6 +35,7 @@ import com.humaclab.selliscope.databinding.NewOrderBinding;
 import com.humaclab.selliscope.model.AddNewOrder;
 import com.humaclab.selliscope.model.Outlets;
 import com.humaclab.selliscope.model.ProductResponse;
+import com.humaclab.selliscope.model.VariantProduct.VariantItem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,6 +62,9 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
     private List<String> productName = new ArrayList<>(), outletName = new ArrayList<>();
     private List<Integer> productID = new ArrayList<>(), productDiscount = new ArrayList<>(), outletID = new ArrayList<>();
     private List<Double> productPrice = new ArrayList<>();
+    private List<View> variantViews = new ArrayList<>();
+    private List<List<String>> variantNameDetailsList = new ArrayList<>();
+    private List<List<Integer>> variantIDDetailsList = new ArrayList<>();
 
     private int selectedPosition = 0, tableRowCount = 2;
     private double totalAmt = 0, totalDiscnt = 0, grandTotal = 0;
@@ -369,88 +377,14 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_add_order) {
             showProductSelectionDialog();
-            final int[] qty = {1}, selectedPosition = {0};
-            final LayoutInflater inflater = (LayoutInflater) OrderActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            final NewOrderBinding newOrder = DataBindingUtil.inflate(inflater, R.layout.new_order, null, true);
-            newOrder.spProduct.setAdapter(new ArrayAdapter<>(getApplicationContext(), R.layout.spinner_item, productName));
-            newOrder.spProduct.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    selectedPosition[0] = position;
-                    newOrder.tvPrice.setText(String.valueOf(productPrice.get(position)));
-                    newOrder.tvAmount.setText(String.valueOf(productPrice.get(position)));
-                    newOrder.etDiscount.setText(String.valueOf(productDiscount.get(position)));
-                    newOrder.etQty.setText("1");
-                    qty[0] = 1;
-                }
-
-                @Override
-                public void onNothingSelected(AdapterView<?> parent) {
-
-                }
-            });
-            newOrder.etQty.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                }
-
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    try {
-                        qty[0] = Integer.parseInt(s.toString());
-                        newOrder.tvAmount.setText(String.valueOf(Integer.parseInt(s.toString()) * productPrice.get(selectedPosition[0])));
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                @Override
-                public void afterTextChanged(Editable s) {
-                }
-            });
-            newOrder.btnIncrease.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    newOrder.etQty.setText(String.valueOf(qty[0] + 1));
-                    qty[0] = qty[0] + 1;
-                    newOrder.tvAmount.setText(String.valueOf(qty[0] * productPrice.get(selectedPosition[0])));
-                }
-            });
-            newOrder.btnDecrease.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (qty[0] > 1) {
-                        newOrder.etQty.setText(String.valueOf(qty[0] - 1));
-                        qty[0] = qty[0] - 1;
-                        newOrder.tvAmount.setText(String.valueOf(qty[0] * productPrice.get(selectedPosition[0])));
-                    } else {
-                        newOrder.etQty.setText("1");
-                        qty[0] = 1;
-                        newOrder.tvAmount.setText(String.valueOf(qty[0] * productPrice.get(selectedPosition[0])));
-                    }
-                }
-            });
-            try {
-                newOrder.btnRemove.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        tableRowCount--;
-                        binding.tblOrders.removeView(newOrder.getRoot());
-                    }
-                });
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            binding.tblOrders.addView(newOrder.getRoot(), tableRowCount++);
-
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
     private void showProductSelectionDialog() {
-        final AlertDialog builder = new AlertDialog.Builder(this,R.style.Theme_Design_Light).create();
-        View dialogView = LayoutInflater.from(this).inflate(R.layout.product_catgeory_item, null);
+        final AlertDialog builder = new AlertDialog.Builder(this, R.style.Theme_Design_Light).create();
+        View dialogView = LayoutInflater.from(this).inflate(R.layout.product_selection_dialog, null);
         builder.setView(dialogView);
 
         ImageView civ_cancel = (ImageView) dialogView.findViewById(R.id.civ_cancel);
@@ -461,9 +395,11 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
             }
         });
 
+        final LinearLayout ll_spinner_layout = (LinearLayout) dialogView.findViewById(R.id.ll_spinner_layout);
         final Spinner sp_product_category = (Spinner) dialogView.findViewById(R.id.sp_product_category);
         final Spinner sp_product_brand = (Spinner) dialogView.findViewById(R.id.sp_product_brand);
         final Spinner sp_product_name = (Spinner) dialogView.findViewById(R.id.sp_product_name);
+        final Button btn_select_product = (Button) dialogView.findViewById(R.id.btn_select_product);
 
         //For category
         List<ProductResponse.Category> categories = databaseHandler.getCategory();
@@ -551,9 +487,168 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
         });
         //For brand
 
+        //For product selection
+        sp_product_name.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (position != 0) {
+                    if (databaseHandler.isVariantExists()) {
+                        variantViews.clear();
+                        ll_spinner_layout.removeAllViews();
+                        addVariantSpinner(view.getContext());
+                    }
+                }
+            }
+
+            private void addVariantSpinner(Context context) {
+                List<VariantItem> variantsItems = databaseHandler.getVariantCategories();
+                int price_id = 0;
+                for (int i = 0; i < variantsItems.size(); i++) {
+                    if (!variantsItems.get(i).getType().toLowerCase().equals("input")) {
+                        Spinner spinner = new Spinner(context);
+                        spinner.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
+                    /*apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(),
+                            sessionManager.getUserPassword(), false)
+                            .create(SelliscopeApiEndpointInterface.class);
+                    Call<VariantListResponse> call = apiService.getVariants(
+                            productID.get(sp_product_name.getSelectedItemPosition()),
+                            variantsItems.get(i).getId(),
+                            variantsItems.get(i).getType()
+                    );
+                    call.enqueue(new Callback<VariantListResponse>() {
+                        @Override
+                        public void onResponse(Call<VariantListResponse> call, Response<VariantListResponse> response) {
+                            Log.e("Variant response", new Gson().toJson(response.raw()));
+                        }
+
+                        @Override
+                        public void onFailure(Call<VariantListResponse> call, Throwable t) {
+                            t.printStackTrace();
+                        }
+                    });*/
+                        List<String> variantNames = new ArrayList<>();
+                        List<Integer> variantNameIDs = new ArrayList<>();
+                        String variantName = "Select " + variantsItems.get(i).getName();
+                        int variantID = variantsItems.get(i).getId();
+                        variantNames.add(variantName);
+                        variantNameIDs.add(variantID);
+
+                        for (String s : databaseHandler.getVariants(variantsItems.get(i).getId(), productID.get(sp_product_name.getSelectedItemPosition()))) {
+                            variantNames.add(s);
+                        }
+                        spinner.setAdapter(new ArrayAdapter<>(context, R.layout.spinner_item, variantNames));
+                        variantViews.add(spinner);
+                        variantNameDetailsList.add(variantNames);
+                        variantIDDetailsList.add(variantNameIDs);
+                    } else {
+                        price_id = i;
+                    }
+                }
+                if (price_id != 0) {
+                    EditText editText = new EditText(context);
+                    editText.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
+                    editText.setInputType(InputType.TYPE_NULL);
+                    editText.setText(variantsItems.get(price_id).getName());
+                    variantViews.add(editText);
+                }
+                for (View view : variantViews)
+                    ll_spinner_layout.addView(view);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+        //For product selection
+
+        btn_select_product.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addProduct(productID.get(sp_product_name.getSelectedItemPosition()));
+                builder.dismiss();
+            }
+        });
 
         builder.setCancelable(false);
         builder.show();
+    }
+
+    private void addProduct(int productId) {
+        final int[] qty = {1}, selectedPosition = {0};
+        final LayoutInflater inflater = (LayoutInflater) OrderActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        final NewOrderBinding newOrder = DataBindingUtil.inflate(inflater, R.layout.new_order, null, true);
+        newOrder.spProduct.setAdapter(new ArrayAdapter<>(getApplicationContext(), R.layout.spinner_item, productName));
+        newOrder.spProduct.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                selectedPosition[0] = position;
+                newOrder.tvPrice.setText(String.valueOf(productPrice.get(position)));
+                newOrder.tvAmount.setText(String.valueOf(productPrice.get(position)));
+                newOrder.etDiscount.setText(String.valueOf(productDiscount.get(position)));
+                newOrder.etQty.setText("1");
+                qty[0] = 1;
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+        newOrder.spProduct.setSelection(productID.indexOf(productId));
+        newOrder.etQty.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                try {
+                    qty[0] = Integer.parseInt(s.toString());
+                    newOrder.tvAmount.setText(String.valueOf(Integer.parseInt(s.toString()) * productPrice.get(selectedPosition[0])));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
+        newOrder.btnIncrease.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                newOrder.etQty.setText(String.valueOf(qty[0] + 1));
+                qty[0] = qty[0] + 1;
+                newOrder.tvAmount.setText(String.valueOf(qty[0] * productPrice.get(selectedPosition[0])));
+            }
+        });
+        newOrder.btnDecrease.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (qty[0] > 1) {
+                    newOrder.etQty.setText(String.valueOf(qty[0] - 1));
+                    qty[0] = qty[0] - 1;
+                    newOrder.tvAmount.setText(String.valueOf(qty[0] * productPrice.get(selectedPosition[0])));
+                } else {
+                    newOrder.etQty.setText("1");
+                    qty[0] = 1;
+                    newOrder.tvAmount.setText(String.valueOf(qty[0] * productPrice.get(selectedPosition[0])));
+                }
+            }
+        });
+        try {
+            newOrder.btnRemove.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    tableRowCount--;
+                    binding.tblOrders.removeView(newOrder.getRoot());
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        binding.tblOrders.addView(newOrder.getRoot(), tableRowCount++);
     }
 
     @Override

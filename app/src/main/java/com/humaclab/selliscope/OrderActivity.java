@@ -507,25 +507,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                     if (!variantsItems.get(i).getType().toLowerCase().equals("input")) {
                         Spinner spinner = new Spinner(context);
                         spinner.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
-                    /*apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(),
-                            sessionManager.getUserPassword(), false)
-                            .create(SelliscopeApiEndpointInterface.class);
-                    Call<VariantListResponse> call = apiService.getVariants(
-                            productID.get(sp_product_name.getSelectedItemPosition()),
-                            variantsItems.get(i).getId(),
-                            variantsItems.get(i).getType()
-                    );
-                    call.enqueue(new Callback<VariantListResponse>() {
-                        @Override
-                        public void onResponse(Call<VariantListResponse> call, Response<VariantListResponse> response) {
-                            Log.e("Variant response", new Gson().toJson(response.raw()));
-                        }
 
-                        @Override
-                        public void onFailure(Call<VariantListResponse> call, Throwable t) {
-                            t.printStackTrace();
-                        }
-                    });*/
                         List<String> variantNames = new ArrayList<>();
                         List<Integer> variantNameIDs = new ArrayList<>();
                         String variantName = "Select " + variantsItems.get(i).getName();

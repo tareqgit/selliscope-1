@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
@@ -14,7 +15,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -52,10 +55,13 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
     private SessionManager sessionManager;
     private List<String> productName = new ArrayList<>(), outletName = new ArrayList<>();
     private List<Integer> productID = new ArrayList<>(), productDiscount = new ArrayList<>(), outletID = new ArrayList<>();
+    private List<String> categoryName = new ArrayList<>(), brandName = new ArrayList<>();
+    private List<Integer> categoryID = new ArrayList<>(), brandID = new ArrayList<>();
     private List<Double> productPrice = new ArrayList<>();
 
     private int selectedPosition = 0, tableRowCount = 2;
     private double totalAmt = 0, totalDiscnt = 0, grandTotal = 0;
+    private int firstCount = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,21 +81,6 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
         binding.btnIncrease.setOnClickListener(this);
         binding.btnDecrease.setOnClickListener(this);
 
-        binding.spProduct.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                selectedPosition = position;
-                binding.tvPrice.setText(String.valueOf(productPrice.get(position)));
-                binding.tvAmount.setText(String.valueOf(productPrice.get(position)));
-                binding.etDiscount.setText(String.valueOf(productDiscount.get(position)));
-                binding.etQty.setText("1");
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
         binding.etQty.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -111,6 +102,8 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
 
         if (NetworkUtility.isNetworkAvailable(this)) {
             getOutlets();
+            getCategory();
+            getBrand();
             getProducts();
         } else {
             Toast.makeText(this, "Connect to Wifi or Mobile Data",
@@ -152,6 +145,28 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
         //For calculate total discount, amount and grand total in 1 second interval
     }
 
+    private void getCategory() {
+        List<ProductResponse.Category> categories = databaseHandler.getCategory();
+        categoryName.clear();
+        categoryName.add("Select Category");
+        categoryID.add(0);
+        for (ProductResponse.Category result : categories) {
+            categoryName.add(result.name);
+            categoryID.add(result.id);
+        }
+    }
+
+    private void getBrand() {
+        List<ProductResponse.Brand> brands = databaseHandler.getBrand();
+        brandName.clear();
+        brandName.add("Select Brand");
+        brandID.add(0);
+        for (ProductResponse.Brand result : brands) {
+            brandName.add(result.name);
+            brandID.add(result.id);
+        }
+    }
+
     private void getProducts() {
         List<ProductResponse.ProductResult> products = databaseHandler.getProduct(0, 0);
         for (ProductResponse.ProductResult result : products) {
@@ -163,8 +178,10 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
         binding.spProduct.setAdapter(new ArrayAdapter<>(getApplicationContext(), R.layout.spinner_item, productName));
         //if this activity called from product activity
         if (getIntent().hasExtra("productID")) {
-            int position = productID.indexOf(getIntent().getIntExtra("productID", 0));
-            binding.spProduct.setSelection(position);
+            addFirstProduct(getIntent().getIntExtra("productID", 0));
+            firstCount++;
+        } else {
+            showProductSelectionDialog();
         }
         //if this activity called from product activity
 
@@ -364,10 +381,132 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_add_order) {
+            showProductSelectionDialog();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void showProductSelectionDialog() {
+        final AlertDialog builder = new AlertDialog.Builder(this).create();
+        View dialogView = LayoutInflater.from(this).inflate(R.layout.product_selection_dialog, null);
+        builder.setView(dialogView);
+
+        ImageView civ_cancel = (ImageView) dialogView.findViewById(R.id.civ_cancel);
+        civ_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                builder.dismiss();
+            }
+        });
+
+        final Spinner sp_product_category = (Spinner) dialogView.findViewById(R.id.sp_product_category);
+        final Spinner sp_product_brand = (Spinner) dialogView.findViewById(R.id.sp_product_brand);
+        final Spinner sp_product_name = (Spinner) dialogView.findViewById(R.id.sp_product_name);
+        final Button btn_select_product = (Button) dialogView.findViewById(R.id.btn_select_product);
+
+        final List<String> productName = new ArrayList<>();
+        final List<Integer> productID = new ArrayList<>();
+
+        //For category
+        sp_product_category.setAdapter(new ArrayAdapter<>(getApplicationContext(), R.layout.spinner_item, categoryName));
+        sp_product_category.setSelection(0);
+        sp_product_category.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                try {
+                    List<ProductResponse.ProductResult> productResults = databaseHandler.getProduct(categoryID.get(position), brandID.get(sp_product_brand.getSelectedItemPosition()));
+                    productName.clear();
+                    productName.add("Select Product");
+                    productID.clear();
+                    productID.add(0);
+                    for (ProductResponse.ProductResult result : productResults) {
+                        productName.add(result.name);
+                        productID.add(result.id);
+                    }
+                    sp_product_name.setAdapter(new ArrayAdapter<>(getApplicationContext(), R.layout.spinner_item, productName));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+        //For category
+
+        //For brand
+        sp_product_brand.setAdapter(new ArrayAdapter<>(getApplicationContext(), R.layout.spinner_item, brandName));
+        sp_product_brand.setSelection(0);
+        sp_product_brand.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                try {
+                    List<ProductResponse.ProductResult> productResults = databaseHandler.getProduct(categoryID.get(sp_product_category.getSelectedItemPosition()), brandID.get(position));
+                    productName.clear();
+                    productName.add("Select Product");
+                    productID.clear();
+                    productID.add(0);
+                    for (ProductResponse.ProductResult result : productResults) {
+                        productName.add(result.name);
+                        productID.add(result.id);
+                    }
+                    sp_product_name.setAdapter(new ArrayAdapter<>(getApplicationContext(), R.layout.spinner_item, productName));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+        //For brand
+
+        btn_select_product.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addProduct(productID.get(sp_product_name.getSelectedItemPosition()));
+                builder.dismiss();
+            }
+        });
+
+        builder.setCancelable(false);
+        builder.show();
+    }
+
+    private void addFirstProduct(Integer productId) {
+        binding.spProduct.setSelection(productID.indexOf(productId));
+        binding.spProduct.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                selectedPosition = position;
+                binding.tvPrice.setText(String.valueOf(productPrice.get(position)));
+                binding.tvAmount.setText(String.valueOf(productPrice.get(position)));
+                binding.etDiscount.setText(String.valueOf(productDiscount.get(position)));
+                binding.etQty.setText("1");
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+    }
+
+    private void addProduct(Integer productId) {
+        if (firstCount == 2) {
+            addFirstProduct(productId);
+            firstCount++;
+        } else {
             final int[] qty = {1}, selectedPosition = {0};
             final LayoutInflater inflater = (LayoutInflater) OrderActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             final NewOrderBinding newOrder = DataBindingUtil.inflate(inflater, R.layout.new_order, null, true);
             newOrder.spProduct.setAdapter(new ArrayAdapter<>(getApplicationContext(), R.layout.spinner_item, productName));
+            newOrder.spProduct.setSelection(productID.indexOf(productId));
             newOrder.spProduct.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -437,10 +576,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                 e.printStackTrace();
             }
             binding.tblOrders.addView(newOrder.getRoot(), tableRowCount++);
-
-            return true;
         }
-        return super.onOptionsItemSelected(item);
     }
 
     @Override

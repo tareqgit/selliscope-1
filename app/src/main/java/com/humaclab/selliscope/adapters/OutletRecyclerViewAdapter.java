@@ -132,7 +132,7 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
                                 //sendLocationDataToSever();
                                 Timber.d("Latitude: " + location.getLatitude()
                                         + "Longitude: " + location.getLongitude());
-                                if (location.distanceTo(outletLocation) <= 30.0) {
+                                if (location.distanceTo(outletLocation) <= 120.0) {
                                     if (NetworkUtility.isNetworkAvailable(context)) {
                                         sendUserLocation(location, outletId, progressbar);
                                     } else {

@@ -28,6 +28,7 @@ import com.google.android.gms.awareness.Awareness;
 import com.google.android.gms.awareness.snapshot.LocationResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.location.LocationServices;
 import com.google.gson.Gson;
 import com.humaclab.selliscope.Utils.NetworkUtility;
 import com.humaclab.selliscope.Utils.SessionManager;
@@ -83,6 +84,7 @@ public class AddOutletActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_outlet);
         googleApiClient = new GoogleApiClient.Builder(AddOutletActivity.this)
                 .addApi(Awareness.API)
+                .addApi(LocationServices.API)
                 .build();
         googleApiClient.connect();
         googleApiClient.registerConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
@@ -410,8 +412,8 @@ public class AddOutletActivity extends AppCompatActivity {
                         public void onResult(@NonNull LocationResult locationResult) {
                             if (locationResult.getStatus().isSuccess()) {
                                 Location location = locationResult.getLocation();
-                                latitude = location.getLatitude();
-                                longitude = location.getLongitude();
+                                latitude = Double.parseDouble(String.format("%.05f", location.getLatitude()));
+                                longitude = Double.parseDouble(String.format("%.05f", location.getLongitude()));
                             } else {
                                 Timber.d("Didn't get Location Data");
                             }

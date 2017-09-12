@@ -581,8 +581,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 values.put(KEY_OUTLET_THANA, outlet.thana);
                 values.put(KEY_OUTLET_PHONE, outlet.phone);
                 values.put(KEY_OUTLET_IMAGE, outlet.outletImgUrl);
-                values.put(KEY_OUTLET_LONGITUDE, outlet.outletLatitude);
-                values.put(KEY_OUTLET_LATITUDE, outlet.outletLongitude);
+                values.put(KEY_OUTLET_LONGITUDE, outlet.outletLongitude);
+                values.put(KEY_OUTLET_LATITUDE, outlet.outletLatitude);
                 values.put(KEY_OUTLET_DUE, outlet.outletDue);
                 try {
                     db.insert(TABLE_OUTLET, null, values);

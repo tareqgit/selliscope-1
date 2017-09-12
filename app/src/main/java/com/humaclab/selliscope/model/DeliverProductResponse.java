@@ -20,8 +20,6 @@ public class DeliverProductResponse implements Serializable {
         public int orderId;
         @SerializedName("outlet_id")
         public int outletId;
-        @SerializedName("godown_id")
-        public int godownId;
         @SerializedName("products")
         public List<Product> products;
 
@@ -30,6 +28,8 @@ public class DeliverProductResponse implements Serializable {
             public int productId;
             @SerializedName("qty")
             public int qty;
+            @SerializedName("godown_id")
+            public int godownId;
         }
     }
 }

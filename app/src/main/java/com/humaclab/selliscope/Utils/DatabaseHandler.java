@@ -28,7 +28,7 @@ import java.util.Map;
  */
 
 public class DatabaseHandler extends SQLiteOpenHelper {
-    private static final int DATABASE_VERSION = 4;
+    private static final int DATABASE_VERSION = 3;
     private static final String DATABASE_NAME = "selliscopedb";
 
     // Database Tables
@@ -744,12 +744,22 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     //Product Variant
     public boolean isVariantExists() {
-        String selectQuery = "SELECT  * FROM " + TABLE_VARIANT_CATEGORY;
+        String selectQuery = "SELECT * FROM " + TABLE_VARIANT_CATEGORY;
 
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
         db.close();
         return cursor.getColumnCount() != 0;
+    }
+
+    public boolean isThereAnyVariantForProduct(Integer productId) {
+        String selectQuery = "SELECT count(" + KEY_VARIANT_ROW + ") " + KEY_VARIANT_ROW + " FROM " + TABLE_VARIANT_DETAILS + " WHERE " + KEY_PRODUCT_ID + "=" + productId;
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        cursor.moveToFirst();
+        String count = cursor.getString(cursor.getColumnIndex(KEY_VARIANT_ROW));
+        db.close();
+        return Integer.parseInt(count) != 0;
     }
 
     public List<VariantItem> getVariantCategories() {

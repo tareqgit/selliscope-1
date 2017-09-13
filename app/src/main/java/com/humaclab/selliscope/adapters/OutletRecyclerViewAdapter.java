@@ -24,6 +24,7 @@ import com.google.android.gms.awareness.Awareness;
 import com.google.android.gms.awareness.snapshot.LocationResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.location.LocationServices;
 import com.google.gson.Gson;
 import com.humaclab.selliscope.OrderActivity;
 import com.humaclab.selliscope.OutletDetailsActivity;
@@ -54,8 +55,8 @@ import static com.humaclab.selliscope.RouteActivity.checkPermission;
 
 public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecyclerViewAdapter.OutletViewHolder> {
 
-    GoogleApiClient googleApiClient;
-    SelliscopeApiEndpointInterface apiService;
+    private GoogleApiClient googleApiClient;
+    private SelliscopeApiEndpointInterface apiService;
     private Context context;
     private Outlets.Successful.OutletsResult outletItems;
 
@@ -89,6 +90,7 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
                 holder.pbCheckIn.setVisibility(View.VISIBLE);
                 googleApiClient = new GoogleApiClient.Builder(context)
                         .addApi(Awareness.API)
+                        .addApi(LocationServices.API)
                         .build();
                 googleApiClient.connect();
                 googleApiClient.registerConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
@@ -130,9 +132,13 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
                             if (locationResult.getStatus().isSuccess()) {
                                 Location location = locationResult.getLocation();
                                 //sendLocationDataToSever();
-                                Timber.d("Latitude: " + location.getLatitude()
-                                        + "Longitude: " + location.getLongitude());
-                                if (location.distanceTo(outletLocation) <= 30.0) {
+                                double latitude = Double.parseDouble(String.format("%.05f", location.getLatitude()));
+                                double longitude = Double.parseDouble(String.format("%.05f", location.getLongitude()));
+                                Timber.d("User location: Latitude: " + latitude + "," + "Longitude: " + longitude);
+                                Timber.d("Outlet location: Latitude: " + outletLocation.getLatitude() + "," + "Longitude: " + outletLocation.getLongitude());
+                                location.setLatitude(latitude);
+                                location.setLongitude(longitude);
+                                if (location.distanceTo(outletLocation) <= 56.0) {
                                     if (NetworkUtility.isNetworkAvailable(context)) {
                                         sendUserLocation(location, outletId, progressbar);
                                     } else {

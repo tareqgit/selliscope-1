@@ -123,10 +123,10 @@ public class DeliveryRecyclerAdapter extends RecyclerView.Adapter<DeliveryRecycl
                     order.products = new ArrayList<>();
                     product1.productId = product.productId;
                     product1.qty = Integer.parseInt(holder.et_qty.getText().toString());
+                    product1.godownId = godownId.get(holder.sp_godown.getSelectedItemPosition());
                     order.products.add(product1);
                     order.orderId = deliveryList.deliveryId;
                     order.outletId = deliveryList.outletId;
-                    order.godownId = godownId.get(holder.sp_godown.getSelectedItemPosition());
                     deliverProductResponse.order = order;
 
                     //Deliver api request

@@ -29,10 +29,10 @@ public class ProductsItem {
     private int id;
 
     @SerializedName("pitch")
-    private String pitch;
+    private Pitch pitch;
 
     @SerializedName("promotion")
-    private String promotion;
+    private Promotion promotion;
 
     @SerializedName("variants")
     private List<VariantsItem> variants;
@@ -115,19 +115,19 @@ public class ProductsItem {
         this.brand = brand;
     }
 
-    public String getPitch() {
+    public Pitch getPitch() {
         return pitch;
     }
 
-    public void setPitch(String pitch) {
+    public void setPitch(Pitch pitch) {
         this.pitch = pitch;
     }
 
-    public String getPromotion() {
+    public Promotion getPromotion() {
         return promotion;
     }
 
-    public void setPromotion(String promotion) {
+    public void setPromotion(Promotion promotion) {
         this.promotion = promotion;
     }
 }

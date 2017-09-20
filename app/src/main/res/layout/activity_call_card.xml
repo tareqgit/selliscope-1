@@ -215,7 +215,7 @@
                                 android:elevation="@dimen/elevation_5"
                                 android:gravity="center_horizontal"
                                 android:padding="@dimen/padding_5"
-                                android:text="Sells Return"
+                                android:text="Sales Return"
                                 android:textColor="@color/white"
                                 android:textStyle="bold" />
                         </LinearLayout>

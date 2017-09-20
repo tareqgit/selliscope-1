@@ -26,6 +26,8 @@ public class AddNewOrder implements Serializable {
             public int id;
             @SerializedName("qty")
             public int qty;
+            @SerializedName("row")
+            public int row;
             @SerializedName("discount")
             public int discount;
         }

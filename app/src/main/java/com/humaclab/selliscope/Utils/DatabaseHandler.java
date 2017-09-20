@@ -839,9 +839,90 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         String query = "SELECT DISTINCT " + KEY_VARIANT_DETAILS_NAME
                 + "," + KEY_VARIANT_CATEGORY_NAME
                 + "," + KEY_VARIANT_CATEGORY_ID
-//                + "," + KEY_VARIANT_ROW
                 + " FROM " + TABLE_VARIANT_DETAILS + " WHERE " + KEY_VARIANT_CATEGORY_ID + "=" + variantCatId + " AND " + KEY_PRODUCT_ID + "=" + productId;
 
+        Cursor cursor = db.rawQuery(query, null);
+
+        List<String> variantNames = new ArrayList<>();
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                cursor.getColumnNames();
+                variantNames.add(cursor.getString(cursor.getColumnIndex(KEY_VARIANT_DETAILS_NAME)));
+            } while (cursor.moveToNext());
+        }
+        db.close();
+        return variantNames;
+    }
+
+    public List<String> getVariantRows(int productId, int variantCatId, String variantName) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "SELECT DISTINCT " + KEY_VARIANT_ROW + " FROM " + TABLE_VARIANT_DETAILS
+                + " WHERE " + KEY_VARIANT_CATEGORY_ID + "=" + variantCatId
+                + " AND " + KEY_PRODUCT_ID + "=" + productId
+                + " AND " + KEY_VARIANT_DETAILS_NAME + "='" + variantName + "'";
+        System.out.println("variant query" + query);
+
+        Cursor cursor = db.rawQuery(query, null);
+
+        List<String> rowList = new ArrayList<>();
+        if (cursor.moveToFirst()) {
+            do {
+                cursor.getColumnNames();
+                rowList.add(cursor.getString(cursor.getColumnIndex(KEY_VARIANT_ROW)));
+            } while (cursor.moveToNext());
+        }
+        db.close();
+        return rowList;
+    }
+
+    public List<String> getVariantRows(int productId, int variantCatId, String variantName, List<String> rowList) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String rows = "";
+        for (int i = 0; i < rowList.size(); i++) {
+            rows += rowList.get(i);
+            if (i != (rowList.size() - 1))
+                rows += ",";
+        }
+
+        String query = "SELECT DISTINCT " + KEY_VARIANT_ROW
+                + " FROM " + TABLE_VARIANT_DETAILS
+                + " WHERE " + KEY_VARIANT_CATEGORY_ID + "=" + variantCatId
+                + " AND " + KEY_PRODUCT_ID + "=" + productId
+                + " AND " + KEY_VARIANT_DETAILS_NAME + "='" + variantName + "'"
+                + " AND " + KEY_VARIANT_ROW + " IN (" + rows + ")";
+        System.out.println("variant query" + query);
+
+        Cursor cursor = db.rawQuery(query, null);
+
+        rowList = new ArrayList<>();
+        if (cursor.moveToFirst()) {
+            do {
+                cursor.getColumnNames();
+                rowList.add(cursor.getString(cursor.getColumnIndex(KEY_VARIANT_ROW)));
+            } while (cursor.moveToNext());
+        }
+        db.close();
+        return rowList;
+    }
+
+    public List<String> getAssociatedVariants(int productId, int variantCatId, String variantName, List<String> rowList) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String rows = "";
+        for (int i = 0; i < rowList.size(); i++) {
+            rows += rowList.get(i);
+            if (i != (rowList.size() - 1))
+                rows += ",";
+        }
+
+        String query = "SELECT DISTINCT " + KEY_VARIANT_DETAILS_NAME
+                + " FROM " + TABLE_VARIANT_DETAILS
+                + " WHERE " + KEY_VARIANT_CATEGORY_ID + "=" + variantCatId
+                + " AND " + KEY_PRODUCT_ID + "=" + productId
+//                + " AND " + KEY_VARIANT_DETAILS_NAME + "='" + variantName + "'"
+                + " AND " + KEY_VARIANT_ROW
+                + " IN (" + rows + ")";
+        System.out.println("variant query" + query);
 
         Cursor cursor = db.rawQuery(query, null);
 

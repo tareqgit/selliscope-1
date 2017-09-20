@@ -86,8 +86,10 @@ public interface SelliscopeApiEndpointInterface {
     @PUT("outlet/{id}/update")
     Call<ResponseBody> updateOutlet(@Path("id") int outletID, @Body CreateOutlet createOutlet);
 
-    @POST("order/store")
+    @POST("order/variant/store")
     Call<AddNewOrder.OrderResponse> addOrder(@Body AddNewOrder order);
+    /*@POST("order/store")
+    Call<AddNewOrder.OrderResponse> addOrder(@Body AddNewOrder order);*/
 
     @POST("payment/collect")
     Call<PaymentResponse.PaymentSucessfull> payNow(@Body PaymentResponse payment);

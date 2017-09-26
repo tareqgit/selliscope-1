@@ -344,6 +344,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                             product.discount = Integer.parseInt(etDiscount.getText().toString());
                             product.qty = Integer.parseInt(etQty.getText().toString());
                             product.row = Integer.parseInt(variantRows.get(i).get(0));
+                            product.price = String.valueOf(productPrice.get(i));
                             products.add(product);
                         }
                     }

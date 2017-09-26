@@ -28,6 +28,8 @@ public class AddNewOrder implements Serializable {
             public int qty;
             @SerializedName("row")
             public int row;
+            @SerializedName("price")
+            public String price;
             @SerializedName("discount")
             public int discount;
         }

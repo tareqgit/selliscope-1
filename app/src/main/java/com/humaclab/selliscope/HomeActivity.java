@@ -130,7 +130,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                     }
                 });
             }
-        }, 0, 5, TimeUnit.MINUTES);
+        }, 0, 1, TimeUnit.MINUTES);
         //loading Data into background
     }
 

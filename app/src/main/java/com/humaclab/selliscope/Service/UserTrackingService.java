@@ -20,7 +20,7 @@ public class UserTrackingService extends Service {
         Timber.d("User Tracking Service OnStartCommand");
         SendUserLocationData sendUserLocationData = new SendUserLocationData(getApplicationContext());
         sendUserLocationData.getLocation();
-        return super.onStartCommand(intent, flags, startId);
+        return START_STICKY;
     }
 
     @Nullable
@@ -31,6 +31,7 @@ public class UserTrackingService extends Service {
 
     @Override
     public void onDestroy() {
-        super.onDestroy();
+        Timber.d("UserTracking service is stopped.");
+        sendBroadcast(new Intent(getApplicationContext(), SendLocationDataService.class));
     }
 }

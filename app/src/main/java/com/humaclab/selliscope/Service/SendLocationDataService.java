@@ -4,6 +4,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 
+import com.humaclab.selliscope.Utils.SendUserLocationData;
 import com.humaclab.selliscope.adapters.LocationSyncAdapter;
 
 import java.util.concurrent.Executors;
@@ -41,13 +42,21 @@ public class SendLocationDataService extends Service {
         }
 
         scheduler = Executors.newSingleThreadScheduledExecutor();
-        scheduler.scheduleAtFixedRate
-                (new Runnable() {
+        scheduler.scheduleAtFixedRate(
+                new Runnable() {
                     public void run() {
-                        startService(new Intent(SendLocationDataService.this,
-                                UserTrackingService.class));
+                        /*startService(new Intent(SendLocationDataService.this,
+                                UserTrackingService.class));*/
+                        SendUserLocationData sendUserLocationData = new SendUserLocationData(getApplicationContext());
+                        sendUserLocationData.getLocation();
                     }
                 }, 0, 1, TimeUnit.MINUTES);
-        return super.onStartCommand(intent, flags, startId);
+        return START_STICKY;
+    }
+
+    @Override
+    public void onDestroy() {
+        Timber.d("SendLocation service is stopped.");
+        sendBroadcast(new Intent(getApplicationContext(), SendLocationDataService.class));
     }
 }

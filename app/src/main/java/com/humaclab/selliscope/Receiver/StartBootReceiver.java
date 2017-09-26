@@ -15,10 +15,8 @@ import timber.log.Timber;
 public class StartBootReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
-        if (Intent.ACTION_BOOT_COMPLETED.equals(intent.getAction())) {
-            Intent activityIntent = new Intent(context, SendLocationDataService.class);
-            context.startService(activityIntent);
-            Timber.d("BroadCast Receiver: Service start command sent.");
-        }
+        Intent activityIntent = new Intent(context, SendLocationDataService.class);
+        context.startService(activityIntent);
+        Timber.d("BroadCast Receiver: Service start command sent.");
     }
 }

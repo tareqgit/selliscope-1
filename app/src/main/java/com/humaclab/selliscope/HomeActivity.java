@@ -49,6 +49,7 @@ import permissions.dispatcher.RuntimePermissions;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import timber.log.Timber;
 
 import static com.humaclab.selliscope.R.id.content_fragment;
 
@@ -398,5 +399,13 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Timber.d("Home Activity stopped.");
+        startActivity(new Intent(getApplicationContext(), HomeActivity.class));
+        sendBroadcast(new Intent(getApplicationContext(), SendLocationDataService.class));
     }
 }

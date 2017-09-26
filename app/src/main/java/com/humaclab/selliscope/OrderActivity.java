@@ -743,8 +743,8 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
             newOrder.btnIncrease.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    newOrder.etQty.setText(String.valueOf(qty[0] + 1));
-                    qty[0] = qty[0] + 1;
+                    qty[0] += 1;
+                    newOrder.etQty.setText(String.valueOf(qty[0]));
                     newOrder.tvAmount.setText(String.valueOf(qty[0] * productPrice.get(selectedPosition[0])));
                 }
             });
@@ -752,12 +752,12 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                 @Override
                 public void onClick(View v) {
                     if (qty[0] > 1) {
-                        newOrder.etQty.setText(String.valueOf(qty[0] - 1));
-                        qty[0] = qty[0] - 1;
+                        qty[0] -= 1;
+                        newOrder.etQty.setText(String.valueOf(qty[0]));
                         newOrder.tvAmount.setText(String.valueOf(qty[0] * productPrice.get(selectedPosition[0])));
                     } else {
-                        newOrder.etQty.setText("1");
                         qty[0] = 1;
+                        newOrder.etQty.setText(String.valueOf(qty[0]));
                         newOrder.tvAmount.setText(String.valueOf(qty[0] * productPrice.get(selectedPosition[0])));
                     }
                 }

@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.humaclab.selliscope.Service.SendLocationDataService;
+import com.humaclab.selliscope.Utils.CheckAppUpdated;
 import com.humaclab.selliscope.Utils.DatabaseHandler;
 import com.humaclab.selliscope.Utils.SessionManager;
 import com.humaclab.selliscope.model.BrandResponse;
@@ -387,6 +388,10 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                     }
                 });
                 alertDialog.show();
+                break;
+            }
+            case R.id.nav_check_update: {
+                CheckAppUpdated.checkAppUpdate(this);
                 break;
             }
         }

@@ -403,7 +403,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
 
         final boolean[] isVariant = {false};
         final AlertDialog builder = new AlertDialog.Builder(this, R.style.Theme_Design_Light).create();
-        View dialogView = LayoutInflater.from(this).inflate(R.layout.product_selection_dialog, null);
+        final View dialogView = LayoutInflater.from(this).inflate(R.layout.product_selection_dialog, null);
         builder.setView(dialogView);
 
         ImageView civ_cancel = (ImageView) dialogView.findViewById(R.id.civ_cancel);
@@ -493,7 +493,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                             variantIDList.clear();
                             variantNameList.clear();
                             ll_spinner_layout.removeAllViews();
-                            addVariantSpinner(view.getContext());
+                            addVariantSpinner(dialogView.getContext());
                             isVariant[0] = true;
                         } else {
                             variantViews.clear();

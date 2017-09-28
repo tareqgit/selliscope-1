@@ -74,6 +74,7 @@ dependencies {
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'com.github.javiersantos:AppUpdater:2.6.3'
+    compile 'com.github.quentin7b:android-location-tracker:3.2'
     compile 'de.hdodenhof:circleimageview:2.1.0'
     compile 'com.google.firebase:firebase-messaging:10.0.1'
     testCompile 'junit:junit:4.12'

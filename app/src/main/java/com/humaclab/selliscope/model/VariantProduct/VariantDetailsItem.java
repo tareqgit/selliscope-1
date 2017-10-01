@@ -20,6 +20,9 @@ public class VariantDetailsItem {
     @SerializedName("row")
     private String row;
 
+    @SerializedName("stock")
+    private String stock;
+
     public int getVariantCatId() {
         return variantCatId;
     }
@@ -50,5 +53,13 @@ public class VariantDetailsItem {
 
     public void setRow(String row) {
         this.row = row;
+    }
+
+    public String getStock() {
+        return stock;
+    }
+
+    public void setStock(String stock) {
+        this.stock = stock;
     }
 }

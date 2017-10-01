@@ -3,6 +3,7 @@ package com.humaclab.selliscope;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -599,7 +600,10 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                 final EditText editText = new EditText(context);
                 editText.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
                 editText.setInputType(InputType.TYPE_NULL);
-
+                final TextView productStock = new TextView(context);
+                productStock.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
+                productStock.setTextSize(20);
+                productStock.setTextColor(Color.RED);
                 variantPriceTypes.add("Select price type");
                 for (Integer integer : price_id) {
                     variantIDs.add(variantsItems.get(integer).getId());
@@ -625,6 +629,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                                 editText.setText(s);
                                 variantPrice = Double.parseDouble(s);
                             }
+                            productStock.setText("Stock: " + databaseHandler.getProductStock(productID.get(sp_product_name.getSelectedItemPosition()), variantRows.get(tableRowCount).get(0)));
                         }
                     }
 
@@ -636,7 +641,9 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                 variantViews.add(spinner);
                 //For loading price dropdown
 
+
                 variantViews.add(editText);
+                variantViews.add(productStock);
                 for (View view : variantViews)
                     ll_spinner_layout.addView(view);
             }

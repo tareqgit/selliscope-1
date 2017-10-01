@@ -28,7 +28,7 @@ import java.util.Map;
  */
 
 public class DatabaseHandler extends SQLiteOpenHelper {
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 4;
     private static final String DATABASE_NAME = "selliscopedb";
 
     // Database Tables
@@ -148,7 +148,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + KEY_VARIANT_CATEGORY_NAME + " TEXT,"
                 + KEY_PRODUCT_ID + " INTEGER,"
                 + KEY_VARIANT_DETAILS_NAME + " TEXT,"
-                + KEY_VARIANT_ROW + " TEXT"
+                + KEY_VARIANT_ROW + " TEXT,"
+                + KEY_PRODUCT_STOCK + " TEXT"
                 + ")";
         String CREATE_CATEGORY_TABLE = "CREATE TABLE " + TABLE_CATEGORY + "("
                 + KEY_CATEGORY_ID + " INTEGER PRIMARY KEY,"
@@ -211,6 +212,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_USER_VISITS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_PRODUCT);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_VARIANT_CATEGORY);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_VARIANT_DETAILS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_CATEGORY);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_BRAND);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_DELIVERY);
@@ -806,14 +808,16 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
                     for (int i = variantsItem.getVariantDetailsItems().size() - 1; i >= 0; i--) {//loop through all variant details list
                         VariantDetailsItem variantDetailsItem = variantsItem.getVariantDetailsItems().get(i);
-                        if (variantDetailsItem.getRow() == null) {
+                        if (variantDetailsItem.getStock() == null) {
                             values.put(KEY_PRODUCT_ID, productsItem.getId());
                             values.put(KEY_VARIANT_CATEGORY_ID, variantDetailsItem.getVariantCatId());
                             values.put(KEY_VARIANT_CATEGORY_NAME, variantDetailsItem.getVariantCatName());
                             values.put(KEY_VARIANT_DETAILS_NAME, variantDetailsItem.getName());
                         } else {
                             values.put(KEY_PRODUCT_ID, productsItem.getId());
-                            values.put(KEY_VARIANT_ROW, variantDetailsItem.getRow());
+                            values.put(KEY_PRODUCT_STOCK, variantDetailsItem.getStock());
+                            i--;
+                            values.put(KEY_VARIANT_ROW, variantsItem.getVariantDetailsItems().get(i).getRow());
                             continue;
                         }
                         try {
@@ -936,6 +940,28 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         }
         db.close();
         return variantNames;
+    }
+
+    public String getProductStock(int productId, String row) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String prouctStock = "";
+        String query = "SELECT DISTINCT " + KEY_PRODUCT_STOCK
+                + " FROM " + TABLE_VARIANT_DETAILS
+                + " WHERE " + KEY_PRODUCT_ID + "=" + productId
+                + " AND " + KEY_VARIANT_ROW + "=" + row;
+        System.out.println("variant query" + query);
+
+        Cursor cursor = db.rawQuery(query, null);
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                cursor.getColumnNames();
+                prouctStock = cursor.getString(cursor.getColumnIndex(KEY_PRODUCT_STOCK));
+            } while (cursor.moveToNext());
+        }
+        db.close();
+        return prouctStock;
     }
 
     public void removeVariantCategories() {

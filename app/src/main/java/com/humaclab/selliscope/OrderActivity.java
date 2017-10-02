@@ -600,10 +600,12 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                 final EditText editText = new EditText(context);
                 editText.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
                 editText.setInputType(InputType.TYPE_NULL);
+                //For product stock
                 final TextView productStock = new TextView(context);
                 productStock.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
                 productStock.setTextSize(20);
                 productStock.setTextColor(Color.RED);
+                //For product stock
                 variantPriceTypes.add("Select price type");
                 for (Integer integer : price_id) {
                     variantIDs.add(variantsItems.get(integer).getId());
@@ -629,6 +631,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                                 editText.setText(s);
                                 variantPrice = Double.parseDouble(s);
                             }
+                            //For product stock
                             productStock.setText("Stock: " + databaseHandler.getProductStock(productID.get(sp_product_name.getSelectedItemPosition()), variantRows.get(tableRowCount).get(0)));
                         }
                     }

@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
@@ -327,21 +328,11 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
     @OnShowRationale(Manifest.permission.ACCESS_FINE_LOCATION)
     void showRationaleForLocation(final PermissionRequest request) {
-        new AlertDialog.Builder(this)
-                .setMessage("GPS permission is required")
-                .setPositiveButton("Allow", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        request.cancel();
-                    }
-                })
-                .setNegativeButton("Deny", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        request.cancel();
-                    }
-                })
-                .show();
+        String[] permissions = {
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+        };
+        ActivityCompat.requestPermissions(this, permissions, 404);
     }
 
     @OnPermissionDenied(Manifest.permission.ACCESS_FINE_LOCATION)

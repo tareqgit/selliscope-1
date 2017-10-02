@@ -43,7 +43,6 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
-import com.humaclab.selliscope.Utils.AccessPermission;
 import com.humaclab.selliscope.Utils.SessionManager;
 import com.humaclab.selliscope.model.Outlets;
 
@@ -68,7 +67,6 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
     private GoogleApiClient googleApiClient;
 
     public static boolean checkPermission(final Context context) {
-        AccessPermission.accessPermission((RouteActivity) context);
         return ActivityCompat.checkSelfPermission(context,
                 Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
     }

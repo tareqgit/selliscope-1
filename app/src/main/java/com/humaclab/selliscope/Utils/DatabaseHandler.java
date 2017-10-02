@@ -865,7 +865,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + " WHERE " + KEY_VARIANT_CATEGORY_ID + "=" + variantCatId
                 + " AND " + KEY_PRODUCT_ID + "=" + productId
                 + " AND " + KEY_VARIANT_DETAILS_NAME + "='" + variantName + "'";
-        System.out.println("variant query" + query);
+//        System.out.println("variant query" + query);
 
         Cursor cursor = db.rawQuery(query, null);
 
@@ -895,7 +895,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + " AND " + KEY_PRODUCT_ID + "=" + productId
                 + " AND " + KEY_VARIANT_DETAILS_NAME + "='" + variantName + "'"
                 + " AND " + KEY_VARIANT_ROW + " IN (" + rows + ")";
-        System.out.println("variant query" + query);
+//        System.out.println("variant query" + query);
 
         Cursor cursor = db.rawQuery(query, null);
 
@@ -926,7 +926,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 //                + " AND " + KEY_VARIANT_DETAILS_NAME + "='" + variantName + "'"
                 + " AND " + KEY_VARIANT_ROW
                 + " IN (" + rows + ")";
-        System.out.println("variant query" + query);
+//        System.out.println("variant query" + query);
 
         Cursor cursor = db.rawQuery(query, null);
 
@@ -949,7 +949,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + " FROM " + TABLE_VARIANT_DETAILS
                 + " WHERE " + KEY_PRODUCT_ID + "=" + productId
                 + " AND " + KEY_VARIANT_ROW + "=" + row;
-        System.out.println("variant query" + query);
+//        System.out.println("variant query" + query);
 
         Cursor cursor = db.rawQuery(query, null);
 

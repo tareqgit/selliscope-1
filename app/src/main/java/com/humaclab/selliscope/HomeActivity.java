@@ -67,6 +67,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         setContentView(R.layout.activity_home);
         sessionManager = new SessionManager(this);
         databaseHandler = new DatabaseHandler(this);
+        apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(), sessionManager.getUserPassword(), false).create(SelliscopeApiEndpointInterface.class);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("");
@@ -138,9 +139,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
     //loading Data into background
     public void getProducts() {
-        final SessionManager sessionManager = new SessionManager(this);
         if (sessionManager.isLoggedIn()) {
-            apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(), sessionManager.getUserPassword(), false).create(SelliscopeApiEndpointInterface.class);
             Call<VariantProductResponse> call = apiService.getProducts();
             call.enqueue(new Callback<VariantProductResponse>() {
                 @Override
@@ -205,10 +204,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void getCategory() {
-        SessionManager sessionManager = new SessionManager(this);
-        apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(),
-                sessionManager.getUserPassword(), false)
-                .create(SelliscopeApiEndpointInterface.class);
         Call<CategoryResponse> call = apiService.getCategories();
         call.enqueue(new Callback<CategoryResponse>() {
             @Override
@@ -238,10 +233,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void getBrand() {
-        SessionManager sessionManager = new SessionManager(this);
-        apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(),
-                sessionManager.getUserPassword(), false)
-                .create(SelliscopeApiEndpointInterface.class);
         Call<BrandResponse> call = apiService.getBrands();
         call.enqueue(new Callback<BrandResponse>() {
             @Override
@@ -395,8 +386,10 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Timber.d("Home Activity stopped.");
-        startActivity(new Intent(getApplicationContext(), HomeActivity.class));
-        sendBroadcast(new Intent(getApplicationContext(), SendLocationDataService.class));
+        if (sessionManager.isLoggedIn()) {
+            Timber.d("Home Activity stopped.");
+            startActivity(new Intent(getApplicationContext(), HomeActivity.class));
+            sendBroadcast(new Intent(getApplicationContext(), SendLocationDataService.class));
+        }
     }
 }

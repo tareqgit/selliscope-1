@@ -161,7 +161,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                                                 result.getBrand().getName(),
                                                 Integer.parseInt(result.getCategory().getId()),
                                                 result.getCategory().getName(),
-                                                ""
+                                                "",
+                                                !result.getVariants().isEmpty()
                                         );
                                     } else {
                                         databaseHandler.addProduct(
@@ -173,7 +174,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                                                 result.getBrand().getName(),
                                                 Integer.parseInt(result.getCategory().getId()),
                                                 result.getCategory().getName(),
-                                                result.getGodown().get(0).getStock()
+                                                result.getGodown().get(0).getStock(),
+                                                !result.getVariants().isEmpty()
                                         );
                                     }
                                 }

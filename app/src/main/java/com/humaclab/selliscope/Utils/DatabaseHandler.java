@@ -29,7 +29,7 @@ import java.util.Map;
  */
 
 public class DatabaseHandler extends SQLiteOpenHelper {
-    private static final int DATABASE_VERSION = 4;
+    private static final int DATABASE_VERSION = 5;
     private static final String DATABASE_NAME = "selliscopedb";
 
     // Database Tables
@@ -68,6 +68,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String KEY_BRAND_ID = "brand_id";
     private static final String KEY_BRAND_NAME = "brand_name";
     private static final String KEY_PRODUCT_STOCK = "stock";
+    private static final String KEY_PRODUCT_VARIANT = "variant";
 
     //product variant category column name
     private static final String KEY_VARIANT_CATEGORY_ID = "variant_category_id";
@@ -136,7 +137,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + KEY_CATEGORY_NAME + " TEXT,"
                 + KEY_BRAND_ID + " INTEGER,"
                 + KEY_BRAND_NAME + " TEXT,"
-                + KEY_PRODUCT_STOCK + " TEXT"
+                + KEY_PRODUCT_STOCK + " TEXT,"
+                + KEY_PRODUCT_VARIANT + " INTEGER"
                 + ")";
         String CREATE_VARIANT_CATEGORY_TABLE = "CREATE TABLE " + TABLE_VARIANT_CATEGORY + "("
                 + KEY_VARIANT_CATEGORY_ID + " INTEGER PRIMARY KEY,"
@@ -292,7 +294,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.close();
     }
 
-    public void addProduct(int productID, String productName, String price, String image, int brandID, String brandName, int categoryID, String categoryName, String stock) {
+    public void addProduct(int productID, String productName, String price, String image, int brandID, String brandName, int categoryID, String categoryName, String stock, boolean variant) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(KEY_PRODUCT_ID, productID);
@@ -304,6 +306,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(KEY_BRAND_ID, brandID);
         values.put(KEY_BRAND_NAME, brandName);
         values.put(KEY_PRODUCT_STOCK, stock);
+        if (variant)
+            values.put(KEY_PRODUCT_VARIANT, 1);
+        else
+            values.put(KEY_PRODUCT_VARIANT, 0);
         try {
             db.insert(TABLE_PRODUCT, null, values);
         } catch (Exception e) {

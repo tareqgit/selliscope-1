@@ -67,7 +67,7 @@ public class SellsReturnActivity extends AppCompatActivity {
     private void loadReturns() {
         apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(),
                 sessionManager.getUserPassword(), false).create(SelliscopeApiEndpointInterface.class);
-        Call<DeliveryResponse> call = apiService.getDelivery(outletID);
+        Call<DeliveryResponse> call = apiService.getSalesReturn(outletID);
         call.enqueue(new Callback<DeliveryResponse>() {
             @Override
             public void onResponse(Call<DeliveryResponse> call, Response<DeliveryResponse> response) {

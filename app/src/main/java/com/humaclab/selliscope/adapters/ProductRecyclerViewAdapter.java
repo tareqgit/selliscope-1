@@ -15,7 +15,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.humaclab.selliscope.OrderActivity;
 import com.humaclab.selliscope.R;
-import com.humaclab.selliscope.model.ProductResponse;
+import com.humaclab.selliscope.model.VariantProduct.ProductsItem;
 
 import java.util.List;
 
@@ -25,11 +25,11 @@ import java.util.List;
 
 public class ProductRecyclerViewAdapter extends RecyclerView.Adapter<ProductRecyclerViewAdapter.ProductsViewHolder> {
     private Context context;
-    private List<ProductResponse.ProductResult> productResultList;
+    private List<ProductsItem> productsItemList;
 
-    public ProductRecyclerViewAdapter(Context context, List<ProductResponse.ProductResult> productResultList) {
+    public ProductRecyclerViewAdapter(Context context, List<ProductsItem> productsItemList) {
         this.context = context;
-        this.productResultList = productResultList;
+        this.productsItemList = productsItemList;
     }
 
     @Override
@@ -40,17 +40,17 @@ public class ProductRecyclerViewAdapter extends RecyclerView.Adapter<ProductRecy
 
     @Override
     public void onBindViewHolder(ProductsViewHolder holder, int position) {
-        final ProductResponse.ProductResult productResult = productResultList.get(position);
-        holder.tv_product_name.setText(productResult.name);
-        holder.tv_category.setText(productResult.category.name);
-        holder.tv_brand.setText(productResult.brand.name);
-        holder.tv_price.setText(String.valueOf(productResult.price));
+        final ProductsItem productResult = productsItemList.get(position);
+        holder.tv_product_name.setText(productResult.getName());
+        holder.tv_category.setText(productResult.getCategory().getName());
+        holder.tv_brand.setText(productResult.getBrand().getName());
+        holder.tv_price.setText(String.valueOf(productResult.getPrice()));
         /*Picasso.with(context)
                 .load(productResult.img)
                 .error(R.drawable.ic_outlet_bnw)
                 .placeholder(R.drawable.ic_outlet_bnw)
                 .into(holder.iv_product);*/
-        Glide.with(context).load(productResult.img)
+        Glide.with(context).load(productResult.getImg())
                 .thumbnail(0.5f)
                 .crossFade()
                 .placeholder(R.drawable.ic_outlet_bnw)
@@ -68,19 +68,19 @@ public class ProductRecyclerViewAdapter extends RecyclerView.Adapter<ProductRecy
                 TextView tv_product_usp = (TextView) dialog.findViewById(R.id.tv_product_usp);
                 TextView tv_product_tips = (TextView) dialog.findViewById(R.id.tv_product_tips);
                 try {
-                    tv_product_description.setText(productResult.promotion.discount);
+                    tv_product_description.setText(productResult.getPromotion().getDiscount());
                 } catch (Exception e) {
                     e.printStackTrace();
                     tv_product_description.setText("This product has no Promotion offer yet.");
                 }
                 try {
-                    tv_product_usp.setText(productResult.pitch.usp);
+                    tv_product_usp.setText(productResult.getPitch().getUsp());
                 } catch (Exception e) {
                     e.printStackTrace();
                     tv_product_usp.setText("This product has no USP yet.");
                 }
                 try {
-                    tv_product_tips.setText(productResult.pitch.tips);
+                    tv_product_tips.setText(productResult.getPitch().getTips());
                 } catch (Exception e) {
                     e.printStackTrace();
                     tv_product_tips.setText("This product has no Tips yet.");
@@ -103,8 +103,8 @@ public class ProductRecyclerViewAdapter extends RecyclerView.Adapter<ProductRecy
                 public void onClick(View v) {
                     Intent intent = new Intent(context, OrderActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    intent.putExtra("productName", productResult.name);
-                    intent.putExtra("productID", productResult.id);
+                    intent.putExtra("productName", productResult.getName());
+                    intent.putExtra("productID", productResult.getId());
                     context.startActivity(intent);
                 }
             });
@@ -115,7 +115,7 @@ public class ProductRecyclerViewAdapter extends RecyclerView.Adapter<ProductRecy
 
     @Override
     public int getItemCount() {
-        return productResultList.size();
+        return productsItemList.size();
     }
 
     public class ProductsViewHolder extends RecyclerView.ViewHolder {

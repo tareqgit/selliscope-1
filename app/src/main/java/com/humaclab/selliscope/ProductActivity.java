@@ -14,7 +14,9 @@ import android.widget.TextView;
 
 import com.humaclab.selliscope.Utils.DatabaseHandler;
 import com.humaclab.selliscope.adapters.ProductRecyclerViewAdapter;
-import com.humaclab.selliscope.model.ProductResponse;
+import com.humaclab.selliscope.model.VariantProduct.Brand;
+import com.humaclab.selliscope.model.VariantProduct.Category;
+import com.humaclab.selliscope.model.VariantProduct.ProductsItem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -147,28 +149,28 @@ public class ProductActivity extends AppCompatActivity {
     private void getFromLocal() {
         if (srl_product.isRefreshing())
             srl_product.setRefreshing(false);
-        List<ProductResponse.ProductResult> products = databaseHandler.getProduct(0, 0);
+        List<ProductsItem> products = databaseHandler.getProduct(0, 0);
         rv_product.setAdapter(new ProductRecyclerViewAdapter(getApplication(), products));
 
         //For spinner
-        List<ProductResponse.Category> categories = databaseHandler.getCategory();
+        List<Category> categories = databaseHandler.getCategory();
         categoryName.clear();
         categoryName.add("Select Category");
         categoryID.add(0);
-        for (ProductResponse.Category result : categories) {
-            categoryName.add(result.name);
-            categoryID.add(result.id);
+        for (Category result : categories) {
+            categoryName.add(result.getName());
+            categoryID.add(Integer.valueOf(result.getId()));
         }
         sp_category.setAdapter(new ArrayAdapter<>(getApplicationContext(), R.layout.spinner_item, categoryName));
         sp_category.setSelection(0);
 
-        List<ProductResponse.Brand> brands = databaseHandler.getBrand();
+        List<Brand> brands = databaseHandler.getBrand();
         brandName.clear();
         brandName.add("Select Brand");
         brandID.add(0);
-        for (ProductResponse.Brand result : brands) {
-            brandName.add(result.name);
-            brandID.add(result.id);
+        for (Brand result : brands) {
+            brandName.add(result.getName());
+            brandID.add(Integer.valueOf(result.getId()));
         }
         sp_brand.setAdapter(new ArrayAdapter<>(getApplicationContext(), R.layout.spinner_item, brandName));
         sp_brand.setSelection(0);

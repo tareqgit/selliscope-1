@@ -11,7 +11,8 @@ import com.humaclab.selliscope.dbmodel.Target;
 import com.humaclab.selliscope.dbmodel.UserVisit;
 import com.humaclab.selliscope.model.DeliveryResponse;
 import com.humaclab.selliscope.model.Outlets;
-import com.humaclab.selliscope.model.ProductResponse;
+import com.humaclab.selliscope.model.VariantProduct.Brand;
+import com.humaclab.selliscope.model.VariantProduct.Category;
 import com.humaclab.selliscope.model.VariantProduct.ProductsItem;
 import com.humaclab.selliscope.model.VariantProduct.VariantDetailsItem;
 import com.humaclab.selliscope.model.VariantProduct.VariantItem;
@@ -365,8 +366,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.close();
     }
 
-    public List<ProductResponse.ProductResult> getProduct(int categoryID, int brandID) {
-        List<ProductResponse.ProductResult> productList = new ArrayList<>();
+    public List<ProductsItem> getProduct(int categoryID, int brandID) {
+        List<ProductsItem> productList = new ArrayList<>();
         // Select All Query
         String selectQuery;
         if (categoryID != 0 && brandID != 0) {
@@ -389,26 +390,31 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             do {
                 cursor.getColumnNames();
-                ProductResponse.ProductResult products = new ProductResponse.ProductResult();
-                products.category = new ProductResponse.Category();
-                products.brand = new ProductResponse.Brand();
+                ProductsItem productsItem = new ProductsItem();
+                Category category = new Category();
+                Brand brand = new Brand();
 
-                products.id = cursor.getInt(cursor.getColumnIndex(KEY_PRODUCT_ID));
-                products.name = cursor.getString(cursor.getColumnIndex(KEY_PRODUCT_NAME));
-                products.price = cursor.getString(cursor.getColumnIndex(KEY_PRODUCT_PRICE));
-                products.img = cursor.getString(cursor.getColumnIndex(KEY_PRODUCT_IMAGE));
-                products.category.id = cursor.getInt(cursor.getColumnIndex(KEY_CATEGORY_ID));
-                products.category.name = cursor.getString(cursor.getColumnIndex(KEY_CATEGORY_NAME));
-                products.brand.id = cursor.getInt(cursor.getColumnIndex(KEY_BRAND_ID));
-                products.brand.name = cursor.getString(cursor.getColumnIndex(KEY_BRAND_NAME));
-                productList.add(products);
+                productsItem.setId(cursor.getInt(cursor.getColumnIndex(KEY_PRODUCT_ID)));
+                productsItem.setName(cursor.getString(cursor.getColumnIndex(KEY_PRODUCT_NAME)));
+                productsItem.setPrice(cursor.getString(cursor.getColumnIndex(KEY_PRODUCT_PRICE)));
+                productsItem.setImg(cursor.getString(cursor.getColumnIndex(KEY_PRODUCT_IMAGE)));
+
+                category.setName(cursor.getString(cursor.getColumnIndex(KEY_CATEGORY_NAME)));
+                category.setId(String.valueOf(cursor.getInt(cursor.getColumnIndex(KEY_CATEGORY_ID))));
+                productsItem.setCategory(category);
+
+                brand.setId(String.valueOf(cursor.getInt(cursor.getColumnIndex(KEY_BRAND_ID))));
+                brand.setName(cursor.getString(cursor.getColumnIndex(KEY_BRAND_NAME)));
+                productsItem.setBrand(brand);
+
+                productList.add(productsItem);
             } while (cursor.moveToNext());
         }
         return productList;
     }
 
     public int getSizeOfProduct() {
-        List<ProductResponse.ProductResult> productList = new ArrayList<>();
+        List<ProductsItem> productsItemList = new ArrayList<>();
         // Select All Query
         String selectQuery = "SELECT  * FROM " + TABLE_PRODUCT + " ORDER BY " + KEY_PRODUCT_NAME + " ASC";
 
@@ -419,26 +425,31 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             do {
                 cursor.getColumnNames();
-                ProductResponse.ProductResult products = new ProductResponse.ProductResult();
-                products.category = new ProductResponse.Category();
-                products.brand = new ProductResponse.Brand();
+                ProductsItem productsItem = new ProductsItem();
+                Category category = new Category();
+                Brand brand = new Brand();
 
-                products.id = cursor.getInt(cursor.getColumnIndex(KEY_PRODUCT_ID));
-                products.name = cursor.getString(cursor.getColumnIndex(KEY_PRODUCT_NAME));
-                products.price = cursor.getString(cursor.getColumnIndex(KEY_PRODUCT_PRICE));
-                products.img = cursor.getString(cursor.getColumnIndex(KEY_PRODUCT_IMAGE));
-                products.category.id = cursor.getInt(cursor.getColumnIndex(KEY_CATEGORY_ID));
-                products.category.name = cursor.getString(cursor.getColumnIndex(KEY_CATEGORY_NAME));
-                products.brand.id = cursor.getInt(cursor.getColumnIndex(KEY_BRAND_ID));
-                products.brand.name = cursor.getString(cursor.getColumnIndex(KEY_BRAND_NAME));
-                productList.add(products);
+                productsItem.setId(cursor.getInt(cursor.getColumnIndex(KEY_PRODUCT_ID)));
+                productsItem.setName(cursor.getString(cursor.getColumnIndex(KEY_PRODUCT_NAME)));
+                productsItem.setPrice(cursor.getString(cursor.getColumnIndex(KEY_PRODUCT_PRICE)));
+                productsItem.setImg(cursor.getString(cursor.getColumnIndex(KEY_PRODUCT_IMAGE)));
+
+                category.setId(String.valueOf(cursor.getInt(cursor.getColumnIndex(KEY_CATEGORY_ID))));
+                category.setName(cursor.getString(cursor.getColumnIndex(KEY_CATEGORY_NAME)));
+                productsItem.setCategory(category);
+
+                brand.setId(String.valueOf(cursor.getInt(cursor.getColumnIndex(KEY_BRAND_ID))));
+                brand.setName(cursor.getString(cursor.getColumnIndex(KEY_BRAND_NAME)));
+                productsItem.setBrand(brand);
+
+                productsItemList.add(productsItem);
             } while (cursor.moveToNext());
         }
-        return productList.size();
+        return productsItemList.size();
     }
 
-    public List<ProductResponse.Category> getCategory() {
-        List<ProductResponse.Category> categoryList = new ArrayList<>();
+    public List<Category> getCategory() {
+        List<Category> categoryList = new ArrayList<>();
         // Select All Query
         String selectQuery = "SELECT  * FROM " + TABLE_CATEGORY;
         SQLiteDatabase db = this.getWritableDatabase();
@@ -448,9 +459,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             do {
                 cursor.getColumnNames();
-                ProductResponse.Category category = new ProductResponse.Category();
-                category.id = cursor.getInt(cursor.getColumnIndex(KEY_CATEGORY_ID));
-                category.name = cursor.getString(cursor.getColumnIndex(KEY_CATEGORY_NAME));
+                Category category = new Category();
+                category.setId(String.valueOf(cursor.getInt(cursor.getColumnIndex(KEY_CATEGORY_ID))));
+                category.setName(cursor.getString(cursor.getColumnIndex(KEY_CATEGORY_NAME)));
 
                 categoryList.add(category);
             } while (cursor.moveToNext());
@@ -458,8 +469,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return categoryList;
     }
 
-    public List<ProductResponse.Brand> getBrand() {
-        List<ProductResponse.Brand> brandList = new ArrayList<>();
+    public List<Brand> getBrand() {
+        List<Brand> brandList = new ArrayList<>();
         // Select All Query
         String selectQuery = "SELECT  * FROM " + TABLE_BRAND;
         SQLiteDatabase db = this.getWritableDatabase();
@@ -469,9 +480,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             do {
                 cursor.getColumnNames();
-                ProductResponse.Brand brand = new ProductResponse.Brand();
-                brand.id = cursor.getInt(cursor.getColumnIndex(KEY_BRAND_ID));
-                brand.name = cursor.getString(cursor.getColumnIndex(KEY_BRAND_NAME));
+                Brand brand = new Brand();
+                brand.setId(String.valueOf(cursor.getInt(cursor.getColumnIndex(KEY_BRAND_ID))));
+                brand.setName(cursor.getString(cursor.getColumnIndex(KEY_BRAND_NAME)));
 
                 brandList.add(brand);
             } while (cursor.moveToNext());

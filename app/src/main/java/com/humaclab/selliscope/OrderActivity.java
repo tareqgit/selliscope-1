@@ -35,7 +35,9 @@ import com.humaclab.selliscope.databinding.ActivityOrderBinding;
 import com.humaclab.selliscope.databinding.NewOrderBinding;
 import com.humaclab.selliscope.model.AddNewOrder;
 import com.humaclab.selliscope.model.Outlets;
-import com.humaclab.selliscope.model.ProductResponse;
+import com.humaclab.selliscope.model.VariantProduct.Brand;
+import com.humaclab.selliscope.model.VariantProduct.Category;
+import com.humaclab.selliscope.model.VariantProduct.ProductsItem;
 import com.humaclab.selliscope.model.VariantProduct.VariantItem;
 
 import java.util.ArrayList;
@@ -155,34 +157,34 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void getCategory() {
-        List<ProductResponse.Category> categories = databaseHandler.getCategory();
+        List<Category> categories = databaseHandler.getCategory();
         categoryName.clear();
         categoryName.add("Select Category");
         categoryID.add(0);
-        for (ProductResponse.Category result : categories) {
-            categoryName.add(result.name);
-            categoryID.add(result.id);
+        for (Category result : categories) {
+            categoryName.add(result.getName());
+            categoryID.add(Integer.valueOf(result.getId()));
         }
     }
 
     private void getBrand() {
-        List<ProductResponse.Brand> brands = databaseHandler.getBrand();
+        List<Brand> brands = databaseHandler.getBrand();
         brandName.clear();
         brandName.add("Select Brand");
         brandID.add(0);
-        for (ProductResponse.Brand result : brands) {
-            brandName.add(result.name);
-            brandID.add(result.id);
+        for (Brand result : brands) {
+            brandName.add(result.getName());
+            brandID.add(Integer.valueOf(result.getId()));
         }
     }
 
     private void getProducts() {
-        List<ProductResponse.ProductResult> products = databaseHandler.getProduct(0, 0);
-        for (ProductResponse.ProductResult result : products) {
-            productName.add(result.name);
-            productID.add(result.id);
-            productDiscount.add(result.discount);
-            productPrice.add(Double.parseDouble(result.price.replace(",", "")));
+        List<ProductsItem> productsItemList = databaseHandler.getProduct(0, 0);
+        for (ProductsItem result : productsItemList) {
+            productName.add(result.getName());
+            productID.add(result.getId());
+            productDiscount.add(result.getDiscount());
+            productPrice.add(Double.parseDouble(result.getPrice().replace(",", "")));
         }
         binding.spProduct.setAdapter(new ArrayAdapter<>(getApplicationContext(), R.layout.spinner_item, productName));
         //if this activity called from product activity
@@ -432,14 +434,14 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 try {
-                    List<ProductResponse.ProductResult> productResults = databaseHandler.getProduct(categoryID.get(position), brandID.get(sp_product_brand.getSelectedItemPosition()));
+                    List<ProductsItem> productsItemList = databaseHandler.getProduct(categoryID.get(position), brandID.get(sp_product_brand.getSelectedItemPosition()));
                     productName.clear();
                     productName.add("Select Product");
                     productID.clear();
                     productID.add(0);
-                    for (ProductResponse.ProductResult result : productResults) {
-                        productName.add(result.name);
-                        productID.add(result.id);
+                    for (ProductsItem result : productsItemList) {
+                        productName.add(result.getName());
+                        productID.add(result.getId());
                     }
                     sp_product_name.setAdapter(new ArrayAdapter<>(getApplicationContext(), R.layout.spinner_item, productName));
                 } catch (Exception e) {
@@ -461,14 +463,14 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 try {
-                    List<ProductResponse.ProductResult> productResults = databaseHandler.getProduct(categoryID.get(sp_product_category.getSelectedItemPosition()), brandID.get(position));
+                    List<ProductsItem> productsItemList = databaseHandler.getProduct(categoryID.get(sp_product_category.getSelectedItemPosition()), brandID.get(position));
                     productName.clear();
                     productName.add("Select Product");
                     productID.clear();
                     productID.add(0);
-                    for (ProductResponse.ProductResult result : productResults) {
-                        productName.add(result.name);
-                        productID.add(result.id);
+                    for (ProductsItem result : productsItemList) {
+                        productName.add(result.getName());
+                        productID.add(result.getId());
                     }
                     sp_product_name.setAdapter(new ArrayAdapter<>(getApplicationContext(), R.layout.spinner_item, productName));
                 } catch (Exception e) {

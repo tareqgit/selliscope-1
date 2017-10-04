@@ -344,7 +344,11 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                             EditText etDiscount = (EditText) row.findViewById(R.id.et_discount);
 
                             product.id = productID.get(sp.getSelectedItemPosition());
-                            product.discount = Double.parseDouble(etDiscount.getText().toString());
+                            if (etDiscount.getText().toString().equals("")) {
+                                product.discount = 0.00;
+                            } else {
+                                product.discount = Double.parseDouble(etDiscount.getText().toString());
+                            }
                             product.qty = Integer.parseInt(etQty.getText().toString());
                             product.row = Integer.parseInt(variantRows.get(i).get(0));
                             product.price = String.valueOf(productPrice.get(sp.getSelectedItemPosition()));

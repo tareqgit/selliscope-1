@@ -352,6 +352,10 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         // Handle navigation view item clicks here.
         switch (item.getItemId()) {
             case R.id.nav_logout: {
+                databaseHandler.removeDeliveryAndDeliveryProduct();
+                databaseHandler.removeOutlet();
+                databaseHandler.removeProductCategoryBrand();
+                databaseHandler.removeVariantCategories();
                 sessionManager.logoutUser();
                 finish();
                 break;

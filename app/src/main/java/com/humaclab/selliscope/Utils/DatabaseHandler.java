@@ -404,6 +404,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 productsItem.setName(cursor.getString(cursor.getColumnIndex(KEY_PRODUCT_NAME)));
                 productsItem.setPrice(cursor.getString(cursor.getColumnIndex(KEY_PRODUCT_PRICE)));
                 productsItem.setImg(cursor.getString(cursor.getColumnIndex(KEY_PRODUCT_IMAGE)));
+                productsItem.setHasVariant(cursor.getInt(cursor.getColumnIndex(KEY_PRODUCT_VARIANT)));
 
                 category.setName(cursor.getString(cursor.getColumnIndex(KEY_CATEGORY_NAME)));
                 category.setId(String.valueOf(cursor.getInt(cursor.getColumnIndex(KEY_CATEGORY_ID))));

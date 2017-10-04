@@ -37,6 +37,8 @@ public class ProductsItem {
     @SerializedName("variants")
     private List<VariantsItem> variants;
 
+    private boolean hasVariant;
+
     @SerializedName("category")
     private Category category;
 
@@ -91,12 +93,36 @@ public class ProductsItem {
         this.id = id;
     }
 
+    public Pitch getPitch() {
+        return pitch;
+    }
+
+    public void setPitch(Pitch pitch) {
+        this.pitch = pitch;
+    }
+
+    public Promotion getPromotion() {
+        return promotion;
+    }
+
+    public void setPromotion(Promotion promotion) {
+        this.promotion = promotion;
+    }
+
     public List<VariantsItem> getVariants() {
         return variants;
     }
 
     public void setVariants(List<VariantsItem> variants) {
         this.variants = variants;
+    }
+
+    public boolean isHasVariant() {
+        return hasVariant;
+    }
+
+    public void setHasVariant(int hasVariant) {
+        this.hasVariant = hasVariant == 1;
     }
 
     public Category getCategory() {
@@ -113,21 +139,5 @@ public class ProductsItem {
 
     public void setBrand(Brand brand) {
         this.brand = brand;
-    }
-
-    public Pitch getPitch() {
-        return pitch;
-    }
-
-    public void setPitch(Pitch pitch) {
-        this.pitch = pitch;
-    }
-
-    public Promotion getPromotion() {
-        return promotion;
-    }
-
-    public void setPromotion(Promotion promotion) {
-        this.promotion = promotion;
     }
 }

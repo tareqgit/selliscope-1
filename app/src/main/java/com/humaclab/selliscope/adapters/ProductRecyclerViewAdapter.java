@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -45,6 +46,11 @@ public class ProductRecyclerViewAdapter extends RecyclerView.Adapter<ProductRecy
         holder.tv_category.setText(productResult.getCategory().getName());
         holder.tv_brand.setText(productResult.getBrand().getName());
         holder.tv_price.setText(String.valueOf(productResult.getPrice()));
+
+        if (productResult.isHasVariant()) {
+            holder.ll_price.setVisibility(View.GONE);
+            holder.btn_order.setVisibility(View.GONE);
+        }
         /*Picasso.with(context)
                 .load(productResult.img)
                 .error(R.drawable.ic_outlet_bnw)
@@ -119,12 +125,14 @@ public class ProductRecyclerViewAdapter extends RecyclerView.Adapter<ProductRecy
     }
 
     public class ProductsViewHolder extends RecyclerView.ViewHolder {
+        LinearLayout ll_price;
         TextView tv_product_name, tv_category, tv_brand, tv_price;
         ImageView iv_product, iv_product_promo;
         Button btn_order;
 
         public ProductsViewHolder(View itemView) {
             super(itemView);
+            ll_price = (LinearLayout) itemView.findViewById(R.id.ll_price);
             iv_product = (ImageView) itemView.findViewById(R.id.iv_product);
             iv_product_promo = (ImageView) itemView.findViewById(R.id.iv_product_promo);
             tv_product_name = (TextView) itemView.findViewById(R.id.tv_product_name);

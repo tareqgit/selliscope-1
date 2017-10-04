@@ -61,9 +61,7 @@ import timber.log.Timber;
 public class RouteActivity extends AppCompatActivity implements OnMapReadyCallback,
         LocationSource.OnLocationChangedListener {
 
-    SelliscopeApiEndpointInterface apiService;
     private GoogleMap mMap;
-    private TextView toolbarTitle;
     private GoogleApiClient googleApiClient;
 
     public static boolean checkPermission(final Context context) {
@@ -77,7 +75,7 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
         setContentView(R.layout.activity_route);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("");
-        toolbarTitle = (TextView) findViewById(R.id.tv_toolbar_title);
+        TextView toolbarTitle = (TextView) findViewById(R.id.tv_toolbar_title);
         toolbarTitle.setText(getResources().getString(R.string.route));
         setSupportActionBar(toolbar);
         googleApiClient = new GoogleApiClient.Builder(RouteActivity.this)
@@ -159,7 +157,7 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
 
     void getVisits() {
         SessionManager sessionManager = new SessionManager(RouteActivity.this);
-        apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(),
+        SelliscopeApiEndpointInterface apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(),
                 sessionManager.getUserPassword(), false)
                 .create(SelliscopeApiEndpointInterface.class);
         Call<ResponseBody> call = apiService.getOutlets();

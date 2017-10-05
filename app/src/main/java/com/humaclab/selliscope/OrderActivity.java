@@ -73,6 +73,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
     private double variantPrice = 0;
     private int selectedPosition = 0, tableRowCount = 1;
     private double totalAmt = 0, totalDiscnt = 0, grandTotal = 0;
+    private boolean outOfStock = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -405,6 +406,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void showProductSelectionDialog() {
+        outOfStock = false;
         for (int i = 0; i < 50; i++) {
             variantRows.add(new ArrayList<String>());
         }
@@ -610,7 +612,6 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                 final TextView productStock = new TextView(context);
                 productStock.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
                 productStock.setTextSize(20);
-                productStock.setTextColor(Color.RED);
                 //For product stock
                 variantPriceTypes.add("Select price type");
                 for (Integer integer : price_id) {
@@ -638,7 +639,16 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                                 variantPrice = Double.parseDouble(s);
                             }
                             //For product stock
-                            productStock.setText("Stock: " + databaseHandler.getProductStock(productID.get(sp_product_name.getSelectedItemPosition()), variantRows.get(tableRowCount).get(0)));
+                            String stock = databaseHandler.getProductStock(productID.get(sp_product_name.getSelectedItemPosition()), variantRows.get(tableRowCount).get(0));
+                            if (stock.equals("0")) {
+                                productStock.setTextColor(Color.RED);
+                                productStock.setText("Out of Stock");
+                                outOfStock = true;
+                            } else {
+                                productStock.setTextColor(Color.GREEN);
+                                productStock.setText("Stock: " + stock);
+                                outOfStock = false;
+                            }
                         }
                     }
 
@@ -667,8 +677,12 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
         btn_select_product.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addProduct(productID.get(sp_product_name.getSelectedItemPosition()), isVariant[0]);
-                builder.dismiss();
+                if (outOfStock) {
+                    Toast.makeText(v.getContext(), "Due to out of stock this product cannot be to added to product list.", Toast.LENGTH_LONG).show();
+                } else {
+                    addProduct(productID.get(sp_product_name.getSelectedItemPosition()), isVariant[0]);
+                    builder.dismiss();
+                }
             }
         });
 

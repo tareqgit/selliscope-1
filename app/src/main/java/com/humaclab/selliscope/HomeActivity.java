@@ -128,17 +128,29 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                     @Override
                     public void run() {
                         Log.v("Running threads", "Thread running in background for updating products and outlets");
-                        getProducts();
+                        getProducts(false);
                         getOutlets();
                     }
                 });
             }
         }, 0, 1, TimeUnit.MINUTES);
+        scheduler.scheduleAtFixedRate(new Runnable() {
+            public void run() {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.v("Running threads", "Thread running in background for updating products and outlets after 1 hour interval");
+                        getProducts(true);
+                        getOutlets();
+                    }
+                });
+            }
+        }, 0, 1, TimeUnit.HOURS);
         //loading Data into background
     }
 
     //loading Data into background
-    public void getProducts() {
+    public void getProducts(final boolean fullUpdate) {
         if (sessionManager.isLoggedIn()) {
             Call<VariantProductResponse> call = apiService.getProducts();
             call.enqueue(new Callback<VariantProductResponse>() {
@@ -147,7 +159,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                     if (response.code() == 200) {
                         try {
                             List<ProductsItem> products = response.body().getResult().getProducts();
-                            if (products.size() != databaseHandler.getSizeOfProduct()) {
+                            if (products.size() != databaseHandler.getSizeOfProduct() || fullUpdate) {
                                 //for removing previous data
                                 databaseHandler.removeProductCategoryBrand();
                                 for (ProductsItem result : products) {

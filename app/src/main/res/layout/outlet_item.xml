@@ -80,7 +80,7 @@
                 android:id="@+id/btn_check_in"
                 style="@android:style/Widget.Button.Small"
                 android:layout_width="82dp"
-                android:layout_height="26dp"
+                android:layout_height="35dp"
                 android:background="@drawable/button_shape"
                 android:text="Check In"
                 android:textColor="@color/white" />
@@ -88,8 +88,8 @@
             <ProgressBar
                 android:id="@+id/pb_check_in"
                 style="@android:style/Widget.DeviceDefault.Light.ProgressBar.Small"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
                 android:layout_gravity="center"
@@ -99,7 +99,7 @@
                 android:id="@+id/btn_order"
                 style="@android:style/Widget.Button.Small"
                 android:layout_width="82dp"
-                android:layout_height="26dp"
+                android:layout_height="35dp"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentTop="true"
                 android:layout_gravity="right"

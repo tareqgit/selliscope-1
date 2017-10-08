@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.humaclab.selliscope">
+          package="com.humaclab.selliscope">
 
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <uses-permission android:name="android.permission.READ_SYNC_SETTINGS" />
-    <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS" />
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.READ_SYNC_SETTINGS"/>
+    <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
 
     <application
         android:name=".SelliscopeApplication"
@@ -29,15 +30,15 @@
         <!--For signed APK-->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyAhsz4pX62D7yu8twGT4ydn-_DRVB3p6_Y" />
+            android:value="AIzaSyAhsz4pX62D7yu8twGT4ydn-_DRVB3p6_Y"/>
         <meta-data
             android:name="com.google.android.awareness.API_KEY"
-            android:value="AIzaSyAhsz4pX62D7yu8twGT4ydn-_DRVB3p6_Y" />
+            android:value="AIzaSyAhsz4pX62D7yu8twGT4ydn-_DRVB3p6_Y"/>
         <!--For signed APK-->
 
         <meta-data
             android:name="io.fabric.ApiKey"
-            android:value="c2bca7824e6a758388318ecf6635fd2e8e11979a" />
+            android:value="c2bca7824e6a758388318ecf6635fd2e8e11979a"/>
 
         <!--Services and Receivers-->
         <receiver
@@ -46,10 +47,10 @@
             android:exported="true"
             android:permission="android.permission.RECEIVE_BOOT_COMPLETED">
             <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.QUICKBOOT_POWERON"/>
 
-                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </receiver>
 
@@ -58,7 +59,7 @@
             android:exported="false"
             android:permission="android.permission.RECEIVE_BOOT_COMPLETED">
             <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
             </intent-filter>
         </service>
         <service
@@ -66,7 +67,7 @@
             android:exported="false"
             android:permission="android.permission.RECEIVE_BOOT_COMPLETED">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
             </intent-filter>
         </service>
         <!--<service
@@ -83,13 +84,13 @@
             android:exported="false"
             android:permission="android.permission.RECEIVE_BOOT_COMPLETED">
             <intent-filter>
-                <action android:name=".Service.SendLocationDataService" />
-                <action android:name="android.content.SyncAdapter" />
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name=".Service.SendLocationDataService"/>
+                <action android:name="android.content.SyncAdapter"/>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
             </intent-filter>
             <meta-data
                 android:name="android.content.SyncAdapter"
-                android:resource="@xml/sync_adapter" />
+                android:resource="@xml/sync_adapter"/>
         </service>
         <!--Services and Receivers-->
 
@@ -97,37 +98,37 @@
             android:name=".SplashScreenActivity"
             android:theme="@style/SplashScreenTheme">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER" />
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".LoginActivity" />
+        <activity android:name=".LoginActivity"/>
         <activity
             android:name=".HomeActivity"
-            android:configChanges="orientation|screenSize" />
-        <activity android:name=".RouteActivity" />
-        <activity android:name=".OutletActivity" />
-        <activity android:name=".AddOutletActivity" />
-        <activity android:name=".OutletDetailsActivity" />
-        <activity android:name=".PrivacyPolicyActivity" />
-        <activity android:name=".ProductActivity" />
+            android:configChanges="orientation|screenSize"/>
+        <activity android:name=".RouteActivity"/>
+        <activity android:name=".OutletActivity"/>
+        <activity android:name=".AddOutletActivity"/>
+        <activity android:name=".OutletDetailsActivity"/>
+        <activity android:name=".PrivacyPolicyActivity"/>
+        <activity android:name=".ProductActivity"/>
         <activity
             android:name=".OrderActivity"
-            android:screenOrientation="landscape" />
-        <activity android:name=".DeliveryListActivity" />
+            android:screenOrientation="landscape"/>
+        <activity android:name=".DeliveryListActivity"/>
         <activity
             android:name=".DeliveryDetailsActivity"
-            android:screenOrientation="landscape" />
-        <activity android:name=".PaymentActivity" />
-        <activity android:name=".DueActivity" />
-        <activity android:name=".EditOutletActivity" />
-        <activity android:name=".CallCardActivity" />
-        <activity android:name=".InspectionActivity" />
-        <activity android:name=".SellsReturnActivity" />
+            android:screenOrientation="landscape"/>
+        <activity android:name=".PaymentActivity"/>
+        <activity android:name=".DueActivity"/>
+        <activity android:name=".EditOutletActivity"/>
+        <activity android:name=".CallCardActivity"/>
+        <activity android:name=".InspectionActivity"/>
+        <activity android:name=".SellsReturnActivity"/>
         <activity
             android:name=".SellsReturnDetailsActivity"
-            android:screenOrientation="landscape" />
+            android:screenOrientation="landscape"/>
     </application>
 
 </manifest>

@@ -1,8 +1,10 @@
 package com.humaclab.selliscope.Service;
 
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
+import android.os.PowerManager;
 
 import com.humaclab.selliscope.Utils.SendUserLocationData;
 import com.humaclab.selliscope.adapters.LocationSyncAdapter;
@@ -16,11 +18,9 @@ import timber.log.Timber;
 public class SendLocationDataService extends Service {
     private static final Object sSyncAdapterLock = new Object();
 
+    private static volatile PowerManager.WakeLock wakeLock;
     private static LocationSyncAdapter locationSyncAdapter = null;
     private ScheduledExecutorService scheduler;
-
-    public SendLocationDataService() {
-    }
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -35,6 +35,19 @@ public class SendLocationDataService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Timber.i("Send Location Data Service onStartCommand");
+        /* Wake up */
+        if (wakeLock == null) {
+            PowerManager pm = (PowerManager) this.getSystemService(Context.POWER_SERVICE);
+
+			/* we don't need the screen on */
+            wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "locationtracker");
+            wakeLock.setReferenceCounted(true);
+        }
+
+        if (!wakeLock.isHeld()) {
+            wakeLock.acquire();
+        }
+
         synchronized (sSyncAdapterLock) {
             if (locationSyncAdapter == null) {
                 locationSyncAdapter = new LocationSyncAdapter(getApplicationContext(), true);

@@ -70,6 +70,7 @@ public class SendLocationDataService extends Service {
     @Override
     public void onDestroy() {
         Timber.d("SendLocation service is stopped.");
+        getApplicationContext().startService(new Intent(SendLocationDataService.this, SendLocationDataService.class));
         sendBroadcast(new Intent(getApplicationContext(), SendLocationDataService.class));
     }
 }

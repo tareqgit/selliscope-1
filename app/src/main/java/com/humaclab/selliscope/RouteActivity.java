@@ -43,6 +43,7 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
+import com.humaclab.selliscope.Utils.SendUserLocationData;
 import com.humaclab.selliscope.Utils.SessionManager;
 import com.humaclab.selliscope.model.Outlets;
 
@@ -124,6 +125,8 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
 
     @NeedsPermission(Manifest.permission.ACCESS_FINE_LOCATION)
     public void getLocation() {
+        SendUserLocationData sendUserLocationData = new SendUserLocationData(getApplicationContext());
+        sendUserLocationData.getLocation();
         if (checkPermission(RouteActivity.this)) {
             Awareness.SnapshotApi.getLocation(googleApiClient)
                     .setResultCallback(new ResultCallback<LocationResult>() {

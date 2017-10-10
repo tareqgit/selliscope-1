@@ -1,5 +1,6 @@
 package com.humaclab.selliscope;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -34,6 +35,7 @@ public class DeliveryListActivity extends AppCompatActivity {
     private RecyclerView rv_delivery_list;
     private Spinner sp_outlet_list;
     private DatabaseHandler databaseHandler;
+    private ProgressDialog pd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +49,7 @@ public class DeliveryListActivity extends AppCompatActivity {
 
         databaseHandler = new DatabaseHandler(DeliveryListActivity.this);
         sessionManager = new SessionManager(DeliveryListActivity.this);
+        pd = new ProgressDialog(this);
 
         rv_delivery_list = (RecyclerView) findViewById(R.id.rv_delivery_list);
         rv_delivery_list.setLayoutManager(new LinearLayoutManager(this));
@@ -72,12 +75,16 @@ public class DeliveryListActivity extends AppCompatActivity {
     }
 
     private void loadDeliveries() {
+        pd.setMessage("Loading delivery list.....");
+        pd.show();
+
         apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(),
                 sessionManager.getUserPassword(), false).create(SelliscopeApiEndpointInterface.class);
         Call<DeliveryResponse> call = apiService.getDelivery();
         call.enqueue(new Callback<DeliveryResponse>() {
             @Override
             public void onResponse(Call<DeliveryResponse> call, Response<DeliveryResponse> response) {
+                pd.dismiss();
                 System.out.println("Response " + new Gson().toJson(response.body()));
                 if (response.code() == 200) {
                     try {
@@ -95,16 +102,15 @@ public class DeliveryListActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
                 } else if (response.code() == 401) {
-                    Toast.makeText(DeliveryListActivity.this,
-                            "Invalid Response from server.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(DeliveryListActivity.this, "Invalid Response from server.", Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(DeliveryListActivity.this,
-                            "Server Error! Try Again Later!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(DeliveryListActivity.this, "Server Error! Try Again Later!", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<DeliveryResponse> call, Throwable t) {
+                pd.dismiss();
                 t.printStackTrace();
             }
         });

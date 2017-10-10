@@ -124,8 +124,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         tv_selliscope_version.setText("Version - " + BuildConfig.VERSION_NAME);
 
         //loading Data into background
-        ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
-        scheduler.scheduleAtFixedRate(new Runnable() {
+        ScheduledExecutorService schedulerForMinute = Executors.newSingleThreadScheduledExecutor();
+        schedulerForMinute.scheduleAtFixedRate(new Runnable() {
             public void run() {
                 runOnUiThread(new Runnable() {
                     @Override
@@ -137,7 +137,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 });
             }
         }, 0, 1, TimeUnit.MINUTES);
-        scheduler.scheduleAtFixedRate(new Runnable() {
+        ScheduledExecutorService schedulerForHour = Executors.newSingleThreadScheduledExecutor();
+        schedulerForHour.scheduleAtFixedRate(new Runnable() {
             public void run() {
                 runOnUiThread(new Runnable() {
                     @Override

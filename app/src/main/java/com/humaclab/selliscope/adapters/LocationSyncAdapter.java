@@ -28,8 +28,8 @@ public class LocationSyncAdapter extends AbstractThreadedSyncAdapter {
 
     private void sendLocationToServer() {
         Timber.d("User Location Tracking Service on sync adapter");
-        SendUserLocationData sendUserLocationData = new SendUserLocationData(context);
-        sendUserLocationData.getLocation();
+        /*SendUserLocationData sendUserLocationData = new SendUserLocationData(context);
+        sendUserLocationData.getLocation();*/
     }
 
     @Override

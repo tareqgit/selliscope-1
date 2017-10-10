@@ -4,16 +4,12 @@ import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.google.android.gms.awareness.Awareness;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationServices;
 import com.google.gson.Gson;
-import com.humaclab.selliscope.HomeActivity;
 import com.humaclab.selliscope.SelliscopeApiEndpointInterface;
 import com.humaclab.selliscope.SelliscopeApplication;
 import com.humaclab.selliscope.dbmodel.UserVisit;
@@ -24,8 +20,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import fr.quentinklein.slt.LocationTracker;
-import fr.quentinklein.slt.TrackerSettings;
+import io.nlopez.smartlocation.OnLocationUpdatedListener;
+import io.nlopez.smartlocation.SmartLocation;
+import io.nlopez.smartlocation.location.config.LocationAccuracy;
+import io.nlopez.smartlocation.location.config.LocationParams;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -46,65 +44,109 @@ public class SendUserLocationData {
         this.context = context;
         this.sessionManager = new SessionManager(this.context);
         this.dbHandler = new DatabaseHandler(this.context);
-        this.googleApiClient = new GoogleApiClient.Builder(this.context)
-                .addApi(Awareness.API)
-                .addApi(LocationServices.API)
-                .build();
     }
 
     public boolean getLocation() {
-        if (checkPermission()) {
-            TrackerSettings settings = new TrackerSettings()
-                    .setUseGPS(true)
-                    .setUseNetwork(false)
-                    .setUsePassive(true)
-                    .setTimeBetweenUpdates(1000)
-                    .setMetersBetweenUpdates(50);
+        long mLocTrackingInterval = 60000; // 1 min
+        float trackingDistance = 0;
+        LocationAccuracy trackingAccuracy = LocationAccuracy.HIGH;
 
-            LocationTracker tracker = new LocationTracker(context, settings) {
-                @Override
-                public void onLocationFound(@NonNull Location location) {
-                    double latitude = Double.parseDouble(String.format("%.05f", location.getLatitude()));
-                    double longitude = Double.parseDouble(String.format("%.05f", location.getLongitude()));
+        LocationParams.Builder builder = new LocationParams.Builder()
+                .setAccuracy(trackingAccuracy)
+                .setDistance(trackingDistance)
+                .setInterval(mLocTrackingInterval);
 
-                    Timber.d("Latitude: " + latitude + " Longitude: " + longitude);
-                    if (NetworkUtility.isNetworkAvailable(context)) {
-                        sendUserLocation(
-                                latitude,
-                                longitude,
-                                CurrentTimeUtilityClass.getCurrentTimeStamp(),
-                                false,
-                                -1);
+        SmartLocation.with(context)
+                .location()
+                .continuous()
+                .config(builder.build())
+                .start(new OnLocationUpdatedListener() {
+                    @Override
+                    public void onLocationUpdated(Location location) {
+                        double latitude = Double.parseDouble(String.format("%.05f", location.getLatitude()));
+                        double longitude = Double.parseDouble(String.format("%.05f", location.getLongitude()));
 
-                        List<UserVisit> userVisits = dbHandler.getUSerVisits();
-                        //For getting all data form local storage
-                        if (!userVisits.isEmpty()) {
-                            for (UserVisit userVisit : userVisits) {
-                                sendUserLocation(
-                                        userVisit.getLatitude(),
-                                        userVisit.getLongitude(),
-                                        userVisit.getTimeStamp(),
-                                        true,
-                                        userVisit.getVisitId()
-                                );
+                        Timber.d("Latitude: " + latitude + " Longitude: " + longitude);
+                        if (NetworkUtility.isNetworkAvailable(context)) {
+                            sendUserLocation(
+                                    latitude,
+                                    longitude,
+                                    CurrentTimeUtilityClass.getCurrentTimeStamp(),
+                                    false,
+                                    -1);
+                            List<UserVisit> userVisits = dbHandler.getUSerVisits();
+                            if (!userVisits.isEmpty())
+                                for (UserVisit userVisit : userVisits) {
+                                    sendUserLocation(
+                                            userVisit.getLatitude(),
+                                            userVisit.getLongitude(),
+                                            userVisit.getTimeStamp(),
+                                            true,
+                                            userVisit.getVisitId()
+                                    );
+                                }
+                        } else {
+                            dbHandler.addUserVisits(new UserVisit(latitude, longitude, CurrentTimeUtilityClass.getCurrentTimeStamp()));
+                            Timber.d("User Location Saved in Database");
+                        }
+                    }
+                });
+
+        /*this.googleApiClient = new GoogleApiClient.Builder(this.context)
+                .addApi(Awareness.API)
+                .addApi(LocationServices.API)
+                .build();
+        this.googleApiClient.registerConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
+            @Override
+            public void onConnected(@Nullable Bundle bundle) {
+                if (checkPermission()) {
+                    Awareness.SnapshotApi.getLocation(googleApiClient).setResultCallback(new ResultCallback<LocationResult>() {
+                        @Override
+                        public void onResult(@NonNull LocationResult locationResult) {
+                            if (locationResult.getStatus().isSuccess()) {
+                                Location location = locationResult.getLocation();
+                                double latitude = Double.parseDouble(String.format("%.05f", location.getLatitude()));
+                                double longitude = Double.parseDouble(String.format("%.05f", location.getLongitude()));
+
+                                Timber.d("Latitude: " + latitude + " Longitude: " + longitude);
+                                if (NetworkUtility.isNetworkAvailable(context)) {
+                                    sendUserLocation(
+                                            latitude,
+                                            longitude,
+                                            CurrentTimeUtilityClass.getCurrentTimeStamp(),
+                                            false,
+                                            -1);
+                                    List<UserVisit> userVisits = dbHandler.getUSerVisits();
+                                    if (!userVisits.isEmpty())
+                                        for (UserVisit userVisit : userVisits) {
+                                            sendUserLocation(
+                                                    userVisit.getLatitude(),
+                                                    userVisit.getLongitude(),
+                                                    userVisit.getTimeStamp(),
+                                                    true,
+                                                    userVisit.getVisitId()
+                                            );
+                                        }
+                                } else {
+                                    dbHandler.addUserVisits(new UserVisit(latitude, longitude, CurrentTimeUtilityClass.getCurrentTimeStamp()));
+                                    Timber.d("User Location Saved in Database");
+                                }
+                            } else {
+                                Timber.d("Didn't get Location Data");
                             }
                         }
-                        //For getting all data form local storage
-                    } else {
-                        dbHandler.addUserVisits(new UserVisit(latitude, longitude, CurrentTimeUtilityClass.getCurrentTimeStamp()));
-                        Timber.d("User Location Saved in Database");
-                    }
+                    });
+                } else {
+                    Timber.d("Location Permission is not enabled.");
                 }
+            }
 
-                @Override
-                public void onTimeout() {
+            @Override
+            public void onConnectionSuspended(int i) {
 
-                }
-            };
-            tracker.startListening();
-        } else {
-            AccessPermission.accessPermission((HomeActivity) context);
-        }
+            }
+        });
+        this.googleApiClient.connect();*/
         return true;
     }
 

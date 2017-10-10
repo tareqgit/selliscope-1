@@ -1,6 +1,7 @@
 package com.humaclab.selliscope;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -60,6 +61,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     private SessionManager sessionManager;
     private SelliscopeApiEndpointInterface apiService;
     private DatabaseHandler databaseHandler;
+    private ProgressDialog pd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +70,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         sessionManager = new SessionManager(this);
         databaseHandler = new DatabaseHandler(this);
         apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(), sessionManager.getUserPassword(), false).create(SelliscopeApiEndpointInterface.class);
+        pd = new ProgressDialog(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("");
@@ -366,12 +369,13 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         // Handle navigation view item clicks here.
         switch (item.getItemId()) {
             case R.id.nav_logout: {
-                databaseHandler.removeDeliveryAndDeliveryProduct();
-                databaseHandler.removeOutlet();
-                databaseHandler.removeProductCategoryBrand();
-                databaseHandler.removeVariantCategories();
-                sessionManager.logoutUser();
-                finish();
+                pd.setMessage("Login out...");
+                pd.show();
+                if (databaseHandler.removeAll()) {
+                    sessionManager.logoutUser();
+                    pd.dismiss();
+                    finish();
+                }
                 break;
             }
             case R.id.nav_privacy_policy: {

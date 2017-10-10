@@ -363,12 +363,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     public void removeProductCategoryBrand() {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(TABLE_PRODUCT, KEY_PRODUCT_ID + " > ?",
-                new String[]{String.valueOf(-1)});
-        db.delete(TABLE_CATEGORY, KEY_CATEGORY_ID + " > ?",
-                new String[]{String.valueOf(-1)});
-        db.delete(TABLE_BRAND, KEY_BRAND_ID + " > ?",
-                new String[]{String.valueOf(-1)});
+        db.delete(TABLE_PRODUCT, KEY_PRODUCT_ID + " > ?", new String[]{String.valueOf(-1)});
+        db.delete(TABLE_CATEGORY, KEY_CATEGORY_ID + " > ?", new String[]{String.valueOf(-1)});
+        db.delete(TABLE_BRAND, KEY_BRAND_ID + " > ?", new String[]{String.valueOf(-1)});
+        db.delete(TABLE_VARIANT_CATEGORY, KEY_VARIANT_CATEGORY_ID + " > ?", new String[]{String.valueOf(-1)});
+        db.delete(TABLE_VARIANT_DETAILS, KEY_VARIANT_DETAILS_ID + " > ?", new String[]{String.valueOf(-1)});
         db.close();
     }
 
@@ -987,6 +986,20 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.delete(TABLE_VARIANT_CATEGORY, KEY_VARIANT_CATEGORY_ID + " > ?",
                 new String[]{String.valueOf(-1)});
         db.close();
+    }
+
+    public boolean removeAll() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_OUTLET, KEY_OUTLET_ID + " > ?", new String[]{String.valueOf(-1)});
+        db.delete(TABLE_DELIVERY, KEY_ORDER_ID + " > ?", new String[]{String.valueOf(-1)});
+        db.delete(TABLE_DELIVERY_PRODUCT, KEY_DELIVERY_PRODUCT_ID + " > ?", new String[]{String.valueOf(-1)});
+        db.delete(TABLE_PRODUCT, KEY_PRODUCT_ID + " > ?", new String[]{String.valueOf(-1)});
+        db.delete(TABLE_VARIANT_CATEGORY, KEY_VARIANT_CATEGORY_ID + " > ?", new String[]{String.valueOf(-1)});
+        db.delete(TABLE_VARIANT_DETAILS, KEY_VARIANT_DETAILS_ID + " > ?", new String[]{String.valueOf(-1)});
+        db.delete(TABLE_CATEGORY, KEY_CATEGORY_ID + " > ?", new String[]{String.valueOf(-1)});
+        db.delete(TABLE_BRAND, KEY_BRAND_ID + " > ?", new String[]{String.valueOf(-1)});
+        db.close();
+        return true;
     }
     //Product Variant
 }

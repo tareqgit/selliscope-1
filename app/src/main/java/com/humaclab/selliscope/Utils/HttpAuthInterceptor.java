@@ -9,22 +9,25 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 /**
- * Created by Miaki on 3/12/17.
+ * Created by Leon on 4/5/17.
  */
 
 public class HttpAuthInterceptor implements Interceptor {
+    private final String userAgent;
     private String httpUsername;
     private String httpPassword;
 
     public HttpAuthInterceptor(String httpUsername, String httpPassword) {
         this.httpUsername = httpUsername;
         this.httpPassword = httpPassword;
+        this.userAgent = Constants.userAgent;
     }
 
     @Override
     public Response intercept(Chain chain) throws IOException {
         Request newRequest = chain.request().newBuilder()
                 .addHeader("Authorization", getAuthorizationValue())
+                .addHeader("User-Agent", userAgent)
                 .build();
         return chain.proceed(newRequest);
     }

@@ -6,7 +6,7 @@ import android.support.v7.app.AppCompatDelegate;
 import com.crashlytics.android.Crashlytics;
 import com.facebook.stetho.Stetho;
 import com.facebook.stetho.okhttp3.StethoInterceptor;
-import com.humaclab.selliscope.Utils.ApiLinks;
+import com.humaclab.selliscope.Utils.Constants;
 import com.humaclab.selliscope.Utils.HttpAuthInterceptor;
 
 import java.util.concurrent.TimeUnit;
@@ -46,7 +46,7 @@ public class SelliscopeApplication extends Application {
                     .build();
 
             retrofitInstance = new Retrofit.Builder()
-                    .baseUrl(ApiLinks.BASE_URL)
+                    .baseUrl(Constants.BASE_URL)
                     .addConverterFactory(GsonConverterFactory.create())
                     //.addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                     .client(client)

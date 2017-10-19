@@ -8,7 +8,6 @@ import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.gson.Gson;
 import com.humaclab.selliscope.SelliscopeApiEndpointInterface;
 import com.humaclab.selliscope.SelliscopeApplication;
@@ -37,7 +36,6 @@ import timber.log.Timber;
 public class SendUserLocationData {
     private Context context;
     private SessionManager sessionManager;
-    private GoogleApiClient googleApiClient;
     private DatabaseHandler dbHandler;
 
     public SendUserLocationData(Context context) {
@@ -47,8 +45,8 @@ public class SendUserLocationData {
     }
 
     public boolean getLocation() {
-        long mLocTrackingInterval = 60000; // 1 min
-        float trackingDistance = 0;
+        long mLocTrackingInterval = 1000; // 1 second
+        float trackingDistance = 50;
         LocationAccuracy trackingAccuracy = LocationAccuracy.HIGH;
 
         LocationParams.Builder builder = new LocationParams.Builder()
@@ -58,7 +56,7 @@ public class SendUserLocationData {
 
         SmartLocation.with(context)
                 .location()
-                .continuous()
+                .oneFix()
                 .config(builder.build())
                 .start(new OnLocationUpdatedListener() {
                     @Override
@@ -89,6 +87,7 @@ public class SendUserLocationData {
                             dbHandler.addUserVisits(new UserVisit(latitude, longitude, CurrentTimeUtilityClass.getCurrentTimeStamp()));
                             Timber.d("User Location Saved in Database");
                         }
+
                     }
                 });
 

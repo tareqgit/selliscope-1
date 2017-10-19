@@ -686,7 +686,6 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
             }
         });
 
-        builder.setCancelable(false);
         builder.show();
     }
 

@@ -90,62 +90,6 @@ public class SendUserLocationData {
 
                     }
                 });
-
-        /*this.googleApiClient = new GoogleApiClient.Builder(this.context)
-                .addApi(Awareness.API)
-                .addApi(LocationServices.API)
-                .build();
-        this.googleApiClient.registerConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
-            @Override
-            public void onConnected(@Nullable Bundle bundle) {
-                if (checkPermission()) {
-                    Awareness.SnapshotApi.getLocation(googleApiClient).setResultCallback(new ResultCallback<LocationResult>() {
-                        @Override
-                        public void onResult(@NonNull LocationResult locationResult) {
-                            if (locationResult.getStatus().isSuccess()) {
-                                Location location = locationResult.getLocation();
-                                double latitude = Double.parseDouble(String.format("%.05f", location.getLatitude()));
-                                double longitude = Double.parseDouble(String.format("%.05f", location.getLongitude()));
-
-                                Timber.d("Latitude: " + latitude + " Longitude: " + longitude);
-                                if (NetworkUtility.isNetworkAvailable(context)) {
-                                    sendUserLocation(
-                                            latitude,
-                                            longitude,
-                                            CurrentTimeUtilityClass.getCurrentTimeStamp(),
-                                            false,
-                                            -1);
-                                    List<UserVisit> userVisits = dbHandler.getUSerVisits();
-                                    if (!userVisits.isEmpty())
-                                        for (UserVisit userVisit : userVisits) {
-                                            sendUserLocation(
-                                                    userVisit.getLatitude(),
-                                                    userVisit.getLongitude(),
-                                                    userVisit.getTimeStamp(),
-                                                    true,
-                                                    userVisit.getVisitId()
-                                            );
-                                        }
-                                } else {
-                                    dbHandler.addUserVisits(new UserVisit(latitude, longitude, CurrentTimeUtilityClass.getCurrentTimeStamp()));
-                                    Timber.d("User Location Saved in Database");
-                                }
-                            } else {
-                                Timber.d("Didn't get Location Data");
-                            }
-                        }
-                    });
-                } else {
-                    Timber.d("Location Permission is not enabled.");
-                }
-            }
-
-            @Override
-            public void onConnectionSuspended(int i) {
-
-            }
-        });
-        this.googleApiClient.connect();*/
         return true;
     }
 

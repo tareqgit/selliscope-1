@@ -1,5 +1,6 @@
 package com.humaclab.selliscope;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -27,6 +28,7 @@ public class SalesReturnActivity extends AppCompatActivity {
     private SwipeRefreshLayout srl_sells_return;
     private RecyclerView rv_return_list;
     private int outletID;
+    private ProgressDialog pd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +42,7 @@ public class SalesReturnActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         sessionManager = new SessionManager(SalesReturnActivity.this);
+        pd = new ProgressDialog(this);
 
         outletID = getIntent().getIntExtra("outletID", 0);
 
@@ -65,12 +68,16 @@ public class SalesReturnActivity extends AppCompatActivity {
     }
 
     private void loadReturns() {
+        pd.setMessage("Loading sales returns.....");
+        pd.show();
+
         apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(),
                 sessionManager.getUserPassword(), false).create(SelliscopeApiEndpointInterface.class);
         Call<DeliveryResponse> call = apiService.getSalesReturn(outletID);
         call.enqueue(new Callback<DeliveryResponse>() {
             @Override
             public void onResponse(Call<DeliveryResponse> call, Response<DeliveryResponse> response) {
+                pd.dismiss();
                 if (response.code() == 200) {
                     try {
                         if (srl_sells_return.isRefreshing())
@@ -93,6 +100,7 @@ public class SalesReturnActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<DeliveryResponse> call, Throwable t) {
+                pd.dismiss();
                 t.printStackTrace();
             }
         });

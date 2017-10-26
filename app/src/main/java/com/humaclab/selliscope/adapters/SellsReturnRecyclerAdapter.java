@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 
 import com.humaclab.selliscope.BR;
 import com.humaclab.selliscope.R;
-import com.humaclab.selliscope.SellsReturnDetailsActivity;
+import com.humaclab.selliscope.SalesReturnDetailsActivity;
 import com.humaclab.selliscope.model.DeliveryResponse;
 
 import java.util.List;
@@ -62,7 +62,7 @@ public class SellsReturnRecyclerAdapter extends RecyclerView.Adapter<SellsReturn
 
         @Override
         public void onClick(View v) {
-            Intent intent = new Intent(context, SellsReturnDetailsActivity.class);
+            Intent intent = new Intent(context, SalesReturnDetailsActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.putExtra("deliveryList", deliveryLists.get(getLayoutPosition()));
             context.startActivity(intent);

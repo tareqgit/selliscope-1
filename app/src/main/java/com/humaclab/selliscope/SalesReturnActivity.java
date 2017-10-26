@@ -21,7 +21,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class SellsReturnActivity extends AppCompatActivity {
+public class SalesReturnActivity extends AppCompatActivity {
     private SelliscopeApiEndpointInterface apiService;
     private SessionManager sessionManager;
     private SwipeRefreshLayout srl_sells_return;
@@ -31,7 +31,7 @@ public class SellsReturnActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sells_return);
+        setContentView(R.layout.activity_sales_return);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("");
@@ -39,7 +39,7 @@ public class SellsReturnActivity extends AppCompatActivity {
         toolbarTitle.setText("Sells Return List");
         setSupportActionBar(toolbar);
 
-        sessionManager = new SessionManager(SellsReturnActivity.this);
+        sessionManager = new SessionManager(SalesReturnActivity.this);
 
         outletID = getIntent().getIntExtra("outletID", 0);
 
@@ -50,10 +50,10 @@ public class SellsReturnActivity extends AppCompatActivity {
         srl_sells_return.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if (NetworkUtility.isNetworkAvailable(SellsReturnActivity.this)) {
+                if (NetworkUtility.isNetworkAvailable(SalesReturnActivity.this)) {
                     loadReturns();
                 } else {
-                    Toast.makeText(SellsReturnActivity.this, "Connect to Wifi or Mobile Data", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SalesReturnActivity.this, "Connect to Wifi or Mobile Data", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -83,10 +83,10 @@ public class SellsReturnActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
                 } else if (response.code() == 401) {
-                    Toast.makeText(SellsReturnActivity.this,
+                    Toast.makeText(SalesReturnActivity.this,
                             "Invalid Response from server.", Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(SellsReturnActivity.this,
+                    Toast.makeText(SalesReturnActivity.this,
                             "Server Error! Try Again Later!", Toast.LENGTH_SHORT).show();
                 }
             }

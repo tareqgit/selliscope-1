@@ -125,9 +125,9 @@
         <activity android:name=".EditOutletActivity"/>
         <activity android:name=".CallCardActivity"/>
         <activity android:name=".InspectionActivity"/>
-        <activity android:name=".SellsReturnActivity"/>
+        <activity android:name=".SalesReturnActivity"/>
         <activity
-            android:name=".SellsReturnDetailsActivity"
+            android:name=".SalesReturnDetailsActivity"
             android:screenOrientation="landscape"/>
     </application>
 

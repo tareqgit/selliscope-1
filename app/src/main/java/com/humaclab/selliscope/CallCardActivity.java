@@ -65,7 +65,7 @@ public class CallCardActivity extends AppCompatActivity {
         binding.cvSellsReturn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(CallCardActivity.this, SellsReturnActivity.class);
+                Intent intent = new Intent(CallCardActivity.this, SalesReturnActivity.class);
                 intent.putExtra("outletName", outlet.outletName);
                 intent.putExtra("outletID", outlet.outletId);
                 startActivity(intent);

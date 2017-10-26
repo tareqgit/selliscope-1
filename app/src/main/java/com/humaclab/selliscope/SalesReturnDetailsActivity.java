@@ -11,18 +11,18 @@ import android.widget.Toast;
 
 import com.humaclab.selliscope.Utils.NetworkUtility;
 import com.humaclab.selliscope.adapters.SellsReturnDetailsRecyclerAdapter;
-import com.humaclab.selliscope.databinding.ActivitySellsReturnDetailsBinding;
+import com.humaclab.selliscope.databinding.ActivitySalesReturnDetailsBinding;
 import com.humaclab.selliscope.model.DeliveryResponse;
 
-public class SellsReturnDetailsActivity extends AppCompatActivity {
-    private ActivitySellsReturnDetailsBinding binding;
+public class SalesReturnDetailsActivity extends AppCompatActivity {
+    private ActivitySalesReturnDetailsBinding binding;
     private DeliveryResponse.DeliveryList deliveryList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_sells_return_details);
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_sells_return_details);
+        setContentView(R.layout.activity_sales_return_details);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_sales_return_details);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("");
         TextView toolbarTitle = (TextView) findViewById(R.id.tv_toolbar_title);
@@ -37,10 +37,10 @@ public class SellsReturnDetailsActivity extends AppCompatActivity {
         binding.srlDeliveryDetails.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if (NetworkUtility.isNetworkAvailable(SellsReturnDetailsActivity.this)) {
+                if (NetworkUtility.isNetworkAvailable(SalesReturnDetailsActivity.this)) {
                     loadReturnDetails();
                 } else {
-                    Toast.makeText(SellsReturnDetailsActivity.this, "Connect to Wifi or Mobile Data", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SalesReturnDetailsActivity.this, "Connect to Wifi or Mobile Data", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -55,7 +55,7 @@ public class SellsReturnDetailsActivity extends AppCompatActivity {
     private void loadReturnDetails() {
         if (binding.srlDeliveryDetails.isRefreshing())
             binding.srlDeliveryDetails.setRefreshing(false);
-        binding.rvDeliveryDetails.setAdapter(new SellsReturnDetailsRecyclerAdapter(SellsReturnDetailsActivity.this, deliveryList));
+        binding.rvDeliveryDetails.setAdapter(new SellsReturnDetailsRecyclerAdapter(SalesReturnDetailsActivity.this, deliveryList));
     }
 
     @Override

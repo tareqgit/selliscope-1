@@ -1,5 +1,6 @@
 package com.humaclab.selliscope;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -27,6 +28,7 @@ public class PaymentActivity extends AppCompatActivity {
     private DatabaseHandler databaseHandler;
     private RecyclerView rv_payment;
     private SwipeRefreshLayout srl_payment;
+    private ProgressDialog pd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +42,7 @@ public class PaymentActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         databaseHandler = new DatabaseHandler(this);
+        pd = new ProgressDialog(this);
 
         rv_payment = (RecyclerView) findViewById(R.id.rv_payment);
         rv_payment.setLayoutManager(new LinearLayoutManager(this));
@@ -62,6 +65,9 @@ public class PaymentActivity extends AppCompatActivity {
     }
 
     private void loadPayments() {
+        pd.setMessage("Loading payment list.....");
+        pd.show();
+
         SessionManager sessionManager = new SessionManager(PaymentActivity.this);
         apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(),
                 sessionManager.getUserPassword(), false).create(SelliscopeApiEndpointInterface.class);
@@ -69,6 +75,7 @@ public class PaymentActivity extends AppCompatActivity {
         call.enqueue(new Callback<Payment>() {
             @Override
             public void onResponse(Call<Payment> call, Response<Payment> response) {
+                pd.dismiss();
                 if (response.code() == 200) {
                     try {
                         if (srl_payment.isRefreshing())
@@ -95,6 +102,7 @@ public class PaymentActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<Payment> call, Throwable t) {
+                pd.dismiss();
                 t.printStackTrace();
             }
         });

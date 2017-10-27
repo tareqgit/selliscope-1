@@ -17,13 +17,13 @@ repositories {
 
 
 android {
-    compileSdkVersion 25
-    buildToolsVersion "25.0.3"
+    compileSdkVersion 26
+    buildToolsVersion '26.0.2'
     defaultConfig {
         applicationId "com.humaclab.selliscope"
         minSdkVersion 19
-        targetSdkVersion 25
-        versionCode 17
+        targetSdkVersion 26
+        versionCode 18
         versionName "2.22"
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -54,7 +54,7 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     compile('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
-        transitive = true;
+        transitive = true
     }
     compile 'com.facebook.stetho:stetho-okhttp3:1.5.0'
     compile 'com.android.support:appcompat-v7:25.3.1'

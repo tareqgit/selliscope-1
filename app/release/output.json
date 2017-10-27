@@ -1,0 +1,18 @@
+[
+  {
+    "outputType": {
+      "type": "APK"
+    },
+    "apkInfo": {
+      "type": "MAIN",
+      "splits": [],
+      "versionCode": 18
+    },
+    "path": "app-release.apk",
+    "properties": {
+      "packageId": "com.humaclab.selliscope",
+      "split": "",
+      "minSdkVersion": "19"
+    }
+  }
+]

@@ -58,8 +58,6 @@ public class SendLocationDataService extends Service {
         scheduler.scheduleAtFixedRate(
                 new Runnable() {
                     public void run() {
-                        /*startService(new Intent(SendLocationDataService.this,
-                                UserTrackingService.class));*/
                         SendUserLocationData sendUserLocationData = new SendUserLocationData(getApplicationContext());
                         sendUserLocationData.getLocation();
                     }
@@ -70,7 +68,7 @@ public class SendLocationDataService extends Service {
     @Override
     public void onDestroy() {
         Timber.d("SendLocation service is stopped.");
-        getApplicationContext().startService(new Intent(SendLocationDataService.this, SendLocationDataService.class));
+        startService(new Intent(SendLocationDataService.this, SendLocationDataService.class));
         sendBroadcast(new Intent(getApplicationContext(), SendLocationDataService.class));
     }
 }

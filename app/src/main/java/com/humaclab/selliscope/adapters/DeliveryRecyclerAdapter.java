@@ -122,6 +122,7 @@ public class DeliveryRecyclerAdapter extends RecyclerView.Adapter<DeliveryRecycl
 
                     order.products = new ArrayList<>();
                     product1.productId = product.productId;
+                    product1.variantRow = product.variantRow;
                     product1.qty = Integer.parseInt(holder.et_qty.getText().toString());
                     product1.godownId = godownId.get(holder.sp_godown.getSelectedItemPosition());
                     order.products.add(product1);
@@ -185,11 +186,11 @@ public class DeliveryRecyclerAdapter extends RecyclerView.Adapter<DeliveryRecycl
         public DeliveryDetailsViewHolder(View itemView) {
             super(itemView);
             binding = DataBindingUtil.bind(itemView);
-            sp_godown = (Spinner) itemView.findViewById(R.id.sp_godown);
-            btn_decrease = (Button) itemView.findViewById(R.id.btn_decrease);
-            btn_increase = (Button) itemView.findViewById(R.id.btn_increase);
-            btn_deliver = (Button) itemView.findViewById(R.id.btn_deliver);
-            et_qty = (EditText) itemView.findViewById(R.id.et_qty);
+            sp_godown = itemView.findViewById(R.id.sp_godown);
+            btn_decrease = itemView.findViewById(R.id.btn_decrease);
+            btn_increase = itemView.findViewById(R.id.btn_increase);
+            btn_deliver = itemView.findViewById(R.id.btn_deliver);
+            et_qty = itemView.findViewById(R.id.et_qty);
         }
 
         public ViewDataBinding getBinding() {

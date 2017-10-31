@@ -30,6 +30,8 @@ public class DeliverProductResponse implements Serializable {
             public int qty;
             @SerializedName("godown_id")
             public int godownId;
+            @SerializedName("variant_row")
+            public int variantRow;
         }
     }
 }

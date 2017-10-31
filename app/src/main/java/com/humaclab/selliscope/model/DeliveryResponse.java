@@ -52,5 +52,7 @@ public class DeliveryResponse implements Serializable {
         public String amount;
         @SerializedName("discount")
         public String discount;
+        @SerializedName("variant_row")
+        public int variantRow;
     }
 }

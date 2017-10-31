@@ -111,16 +111,16 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         drawer.addDrawerListener(toggle);
         toggle.syncState();
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        TextView userName = (TextView) navigationView.getHeaderView(0)
+        TextView userName = navigationView.getHeaderView(0)
                 .findViewById(R.id.tv_user_name);
-        ImageView profilePicture = (ImageView) navigationView.getHeaderView(0)
+        ImageView profilePicture = navigationView.getHeaderView(0)
                 .findViewById(R.id.iv_profile_pic);
         userName.setText(sessionManager.getUserDetails().get("userName"));
         Picasso.with(this)
                 .load(sessionManager.getUserDetails().get("profilePictureUrl"))
                 .into(profilePicture);
         navigationView.setNavigationItemSelectedListener(this);
-        TextView tv_selliscope_version = (TextView) navigationView.getHeaderView(0).findViewById(R.id.tv_selliscope_version);
+        TextView tv_selliscope_version = navigationView.getHeaderView(0).findViewById(R.id.tv_selliscope_version);
         tv_selliscope_version.setText("Version - " + BuildConfig.VERSION_NAME);
 
         //loading Data into background
@@ -143,13 +143,12 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Log.v("Running threads", "Thread running in background for updating products and outlets after 1 hour interval");
+                        Log.v("Running threads", "Thread running in background for updating products and outlets after 30 Minutes interval");
                         getProducts(true);
-                        getOutlets();
                     }
                 });
             }
-        }, 0, 1, TimeUnit.HOURS);
+        }, 30, 30, TimeUnit.MINUTES);
         //loading Data into background
     }
 
@@ -412,7 +411,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         if (sessionManager.isLoggedIn()) {
             Timber.d("Home Activity stopped.");
             startActivity(new Intent(getApplicationContext(), HomeActivity.class));
-            sendBroadcast(new Intent(getApplicationContext(), SendLocationDataService.class));
         }
     }
 }

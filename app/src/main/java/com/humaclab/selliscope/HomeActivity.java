@@ -26,6 +26,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.humaclab.selliscope.Service.SendLocationDataService;
 import com.humaclab.selliscope.Utils.CheckAppUpdated;
+import com.humaclab.selliscope.Utils.Constants;
 import com.humaclab.selliscope.Utils.DatabaseHandler;
 import com.humaclab.selliscope.Utils.SessionManager;
 import com.humaclab.selliscope.model.BrandResponse;
@@ -62,6 +63,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     private SelliscopeApiEndpointInterface apiService;
     private DatabaseHandler databaseHandler;
     private ProgressDialog pd;
+    private ScheduledExecutorService schedulerForMinute, schedulerForHour;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,7 +126,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         tv_selliscope_version.setText("Version - " + BuildConfig.VERSION_NAME);
 
         //loading Data into background
-        ScheduledExecutorService schedulerForMinute = Executors.newSingleThreadScheduledExecutor();
+        schedulerForMinute = Executors.newSingleThreadScheduledExecutor();
         schedulerForMinute.scheduleAtFixedRate(new Runnable() {
             public void run() {
                 runOnUiThread(new Runnable() {
@@ -137,7 +139,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 });
             }
         }, 0, 1, TimeUnit.MINUTES);
-        ScheduledExecutorService schedulerForHour = Executors.newSingleThreadScheduledExecutor();
+        schedulerForHour = Executors.newSingleThreadScheduledExecutor();
         schedulerForHour.scheduleAtFixedRate(new Runnable() {
             public void run() {
                 runOnUiThread(new Runnable() {
@@ -373,6 +375,10 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 pd.show();
                 if (databaseHandler.removeAll()) {
                     sessionManager.logoutUser();
+                    schedulerForMinute.shutdownNow();
+                    schedulerForHour.shutdownNow();
+                    stopService(new Intent(getApplicationContext(), SendLocationDataService.class));
+                    getApplicationContext().deleteDatabase(Constants.databaseName);
                     pd.dismiss();
                     finish();
                 }

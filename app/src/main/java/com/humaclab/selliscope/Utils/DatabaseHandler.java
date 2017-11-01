@@ -30,7 +30,6 @@ import java.util.Map;
 
 public class DatabaseHandler extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 5;
-    private static final String DATABASE_NAME = "selliscopedb";
 
     // Database Tables
     private static final String TABLE_TARGET = "targets";
@@ -110,7 +109,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
 
     public DatabaseHandler(Context context) {
-        super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        super(context, Constants.databaseName, null, DATABASE_VERSION);
     }
 
     // Creating Tables

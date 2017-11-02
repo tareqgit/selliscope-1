@@ -45,8 +45,8 @@ public class SendUserLocationData {
     }
 
     public boolean getLocation() {
-        long mLocTrackingInterval = 1000; // 1 second
-        float trackingDistance = 50;
+        long mLocTrackingInterval = 100; // 1 second
+        float trackingDistance = 0;
         LocationAccuracy trackingAccuracy = LocationAccuracy.HIGH;
 
         LocationParams.Builder builder = new LocationParams.Builder()

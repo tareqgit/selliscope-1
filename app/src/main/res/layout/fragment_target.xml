@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/fragment_target_layout"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:id="@+id/fragment_target_layout"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="vertical">
 
     <com.ogaclejapan.smarttablayout.SmartTabLayout
         android:id="@+id/viewpagertab"
@@ -34,11 +34,11 @@
         app:stl_overlineThickness="0dp"
         app:stl_titleOffset="24dp"
         app:stl_underlineColor="#4D000000"
-        app:stl_underlineThickness="1dp" />
+        app:stl_underlineThickness="1dp"/>
 
     <android.support.v4.view.ViewPager
         android:id="@+id/viewpager"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/viewpagertab" />
+        android:layout_below="@id/viewpagertab"/>
 </LinearLayout>

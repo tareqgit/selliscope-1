@@ -1,0 +1,24 @@
+package com.humaclab.selliscope_kenya.model;
+
+/**
+ * Created by Miaki on 3/3/17.
+ */
+
+public class DashboardItem {
+    private String itemName;
+    private int itemImageId;
+
+    public DashboardItem(String itemName, int itemImageId) {
+        this.itemName = itemName;
+        this.itemImageId = itemImageId;
+    }
+
+    public String getItemName() {
+        return itemName;
+    }
+
+    public int getItemImageId() {
+        return itemImageId;
+    }
+
+}

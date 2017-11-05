@@ -1,35 +1,35 @@
 {
   "project_info": {
-    "project_number": "549109950382",
-    "firebase_url": "https://selliscope-976ac.firebaseio.com",
-    "project_id": "selliscope-976ac",
-    "storage_bucket": "selliscope-976ac.appspot.com"
+    "project_number": "208071747171",
+    "firebase_url": "https://selliscope-5bc4c.firebaseio.com",
+    "project_id": "selliscope-5bc4c",
+    "storage_bucket": "selliscope-5bc4c.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:549109950382:android:04ade098b734696c",
+        "mobilesdk_app_id": "1:208071747171:android:57a252a50cd8fdf2",
         "android_client_info": {
-          "package_name": "com.humaclab.selliscope"
+          "package_name": "com.humaclab.selliscope_kenya"
         }
       },
       "oauth_client": [
         {
-          "client_id": "549109950382-8ttueqomljr2pap9448kqdiof1bnm17m.apps.googleusercontent.com",
+          "client_id": "208071747171-j6ucegf08f2cdq9valssu170fk53aq1n.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.humaclab.selliscope",
+            "package_name": "com.humaclab.selliscope_kenya",
             "certificate_hash": "bf4985fdf63f665a71ca385946458c86dd3dff59"
           }
         },
         {
-          "client_id": "549109950382-43c45u132q3o9hfccha6o4odckm2qreh.apps.googleusercontent.com",
+          "client_id": "208071747171-nmn8gfg0tqc128rn0gn95jqru3mmad2h.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCQ-h7Um4JK5QnHXSkx5jH-Q1dXOEx6dNk"
+          "current_key": "AIzaSyAc64ltaymDnSPKbr7k9aP85G1DCyS4h1A"
         }
       ],
       "services": {
@@ -40,7 +40,7 @@
           "status": 2,
           "other_platform_oauth_client": [
             {
-              "client_id": "549109950382-43c45u132q3o9hfccha6o4odckm2qreh.apps.googleusercontent.com",
+              "client_id": "208071747171-nmn8gfg0tqc128rn0gn95jqru3mmad2h.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

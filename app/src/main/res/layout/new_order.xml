@@ -1,5 +1,5 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+        xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <TableRow
         android:layout_width="match_parent"
@@ -13,7 +13,7 @@
             android:layout_weight="1"
             android:clickable="true"
             android:padding="@dimen/margin_10"
-            android:spinnerMode="dropdown" />
+            android:spinnerMode="dropdown"/>
 
         <LinearLayout
             android:layout_width="100dp"
@@ -31,7 +31,7 @@
                 android:background="#fff"
                 android:text="-"
                 android:textColor="#000"
-                android:textSize="20sp" />
+                android:textSize="20sp"/>
 
             <EditText
                 android:id="@+id/et_qty"
@@ -43,7 +43,7 @@
                 android:inputType="number"
                 android:text="1"
                 android:textAlignment="center"
-                android:textColor="#000" />
+                android:textColor="#000"/>
 
             <Button
                 android:id="@+id/btn_increase"
@@ -53,7 +53,7 @@
                 android:background="#fff"
                 android:text="+"
                 android:textColor="#000"
-                android:textSize="20sp" />
+                android:textSize="20sp"/>
         </LinearLayout>
 
         <TextView
@@ -65,7 +65,7 @@
             android:padding="@dimen/margin_10"
             android:text="Price"
             android:textAlignment="center"
-            android:textColor="#000" />
+            android:textColor="#000"/>
 
         <EditText
             android:id="@+id/et_discount"
@@ -78,7 +78,7 @@
             android:padding="@dimen/margin_10"
             android:text="0.0"
             android:textAlignment="center"
-            android:textColor="#000" />
+            android:textColor="#000"/>
 
         <TextView
             android:id="@+id/tv_amount"
@@ -89,7 +89,7 @@
             android:padding="@dimen/margin_10"
             android:text="0.0"
             android:textAlignment="center"
-            android:textColor="#000" />
+            android:textColor="#000"/>
 
         <ImageView
             android:id="@+id/btn_remove"
@@ -101,7 +101,7 @@
             android:padding="@dimen/margin_10"
             android:textAlignment="center"
             android:tint="#d50000"
-            app:srcCompat="@drawable/remove" /><!--
+            app:srcCompat="@drawable/remove"/><!--
         <TextView
             android:id="@+id/btn_remove"
             android:layout_width="wrap_content"

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.humaclab.selliscope">
+          package="com.humaclab.selliscope_kenya">
 
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
@@ -11,7 +11,7 @@
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
 
     <application
-        android:name=".SelliscopeApplication"
+        android:name="com.humaclab.selliscope_kenya.SelliscopeApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -19,21 +19,21 @@
         android:theme="@style/AppTheme">
 
         <!--For debug APK-->
-        <!--<meta-data
+        <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyBZ5heET41mdUTW5UOouLZFn56kGsAocbM" />
+            android:value="AIzaSyDhIrKpktVn3vdtS0iabe3189xz8Fw1CyY"/>
         <meta-data
             android:name="com.google.android.awareness.API_KEY"
-            android:value="AIzaSyBZ5heET41mdUTW5UOouLZFn56kGsAocbM" />-->
+            android:value="AIzaSyDhIrKpktVn3vdtS0iabe3189xz8Fw1CyY"/>
         <!--For debug APK-->
 
         <!--For signed APK-->
-        <meta-data
+        <!--<meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyAhsz4pX62D7yu8twGT4ydn-_DRVB3p6_Y"/>
+            android:value="AIzaSyDUD-38YHkUpHM6dKwiqqaEs5QfZtrsd-A"/>
         <meta-data
             android:name="com.google.android.awareness.API_KEY"
-            android:value="AIzaSyAhsz4pX62D7yu8twGT4ydn-_DRVB3p6_Y"/>
+            android:value="AIzaSyDUD-38YHkUpHM6dKwiqqaEs5QfZtrsd-A"/>-->
         <!--For signed APK-->
 
         <meta-data
@@ -55,7 +55,7 @@
         </receiver>-->
 
         <service
-            android:name=".Service.FcmInstanceIdServices"
+            android:name="com.humaclab.selliscope_kenya.Service.FcmInstanceIdServices"
             android:exported="false"
             android:permission="android.permission.RECEIVE_BOOT_COMPLETED">
             <intent-filter>
@@ -63,7 +63,7 @@
             </intent-filter>
         </service>
         <service
-            android:name=".Service.FcmGetLocationService"
+            android:name="com.humaclab.selliscope_kenya.Service.FcmGetLocationService"
             android:exported="false"
             android:permission="android.permission.RECEIVE_BOOT_COMPLETED">
             <intent-filter>
@@ -71,7 +71,7 @@
             </intent-filter>
         </service>
         <service
-            android:name=".Service.SendLocationDataService"
+            android:name="com.humaclab.selliscope_kenya.Service.SendLocationDataService"
             android:exported="false"
             android:permission="android.permission.RECEIVE_BOOT_COMPLETED">
             <intent-filter>
@@ -86,7 +86,7 @@
         <!--Services and Receivers-->
 
         <activity
-            android:name=".SplashScreenActivity"
+            android:name="com.humaclab.selliscope_kenya.SplashScreenActivity"
             android:theme="@style/SplashScreenTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -94,31 +94,31 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".LoginActivity"/>
+        <activity android:name="com.humaclab.selliscope_kenya.LoginActivity"/>
         <activity
-            android:name=".HomeActivity"
+            android:name="com.humaclab.selliscope_kenya.HomeActivity"
             android:configChanges="orientation|screenSize"/>
-        <activity android:name=".RouteActivity"/>
-        <activity android:name=".OutletActivity"/>
-        <activity android:name=".AddOutletActivity"/>
-        <activity android:name=".OutletDetailsActivity"/>
-        <activity android:name=".PrivacyPolicyActivity"/>
-        <activity android:name=".ProductActivity"/>
+        <activity android:name="com.humaclab.selliscope_kenya.RouteActivity"/>
+        <activity android:name="com.humaclab.selliscope_kenya.OutletActivity"/>
+        <activity android:name="com.humaclab.selliscope_kenya.AddOutletActivity"/>
+        <activity android:name="com.humaclab.selliscope_kenya.OutletDetailsActivity"/>
+        <activity android:name="com.humaclab.selliscope_kenya.PrivacyPolicyActivity"/>
+        <activity android:name="com.humaclab.selliscope_kenya.ProductActivity"/>
         <activity
-            android:name=".OrderActivity"
+            android:name="com.humaclab.selliscope_kenya.OrderActivity"
             android:screenOrientation="landscape"/>
-        <activity android:name=".DeliveryListActivity"/>
+        <activity android:name="com.humaclab.selliscope_kenya.DeliveryListActivity"/>
         <activity
-            android:name=".DeliveryDetailsActivity"
+            android:name="com.humaclab.selliscope_kenya.DeliveryDetailsActivity"
             android:screenOrientation="landscape"/>
-        <activity android:name=".PaymentActivity"/>
-        <activity android:name=".DueActivity"/>
-        <activity android:name=".EditOutletActivity"/>
-        <activity android:name=".CallCardActivity"/>
-        <activity android:name=".InspectionActivity"/>
-        <activity android:name=".SalesReturnActivity"/>
+        <activity android:name="com.humaclab.selliscope_kenya.PaymentActivity"/>
+        <activity android:name="com.humaclab.selliscope_kenya.DueActivity"/>
+        <activity android:name="com.humaclab.selliscope_kenya.EditOutletActivity"/>
+        <activity android:name="com.humaclab.selliscope_kenya.CallCardActivity"/>
+        <activity android:name="com.humaclab.selliscope_kenya.InspectionActivity"/>
+        <activity android:name="com.humaclab.selliscope_kenya.SalesReturnActivity"/>
         <activity
-            android:name=".SalesReturnDetailsActivity"
+            android:name="com.humaclab.selliscope_kenya.SalesReturnDetailsActivity"
             android:screenOrientation="landscape"/>
     </application>
 

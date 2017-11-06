@@ -33,9 +33,9 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.gson.Gson;
 import com.humaclab.selliscope_kenya.Utils.NetworkUtility;
 import com.humaclab.selliscope_kenya.Utils.SessionManager;
-import com.humaclab.selliscope_kenya.adapters.DistrictAdapter;
+import com.humaclab.selliscope_kenya.adapters.CountyAdapter;
 import com.humaclab.selliscope_kenya.adapters.OutletTypeAdapter;
-import com.humaclab.selliscope_kenya.adapters.ThanaAdapter;
+import com.humaclab.selliscope_kenya.adapters.TownAdapter;
 import com.humaclab.selliscope_kenya.model.CreateOutlet;
 import com.humaclab.selliscope_kenya.model.Districts;
 import com.humaclab.selliscope_kenya.model.Login;
@@ -52,6 +52,10 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import timber.log.Timber;
 
+/**
+ * Created by Leon on 5/11/2017.
+ */
+
 public class EditOutletActivity extends AppCompatActivity {
     private final int CAMERA_REQUEST = 3214;
     boolean isValidOutletName = true;
@@ -61,13 +65,13 @@ public class EditOutletActivity extends AppCompatActivity {
     double latitude, longitude = 0.0;
     int outletTypeId, thanaId = -1;
     private EditText outletName, outletAddress, outletOwner, outletContactNumber;
-    private Spinner outletType, district, thana;
+    private Spinner outletType, county, town;
     private ImageView iv_outlet;
     private Button submit, cancel;
     private String email, password;
     private OutletTypeAdapter outletTypeAdapter;
-    private ThanaAdapter thanaAdapter;
-    private DistrictAdapter districtAdapter;
+    private TownAdapter townAdapter;
+    private CountyAdapter countyAdapter;
     private SelliscopeApiEndpointInterface apiService;
     private SessionManager sessionManager;
     private GoogleApiClient googleApiClient;
@@ -123,8 +127,8 @@ public class EditOutletActivity extends AppCompatActivity {
         outletContactNumber = (EditText) findViewById(R.id.et_outlet_contact_number);
         outletContactNumber.setText(outlet.phone);
 
-        district = (Spinner) findViewById(R.id.sp_district);
-        thana = (Spinner) findViewById(R.id.sp_thana);
+        county = (Spinner) findViewById(R.id.sp_county);
+        town = (Spinner) findViewById(R.id.sp_town);
         outletType = (Spinner) findViewById(R.id.sp_outlet_type);
         submit = (Button) findViewById(R.id.btn_update_outlet);
         cancel = (Button) findViewById(R.id.btn_cancel);
@@ -147,7 +151,7 @@ public class EditOutletActivity extends AppCompatActivity {
             }
         });
 
-        district.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        county.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Districts.Successful.District district =
@@ -160,7 +164,7 @@ public class EditOutletActivity extends AppCompatActivity {
 
             }
         });
-        thana.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        town.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Thanas.Successful.Thana thana =
@@ -306,18 +310,18 @@ public class EditOutletActivity extends AppCompatActivity {
                         Districts.Successful districtListSuccessful
                                 = gson.fromJson(response.body().string()
                                 , Districts.Successful.class);
-                        districtAdapter = new DistrictAdapter(EditOutletActivity.this,
+                        countyAdapter = new CountyAdapter(EditOutletActivity.this,
                                 districtListSuccessful.districtResult.districts);
-                        district.setAdapter(districtAdapter);
+                        county.setAdapter(countyAdapter);
 
-                        //For selecting previous district
+                        //For selecting previous county
                         int position = 0;
                         for (int i = 0; i < districtListSuccessful.districtResult.districts.size(); i++) {
                             if (districtListSuccessful.districtResult.districts.get(i).districtName.equals(outlet.district))
                                 position = i;
                         }
-                        district.setSelection(position);
-                        //For selecting previous district
+                        county.setSelection(position);
+                        //For selecting previous county
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -359,18 +363,18 @@ public class EditOutletActivity extends AppCompatActivity {
                         Thanas.Successful thanaListSuccessful
                                 = gson.fromJson(response.body().string()
                                 , Thanas.Successful.class);
-                        thanaAdapter = new ThanaAdapter(EditOutletActivity.this,
+                        townAdapter = new TownAdapter(EditOutletActivity.this,
                                 thanaListSuccessful.thanaResult.thanas);
-                        thana.setAdapter(thanaAdapter);
+                        town.setAdapter(townAdapter);
 
-                        //For selecting previous thana
+                        //For selecting previous town
                         int position = 0;
                         for (int i = 0; i < thanaListSuccessful.thanaResult.thanas.size(); i++) {
                             if (thanaListSuccessful.thanaResult.thanas.get(i).thanaName.equals(outlet.thana))
                                 position = i;
                         }
-                        thana.setSelection(position);
-                        //For selecting previous thana
+                        town.setSelection(position);
+                        //For selecting previous town
                     } catch (IOException e) {
                         e.printStackTrace();
                     }

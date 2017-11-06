@@ -32,9 +32,9 @@ import com.google.android.gms.location.LocationServices;
 import com.google.gson.Gson;
 import com.humaclab.selliscope_kenya.Utils.NetworkUtility;
 import com.humaclab.selliscope_kenya.Utils.SessionManager;
-import com.humaclab.selliscope_kenya.adapters.DistrictAdapter;
+import com.humaclab.selliscope_kenya.adapters.CountyAdapter;
 import com.humaclab.selliscope_kenya.adapters.OutletTypeAdapter;
-import com.humaclab.selliscope_kenya.adapters.ThanaAdapter;
+import com.humaclab.selliscope_kenya.adapters.TownAdapter;
 import com.humaclab.selliscope_kenya.model.CreateOutlet;
 import com.humaclab.selliscope_kenya.model.Districts;
 import com.humaclab.selliscope_kenya.model.Login;
@@ -50,6 +50,10 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import timber.log.Timber;
 
+/**
+ * Created by Leon on 5/11/2017.
+ */
+
 public class AddOutletActivity extends AppCompatActivity {
     private final int CAMERA_REQUEST = 3214;
     SelliscopeApiEndpointInterface apiService;
@@ -61,13 +65,13 @@ public class AddOutletActivity extends AppCompatActivity {
     double latitude, longitude = 0.0;
     int outletTypeId, thanaId = -1;
     private EditText outletName, outletAddress, outletOwner, outletContactNumber;
-    private Spinner outletType, district, thana;
+    private Spinner outletType, county, town;
     private ImageView iv_outlet;
     private Button submit, cancel;
     private String email, password;
     private OutletTypeAdapter outletTypeAdapter;
-    private ThanaAdapter thanaAdapter;
-    private DistrictAdapter districtAdapter;
+    private TownAdapter townAdapter;
+    private CountyAdapter countyAdapter;
     private GoogleApiClient googleApiClient;
     private String outletImage;
 
@@ -110,12 +114,12 @@ public class AddOutletActivity extends AppCompatActivity {
         outletAddress = (EditText) findViewById(R.id.et_outlet_address);
         outletOwner = (EditText) findViewById(R.id.et_outlet_owner_name);
         outletContactNumber = (EditText) findViewById(R.id.et_outlet_contact_number);
-        district = (Spinner) findViewById(R.id.sp_district);
-        thana = (Spinner) findViewById(R.id.sp_thana);
+        county = (Spinner) findViewById(R.id.sp_county);
+        town = (Spinner) findViewById(R.id.sp_town);
         outletType = (Spinner) findViewById(R.id.sp_outlet_type);
         submit = (Button) findViewById(R.id.btn_add_outlet);
         cancel = (Button) findViewById(R.id.btn_cancel);
-        getDistricts(email, password);
+        getCounties(email, password);
         getOutletTypes(email, password);
 
         iv_outlet = (ImageView) findViewById(R.id.iv_outlet);
@@ -127,12 +131,12 @@ public class AddOutletActivity extends AppCompatActivity {
             }
         });
 
-        district.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        county.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Districts.Successful.District district =
                         (Districts.Successful.District) parent.getItemAtPosition(position);
-                getThanas(email, password, district.districtId);
+                getTowns(email, password, district.districtId);
             }
 
             @Override
@@ -140,7 +144,7 @@ public class AddOutletActivity extends AppCompatActivity {
 
             }
         });
-        thana.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        town.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Thanas.Successful.Thana thana =
@@ -270,7 +274,7 @@ public class AddOutletActivity extends AppCompatActivity {
         });
     }
 
-    void getDistricts(String email, String password) {
+    void getCounties(String email, String password) {
         apiService = SelliscopeApplication.getRetrofitInstance(email, password, false)
                 .create(SelliscopeApiEndpointInterface.class);
         Call<ResponseBody> call = apiService.getDistricts();
@@ -284,9 +288,9 @@ public class AddOutletActivity extends AppCompatActivity {
                         Districts.Successful districtListSuccessful
                                 = gson.fromJson(response.body().string()
                                 , Districts.Successful.class);
-                        districtAdapter = new DistrictAdapter(AddOutletActivity.this,
+                        countyAdapter = new CountyAdapter(AddOutletActivity.this,
                                 districtListSuccessful.districtResult.districts);
-                        district.setAdapter(districtAdapter);
+                        county.setAdapter(countyAdapter);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -359,7 +363,7 @@ public class AddOutletActivity extends AppCompatActivity {
         });
     }
 
-    void getThanas(String email, String password, int districtId) {
+    void getTowns(String email, String password, int districtId) {
         apiService = SelliscopeApplication.getRetrofitInstance(email, password, false)
                 .create(SelliscopeApiEndpointInterface.class);
         Call<ResponseBody> call = apiService.getThanas(districtId);
@@ -373,9 +377,9 @@ public class AddOutletActivity extends AppCompatActivity {
                         Thanas.Successful thanaListSuccessful
                                 = gson.fromJson(response.body().string()
                                 , Thanas.Successful.class);
-                        thanaAdapter = new ThanaAdapter(AddOutletActivity.this,
+                        townAdapter = new TownAdapter(AddOutletActivity.this,
                                 thanaListSuccessful.thanaResult.thanas);
-                        thana.setAdapter(thanaAdapter);
+                        town.setAdapter(townAdapter);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }

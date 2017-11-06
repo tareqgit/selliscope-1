@@ -138,7 +138,7 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
                                 Timber.d("Outlet location: Latitude: " + outletLocation.getLatitude() + "," + "Longitude: " + outletLocation.getLongitude());
                                 location.setLatitude(latitude);
                                 location.setLongitude(longitude);
-                                if (location.distanceTo(outletLocation) <= 150.0) {
+                                if (location.distanceTo(outletLocation) <= 200.0) {
                                     if (NetworkUtility.isNetworkAvailable(context)) {
                                         sendUserLocation(location, outletId, progressbar);
                                     } else {
@@ -227,15 +227,15 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
 
         public OutletViewHolder(View itemView) {
             super(itemView);
-            iv_outlet = (ImageView) itemView.findViewById(R.id.iv_outlet);
-            cardView = (CardView) itemView.findViewById(R.id.cv_outlet_item);
-            tvOutletName = (TextView) itemView.findViewById(R.id.tv_outlet_name);
-            tvOutletAddress = (TextView) itemView.findViewById(R.id.tv_outlet_address);
-            tvOutletContactNumber = (TextView) itemView.findViewById(R.id.tv_outlet_contact_number);
-            tvOutletOwnerName = (TextView) itemView.findViewById(R.id.tv_owner_name);
-            checkInButton = (Button) itemView.findViewById(R.id.btn_check_in);
-            orderButton = (Button) itemView.findViewById(R.id.btn_order);
-            pbCheckIn = (ProgressBar) itemView.findViewById(R.id.pb_check_in);
+            iv_outlet = itemView.findViewById(R.id.iv_outlet);
+            cardView = itemView.findViewById(R.id.cv_outlet_item);
+            tvOutletName = itemView.findViewById(R.id.tv_outlet_name);
+            tvOutletAddress = itemView.findViewById(R.id.tv_outlet_address);
+            tvOutletContactNumber = itemView.findViewById(R.id.tv_outlet_contact_number);
+            tvOutletOwnerName = itemView.findViewById(R.id.tv_owner_name);
+            checkInButton = itemView.findViewById(R.id.btn_check_in);
+            orderButton = itemView.findViewById(R.id.btn_order);
+            pbCheckIn = itemView.findViewById(R.id.pb_check_in);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

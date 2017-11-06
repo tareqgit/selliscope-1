@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context="com.humaclab.selliscope.DeliveryListActivity">
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              tools:context="com.humaclab.selliscope_nepal.DeliveryListActivity">
 
-    <include layout="@layout/toolbar_layout" />
+    <include layout="@layout/toolbar_layout"/>
 
     <Spinner
         android:id="@+id/sp_outlet_list"
@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
         android:layout_marginTop="10dp"
-        android:padding="10dp" />
+        android:padding="10dp"/>
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/srl_delivery"
@@ -24,6 +24,6 @@
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rv_delivery_list"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"/>
     </android.support.v4.widget.SwipeRefreshLayout>
 </LinearLayout>

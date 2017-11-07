@@ -10,7 +10,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:549109950382:android:04ade098b734696c",
         "android_client_info": {
-          "package_name": "com.humaclab.selliscope"
+          "package_name": "com.humaclab.selliscope_malaysia"
         }
       },
       "oauth_client": [
@@ -18,7 +18,7 @@
           "client_id": "549109950382-8ttueqomljr2pap9448kqdiof1bnm17m.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.humaclab.selliscope",
+            "package_name": "com.humaclab.selliscope_malaysia",
             "certificate_hash": "bf4985fdf63f665a71ca385946458c86dd3dff59"
           }
         },

@@ -35,7 +35,7 @@ import com.humaclab.selliscope_malaysia.Utils.NetworkUtility;
 import com.humaclab.selliscope_malaysia.Utils.SessionManager;
 import com.humaclab.selliscope_malaysia.adapters.DistrictAdapter;
 import com.humaclab.selliscope_malaysia.adapters.OutletTypeAdapter;
-import com.humaclab.selliscope_malaysia.adapters.ThanaAdapter;
+import com.humaclab.selliscope_malaysia.adapters.SatateAdapter;
 import com.humaclab.selliscope_malaysia.model.CreateOutlet;
 import com.humaclab.selliscope_malaysia.model.Districts;
 import com.humaclab.selliscope_malaysia.model.Login;
@@ -61,13 +61,13 @@ public class EditOutletActivity extends AppCompatActivity {
     double latitude, longitude = 0.0;
     int outletTypeId, thanaId = -1;
     private EditText outletName, outletAddress, outletOwner, outletContactNumber;
-    private Spinner outletType, district, thana;
+    private Spinner outletType, state, district;
     private ImageView iv_outlet;
     private Button submit, cancel;
     private String email, password;
     private OutletTypeAdapter outletTypeAdapter;
-    private ThanaAdapter thanaAdapter;
     private DistrictAdapter districtAdapter;
+    private SatateAdapter satateAdapter;
     private SelliscopeApiEndpointInterface apiService;
     private SessionManager sessionManager;
     private GoogleApiClient googleApiClient;
@@ -108,30 +108,30 @@ public class EditOutletActivity extends AppCompatActivity {
         sessionManager = new SessionManager(this);
         email = sessionManager.getUserEmail();
         password = sessionManager.getUserPassword();
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("Add Outlet");
         setSupportActionBar(toolbar);
-        outletName = (EditText) findViewById(R.id.et_outlet_name);
+        outletName = findViewById(R.id.et_outlet_name);
         outletName.setText(outlet.outletName);
 
-        outletAddress = (EditText) findViewById(R.id.et_outlet_address);
+        outletAddress = findViewById(R.id.et_outlet_address);
         outletAddress.setText(outlet.outletAddress);
 
-        outletOwner = (EditText) findViewById(R.id.et_outlet_owner_name);
+        outletOwner = findViewById(R.id.et_outlet_owner_name);
         outletOwner.setText(outlet.ownerName);
 
-        outletContactNumber = (EditText) findViewById(R.id.et_outlet_contact_number);
+        outletContactNumber = findViewById(R.id.et_outlet_contact_number);
         outletContactNumber.setText(outlet.phone);
 
-        district = (Spinner) findViewById(R.id.sp_district);
-        thana = (Spinner) findViewById(R.id.sp_thana);
-        outletType = (Spinner) findViewById(R.id.sp_outlet_type);
-        submit = (Button) findViewById(R.id.btn_update_outlet);
-        cancel = (Button) findViewById(R.id.btn_cancel);
-        getDistricts(email, password);
+        state = findViewById(R.id.sp_state);
+        district = findViewById(R.id.sp_district);
+        outletType = findViewById(R.id.sp_outlet_type);
+        submit = findViewById(R.id.btn_update_outlet);
+        cancel = findViewById(R.id.btn_cancel);
+        getStates(email, password);
         getOutletTypes(email, password);
 
-        iv_outlet = (ImageView) findViewById(R.id.iv_outlet);
+        iv_outlet = findViewById(R.id.iv_outlet);
         Glide.with(getApplicationContext()).load(outlet.outletImgUrl)
                 .thumbnail(0.5f)
                 .crossFade()
@@ -147,12 +147,12 @@ public class EditOutletActivity extends AppCompatActivity {
             }
         });
 
-        district.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        state.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Districts.Successful.District district =
                         (Districts.Successful.District) parent.getItemAtPosition(position);
-                getThanas(email, password, district.districtId);
+                getDistricts(email, password, district.districtId);
             }
 
             @Override
@@ -160,7 +160,7 @@ public class EditOutletActivity extends AppCompatActivity {
 
             }
         });
-        thana.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        district.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Thanas.Successful.Thana thana =
@@ -292,7 +292,7 @@ public class EditOutletActivity extends AppCompatActivity {
         });
     }
 
-    void getDistricts(String email, String password) {
+    void getStates(String email, String password) {
         apiService = SelliscopeApplication.getRetrofitInstance(email, password, false)
                 .create(SelliscopeApiEndpointInterface.class);
         Call<ResponseBody> call = apiService.getDistricts();
@@ -306,18 +306,18 @@ public class EditOutletActivity extends AppCompatActivity {
                         Districts.Successful districtListSuccessful
                                 = gson.fromJson(response.body().string()
                                 , Districts.Successful.class);
-                        districtAdapter = new DistrictAdapter(EditOutletActivity.this,
+                        satateAdapter = new SatateAdapter(EditOutletActivity.this,
                                 districtListSuccessful.districtResult.districts);
-                        district.setAdapter(districtAdapter);
+                        state.setAdapter(satateAdapter);
 
-                        //For selecting previous district
+                        //For selecting previous state
                         int position = 0;
                         for (int i = 0; i < districtListSuccessful.districtResult.districts.size(); i++) {
                             if (districtListSuccessful.districtResult.districts.get(i).districtName.equals(outlet.district))
                                 position = i;
                         }
-                        district.setSelection(position);
-                        //For selecting previous district
+                        state.setSelection(position);
+                        //For selecting previous state
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -345,7 +345,7 @@ public class EditOutletActivity extends AppCompatActivity {
         });
     }
 
-    void getThanas(String email, String password, int districtId) {
+    void getDistricts(String email, String password, int districtId) {
         apiService = SelliscopeApplication.getRetrofitInstance(email, password, false)
                 .create(SelliscopeApiEndpointInterface.class);
         Call<ResponseBody> call = apiService.getThanas(districtId);
@@ -359,18 +359,18 @@ public class EditOutletActivity extends AppCompatActivity {
                         Thanas.Successful thanaListSuccessful
                                 = gson.fromJson(response.body().string()
                                 , Thanas.Successful.class);
-                        thanaAdapter = new ThanaAdapter(EditOutletActivity.this,
+                        districtAdapter = new DistrictAdapter(EditOutletActivity.this,
                                 thanaListSuccessful.thanaResult.thanas);
-                        thana.setAdapter(thanaAdapter);
+                        district.setAdapter(districtAdapter);
 
-                        //For selecting previous thana
+                        //For selecting previous district
                         int position = 0;
                         for (int i = 0; i < thanaListSuccessful.thanaResult.thanas.size(); i++) {
                             if (thanaListSuccessful.thanaResult.thanas.get(i).thanaName.equals(outlet.thana))
                                 position = i;
                         }
-                        thana.setSelection(position);
-                        //For selecting previous thana
+                        district.setSelection(position);
+                        //For selecting previous district
                     } catch (IOException e) {
                         e.printStackTrace();
                     }

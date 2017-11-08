@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical"
-              tools:context="com.humaclab.selliscope_malaysia.EditOutletActivity">
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.humaclab.selliscope_malaysia.EditOutletActivity">
 
     <include
         android:id="@+id/include"
@@ -50,7 +51,7 @@
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/sp_thana"/>
+                app:layout_constraintTop_toBottomOf="@+id/sp_district"/>
 
             <ImageView
                 android:id="@+id/iv_outlet"
@@ -100,21 +101,6 @@
 
 
             <Spinner
-                android:id="@+id/sp_thana"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="0dp"
-                android:spinnerMode="dropdown"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_thana"/>
-
-            <Spinner
                 android:id="@+id/sp_district"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -128,6 +114,21 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_district"/>
+
+            <Spinner
+                android:id="@+id/sp_state"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="0dp"
+                android:spinnerMode="dropdown"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_state"/>
 
             <Spinner
                 android:id="@+id/sp_outlet_type"
@@ -199,7 +200,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/et_outlet_name"/>
 
             <TextView
-                android:id="@+id/tv_district"
+                android:id="@+id/tv_state"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="16dp"
@@ -208,7 +209,7 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="0dp"
                 android:paddingLeft="4dp"
-                android:text="District:"
+                android:text="State:"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintLeft_toLeftOf="parent"
@@ -216,19 +217,19 @@
                 app:layout_constraintTop_toBottomOf="@+id/et_outlet_address"/>
 
             <TextView
-                android:id="@+id/tv_thana"
+                android:id="@+id/tv_district"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
                 android:layout_marginTop="0dp"
                 android:paddingLeft="4dp"
-                android:text="Thana:"
+                android:text="District:"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/sp_district"/>
+                app:layout_constraintTop_toBottomOf="@+id/sp_state"/>
 
         </android.support.constraint.ConstraintLayout>
     </ScrollView>

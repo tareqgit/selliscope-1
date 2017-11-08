@@ -63,10 +63,12 @@ public class OutletActivity extends AppCompatActivity {
         recyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
         });
         recyclerView.addItemDecoration(new VerticalSpaceItemDecoration(20));
-        if (NetworkUtility.isNetworkAvailable(this))
+        if (NetworkUtility.isNetworkAvailable(this)) {
             getOutlets();
-        else
-            Toast.makeText(this, "Connect to Wifi or Mobile Data", Toast.LENGTH_SHORT).show();
+        } else {
+            getOutlets();
+            Toast.makeText(this, "Connect to Wifi or Mobile Data for better performance.", Toast.LENGTH_SHORT).show();
+        }
 
         tv_search_outlet = (EditText) findViewById(R.id.tv_search_outlet);
         tv_search_outlet.addTextChangedListener(new TextWatcher() {

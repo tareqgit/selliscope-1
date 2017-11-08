@@ -6,11 +6,11 @@
     "apkInfo": {
       "type": "MAIN",
       "splits": [],
-      "versionCode": 18
+      "versionCode": 1
     },
     "path": "app-release.apk",
     "properties": {
-      "packageId": "com.humaclab.selliscope",
+      "packageId": "com.humaclab.selliscope_malaysia",
       "split": "",
       "minSdkVersion": "19"
     }

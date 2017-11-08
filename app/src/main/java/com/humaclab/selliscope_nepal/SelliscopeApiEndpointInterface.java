@@ -25,8 +25,7 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 /**
- * Created by Nahid on 3/5/2017.
- * Updated by Leon on 9/3/2017.
+ * Created by Leon on 9/3/2017.
  */
 
 public interface SelliscopeApiEndpointInterface {

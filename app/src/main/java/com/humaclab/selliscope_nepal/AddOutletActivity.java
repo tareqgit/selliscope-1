@@ -34,7 +34,7 @@ import com.humaclab.selliscope_nepal.Utils.NetworkUtility;
 import com.humaclab.selliscope_nepal.Utils.SessionManager;
 import com.humaclab.selliscope_nepal.adapters.DistrictAdapter;
 import com.humaclab.selliscope_nepal.adapters.OutletTypeAdapter;
-import com.humaclab.selliscope_nepal.adapters.ThanaAdapter;
+import com.humaclab.selliscope_nepal.adapters.ZoneAdapter;
 import com.humaclab.selliscope_nepal.model.CreateOutlet;
 import com.humaclab.selliscope_nepal.model.Districts;
 import com.humaclab.selliscope_nepal.model.Login;
@@ -61,13 +61,13 @@ public class AddOutletActivity extends AppCompatActivity {
     double latitude, longitude = 0.0;
     int outletTypeId, thanaId = -1;
     private EditText outletName, outletAddress, outletOwner, outletContactNumber;
-    private Spinner outletType, district, thana;
+    private Spinner outletType, zone, district;
     private ImageView iv_outlet;
     private Button submit, cancel;
     private String email, password;
     private OutletTypeAdapter outletTypeAdapter;
-    private ThanaAdapter thanaAdapter;
     private DistrictAdapter districtAdapter;
+    private ZoneAdapter zoneAdapter;
     private GoogleApiClient googleApiClient;
     private String outletImage;
 
@@ -110,12 +110,12 @@ public class AddOutletActivity extends AppCompatActivity {
         outletAddress = (EditText) findViewById(R.id.et_outlet_address);
         outletOwner = (EditText) findViewById(R.id.et_outlet_owner_name);
         outletContactNumber = (EditText) findViewById(R.id.et_outlet_contact_number);
+        zone = (Spinner) findViewById(R.id.sp_zone);
         district = (Spinner) findViewById(R.id.sp_district);
-        thana = (Spinner) findViewById(R.id.sp_thana);
         outletType = (Spinner) findViewById(R.id.sp_outlet_type);
         submit = (Button) findViewById(R.id.btn_add_outlet);
         cancel = (Button) findViewById(R.id.btn_cancel);
-        getDistricts(email, password);
+        getZones(email, password);
         getOutletTypes(email, password);
 
         iv_outlet = (ImageView) findViewById(R.id.iv_outlet);
@@ -127,12 +127,12 @@ public class AddOutletActivity extends AppCompatActivity {
             }
         });
 
-        district.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        zone.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Districts.Successful.District district =
                         (Districts.Successful.District) parent.getItemAtPosition(position);
-                getThanas(email, password, district.districtId);
+                getDistricts(email, password, district.districtId);
             }
 
             @Override
@@ -140,7 +140,7 @@ public class AddOutletActivity extends AppCompatActivity {
 
             }
         });
-        thana.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        district.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Thanas.Successful.Thana thana =
@@ -270,7 +270,7 @@ public class AddOutletActivity extends AppCompatActivity {
         });
     }
 
-    void getDistricts(String email, String password) {
+    void getZones(String email, String password) {
         apiService = SelliscopeApplication.getRetrofitInstance(email, password, false)
                 .create(SelliscopeApiEndpointInterface.class);
         Call<ResponseBody> call = apiService.getDistricts();
@@ -284,9 +284,9 @@ public class AddOutletActivity extends AppCompatActivity {
                         Districts.Successful districtListSuccessful
                                 = gson.fromJson(response.body().string()
                                 , Districts.Successful.class);
-                        districtAdapter = new DistrictAdapter(AddOutletActivity.this,
+                        zoneAdapter = new ZoneAdapter(AddOutletActivity.this,
                                 districtListSuccessful.districtResult.districts);
-                        district.setAdapter(districtAdapter);
+                        zone.setAdapter(zoneAdapter);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -359,7 +359,7 @@ public class AddOutletActivity extends AppCompatActivity {
         });
     }
 
-    void getThanas(String email, String password, int districtId) {
+    void getDistricts(String email, String password, int districtId) {
         apiService = SelliscopeApplication.getRetrofitInstance(email, password, false)
                 .create(SelliscopeApiEndpointInterface.class);
         Call<ResponseBody> call = apiService.getThanas(districtId);
@@ -373,9 +373,9 @@ public class AddOutletActivity extends AppCompatActivity {
                         Thanas.Successful thanaListSuccessful
                                 = gson.fromJson(response.body().string()
                                 , Thanas.Successful.class);
-                        thanaAdapter = new ThanaAdapter(AddOutletActivity.this,
+                        districtAdapter = new DistrictAdapter(AddOutletActivity.this,
                                 thanaListSuccessful.thanaResult.thanas);
-                        thana.setAdapter(thanaAdapter);
+                        district.setAdapter(districtAdapter);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }

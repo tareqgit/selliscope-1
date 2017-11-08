@@ -9,7 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.humaclab.selliscope_nepal.R;
-import com.humaclab.selliscope_nepal.model.Districts;
+import com.humaclab.selliscope_nepal.model.Thanas;
 
 import java.util.List;
 
@@ -17,26 +17,26 @@ import java.util.List;
  * Created by dipu_ on 3/25/2017.
  */
 
-public class DistrictAdapter extends ArrayAdapter<Districts.Successful.District> {
+public class DistrictAdapter extends ArrayAdapter<Thanas.Successful.Thana> {
     LayoutInflater layoutInflater;
     private Activity activity;
-    private List<Districts.Successful.District> districts;
+    private List<Thanas.Successful.Thana> thanas;
 
-    public DistrictAdapter(Activity activity, List<Districts.Successful.District>
-            districts) {
-        super(activity, R.layout.spinner_item, districts);
+    public DistrictAdapter(Activity activity, List<Thanas.Successful.Thana>
+            thanas) {
+        super(activity, R.layout.spinner_item, thanas);
         layoutInflater = (LayoutInflater) activity
                 .getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
         this.activity = activity;
-        this.districts = districts;
+        this.thanas = thanas;
     }
 
     public int getCount() {
-        return districts.size();
+        return thanas.size();
     }
 
-    public Districts.Successful.District getItem(int position) {
-        return districts.get(position);
+    public Thanas.Successful.Thana getItem(int position) {
+        return thanas.get(position);
     }
 
     public long getItemId(int position) {
@@ -60,8 +60,7 @@ public class DistrictAdapter extends ArrayAdapter<Districts.Successful.District>
                 .inflate(R.layout.spinner_item, parent, false);
         TextView label = row.findViewById(R.id.tv_spinner_item_name);
         label.setTextColor(Color.BLACK);
-        label.setText(districts.get(position).districtName);
+        label.setText(thanas.get(position).thanaName);
         return row;
     }
-
 }

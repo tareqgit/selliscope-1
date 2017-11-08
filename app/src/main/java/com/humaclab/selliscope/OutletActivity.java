@@ -34,8 +34,8 @@ public class OutletActivity extends AppCompatActivity {
         setContentView(R.layout.activity_outlet);
         databaseHandler = new DatabaseHandler(this);
 
-        FloatingActionButton addOutlet = (FloatingActionButton) findViewById(R.id.fab_add_outlet);
-        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.srl_outlet);
+        FloatingActionButton addOutlet = findViewById(R.id.fab_add_outlet);
+        swipeRefreshLayout = findViewById(R.id.srl_outlet);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -46,9 +46,9 @@ public class OutletActivity extends AppCompatActivity {
                             Toast.LENGTH_SHORT).show();
             }
         });
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("");
-        TextView toolbarTitle = (TextView) findViewById(R.id.tv_toolbar_title);
+        TextView toolbarTitle = findViewById(R.id.tv_toolbar_title);
         toolbarTitle.setText(getResources().getString(R.string.outle));
         setSupportActionBar(toolbar);
         addOutlet.setOnClickListener(new View.OnClickListener() {
@@ -57,18 +57,20 @@ public class OutletActivity extends AppCompatActivity {
                 startActivity(new Intent(OutletActivity.this, AddOutletActivity.class));
             }
         });
-        recyclerView = (RecyclerView) findViewById(R.id.rv_outlet);
+        recyclerView = findViewById(R.id.rv_outlet);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
         recyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
         });
         recyclerView.addItemDecoration(new VerticalSpaceItemDecoration(20));
-        if (NetworkUtility.isNetworkAvailable(this))
+        if (NetworkUtility.isNetworkAvailable(this)) {
             getOutlets();
-        else
-            Toast.makeText(this, "Connect to Wifi or Mobile Data", Toast.LENGTH_SHORT).show();
+        } else {
+            getOutlets();
+            Toast.makeText(this, "Connect to Wifi or Mobile Data for better performance.", Toast.LENGTH_SHORT).show();
+        }
 
-        tv_search_outlet = (EditText) findViewById(R.id.tv_search_outlet);
+        tv_search_outlet = findViewById(R.id.tv_search_outlet);
         tv_search_outlet.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {

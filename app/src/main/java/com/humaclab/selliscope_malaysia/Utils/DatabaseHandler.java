@@ -24,8 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by dipu_ on 4/21/2017.
- * Updated by Leon on 8/20/2017.
+ * Created by Leon on 8/20/2017.
  */
 
 public class DatabaseHandler extends SQLiteOpenHelper {
@@ -958,7 +957,28 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return variantNames;
     }
 
-    public String getProductStock(int productId, String row) {
+    public String getProductStock(int productId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String prouctStock = "";
+        String query = "SELECT DISTINCT " + KEY_PRODUCT_STOCK
+                + " FROM " + TABLE_PRODUCT
+                + " WHERE " + KEY_PRODUCT_ID + "=" + productId;
+//        System.out.println("variant query" + query);
+
+        Cursor cursor = db.rawQuery(query, null);
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                cursor.getColumnNames();
+                prouctStock = cursor.getString(cursor.getColumnIndex(KEY_PRODUCT_STOCK));
+            } while (cursor.moveToNext());
+        }
+        db.close();
+        return prouctStock;
+    }
+
+    public String getVariantProductStock(int productId, String row) {
         SQLiteDatabase db = this.getWritableDatabase();
         String prouctStock = "";
         String query = "SELECT DISTINCT " + KEY_PRODUCT_STOCK

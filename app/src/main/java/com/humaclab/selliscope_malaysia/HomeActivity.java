@@ -32,6 +32,7 @@ import com.humaclab.selliscope_malaysia.Utils.SessionManager;
 import com.humaclab.selliscope_malaysia.model.BrandResponse;
 import com.humaclab.selliscope_malaysia.model.CategoryResponse;
 import com.humaclab.selliscope_malaysia.model.Outlets;
+import com.humaclab.selliscope_malaysia.model.VariantProduct.GodownItem;
 import com.humaclab.selliscope_malaysia.model.VariantProduct.ProductsItem;
 import com.humaclab.selliscope_malaysia.model.VariantProduct.VariantProductResponse;
 import com.squareup.picasso.Picasso;
@@ -182,6 +183,10 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                                                 !result.getVariants().isEmpty()
                                         );
                                     } else {
+                                        int stock = 0;
+                                        for (GodownItem godownItem : result.getGodown()) {
+                                            stock += Integer.parseInt(godownItem.getStock());
+                                        }
                                         databaseHandler.addProduct(
                                                 result.getId(),
                                                 result.getName(),
@@ -191,7 +196,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                                                 result.getBrand().getName(),
                                                 Integer.parseInt(result.getCategory().getId()),
                                                 result.getCategory().getName(),
-                                                result.getGodown().get(0).getStock(),
+                                                String.valueOf(stock),
                                                 !result.getVariants().isEmpty()
                                         );
                                     }
@@ -420,3 +425,4 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 }
+

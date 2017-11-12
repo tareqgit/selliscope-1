@@ -42,6 +42,7 @@
     <!-- Spinner title -->
     <string name="sp_thana_title">Thana</string>
     <string name="sp_outlet_type">Type</string>
+    <string name="stock">Stock: %1$s</string>
 
     <string-array name="paymentType">
         <item>Cash</item>

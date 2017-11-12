@@ -137,9 +137,9 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                             View view = binding.tblOrders.getChildAt(i);
                             if (view instanceof TableRow) {
                                 TableRow row = (TableRow) view;
-                                TextView tvTotalAmount = (TextView) row.findViewById(R.id.tv_amount);
+                                TextView tvTotalAmount = row.findViewById(R.id.tv_amount);
                                 totalAmount += Double.parseDouble(tvTotalAmount.getText().toString());
-                                EditText tvTotalDiscnt = (EditText) row.findViewById(R.id.et_discount);
+                                EditText tvTotalDiscnt = row.findViewById(R.id.et_discount);
                                 if (!tvTotalDiscnt.getText().toString().equals(""))
                                     totalDiscount += Double.parseDouble(tvTotalDiscnt.getText().toString());
                             }
@@ -340,9 +340,9 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                         if (view instanceof TableRow) {
                             AddNewOrder.NewOrder.Product product = new AddNewOrder.NewOrder.Product();
                             TableRow row = (TableRow) view;
-                            Spinner sp = (Spinner) row.findViewById(R.id.sp_product);
-                            EditText etQty = (EditText) row.findViewById(R.id.et_qty);
-                            EditText etDiscount = (EditText) row.findViewById(R.id.et_discount);
+                            Spinner sp = row.findViewById(R.id.sp_product);
+                            EditText etQty = row.findViewById(R.id.et_qty);
+                            EditText etDiscount = row.findViewById(R.id.et_discount);
 
                             product.id = productID.get(sp.getSelectedItemPosition());
                             if (etDiscount.getText().toString().equals("")) {
@@ -416,7 +416,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
         final View dialogView = LayoutInflater.from(this).inflate(R.layout.product_selection_dialog, null);
         builder.setView(dialogView);
 
-        ImageView civ_cancel = (ImageView) dialogView.findViewById(R.id.civ_cancel);
+        ImageView civ_cancel = dialogView.findViewById(R.id.civ_cancel);
         civ_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -424,11 +424,12 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
             }
         });
 
-        final LinearLayout ll_spinner_layout = (LinearLayout) dialogView.findViewById(R.id.ll_spinner_layout);
-        final Spinner sp_product_category = (Spinner) dialogView.findViewById(R.id.sp_product_category);
-        final Spinner sp_product_brand = (Spinner) dialogView.findViewById(R.id.sp_product_brand);
-        final Spinner sp_product_name = (Spinner) dialogView.findViewById(R.id.sp_product_name);
-        final Button btn_select_product = (Button) dialogView.findViewById(R.id.btn_select_product);
+        final LinearLayout ll_spinner_layout = dialogView.findViewById(R.id.ll_spinner_layout);
+        final Spinner sp_product_category = dialogView.findViewById(R.id.sp_product_category);
+        final Spinner sp_product_brand = dialogView.findViewById(R.id.sp_product_brand);
+        final Spinner sp_product_name = dialogView.findViewById(R.id.sp_product_name);
+        final TextView tv_simple_product_stock = dialogView.findViewById(R.id.tv_simple_product_stock);
+        final Button btn_select_product = dialogView.findViewById(R.id.btn_select_product);
 
         final List<String> productName = new ArrayList<>();
         final List<Integer> productID = new ArrayList<>();
@@ -499,6 +500,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                 if (position != 0) {
                     if (databaseHandler.isVariantExists()) {
                         if (databaseHandler.isThereAnyVariantForProduct(productID.get(position))) {
+                            tv_simple_product_stock.setVisibility(View.GONE);
                             variantViews.clear();
                             variantIDList.clear();
                             variantNameList.clear();
@@ -506,6 +508,8 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                             addVariantSpinner(dialogView.getContext());
                             isVariant[0] = true;
                         } else {
+                            tv_simple_product_stock.setVisibility(View.VISIBLE);
+                            tv_simple_product_stock.setText(getString(R.string.stock, databaseHandler.getProductStock(productID.get(sp_product_name.getSelectedItemPosition()))));
                             variantViews.clear();
                             variantIDList.clear();
                             variantNameList.clear();
@@ -639,7 +643,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                                 variantPrice = Double.parseDouble(s);
                             }
                             //For product stock
-                            String stock = databaseHandler.getProductStock(productID.get(sp_product_name.getSelectedItemPosition()), variantRows.get(tableRowCount).get(0));
+                            String stock = databaseHandler.getVariantProductStock(productID.get(sp_product_name.getSelectedItemPosition()), variantRows.get(tableRowCount).get(0));
                             if (stock.equals("0")) {
                                 productStock.setTextColor(Color.RED);
                                 productStock.setText("Out of Stock");

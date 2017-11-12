@@ -30,6 +30,10 @@ public class OutletDetailsActivity extends AppCompatActivity {
         outlet = (Outlets.Successful.Outlet) getIntent().getSerializableExtra("outletDetails");
         binding.setVariable(com.humaclab.selliscope.BR.outletDetails, outlet);
 
+        if (Float.parseFloat(outlet.outletDue.replace(",", "")) < 0) {
+            binding.tvDueAmount.setVisibility(View.GONE);
+        }
+
         Glide.with(getApplicationContext()).load(outlet.outletImgUrl)
                 .thumbnail(0.5f)
                 .crossFade()

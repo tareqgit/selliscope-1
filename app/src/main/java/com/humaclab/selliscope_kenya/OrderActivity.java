@@ -84,9 +84,9 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
 
         pd = new ProgressDialog(this);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("");
-        TextView toolbarTitle = (TextView) findViewById(R.id.tv_toolbar_title);
+        TextView toolbarTitle = findViewById(R.id.tv_toolbar_title);
         toolbarTitle.setText(getResources().getString(R.string.order));
         setSupportActionBar(toolbar);
 
@@ -428,6 +428,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
         final Spinner sp_product_category = dialogView.findViewById(R.id.sp_product_category);
         final Spinner sp_product_brand = dialogView.findViewById(R.id.sp_product_brand);
         final Spinner sp_product_name = dialogView.findViewById(R.id.sp_product_name);
+        final TextView tv_simple_product_stock = dialogView.findViewById(R.id.tv_simple_product_stock);
         final Button btn_select_product = dialogView.findViewById(R.id.btn_select_product);
 
         final List<String> productName = new ArrayList<>();
@@ -499,6 +500,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                 if (position != 0) {
                     if (databaseHandler.isVariantExists()) {
                         if (databaseHandler.isThereAnyVariantForProduct(productID.get(position))) {
+                            tv_simple_product_stock.setVisibility(View.GONE);
                             variantViews.clear();
                             variantIDList.clear();
                             variantNameList.clear();
@@ -506,6 +508,8 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                             addVariantSpinner(dialogView.getContext());
                             isVariant[0] = true;
                         } else {
+                            tv_simple_product_stock.setVisibility(View.VISIBLE);
+                            tv_simple_product_stock.setText(getString(R.string.stock, databaseHandler.getProductStock(productID.get(sp_product_name.getSelectedItemPosition()))));
                             variantViews.clear();
                             variantIDList.clear();
                             variantNameList.clear();
@@ -639,7 +643,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                                 variantPrice = Double.parseDouble(s);
                             }
                             //For product stock
-                            String stock = databaseHandler.getProductStock(productID.get(sp_product_name.getSelectedItemPosition()), variantRows.get(tableRowCount).get(0));
+                            String stock = databaseHandler.getVariantProductStock(productID.get(sp_product_name.getSelectedItemPosition()), variantRows.get(tableRowCount).get(0));
                             if (stock.equals("0")) {
                                 productStock.setTextColor(Color.RED);
                                 productStock.setText("Out of Stock");

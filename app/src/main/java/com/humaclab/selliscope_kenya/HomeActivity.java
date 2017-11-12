@@ -32,6 +32,7 @@ import com.humaclab.selliscope_kenya.Utils.SessionManager;
 import com.humaclab.selliscope_kenya.model.BrandResponse;
 import com.humaclab.selliscope_kenya.model.CategoryResponse;
 import com.humaclab.selliscope_kenya.model.Outlets;
+import com.humaclab.selliscope_kenya.model.VariantProduct.GodownItem;
 import com.humaclab.selliscope_kenya.model.VariantProduct.ProductsItem;
 import com.humaclab.selliscope_kenya.model.VariantProduct.VariantProductResponse;
 import com.squareup.picasso.Picasso;
@@ -74,15 +75,15 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(), sessionManager.getUserPassword(), false).create(SelliscopeApiEndpointInterface.class);
         pd = new ProgressDialog(this);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("");
-        TextView toolbarTitle = (TextView) findViewById(R.id.tv_toolbar_title);
+        TextView toolbarTitle = findViewById(R.id.tv_toolbar_title);
         toolbarTitle.setText(getResources().getString(R.string.home));
         setSupportActionBar(toolbar);
         HomeActivityPermissionsDispatcher.startUserTrackingServiceWithCheck(this);
         fragmentManager = getSupportFragmentManager();
         getFragment(TargetFragment.class);
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.sliding_tabs);
+        TabLayout tabLayout = findViewById(R.id.sliding_tabs);
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -107,12 +108,12 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             public void onTabReselected(TabLayout.Tab tab) {
             }
         });
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        NavigationView navigationView = findViewById(R.id.nav_view);
         TextView userName = navigationView.getHeaderView(0)
                 .findViewById(R.id.tv_user_name);
         ImageView profilePicture = navigationView.getHeaderView(0)
@@ -182,6 +183,10 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                                                 !result.getVariants().isEmpty()
                                         );
                                     } else {
+                                        int stock = 0;
+                                        for (GodownItem godownItem : result.getGodown()) {
+                                            stock += Integer.parseInt(godownItem.getStock());
+                                        }
                                         databaseHandler.addProduct(
                                                 result.getId(),
                                                 result.getName(),
@@ -191,7 +196,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                                                 result.getBrand().getName(),
                                                 Integer.parseInt(result.getCategory().getId()),
                                                 result.getCategory().getName(),
-                                                result.getGodown().get(0).getStock(),
+                                                String.valueOf(stock),
                                                 !result.getVariants().isEmpty()
                                         );
                                     }
@@ -357,7 +362,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -406,7 +411,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 break;
             }
         }
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }

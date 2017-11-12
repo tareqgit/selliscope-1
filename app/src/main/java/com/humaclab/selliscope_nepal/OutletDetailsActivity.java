@@ -21,14 +21,18 @@ public class OutletDetailsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_outlet_details);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("");
-        TextView toolbarTitle = (TextView) findViewById(R.id.tv_toolbar_title);
+        TextView toolbarTitle = findViewById(R.id.tv_toolbar_title);
         toolbarTitle.setText("Outlet Information");
         setSupportActionBar(toolbar);
 
         outlet = (Outlets.Successful.Outlet) getIntent().getSerializableExtra("outletDetails");
         binding.setVariable(com.humaclab.selliscope_nepal.BR.outletDetails, outlet);
+
+        if (Float.parseFloat(outlet.outletDue.replace(",", "")) < 0) {
+            binding.tvDueAmount.setVisibility(View.GONE);
+        }
 
         Glide.with(getApplicationContext()).load(outlet.outletImgUrl)
                 .thumbnail(0.5f)

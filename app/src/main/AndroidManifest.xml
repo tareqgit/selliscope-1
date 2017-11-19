@@ -55,17 +55,13 @@
         </receiver>-->
 
         <service
-            android:name=".Service.FcmInstanceIdServices"
-            android:exported="false"
-            android:permission="android.permission.RECEIVE_BOOT_COMPLETED">
+            android:name=".Service.FcmInstanceIdServices">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
             </intent-filter>
         </service>
         <service
-            android:name=".Service.FcmGetLocationService"
-            android:exported="false"
-            android:permission="android.permission.RECEIVE_BOOT_COMPLETED">
+            android:name=".Service.FcmGetNotificationService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT"/>
             </intent-filter>

@@ -76,7 +76,7 @@ dependencies {
     compile 'com.github.javiersantos:AppUpdater:2.6.3'
     compile 'com.github.quentin7b:android-location-tracker:3.2'
     compile 'de.hdodenhof:circleimageview:2.1.0'
-    compile 'com.google.firebase:firebase-messaging:10.0.1'
+    compile 'com.google.firebase:firebase-messaging:11.0.4'
     compile('io.nlopez.smartlocation:library:3.3.2') {
         transitive = false
     }

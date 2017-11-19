@@ -18,7 +18,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import timber.log.Timber;
 
 /**
- * Created by Nahid on 3/5/2017.
+ * Created by Leon on 3/6/2017.
  */
 
 public class SelliscopeApplication extends Application {
@@ -31,11 +31,10 @@ public class SelliscopeApplication extends Application {
     /**
      * @param email
      * @param password
-     * @return retofitInstance
+     * @return retrofitInstance
      */
 
-    public static Retrofit getRetrofitInstance(String email, String password, boolean
-            isForLogin) {
+    public static Retrofit getRetrofitInstance(String email, String password, boolean isForLogin) {
         if (retrofitInstance == null || isForLogin) {
 
             OkHttpClient client = new OkHttpClient.Builder()

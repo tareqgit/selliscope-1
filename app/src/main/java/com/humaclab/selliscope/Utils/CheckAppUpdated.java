@@ -39,7 +39,7 @@ public class CheckAppUpdated {
                 })
                 .setButtonDismiss(null)
                 .setButtonDoNotShowAgain(null)
-                .setCancelable(true); // Dialog could not be dismissable
+                .setCancelable(false); // Dialog could not be dismissable
         appUpdater.start();
     }
 }

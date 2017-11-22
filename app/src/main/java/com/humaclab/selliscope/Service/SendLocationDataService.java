@@ -7,7 +7,6 @@ import android.os.IBinder;
 import android.os.PowerManager;
 
 import com.humaclab.selliscope.Utils.SendUserLocationData;
-import com.humaclab.selliscope.adapters.LocationSyncAdapter;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -16,15 +15,12 @@ import java.util.concurrent.TimeUnit;
 import timber.log.Timber;
 
 public class SendLocationDataService extends Service {
-    private static final Object sSyncAdapterLock = new Object();
-
     private static volatile PowerManager.WakeLock wakeLock;
-    private static LocationSyncAdapter locationSyncAdapter = null;
     private ScheduledExecutorService scheduler;
 
     @Override
     public IBinder onBind(Intent intent) {
-        return locationSyncAdapter.getSyncAdapterBinder();
+        return null;
     }
 
     @Override
@@ -48,20 +44,13 @@ public class SendLocationDataService extends Service {
             wakeLock.acquire();
         }
 
-        synchronized (sSyncAdapterLock) {
-            if (locationSyncAdapter == null) {
-                locationSyncAdapter = new LocationSyncAdapter(getApplicationContext(), true);
-            }
-        }
-
         scheduler = Executors.newSingleThreadScheduledExecutor();
-        scheduler.scheduleAtFixedRate(
-                new Runnable() {
-                    public void run() {
-                        SendUserLocationData sendUserLocationData = new SendUserLocationData(getApplicationContext());
-                        sendUserLocationData.getLocation();
-                    }
-                }, 0, 15, TimeUnit.MINUTES);
+        scheduler.scheduleAtFixedRate(new Runnable() {
+            public void run() {
+                SendUserLocationData sendUserLocationData = new SendUserLocationData(getApplicationContext());
+                sendUserLocationData.getLocation();
+            }
+        }, 0, 900000, TimeUnit.MILLISECONDS);
         return START_STICKY;
     }
 

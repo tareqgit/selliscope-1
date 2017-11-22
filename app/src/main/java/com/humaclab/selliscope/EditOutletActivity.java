@@ -1,17 +1,10 @@
 package com.humaclab.selliscope;
 
-import android.Manifest;
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.location.Location;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Base64;
@@ -26,10 +19,6 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.google.android.gms.awareness.Awareness;
-import com.google.android.gms.awareness.snapshot.LocationResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResultCallback;
 import com.google.gson.Gson;
 import com.humaclab.selliscope.Utils.NetworkUtility;
 import com.humaclab.selliscope.Utils.SessionManager;
@@ -58,7 +47,7 @@ public class EditOutletActivity extends AppCompatActivity {
     boolean isValidOwnerName = true;
     boolean isValidAddress = true;
     boolean isValidPhone = true;
-    double latitude, longitude = 0.0;
+    //    double latitude, longitude = 0.0;
     int outletTypeId, thanaId = -1;
     private EditText outletName, outletAddress, outletOwner, outletContactNumber;
     private Spinner outletType, district, thana;
@@ -70,23 +59,23 @@ public class EditOutletActivity extends AppCompatActivity {
     private DistrictAdapter districtAdapter;
     private SelliscopeApiEndpointInterface apiService;
     private SessionManager sessionManager;
-    private GoogleApiClient googleApiClient;
+    //    private GoogleApiClient googleApiClient;
     private String outletImage;
     private ProgressDialog pd;
 
     private Outlets.Successful.Outlet outlet;
 
-    public static boolean checkPermission(final Context context) {
+    /*public static boolean checkPermission(final Context context) {
         return ActivityCompat.checkSelfPermission(context,
                 Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
-    }
+    }*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_outlet);
 
-        googleApiClient = new GoogleApiClient.Builder(EditOutletActivity.this)
+        /*googleApiClient = new GoogleApiClient.Builder(EditOutletActivity.this)
                 .addApi(Awareness.API)
                 .build();
         googleApiClient.connect();
@@ -100,7 +89,7 @@ public class EditOutletActivity extends AppCompatActivity {
             public void onConnectionSuspended(int i) {
 
             }
-        });
+        });*/
 
         pd = new ProgressDialog(this);
         outlet = (Outlets.Successful.Outlet) getIntent().getSerializableExtra("outletDetails");
@@ -150,8 +139,7 @@ public class EditOutletActivity extends AppCompatActivity {
         district.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Districts.Successful.District district =
-                        (Districts.Successful.District) parent.getItemAtPosition(position);
+                Districts.Successful.District district = (Districts.Successful.District) parent.getItemAtPosition(position);
                 getThanas(email, password, district.districtId);
             }
 
@@ -163,8 +151,7 @@ public class EditOutletActivity extends AppCompatActivity {
         thana.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Thanas.Successful.Thana thana =
-                        (Thanas.Successful.Thana) parent.getItemAtPosition(position);
+                Thanas.Successful.Thana thana = (Thanas.Successful.Thana) parent.getItemAtPosition(position);
                 thanaId = thana.thanaId;
             }
 
@@ -223,20 +210,20 @@ public class EditOutletActivity extends AppCompatActivity {
                 Timber.d("Valid Outle Name" + isValidOutletName);
                 Timber.d("valid owner naem" + isValidOwnerName);
                 Timber.d("Valid phone" + isValidPhone);
-                Timber.d("Latitude" + latitude);
-                Timber.d("Long" + longitude);
+                Timber.d("Latitude" + outlet.outletLatitude);
+                Timber.d("Long" + outlet.outletLongitude);
                 Timber.d("Type id" + outletTypeId);
                 Timber.d("Thana id" + thanaId);
 
                 if (isValidAddress && isValidOutletName && isValidOwnerName
-                        && isValidPhone && latitude != 0.0 && longitude != 0.0
+                        && isValidPhone && outlet.outletLatitude != 0.0 && outlet.outletLongitude != 0.0
                         && outletTypeId != -1 && thanaId != -1) {
                     Timber.d("addOutletRun");
                     if (NetworkUtility.isNetworkAvailable(EditOutletActivity.this)) {
                         updatedOutlet(email, password, outletTypeId, outletName.getText().toString().trim(),
                                 outletOwner.getText().toString().trim(),
                                 outletAddress.getText().toString().trim(), thanaId,
-                                outletContactNumber.getText().toString().trim(), latitude, longitude);
+                                outletContactNumber.getText().toString().trim(), outlet.outletLatitude, outlet.outletLongitude);
                     } else
                         Toast.makeText(EditOutletActivity.this, "Connect to Wifi or Mobile Data",
                                 Toast.LENGTH_SHORT).show();
@@ -303,11 +290,8 @@ public class EditOutletActivity extends AppCompatActivity {
                 Timber.d("Response " + response.code() + " " + response.body().toString());
                 if (response.code() == 200) {
                     try {
-                        Districts.Successful districtListSuccessful
-                                = gson.fromJson(response.body().string()
-                                , Districts.Successful.class);
-                        districtAdapter = new DistrictAdapter(EditOutletActivity.this,
-                                districtListSuccessful.districtResult.districts);
+                        Districts.Successful districtListSuccessful = gson.fromJson(response.body().string(), Districts.Successful.class);
+                        districtAdapter = new DistrictAdapter(EditOutletActivity.this, districtListSuccessful.districtResult.districts);
                         district.setAdapter(districtAdapter);
 
                         //For selecting previous district
@@ -442,7 +426,7 @@ public class EditOutletActivity extends AppCompatActivity {
         });
     }
 
-    public void getLocation() {
+    /*public void getLocation() {
         if (checkPermission(EditOutletActivity.this)) {
             Awareness.SnapshotApi.getLocation(googleApiClient)
                     .setResultCallback(new ResultCallback<LocationResult>() {
@@ -460,7 +444,7 @@ public class EditOutletActivity extends AppCompatActivity {
         } else {
             Timber.d("Location Permission is not enabled.");
         }
-    }
+    }*/
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -476,7 +460,7 @@ public class EditOutletActivity extends AppCompatActivity {
 
     @Override
     public void onDestroy() {
-        googleApiClient.disconnect();
+//        googleApiClient.disconnect();
         super.onDestroy();
     }
 }

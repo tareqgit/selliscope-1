@@ -1,10 +1,10 @@
 package com.humaclab.selliscope.adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -21,9 +21,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.gms.awareness.Awareness;
-import com.google.android.gms.awareness.snapshot.LocationResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.location.LocationServices;
 import com.google.gson.Gson;
 import com.humaclab.selliscope.OrderActivity;
@@ -33,6 +31,7 @@ import com.humaclab.selliscope.SelliscopeApiEndpointInterface;
 import com.humaclab.selliscope.SelliscopeApplication;
 import com.humaclab.selliscope.Utils.GetAddressFromLatLang;
 import com.humaclab.selliscope.Utils.NetworkUtility;
+import com.humaclab.selliscope.Utils.SendUserLocationData;
 import com.humaclab.selliscope.Utils.SessionManager;
 import com.humaclab.selliscope.model.Outlets;
 import com.humaclab.selliscope.model.UserLocation;
@@ -47,10 +46,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import timber.log.Timber;
 
-import static com.humaclab.selliscope.RouteActivity.checkPermission;
-
 /**
- * Created by Nahid on 3/12/2017.
+ * Created by Leon on 6/12/2017.
  */
 
 public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecyclerViewAdapter.OutletViewHolder> {
@@ -58,11 +55,13 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
     private GoogleApiClient googleApiClient;
     private SelliscopeApiEndpointInterface apiService;
     private Context context;
+    private Activity activity;
     private Outlets.Successful.OutletsResult outletItems;
 
-    public OutletRecyclerViewAdapter(Context context, Outlets.Successful.OutletsResult outletItems) {
+    public OutletRecyclerViewAdapter(Context context, Activity activity, Outlets.Successful.OutletsResult outletItems) {
         this.outletItems = outletItems;
         this.context = context;
+        this.activity = activity;
     }
 
     @Override
@@ -124,47 +123,31 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
 
     private void getLocation(final int outletId, final Location outletLocation,
                              final ProgressBar progressbar) {
-        if (checkPermission(context)) {
-            Awareness.SnapshotApi.getLocation(googleApiClient)
-                    .setResultCallback(new ResultCallback<LocationResult>() {
-                        @Override
-                        public void onResult(@NonNull LocationResult locationResult) {
-                            if (locationResult.getStatus().isSuccess()) {
-                                Location location = locationResult.getLocation();
-                                //sendLocationDataToSever();
-                                double latitude = Double.parseDouble(String.format("%.05f", location.getLatitude()));
-                                double longitude = Double.parseDouble(String.format("%.05f", location.getLongitude()));
-                                Timber.d("User location: Latitude: " + latitude + "," + "Longitude: " + longitude);
-                                Timber.d("Outlet location: Latitude: " + outletLocation.getLatitude() + "," + "Longitude: " + outletLocation.getLongitude());
-                                location.setLatitude(latitude);
-                                location.setLongitude(longitude);
-                                if (location.distanceTo(outletLocation) <= 300.0) {
-                                    if (NetworkUtility.isNetworkAvailable(context)) {
-                                        sendUserLocation(location, outletId, progressbar);
-                                    } else {
-                                        progressbar.setVisibility(View.INVISIBLE);
-                                        Toast.makeText(context, "Enable Wifi or Mobile data.",
-                                                Toast.LENGTH_SHORT).show();
-                                    }
+        SendUserLocationData sendUserLocationData = new SendUserLocationData(context);
+        sendUserLocationData.getInstantLocation(activity, new SendUserLocationData.OnGetLocation() {
+            @Override
+            public void getLocation(Double latitude, Double longitude) {
+                Timber.d("User location: Latitude: " + latitude + "," + "Longitude: " + longitude);
+                Timber.d("Outlet location: Latitude: " + outletLocation.getLatitude() + "," + "Longitude: " + outletLocation.getLongitude());
 
-                                } else {
-                                    progressbar.setVisibility(View.INVISIBLE);
-                                    Toast.makeText(context, "You are not " +
-                                                    "within 30m radius of the outlet.",
-                                            Toast.LENGTH_SHORT).show();
-                                }
+                Location location = new Location("");
+                location.setLatitude(latitude);
+                location.setLongitude(longitude);
+                if (location.distanceTo(outletLocation) <= 300.0) {
+                    if (NetworkUtility.isNetworkAvailable(context)) {
+                        sendUserLocation(location, outletId, progressbar);
+                    } else {
+                        progressbar.setVisibility(View.INVISIBLE);
+                        Toast.makeText(context, "Enable Wifi or Mobile data.",
+                                Toast.LENGTH_SHORT).show();
+                    }
 
-                            } else {
-                                progressbar.setVisibility(View.INVISIBLE);
-                                Timber.d("Didn't get Location Data");
-                                Toast.makeText(context, "Enable GPS.", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    });
-        } else {
-            progressbar.setVisibility(View.INVISIBLE);
-            Timber.d("Location Permission is not enabled.");
-        }
+                } else {
+                    progressbar.setVisibility(View.INVISIBLE);
+                    Toast.makeText(context, "You are not within 70m radius of the outlet.", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
     private void sendUserLocation(Location location, int outletId, final ProgressBar progressBar) {
@@ -182,9 +165,7 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
                 Gson gson = new Gson();
                 if (response.code() == 201) {
                     try {
-                        UserLocation.Successful userLocationSuccess
-                                = gson.fromJson(response.body().string()
-                                , UserLocation.Successful.class);
+                        UserLocation.Successful userLocationSuccess = gson.fromJson(response.body().string(), UserLocation.Successful.class);
                         Timber.d("Result:" + userLocationSuccess.result);
                         progressBar.setVisibility(View.INVISIBLE);
                         Toast.makeText(context, "You are checked In.", Toast.LENGTH_SHORT).show();

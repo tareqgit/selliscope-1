@@ -81,7 +81,7 @@ public class OutletActivity extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 Outlets.Successful.OutletsResult outletsResult = databaseHandler.getSearchedOutlet(String.valueOf(s));
-                outletRecyclerViewAdapter = new OutletRecyclerViewAdapter(OutletActivity.this, outletsResult);
+                outletRecyclerViewAdapter = new OutletRecyclerViewAdapter(OutletActivity.this, OutletActivity.this, outletsResult);
                 recyclerView.setAdapter(outletRecyclerViewAdapter);
             }
 
@@ -92,57 +92,13 @@ public class OutletActivity extends AppCompatActivity {
         });
     }
 
-    /*void getOutlets() {
-        SessionManager sessionManager = new SessionManager(OutletActivity.this);
-        SelliscopeApiEndpointInterface apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(),
-                sessionManager.getUserPassword(), false)
-                .create(SelliscopeApiEndpointInterface.class);
-        Call<ResponseBody> call = apiService.getOutlets();
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                Gson gson = new Gson();
-                if (response.code() == 200) {
-                    try {
-                        Outlets.Successful getOutletListSuccessful = gson.fromJson(response.body()
-                                .string(), Outlets.Successful.class);
-                        if (!getOutletListSuccessful.outletsResult.outlets.isEmpty()) {
-                            if (swipeRefreshLayout.isRefreshing())
-                                swipeRefreshLayout.setRefreshing(false);
-                            outletRecyclerViewAdapter = new OutletRecyclerViewAdapter(
-                                    OutletActivity.this, getOutletListSuccessful.outletsResult);
-                            recyclerView.setAdapter(outletRecyclerViewAdapter);
-                        } else {
-                            Toast.makeText(getApplicationContext(), "You don't have any outlet in your list.", Toast.LENGTH_LONG).show();
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                } else if (response.code() == 401) {
-                    Toast.makeText(OutletActivity.this,
-                            "Invalid Response from server.", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(OutletActivity.this,
-                            "Server Error! Try Again Later!", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                //Toast.makeText(LoginActivity.this, t.toString(), Toast.LENGTH_SHORT).show();
-                Log.d("Response", t.toString());
-
-            }
-        });
-    }*/
-
     void getOutlets() {
         Outlets.Successful.OutletsResult outletsResult = databaseHandler.getAllOutlet();
 
         if (!outletsResult.outlets.isEmpty()) {
             if (swipeRefreshLayout.isRefreshing())
                 swipeRefreshLayout.setRefreshing(false);
-            outletRecyclerViewAdapter = new OutletRecyclerViewAdapter(OutletActivity.this, outletsResult);
+            outletRecyclerViewAdapter = new OutletRecyclerViewAdapter(OutletActivity.this, OutletActivity.this, outletsResult);
             recyclerView.setAdapter(outletRecyclerViewAdapter);
         } else {
             Toast.makeText(getApplicationContext(), "You don't have any outlet in your list.", Toast.LENGTH_LONG).show();

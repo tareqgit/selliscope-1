@@ -6,8 +6,6 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
-    <uses-permission android:name="android.permission.READ_SYNC_SETTINGS"/>
-    <uses-permission android:name="android.permission.WRITE_SYNC_SETTINGS"/>
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
 
     <application
@@ -41,19 +39,6 @@
             android:value="c2bca7824e6a758388318ecf6635fd2e8e11979a"/>
 
         <!--Services and Receivers-->
-        <!--<receiver
-            android:name=".Receiver.StartBootReceiver"
-            android:enabled="true"
-            android:exported="true"
-            android:permission="android.permission.RECEIVE_BOOT_COMPLETED">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
-                <action android:name="android.intent.action.QUICKBOOT_POWERON"/>
-
-                <category android:name="android.intent.category.DEFAULT"/>
-            </intent-filter>
-        </receiver>-->
-
         <service
             android:name=".Service.FcmInstanceIdServices">
             <intent-filter>
@@ -69,15 +54,13 @@
         <service
             android:name=".Service.SendLocationDataService"
             android:exported="false"
-            android:permission="android.permission.RECEIVE_BOOT_COMPLETED">
+            android:permission="android.permission.RECEIVE_BOOT_COMPLETED"
+            android:process=":selliscope_process">
             <intent-filter>
                 <action android:name=".Service.SendLocationDataService"/>
                 <action android:name="android.content.SyncAdapter"/>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
             </intent-filter>
-            <meta-data
-                android:name="android.content.SyncAdapter"
-                android:resource="@xml/sync_adapter"/>
         </service>
         <!--Services and Receivers-->
 

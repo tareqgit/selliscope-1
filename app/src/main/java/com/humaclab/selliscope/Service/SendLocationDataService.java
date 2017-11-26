@@ -7,6 +7,7 @@ import android.os.IBinder;
 import android.os.PowerManager;
 
 import com.humaclab.selliscope.Utils.SendUserLocationData;
+import com.humaclab.selliscope.Utils.SessionManager;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -56,8 +57,11 @@ public class SendLocationDataService extends Service {
 
     @Override
     public void onDestroy() {
+        SessionManager sessionManager = new SessionManager(getApplicationContext());
         Timber.d("SendLocation service is stopped.");
-        startService(new Intent(SendLocationDataService.this, SendLocationDataService.class));
-        sendBroadcast(new Intent(getApplicationContext(), SendLocationDataService.class));
+        if (sessionManager.isLoggedIn()) {
+            startService(new Intent(SendLocationDataService.this, SendLocationDataService.class));
+            sendBroadcast(new Intent(getApplicationContext(), SendLocationDataService.class));
+        }
     }
 }

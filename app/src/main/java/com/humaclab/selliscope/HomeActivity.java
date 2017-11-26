@@ -379,15 +379,15 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             case R.id.nav_logout: {
                 pd.setMessage("Login out...");
                 pd.show();
-                if (databaseHandler.removeAll()) {
-                    sessionManager.logoutUser();
-                    schedulerForMinute.shutdownNow();
-                    schedulerForHour.shutdownNow();
-                    stopService(new Intent(getApplicationContext(), SendLocationDataService.class));
-                    getApplicationContext().deleteDatabase(Constants.databaseName);
-                    pd.dismiss();
-                    finish();
-                }
+//                if (databaseHandler.removeAll()) {
+                sessionManager.logoutUser();
+                schedulerForMinute.shutdownNow();
+                schedulerForHour.shutdownNow();
+                stopService(new Intent(getApplicationContext(), SendLocationDataService.class));
+                getApplicationContext().deleteDatabase(Constants.databaseName);
+                pd.dismiss();
+                finish();
+//                }
                 break;
             }
             case R.id.nav_privacy_policy: {

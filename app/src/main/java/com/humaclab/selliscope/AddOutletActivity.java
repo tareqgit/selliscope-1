@@ -52,19 +52,18 @@ import timber.log.Timber;
 
 public class AddOutletActivity extends AppCompatActivity {
     private final int CAMERA_REQUEST = 3214;
-    SelliscopeApiEndpointInterface apiService;
-    SessionManager sessionManager;
     boolean isValidOutletName = true;
     boolean isValidOwnerName = true;
     boolean isValidAddress = true;
     boolean isValidPhone = true;
     double latitude, longitude = 0.0;
     int outletTypeId, thanaId = -1;
+    private SelliscopeApiEndpointInterface apiService;
+    private SessionManager sessionManager;
     private EditText outletName, outletAddress, outletOwner, outletContactNumber;
     private Spinner outletType, district, thana;
     private ImageView iv_outlet;
     private Button submit, cancel;
-    private String email, password;
     private OutletTypeAdapter outletTypeAdapter;
     private ThanaAdapter thanaAdapter;
     private DistrictAdapter districtAdapter;
@@ -99,10 +98,9 @@ public class AddOutletActivity extends AppCompatActivity {
             }
         });
         sessionManager = new SessionManager(this);
+        apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(), sessionManager.getUserPassword(), false).create(SelliscopeApiEndpointInterface.class);
         pd = new ProgressDialog(this);
 
-        email = sessionManager.getUserEmail();
-        password = sessionManager.getUserPassword();
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("Add Outlet");
         setSupportActionBar(toolbar);
@@ -115,8 +113,8 @@ public class AddOutletActivity extends AppCompatActivity {
         outletType = (Spinner) findViewById(R.id.sp_outlet_type);
         submit = (Button) findViewById(R.id.btn_add_outlet);
         cancel = (Button) findViewById(R.id.btn_cancel);
-        getDistricts(email, password);
-        getOutletTypes(email, password);
+        getDistricts();
+        getOutletTypes();
 
         iv_outlet = (ImageView) findViewById(R.id.iv_outlet);
         iv_outlet.setOnClickListener(new View.OnClickListener() {
@@ -132,7 +130,7 @@ public class AddOutletActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Districts.Successful.District district =
                         (Districts.Successful.District) parent.getItemAtPosition(position);
-                getThanas(email, password, district.districtId);
+                getThanas(district.districtId);
             }
 
             @Override
@@ -213,7 +211,7 @@ public class AddOutletActivity extends AppCompatActivity {
                         && outletTypeId != -1 && thanaId != -1) {
                     Timber.d("addOutletRun");
                     if (NetworkUtility.isNetworkAvailable(AddOutletActivity.this)) {
-                        addOutlet(email, password, outletTypeId, outletName.getText().toString().trim(),
+                        addOutlet(outletTypeId, outletName.getText().toString().trim(),
                                 outletOwner.getText().toString().trim(),
                                 outletAddress.getText().toString().trim(), thanaId,
                                 outletContactNumber.getText().toString().trim(), latitude, longitude);
@@ -226,15 +224,12 @@ public class AddOutletActivity extends AppCompatActivity {
         });
     }
 
-    private void addOutlet(String email, String password, int outletTypeId, String outletName,
+    private void addOutlet(int outletTypeId, String outletName,
                            String ownerName, String address, int thanaId, String phone,
                            double latitude, double longitude) {
         pd.setMessage("Creating outlet......");
         pd.setCancelable(false);
         pd.show();
-
-        apiService = SelliscopeApplication.getRetrofitInstance(email, password, false)
-                .create(SelliscopeApiEndpointInterface.class);
 
         Call<ResponseBody> call = apiService.createOutlet(new CreateOutlet(outletTypeId, outletName, ownerName, address, thanaId, phone, latitude, longitude, outletImage));
         call.enqueue(new Callback<ResponseBody>() {
@@ -270,9 +265,7 @@ public class AddOutletActivity extends AppCompatActivity {
         });
     }
 
-    void getDistricts(String email, String password) {
-        apiService = SelliscopeApplication.getRetrofitInstance(email, password, false)
-                .create(SelliscopeApiEndpointInterface.class);
+    void getDistricts() {
         Call<ResponseBody> call = apiService.getDistricts();
         call.enqueue(new Callback<ResponseBody>() {
             @Override
@@ -315,9 +308,7 @@ public class AddOutletActivity extends AppCompatActivity {
         });
     }
 
-    void getOutletTypes(String email, String password) {
-        apiService = SelliscopeApplication.getRetrofitInstance(email, password, false)
-                .create(SelliscopeApiEndpointInterface.class);
+    void getOutletTypes() {
         Call<ResponseBody> call = apiService.getOutletTypes();
         call.enqueue(new Callback<ResponseBody>() {
             @Override
@@ -359,9 +350,7 @@ public class AddOutletActivity extends AppCompatActivity {
         });
     }
 
-    void getThanas(String email, String password, int districtId) {
-        apiService = SelliscopeApplication.getRetrofitInstance(email, password, false)
-                .create(SelliscopeApiEndpointInterface.class);
+    void getThanas(int districtId) {
         Call<ResponseBody> call = apiService.getThanas(districtId);
         call.enqueue(new Callback<ResponseBody>() {
             @Override

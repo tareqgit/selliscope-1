@@ -10,7 +10,9 @@ import com.google.gson.Gson;
 import com.humaclab.selliscope.dbmodel.Target;
 import com.humaclab.selliscope.dbmodel.UserVisit;
 import com.humaclab.selliscope.model.DeliveryResponse;
+import com.humaclab.selliscope.model.District.District;
 import com.humaclab.selliscope.model.Outlets;
+import com.humaclab.selliscope.model.Thana.Thana;
 import com.humaclab.selliscope.model.VariantProduct.Brand;
 import com.humaclab.selliscope.model.VariantProduct.Category;
 import com.humaclab.selliscope.model.VariantProduct.ProductsItem;
@@ -41,6 +43,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String TABLE_DELIVERY = "delivery";
     private static final String TABLE_DELIVERY_PRODUCT = "delivery_product";
     private static final String TABLE_OUTLET = "outlet";
+    private static final String TABLE_THANA = "thana";
+    private static final String TABLE_DISTRICT = "district";
 
     // Target Table Columns names
     private static final String KEY_TARGET_ID = "targetId";
@@ -105,6 +109,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String KEY_OUTLET_LONGITUDE = "outlet_longitude";
     private static final String KEY_OUTLET_LATITUDE = "outlet_latitude";
     private static final String KEY_OUTLET_DUE = "outlet_due";
+
+    //Thana table column name
+    private static final String KEY_THANA_ID = "thana_id";
+    private static final String KEY_THANA_NAME = "name";
+
+    //District table column name
+    private static final String KEY_DISTRICT_ID = "district_id";
+    private static final String KEY_DISTRICT_NAME = "name";
 
 
     public DatabaseHandler(Context context) {
@@ -193,6 +205,15 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + KEY_OUTLET_LONGITUDE + " TEXT,"
                 + KEY_OUTLET_DUE + " TEXT"
                 + ")";
+        String CREATE_DISTRICT_TABLE = "CREATE TABLE " + TABLE_DISTRICT + "("
+                + KEY_DISTRICT_ID + " INTEGER  PRIMARY KEY,"
+                + KEY_DISTRICT_NAME + " TEXT"
+                + ")";
+        String CREATE_THANA_TABLE = "CREATE TABLE " + TABLE_THANA + "("
+                + KEY_THANA_ID + " INTEGER  PRIMARY KEY,"
+                + KEY_THANA_NAME + " TEXT,"
+                + KEY_DISTRICT_ID + " INTEGER"
+                + ")";
         db.execSQL(CREATE_TARGET_TABLE);
         db.execSQL(CREATE_TARGET_USER_VISITS);
         db.execSQL(CREATE_PRODUCT_TABLE);
@@ -203,6 +224,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL(CREATE_DELIVERY_TABLE);
         db.execSQL(CREATE_DELIVERY_PRODUCT_TABLE);
         db.execSQL(CREATE_OUTLET_TABLE);
+        db.execSQL(CREATE_THANA_TABLE);
+        db.execSQL(CREATE_DISTRICT_TABLE);
     }
 
     // Upgrading database
@@ -219,6 +242,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_DELIVERY);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_DELIVERY_PRODUCT);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_OUTLET);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_THANA);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_DISTRICT);
         // Create tables again
         onCreate(db);
     }
@@ -1006,6 +1031,83 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 new String[]{String.valueOf(-1)});
         db.close();
     }
+    //Product Variant
+
+    public void setDistrictAndThana(List<District> districtList, List<Thana> thanaList) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        try {
+            for (District district : districtList) {
+                values.put(KEY_DISTRICT_ID, district.getId());
+                values.put(KEY_DISTRICT_NAME, district.getName());
+                try {
+                    db.insert(TABLE_DISTRICT, null, values);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            values.clear();
+            for (Thana thana : thanaList) {
+                values.put(KEY_THANA_ID, thana.getId());
+                values.put(KEY_THANA_NAME, thana.getName());
+                values.put(KEY_DISTRICT_ID, thana.getDistrictId());
+                try {
+                    db.insert(TABLE_THANA, null, values);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        db.close();
+    }
+
+    public List<District> getDistrict() {
+        List<District> districtList = new ArrayList<>();
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "SELECT * FROM " + TABLE_DISTRICT;
+
+        Cursor cursor = db.rawQuery(query, null);
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                cursor.getColumnNames();
+                District district = new District();
+                district.setId(cursor.getInt(cursor.getColumnIndex(KEY_DISTRICT_ID)));
+                district.setName(cursor.getString(cursor.getColumnIndex(KEY_DISTRICT_NAME)));
+                districtList.add(district);
+
+            } while (cursor.moveToNext());
+        }
+        db.close();
+        return districtList;
+    }
+
+    public List<Thana> getThana(int districtId) {
+        List<Thana> thanaList = new ArrayList<>();
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "SELECT * FROM " + TABLE_THANA
+                + " WHERE " + KEY_DISTRICT_ID + "=" + districtId;
+
+        Cursor cursor = db.rawQuery(query, null);
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                cursor.getColumnNames();
+                Thana thana = new Thana();
+                thana.setId(cursor.getInt(cursor.getColumnIndex(KEY_THANA_ID)));
+                thana.setName(cursor.getString(cursor.getColumnIndex(KEY_THANA_NAME)));
+                thana.setDistrictId(cursor.getInt(cursor.getColumnIndex(KEY_DISTRICT_ID)));
+                thanaList.add(thana);
+
+            } while (cursor.moveToNext());
+        }
+        db.close();
+        return thanaList;
+    }
 
     public boolean removeAll() {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -1020,5 +1122,4 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.close();
         return true;
     }
-    //Product Variant
 }

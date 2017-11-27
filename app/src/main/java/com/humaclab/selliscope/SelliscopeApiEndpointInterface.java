@@ -6,12 +6,14 @@ import com.humaclab.selliscope.model.CategoryResponse;
 import com.humaclab.selliscope.model.CreateOutlet;
 import com.humaclab.selliscope.model.DeliverProductResponse;
 import com.humaclab.selliscope.model.DeliveryResponse;
+import com.humaclab.selliscope.model.District.DistrictResponse;
 import com.humaclab.selliscope.model.GodownRespons;
 import com.humaclab.selliscope.model.InspectionResponse;
 import com.humaclab.selliscope.model.OrderResponse;
 import com.humaclab.selliscope.model.Payment;
 import com.humaclab.selliscope.model.PaymentResponse;
 import com.humaclab.selliscope.model.SellsReturnResponse;
+import com.humaclab.selliscope.model.Thana.ThanaResponse;
 import com.humaclab.selliscope.model.UserLocation;
 import com.humaclab.selliscope.model.VariantProduct.VariantProductResponse;
 
@@ -66,10 +68,10 @@ public interface SelliscopeApiEndpointInterface {
     Call<ResponseBody> sendUserLocation(@Body UserLocation userLocation);
 
     @GET("district")
-    Call<ResponseBody> getDistricts();
+    Call<DistrictResponse> getDistricts();
 
     @GET("thana")
-    Call<ResponseBody> getThanas(@Query("district_id") int districtId);
+    Call<ThanaResponse> getThanas(@Query("district_id") int districtId);
 
     @GET("outlet/type")
     Call<ResponseBody> getOutletTypes();

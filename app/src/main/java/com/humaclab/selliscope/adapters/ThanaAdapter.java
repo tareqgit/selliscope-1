@@ -9,20 +9,20 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.humaclab.selliscope.R;
-import com.humaclab.selliscope.model.Thanas;
+import com.humaclab.selliscope.model.Thana.Thana;
 
 import java.util.List;
 
 /**
- * Created by dipu_ on 3/25/2017.
+ * Created by leon on 11/25/2017.
  */
 
-public class ThanaAdapter extends ArrayAdapter<Thanas.Successful.Thana> {
+public class ThanaAdapter extends ArrayAdapter<Thana> {
     LayoutInflater layoutInflater;
     private Activity activity;
-    private List<Thanas.Successful.Thana> thanas;
+    private List<Thana> thanas;
 
-    public ThanaAdapter(Activity activity, List<Thanas.Successful.Thana>
+    public ThanaAdapter(Activity activity, List<Thana>
             thanas) {
         super(activity, R.layout.spinner_item, thanas);
         layoutInflater = (LayoutInflater) activity
@@ -35,7 +35,7 @@ public class ThanaAdapter extends ArrayAdapter<Thanas.Successful.Thana> {
         return thanas.size();
     }
 
-    public Thanas.Successful.Thana getItem(int position) {
+    public Thana getItem(int position) {
         return thanas.get(position);
     }
 
@@ -49,18 +49,15 @@ public class ThanaAdapter extends ArrayAdapter<Thanas.Successful.Thana> {
     }
 
     @Override
-    public View getDropDownView(int position, View convertView,
-                                ViewGroup parent) {
+    public View getDropDownView(int position, View convertView, ViewGroup parent) {
         return getCustomView(position, convertView, parent);
     }
 
     public View getCustomView(int position, View convertView, ViewGroup parent) {
-
-        View row = layoutInflater
-                .inflate(R.layout.spinner_item, parent, false);
-        TextView label = (TextView) row.findViewById(R.id.tv_spinner_item_name);
+        View row = layoutInflater.inflate(R.layout.spinner_item, parent, false);
+        TextView label = row.findViewById(R.id.tv_spinner_item_name);
         label.setTextColor(Color.BLACK);
-        label.setText(thanas.get(position).thanaName);
+        label.setText(thanas.get(position).getName());
         return row;
     }
 }

@@ -7,9 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.location.Location;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -25,24 +23,26 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.android.gms.awareness.Awareness;
-import com.google.android.gms.awareness.snapshot.LocationResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.location.LocationServices;
 import com.google.gson.Gson;
 import com.humaclab.selliscope.Utils.NetworkUtility;
+import com.humaclab.selliscope.Utils.SendUserLocationData;
 import com.humaclab.selliscope.Utils.SessionManager;
 import com.humaclab.selliscope.adapters.DistrictAdapter;
 import com.humaclab.selliscope.adapters.OutletTypeAdapter;
 import com.humaclab.selliscope.adapters.ThanaAdapter;
 import com.humaclab.selliscope.model.CreateOutlet;
-import com.humaclab.selliscope.model.Districts;
+import com.humaclab.selliscope.model.District.District;
+import com.humaclab.selliscope.model.District.DistrictResponse;
 import com.humaclab.selliscope.model.Login;
 import com.humaclab.selliscope.model.OutletTypes;
-import com.humaclab.selliscope.model.Thanas;
+import com.humaclab.selliscope.model.Thana.Thana;
+import com.humaclab.selliscope.model.Thana.ThanaResponse;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.List;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -56,7 +56,7 @@ public class AddOutletActivity extends AppCompatActivity {
     boolean isValidOwnerName = true;
     boolean isValidAddress = true;
     boolean isValidPhone = true;
-    double latitude, longitude = 0.0;
+    double mLatitude = 0.0, mLongitude = 0.0;
     int outletTypeId, thanaId = -1;
     private SelliscopeApiEndpointInterface apiService;
     private SessionManager sessionManager;
@@ -128,9 +128,8 @@ public class AddOutletActivity extends AppCompatActivity {
         district.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Districts.Successful.District district =
-                        (Districts.Successful.District) parent.getItemAtPosition(position);
-                getThanas(district.districtId);
+                District district = (District) parent.getItemAtPosition(position);
+                getThanas(district.getId());
             }
 
             @Override
@@ -141,9 +140,8 @@ public class AddOutletActivity extends AppCompatActivity {
         thana.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Thanas.Successful.Thana thana =
-                        (Thanas.Successful.Thana) parent.getItemAtPosition(position);
-                thanaId = thana.thanaId;
+                Thana thana = (Thana) parent.getItemAtPosition(position);
+                thanaId = thana.getId();
             }
 
             @Override
@@ -201,25 +199,30 @@ public class AddOutletActivity extends AppCompatActivity {
                 Timber.d("Valid Outle Name" + isValidOutletName);
                 Timber.d("valid owner naem" + isValidOwnerName);
                 Timber.d("Valid phone" + isValidPhone);
-                Timber.d("Latitude" + latitude);
-                Timber.d("Long" + longitude);
+                Timber.d("Latitude" + mLatitude);
+                Timber.d("Long" + mLongitude);
                 Timber.d("Type id" + outletTypeId);
                 Timber.d("Thana id" + thanaId);
 
                 if (isValidAddress && isValidOutletName && isValidOwnerName
-                        && isValidPhone && latitude != 0.0 && longitude != 0.0
+                        && isValidPhone && mLatitude != 0.0 && mLongitude != 0.0
                         && outletTypeId != -1 && thanaId != -1) {
                     Timber.d("addOutletRun");
                     if (NetworkUtility.isNetworkAvailable(AddOutletActivity.this)) {
-                        addOutlet(outletTypeId, outletName.getText().toString().trim(),
+                        addOutlet(
+                                outletTypeId, outletName.getText().toString().trim(),
                                 outletOwner.getText().toString().trim(),
-                                outletAddress.getText().toString().trim(), thanaId,
-                                outletContactNumber.getText().toString().trim(), latitude, longitude);
+                                outletAddress.getText().toString().trim(),
+                                thanaId,
+                                outletContactNumber.getText().toString().trim(),
+                                mLatitude,
+                                mLongitude
+                        );
                     } else
-                        Toast.makeText(AddOutletActivity.this, "Connect to Wifi or Mobile Data",
-                                Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AddOutletActivity.this, "Connect to Wifi or Mobile Data", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(AddOutletActivity.this, "Could not found any location yet.\nPlease try again.", Toast.LENGTH_SHORT).show();
                 }
-
             }
         });
     }
@@ -266,44 +269,36 @@ public class AddOutletActivity extends AppCompatActivity {
     }
 
     void getDistricts() {
-        Call<ResponseBody> call = apiService.getDistricts();
-        call.enqueue(new Callback<ResponseBody>() {
+        Call<DistrictResponse> call = apiService.getDistricts();
+        call.enqueue(new Callback<DistrictResponse>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onResponse(Call<DistrictResponse> call, Response<DistrictResponse> response) {
                 Gson gson = new Gson();
                 Timber.d("Response " + response.code() + " " + response.body().toString());
                 if (response.code() == 200) {
                     try {
-                        Districts.Successful districtListSuccessful
-                                = gson.fromJson(response.body().string()
-                                , Districts.Successful.class);
-                        districtAdapter = new DistrictAdapter(AddOutletActivity.this,
-                                districtListSuccessful.districtResult.districts);
+                        List<District> districtList = response.body().getResult().getDistrict();
+                        districtAdapter = new DistrictAdapter(AddOutletActivity.this, districtList);
                         district.setAdapter(districtAdapter);
-                    } catch (IOException e) {
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                 } else if (response.code() == 401) {
                     try {
-                        Login.Unsuccessful loginUnsuccessful = gson
-                                .fromJson(response.errorBody().string()
-                                        , Login.Unsuccessful.class);
-                        Toast.makeText(AddOutletActivity.this,
-                                loginUnsuccessful.result, Toast.LENGTH_SHORT).show();
+                        Login.Unsuccessful loginUnsuccessful = gson.fromJson(response.errorBody().string(), Login.Unsuccessful.class);
+                        Toast.makeText(AddOutletActivity.this, loginUnsuccessful.result, Toast.LENGTH_SHORT).show();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                 } else {
-                    Toast.makeText(AddOutletActivity.this,
-                            "Server Error! Try Again Later!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddOutletActivity.this, "Server Error! Try Again Later!", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            public void onFailure(Call<DistrictResponse> call, Throwable t) {
                 //Toast.makeText(LoginActivity.this, t.toString(), Toast.LENGTH_SHORT).show();
                 Log.d("Response", t.toString());
-
             }
         });
     }
@@ -332,7 +327,7 @@ public class AddOutletActivity extends AppCompatActivity {
                                 , Login.Unsuccessful.class);
                         Toast.makeText(AddOutletActivity.this,
                                 loginUnsuccessful.result, Toast.LENGTH_SHORT).show();
-                    } catch (IOException e) {
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                 } else {
@@ -351,21 +346,18 @@ public class AddOutletActivity extends AppCompatActivity {
     }
 
     void getThanas(int districtId) {
-        Call<ResponseBody> call = apiService.getThanas(districtId);
-        call.enqueue(new Callback<ResponseBody>() {
+        Call<ThanaResponse> call = apiService.getThanas(districtId);
+        call.enqueue(new Callback<ThanaResponse>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onResponse(Call<ThanaResponse> call, Response<ThanaResponse> response) {
                 Gson gson = new Gson();
                 Timber.d("Response " + response.code() + " " + response.body().toString());
                 if (response.code() == 200) {
                     try {
-                        Thanas.Successful thanaListSuccessful
-                                = gson.fromJson(response.body().string()
-                                , Thanas.Successful.class);
-                        thanaAdapter = new ThanaAdapter(AddOutletActivity.this,
-                                thanaListSuccessful.thanaResult.thanas);
+                        List<Thana> thanaList = response.body().getResult().getThana();
+                        thanaAdapter = new ThanaAdapter(AddOutletActivity.this, thanaList);
                         thana.setAdapter(thanaAdapter);
-                    } catch (IOException e) {
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                 } else if (response.code() == 401) {
@@ -375,7 +367,7 @@ public class AddOutletActivity extends AppCompatActivity {
                                         , Login.Unsuccessful.class);
                         Toast.makeText(AddOutletActivity.this,
                                 loginUnsuccessful.result, Toast.LENGTH_SHORT).show();
-                    } catch (IOException e) {
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                 } else {
@@ -385,7 +377,7 @@ public class AddOutletActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            public void onFailure(Call<ThanaResponse> call, Throwable t) {
                 //Toast.makeText(LoginActivity.this, t.toString(), Toast.LENGTH_SHORT).show();
                 Log.d("Response", t.toString());
 
@@ -394,23 +386,14 @@ public class AddOutletActivity extends AppCompatActivity {
     }
 
     public void getLocation() {
-        if (checkPermission(AddOutletActivity.this)) {
-            Awareness.SnapshotApi.getLocation(googleApiClient)
-                    .setResultCallback(new ResultCallback<LocationResult>() {
-                        @Override
-                        public void onResult(@NonNull LocationResult locationResult) {
-                            if (locationResult.getStatus().isSuccess()) {
-                                Location location = locationResult.getLocation();
-                                latitude = Double.parseDouble(String.format("%.05f", location.getLatitude()));
-                                longitude = Double.parseDouble(String.format("%.05f", location.getLongitude()));
-                            } else {
-                                Timber.d("Didn't get Location Data");
-                            }
-                        }
-                    });
-        } else {
-            Timber.d("Location Permission is not enabled.");
-        }
+        SendUserLocationData sendUserLocationData = new SendUserLocationData(AddOutletActivity.this);
+        sendUserLocationData.getInstantLocation(this, new SendUserLocationData.OnGetLocation() {
+            @Override
+            public void getLocation(Double latitude, Double longitude) {
+                mLatitude = latitude;
+                mLongitude = longitude;
+            }
+        });
     }
 
     @Override

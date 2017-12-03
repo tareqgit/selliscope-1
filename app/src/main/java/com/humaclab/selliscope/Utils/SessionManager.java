@@ -1,7 +1,7 @@
 package com.humaclab.selliscope.Utils;
 
 /**
- * Created by Miaki on 3/22/17.
+ * Created by leon on 8/22/17.
  */
 
 import android.content.Context;
@@ -17,12 +17,12 @@ import java.util.HashMap;
 
 
 public class SessionManager {
-    public static final String KEY_USER_NAME = "userName";
-    public static final String KEY_USER_EMAIL = "email";
-    public static final String KEY_USER_PASSWORD = "password";
-    public static final String KEY_CLIENT_ID = "client_id";
-    public static final String KEY_USER_PROFILE_PIC_URL = "profilePictureUrl";
-    public static final String KEY_FCM_TOKEN = "fcmToken";
+    private static final String KEY_USER_NAME = "userName";
+    private static final String KEY_USER_EMAIL = "email";
+    private static final String KEY_USER_PASSWORD = "password";
+    private static final String KEY_CLIENT_ID = "client_id";
+    private static final String KEY_USER_PROFILE_PIC_URL = "profilePictureUrl";
+    private static final String KEY_FCM_TOKEN = "fcmToken";
 
     // Sharedpref file name
     private static final String PREF_NAME = "SelliscopePref";

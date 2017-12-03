@@ -23,8 +23,8 @@ public class CheckAppUpdated {
                 .showAppUpdated(true)//need to be removed
                 .setTitleOnUpdateAvailable("Update available")
                 .setContentOnUpdateAvailable("Check out the latest version available on play store")
-//                .setTitleOnUpdateNotAvailable("Update not available")
-//                .setContentOnUpdateNotAvailable("No update available. Check for updates again later!")
+                .setTitleOnUpdateNotAvailable("Latest Update")
+                .setContentOnUpdateNotAvailable("You have the latest update.")
                 .setButtonUpdate("Update now?")
                 .setButtonUpdateClickListener(new DialogInterface.OnClickListener() {
                     @Override

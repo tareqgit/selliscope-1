@@ -11,6 +11,7 @@ import com.humaclab.selliscope.dbmodel.Target;
 import com.humaclab.selliscope.dbmodel.UserVisit;
 import com.humaclab.selliscope.model.DeliveryResponse;
 import com.humaclab.selliscope.model.District.District;
+import com.humaclab.selliscope.model.OutletType.OutletType;
 import com.humaclab.selliscope.model.Outlets;
 import com.humaclab.selliscope.model.Thana.Thana;
 import com.humaclab.selliscope.model.VariantProduct.Brand;
@@ -26,11 +27,11 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by Leon on 8/20/2017.
+ * Created by leon on 8/20/2017.
  */
 
 public class DatabaseHandler extends SQLiteOpenHelper {
-    private static final int DATABASE_VERSION = 5;
+    private static final int DATABASE_VERSION = 6;
 
     // Database Tables
     private static final String TABLE_TARGET = "targets";
@@ -45,6 +46,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String TABLE_OUTLET = "outlet";
     private static final String TABLE_THANA = "thana";
     private static final String TABLE_DISTRICT = "district";
+    private static final String TABLE_OUTLET_TYPE = "outlet_type";
 
     // Target Table Columns names
     private static final String KEY_TARGET_ID = "targetId";
@@ -118,10 +120,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String KEY_DISTRICT_ID = "district_id";
     private static final String KEY_DISTRICT_NAME = "name";
 
+    //Outlet type table column name
+    private static final String KEY_TYPE_ID = "id";
+    private static final String KEY_TYPE_NAME = "type";
 
     public DatabaseHandler(Context context) {
         super(context, Constants.databaseName, null, DATABASE_VERSION);
     }
+
 
     // Creating Tables
     @Override
@@ -214,6 +220,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + KEY_THANA_NAME + " TEXT,"
                 + KEY_DISTRICT_ID + " INTEGER"
                 + ")";
+        String CREATE_OUTELT_TYPE_TABLE = "CREATE TABLE " + TABLE_OUTLET_TYPE + "("
+                + KEY_TYPE_ID + " INTEGER  PRIMARY KEY,"
+                + KEY_TYPE_NAME + " TEXT"
+                + ")";
         db.execSQL(CREATE_TARGET_TABLE);
         db.execSQL(CREATE_TARGET_USER_VISITS);
         db.execSQL(CREATE_PRODUCT_TABLE);
@@ -226,6 +236,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL(CREATE_OUTLET_TABLE);
         db.execSQL(CREATE_THANA_TABLE);
         db.execSQL(CREATE_DISTRICT_TABLE);
+        db.execSQL(CREATE_OUTELT_TYPE_TABLE);
     }
 
     // Upgrading database
@@ -244,6 +255,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_OUTLET);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_THANA);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_DISTRICT);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_OUTLET_TYPE);
         // Create tables again
         onCreate(db);
     }
@@ -1107,6 +1119,46 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         }
         db.close();
         return thanaList;
+    }
+
+    public void setOuletType(List<OutletType> outletTypeList) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        try {
+            for (OutletType outletType : outletTypeList) {
+                values.put(KEY_TYPE_ID, outletType.getId());
+                values.put(KEY_TYPE_NAME, outletType.getName());
+                try {
+                    db.insert(TABLE_THANA, null, values);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        db.close();
+    }
+
+    public List<OutletType> getOutletType() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "SELECT * FROM " + TABLE_OUTLET_TYPE;
+        List<OutletType> outletTypeList = new ArrayList<>();
+
+        Cursor cursor = db.rawQuery(query, null);
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                cursor.getColumnNames();
+                OutletType outletType = new OutletType();
+                outletType.setId(cursor.getInt(cursor.getColumnIndex(KEY_TYPE_ID)));
+                outletType.setName(cursor.getString(cursor.getColumnIndex(KEY_TYPE_NAME)));
+                outletTypeList.add(outletType);
+            } while (cursor.moveToNext());
+        }
+        db.close();
+        return outletTypeList;
     }
 
     public boolean removeAll() {

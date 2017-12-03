@@ -20,6 +20,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
+import com.humaclab.selliscope.Utils.DatabaseHandler;
 import com.humaclab.selliscope.Utils.NetworkUtility;
 import com.humaclab.selliscope.Utils.SessionManager;
 import com.humaclab.selliscope.adapters.DistrictAdapter;
@@ -27,12 +28,9 @@ import com.humaclab.selliscope.adapters.OutletTypeAdapter;
 import com.humaclab.selliscope.adapters.ThanaAdapter;
 import com.humaclab.selliscope.model.CreateOutlet;
 import com.humaclab.selliscope.model.District.District;
-import com.humaclab.selliscope.model.District.DistrictResponse;
-import com.humaclab.selliscope.model.Login;
-import com.humaclab.selliscope.model.OutletTypes;
+import com.humaclab.selliscope.model.OutletType.OutletType;
 import com.humaclab.selliscope.model.Outlets;
 import com.humaclab.selliscope.model.Thana.Thana;
-import com.humaclab.selliscope.model.Thana.ThanaResponse;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -62,68 +60,48 @@ public class EditOutletActivity extends AppCompatActivity {
     private DistrictAdapter districtAdapter;
     private SelliscopeApiEndpointInterface apiService;
     private SessionManager sessionManager;
-    //    private GoogleApiClient googleApiClient;
     private String outletImage;
     private ProgressDialog pd;
+    private DatabaseHandler databaseHandler;
 
     private Outlets.Successful.Outlet outlet;
-
-    /*public static boolean checkPermission(final Context context) {
-        return ActivityCompat.checkSelfPermission(context,
-                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
-    }*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_outlet);
 
-        /*googleApiClient = new GoogleApiClient.Builder(EditOutletActivity.this)
-                .addApi(Awareness.API)
-                .build();
-        googleApiClient.connect();
-        googleApiClient.registerConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
-            @Override
-            public void onConnected(@Nullable Bundle bundle) {
-                getLocation();
-            }
-
-            @Override
-            public void onConnectionSuspended(int i) {
-
-            }
-        });*/
-
+        databaseHandler = new DatabaseHandler(this);
         pd = new ProgressDialog(this);
         outlet = (Outlets.Successful.Outlet) getIntent().getSerializableExtra("outletDetails");
 
         sessionManager = new SessionManager(this);
         email = sessionManager.getUserEmail();
         password = sessionManager.getUserPassword();
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("Add Outlet");
         setSupportActionBar(toolbar);
-        outletName = (EditText) findViewById(R.id.et_outlet_name);
+        outletName = findViewById(R.id.et_outlet_name);
         outletName.setText(outlet.outletName);
 
-        outletAddress = (EditText) findViewById(R.id.et_outlet_address);
+        outletAddress = findViewById(R.id.et_outlet_address);
         outletAddress.setText(outlet.outletAddress);
 
-        outletOwner = (EditText) findViewById(R.id.et_outlet_owner_name);
+        outletOwner = findViewById(R.id.et_outlet_owner_name);
         outletOwner.setText(outlet.ownerName);
 
-        outletContactNumber = (EditText) findViewById(R.id.et_outlet_contact_number);
+        outletContactNumber = findViewById(R.id.et_outlet_contact_number);
         outletContactNumber.setText(outlet.phone);
 
-        district = (Spinner) findViewById(R.id.sp_district);
-        thana = (Spinner) findViewById(R.id.sp_thana);
-        outletType = (Spinner) findViewById(R.id.sp_outlet_type);
-        submit = (Button) findViewById(R.id.btn_update_outlet);
-        cancel = (Button) findViewById(R.id.btn_cancel);
-        getDistricts(email, password);
-        getOutletTypes(email, password);
+        district = findViewById(R.id.sp_district);
+        thana = findViewById(R.id.sp_thana);
+        outletType = findViewById(R.id.sp_outlet_type);
+        submit = findViewById(R.id.btn_update_outlet);
+        cancel = findViewById(R.id.btn_cancel);
+        getDistricts();
+        getOutletTypes();
 
-        iv_outlet = (ImageView) findViewById(R.id.iv_outlet);
+        iv_outlet = findViewById(R.id.iv_outlet);
         Glide.with(getApplicationContext()).load(outlet.outletImgUrl)
                 .thumbnail(0.5f)
                 .crossFade()
@@ -143,7 +121,7 @@ public class EditOutletActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 District district = (District) parent.getItemAtPosition(position);
-                getThanas(email, password, district.getId());
+                getThanas(district.getId());
             }
 
             @Override
@@ -166,9 +144,8 @@ public class EditOutletActivity extends AppCompatActivity {
         outletType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                OutletTypes.Successful.OutletType outletType =
-                        (OutletTypes.Successful.OutletType) parent.getItemAtPosition(position);
-                outletTypeId = outletType.outletTypeId;
+                OutletType outletType = (OutletType) parent.getItemAtPosition(position);
+                outletTypeId = outletType.getId();
             }
 
             @Override
@@ -282,162 +259,49 @@ public class EditOutletActivity extends AppCompatActivity {
         });
     }
 
-    void getDistricts(String email, String password) {
-        apiService = SelliscopeApplication.getRetrofitInstance(email, password, false)
-                .create(SelliscopeApiEndpointInterface.class);
-        Call<DistrictResponse> call = apiService.getDistricts();
-        call.enqueue(new Callback<DistrictResponse>() {
-            @Override
-            public void onResponse(Call<DistrictResponse> call, Response<DistrictResponse> response) {
-                Gson gson = new Gson();
-                Timber.d("Response " + response.code() + " " + response.body().toString());
-                if (response.code() == 200) {
-                    try {
-                        List<District> districtList = response.body().getResult().getDistrict();
-                        districtAdapter = new DistrictAdapter(EditOutletActivity.this, districtList);
-                        district.setAdapter(districtAdapter);
+    void getDistricts() {
+        List<District> districtList = databaseHandler.getDistrict();
+        districtAdapter = new DistrictAdapter(EditOutletActivity.this, districtList);
+        district.setAdapter(districtAdapter);
 
-                        //For selecting previous district from server
-                        int position = 0;
-                        for (int i = 0; i < districtList.size(); i++) {
-                            if (districtList.get(i).getName().equals(outlet.district))
-                                position = i;
-                        }
-                        district.setSelection(position);
-                        //For selecting previous district
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                } else if (response.code() == 401) {
-                    try {
-                        Login.Unsuccessful loginUnsuccessful = gson.fromJson(response.errorBody().string(), Login.Unsuccessful.class);
-                        Toast.makeText(EditOutletActivity.this, loginUnsuccessful.result, Toast.LENGTH_SHORT).show();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                } else {
-                    Toast.makeText(EditOutletActivity.this,
-                            "Server Error! Try Again Later!", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<DistrictResponse> call, Throwable t) {
-                Log.d("Response", t.toString());
-
-            }
-        });
-    }
-
-    void getThanas(String email, String password, int districtId) {
-        apiService = SelliscopeApplication.getRetrofitInstance(email, password, false)
-                .create(SelliscopeApiEndpointInterface.class);
-        Call<ThanaResponse> call = apiService.getThanas(districtId);
-        call.enqueue(new Callback<ThanaResponse>() {
-            @Override
-            public void onResponse(Call<ThanaResponse> call, Response<ThanaResponse> response) {
-                Gson gson = new Gson();
-                Timber.d("Response " + response.code() + " " + response.body().toString());
-                if (response.code() == 200) {
-                    try {
-                        List<Thana> thanaList = response.body().getResult().getThana();
-                        thanaAdapter = new ThanaAdapter(EditOutletActivity.this, thanaList);
-                        thana.setAdapter(thanaAdapter);
-
-                        //For selecting previous thana
-                        int position = 0;
-                        for (int i = 0; i < thanaList.size(); i++) {
-                            if (thanaList.get(i).getName().equals(outlet.thana))
-                                position = i;
-                        }
-                        thana.setSelection(position);
-                        //For selecting previous thana
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                } else if (response.code() == 401) {
-                    try {
-                        Login.Unsuccessful loginUnsuccessful = gson.fromJson(response.errorBody().string(), Login.Unsuccessful.class);
-                        Toast.makeText(EditOutletActivity.this, loginUnsuccessful.result, Toast.LENGTH_SHORT).show();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                } else {
-                    Toast.makeText(EditOutletActivity.this, "Server Error! Try Again Later!", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ThanaResponse> call, Throwable t) {
-                Log.d("Response", t.toString());
-
-            }
-        });
-    }
-
-    void getOutletTypes(String email, String password) {
-        apiService = SelliscopeApplication.getRetrofitInstance(email, password, false)
-                .create(SelliscopeApiEndpointInterface.class);
-        Call<ResponseBody> call = apiService.getOutletTypes();
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                Gson gson = new Gson();
-                Timber.d("Response " + response.code() + " " + response.body().toString());
-                if (response.code() == 200) {
-                    try {
-                        OutletTypes.Successful outletTypeListSuccessful
-                                = gson.fromJson(response.body().string()
-                                , OutletTypes.Successful.class);
-                        outletTypeAdapter = new OutletTypeAdapter(EditOutletActivity.this,
-                                outletTypeListSuccessful.outletTypeResult.outletTypes);
-                        outletType.setAdapter(outletTypeAdapter);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                } else if (response.code() == 401) {
-                    try {
-                        Login.Unsuccessful loginUnsuccessful = gson.fromJson(response.errorBody().string()
-                                , Login.Unsuccessful.class);
-                        Toast.makeText(EditOutletActivity.this,
-                                loginUnsuccessful.result, Toast.LENGTH_SHORT).show();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                } else {
-                    Toast.makeText(EditOutletActivity.this,
-                            "Server Error! Try Again Later!", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                //Toast.makeText(LoginActivity.this, t.toString(), Toast.LENGTH_SHORT).show();
-                Log.d("Response", t.toString());
-
-            }
-        });
-    }
-
-    /*public void getLocation() {
-        if (checkPermission(EditOutletActivity.this)) {
-            Awareness.SnapshotApi.getLocation(googleApiClient)
-                    .setResultCallback(new ResultCallback<LocationResult>() {
-                        @Override
-                        public void onResult(@NonNull LocationResult locationResult) {
-                            if (locationResult.getStatus().isSuccess()) {
-                                Location location = locationResult.getLocation();
-                                latitude = location.getLatitude();
-                                longitude = location.getLongitude();
-                            } else {
-                                Timber.d("Didn't get Location Data");
-                            }
-                        }
-                    });
-        } else {
-            Timber.d("Location Permission is not enabled.");
+        //For selecting previous district from server
+        int position = 0;
+        for (int i = 0; i < districtList.size(); i++) {
+            if (districtList.get(i).getName().equals(outlet.district))
+                position = i;
         }
-    }*/
+        district.setSelection(position);
+        //For selecting previous district
+    }
+
+    void getThanas(int districtId) {
+        List<Thana> thanaList = databaseHandler.getThana(districtId);
+        thanaAdapter = new ThanaAdapter(EditOutletActivity.this, thanaList);
+        thana.setAdapter(thanaAdapter);
+
+        //For selecting previous thana
+        int position = 0;
+        for (int i = 0; i < thanaList.size(); i++) {
+            if (thanaList.get(i).getName().equals(outlet.thana))
+                position = i;
+        }
+        thana.setSelection(position);
+        //For selecting previous thana
+    }
+
+    void getOutletTypes() {
+        List<OutletType> outletTypeList = databaseHandler.getOutletType();
+        outletTypeAdapter = new OutletTypeAdapter(EditOutletActivity.this, outletTypeList);
+        outletType.setAdapter(outletTypeAdapter);
+        //For selecting previous outlet type
+        int position = 0;
+        for (int i = 0; i < outletTypeList.size(); i++) {
+            if (outletTypeList.get(i).getName().equals(outlet.outletType))
+                position = i;
+        }
+        thana.setSelection(position);
+        //For selecting previous outlet type
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -453,7 +317,6 @@ public class EditOutletActivity extends AppCompatActivity {
 
     @Override
     public void onDestroy() {
-//        googleApiClient.disconnect();
         super.onDestroy();
     }
 }

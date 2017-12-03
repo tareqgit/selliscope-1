@@ -9,34 +9,34 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.humaclab.selliscope.R;
-import com.humaclab.selliscope.model.OutletTypes;
+import com.humaclab.selliscope.model.OutletType.OutletType;
 
 import java.util.List;
 
 /**
- * Created by dipu_ on 3/25/2017.
+ * Created by leon on 3/25/2017.
  */
 
-public class OutletTypeAdapter extends ArrayAdapter<OutletTypes.Successful.OutletType> {
+public class OutletTypeAdapter extends ArrayAdapter<OutletType> {
     LayoutInflater layoutInflater;
     private Activity activity;
-    private List<OutletTypes.Successful.OutletType> outletTypes;
+    private List<OutletType> outletTypeList;
 
-    public OutletTypeAdapter(Activity activity, List<OutletTypes.Successful.OutletType>
-            outletTypes) {
-        super(activity, R.layout.spinner_item, outletTypes);
+    public OutletTypeAdapter(Activity activity, List<OutletType>
+            outletTypeList) {
+        super(activity, R.layout.spinner_item, outletTypeList);
         layoutInflater = (LayoutInflater) activity
                 .getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
         this.activity = activity;
-        this.outletTypes = outletTypes;
+        this.outletTypeList = outletTypeList;
     }
 
     public int getCount() {
-        return outletTypes.size();
+        return outletTypeList.size();
     }
 
-    public OutletTypes.Successful.OutletType getItem(int position) {
-        return outletTypes.get(position);
+    public OutletType getItem(int position) {
+        return outletTypeList.get(position);
     }
 
     public long getItemId(int position) {
@@ -58,9 +58,9 @@ public class OutletTypeAdapter extends ArrayAdapter<OutletTypes.Successful.Outle
 
         View row = layoutInflater
                 .inflate(R.layout.spinner_item, parent, false);
-        TextView label = (TextView) row.findViewById(R.id.tv_spinner_item_name);
+        TextView label = row.findViewById(R.id.tv_spinner_item_name);
         label.setTextColor(Color.BLACK);
-        label.setText(outletTypes.get(position).outletTypeName);
+        label.setText(outletTypeList.get(position).getName());
         return row;
     }
 }

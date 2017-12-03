@@ -1045,36 +1045,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
     //Product Variant
 
-    public void setDistrictAndThana(List<District> districtList, List<Thana> thanaList) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        try {
-            for (District district : districtList) {
-                values.put(KEY_DISTRICT_ID, district.getId());
-                values.put(KEY_DISTRICT_NAME, district.getName());
-                try {
-                    db.insert(TABLE_DISTRICT, null, values);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-            values.clear();
-            for (Thana thana : thanaList) {
-                values.put(KEY_THANA_ID, thana.getId());
-                values.put(KEY_THANA_NAME, thana.getName());
-                values.put(KEY_DISTRICT_ID, thana.getDistrictId());
-                try {
-                    db.insert(TABLE_THANA, null, values);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        db.close();
-    }
-
     public List<District> getDistrict() {
         List<District> districtList = new ArrayList<>();
         SQLiteDatabase db = this.getWritableDatabase();
@@ -1095,6 +1065,25 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         }
         db.close();
         return districtList;
+    }
+
+    public void setDistrict(List<District> districtList) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        try {
+            for (District district : districtList) {
+                values.put(KEY_DISTRICT_ID, district.getId());
+                values.put(KEY_DISTRICT_NAME, district.getName());
+                try {
+                    db.insert(TABLE_DISTRICT, null, values);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        db.close();
     }
 
     public List<Thana> getThana(int districtId) {
@@ -1121,13 +1110,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return thanaList;
     }
 
-    public void setOuletType(List<OutletType> outletTypeList) {
+    public void setThana(List<Thana> thanaList) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         try {
-            for (OutletType outletType : outletTypeList) {
-                values.put(KEY_TYPE_ID, outletType.getId());
-                values.put(KEY_TYPE_NAME, outletType.getName());
+            for (Thana thana : thanaList) {
+                values.put(KEY_THANA_ID, thana.getId());
+                values.put(KEY_THANA_NAME, thana.getName());
+                values.put(KEY_DISTRICT_ID, thana.getDistrictId());
                 try {
                     db.insert(TABLE_THANA, null, values);
                 } catch (Exception e) {
@@ -1159,6 +1149,25 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         }
         db.close();
         return outletTypeList;
+    }
+
+    public void setOutletType(List<OutletType> outletTypeList) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        try {
+            for (OutletType outletType : outletTypeList) {
+                values.put(KEY_TYPE_ID, outletType.getId());
+                values.put(KEY_TYPE_NAME, outletType.getName());
+                try {
+                    db.insert(TABLE_OUTLET_TYPE, null, values);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        db.close();
     }
 
     public boolean removeAll() {

@@ -10,6 +10,7 @@ import com.humaclab.selliscope.model.District.DistrictResponse;
 import com.humaclab.selliscope.model.GodownRespons;
 import com.humaclab.selliscope.model.InspectionResponse;
 import com.humaclab.selliscope.model.OrderResponse;
+import com.humaclab.selliscope.model.OutletType.OutletTypeResponse;
 import com.humaclab.selliscope.model.Payment;
 import com.humaclab.selliscope.model.PaymentResponse;
 import com.humaclab.selliscope.model.SellsReturnResponse;
@@ -71,10 +72,10 @@ public interface SelliscopeApiEndpointInterface {
     Call<DistrictResponse> getDistricts();
 
     @GET("thana")
-    Call<ThanaResponse> getThanas(@Query("district_id") int districtId);
+    Call<ThanaResponse> getThanas();
 
     @GET("outlet/type")
-    Call<ResponseBody> getOutletTypes();
+    Call<OutletTypeResponse> getOutletTypes();
 
     @GET("visit")
     Call<ResponseBody> getVisits();

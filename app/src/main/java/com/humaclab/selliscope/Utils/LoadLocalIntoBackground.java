@@ -43,13 +43,16 @@ public class LoadLocalIntoBackground {
     }
 
     public void loadAll() {
-        this.loadProduct();
-        this.loadCategory();
-        this.loadBrand();
-        this.loadOutlet();
-        this.loadOutletType();
-        this.loadDistrict();
-        this.loadThana();
+        if (!sessionManager.isAllDataLoaded()) {
+            this.loadProduct();
+            this.loadCategory();
+            this.loadBrand();
+            this.loadOutlet();
+            this.loadOutletType();
+            this.loadDistrict();
+            this.loadThana();
+            sessionManager.setAllDataLoaded();
+        }
     }
 
     public void loadProduct() {

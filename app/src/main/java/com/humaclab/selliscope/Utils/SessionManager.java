@@ -1,9 +1,5 @@
 package com.humaclab.selliscope.Utils;
 
-/**
- * Created by leon on 8/22/17.
- */
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -15,20 +11,25 @@ import com.humaclab.selliscope.LoginActivity;
 
 import java.util.HashMap;
 
+/**
+ * Created by leon on 8/22/17.
+ */
+
 
 public class SessionManager {
+    // Sharedpref file name
+    private static final String PREF_NAME = "SelliscopePref";
+
+    // All Shared Preferences Keys
     private static final String KEY_USER_NAME = "userName";
     private static final String KEY_USER_EMAIL = "email";
     private static final String KEY_USER_PASSWORD = "password";
     private static final String KEY_CLIENT_ID = "client_id";
     private static final String KEY_USER_PROFILE_PIC_URL = "profilePictureUrl";
     private static final String KEY_FCM_TOKEN = "fcmToken";
-
-    // Sharedpref file name
-    private static final String PREF_NAME = "SelliscopePref";
-
-    // All Shared Preferences Keys
     private static final String IS_LOGGED_IN = "IsLoggedIn";
+    private static final String IS_ALL_DATA_LOADADE = "IsAllDataLoaded";
+
     // Shared Preferences
     private SharedPreferences pref;
     // Editor for Shared preferences
@@ -124,5 +125,14 @@ public class SessionManager {
 
     public void setFcmToken(String fcmToken) {
         editor.putString(KEY_FCM_TOKEN, fcmToken);
+    }
+
+    public void setAllDataLoaded() {
+        editor.putBoolean(IS_ALL_DATA_LOADADE, true);
+        editor.commit();
+    }
+
+    public boolean isAllDataLoaded() {
+        return pref.getBoolean(IS_ALL_DATA_LOADADE, false);
     }
 }

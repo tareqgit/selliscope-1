@@ -1,8 +1,12 @@
 package com.humaclab.selliscope;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -14,6 +18,7 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.humaclab.selliscope.Utils.NetworkUtility;
 import com.humaclab.selliscope.Utils.SessionManager;
+import com.humaclab.selliscope.model.IMEIandVerison;
 import com.humaclab.selliscope.model.Login;
 
 import java.io.IOException;
@@ -25,12 +30,12 @@ import retrofit2.Response;
 import timber.log.Timber;
 
 public class LoginActivity extends AppCompatActivity {
-    TextView forgotPassword;
-    EditText email, password;
-    Button signIn;
-    SelliscopeApiEndpointInterface apiService;
-    SessionManager sessionManager;
-    ProgressBar loginProgresssBar;
+    private TextView forgotPassword;
+    private EditText email, password;
+    private Button signIn;
+    private SelliscopeApiEndpointInterface apiService;
+    private SessionManager sessionManager;
+    private ProgressBar loginProgresssBar;
 
     public final static boolean isValidEmail(CharSequence target) {
         if (target == null) {
@@ -45,16 +50,18 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        checkPermission();
+
         //View version
-        TextView tv_selliscope_version = (TextView) findViewById(R.id.tv_selliscope_version);
+        TextView tv_selliscope_version = findViewById(R.id.tv_selliscope_version);
         tv_selliscope_version.setText("Version - " + BuildConfig.VERSION_NAME);
         //View version
 
-        loginProgresssBar = (ProgressBar) findViewById(R.id.pb_login);
-        forgotPassword = (TextView) findViewById(R.id.tv_forgot_password);
-        email = (EditText) findViewById(R.id.et_email);
-        password = (EditText) findViewById(R.id.et_password);
-        signIn = (Button) findViewById(R.id.btn_sign_in);
+        loginProgresssBar = findViewById(R.id.pb_login);
+        forgotPassword = findViewById(R.id.tv_forgot_password);
+        email = findViewById(R.id.et_email);
+        password = findViewById(R.id.et_password);
+        signIn = findViewById(R.id.btn_sign_in);
         signIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -116,16 +123,13 @@ public class LoginActivity extends AppCompatActivity {
                         );
                         loginProgresssBar.setVisibility(View.INVISIBLE);
                         startActivity(new Intent(LoginActivity.this, HomeActivity.class));
-                        finish();
+                        sendIMEIAndVersion();
 
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                 } else if (response.code() == 401) {
                     try {
-//                        Login.Unsuccessful loginUnsuccessful = gson.fromJson(response.errorBody()
-//                                        .string()
-//                                , Login.Unsuccessful.class);
                         loginProgresssBar.setVisibility(View.INVISIBLE);
                         Toast.makeText(LoginActivity.this,
                                 response.errorBody().string(), Toast.LENGTH_SHORT).show();
@@ -139,6 +143,30 @@ public class LoginActivity extends AppCompatActivity {
                 }
             }
 
+            private void sendIMEIAndVersion() {
+                TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+                if (ActivityCompat.checkSelfPermission(LoginActivity.this, android.Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+                    checkPermission();
+                    sendIMEIAndVersion();
+                } else {
+                    IMEIandVerison imeIandVerison = new IMEIandVerison();
+                    imeIandVerison.setIMEIcode(telephonyManager.getDeviceId());
+                    imeIandVerison.setAppVersion(BuildConfig.VERSION_NAME);
+                    System.out.println("IMEI and version: " + new Gson().toJson(imeIandVerison));
+                    Call<ResponseBody> call = apiService.sendIMEIAndVersion(imeIandVerison);
+                    call.enqueue(new Callback<ResponseBody>() {
+                        @Override
+                        public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                            Timber.d("Status code: " + String.valueOf(response.code()));
+                        }
+
+                        @Override
+                        public void onFailure(Call<ResponseBody> call, Throwable t) {
+                        }
+                    });
+                }
+            }
+
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 loginProgresssBar.setVisibility(View.INVISIBLE);
@@ -146,6 +174,18 @@ public class LoginActivity extends AppCompatActivity {
                 Log.d("Response", t.toString());
             }
         });
+    }
 
+    private void checkPermission() {
+        String[] permissions = {
+                android.Manifest.permission.READ_PHONE_STATE,
+                android.Manifest.permission.ACCESS_FINE_LOCATION,
+                android.Manifest.permission.ACCESS_COARSE_LOCATION
+        };
+        if (ActivityCompat.checkSelfPermission(LoginActivity.this, android.Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(LoginActivity.this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(LoginActivity.this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(LoginActivity.this, permissions, 404);
+        }
     }
 }

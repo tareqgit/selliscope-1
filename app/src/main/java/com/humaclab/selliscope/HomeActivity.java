@@ -29,6 +29,7 @@ import com.humaclab.selliscope.Utils.Constants;
 import com.humaclab.selliscope.Utils.DatabaseHandler;
 import com.humaclab.selliscope.Utils.LoadLocalIntoBackground;
 import com.humaclab.selliscope.Utils.SessionManager;
+import com.humaclab.selliscope.model.Diameter.DiameterResponse;
 import com.squareup.picasso.Picasso;
 
 import java.util.concurrent.Executors;
@@ -41,6 +42,9 @@ import permissions.dispatcher.OnPermissionDenied;
 import permissions.dispatcher.OnShowRationale;
 import permissions.dispatcher.PermissionRequest;
 import permissions.dispatcher.RuntimePermissions;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import timber.log.Timber;
 
 import static com.humaclab.selliscope.R.id.content_fragment;
@@ -118,6 +122,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         TextView tv_selliscope_version = navigationView.getHeaderView(0).findViewById(R.id.tv_selliscope_version);
         tv_selliscope_version.setText("Version - " + BuildConfig.VERSION_NAME);
 
+        //For getting diameter
+        setDiameter();
+
         //loading Data into background
         schedulerForMinute = Executors.newSingleThreadScheduledExecutor();
         schedulerForMinute.scheduleAtFixedRate(new Runnable() {
@@ -144,6 +151,23 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             }
         }, 30, 30, TimeUnit.MINUTES);
         //loading Data into background
+    }
+
+    private void setDiameter() {
+        Call<DiameterResponse> call = apiService.getDiameter();
+        call.enqueue(new Callback<DiameterResponse>() {
+            @Override
+            public void onResponse(Call<DiameterResponse> call, Response<DiameterResponse> response) {
+                if (response.code() == 200) {
+                    sessionManager.setDiameter(response.body().getDiameter().getDiameter());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<DiameterResponse> call, Throwable t) {
+
+            }
+        });
     }
 
     private void getFragment(Class createFragment) {

@@ -57,11 +57,13 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
     private Context context;
     private Activity activity;
     private Outlets.Successful.OutletsResult outletItems;
+    private SessionManager sessionManager;
 
     public OutletRecyclerViewAdapter(Context context, Activity activity, Outlets.Successful.OutletsResult outletItems) {
         this.outletItems = outletItems;
         this.context = context;
         this.activity = activity;
+        this.sessionManager = new SessionManager(context);
     }
 
     @Override
@@ -133,7 +135,7 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
                 Location location = new Location("");
                 location.setLatitude(latitude);
                 location.setLongitude(longitude);
-                if (location.distanceTo(outletLocation) <= 300.0) {
+                if (location.distanceTo(outletLocation) <= sessionManager.getDiameter()) {
                     if (NetworkUtility.isNetworkAvailable(context)) {
                         sendUserLocation(location, outletId, progressbar);
                     } else {

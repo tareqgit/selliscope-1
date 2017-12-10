@@ -6,8 +6,10 @@ import com.humaclab.selliscope.model.CategoryResponse;
 import com.humaclab.selliscope.model.CreateOutlet;
 import com.humaclab.selliscope.model.DeliverProductResponse;
 import com.humaclab.selliscope.model.DeliveryResponse;
+import com.humaclab.selliscope.model.Diameter.DiameterResponse;
 import com.humaclab.selliscope.model.District.DistrictResponse;
 import com.humaclab.selliscope.model.GodownRespons;
+import com.humaclab.selliscope.model.IMEIandVerison;
 import com.humaclab.selliscope.model.InspectionResponse;
 import com.humaclab.selliscope.model.OrderResponse;
 import com.humaclab.selliscope.model.OutletType.OutletTypeResponse;
@@ -28,13 +30,11 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 /**
- * Created by Nahid on 3/5/2017.
- * Updated by Leon on 9/3/2017.
+ * Created by Leon on 9/3/2017.
  */
 
 public interface SelliscopeApiEndpointInterface {
-    @POST("login")
-    Call<ResponseBody> getUser();
+    //GET methods
 
     @GET("outlet")
     Call<ResponseBody> getOutlets();
@@ -65,9 +65,6 @@ public interface SelliscopeApiEndpointInterface {
     @GET("godown")
     Call<GodownRespons> getGodown();
 
-    @POST("visit/store")
-    Call<ResponseBody> sendUserLocation(@Body UserLocation userLocation);
-
     @GET("district")
     Call<DistrictResponse> getDistricts();
 
@@ -83,11 +80,19 @@ public interface SelliscopeApiEndpointInterface {
     @GET("target")
     Call<ResponseBody> getTargets();
 
+    @GET("diameter")
+    Call<DiameterResponse> getDiameter();
+
+    //POST methods
+
+    @POST("login")
+    Call<ResponseBody> getUser();
+
     @POST("outlet/store")
     Call<ResponseBody> createOutlet(@Body CreateOutlet createOutlet);
 
-    @PUT("outlet/{id}/update")
-    Call<ResponseBody> updateOutlet(@Path("id") int outletID, @Body CreateOutlet createOutlet);
+    @POST("visit/store")
+    Call<ResponseBody> sendUserLocation(@Body UserLocation userLocation);
 
     @POST("order/variant/store")
     Call<AddNewOrder.OrderResponse> addOrder(@Body AddNewOrder order);
@@ -105,4 +110,10 @@ public interface SelliscopeApiEndpointInterface {
 
     @POST("inspection/store")
     Call<InspectionResponse> inspectOutlet(@Body InspectionResponse.Inspection inspection);
+
+    @POST("version-imei")
+    Call<ResponseBody> sendIMEIAndVersion(@Body IMEIandVerison imeIandVerison);
+
+    @PUT("outlet/{id}/update")
+    Call<ResponseBody> updateOutlet(@Path("id") int outletID, @Body CreateOutlet createOutlet);
 }

@@ -27,6 +27,7 @@ public class SessionManager {
     private static final String KEY_CLIENT_ID = "client_id";
     private static final String KEY_USER_PROFILE_PIC_URL = "profilePictureUrl";
     private static final String KEY_FCM_TOKEN = "fcmToken";
+    private static final String KEY_DIAMETER = "diameter";
     private static final String IS_LOGGED_IN = "IsLoggedIn";
     private static final String IS_ALL_DATA_LOADADE = "IsAllDataLoaded";
 
@@ -134,5 +135,14 @@ public class SessionManager {
 
     public boolean isAllDataLoaded() {
         return pref.getBoolean(IS_ALL_DATA_LOADADE, false);
+    }
+
+    public Integer getDiameter() {
+        return pref.getInt(KEY_DIAMETER, 0);
+    }
+
+    public void setDiameter(Integer diameter) {
+        editor.putInt(KEY_DIAMETER, diameter);
+        editor.commit();
     }
 }

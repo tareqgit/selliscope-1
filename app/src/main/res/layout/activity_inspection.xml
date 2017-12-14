@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+        xmlns:tools="http://schemas.android.com/tools">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        tools:context="com.humaclab.selliscope.InspectionActivity">
+        tools:context="com.humaclab.selliscope_myone.InspectionActivity">
 
-        <include layout="@layout/toolbar_layout" />
+        <include layout="@layout/toolbar_layout"/>
 
         <ScrollView
             android:layout_width="match_parent"
@@ -24,14 +24,14 @@
                     android:id="@+id/sp_outlets"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="5dp" />
+                    android:layout_margin="5dp"/>
 
                 <ImageView
                     android:id="@+id/iv_take_image"
                     android:layout_width="wrap_content"
                     android:layout_height="200dp"
                     android:layout_gravity="center"
-                    android:src="@drawable/ic_add_outlet" />
+                    android:src="@drawable/ic_add_outlet"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -53,7 +53,7 @@
                             android:text="Quentity : "
                             android:textAlignment="textEnd"
                             android:textColor="#000000"
-                            android:textSize="16sp" />
+                            android:textSize="16sp"/>
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -64,7 +64,7 @@
                             android:text="Promotion Type : "
                             android:textAlignment="textEnd"
                             android:textColor="#000000"
-                            android:textSize="16sp" />
+                            android:textSize="16sp"/>
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -75,7 +75,7 @@
                             android:text="Is Damaged : "
                             android:textAlignment="textEnd"
                             android:textColor="#000000"
-                            android:textSize="16sp" />
+                            android:textSize="16sp"/>
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -86,7 +86,7 @@
                             android:text="Condition : "
                             android:textAlignment="textEnd"
                             android:textColor="#000000"
-                            android:textSize="16sp" />
+                            android:textSize="16sp"/>
 
                     </LinearLayout>
 
@@ -102,28 +102,28 @@
                             android:layout_height="wrap_content"
                             android:hint="Qty."
                             android:inputType="numberSigned"
-                            android:padding="10dp" />
+                            android:padding="10dp"/>
 
                         <Spinner
                             android:id="@+id/sp_promotion_type"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:entries="@array/promotion_type"
-                            android:padding="10dp" />
+                            android:padding="10dp"/>
 
                         <Spinner
                             android:id="@+id/sp_is_damaged"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:entries="@array/is_damaged"
-                            android:padding="10dp" />
+                            android:padding="10dp"/>
 
                         <Spinner
                             android:id="@+id/sp_condition"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:entries="@array/condition"
-                            android:padding="10dp" />
+                            android:padding="10dp"/>
                     </LinearLayout>
                 </LinearLayout>
 
@@ -135,7 +135,7 @@
                     android:layout_margin="10dp"
                     android:padding="20dp"
                     android:text="Submit Inspection"
-                    android:textAllCaps="false" />
+                    android:textAllCaps="false"/>
             </LinearLayout>
         </ScrollView>
     </LinearLayout>

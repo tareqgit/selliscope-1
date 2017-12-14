@@ -5,7 +5,7 @@
 
         <variable
             name="product"
-            type="com.humaclab.selliscope.model.DeliveryResponse.Product" />
+            type="com.humaclab.selliscope_myone.model.DeliveryResponse.Product"/>
     </data>
 
     <LinearLayout
@@ -24,7 +24,7 @@
             android:gravity="center"
             android:padding="10dp"
             android:text="@{product.name}"
-            android:textAlignment="center" />
+            android:textAlignment="center"/>
 
         <TextView
             android:layout_width="match_parent"
@@ -36,7 +36,7 @@
             android:gravity="center"
             android:padding="10dp"
             android:text="@{Integer.toString(product.qty)}"
-            android:textAlignment="center" />
+            android:textAlignment="center"/>
 
         <TextView
             android:layout_width="match_parent"
@@ -48,7 +48,7 @@
             android:gravity="center"
             android:padding="10dp"
             android:text="@{product.dQty}"
-            android:textAlignment="center" />
+            android:textAlignment="center"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -70,7 +70,7 @@
                 android:background="#ddd"
                 android:text="-"
                 android:textColor="#000"
-                android:textSize="20sp" />
+                android:textSize="20sp"/>
 
             <EditText
                 android:id="@+id/et_qty"
@@ -82,7 +82,7 @@
                 android:inputType="number"
                 android:text="0"
                 android:textAlignment="center"
-                android:textColor="#000" />
+                android:textColor="#000"/>
 
             <Button
                 android:id="@+id/btn_increase"
@@ -92,7 +92,7 @@
                 android:background="#ddd"
                 android:text="+"
                 android:textColor="#000"
-                android:textSize="20sp" />
+                android:textSize="20sp"/>
         </LinearLayout>
 
         <Spinner
@@ -104,7 +104,7 @@
             android:layout_margin=".5dp"
             android:layout_weight="1"
             android:background="#fff"
-            android:entries="@array/returnCause" />
+            android:entries="@array/returnCause"/>
 
         <Button
             android:id="@+id/btn_return"
@@ -115,6 +115,6 @@
             android:layout_weight="1"
             android:background="@drawable/button_shape"
             android:text="Return"
-            android:textColor="#fff" />
+            android:textColor="#fff"/>
     </LinearLayout>
 </layout>

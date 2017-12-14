@@ -10,7 +10,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:208071747171:android:57a252a50cd8fdf2",
         "android_client_info": {
-          "package_name": "com.humaclab.selliscope_kenya"
+          "package_name": "com.humaclab.selliscope_myone"
         }
       },
       "oauth_client": [
@@ -18,51 +18,7 @@
           "client_id": "208071747171-j6ucegf08f2cdq9valssu170fk53aq1n.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.humaclab.selliscope_kenya",
-            "certificate_hash": "bf4985fdf63f665a71ca385946458c86dd3dff59"
-          }
-        },
-        {
-          "client_id": "208071747171-nmn8gfg0tqc128rn0gn95jqru3mmad2h.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyAc64ltaymDnSPKbr7k9aP85G1DCyS4h1A"
-        }
-      ],
-      "services": {
-        "analytics_service": {
-          "status": 1
-        },
-        "appinvite_service": {
-          "status": 2,
-          "other_platform_oauth_client": [
-            {
-              "client_id": "208071747171-nmn8gfg0tqc128rn0gn95jqru3mmad2h.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        },
-        "ads_service": {
-          "status": 2
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:208071747171:android:04ade098b734696c",
-        "android_client_info": {
-          "package_name": "com.humaclab.selliscope"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "208071747171-r2sn2kvbugju8dphfjn5tola85qg10so.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.humaclab.selliscope",
+            "package_name": "com.humaclab.selliscope_myone",
             "certificate_hash": "bf4985fdf63f665a71ca385946458c86dd3dff59"
           }
         },

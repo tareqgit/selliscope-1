@@ -172,12 +172,16 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
                         List<Outlets.Successful.Outlet> outlets = getOutletListSuccessful
                                 .outletsResult.outlets;
                         for (int i = 0; i < outlets.size(); i++) {
-                            mMap.addMarker(new MarkerOptions().position(
-                                    new LatLng(Double.parseDouble(outlets.get(i).outletLatitude),
-                                            Double.parseDouble(outlets.get(i).outletLongitude)))
-                                    .icon(vectorToBitmap(
-                                            R.drawable.store_location_marker, 0))
-                                    .title(outlets.get(i).outletName));
+                            try {
+                                mMap.addMarker(new MarkerOptions().position(
+                                        new LatLng(Double.parseDouble(outlets.get(i).outletLatitude),
+                                                Double.parseDouble(outlets.get(i).outletLongitude)))
+                                        .icon(vectorToBitmap(
+                                                R.drawable.store_location_marker, 0))
+                                        .title(outlets.get(i).outletName));
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
                         }
                     } catch (IOException e) {
                         e.printStackTrace();

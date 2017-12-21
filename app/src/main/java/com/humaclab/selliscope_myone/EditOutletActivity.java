@@ -196,7 +196,7 @@ public class EditOutletActivity extends AppCompatActivity {
                 Timber.d("Thana id" + thanaId);
 
                 if (isValidAddress && isValidOutletName && isValidOwnerName
-                        && isValidPhone && outlet.outletLatitude != 0.0 && outlet.outletLongitude != 0.0
+                        && isValidPhone && outlet.outletLatitude != null && outlet.outletLongitude != null
                         && outletTypeId != -1 && thanaId != -1) {
                     Timber.d("addOutletRun");
                     if (NetworkUtility.isNetworkAvailable(EditOutletActivity.this)) {
@@ -214,7 +214,7 @@ public class EditOutletActivity extends AppCompatActivity {
 
     private void updatedOutlet(String email, String password, int outletTypeId, String outletName,
                                String ownerName, String address, int thanaId, String phone,
-                               double latitude, double longitude) {
+                               String latitude, String longitude) {
         pd.setMessage("Outlet updating.....");
         pd.setCancelable(false);
         pd.show();

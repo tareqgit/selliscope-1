@@ -25,7 +25,7 @@ public class Outlets implements Serializable {
 
         public static class Outlet implements Serializable {
             @SerializedName("id")
-            public int outletId;
+            public String outletId;
             @SerializedName("type")
             public String outletType;
             @SerializedName("name")
@@ -44,9 +44,9 @@ public class Outlets implements Serializable {
             @SerializedName("img")
             public String outletImgUrl;
             @SerializedName("latitude")
-            public Double outletLatitude;
+            public String outletLatitude;
             @SerializedName("longitude")
-            public Double outletLongitude;
+            public String outletLongitude;
             @SerializedName("due")
             public String outletDue;
         }

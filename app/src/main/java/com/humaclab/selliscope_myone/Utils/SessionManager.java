@@ -50,12 +50,11 @@ public class SessionManager {
     /**
      * Create login session
      */
-    public void createLoginSession(String userName, String clientId, String userProfilePicUrl,
-                                   String email, String password) {
+    public void createLoginSession(String userName, String email, String password) {
         editor.putBoolean(IS_LOGGED_IN, true);
         editor.putString(KEY_USER_NAME, userName);
-        editor.putString(KEY_CLIENT_ID, clientId);
-        editor.putString(KEY_USER_PROFILE_PIC_URL, userProfilePicUrl);
+//        editor.putString(KEY_CLIENT_ID, clientId);
+//        editor.putString(KEY_USER_PROFILE_PIC_URL, userProfilePicUrl);
         editor.putString(KEY_USER_EMAIL, email);
         editor.putString(KEY_USER_PASSWORD, password);
         editor.commit();

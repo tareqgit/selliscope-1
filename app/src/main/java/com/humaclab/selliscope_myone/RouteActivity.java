@@ -173,13 +173,12 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
                                 .outletsResult.outlets;
                         for (int i = 0; i < outlets.size(); i++) {
                             mMap.addMarker(new MarkerOptions().position(
-                                    new LatLng(outlets.get(i).outletLatitude,
-                                            outlets.get(i).outletLongitude))
+                                    new LatLng(Double.parseDouble(outlets.get(i).outletLatitude),
+                                            Double.parseDouble(outlets.get(i).outletLongitude)))
                                     .icon(vectorToBitmap(
                                             R.drawable.store_location_marker, 0))
                                     .title(outlets.get(i).outletName));
                         }
-
                     } catch (IOException e) {
                         e.printStackTrace();
                     }

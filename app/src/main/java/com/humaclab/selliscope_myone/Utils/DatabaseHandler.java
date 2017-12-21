@@ -179,7 +179,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + KEY_BRAND_NAME + " TEXT"
                 + ")";
         String CREATE_DELIVERY_TABLE = "CREATE TABLE " + TABLE_DELIVERY + "("
-                + KEY_OUTLET_ID + " INTEGER,"
+                + KEY_OUTLET_ID + " TEXT,"
                 + KEY_ORDER_ID + " INTEGER,"
                 + KEY_OUTLET_NAME + " TEXT,"
                 + KEY_DISCOUNT + " TEXT,"
@@ -198,7 +198,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + ")";
 
         String CREATE_OUTLET_TABLE = "CREATE TABLE " + TABLE_OUTLET + "("
-                + KEY_OUTLET_ID + " INTEGER  PRIMARY KEY,"
+                + KEY_OUTLET_ID + " TEXT  PRIMARY KEY,"
                 + KEY_OUTLET_NAME + " TEXT,"
                 + KEY_OUTLET_TYPE + " TEXT,"
                 + KEY_OUTLET_OWNER_NAME + " TEXT,"
@@ -711,7 +711,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             do {
                 cursor.getColumnNames();
                 Outlets.Successful.Outlet outlet = new Outlets.Successful.Outlet();
-                outlet.outletId = cursor.getInt(cursor.getColumnIndex(KEY_OUTLET_ID));
+                outlet.outletId = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_ID));
                 outlet.outletName = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_NAME));
                 outlet.outletType = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_TYPE));
                 outlet.ownerName = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_OWNER_NAME));
@@ -720,8 +720,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 outlet.thana = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_THANA));
                 outlet.phone = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_PHONE));
                 outlet.outletImgUrl = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_IMAGE));
-                outlet.outletLongitude = Double.parseDouble(cursor.getString(cursor.getColumnIndex(KEY_OUTLET_LONGITUDE)));
-                outlet.outletLatitude = Double.parseDouble(cursor.getString(cursor.getColumnIndex(KEY_OUTLET_LATITUDE)));
+                outlet.outletLongitude = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_LONGITUDE));
+                outlet.outletLatitude = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_LATITUDE));
                 outlet.outletDue = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_DUE));
 
                 outletList.add(outlet);
@@ -743,7 +743,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             do {
                 cursor.getColumnNames();
                 Outlets.Successful.Outlet outlet = new Outlets.Successful.Outlet();
-                outlet.outletId = cursor.getInt(cursor.getColumnIndex(KEY_OUTLET_ID));
+                outlet.outletId = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_ID));
                 outlet.outletName = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_NAME));
                 outlet.outletType = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_TYPE));
                 outlet.ownerName = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_OWNER_NAME));
@@ -752,8 +752,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 outlet.thana = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_THANA));
                 outlet.phone = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_PHONE));
                 outlet.outletImgUrl = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_IMAGE));
-                outlet.outletLongitude = Double.parseDouble(cursor.getString(cursor.getColumnIndex(KEY_OUTLET_LONGITUDE)));
-                outlet.outletLatitude = Double.parseDouble(cursor.getString(cursor.getColumnIndex(KEY_OUTLET_LATITUDE)));
+                outlet.outletLongitude = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_LONGITUDE));
+                outlet.outletLatitude = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_LATITUDE));
                 outlet.outletDue = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_DUE));
 
                 outletList.add(outlet);
@@ -775,7 +775,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             do {
                 cursor.getColumnNames();
                 Outlets.Successful.Outlet outlet = new Outlets.Successful.Outlet();
-                outlet.outletId = cursor.getInt(cursor.getColumnIndex(KEY_OUTLET_ID));
+                outlet.outletId = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_ID));
                 outlet.outletName = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_NAME));
                 outlet.outletType = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_TYPE));
                 outlet.ownerName = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_OWNER_NAME));
@@ -784,8 +784,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 outlet.thana = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_THANA));
                 outlet.phone = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_PHONE));
                 outlet.outletImgUrl = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_IMAGE));
-                outlet.outletLongitude = Double.parseDouble(cursor.getString(cursor.getColumnIndex(KEY_OUTLET_LONGITUDE)));
-                outlet.outletLatitude = Double.parseDouble(cursor.getString(cursor.getColumnIndex(KEY_OUTLET_LATITUDE)));
+                outlet.outletLongitude = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_LONGITUDE));
+                outlet.outletLatitude = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_LATITUDE));
                 outlet.outletDue = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_DUE));
 
                 outletList.add(outlet);

@@ -19,7 +19,7 @@ import com.google.gson.Gson;
 import com.humaclab.selliscope_myone.Utils.NetworkUtility;
 import com.humaclab.selliscope_myone.Utils.SessionManager;
 import com.humaclab.selliscope_myone.model.IMEIandVerison;
-import com.humaclab.selliscope_myone.model.Login;
+import com.humaclab.selliscope_myone.model.LoginResponse;
 
 import java.io.IOException;
 
@@ -98,26 +98,28 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    void getUser(final String email, final String password) {
+    private void getUser(final String email, final String password) {
         Timber.d(email + " " + password);
         sessionManager = new SessionManager(this);
-        apiService = SelliscopeApplication.getRetrofitInstance(email, password, true)
-                .create(SelliscopeApiEndpointInterface.class);
-        Call<ResponseBody> call = apiService.getUser();
-        call.enqueue(new Callback<ResponseBody>() {
+        apiService = SelliscopeApplication.getRetrofitInstance(email, password, true).create(SelliscopeApiEndpointInterface.class);
+
+        LoginResponse.LoginInformation loginInformation = new LoginResponse.LoginInformation();
+        loginInformation.setEmail(email);
+        loginInformation.setPassword(password);
+
+        System.out.println("Login:" + new Gson().toJson(loginInformation));
+
+        Call<LoginResponse> call = apiService.getUser(loginInformation);
+        call.enqueue(new Callback<LoginResponse>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                Gson gson = new Gson();
+            public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
+                System.out.println("Login:" + new Gson().toJson(response));
                 if (response.code() == 202) {
                     try {
-                        Login.Successful loginSuccessful = gson.fromJson(response.body().string()
-                                , Login.Successful.class);
                         Timber.d("Login Successful");
 
                         sessionManager.createLoginSession(
-                                loginSuccessful.result.user.name,
-                                loginSuccessful.result.clientId,
-                                loginSuccessful.result.user.profilePictureUrl,
+                                response.body().getLoginResult().getLoginUser().getName(),
                                 email,
                                 password
                         );
@@ -168,7 +170,7 @@ public class LoginActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            public void onFailure(Call<LoginResponse> call, Throwable t) {
                 loginProgresssBar.setVisibility(View.INVISIBLE);
                 Toast.makeText(LoginActivity.this, t.toString(), Toast.LENGTH_SHORT).show();
                 Log.d("Response", t.toString());

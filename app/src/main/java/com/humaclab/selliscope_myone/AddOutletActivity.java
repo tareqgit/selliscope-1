@@ -57,7 +57,7 @@ public class AddOutletActivity extends AppCompatActivity {
     boolean isValidOwnerName = true;
     boolean isValidAddress = true;
     boolean isValidPhone = true;
-    double mLatitude = 0.0, mLongitude = 0.0;
+    String mLatitude = null, mLongitude = null;
     private int outletTypeId, thanaId = -1;
     private SelliscopeApiEndpointInterface apiService;
     private SessionManager sessionManager;
@@ -207,7 +207,7 @@ public class AddOutletActivity extends AppCompatActivity {
                 Timber.d("Thana id" + thanaId);
 
                 if (isValidAddress && isValidOutletName && isValidOwnerName
-                        && isValidPhone && mLatitude != 0.0 && mLongitude != 0.0
+                        && isValidPhone && mLatitude != null && mLongitude != null
                         && outletTypeId != -1 && thanaId != -1) {
                     Timber.d("addOutletRun");
                     if (NetworkUtility.isNetworkAvailable(AddOutletActivity.this)) {
@@ -231,7 +231,7 @@ public class AddOutletActivity extends AppCompatActivity {
 
     private void addOutlet(int outletTypeId, String outletName,
                            String ownerName, String address, int thanaId, String phone,
-                           double latitude, double longitude) {
+                           String latitude, String longitude) {
         pd.setMessage("Creating outlet......");
         pd.setCancelable(false);
         pd.show();
@@ -290,8 +290,8 @@ public class AddOutletActivity extends AppCompatActivity {
         sendUserLocationData.getInstantLocation(this, new SendUserLocationData.OnGetLocation() {
             @Override
             public void getLocation(Double latitude, Double longitude) {
-                mLatitude = latitude;
-                mLongitude = longitude;
+                mLatitude = String.valueOf(latitude);
+                mLongitude = String.valueOf(longitude);
             }
         });
     }

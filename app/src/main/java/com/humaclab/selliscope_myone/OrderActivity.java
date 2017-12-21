@@ -61,7 +61,8 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
     private DatabaseHandler databaseHandler;
     private SessionManager sessionManager;
     private List<String> productName = new ArrayList<>(), outletName = new ArrayList<>();
-    private List<Integer> productID = new ArrayList<>(), productDiscount = new ArrayList<>(), outletID = new ArrayList<>();
+    private List<Integer> productID = new ArrayList<>(), productDiscount = new ArrayList<>();
+    private List<String> outletID = new ArrayList<>();
     private List<String> categoryName = new ArrayList<>(), brandName = new ArrayList<>();
     private List<Integer> categoryID = new ArrayList<>(), brandID = new ArrayList<>();
     private List<Double> productPrice = new ArrayList<>();
@@ -196,43 +197,6 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
             showProductSelectionDialog();
         }
         //if this activity called from product activity
-
-        /*
-        SessionManager sessionManager = new SessionManager(OrderActivity.this);
-        apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(),
-                sessionManager.getUserPassword(), false)
-                .create(SelliscopeApiEndpointInterface.class);
-        Call<ProductResponse> call = apiService.getProducts();
-        call.enqueue(new Callback<ProductResponse>() {
-            @Override
-            public void onResponse(Call<ProductResponse> call, Response<ProductResponse> response) {
-                if (response.code() == 200) {
-                    try {
-                        List<ProductResponse.ProductResult> products = response.body().result.productResults;
-                        for (ProductResponse.ProductResult result : products) {
-                            productName.add(result.name);
-                            productID.add(result.id);
-                            productDiscount.add(result.discount);
-                            productPrice.add(Double.parseDouble(result.price.replace(",", "")));
-                        }
-                        binding.spProduct.setAdapter(new ArrayAdapter<>(getApplicationContext(), R.layout.spinner_item, productName));
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                } else if (response.code() == 401) {
-                    Toast.makeText(OrderActivity.this,
-                            "Invalid Response from server.", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(OrderActivity.this,
-                            "Server Error! Try Again Later!", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ProductResponse> call, Throwable t) {
-                t.printStackTrace();
-            }
-        });*/
     }
 
     private void getOutlets() {
@@ -249,51 +213,6 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
             binding.spOutlet.setSelection(position);
         }
         //if this activity called from outlet activity
-
-        /* SessionManager sessionManager = new SessionManager(OrderActivity.this);
-        apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(),
-                sessionManager.getUserPassword(), false)
-                .create(SelliscopeApiEndpointInterface.class);
-        Call<ResponseBody> call = apiService.getOutlets();
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                Gson gson = new Gson();
-                if (response.code() == 200) {
-                    try {
-                        Outlets.Successful getOutletListSuccessful = gson.fromJson(response.body()
-                                .string(), Outlets.Successful.class);
-                        for (Outlets.Successful.Outlet outlet : getOutletListSuccessful.outletsResult.outlets) {
-                            outletName.add(outlet.outletName);
-                            outletID.add(outlet.outletId);
-                        }
-                        binding.spOutlet.setAdapter(new ArrayAdapter<>(getApplication(), R.layout.spinner_item, outletName));
-
-                        //if this activity called from outlet activity
-                        if (getIntent().hasExtra("outletID")) {
-                            int position = outletID.indexOf(getIntent().getIntExtra("outletID", 0));
-                            binding.spOutlet.setSelection(position);
-                        }
-                        //if this activity called from outlet activity
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                } else if (response.code() == 401) {
-                    Toast.makeText(OrderActivity.this,
-                            "Invalid Response from server.", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(OrderActivity.this,
-                            "Server Error! Try Again Later!", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                //Toast.makeText(LoginActivity.this, t.toString(), Toast.LENGTH_SHORT).show();
-                Log.d("Response", t.toString());
-
-            }
-        });*/
     }
 
     @Override

@@ -37,7 +37,7 @@ public class InspectionActivity extends AppCompatActivity {
     private ProgressDialog pd;
     private String promotionImage;
 
-    private List<Integer> outletIDs;
+    private List<String> outletIDs;
     private List<String> outletNames;
 
     @Override

@@ -245,8 +245,6 @@ public class LoadLocalIntoBackground {
         call.enqueue(new Callback<OutletTypeResponse>() {
             @Override
             public void onResponse(Call<OutletTypeResponse> call, Response<OutletTypeResponse> response) {
-                Gson gson = new Gson();
-                Timber.d("Response " + response.code() + " " + response.body().toString());
                 if (response.code() == 200) {
                     try {
                         databaseHandler.setOutletType(response.body().getResult().getType());

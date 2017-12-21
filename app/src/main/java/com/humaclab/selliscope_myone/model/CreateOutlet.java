@@ -3,7 +3,7 @@ package com.humaclab.selliscope_myone.model;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * Created by dipu_ on 3/25/2017.
+ * Created by Leon on 12/21/2017.
  */
 
 public class CreateOutlet {
@@ -20,9 +20,9 @@ public class CreateOutlet {
     @SerializedName("phone")
     public String outletPhoneNumber;
     @SerializedName("latitude")
-    public double outletLatitude;
+    public String outletLatitude;
     @SerializedName("longitude")
-    public double outletLongitude;
+    public String outletLongitude;
     @SerializedName("img")
     public String outletImage;
     @SerializedName("error")
@@ -31,8 +31,8 @@ public class CreateOutlet {
     public String result;
 
     public CreateOutlet(int outletTypeId, String outletName, String ownerName, String address,
-                        int outletThanaId, String outletPhoneNumber, double outletLatitude,
-                        double outletLongitude, String outletImage) {
+                        int outletThanaId, String outletPhoneNumber, String outletLatitude,
+                        String outletLongitude, String outletImage) {
         this.outletTypeId = outletTypeId;
         this.outletName = outletName;
         this.ownerName = ownerName;

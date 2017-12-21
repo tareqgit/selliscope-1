@@ -98,8 +98,8 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
                     @Override
                     public void onConnected(@Nullable Bundle bundle) {
                         Location outletLocation = new Location("outlet_location");
-                        outletLocation.setLatitude(outlet.outletLatitude);
-                        outletLocation.setLongitude(outlet.outletLongitude);
+                        outletLocation.setLatitude(Double.parseDouble(outlet.outletLatitude));
+                        outletLocation.setLongitude(Double.parseDouble(outlet.outletLongitude));
                         getLocation(outlet.outletId, outletLocation, holder.pbCheckIn);
                     }
 
@@ -123,7 +123,7 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
         });
     }
 
-    private void getLocation(final int outletId, final Location outletLocation,
+    private void getLocation(final String outletId, final Location outletLocation,
                              final ProgressBar progressbar) {
         SendUserLocationData sendUserLocationData = new SendUserLocationData(context);
         sendUserLocationData.getInstantLocation(activity, new SendUserLocationData.OnGetLocation() {
@@ -152,7 +152,7 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
         });
     }
 
-    private void sendUserLocation(Location location, int outletId, final ProgressBar progressBar) {
+    private void sendUserLocation(Location location, String outletId, final ProgressBar progressBar) {
         SessionManager sessionManager = new SessionManager(context);
         apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(),
                 sessionManager.getUserPassword(), false)

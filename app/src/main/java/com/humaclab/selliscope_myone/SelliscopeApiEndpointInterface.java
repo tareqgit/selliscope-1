@@ -11,6 +11,7 @@ import com.humaclab.selliscope_myone.model.District.DistrictResponse;
 import com.humaclab.selliscope_myone.model.GodownRespons;
 import com.humaclab.selliscope_myone.model.IMEIandVerison;
 import com.humaclab.selliscope_myone.model.InspectionResponse;
+import com.humaclab.selliscope_myone.model.LoginResponse;
 import com.humaclab.selliscope_myone.model.OrderResponse;
 import com.humaclab.selliscope_myone.model.OutletType.OutletTypeResponse;
 import com.humaclab.selliscope_myone.model.Payment;
@@ -86,7 +87,7 @@ public interface SelliscopeApiEndpointInterface {
     //POST methods
 
     @POST("login")
-    Call<ResponseBody> getUser();
+    Call<LoginResponse> getUser(@Body LoginResponse.LoginInformation loginInformation);
 
     @POST("outlet/store")
     Call<ResponseBody> createOutlet(@Body CreateOutlet createOutlet);
@@ -115,5 +116,5 @@ public interface SelliscopeApiEndpointInterface {
     Call<ResponseBody> sendIMEIAndVersion(@Body IMEIandVerison imeIandVerison);
 
     @PUT("outlet/{id}/update")
-    Call<ResponseBody> updateOutlet(@Path("id") int outletID, @Body CreateOutlet createOutlet);
+    Call<ResponseBody> updateOutlet(@Path("id") String outletID, @Body CreateOutlet createOutlet);
 }

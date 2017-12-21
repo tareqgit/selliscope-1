@@ -19,7 +19,7 @@ public class InspectionResponse implements Serializable {
 
     public static class Inspection implements Serializable {
         @SerializedName("outlet_id")
-        public int outletID;
+        public String outletID;
         @SerializedName("image")
         public String image;
         @SerializedName("quantity")

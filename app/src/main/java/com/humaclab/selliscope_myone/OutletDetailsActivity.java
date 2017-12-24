@@ -28,11 +28,12 @@ public class OutletDetailsActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         outlet = (Outlets.Successful.Outlet) getIntent().getSerializableExtra("outletDetails");
-        binding.setVariable(com.humaclab.selliscope_myone.BR.outletDetails, outlet);
 
-        if (Float.parseFloat(outlet.outletDue.replace(",", "")) < 0) {
+        binding.setVariable(BR.outletDetails, outlet);
+
+//        if (Float.parseFloat(outlet.outletDue.replace(",", "")) < 0) {
             binding.tvDueAmount.setVisibility(View.GONE);
-        }
+//        }
 
         Glide.with(getApplicationContext()).load(outlet.outletImgUrl)
                 .thumbnail(0.5f)

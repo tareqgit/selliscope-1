@@ -31,7 +31,7 @@ import java.util.Map;
  */
 
 public class DatabaseHandler extends SQLiteOpenHelper {
-    private static final int DATABASE_VERSION = 6;
+    private static final int DATABASE_VERSION = 1;
 
     // Database Tables
     private static final String TABLE_TARGET = "targets";
@@ -145,7 +145,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + KEY_TIMESTAMP + " TEXT,"
                 + KEY_IS_UPDATED + " INTEGER" + ")";
         String CREATE_PRODUCT_TABLE = "CREATE TABLE " + TABLE_PRODUCT + "("
-                + KEY_PRODUCT_ID + " INTEGER PRIMARY KEY,"
+                + KEY_PRODUCT_ID + " TEXT PRIMARY KEY,"
                 + KEY_PRODUCT_NAME + " TEXT,"
                 + KEY_PRODUCT_PRICE + " TEXT,"
                 + KEY_PRODUCT_IMAGE + " TEXT,"
@@ -171,11 +171,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + KEY_PRODUCT_STOCK + " TEXT"
                 + ")";
         String CREATE_CATEGORY_TABLE = "CREATE TABLE " + TABLE_CATEGORY + "("
-                + KEY_CATEGORY_ID + " INTEGER PRIMARY KEY,"
+                + KEY_CATEGORY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
                 + KEY_CATEGORY_NAME + " TEXT"
                 + ")";
         String CREATE_BRAND_TABLE = "CREATE TABLE " + TABLE_BRAND + "("
-                + KEY_BRAND_ID + " INTEGER PRIMARY KEY,"
+                + KEY_BRAND_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
                 + KEY_BRAND_NAME + " TEXT"
                 + ")";
         String CREATE_DELIVERY_TABLE = "CREATE TABLE " + TABLE_DELIVERY + "("
@@ -329,22 +329,17 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.close();
     }
 
-    public void addProduct(int productID, String productName, String price, String image, int brandID, String brandName, int categoryID, String categoryName, String stock, boolean variant) {
+    public void addProduct(String productID, String productName, String price, String image, String brandName, String categoryName, String stock) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(KEY_PRODUCT_ID, productID);
         values.put(KEY_PRODUCT_NAME, productName);
         values.put(KEY_PRODUCT_PRICE, price);
         values.put(KEY_PRODUCT_IMAGE, image);
-        values.put(KEY_CATEGORY_ID, categoryID);
         values.put(KEY_CATEGORY_NAME, categoryName);
-        values.put(KEY_BRAND_ID, brandID);
         values.put(KEY_BRAND_NAME, brandName);
         values.put(KEY_PRODUCT_STOCK, stock);
-        if (variant)
-            values.put(KEY_PRODUCT_VARIANT, 1);
-        else
-            values.put(KEY_PRODUCT_VARIANT, 0);
+
         try {
             db.insert(TABLE_PRODUCT, null, values);
         } catch (Exception e) {
@@ -354,31 +349,33 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.close(); // Closing database connection
     }
 
-    public void addCategory(int categoryID, String categoryName) {
+    public void addCategory() {
         SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put(KEY_CATEGORY_ID, categoryID);
-        values.put(KEY_CATEGORY_NAME, categoryName);
-        try {
-            db.insert(TABLE_CATEGORY, null, values);
-        } catch (Exception e) {
-            e.printStackTrace();
+        String query = "SELECT distinct " + KEY_CATEGORY_NAME + " FROM " + TABLE_PRODUCT + " WHERE " + KEY_CATEGORY_NAME + " not null";
+        Cursor cursor = db.rawQuery(query, null);
+        if (cursor.moveToFirst()) {
+            do {
+                String categoryName = cursor.getString(cursor.getColumnIndex(KEY_CATEGORY_NAME));
+                ContentValues contentValues = new ContentValues();
+                contentValues.put(KEY_CATEGORY_NAME, categoryName);
+                db.insert(TABLE_CATEGORY, null, contentValues);
+            } while (cursor.moveToNext());
         }
-        values.clear();
         db.close(); // Closing database connection
     }
 
-    public void addBrand(int brandID, String brandName) {
+    public void addBrand() {
         SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put(KEY_BRAND_ID, brandID);
-        values.put(KEY_BRAND_NAME, brandName);
-        try {
-            db.insert(TABLE_BRAND, null, values);
-        } catch (Exception e) {
-            e.printStackTrace();
+        String query = "SELECT distinct " + KEY_BRAND_NAME + " FROM " + TABLE_PRODUCT + " WHERE " + KEY_BRAND_NAME + " not null";
+        Cursor cursor = db.rawQuery(query, null);
+        ContentValues contentValues = new ContentValues();
+        if (cursor.moveToFirst()) {
+            do {
+                String categoryName = cursor.getString(cursor.getColumnIndex(KEY_BRAND_NAME));
+                contentValues.put(KEY_BRAND_NAME, categoryName);
+                db.insert(TABLE_BRAND, null, contentValues);
+            } while (cursor.moveToNext());
         }
-        values.clear();
         db.close(); // Closing database connection
     }
 
@@ -434,7 +431,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 Category category = new Category();
                 Brand brand = new Brand();
 
-                productsItem.setId(cursor.getInt(cursor.getColumnIndex(KEY_PRODUCT_ID)));
+                productsItem.setId(cursor.getString(cursor.getColumnIndex(KEY_PRODUCT_ID)));
                 productsItem.setName(cursor.getString(cursor.getColumnIndex(KEY_PRODUCT_NAME)));
                 productsItem.setPrice(cursor.getString(cursor.getColumnIndex(KEY_PRODUCT_PRICE)));
                 productsItem.setImg(cursor.getString(cursor.getColumnIndex(KEY_PRODUCT_IMAGE)));
@@ -470,7 +467,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 Category category = new Category();
                 Brand brand = new Brand();
 
-                productsItem.setId(cursor.getInt(cursor.getColumnIndex(KEY_PRODUCT_ID)));
+                productsItem.setId(cursor.getString(cursor.getColumnIndex(KEY_PRODUCT_ID)));
                 productsItem.setName(cursor.getString(cursor.getColumnIndex(KEY_PRODUCT_NAME)));
                 productsItem.setPrice(cursor.getString(cursor.getColumnIndex(KEY_PRODUCT_PRICE)));
                 productsItem.setImg(cursor.getString(cursor.getColumnIndex(KEY_PRODUCT_IMAGE)));
@@ -685,7 +682,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 values.put(KEY_OUTLET_IMAGE, outlet.outletImgUrl);
                 values.put(KEY_OUTLET_LONGITUDE, outlet.outletLongitude);
                 values.put(KEY_OUTLET_LATITUDE, outlet.outletLatitude);
-                values.put(KEY_OUTLET_DUE, outlet.outletDue);
+//                values.put(KEY_OUTLET_DUE, outlet.outletDue);
                 try {
                     db.insert(TABLE_OUTLET, null, values);
                 } catch (Exception e) {
@@ -722,7 +719,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 outlet.outletImgUrl = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_IMAGE));
                 outlet.outletLongitude = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_LONGITUDE));
                 outlet.outletLatitude = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_LATITUDE));
-                outlet.outletDue = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_DUE));
+//                outlet.outletDue = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_DUE));
 
                 outletList.add(outlet);
             } while (cursor.moveToNext());
@@ -754,7 +751,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 outlet.outletImgUrl = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_IMAGE));
                 outlet.outletLongitude = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_LONGITUDE));
                 outlet.outletLatitude = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_LATITUDE));
-                outlet.outletDue = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_DUE));
+//                outlet.outletDue = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_DUE));
 
                 outletList.add(outlet);
             } while (cursor.moveToNext());
@@ -786,7 +783,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 outlet.outletImgUrl = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_IMAGE));
                 outlet.outletLongitude = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_LONGITUDE));
                 outlet.outletLatitude = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_LATITUDE));
-                outlet.outletDue = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_DUE));
+//                outlet.outletDue = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_DUE));
 
                 outletList.add(outlet);
             } while (cursor.moveToNext());
@@ -994,12 +991,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return variantNames;
     }
 
-    public String getProductStock(int productId) {
+    public String getProductStock(String productId) {
         SQLiteDatabase db = this.getWritableDatabase();
         String prouctStock = "";
-        String query = "SELECT DISTINCT " + KEY_PRODUCT_STOCK
+        String query = "SELECT " + KEY_PRODUCT_STOCK
                 + " FROM " + TABLE_PRODUCT
-                + " WHERE " + KEY_PRODUCT_ID + "=" + productId;
+                + " WHERE " + KEY_PRODUCT_ID + "='" + productId + "'";
 //        System.out.println("variant query" + query);
 
         Cursor cursor = db.rawQuery(query, null);

@@ -6,15 +6,12 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.humaclab.selliscope_myone.SelliscopeApiEndpointInterface;
 import com.humaclab.selliscope_myone.SelliscopeApplication;
-import com.humaclab.selliscope_myone.model.BrandResponse;
-import com.humaclab.selliscope_myone.model.CategoryResponse;
+import com.humaclab.selliscope_myone.StockResponse;
 import com.humaclab.selliscope_myone.model.District.DistrictResponse;
 import com.humaclab.selliscope_myone.model.OutletType.OutletTypeResponse;
 import com.humaclab.selliscope_myone.model.Outlets;
+import com.humaclab.selliscope_myone.model.ProductResponse;
 import com.humaclab.selliscope_myone.model.Thana.ThanaResponse;
-import com.humaclab.selliscope_myone.model.VariantProduct.GodownItem;
-import com.humaclab.selliscope_myone.model.VariantProduct.ProductsItem;
-import com.humaclab.selliscope_myone.model.VariantProduct.VariantProductResponse;
 
 import java.io.IOException;
 import java.util.List;
@@ -23,7 +20,6 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import timber.log.Timber;
 
 /**
  * Created by leon on 29/11/17.
@@ -45,8 +41,6 @@ public class LoadLocalIntoBackground {
     public void loadAll() {
         if (!sessionManager.isAllDataLoaded()) {
             this.loadProduct();
-            this.loadCategory();
-            this.loadBrand();
             this.loadOutlet();
             this.loadOutletType();
             this.loadDistrict();
@@ -57,53 +51,40 @@ public class LoadLocalIntoBackground {
 
     public void loadProduct() {
         if (sessionManager.isLoggedIn()) {
-            Call<VariantProductResponse> call = apiService.getProducts();
-            call.enqueue(new Callback<VariantProductResponse>() {
+            Call<ProductResponse> call = apiService.getProducts();
+            call.enqueue(new Callback<ProductResponse>() {
                 @Override
-                public void onResponse(Call<VariantProductResponse> call, Response<VariantProductResponse> response) {
+                public void onResponse(Call<ProductResponse> call, Response<ProductResponse> response) {
                     if (response.code() == 200) {
+                        System.out.println("Products: " + new Gson().toJson(response.body()));
                         try {
-                            List<ProductsItem> products = response.body().getResult().getProducts();
+                            List<ProductResponse.Product> products = response.body().getProductResult().getProducts();
                             //for removing previous data
                             databaseHandler.removeProductCategoryBrand();
-                            for (ProductsItem result : products) {
-                                if (result.getGodown() == null) {
-                                    databaseHandler.addProduct(
-                                            result.getId(),
-                                            result.getName(),
-                                            result.getPrice(),
-                                            result.getImg(),
-                                            Integer.parseInt(result.getBrand().getId()),
-                                            result.getBrand().getName(),
-                                            Integer.parseInt(result.getCategory().getId()),
-                                            result.getCategory().getName(),
-                                            "",
-                                            !result.getVariants().isEmpty()
-                                    );
-                                } else {
-                                    int stock = 0;
-                                    for (GodownItem godownItem : result.getGodown()) {
-                                        stock += Integer.parseInt(godownItem.getStock());
+                            for (final ProductResponse.Product result : products) {
+                                Call<StockResponse> call1 = apiService.getProductStock(result.getId());
+                                call1.enqueue(new Callback<StockResponse>() {
+                                    @Override
+                                    public void onResponse(Call<StockResponse> call, Response<StockResponse> response) {
+                                        databaseHandler.addProduct(
+                                                result.getId(),
+                                                result.getName(),
+                                                result.getPrice(),
+                                                result.getImg(),
+                                                result.getBrand(),
+                                                result.getCategory(),
+                                                response.body().getStock().getStock()
+                                        );
+                                        loadCategory();
+                                        loadBrand();
                                     }
-                                    databaseHandler.addProduct(
-                                            result.getId(),
-                                            result.getName(),
-                                            result.getPrice(),
-                                            result.getImg(),
-                                            Integer.parseInt(result.getBrand().getId()),
-                                            result.getBrand().getName(),
-                                            Integer.parseInt(result.getCategory().getId()),
-                                            result.getCategory().getName(),
-                                            String.valueOf(stock),
-                                            !result.getVariants().isEmpty()
-                                    );
-                                }
+
+                                    @Override
+                                    public void onFailure(Call<StockResponse> call, Throwable t) {
+
+                                    }
+                                });
                             }
-                            databaseHandler.removeVariantCategories();
-                            databaseHandler.setVariantCategories(
-                                    response.body().getResult().getVariant(),
-                                    response.body().getResult().getProducts()
-                            );
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -111,7 +92,7 @@ public class LoadLocalIntoBackground {
                 }
 
                 @Override
-                public void onFailure(Call<VariantProductResponse> call, Throwable t) {
+                public void onFailure(Call<ProductResponse> call, Throwable t) {
                     t.printStackTrace();
                 }
             });
@@ -119,52 +100,11 @@ public class LoadLocalIntoBackground {
     }
 
     private void loadCategory() {
-        Call<CategoryResponse> call = apiService.getCategories();
-        call.enqueue(new Callback<CategoryResponse>() {
-            @Override
-            public void onResponse(Call<CategoryResponse> call, Response<CategoryResponse> response) {
-                if (response.code() == 200) {
-                    try {
-                        List<CategoryResponse.CategoryResult> categories = response.body().result.categoryResults;
-                        for (CategoryResponse.CategoryResult result : categories) {
-                            databaseHandler.addCategory(result.id, result.name);
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<CategoryResponse> call, Throwable t) {
-                t.printStackTrace();
-            }
-        });
-
+        databaseHandler.addCategory();
     }
 
     private void loadBrand() {
-        Call<BrandResponse> call = apiService.getBrands();
-        call.enqueue(new Callback<BrandResponse>() {
-            @Override
-            public void onResponse(Call<BrandResponse> call, Response<BrandResponse> response) {
-                if (response.code() == 200) {
-                    try {
-                        List<BrandResponse.BrandResult> brands = response.body().result.brandResults;
-                        for (BrandResponse.BrandResult result : brands) {
-                            databaseHandler.addBrand(result.id, result.name);
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<BrandResponse> call, Throwable t) {
-                t.printStackTrace();
-            }
-        });
+        databaseHandler.addBrand();
     }
 
     public void loadOutlet() {
@@ -198,8 +138,6 @@ public class LoadLocalIntoBackground {
         call.enqueue(new Callback<DistrictResponse>() {
             @Override
             public void onResponse(Call<DistrictResponse> call, Response<DistrictResponse> response) {
-                Gson gson = new Gson();
-                Timber.d("Response " + response.code() + " " + response.body().toString());
                 if (response.code() == 200) {
                     try {
                         databaseHandler.setDistrict(response.body().getResult().getDistrict());
@@ -221,8 +159,6 @@ public class LoadLocalIntoBackground {
         call.enqueue(new Callback<ThanaResponse>() {
             @Override
             public void onResponse(Call<ThanaResponse> call, Response<ThanaResponse> response) {
-                Gson gson = new Gson();
-                Timber.d("Response " + response.code() + " " + response.body().toString());
                 if (response.code() == 200) {
                     try {
                         databaseHandler.setThana(response.body().getResult().getThana());

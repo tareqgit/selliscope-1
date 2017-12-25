@@ -3,25 +3,21 @@ package com.humaclab.selliscope_myone;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
-import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -38,7 +34,6 @@ import com.humaclab.selliscope_myone.model.Outlets;
 import com.humaclab.selliscope_myone.model.VariantProduct.Brand;
 import com.humaclab.selliscope_myone.model.VariantProduct.Category;
 import com.humaclab.selliscope_myone.model.VariantProduct.ProductsItem;
-import com.humaclab.selliscope_myone.model.VariantProduct.VariantItem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,16 +55,9 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
 
     private DatabaseHandler databaseHandler;
     private SessionManager sessionManager;
-    private List<String> productName = new ArrayList<>(), outletName = new ArrayList<>();
-    private List<Integer> productID = new ArrayList<>(), productDiscount = new ArrayList<>();
-    private List<String> outletID = new ArrayList<>();
-    private List<String> categoryName = new ArrayList<>(), brandName = new ArrayList<>();
-    private List<Integer> categoryID = new ArrayList<>(), brandID = new ArrayList<>();
+    private List<String> productName = new ArrayList<>(), outletName = new ArrayList<>(), productID = new ArrayList<>(), outletID = new ArrayList<>(), categoryName = new ArrayList<>(), brandName = new ArrayList<>();
+    private List<Integer> categoryID = new ArrayList<>(), brandID = new ArrayList<>(), productDiscount = new ArrayList<>();
     private List<Double> productPrice = new ArrayList<>();
-    private List<View> variantViews = new ArrayList<>();
-    private List<List<String>> variantNameList = new ArrayList<>();
-    private List<List<Integer>> variantIDList = new ArrayList<>();
-    private List<List<String>> variantRows = new ArrayList<>();
 
     private double variantPrice = 0;
     private int selectedPosition = 0, tableRowCount = 1;
@@ -191,7 +179,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
         binding.spProduct.setAdapter(new ArrayAdapter<>(getApplicationContext(), R.layout.spinner_item, productName));
         //if this activity called from product activity
         if (getIntent().hasExtra("productID")) {
-            addFirstProduct(getIntent().getIntExtra("productID", 0), false);
+            addFirstProduct(getIntent().getStringExtra("productID"), false);
             tableRowCount++;
         } else {
             showProductSelectionDialog();
@@ -270,7 +258,6 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                                 product.discount = Double.parseDouble(etDiscount.getText().toString());
                             }
                             product.qty = Integer.parseInt(etQty.getText().toString());
-                            product.row = (variantRows.size() != 0) ? Integer.parseInt(variantRows.get(i).get(0)) : 0;
                             product.price = String.valueOf(productPrice.get(sp.getSelectedItemPosition()));
                             products.add(product);
                         }
@@ -290,14 +277,14 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                         public void onResponse(Call<AddNewOrder.OrderResponse> call, Response<AddNewOrder.OrderResponse> response) {
                             pd.dismiss();
                             if (response.code() == 201) {
-                                System.out.println(new Gson().toJson(response.body()));
+//                                System.out.println(new Gson().toJson(response.body()));
                                 Toast.makeText(OrderActivity.this, "Order created successfully", Toast.LENGTH_LONG).show();
                                 finish();
                             } else if (response.code() == 401) {
-                                System.out.println(new Gson().toJson(response.body()));
+//                                System.out.println(new Gson().toJson(response.body()));
                                 Toast.makeText(OrderActivity.this, "Invalid Response from server.", Toast.LENGTH_SHORT).show();
                             } else {
-                                System.out.println(new Gson().toJson(response.body()));
+//                                System.out.println(new Gson().toJson(response.body()));
                                 Toast.makeText(OrderActivity.this, "Server Error! Try Again Later!", Toast.LENGTH_SHORT).show();
                             }
                         }
@@ -326,9 +313,6 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
 
     private void showProductSelectionDialog() {
         outOfStock = false;
-        for (int i = 0; i < 50; i++) {
-            variantRows.add(new ArrayList<String>());
-        }
 
         final boolean[] isVariant = {false};
         final AlertDialog builder = new AlertDialog.Builder(this, R.style.Theme_Design_Light).create();
@@ -343,7 +327,6 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
             }
         });
 
-        final LinearLayout ll_spinner_layout = dialogView.findViewById(R.id.ll_spinner_layout);
         final Spinner sp_product_category = dialogView.findViewById(R.id.sp_product_category);
         final Spinner sp_product_brand = dialogView.findViewById(R.id.sp_product_brand);
         final Spinner sp_product_name = dialogView.findViewById(R.id.sp_product_name);
@@ -351,7 +334,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
         final Button btn_select_product = dialogView.findViewById(R.id.btn_select_product);
 
         final List<String> productName = new ArrayList<>();
-        final List<Integer> productID = new ArrayList<>();
+        final List<String> productID = new ArrayList<>();
 
         //For category
         sp_product_category.setAdapter(new ArrayAdapter<>(getApplicationContext(), R.layout.spinner_item, categoryName));
@@ -364,7 +347,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                     productName.clear();
                     productName.add("Select Product");
                     productID.clear();
-                    productID.add(0);
+                    productID.add("0");
                     for (ProductsItem result : productsItemList) {
                         productName.add(result.getName());
                         productID.add(result.getId());
@@ -393,7 +376,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                     productName.clear();
                     productName.add("Select Product");
                     productID.clear();
-                    productID.add(0);
+                    productID.add("0");
                     for (ProductsItem result : productsItemList) {
                         productName.add(result.getName());
                         productID.add(result.getId());
@@ -418,176 +401,13 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (position != 0) {
                     if (databaseHandler.isVariantExists()) {
-                        if (databaseHandler.isThereAnyVariantForProduct(productID.get(position))) {
-                            tv_simple_product_stock.setVisibility(View.GONE);
-                            variantViews.clear();
-                            variantIDList.clear();
-                            variantNameList.clear();
-                            ll_spinner_layout.removeAllViews();
-                            addVariantSpinner(dialogView.getContext());
-                            isVariant[0] = true;
-                        } else {
-                            tv_simple_product_stock.setVisibility(View.VISIBLE);
-                            tv_simple_product_stock.setText(getString(R.string.stock, databaseHandler.getProductStock(productID.get(sp_product_name.getSelectedItemPosition()))));
-                            variantViews.clear();
-                            variantIDList.clear();
-                            variantNameList.clear();
-                            ll_spinner_layout.removeAllViews();
-                            isVariant[0] = false;
-                            List<String> list = new ArrayList<>();
-                            list.add("0");
-                            variantRows.add(tableRowCount, list);
-                        }
+                        tv_simple_product_stock.setVisibility(View.VISIBLE);
+                        tv_simple_product_stock.setText(getString(R.string.stock, databaseHandler.getProductStock(productID.get(sp_product_name.getSelectedItemPosition()))));
+                        isVariant[0] = false;
+                        List<String> list = new ArrayList<>();
+                        list.add("0");
                     }
                 }
-            }
-
-            private void addVariantSpinner(final Context context) {
-                final List<VariantItem> variantsItems = databaseHandler.getVariantCategories();
-                final List<Integer> price_id = new ArrayList<>();
-                for (int i = 0; i < variantsItems.size(); i++) {
-                    if (!variantsItems.get(i).getType().toLowerCase().equals("input")) {
-                        Spinner spinner = new Spinner(context);
-                        final ArrayAdapter<String> arrayAdapter;
-                        spinner.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
-
-                        final List<String> variantNames = new ArrayList<>();
-                        List<Integer> variantNameIDs = new ArrayList<>();
-                        final String variantName = "Select " + variantsItems.get(i).getName();
-                        int variantID = variantsItems.get(i).getId();
-                        variantNames.add(variantName);
-                        variantNameIDs.add(variantID);
-
-                        for (String s : databaseHandler.getVariants(variantsItems.get(i).getId(), productID.get(sp_product_name.getSelectedItemPosition()))) {
-                            variantNames.add(s);
-                        }
-                        arrayAdapter = new ArrayAdapter<>(context, R.layout.spinner_item, variantNames);
-                        spinner.setAdapter(arrayAdapter);
-                        final int finalI; //This variable is uses to track the positions of variantID and variantName list items.
-                        if (i != variantsItems.size() - 1) {
-                            finalI = i + 1; //if i is less then variant item size - 1 then it will execute
-                        } else {
-                            finalI = i;
-                        }
-                        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                            @Override
-                            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                                if (position > 0) {
-                                    if (finalI != variantsItems.size() - 1) {
-                                        List<String> variantDetailsNames = new ArrayList<>();
-                                        variantDetailsNames.add(variantNameList.get(finalI).get(0));
-                                        if (finalI == 1) {
-                                            variantRows.add(
-                                                    tableRowCount,
-                                                    databaseHandler.getVariantRows(
-                                                            productID.get(sp_product_name.getSelectedItemPosition()),
-                                                            variantIDList.get(finalI - 1).get(0),
-                                                            variantNameList.get(finalI - 1).get(position)
-                                                    )
-                                            );
-                                        } else {
-                                            variantRows.add(
-                                                    tableRowCount,
-                                                    databaseHandler.getVariantRows(
-                                                            productID.get(sp_product_name.getSelectedItemPosition()),
-                                                            variantIDList.get(finalI - 1).get(0),
-                                                            variantNameList.get(finalI - 1).get(position),
-                                                            variantRows.get(tableRowCount)
-                                                    )
-                                            );
-                                        }
-                                        for (String s : databaseHandler.getAssociatedVariants(
-                                                productID.get(sp_product_name.getSelectedItemPosition()),
-                                                variantIDList.get(finalI).get(0),
-                                                variantNameList.get(finalI - 1).get(position),
-                                                variantRows.get(tableRowCount))
-                                                ) {
-                                            variantDetailsNames.add(s);
-                                        }
-                                        variantNameList.add(finalI, variantDetailsNames);
-                                        ((Spinner) variantViews.get(finalI)).setAdapter(new ArrayAdapter<>(context, R.layout.spinner_item, variantNameList.get(finalI)));
-                                        arrayAdapter.notifyDataSetChanged();
-                                    }
-                                }
-                            }
-
-                            @Override
-                            public void onNothingSelected(AdapterView<?> parent) {
-
-                            }
-                        });
-                        variantViews.add(spinner);
-                        variantIDList.add(variantNameIDs);
-                        variantNameList.add(variantNames);
-                    } else {
-                        price_id.add(i);
-                    }
-                }
-
-                //For loading price dropdown
-                final List<String> variantPriceTypes = new ArrayList<>();
-                final List<Integer> variantIDs = new ArrayList<>();
-
-                final EditText editText = new EditText(context);
-                editText.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
-                editText.setInputType(InputType.TYPE_NULL);
-                //For product stock
-                final TextView productStock = new TextView(context);
-                productStock.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
-                productStock.setTextSize(20);
-                //For product stock
-                variantPriceTypes.add("Select price type");
-                for (Integer integer : price_id) {
-                    variantIDs.add(variantsItems.get(integer).getId());
-                    variantPriceTypes.add(variantsItems.get(integer).getName());
-                    variantNameList.add(variantPriceTypes);
-                    variantIDList.add(variantIDs);
-                }
-
-                final ArrayAdapter<String> arrayAdapter;
-                Spinner spinner = new Spinner(context);
-                spinner.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
-                arrayAdapter = new ArrayAdapter<>(context, R.layout.spinner_item, variantPriceTypes);
-                spinner.setAdapter(arrayAdapter);
-                spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                    @Override
-                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                        if (position != 0) {
-                            for (String s : databaseHandler.getAssociatedVariants(
-                                    productID.get(sp_product_name.getSelectedItemPosition()),
-                                    variantIDs.get(position - 1),
-                                    "Price",//this is not used in query. its optional
-                                    variantRows.get(tableRowCount))) {
-                                editText.setText(s);
-                                variantPrice = Double.parseDouble(s);
-                            }
-                            //For product stock
-                            String stock = databaseHandler.getVariantProductStock(productID.get(sp_product_name.getSelectedItemPosition()), variantRows.get(tableRowCount).get(0));
-                            if (stock.equals("0")) {
-                                productStock.setTextColor(Color.RED);
-                                productStock.setText("Out of Stock");
-                                outOfStock = true;
-                            } else {
-                                productStock.setTextColor(Color.GREEN);
-                                productStock.setText("Stock: " + stock);
-                                outOfStock = false;
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onNothingSelected(AdapterView<?> parent) {
-
-                    }
-                });
-                variantViews.add(spinner);
-                //For loading price dropdown
-
-
-                variantViews.add(editText);
-                variantViews.add(productStock);
-                for (View view : variantViews)
-                    ll_spinner_layout.addView(view);
             }
 
             @Override
@@ -612,7 +432,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
         builder.show();
     }
 
-    private void addFirstProduct(Integer productId, final boolean fromVariant) {
+    private void addFirstProduct(String productId, final boolean fromVariant) {
         binding.spProduct.setSelection(productID.indexOf(productId));
         binding.spProduct.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -638,7 +458,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
         });
     }
 
-    private void addProduct(Integer productId, final boolean fromVariant) {
+    private void addProduct(String productId, final boolean fromVariant) {
         if (tableRowCount == 1) {
             addFirstProduct(productId, fromVariant);
             tableRowCount++;

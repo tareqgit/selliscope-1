@@ -16,10 +16,10 @@ import com.humaclab.selliscope_myone.model.OrderResponse;
 import com.humaclab.selliscope_myone.model.OutletType.OutletTypeResponse;
 import com.humaclab.selliscope_myone.model.Payment;
 import com.humaclab.selliscope_myone.model.PaymentResponse;
+import com.humaclab.selliscope_myone.model.ProductResponse;
 import com.humaclab.selliscope_myone.model.SellsReturnResponse;
 import com.humaclab.selliscope_myone.model.Thana.ThanaResponse;
 import com.humaclab.selliscope_myone.model.UserLocation;
-import com.humaclab.selliscope_myone.model.VariantProduct.VariantProductResponse;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -46,10 +46,13 @@ public interface SelliscopeApiEndpointInterface {
     @GET("product/brand")
     Call<BrandResponse> getBrands();
 
-    /*@GET("product")
-    Call<ProductResponse> getProducts();*/
-    @GET("variant-product")
-    Call<VariantProductResponse> getProducts();
+    @GET("product")
+    Call<ProductResponse> getProducts();
+
+    /*@GET("variant-product")
+    Call<VariantProductResponse> getProducts();*/
+    @GET("product/stock/{productID}")
+    Call<StockResponse> getProductStock(@Path("productID") String productID);
 
     @GET("order")
     Call<OrderResponse> getOrders();
@@ -95,10 +98,10 @@ public interface SelliscopeApiEndpointInterface {
     @POST("visit/store")
     Call<ResponseBody> sendUserLocation(@Body UserLocation userLocation);
 
-    @POST("order/variant/store")
-    Call<AddNewOrder.OrderResponse> addOrder(@Body AddNewOrder order);
-    /*@POST("order/store")
+    /*@POST("order/variant/store")
     Call<AddNewOrder.OrderResponse> addOrder(@Body AddNewOrder order);*/
+    @POST("order/store")
+    Call<AddNewOrder.OrderResponse> addOrder(@Body AddNewOrder order);
 
     @POST("payment/collect")
     Call<PaymentResponse.PaymentSucessfull> payNow(@Body PaymentResponse payment);

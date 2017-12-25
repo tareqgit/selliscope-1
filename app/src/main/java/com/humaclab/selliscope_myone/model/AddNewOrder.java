@@ -23,10 +23,10 @@ public class AddNewOrder implements Serializable {
 
         public static class Product {
             @SerializedName("id")
-            public int id;
+            public String id;
             @SerializedName("qty")
             public int qty;
-            @SerializedName("row")
+            @SerializedName("stocktype")
             public int row;
             @SerializedName("price")
             public String price;
@@ -49,9 +49,9 @@ public class AddNewOrder implements Serializable {
                 @SerializedName("id")
                 public int id;
                 @SerializedName("outlet_id")
-                public int outlet_id;
+                public String outlet_id;
                 @SerializedName("discount")
-                public int discount;
+                public Double discount;
             }
         }
     }

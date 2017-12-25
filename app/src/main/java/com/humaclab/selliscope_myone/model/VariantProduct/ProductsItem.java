@@ -26,7 +26,7 @@ public class ProductsItem {
     private int discount;
 
     @SerializedName("id")
-    private int id;
+    private String id;
 
     @SerializedName("pitch")
     private Pitch pitch;
@@ -85,11 +85,11 @@ public class ProductsItem {
         this.discount = discount;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 

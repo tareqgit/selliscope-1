@@ -16,7 +16,7 @@ import com.humaclab.selliscope_myone.model.DashboardItem;
 import java.util.List;
 
 /**
- * Created by Nahid on 3/1/2017.
+ * Created by Leon on 3/1/2017.
  */
 public class DashboardRecyclerViewAdapter extends RecyclerView.Adapter<DashboardRecyclerViewAdapter.DashboardViewHolder> {
 
@@ -44,7 +44,7 @@ public class DashboardRecyclerViewAdapter extends RecyclerView.Adapter<Dashboard
 
     @Override
     public int getItemCount() {
-        return 8;
+        return 4;
     }
 
     public static class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {

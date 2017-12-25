@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -78,32 +77,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         setSupportActionBar(toolbar);
         HomeActivityPermissionsDispatcher.startUserTrackingServiceWithCheck(this);
         fragmentManager = getSupportFragmentManager();
-        getFragment(TargetFragment.class);
-        TabLayout tabLayout = findViewById(R.id.sliding_tabs);
-        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                int position = tab.getPosition();
-                switch (position) {
-                    case 0: {
-                        getFragment(TargetFragment.class);
-                        break;
-                    }
-                    case 1: {
-                        getFragment(DashboardFragment.class);
-                        break;
-                    }
-                }
-            }
+        getFragment(DashboardFragment.class);
 
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-            }
-        });
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -173,9 +148,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     private void getFragment(Class createFragment) {
         try {
             Fragment fragment = (Fragment) createFragment.newInstance();
-            fragmentManager.beginTransaction()
-                    .replace(content_fragment, fragment)
-                    .commit();
+            fragmentManager.beginTransaction().replace(content_fragment, fragment).commit();
         } catch (Exception e) {
             e.printStackTrace();
         }

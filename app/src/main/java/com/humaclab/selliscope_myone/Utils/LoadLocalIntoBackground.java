@@ -75,8 +75,6 @@ public class LoadLocalIntoBackground {
                                                 result.getCategory(),
                                                 response.body().getStock().getStock()
                                         );
-                                        loadCategory();
-                                        loadBrand();
                                     }
 
                                     @Override
@@ -85,6 +83,14 @@ public class LoadLocalIntoBackground {
                                     }
                                 });
                             }
+
+                            new android.os.Handler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    loadCategory();
+                                    loadBrand();
+                                }
+                            },60000);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }

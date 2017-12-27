@@ -30,6 +30,7 @@ android {
     buildTypes {
         release {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            shrinkResources true
             minifyEnabled true
         }
     }
@@ -40,8 +41,8 @@ android {
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     implementation('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
@@ -71,7 +72,7 @@ dependencies {
     implementation('io.nlopez.smartlocation:library:3.3.2') {
         transitive = false
     }
-    testCompile 'junit:junit:4.12'
+    testImplementation 'junit:junit:4.12'
     annotationProcessor 'com.github.hotchemi:permissionsdispatcher-processor:2.3.2'
     implementation('com.crashlytics.sdk.android:answers:1.4.1@aar') {
         transitive = true

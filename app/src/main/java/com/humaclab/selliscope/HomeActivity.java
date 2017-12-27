@@ -4,6 +4,8 @@ import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -23,6 +25,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.humaclab.selliscope.Receiver.InternetConnectivityChangeReceiver;
 import com.humaclab.selliscope.Service.SendLocationDataService;
 import com.humaclab.selliscope.Utils.CheckAppUpdated;
 import com.humaclab.selliscope.Utils.Constants;
@@ -151,6 +154,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             }
         }, 30, 30, TimeUnit.MINUTES);
         //loading Data into background
+
+        //Register receiver for Internet Connectivity change
+        registerReceiver(new InternetConnectivityChangeReceiver(), new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
     }
 
     private void setDiameter() {

@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import com.google.gson.Gson;
 import com.humaclab.selliscope.dbmodel.Target;
 import com.humaclab.selliscope.dbmodel.UserVisit;
+import com.humaclab.selliscope.model.AddNewOrder;
 import com.humaclab.selliscope.model.DeliveryResponse;
 import com.humaclab.selliscope.model.District.District;
 import com.humaclab.selliscope.model.OutletType.OutletType;
@@ -31,7 +32,7 @@ import java.util.Map;
  */
 
 public class DatabaseHandler extends SQLiteOpenHelper {
-    private static final int DATABASE_VERSION = 6;
+    private static final int DATABASE_VERSION = 7;
 
     // Database Tables
     private static final String TABLE_TARGET = "targets";
@@ -47,6 +48,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String TABLE_THANA = "thana";
     private static final String TABLE_DISTRICT = "district";
     private static final String TABLE_OUTLET_TYPE = "outlet_type";
+    private static final String TABLE_ORDER = "order_table";
 
     // Target Table Columns names
     private static final String KEY_TARGET_ID = "targetId";
@@ -123,6 +125,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     //Outlet type table column name
     private static final String KEY_TYPE_ID = "id";
     private static final String KEY_TYPE_NAME = "type";
+
+    //Order table column name
+    private static final String KEY_ORDER_OUTLET_ID = "outlet_id";
+    private static final String KEY_ORDER_PRODUCT_ID = "product_id";
+    private static final String KEY_ORDER_PRODUCT_QUANTITY = "product_quantity";
+    private static final String KEY_ORDER_PRODUCT_ROW = "product_row";
+    private static final String KEY_ORDER_PRODUCT_PRICE = "product_price";
+    private static final String KEY_ORDER_PRODUCT_DISCOUNT = "product_discount";
 
     public DatabaseHandler(Context context) {
         super(context, Constants.databaseName, null, DATABASE_VERSION);
@@ -224,6 +234,15 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + KEY_TYPE_ID + " INTEGER  PRIMARY KEY,"
                 + KEY_TYPE_NAME + " TEXT"
                 + ")";
+        String CREATE_ORDER_TABLE = "CREATE TABLE " + TABLE_ORDER + "("
+                + KEY_ORDER_ID + " INTEGER  PRIMARY KEY AUTOINCREMENT,"
+                + KEY_ORDER_OUTLET_ID + " INTEGER,"
+                + KEY_ORDER_PRODUCT_ID + " INTEGER,"
+                + KEY_ORDER_PRODUCT_QUANTITY + " INTEGER,"
+                + KEY_ORDER_PRODUCT_ROW + " INTEGER,"
+                + KEY_ORDER_PRODUCT_PRICE + " TEXT,"
+                + KEY_ORDER_PRODUCT_DISCOUNT + " TEXT"
+                + ")";
         db.execSQL(CREATE_TARGET_TABLE);
         db.execSQL(CREATE_TARGET_USER_VISITS);
         db.execSQL(CREATE_PRODUCT_TABLE);
@@ -237,6 +256,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL(CREATE_THANA_TABLE);
         db.execSQL(CREATE_DISTRICT_TABLE);
         db.execSQL(CREATE_OUTELT_TYPE_TABLE);
+        db.execSQL(CREATE_ORDER_TABLE);
     }
 
     // Upgrading database
@@ -256,6 +276,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_THANA);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_DISTRICT);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_OUTLET_TYPE);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_ORDER);
         // Create tables again
         onCreate(db);
     }
@@ -1169,6 +1190,75 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         }
         db.close();
     }
+
+    //Offline order taking
+    public List<AddNewOrder> getOrder() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String outletIds = "SELECT distinct " + KEY_ORDER_OUTLET_ID + " FROM " + TABLE_ORDER;
+
+        List<AddNewOrder> addNewOrderList = new ArrayList<>();
+
+        Cursor cursorOutletID = db.rawQuery(outletIds, null);
+
+        // looping through all rows and adding to list
+        if (cursorOutletID.moveToFirst()) {
+            do {
+                AddNewOrder addNewOrder = new AddNewOrder();
+                AddNewOrder.NewOrder newOrder = new AddNewOrder.NewOrder();
+                List<AddNewOrder.NewOrder.Product> productList = new ArrayList<>();
+                cursorOutletID.getColumnNames();
+                newOrder.outletId = cursorOutletID.getInt(cursorOutletID.getColumnIndex(KEY_ORDER_OUTLET_ID));
+                String orders = "SELECT * FROM " + TABLE_ORDER + " WHERE " + KEY_ORDER_OUTLET_ID + "=" + newOrder.outletId;
+                Cursor cursorOrders = db.rawQuery(orders, null);
+                if (cursorOrders.moveToFirst()) {
+                    do {
+                        AddNewOrder.NewOrder.Product product = new AddNewOrder.NewOrder.Product();
+                        product.id = cursorOrders.getInt(cursorOrders.getColumnIndex(KEY_ORDER_PRODUCT_ID));
+                        product.qty = cursorOrders.getInt(cursorOrders.getColumnIndex(KEY_ORDER_PRODUCT_QUANTITY));
+                        product.row = cursorOrders.getInt(cursorOrders.getColumnIndex(KEY_ORDER_PRODUCT_ROW));
+                        product.price = cursorOrders.getString(cursorOrders.getColumnIndex(KEY_ORDER_PRODUCT_PRICE));
+                        product.discount = Double.valueOf(cursorOrders.getString(cursorOrders.getColumnIndex(KEY_ORDER_PRODUCT_DISCOUNT)));
+                        productList.add(product);
+                    } while (cursorOrders.moveToNext());
+                    newOrder.products = productList;
+                    addNewOrder.newOrder = newOrder;
+                }
+                addNewOrderList.add(addNewOrder);
+            } while (cursorOutletID.moveToNext());
+        }
+        db.close();
+        return addNewOrderList;
+    }
+
+    public void setOrder(AddNewOrder addNewOrder) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(KEY_ORDER_OUTLET_ID, addNewOrder.newOrder.outletId);
+        try {
+            for (AddNewOrder.NewOrder.Product product : addNewOrder.newOrder.products) {
+                values.put(KEY_ORDER_PRODUCT_ID, product.id);
+                values.put(KEY_ORDER_PRODUCT_QUANTITY, product.qty);
+                values.put(KEY_ORDER_PRODUCT_ROW, product.row);
+                values.put(KEY_ORDER_PRODUCT_PRICE, product.price);
+                values.put(KEY_ORDER_PRODUCT_DISCOUNT, product.discount);
+                try {
+                    db.insert(TABLE_ORDER, null, values);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        db.close();
+    }
+
+    public void removeOrder(int outletId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_ORDER, KEY_OUTLET_ID + " = ?", new String[]{String.valueOf(outletId)});
+        db.close();
+    }
+    //Offline order taking
 
     public boolean removeAll() {
         SQLiteDatabase db = this.getWritableDatabase();

@@ -84,9 +84,9 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
 
         pd = new ProgressDialog(this);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("");
-        TextView toolbarTitle = (TextView) findViewById(R.id.tv_toolbar_title);
+        TextView toolbarTitle = findViewById(R.id.tv_toolbar_title);
         toolbarTitle.setText(getResources().getString(R.string.order));
         setSupportActionBar(toolbar);
 
@@ -112,15 +112,10 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
             }
         });
 
-        if (NetworkUtility.isNetworkAvailable(this)) {
-            getOutlets();
-            getCategory();
-            getBrand();
-            getProducts();
-        } else {
-            Toast.makeText(this, "Connect to Wifi or Mobile Data",
-                    Toast.LENGTH_SHORT).show();
-        }
+        getOutlets();
+        getCategory();
+        getBrand();
+        getProducts();
 
         binding.btnOrder.setOnClickListener(this);
 
@@ -196,43 +191,6 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
             showProductSelectionDialog();
         }
         //if this activity called from product activity
-
-        /*
-        SessionManager sessionManager = new SessionManager(OrderActivity.this);
-        apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(),
-                sessionManager.getUserPassword(), false)
-                .create(SelliscopeApiEndpointInterface.class);
-        Call<ProductResponse> call = apiService.getProducts();
-        call.enqueue(new Callback<ProductResponse>() {
-            @Override
-            public void onResponse(Call<ProductResponse> call, Response<ProductResponse> response) {
-                if (response.code() == 200) {
-                    try {
-                        List<ProductResponse.ProductResult> products = response.body().result.productResults;
-                        for (ProductResponse.ProductResult result : products) {
-                            productName.add(result.name);
-                            productID.add(result.id);
-                            productDiscount.add(result.discount);
-                            productPrice.add(Double.parseDouble(result.price.replace(",", "")));
-                        }
-                        binding.spProduct.setAdapter(new ArrayAdapter<>(getApplicationContext(), R.layout.spinner_item, productName));
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                } else if (response.code() == 401) {
-                    Toast.makeText(OrderActivity.this,
-                            "Invalid Response from server.", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(OrderActivity.this,
-                            "Server Error! Try Again Later!", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ProductResponse> call, Throwable t) {
-                t.printStackTrace();
-            }
-        });*/
     }
 
     private void getOutlets() {
@@ -249,51 +207,6 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
             binding.spOutlet.setSelection(position);
         }
         //if this activity called from outlet activity
-
-        /* SessionManager sessionManager = new SessionManager(OrderActivity.this);
-        apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(),
-                sessionManager.getUserPassword(), false)
-                .create(SelliscopeApiEndpointInterface.class);
-        Call<ResponseBody> call = apiService.getOutlets();
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                Gson gson = new Gson();
-                if (response.code() == 200) {
-                    try {
-                        Outlets.Successful getOutletListSuccessful = gson.fromJson(response.body()
-                                .string(), Outlets.Successful.class);
-                        for (Outlets.Successful.Outlet outlet : getOutletListSuccessful.outletsResult.outlets) {
-                            outletName.add(outlet.outletName);
-                            outletID.add(outlet.outletId);
-                        }
-                        binding.spOutlet.setAdapter(new ArrayAdapter<>(getApplication(), R.layout.spinner_item, outletName));
-
-                        //if this activity called from outlet activity
-                        if (getIntent().hasExtra("outletID")) {
-                            int position = outletID.indexOf(getIntent().getIntExtra("outletID", 0));
-                            binding.spOutlet.setSelection(position);
-                        }
-                        //if this activity called from outlet activity
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                } else if (response.code() == 401) {
-                    Toast.makeText(OrderActivity.this,
-                            "Invalid Response from server.", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(OrderActivity.this,
-                            "Server Error! Try Again Later!", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                //Toast.makeText(LoginActivity.this, t.toString(), Toast.LENGTH_SHORT).show();
-                Log.d("Response", t.toString());
-
-            }
-        });*/
     }
 
     @Override
@@ -363,32 +276,40 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                     apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(),
                             sessionManager.getUserPassword(), false)
                             .create(SelliscopeApiEndpointInterface.class);
-                    System.out.println(new Gson().toJson(addNewOrder));
 
-                    Call<AddNewOrder.OrderResponse> call = apiService.addOrder(addNewOrder);
-                    call.enqueue(new Callback<AddNewOrder.OrderResponse>() {
-                        @Override
-                        public void onResponse(Call<AddNewOrder.OrderResponse> call, Response<AddNewOrder.OrderResponse> response) {
-                            pd.dismiss();
-                            if (response.code() == 201) {
-                                System.out.println(new Gson().toJson(response.body()));
-                                Toast.makeText(OrderActivity.this, "Order created successfully", Toast.LENGTH_LONG).show();
-                                finish();
-                            } else if (response.code() == 401) {
-                                System.out.println(new Gson().toJson(response.body()));
-                                Toast.makeText(OrderActivity.this, "Invalid Response from server.", Toast.LENGTH_SHORT).show();
-                            } else {
-                                System.out.println(new Gson().toJson(response.body()));
-                                Toast.makeText(OrderActivity.this, "Server Error! Try Again Later!", Toast.LENGTH_SHORT).show();
+                    System.out.println("Order: " + new Gson().toJson(addNewOrder));
+
+                    if (NetworkUtility.isNetworkAvailable(OrderActivity.this)) {
+                        Call<AddNewOrder.OrderResponse> call = apiService.addOrder(addNewOrder);
+                        call.enqueue(new Callback<AddNewOrder.OrderResponse>() {
+                            @Override
+                            public void onResponse(Call<AddNewOrder.OrderResponse> call, Response<AddNewOrder.OrderResponse> response) {
+                                pd.dismiss();
+                                if (response.code() == 201) {
+                                    System.out.println(new Gson().toJson(response.body()));
+                                    Toast.makeText(OrderActivity.this, "Order created successfully", Toast.LENGTH_LONG).show();
+                                    finish();
+                                } else if (response.code() == 401) {
+                                    System.out.println(new Gson().toJson(response.body()));
+                                    Toast.makeText(OrderActivity.this, "Invalid Response from server.", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    System.out.println(new Gson().toJson(response.body()));
+                                    Toast.makeText(OrderActivity.this, "Server Error! Try Again Later!", Toast.LENGTH_SHORT).show();
+                                }
                             }
-                        }
 
-                        @Override
-                        public void onFailure(Call<AddNewOrder.OrderResponse> call, Throwable t) {
-                            pd.dismiss();
-                            t.printStackTrace();
-                        }
-                    });
+                            @Override
+                            public void onFailure(Call<AddNewOrder.OrderResponse> call, Throwable t) {
+                                pd.dismiss();
+                                t.printStackTrace();
+                            }
+                        });
+                    } else {
+                        databaseHandler.setOrder(addNewOrder);
+                        Toast.makeText(OrderActivity.this, "Order created successfully", Toast.LENGTH_LONG).show();
+                        pd.dismiss();
+                        finish();
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

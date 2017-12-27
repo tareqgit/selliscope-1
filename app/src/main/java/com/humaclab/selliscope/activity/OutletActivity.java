@@ -1,4 +1,4 @@
-package com.humaclab.selliscope;
+package com.humaclab.selliscope.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,11 +15,12 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.humaclab.selliscope.Utils.DatabaseHandler;
-import com.humaclab.selliscope.Utils.NetworkUtility;
-import com.humaclab.selliscope.Utils.VerticalSpaceItemDecoration;
+import com.humaclab.selliscope.R;
 import com.humaclab.selliscope.adapters.OutletRecyclerViewAdapter;
 import com.humaclab.selliscope.model.Outlets;
+import com.humaclab.selliscope.utils.DatabaseHandler;
+import com.humaclab.selliscope.utils.NetworkUtility;
+import com.humaclab.selliscope.utils.VerticalSpaceItemDecoration;
 
 public class OutletActivity extends AppCompatActivity {
     private EditText tv_search_outlet;

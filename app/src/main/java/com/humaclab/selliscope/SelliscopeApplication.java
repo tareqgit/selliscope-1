@@ -6,8 +6,8 @@ import android.support.v7.app.AppCompatDelegate;
 import com.crashlytics.android.Crashlytics;
 import com.facebook.stetho.Stetho;
 import com.facebook.stetho.okhttp3.StethoInterceptor;
-import com.humaclab.selliscope.Utils.Constants;
-import com.humaclab.selliscope.Utils.HttpAuthInterceptor;
+import com.humaclab.selliscope.utils.Constants;
+import com.humaclab.selliscope.utils.HttpAuthInterceptor;
 
 import java.util.concurrent.TimeUnit;
 

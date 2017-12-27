@@ -1,4 +1,4 @@
-package com.humaclab.selliscope.Utils;
+package com.humaclab.selliscope.utils;
 
 import android.content.Context;
 import android.content.Intent;
@@ -6,8 +6,8 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.util.Log;
 
-import com.humaclab.selliscope.HomeActivity;
-import com.humaclab.selliscope.LoginActivity;
+import com.humaclab.selliscope.activity.HomeActivity;
+import com.humaclab.selliscope.activity.LoginActivity;
 
 import java.util.HashMap;
 

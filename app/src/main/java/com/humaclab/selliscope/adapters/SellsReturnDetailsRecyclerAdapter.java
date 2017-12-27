@@ -17,9 +17,9 @@ import com.humaclab.selliscope.BR;
 import com.humaclab.selliscope.R;
 import com.humaclab.selliscope.SelliscopeApiEndpointInterface;
 import com.humaclab.selliscope.SelliscopeApplication;
-import com.humaclab.selliscope.Utils.SessionManager;
 import com.humaclab.selliscope.model.DeliveryResponse;
 import com.humaclab.selliscope.model.SellsReturnResponse;
+import com.humaclab.selliscope.utils.SessionManager;
 
 import java.util.List;
 

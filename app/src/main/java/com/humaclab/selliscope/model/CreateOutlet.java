@@ -29,6 +29,7 @@ public class CreateOutlet {
     public boolean error;
     @SerializedName("result")
     public String result;
+
     public CreateOutlet(int outletTypeId, String outletName, String ownerName, String address,
                         int outletThanaId, String outletPhoneNumber, double outletLatitude,
                         double outletLongitude, String outletImage) {

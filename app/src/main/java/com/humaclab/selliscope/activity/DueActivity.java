@@ -1,6 +1,5 @@
-package com.humaclab.selliscope;
+package com.humaclab.selliscope.activity;
 
-import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -11,11 +10,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.humaclab.selliscope.Utils.DatabaseHandler;
-import com.humaclab.selliscope.Utils.NetworkUtility;
-import com.humaclab.selliscope.Utils.SessionManager;
-import com.humaclab.selliscope.adapters.PaymentRecyclerViewAdapter;
+import com.humaclab.selliscope.R;
+import com.humaclab.selliscope.SelliscopeApiEndpointInterface;
+import com.humaclab.selliscope.SelliscopeApplication;
+import com.humaclab.selliscope.adapters.DueRecyclerViewAdapter;
 import com.humaclab.selliscope.model.Payment;
+import com.humaclab.selliscope.utils.DatabaseHandler;
+import com.humaclab.selliscope.utils.NetworkUtility;
+import com.humaclab.selliscope.utils.SessionManager;
 
 import java.util.List;
 
@@ -23,86 +25,76 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class PaymentActivity extends AppCompatActivity {
+public class DueActivity extends AppCompatActivity {
     private SelliscopeApiEndpointInterface apiService;
     private DatabaseHandler databaseHandler;
-    private RecyclerView rv_payment;
-    private SwipeRefreshLayout srl_payment;
-    private ProgressDialog pd;
+    private RecyclerView rv_due;
+    private SwipeRefreshLayout srl_due;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_payment);
+        setContentView(R.layout.activity_due);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("");
         TextView toolbarTitle = (TextView) findViewById(R.id.tv_toolbar_title);
-        toolbarTitle.setText("Payment");
+        toolbarTitle.setText("Dues");
         setSupportActionBar(toolbar);
 
         databaseHandler = new DatabaseHandler(this);
-        pd = new ProgressDialog(this);
 
-        rv_payment = (RecyclerView) findViewById(R.id.rv_payment);
-        rv_payment.setLayoutManager(new LinearLayoutManager(this));
-        srl_payment = (SwipeRefreshLayout) findViewById(R.id.srl_payment);
-        srl_payment.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+        rv_due = (RecyclerView) findViewById(R.id.rv_due);
+        rv_due.setLayoutManager(new LinearLayoutManager(this));
+        srl_due = (SwipeRefreshLayout) findViewById(R.id.srl_due);
+        srl_due.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if (NetworkUtility.isNetworkAvailable(PaymentActivity.this)) {
-                    loadPayments();
+                if (NetworkUtility.isNetworkAvailable(DueActivity.this)) {
+                    loadDues();
                 } else {
-                    Toast.makeText(PaymentActivity.this, "Connect to Wifi or Mobile Data", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(DueActivity.this, "Connect to Wifi or Mobile Data", Toast.LENGTH_SHORT).show();
                 }
             }
         });
         if (NetworkUtility.isNetworkAvailable(this)) {
-            loadPayments();
+            loadDues();
         } else {
             Toast.makeText(this, "Connect to Wifi or Mobile Data", Toast.LENGTH_SHORT).show();
         }
     }
 
-    private void loadPayments() {
-        pd.setMessage("Loading payment list.....");
-        pd.show();
-
-        SessionManager sessionManager = new SessionManager(PaymentActivity.this);
+    private void loadDues() {
+        SessionManager sessionManager = new SessionManager(DueActivity.this);
         apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(),
                 sessionManager.getUserPassword(), false).create(SelliscopeApiEndpointInterface.class);
         Call<Payment> call = apiService.getPayment();
         call.enqueue(new Callback<Payment>() {
             @Override
             public void onResponse(Call<Payment> call, Response<Payment> response) {
-                pd.dismiss();
                 if (response.code() == 200) {
                     try {
-                        if (srl_payment.isRefreshing())
-                            srl_payment.setRefreshing(false);
+                        if (srl_due.isRefreshing())
+                            srl_due.setRefreshing(false);
 
                         System.out.println("Response " + new Gson().toJson(response.body()));
                         List<Payment.OrderList> orders = response.body().result.orderList;
-                        if (!orders.isEmpty()) {
-                            rv_payment.setAdapter(new PaymentRecyclerViewAdapter(getApplication(), orders));
-                        } else {
-                            Toast.makeText(getApplicationContext(), "You don't have any due payments.", Toast.LENGTH_LONG).show();
-                        }
+
+                        rv_due.setAdapter(new DueRecyclerViewAdapter(getApplication(), orders));
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                 } else if (response.code() == 401) {
-                    Toast.makeText(PaymentActivity.this,
+                    Toast.makeText(DueActivity.this,
                             "Invalid Response from server.", Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(PaymentActivity.this,
+                    Toast.makeText(DueActivity.this,
                             "Server Error! Try Again Later!", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<Payment> call, Throwable t) {
-                pd.dismiss();
                 t.printStackTrace();
             }
         });

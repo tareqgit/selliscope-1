@@ -1,4 +1,4 @@
-package com.humaclab.selliscope.Utils;
+package com.humaclab.selliscope.utils;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;

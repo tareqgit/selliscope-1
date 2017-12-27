@@ -1,4 +1,4 @@
-package com.humaclab.selliscope;
+package com.humaclab.selliscope.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -12,12 +12,15 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.humaclab.selliscope.Utils.NetworkUtility;
-import com.humaclab.selliscope.Utils.SessionManager;
-import com.humaclab.selliscope.Utils.VerticalSpaceItemDecoration;
+import com.humaclab.selliscope.R;
+import com.humaclab.selliscope.SelliscopeApiEndpointInterface;
+import com.humaclab.selliscope.SelliscopeApplication;
 import com.humaclab.selliscope.adapters.TargetRecyclerViewAdapter;
 import com.humaclab.selliscope.model.TargetItem;
 import com.humaclab.selliscope.model.Targets;
+import com.humaclab.selliscope.utils.NetworkUtility;
+import com.humaclab.selliscope.utils.SessionManager;
+import com.humaclab.selliscope.utils.VerticalSpaceItemDecoration;
 
 import java.io.IOException;
 import java.util.List;

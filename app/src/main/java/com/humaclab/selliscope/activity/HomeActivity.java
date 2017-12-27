@@ -1,4 +1,4 @@
-package com.humaclab.selliscope;
+package com.humaclab.selliscope.activity;
 
 import android.Manifest;
 import android.app.ProgressDialog;
@@ -25,14 +25,20 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.humaclab.selliscope.Receiver.InternetConnectivityChangeReceiver;
-import com.humaclab.selliscope.Service.SendLocationDataService;
-import com.humaclab.selliscope.Utils.CheckAppUpdated;
-import com.humaclab.selliscope.Utils.Constants;
-import com.humaclab.selliscope.Utils.DatabaseHandler;
-import com.humaclab.selliscope.Utils.LoadLocalIntoBackground;
-import com.humaclab.selliscope.Utils.SessionManager;
+import com.humaclab.selliscope.BuildConfig;
+import com.humaclab.selliscope.R;
+import com.humaclab.selliscope.SelliscopeApiEndpointInterface;
+import com.humaclab.selliscope.SelliscopeApplication;
+import com.humaclab.selliscope.fragment.DashboardFragment;
+import com.humaclab.selliscope.fragment.TargetFragment;
 import com.humaclab.selliscope.model.Diameter.DiameterResponse;
+import com.humaclab.selliscope.receiver.InternetConnectivityChangeReceiver;
+import com.humaclab.selliscope.service.SendLocationDataService;
+import com.humaclab.selliscope.utils.CheckAppUpdated;
+import com.humaclab.selliscope.utils.Constants;
+import com.humaclab.selliscope.utils.DatabaseHandler;
+import com.humaclab.selliscope.utils.LoadLocalIntoBackground;
+import com.humaclab.selliscope.utils.SessionManager;
 import com.squareup.picasso.Picasso;
 
 import java.util.concurrent.Executors;

@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context="com.humaclab.selliscope.EditOutletActivity">
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+              tools:context="com.humaclab.selliscope.activity.EditOutletActivity">
 
     <include
         android:id="@+id/include"
-        layout="@layout/toolbar_layout" />
+        layout="@layout/toolbar_layout"/>
 
     <ScrollView
         android:layout_width="match_parent"
@@ -35,7 +35,7 @@
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/iv_outlet" />
+                app:layout_constraintTop_toBottomOf="@+id/iv_outlet"/>
 
             <EditText
                 android:id="@+id/et_outlet_owner_name"
@@ -50,7 +50,7 @@
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/sp_thana" />
+                app:layout_constraintTop_toBottomOf="@+id/sp_thana"/>
 
             <ImageView
                 android:id="@+id/iv_outlet"
@@ -64,7 +64,7 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_add_outlet" />
+                app:srcCompat="@drawable/ic_add_outlet"/>
 
             <EditText
                 android:id="@+id/et_outlet_address"
@@ -80,7 +80,7 @@
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/sp_outlet_type" />
+                app:layout_constraintTop_toBottomOf="@+id/sp_outlet_type"/>
 
             <EditText
                 android:id="@+id/et_outlet_contact_number"
@@ -96,7 +96,7 @@
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/et_outlet_owner_name" />
+                app:layout_constraintTop_toBottomOf="@+id/et_outlet_owner_name"/>
 
 
             <Spinner
@@ -112,7 +112,7 @@
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_thana" />
+                app:layout_constraintTop_toBottomOf="@+id/tv_thana"/>
 
             <Spinner
                 android:id="@+id/sp_district"
@@ -127,7 +127,7 @@
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_district" />
+                app:layout_constraintTop_toBottomOf="@+id/tv_district"/>
 
             <Spinner
                 android:id="@+id/sp_outlet_type"
@@ -142,7 +142,7 @@
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_outlet_type" />
+                app:layout_constraintTop_toBottomOf="@+id/tv_outlet_type"/>
 
             <Button
                 android:id="@+id/btn_update_outlet"
@@ -159,7 +159,7 @@
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/et_outlet_contact_number" />
+                app:layout_constraintTop_toBottomOf="@+id/et_outlet_contact_number"/>
 
             <Button
                 android:id="@+id/btn_cancel"
@@ -179,7 +179,7 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/btn_update_outlet"
-                app:layout_constraintVertical_bias="0.0" />
+                app:layout_constraintVertical_bias="0.0"/>
 
             <TextView
                 android:id="@+id/tv_outlet_type"
@@ -196,7 +196,7 @@
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/et_outlet_name" />
+                app:layout_constraintTop_toBottomOf="@+id/et_outlet_name"/>
 
             <TextView
                 android:id="@+id/tv_district"
@@ -213,7 +213,7 @@
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/et_outlet_address" />
+                app:layout_constraintTop_toBottomOf="@+id/et_outlet_address"/>
 
             <TextView
                 android:id="@+id/tv_thana"
@@ -228,7 +228,7 @@
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/sp_district" />
+                app:layout_constraintTop_toBottomOf="@+id/sp_district"/>
 
         </android.support.constraint.ConstraintLayout>
     </ScrollView>

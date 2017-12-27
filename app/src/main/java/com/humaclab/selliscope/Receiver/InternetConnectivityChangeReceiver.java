@@ -1,4 +1,4 @@
-package com.humaclab.selliscope.Receiver;
+package com.humaclab.selliscope.receiver;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -8,9 +8,9 @@ import android.net.NetworkInfo;
 
 import com.humaclab.selliscope.SelliscopeApiEndpointInterface;
 import com.humaclab.selliscope.SelliscopeApplication;
-import com.humaclab.selliscope.Utils.DatabaseHandler;
-import com.humaclab.selliscope.Utils.SessionManager;
 import com.humaclab.selliscope.model.AddNewOrder;
+import com.humaclab.selliscope.utils.DatabaseHandler;
+import com.humaclab.selliscope.utils.SessionManager;
 
 import java.util.List;
 

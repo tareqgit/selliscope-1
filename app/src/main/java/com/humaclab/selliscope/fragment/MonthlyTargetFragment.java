@@ -1,4 +1,4 @@
-package com.humaclab.selliscope;
+package com.humaclab.selliscope.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -12,17 +12,17 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.humaclab.selliscope.Utils.DatabaseHandler;
-import com.humaclab.selliscope.Utils.NetworkUtility;
-import com.humaclab.selliscope.Utils.SessionManager;
-import com.humaclab.selliscope.Utils.VerticalSpaceItemDecoration;
+import com.humaclab.selliscope.R;
+import com.humaclab.selliscope.SelliscopeApiEndpointInterface;
+import com.humaclab.selliscope.SelliscopeApplication;
 import com.humaclab.selliscope.adapters.TargetRecyclerViewAdapter;
-import com.humaclab.selliscope.dbmodel.Target;
 import com.humaclab.selliscope.model.TargetItem;
 import com.humaclab.selliscope.model.Targets;
+import com.humaclab.selliscope.utils.NetworkUtility;
+import com.humaclab.selliscope.utils.SessionManager;
+import com.humaclab.selliscope.utils.VerticalSpaceItemDecoration;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.ResponseBody;
@@ -34,18 +34,16 @@ import retrofit2.Response;
  * Created by Miaki on 2/27/17.
  */
 
-public class DailyTargetFragment extends Fragment {
+public class MonthlyTargetFragment extends Fragment {
     private static final String KEY_POSITION = "position";
     SelliscopeApiEndpointInterface apiService;
     SwipeRefreshLayout swipeRefreshLayout;
     RecyclerView recyclerView;
-    DatabaseHandler dbHandler;
-    List<Target> targets;
     private TargetRecyclerViewAdapter targetRecyclerViewAdapter;
     private List<TargetItem> targetItems;
 
-    public static DailyTargetFragment newInstance(int position) {
-        DailyTargetFragment frag = new DailyTargetFragment();
+    public static MonthlyTargetFragment newInstance(int position) {
+        MonthlyTargetFragment frag = new MonthlyTargetFragment();
         Bundle args = new Bundle();
 
         args.putInt(KEY_POSITION, position);
@@ -61,11 +59,9 @@ public class DailyTargetFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater,
                              ViewGroup container,
                              Bundle savedInstanceState) {
-        View dailyTargetView = inflater.inflate(R.layout.target_layout, container, false);
-        dbHandler = new DatabaseHandler(getContext());
-        targets = new ArrayList<>();
-        recyclerView = (RecyclerView) dailyTargetView.findViewById(R.id.rv_target);
-        swipeRefreshLayout = (SwipeRefreshLayout) dailyTargetView.findViewById(R.id.srl_target);
+        View monthlyTargetView = inflater.inflate(R.layout.target_layout, container, false);
+        recyclerView = (RecyclerView) monthlyTargetView.findViewById(R.id.rv_target);
+        swipeRefreshLayout = (SwipeRefreshLayout) monthlyTargetView.findViewById(R.id.srl_target);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -85,7 +81,7 @@ public class DailyTargetFragment extends Fragment {
         else
             Toast.makeText(getActivity(), "Connect to Wifi or Mobile Data",
                     Toast.LENGTH_SHORT).show();
-        return dailyTargetView;
+        return monthlyTargetView;
     }
 
     void getTargets() {
@@ -104,17 +100,8 @@ public class DailyTargetFragment extends Fragment {
                                 , Targets.Successful.class);
                         if (swipeRefreshLayout.isRefreshing())
                             swipeRefreshLayout.setRefreshing(false);
-//                        for (Targets.Successful.Target target :
-//                                getTargetListSuccessful.targetResult.dailyTarget) {
-//                            targets.add(new Target("Must Sales", "Daily", target.mustSales.target,
-//                                    target.mustSales.achieved));
-//                            targets.add(new Target("Priority Sales", "Daily", target.prioritySales.target,
-//                                    target.prioritySales.achieved));
-//                            targets.add(new Target("Regular Sales", "Daily", target.regularSales.target,
-//                                    target.mustSales.achieved));
-//                        }
                         targetRecyclerViewAdapter = new TargetRecyclerViewAdapter(getContext(),
-                                getTargetListSuccessful.targetResult.dailyTarget);
+                                getTargetListSuccessful.targetResult.monthlyTarget);
 
                         recyclerView.setAdapter(targetRecyclerViewAdapter);
 

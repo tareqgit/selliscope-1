@@ -1,4 +1,4 @@
-package com.humaclab.selliscope.Utils;
+package com.humaclab.selliscope.utils;
 
 import android.graphics.Rect;
 import android.support.v7.widget.RecyclerView;

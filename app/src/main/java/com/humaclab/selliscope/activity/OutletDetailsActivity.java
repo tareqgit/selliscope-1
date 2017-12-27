@@ -1,4 +1,4 @@
-package com.humaclab.selliscope;
+package com.humaclab.selliscope.activity;
 
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.humaclab.selliscope.R;
 import com.humaclab.selliscope.databinding.ActivityOutletDetailsBinding;
 import com.humaclab.selliscope.model.Outlets;
 

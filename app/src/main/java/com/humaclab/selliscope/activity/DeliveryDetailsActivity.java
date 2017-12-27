@@ -1,4 +1,4 @@
-package com.humaclab.selliscope;
+package com.humaclab.selliscope.activity;
 
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
@@ -9,12 +9,16 @@ import android.support.v7.widget.Toolbar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.humaclab.selliscope.Utils.NetworkUtility;
-import com.humaclab.selliscope.Utils.SessionManager;
+import com.humaclab.selliscope.BR;
+import com.humaclab.selliscope.R;
+import com.humaclab.selliscope.SelliscopeApiEndpointInterface;
+import com.humaclab.selliscope.SelliscopeApplication;
 import com.humaclab.selliscope.adapters.DeliveryRecyclerAdapter;
 import com.humaclab.selliscope.databinding.ActivityDeliveryDetailsBinding;
 import com.humaclab.selliscope.model.DeliveryResponse;
 import com.humaclab.selliscope.model.GodownRespons;
+import com.humaclab.selliscope.utils.NetworkUtility;
+import com.humaclab.selliscope.utils.SessionManager;
 
 import java.util.ArrayList;
 import java.util.List;

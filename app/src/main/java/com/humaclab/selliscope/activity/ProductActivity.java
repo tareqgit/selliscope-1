@@ -1,4 +1,4 @@
-package com.humaclab.selliscope;
+package com.humaclab.selliscope.activity;
 
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -12,11 +12,13 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.humaclab.selliscope.Utils.DatabaseHandler;
+import com.humaclab.selliscope.R;
+import com.humaclab.selliscope.SelliscopeApiEndpointInterface;
 import com.humaclab.selliscope.adapters.ProductRecyclerViewAdapter;
 import com.humaclab.selliscope.model.VariantProduct.Brand;
 import com.humaclab.selliscope.model.VariantProduct.Category;
 import com.humaclab.selliscope.model.VariantProduct.ProductsItem;
+import com.humaclab.selliscope.utils.DatabaseHandler;
 
 import java.util.ArrayList;
 import java.util.List;

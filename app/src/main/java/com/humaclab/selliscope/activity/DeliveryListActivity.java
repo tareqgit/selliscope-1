@@ -1,4 +1,4 @@
-package com.humaclab.selliscope;
+package com.humaclab.selliscope.activity;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
@@ -15,11 +15,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.humaclab.selliscope.Utils.DatabaseHandler;
-import com.humaclab.selliscope.Utils.NetworkUtility;
-import com.humaclab.selliscope.Utils.SessionManager;
+import com.humaclab.selliscope.R;
+import com.humaclab.selliscope.SelliscopeApiEndpointInterface;
+import com.humaclab.selliscope.SelliscopeApplication;
 import com.humaclab.selliscope.adapters.DeliveryListRecyclerAdapter;
 import com.humaclab.selliscope.model.DeliveryResponse;
+import com.humaclab.selliscope.utils.DatabaseHandler;
+import com.humaclab.selliscope.utils.NetworkUtility;
+import com.humaclab.selliscope.utils.SessionManager;
 
 import java.util.List;
 import java.util.Map;

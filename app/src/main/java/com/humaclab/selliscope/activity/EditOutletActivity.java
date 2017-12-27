@@ -1,15 +1,10 @@
-package com.humaclab.selliscope;
+package com.humaclab.selliscope.activity;
 
-import android.Manifest;
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Base64;
@@ -22,24 +17,27 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.google.android.gms.awareness.Awareness;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationServices;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
-import com.humaclab.selliscope.Utils.DatabaseHandler;
-import com.humaclab.selliscope.Utils.NetworkUtility;
-import com.humaclab.selliscope.Utils.SendUserLocationData;
-import com.humaclab.selliscope.Utils.SessionManager;
+import com.humaclab.selliscope.R;
+import com.humaclab.selliscope.SelliscopeApiEndpointInterface;
+import com.humaclab.selliscope.SelliscopeApplication;
 import com.humaclab.selliscope.adapters.DistrictAdapter;
 import com.humaclab.selliscope.adapters.OutletTypeAdapter;
 import com.humaclab.selliscope.adapters.ThanaAdapter;
 import com.humaclab.selliscope.model.CreateOutlet;
 import com.humaclab.selliscope.model.District.District;
 import com.humaclab.selliscope.model.OutletType.OutletType;
+import com.humaclab.selliscope.model.Outlets;
 import com.humaclab.selliscope.model.Thana.Thana;
+import com.humaclab.selliscope.utils.DatabaseHandler;
+import com.humaclab.selliscope.utils.NetworkUtility;
+import com.humaclab.selliscope.utils.SessionManager;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.List;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -47,79 +45,73 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import timber.log.Timber;
 
-/**
- * Created by leon on 11/19/17.
- */
-
-public class AddOutletActivity extends AppCompatActivity {
+public class EditOutletActivity extends AppCompatActivity {
     private final int CAMERA_REQUEST = 3214;
     boolean isValidOutletName = true;
     boolean isValidOwnerName = true;
     boolean isValidAddress = true;
     boolean isValidPhone = true;
-    double mLatitude = 0.0, mLongitude = 0.0;
-    private int outletTypeId, thanaId = -1;
-    private SelliscopeApiEndpointInterface apiService;
-    private SessionManager sessionManager;
+    //    double latitude, longitude = 0.0;
+    int outletTypeId, thanaId = -1;
     private EditText outletName, outletAddress, outletOwner, outletContactNumber;
     private Spinner outletType, district, thana;
     private ImageView iv_outlet;
     private Button submit, cancel;
+    private String email, password;
     private OutletTypeAdapter outletTypeAdapter;
     private ThanaAdapter thanaAdapter;
     private DistrictAdapter districtAdapter;
-    private GoogleApiClient googleApiClient;
+    private SelliscopeApiEndpointInterface apiService;
+    private SessionManager sessionManager;
     private String outletImage;
+    private ProgressDialog pd;
     private DatabaseHandler databaseHandler;
 
-    private ProgressDialog pd;
-
-    public static boolean checkPermission(final Context context) {
-        return ActivityCompat.checkSelfPermission(context,
-                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
-    }
+    private Outlets.Successful.Outlet outlet;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_outlet);
-        googleApiClient = new GoogleApiClient.Builder(AddOutletActivity.this)
-                .addApi(Awareness.API)
-                .addApi(LocationServices.API)
-                .build();
-        googleApiClient.connect();
-        googleApiClient.registerConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
-            @Override
-            public void onConnected(@Nullable Bundle bundle) {
-                getLocation();
-            }
+        setContentView(R.layout.activity_edit_outlet);
 
-            @Override
-            public void onConnectionSuspended(int i) {
-
-            }
-        });
         databaseHandler = new DatabaseHandler(this);
-        sessionManager = new SessionManager(this);
-        apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(), sessionManager.getUserPassword(), false).create(SelliscopeApiEndpointInterface.class);
         pd = new ProgressDialog(this);
+        outlet = (Outlets.Successful.Outlet) getIntent().getSerializableExtra("outletDetails");
 
+        sessionManager = new SessionManager(this);
+        email = sessionManager.getUserEmail();
+        password = sessionManager.getUserPassword();
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("Add Outlet");
         setSupportActionBar(toolbar);
         outletName = findViewById(R.id.et_outlet_name);
+        outletName.setText(outlet.outletName);
+
         outletAddress = findViewById(R.id.et_outlet_address);
+        outletAddress.setText(outlet.outletAddress);
+
         outletOwner = findViewById(R.id.et_outlet_owner_name);
+        outletOwner.setText(outlet.ownerName);
+
         outletContactNumber = findViewById(R.id.et_outlet_contact_number);
+        outletContactNumber.setText(outlet.phone);
+
         district = findViewById(R.id.sp_district);
         thana = findViewById(R.id.sp_thana);
         outletType = findViewById(R.id.sp_outlet_type);
-        submit = findViewById(R.id.btn_add_outlet);
+        submit = findViewById(R.id.btn_update_outlet);
         cancel = findViewById(R.id.btn_cancel);
         getDistricts();
         getOutletTypes();
 
         iv_outlet = findViewById(R.id.iv_outlet);
+        Glide.with(getApplicationContext()).load(outlet.outletImgUrl)
+                .thumbnail(0.5f)
+                .crossFade()
+                .placeholder(R.drawable.ic_outlet_bnw)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(iv_outlet);
+
         iv_outlet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -201,99 +193,117 @@ public class AddOutletActivity extends AppCompatActivity {
                 Timber.d("Valid Outle Name" + isValidOutletName);
                 Timber.d("valid owner naem" + isValidOwnerName);
                 Timber.d("Valid phone" + isValidPhone);
-                Timber.d("Latitude" + mLatitude);
-                Timber.d("Long" + mLongitude);
+                Timber.d("Latitude" + outlet.outletLatitude);
+                Timber.d("Long" + outlet.outletLongitude);
                 Timber.d("Type id" + outletTypeId);
                 Timber.d("Thana id" + thanaId);
 
                 if (isValidAddress && isValidOutletName && isValidOwnerName
-                        && isValidPhone && mLatitude != 0.0 && mLongitude != 0.0
+                        && isValidPhone && outlet.outletLatitude != 0.0 && outlet.outletLongitude != 0.0
                         && outletTypeId != -1 && thanaId != -1) {
                     Timber.d("addOutletRun");
-                    if (NetworkUtility.isNetworkAvailable(AddOutletActivity.this)) {
-                        addOutlet(
-                                outletTypeId, outletName.getText().toString().trim(),
+                    if (NetworkUtility.isNetworkAvailable(EditOutletActivity.this)) {
+                        updatedOutlet(email, password, outletTypeId, outletName.getText().toString().trim(),
                                 outletOwner.getText().toString().trim(),
-                                outletAddress.getText().toString().trim(),
-                                thanaId,
-                                outletContactNumber.getText().toString().trim(),
-                                mLatitude,
-                                mLongitude
-                        );
+                                outletAddress.getText().toString().trim(), thanaId,
+                                outletContactNumber.getText().toString().trim(), outlet.outletLatitude, outlet.outletLongitude);
                     } else
-                        Toast.makeText(AddOutletActivity.this, "Connect to Wifi or Mobile Data", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(AddOutletActivity.this, "Could not found any location yet.\nPlease try again.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(EditOutletActivity.this, "Connect to Wifi or Mobile Data",
+                                Toast.LENGTH_SHORT).show();
                 }
             }
         });
     }
 
-    private void addOutlet(int outletTypeId, String outletName,
-                           String ownerName, String address, int thanaId, String phone,
-                           double latitude, double longitude) {
-        pd.setMessage("Creating outlet......");
+    private void updatedOutlet(String email, String password, int outletTypeId, String outletName,
+                               String ownerName, String address, int thanaId, String phone,
+                               double latitude, double longitude) {
+        pd.setMessage("Outlet updating.....");
         pd.setCancelable(false);
         pd.show();
 
-        Call<ResponseBody> call = apiService.createOutlet(new CreateOutlet(outletTypeId, outletName, ownerName, address, thanaId, phone, latitude, longitude, outletImage));
+        apiService = SelliscopeApplication.getRetrofitInstance(email, password, false).create(SelliscopeApiEndpointInterface.class);
+        Call<ResponseBody> call = apiService.updateOutlet(outlet.outletId,
+                new CreateOutlet(outletTypeId, outletName, ownerName, address, thanaId, phone, latitude, longitude, outletImage));
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                pd.dismiss();
                 Gson gson = new Gson();
                 System.out.println("Response code: " + response.code());
-                pd.dismiss();
-                if (response.code() == 201) {
-                    Toast.makeText(AddOutletActivity.this, "Outlet created successfully", Toast.LENGTH_SHORT).show();
+                if (response.code() == 202) {
                     try {
-                        CreateOutlet createOutletResult = gson.fromJson(response.body().string(), CreateOutlet.class);
-                        Toast.makeText(AddOutletActivity.this, createOutletResult.result, Toast.LENGTH_SHORT).show();
-                        submit.setEnabled(false);
-                        finish();
-                        startActivity(new Intent(AddOutletActivity.this, OutletActivity.class));
+                        CreateOutlet createOutletResult =
+                                gson.fromJson(response.body().string()
+                                        , CreateOutlet.class);
+                        Toast.makeText(EditOutletActivity.this, createOutletResult.result,
+                                Toast.LENGTH_SHORT).show();
+
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                 } else if (response.code() == 401) {
-                    Toast.makeText(AddOutletActivity.this, "Invalid Response from server.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(EditOutletActivity.this,
+                            "Invalid Response from server.", Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(AddOutletActivity.this, "Server Error! Try Again Later!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(EditOutletActivity.this,
+                            "Server Error! Try Again Later!", Toast.LENGTH_SHORT).show();
                 }
+
+                finish();
+                startActivity(new Intent(EditOutletActivity.this, OutletActivity.class));
             }
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-                //Toast.makeText(LoginActivity.this, t.toString(), Toast.LENGTH_SHORT).show();
+                pd.dismiss();
                 Log.d("Response", t.toString());
-
             }
         });
     }
 
     void getDistricts() {
-        districtAdapter = new DistrictAdapter(AddOutletActivity.this, databaseHandler.getDistrict());
+        List<District> districtList = databaseHandler.getDistrict();
+        districtAdapter = new DistrictAdapter(EditOutletActivity.this, districtList);
         district.setAdapter(districtAdapter);
+
+        //For selecting previous district from server
+        int position = 0;
+        for (int i = 0; i < districtList.size(); i++) {
+            if (districtList.get(i).getName().equals(outlet.district))
+                position = i;
+        }
+        district.setSelection(position);
+        //For selecting previous district
     }
 
     void getThanas(int districtId) {
-        thanaAdapter = new ThanaAdapter(AddOutletActivity.this, databaseHandler.getThana(districtId));
+        List<Thana> thanaList = databaseHandler.getThana(districtId);
+        thanaAdapter = new ThanaAdapter(EditOutletActivity.this, thanaList);
         thana.setAdapter(thanaAdapter);
+
+        //For selecting previous thana
+        int position = 0;
+        for (int i = 0; i < thanaList.size(); i++) {
+            if (thanaList.get(i).getName().equals(outlet.thana))
+                position = i;
+        }
+        thana.setSelection(position);
+        //For selecting previous thana
     }
 
     void getOutletTypes() {
-        outletTypeAdapter = new OutletTypeAdapter(AddOutletActivity.this, databaseHandler.getOutletType());
+        List<OutletType> outletTypeList = databaseHandler.getOutletType();
+        outletTypeAdapter = new OutletTypeAdapter(EditOutletActivity.this, outletTypeList);
         outletType.setAdapter(outletTypeAdapter);
-    }
-
-    public void getLocation() {
-        SendUserLocationData sendUserLocationData = new SendUserLocationData(AddOutletActivity.this);
-        sendUserLocationData.getInstantLocation(this, new SendUserLocationData.OnGetLocation() {
-            @Override
-            public void getLocation(Double latitude, Double longitude) {
-                mLatitude = latitude;
-                mLongitude = longitude;
-            }
-        });
+        //For selecting previous outlet type
+        int position = 0;
+        for (int i = 0; i < outletTypeList.size(); i++) {
+            if (outletTypeList.get(i).getName().equals(outlet.outletType))
+                position = i;
+        }
+        thana.setSelection(position);
+        //For selecting previous outlet type
     }
 
     @Override
@@ -310,7 +320,6 @@ public class AddOutletActivity extends AppCompatActivity {
 
     @Override
     public void onDestroy() {
-        googleApiClient.disconnect();
         super.onDestroy();
     }
 }

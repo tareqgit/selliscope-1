@@ -1,4 +1,4 @@
-package com.humaclab.selliscope.Service;
+package com.humaclab.selliscope.service;
 
 import android.app.Service;
 import android.content.Context;
@@ -6,8 +6,8 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.os.PowerManager;
 
-import com.humaclab.selliscope.Utils.SendUserLocationData;
-import com.humaclab.selliscope.Utils.SessionManager;
+import com.humaclab.selliscope.utils.SendUserLocationData;
+import com.humaclab.selliscope.utils.SessionManager;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;

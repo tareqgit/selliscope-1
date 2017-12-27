@@ -1,4 +1,4 @@
-package com.humaclab.selliscope;
+package com.humaclab.selliscope.fragment;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -11,9 +11,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.humaclab.selliscope.Utils.RecyclerItemClickListener;
+import com.humaclab.selliscope.R;
+import com.humaclab.selliscope.activity.DeliveryListActivity;
+import com.humaclab.selliscope.activity.InspectionActivity;
+import com.humaclab.selliscope.activity.OrderActivity;
+import com.humaclab.selliscope.activity.OutletActivity;
+import com.humaclab.selliscope.activity.PaymentActivity;
+import com.humaclab.selliscope.activity.ProductActivity;
+import com.humaclab.selliscope.activity.RouteActivity;
 import com.humaclab.selliscope.adapters.DashboardRecyclerViewAdapter;
 import com.humaclab.selliscope.model.DashboardItem;
+import com.humaclab.selliscope.utils.RecyclerItemClickListener;
 
 import java.util.ArrayList;
 import java.util.List;

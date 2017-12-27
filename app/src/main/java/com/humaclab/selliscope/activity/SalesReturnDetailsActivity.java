@@ -1,4 +1,4 @@
-package com.humaclab.selliscope;
+package com.humaclab.selliscope.activity;
 
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
@@ -9,10 +9,11 @@ import android.support.v7.widget.Toolbar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.humaclab.selliscope.Utils.NetworkUtility;
+import com.humaclab.selliscope.R;
 import com.humaclab.selliscope.adapters.SellsReturnDetailsRecyclerAdapter;
 import com.humaclab.selliscope.databinding.ActivitySalesReturnDetailsBinding;
 import com.humaclab.selliscope.model.DeliveryResponse;
+import com.humaclab.selliscope.utils.NetworkUtility;
 
 public class SalesReturnDetailsActivity extends AppCompatActivity {
     private ActivitySalesReturnDetailsBinding binding;

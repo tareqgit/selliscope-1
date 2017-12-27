@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/splash_and_login_background">
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/splash_and_login_background">
 
     <EditText
         android:id="@+id/et_email"
@@ -18,7 +18,7 @@
         android:paddingBottom="5dp"
         android:paddingLeft="23dp"
         android:paddingRight="23dp"
-        android:paddingTop="5dp" />
+        android:paddingTop="5dp"/>
 
 
     <EditText
@@ -34,7 +34,7 @@
         android:paddingBottom="5dp"
         android:paddingLeft="23dp"
         android:paddingRight="23dp"
-        android:paddingTop="5dp" />
+        android:paddingTop="5dp"/>
 
     <TextView
         android:id="@+id/tv_forgot_password"
@@ -47,7 +47,7 @@
         android:text="Forgot Password"
         android:textColor="@color/white"
         android:textSize="@dimen/text_size_16"
-        android:textStyle="bold" />
+        android:textStyle="bold"/>
 
 
     <Button
@@ -60,7 +60,7 @@
         android:text="@string/sign_in"
         android:textColor="@color/white"
         android:textSize="@dimen/text_size_16"
-        android:textStyle="bold" />
+        android:textStyle="bold"/>
 
 
     <ImageView
@@ -70,7 +70,7 @@
         android:layout_above="@+id/et_email"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="60dp"
-        android:src="@drawable/selliscope_login_icon" />
+        android:src="@drawable/selliscope_login_icon"/>
 
     <ProgressBar
         android:id="@+id/pb_login"
@@ -80,7 +80,7 @@
         android:layout_below="@+id/tv_forgot_password"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="31dp"
-        android:visibility="invisible" />
+        android:visibility="invisible"/>
 
     <TextView
         android:id="@+id/tv_selliscope_version"
@@ -92,5 +92,5 @@
         android:text="Verison"
         android:textAlignment="center"
         android:textColor="#ddd"
-        android:textSize="16sp" />
+        android:textSize="16sp"/>
 </RelativeLayout>

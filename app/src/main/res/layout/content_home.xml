@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/content_home"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.humaclab.selliscope.HomeActivity"
-    tools:showIn="@layout/app_bar_home">
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:id="@+id/content_home"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                tools:context="com.humaclab.selliscope.activity.HomeActivity"
+                tools:showIn="@layout/app_bar_home">
 
     <android.support.design.widget.TabLayout
         android:id="@+id/sliding_tabs"
@@ -24,19 +24,19 @@
             android:id="@+id/tab_item_target"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/target" />
+            android:text="@string/target"/>
 
         <android.support.design.widget.TabItem
             android:id="@+id/tab_item_dashboard"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/dashboard" />
+            android:text="@string/dashboard"/>
     </android.support.design.widget.TabLayout>
 
     <RelativeLayout
         android:id="@+id/content_fragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@id/sliding_tabs" />
+        android:layout_above="@id/sliding_tabs"/>
 
 </RelativeLayout>

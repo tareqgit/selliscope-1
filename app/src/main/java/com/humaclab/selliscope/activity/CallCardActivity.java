@@ -1,4 +1,4 @@
-package com.humaclab.selliscope;
+package com.humaclab.selliscope.activity;
 
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
@@ -8,6 +8,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
 
+import com.humaclab.selliscope.R;
 import com.humaclab.selliscope.databinding.ActivityCallCardBinding;
 import com.humaclab.selliscope.model.Outlets;
 

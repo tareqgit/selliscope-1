@@ -1,4 +1,4 @@
-package com.humaclab.selliscope.Service;
+package com.humaclab.selliscope.service;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -11,8 +11,8 @@ import android.util.Log;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
-import com.humaclab.selliscope.HomeActivity;
 import com.humaclab.selliscope.R;
+import com.humaclab.selliscope.activity.HomeActivity;
 
 /**
  * Created by leon on 8/28/17.

@@ -45,19 +45,19 @@
 
         <!--Services and Receivers-->
         <service
-            android:name=".Service.FcmInstanceIdServices">
+            android:name=".service.FcmInstanceIdServices">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
             </intent-filter>
         </service>
         <service
-            android:name=".Service.FcmGetNotificationService">
+            android:name=".service.FcmGetNotificationService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT"/>
             </intent-filter>
         </service>
         <service
-            android:name=".Service.SendLocationDataService"
+            android:name=".service.SendLocationDataService"
             android:exported="false"
             android:permission="android.permission.RECEIVE_BOOT_COMPLETED"
             android:process=":selliscope_process">
@@ -69,7 +69,7 @@
         </service>
 
         <receiver
-            android:name=".Receiver.InternetConnectivityChangeReceiver"
+            android:name=".receiver.InternetConnectivityChangeReceiver"
             android:enabled="true">
             <intent-filter>
                 <action
@@ -80,7 +80,7 @@
         <!--Services and Receivers-->
 
         <activity
-            android:name=".SplashScreenActivity"
+            android:name=".activity.SplashScreenActivity"
             android:theme="@style/SplashScreenTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -88,31 +88,31 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".LoginActivity"/>
+        <activity android:name=".activity.LoginActivity"/>
         <activity
-            android:name=".HomeActivity"
+            android:name=".activity.HomeActivity"
             android:configChanges="orientation|screenSize"/>
-        <activity android:name=".RouteActivity"/>
-        <activity android:name=".OutletActivity"/>
-        <activity android:name=".AddOutletActivity"/>
-        <activity android:name=".OutletDetailsActivity"/>
-        <activity android:name=".PrivacyPolicyActivity"/>
-        <activity android:name=".ProductActivity"/>
+        <activity android:name=".activity.RouteActivity"/>
+        <activity android:name=".activity.OutletActivity"/>
+        <activity android:name=".activity.AddOutletActivity"/>
+        <activity android:name=".activity.OutletDetailsActivity"/>
+        <activity android:name=".activity.PrivacyPolicyActivity"/>
+        <activity android:name=".activity.ProductActivity"/>
         <activity
-            android:name=".OrderActivity"
+            android:name=".activity.OrderActivity"
             android:screenOrientation="landscape"/>
-        <activity android:name=".DeliveryListActivity"/>
+        <activity android:name=".activity.DeliveryListActivity"/>
         <activity
-            android:name=".DeliveryDetailsActivity"
+            android:name=".activity.DeliveryDetailsActivity"
             android:screenOrientation="landscape"/>
-        <activity android:name=".PaymentActivity"/>
-        <activity android:name=".DueActivity"/>
-        <activity android:name=".EditOutletActivity"/>
-        <activity android:name=".CallCardActivity"/>
-        <activity android:name=".InspectionActivity"/>
-        <activity android:name=".SalesReturnActivity"/>
+        <activity android:name=".activity.PaymentActivity"/>
+        <activity android:name=".activity.DueActivity"/>
+        <activity android:name=".activity.EditOutletActivity"/>
+        <activity android:name=".activity.CallCardActivity"/>
+        <activity android:name=".activity.InspectionActivity"/>
+        <activity android:name=".activity.SalesReturnActivity"/>
         <activity
-            android:name=".SalesReturnDetailsActivity"
+            android:name=".activity.SalesReturnDetailsActivity"
             android:screenOrientation="landscape"/>
     </application>
 

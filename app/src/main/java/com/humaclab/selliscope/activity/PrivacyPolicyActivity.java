@@ -1,8 +1,10 @@
-package com.humaclab.selliscope;
+package com.humaclab.selliscope.activity;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.webkit.WebView;
+
+import com.humaclab.selliscope.R;
 
 public class PrivacyPolicyActivity extends AppCompatActivity {
 

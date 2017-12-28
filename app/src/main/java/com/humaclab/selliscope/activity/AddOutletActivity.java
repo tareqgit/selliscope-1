@@ -37,6 +37,7 @@ import com.humaclab.selliscope.model.District.District;
 import com.humaclab.selliscope.model.OutletType.OutletType;
 import com.humaclab.selliscope.model.Thana.Thana;
 import com.humaclab.selliscope.utils.DatabaseHandler;
+import com.humaclab.selliscope.utils.LoadLocalIntoBackground;
 import com.humaclab.selliscope.utils.NetworkUtility;
 import com.humaclab.selliscope.utils.SendUserLocationData;
 import com.humaclab.selliscope.utils.SessionManager;
@@ -248,6 +249,8 @@ public class AddOutletActivity extends AppCompatActivity {
                 pd.dismiss();
                 if (response.code() == 201) {
                     Toast.makeText(AddOutletActivity.this, "Outlet created successfully", Toast.LENGTH_SHORT).show();
+                    LoadLocalIntoBackground loadLocalIntoBackground = new LoadLocalIntoBackground(AddOutletActivity.this);
+                    loadLocalIntoBackground.loadOutlet(true);
                     try {
                         CreateOutlet createOutletResult = gson.fromJson(response.body().string(), CreateOutlet.class);
                         Toast.makeText(AddOutletActivity.this, createOutletResult.result, Toast.LENGTH_SHORT).show();

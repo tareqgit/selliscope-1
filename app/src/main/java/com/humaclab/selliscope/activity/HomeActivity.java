@@ -142,7 +142,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                     @Override
                     public void run() {
                         Log.v("Running threads", "Thread running in background for updating products and outlets");
-                        loadLocalIntoBackground.loadOutlet();
+                        loadLocalIntoBackground.loadOutlet(false);
                     }
                 });
             }

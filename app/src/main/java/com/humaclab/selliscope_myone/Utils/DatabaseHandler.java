@@ -1,4 +1,4 @@
-package com.humaclab.selliscope_myone.Utils;
+package com.humaclab.selliscope_myone.utils;
 
 import android.content.ContentValues;
 import android.content.Context;

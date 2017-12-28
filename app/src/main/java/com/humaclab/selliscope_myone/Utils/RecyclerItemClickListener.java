@@ -1,4 +1,4 @@
-package com.humaclab.selliscope_myone.Utils;
+package com.humaclab.selliscope_myone.utils;
 
 /**
  * Created by Nahid on 3/9/2017.

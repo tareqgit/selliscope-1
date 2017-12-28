@@ -18,21 +18,21 @@
         android:theme="@style/AppTheme">
 
         <!--For debug APK-->
-        <meta-data
+        <!--<meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBZ5heET41mdUTW5UOouLZFn56kGsAocbM" />
         <meta-data
             android:name="com.google.android.awareness.API_KEY"
-            android:value="AIzaSyBZ5heET41mdUTW5UOouLZFn56kGsAocbM" />
+            android:value="AIzaSyBZ5heET41mdUTW5UOouLZFn56kGsAocbM" />-->
         <!--For debug APK-->
 
         <!--For signed APK-->
-        <!--<meta-data
+        <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyAhsz4pX62D7yu8twGT4ydn-_DRVB3p6_Y"/>
         <meta-data
             android:name="com.google.android.awareness.API_KEY"
-            android:value="AIzaSyAhsz4pX62D7yu8twGT4ydn-_DRVB3p6_Y"/>-->
+            android:value="AIzaSyAhsz4pX62D7yu8twGT4ydn-_DRVB3p6_Y"/>
         <!--For signed APK-->
 
         <meta-data
@@ -41,19 +41,19 @@
 
         <!--Services and Receivers-->
         <service
-            android:name="com.humaclab.selliscope_myone.Service.FcmInstanceIdServices">
+            android:name="com.humaclab.selliscope_myone.service.FcmInstanceIdServices">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
             </intent-filter>
         </service>
         <service
-            android:name="com.humaclab.selliscope_myone.Service.FcmGetNotificationService">
+            android:name="com.humaclab.selliscope_myone.service.FcmGetNotificationService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT"/>
             </intent-filter>
         </service>
         <service
-            android:name="com.humaclab.selliscope_myone.Service.SendLocationDataService"
+            android:name="com.humaclab.selliscope_myone.service.SendLocationDataService"
             android:exported="false"
             android:permission="android.permission.RECEIVE_BOOT_COMPLETED"
             android:process=":selliscope_process">
@@ -66,7 +66,7 @@
         <!--Services and Receivers-->
 
         <activity
-            android:name="com.humaclab.selliscope_myone.SplashScreenActivity"
+            android:name="com.humaclab.selliscope_myone.activity.SplashScreenActivity"
             android:theme="@style/SplashScreenTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -74,31 +74,31 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name="com.humaclab.selliscope_myone.LoginActivity"/>
+        <activity android:name="com.humaclab.selliscope_myone.activity.LoginActivity"/>
         <activity
-            android:name="com.humaclab.selliscope_myone.HomeActivity"
+            android:name="com.humaclab.selliscope_myone.activity.HomeActivity"
             android:configChanges="orientation|screenSize"/>
-        <activity android:name="com.humaclab.selliscope_myone.RouteActivity"/>
-        <activity android:name="com.humaclab.selliscope_myone.OutletActivity"/>
-        <activity android:name="com.humaclab.selliscope_myone.AddOutletActivity"/>
-        <activity android:name="com.humaclab.selliscope_myone.OutletDetailsActivity"/>
-        <activity android:name="com.humaclab.selliscope_myone.PrivacyPolicyActivity"/>
-        <activity android:name="com.humaclab.selliscope_myone.ProductActivity"/>
+        <activity android:name="com.humaclab.selliscope_myone.activity.RouteActivity"/>
+        <activity android:name="com.humaclab.selliscope_myone.activity.OutletActivity"/>
+        <activity android:name="com.humaclab.selliscope_myone.activity.AddOutletActivity"/>
+        <activity android:name="com.humaclab.selliscope_myone.activity.OutletDetailsActivity"/>
+        <activity android:name="com.humaclab.selliscope_myone.activity.PrivacyPolicyActivity"/>
+        <activity android:name="com.humaclab.selliscope_myone.activity.ProductActivity"/>
         <activity
-            android:name="com.humaclab.selliscope_myone.OrderActivity"
+            android:name="com.humaclab.selliscope_myone.activity.OrderActivity"
             android:screenOrientation="landscape"/>
-        <activity android:name="com.humaclab.selliscope_myone.DeliveryListActivity"/>
+        <activity android:name="com.humaclab.selliscope_myone.activity.DeliveryListActivity"/>
         <activity
-            android:name="com.humaclab.selliscope_myone.DeliveryDetailsActivity"
+            android:name="com.humaclab.selliscope_myone.activity.DeliveryDetailsActivity"
             android:screenOrientation="landscape"/>
-        <activity android:name="com.humaclab.selliscope_myone.PaymentActivity"/>
-        <activity android:name="com.humaclab.selliscope_myone.DueActivity"/>
-        <activity android:name="com.humaclab.selliscope_myone.EditOutletActivity"/>
-        <activity android:name="com.humaclab.selliscope_myone.CallCardActivity"/>
-        <activity android:name="com.humaclab.selliscope_myone.InspectionActivity"/>
-        <activity android:name="com.humaclab.selliscope_myone.SalesReturnActivity"/>
+        <activity android:name="com.humaclab.selliscope_myone.activity.PaymentActivity"/>
+        <activity android:name="com.humaclab.selliscope_myone.activity.DueActivity"/>
+        <activity android:name="com.humaclab.selliscope_myone.activity.EditOutletActivity"/>
+        <activity android:name="com.humaclab.selliscope_myone.activity.CallCardActivity"/>
+        <activity android:name="com.humaclab.selliscope_myone.activity.InspectionActivity"/>
+        <activity android:name="com.humaclab.selliscope_myone.activity.SalesReturnActivity"/>
         <activity
-            android:name="com.humaclab.selliscope_myone.SalesReturnDetailsActivity"
+            android:name="com.humaclab.selliscope_myone.activity.SalesReturnDetailsActivity"
             android:screenOrientation="landscape"/>
     </application>
 

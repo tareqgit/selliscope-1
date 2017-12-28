@@ -14,8 +14,8 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.humaclab.selliscope_myone.OrderActivity;
 import com.humaclab.selliscope_myone.R;
+import com.humaclab.selliscope_myone.activity.OrderActivity;
 import com.humaclab.selliscope_myone.model.VariantProduct.ProductsItem;
 
 import java.util.List;

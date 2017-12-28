@@ -1,10 +1,10 @@
-package com.humaclab.selliscope_myone.Service;
+package com.humaclab.selliscope_myone.service;
 
 import android.util.Log;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
-import com.humaclab.selliscope_myone.Utils.SessionManager;
+import com.humaclab.selliscope_myone.utils.SessionManager;
 
 /**
  * Created by leon on 8/28/17.

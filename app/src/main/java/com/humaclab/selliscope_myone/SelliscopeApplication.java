@@ -5,9 +5,8 @@ import android.support.v7.app.AppCompatDelegate;
 
 import com.crashlytics.android.Crashlytics;
 import com.facebook.stetho.Stetho;
-import com.facebook.stetho.okhttp3.StethoInterceptor;
-import com.humaclab.selliscope_myone.Utils.Constants;
-import com.humaclab.selliscope_myone.Utils.HttpAuthInterceptor;
+import com.humaclab.selliscope_myone.utils.Constants;
+import com.humaclab.selliscope_myone.utils.HttpAuthInterceptor;
 
 import java.util.concurrent.TimeUnit;
 
@@ -41,7 +40,7 @@ public class SelliscopeApplication extends Application {
                     .addInterceptor(new HttpAuthInterceptor(email, password))
                     .connectTimeout(100000, TimeUnit.SECONDS)
                     .readTimeout(100000, TimeUnit.SECONDS)
-                    .addNetworkInterceptor(new StethoInterceptor())
+//                    .addNetworkInterceptor(new StethoInterceptor())
                     .build();
 
             retrofitInstance = new Retrofit.Builder()

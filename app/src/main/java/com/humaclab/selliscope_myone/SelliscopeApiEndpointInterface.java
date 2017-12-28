@@ -20,6 +20,7 @@ import com.humaclab.selliscope_myone.model.ProductResponse;
 import com.humaclab.selliscope_myone.model.SellsReturnResponse;
 import com.humaclab.selliscope_myone.model.Thana.ThanaResponse;
 import com.humaclab.selliscope_myone.model.UserLocation;
+import com.humaclab.selliscope_myone.utils.StockResponse;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;

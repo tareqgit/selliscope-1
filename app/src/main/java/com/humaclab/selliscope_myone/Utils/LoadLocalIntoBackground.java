@@ -1,4 +1,4 @@
-package com.humaclab.selliscope_myone.Utils;
+package com.humaclab.selliscope_myone.utils;
 
 import android.content.Context;
 import android.util.Log;
@@ -6,7 +6,6 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.humaclab.selliscope_myone.SelliscopeApiEndpointInterface;
 import com.humaclab.selliscope_myone.SelliscopeApplication;
-import com.humaclab.selliscope_myone.StockResponse;
 import com.humaclab.selliscope_myone.model.District.DistrictResponse;
 import com.humaclab.selliscope_myone.model.OutletType.OutletTypeResponse;
 import com.humaclab.selliscope_myone.model.Outlets;
@@ -90,7 +89,7 @@ public class LoadLocalIntoBackground {
                                     loadCategory();
                                     loadBrand();
                                 }
-                            },60000);
+                            }, 60000);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }

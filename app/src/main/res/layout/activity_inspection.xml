@@ -6,7 +6,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        tools:context="com.humaclab.selliscope.activity.InspectionActivity">
+        tools:context="com.humaclab.selliscope_mohammadi.activity.InspectionActivity">
 
         <include layout="@layout/toolbar_layout"/>
 

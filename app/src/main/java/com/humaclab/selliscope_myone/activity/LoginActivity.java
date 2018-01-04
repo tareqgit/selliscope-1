@@ -118,7 +118,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
                 System.out.println("Login:" + new Gson().toJson(response));
-                if (response.code() == 202) {
+                if (response.code() == 200) {
                     try {
                         Timber.d("Login Successful");
 

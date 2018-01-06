@@ -282,7 +282,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                             if (response.code() == 201) {
 //                                System.out.println(new Gson().toJson(response.body()));
                                 Toast.makeText(OrderActivity.this, "Order created successfully", Toast.LENGTH_LONG).show();
-                                finish();
+//                                finish();
                             } else if (response.code() == 401) {
 //                                System.out.println(new Gson().toJson(response.body()));
                                 Toast.makeText(OrderActivity.this, "Invalid Response from server.", Toast.LENGTH_SHORT).show();

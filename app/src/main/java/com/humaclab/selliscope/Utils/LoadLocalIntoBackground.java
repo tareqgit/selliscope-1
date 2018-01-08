@@ -45,8 +45,6 @@ public class LoadLocalIntoBackground {
     public void loadAll() {
         if (!sessionManager.isAllDataLoaded()) {
             this.loadProduct();
-            this.loadCategory();
-            this.loadBrand();
             this.loadOutlet(false);
             this.loadOutletType();
             this.loadDistrict();
@@ -104,6 +102,8 @@ public class LoadLocalIntoBackground {
                                     response.body().getResult().getVariant(),
                                     response.body().getResult().getProducts()
                             );
+                            loadCategory();
+                            loadBrand();
                         } catch (Exception e) {
                             e.printStackTrace();
                         }

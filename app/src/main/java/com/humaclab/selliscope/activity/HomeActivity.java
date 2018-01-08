@@ -2,10 +2,10 @@ package com.humaclab.selliscope.activity;
 
 import android.Manifest;
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -67,6 +67,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     private ProgressDialog pd;
     private LoadLocalIntoBackground loadLocalIntoBackground;
     private ScheduledExecutorService schedulerForMinute, schedulerForHour;
+
+    private BroadcastReceiver receiver = new InternetConnectivityChangeReceiver();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -162,7 +164,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         //loading Data into background
 
         //Register receiver for Internet Connectivity change
-        registerReceiver(new InternetConnectivityChangeReceiver(), new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+        IntentFilter filter = new IntentFilter();
+        filter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
+        registerReceiver(receiver, filter);
     }
 
     private void setDiameter() {
@@ -250,8 +254,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 schedulerForMinute.shutdownNow();
                 schedulerForHour.shutdownNow();
                 stopService(new Intent(getApplicationContext(), SendLocationDataService.class));
-                getApplicationContext().deleteDatabase(Constants.databaseName);
+                HomeActivity.this.deleteDatabase(Constants.databaseName);
                 pd.dismiss();
+                unregisterReceiver(receiver);
                 finish();
 //                }
                 break;

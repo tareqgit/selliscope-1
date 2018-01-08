@@ -8,14 +8,22 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:208071747171:android:57a252a50cd8fdf2",
+        "mobilesdk_app_id": "1:208071747171:android:04ade098b734696c",
         "android_client_info": {
           "package_name": "com.humaclab.selliscope"
         }
       },
       "oauth_client": [
         {
-          "client_id": "208071747171-j6ucegf08f2cdq9valssu170fk53aq1n.apps.googleusercontent.com",
+          "client_id": "208071747171-iscqis0mqm5uqnrc5df7rp1bktjg0bdj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.humaclab.selliscope",
+            "certificate_hash": "041542b3c4220b56d5abf82a6dc255b43dcb4d20"
+          }
+        },
+        {
+          "client_id": "208071747171-r2sn2kvbugju8dphfjn5tola85qg10so.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.humaclab.selliscope",

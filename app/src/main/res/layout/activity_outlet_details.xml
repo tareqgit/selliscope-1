@@ -168,7 +168,8 @@
                         android:padding="10dp"
                         android:text="Call Card"
                         android:textAllCaps="false"
-                        android:textColor="#fff"/>
+                        android:textColor="#fff"
+                        android:visibility="gone"/>
                 </LinearLayout>
             </LinearLayout>
         </ScrollView>

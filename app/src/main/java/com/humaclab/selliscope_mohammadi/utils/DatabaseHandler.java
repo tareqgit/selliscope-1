@@ -113,6 +113,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String KEY_OUTLET_LONGITUDE = "outlet_longitude";
     private static final String KEY_OUTLET_LATITUDE = "outlet_latitude";
     private static final String KEY_OUTLET_DUE = "outlet_due";
+    private static final String KEY_OUTLET_CREDIT_LIMIT = "outlet_credit_limit";
+    private static final String KEY_OUTLET_CREDIT_BALANCE = "outlet_credit_balance";
+    private static final String KEY_OUTLET_EMAIL = "outlet_email";
 
     //Thana table column name
     private static final String KEY_THANA_ID = "thana_id";
@@ -219,7 +222,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + KEY_OUTLET_IMAGE + " TEXT,"
                 + KEY_OUTLET_LATITUDE + " TEXT,"
                 + KEY_OUTLET_LONGITUDE + " TEXT,"
-                + KEY_OUTLET_DUE + " TEXT"
+                + KEY_OUTLET_DUE + " TEXT,"
+                + KEY_OUTLET_CREDIT_LIMIT + " INTEGER,"
+                + KEY_OUTLET_CREDIT_BALANCE + " INTEGER,"
+                + KEY_OUTLET_EMAIL + " TEXT"
                 + ")";
         String CREATE_DISTRICT_TABLE = "CREATE TABLE " + TABLE_DISTRICT + "("
                 + KEY_DISTRICT_ID + " INTEGER  PRIMARY KEY,"
@@ -707,6 +713,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 values.put(KEY_OUTLET_LONGITUDE, outlet.outletLongitude);
                 values.put(KEY_OUTLET_LATITUDE, outlet.outletLatitude);
                 values.put(KEY_OUTLET_DUE, outlet.outletDue);
+                values.put(KEY_OUTLET_CREDIT_LIMIT, outlet.outletCreditLimit);
+                values.put(KEY_OUTLET_CREDIT_BALANCE, outlet.outletCreditBalance);
+                values.put(KEY_OUTLET_EMAIL, outlet.outletEmail);
                 try {
                     db.insert(TABLE_OUTLET, null, values);
                 } catch (Exception e) {
@@ -744,6 +753,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 outlet.outletLongitude = Double.parseDouble(cursor.getString(cursor.getColumnIndex(KEY_OUTLET_LONGITUDE)));
                 outlet.outletLatitude = Double.parseDouble(cursor.getString(cursor.getColumnIndex(KEY_OUTLET_LATITUDE)));
                 outlet.outletDue = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_DUE));
+                outlet.outletCreditLimit = cursor.getInt(cursor.getColumnIndex(KEY_OUTLET_CREDIT_LIMIT));
+                outlet.outletCreditBalance = cursor.getInt(cursor.getColumnIndex(KEY_OUTLET_CREDIT_BALANCE));
+                outlet.outletEmail = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_EMAIL));
 
                 outletList.add(outlet);
             } while (cursor.moveToNext());
@@ -776,6 +788,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 outlet.outletLongitude = Double.parseDouble(cursor.getString(cursor.getColumnIndex(KEY_OUTLET_LONGITUDE)));
                 outlet.outletLatitude = Double.parseDouble(cursor.getString(cursor.getColumnIndex(KEY_OUTLET_LATITUDE)));
                 outlet.outletDue = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_DUE));
+                outlet.outletCreditLimit = cursor.getInt(cursor.getColumnIndex(KEY_OUTLET_CREDIT_LIMIT));
+                outlet.outletCreditBalance = cursor.getInt(cursor.getColumnIndex(KEY_OUTLET_CREDIT_BALANCE));
+                outlet.outletEmail = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_EMAIL));
 
                 outletList.add(outlet);
             } while (cursor.moveToNext());
@@ -808,6 +823,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 outlet.outletLongitude = Double.parseDouble(cursor.getString(cursor.getColumnIndex(KEY_OUTLET_LONGITUDE)));
                 outlet.outletLatitude = Double.parseDouble(cursor.getString(cursor.getColumnIndex(KEY_OUTLET_LATITUDE)));
                 outlet.outletDue = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_DUE));
+                outlet.outletCreditLimit = cursor.getInt(cursor.getColumnIndex(KEY_OUTLET_CREDIT_LIMIT));
+                outlet.outletCreditBalance = cursor.getInt(cursor.getColumnIndex(KEY_OUTLET_CREDIT_BALANCE));
+                outlet.outletEmail = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_EMAIL));
 
                 outletList.add(outlet);
             } while (cursor.moveToNext());

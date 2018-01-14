@@ -8,7 +8,7 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * Created by Miaki on 3/18/17.
+ * Created by Leon on 3/18/17.
  */
 
 public class Outlets implements Serializable {
@@ -49,6 +49,12 @@ public class Outlets implements Serializable {
             public Double outletLongitude;
             @SerializedName("due")
             public String outletDue;
+            @SerializedName("credit_limit")
+            public Integer outletCreditLimit;
+            @SerializedName("credit_balance")
+            public Integer outletCreditBalance;
+            @SerializedName("email")
+            public String outletEmail;
         }
     }
 

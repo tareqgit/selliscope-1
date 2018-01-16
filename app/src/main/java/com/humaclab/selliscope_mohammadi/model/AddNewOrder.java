@@ -17,7 +17,15 @@ public class AddNewOrder implements Serializable {
         @SerializedName("outlet_id")
         public int outletId;
         @SerializedName("discount")
-        public int discount;
+        public Double discount;
+        @SerializedName("additional_charge")
+        public Double additionalCharge;
+        @SerializedName("bend")
+        public int bend;
+        @SerializedName("cap")
+        public int cap;
+        @SerializedName("remarks")
+        public String remarks;
         @SerializedName("products")
         public List<Product> products;
 

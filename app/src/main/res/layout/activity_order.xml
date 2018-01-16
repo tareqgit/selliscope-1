@@ -51,394 +51,313 @@
                             android:layout_height="wrap_content"
                             android:background="#ddd">
 
-                            <TextView
+                            <TableLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_margin="1dp"
-                                android:layout_weight="1"
-                                android:background="#fff"
-                                android:padding="@dimen/margin_10"
-                                android:text="Product"
-                                android:textAlignment="center"/>
+                                android:layout_weight="1">
+
+                                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_margin="1dp"
+                                    android:layout_weight="1"
+                                    android:background="#fff"
+                                    android:padding="10dp"
+                                    android:text="Product Name"
+                                    android:textAlignment="center"
+                                    android:textStyle="bold"/>
+
+                                <TableLayout>
+
+                                    <TableRow>
+
+                                        <TextView
+                                            android:layout_width="0dp"
+                                            android:layout_height="wrap_content"
+                                            android:layout_margin="1dp"
+                                            android:layout_weight="1"
+                                            android:background="#fff"
+                                            android:padding="10dp"
+                                            android:text="Dia"
+                                            android:textAlignment="center"
+                                            android:textStyle="bold"/>
+
+                                        <TextView
+                                            android:layout_width="0dp"
+                                            android:layout_height="wrap_content"
+                                            android:layout_margin="1dp"
+                                            android:layout_weight="1"
+                                            android:background="#fff"
+                                            android:padding="10dp"
+                                            android:text="Grade"
+                                            android:textAlignment="center"
+                                            android:textStyle="bold"/>
+                                    </TableRow>
+                                </TableLayout>
+                            </TableLayout>
 
                             <TextView
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_margin="1dp"
-                                android:background="#fff"
-                                android:padding="@dimen/margin_10"
-                                android:text="Qty."
-                                android:textAlignment="center"/>
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_margin="1dp"
-                                android:layout_weight="1"
-                                android:background="#fff"
-                                android:padding="@dimen/margin_10"
-                                android:text="Price"
-                                android:textAlignment="center"/>
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_margin="1dp"
-                                android:layout_weight="-2"
-                                android:background="#fff"
-                                android:padding="@dimen/margin_10"
-                                android:text="Discount"
-                                android:textAlignment="center"/>
-
-                            <TextView
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_margin="1dp"
-                                android:layout_weight="1"
-                                android:background="#fff"
-                                android:padding="@dimen/margin_10"
-                                android:text="Amt"
-                                android:textAlignment="center"/>
-
-                            <ImageView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
+                                android:layout_height="match_parent"
                                 android:layout_margin="1dp"
                                 android:background="#fff"
                                 android:gravity="center"
-                                android:padding="@dimen/margin_10"
+                                android:padding="10dp"
+                                android:text="Qty."
+                                android:textAlignment="center"
+                                android:textStyle="bold"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_margin="1dp"
+                                android:layout_weight="1"
+                                android:background="#fff"
+                                android:gravity="center"
+                                android:padding="10dp"
+                                android:text="Rate"
+                                android:textAlignment="center"
+                                android:textStyle="bold"/>
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_margin="1dp"
+                                android:layout_weight="1"
+                                android:background="#fff"
+                                android:gravity="center"
+                                android:padding="10dp"
+                                android:text="Price"
+                                android:textAlignment="center"
+                                android:textStyle="bold"/>
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_margin="1dp"
+                                android:background="#fff"
+                                android:gravity="center"
+                                android:padding="10dp"
                                 android:textAlignment="center"
                                 android:tint="#d50000"
                                 app:srcCompat="@drawable/remove"/>
                         </TableRow>
+                    </TableLayout>
+                </LinearLayout>
 
-                        <TableRow
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal">
 
-                            <Spinner
-                                android:id="@+id/sp_product"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_margin="1dp"
-                                android:layout_weight="1"
-                                android:clickable="true"
-                                android:padding="@dimen/margin_10"
-                                android:spinnerMode="dropdown"/>
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:layout_weight="1"
+                        android:orientation="horizontal">
 
-                            <LinearLayout
-                                android:layout_width="100dp"
-                                android:layout_height="wrap_content"
-                                android:layout_margin="1dp"
-                                android:orientation="horizontal"
-                                android:paddingLeft="@dimen/margin_10"
-                                android:paddingRight="@dimen/margin_10">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:padding="10dp"
+                            android:text="BG Amount: "
+                            android:textColor="#000"/>
 
-                                <Button
-                                    android:id="@+id/btn_decrease"
-                                    android:layout_width="60dp"
-                                    android:layout_height="30dp"
-                                    android:layout_weight="1"
-                                    android:background="#fff"
-                                    android:text="-"
-                                    android:textSize="20sp"/>
+                        <TextView
+                            android:id="@+id/tv_bg_amount"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:hint="500000"
+                            android:padding="10dp"/>
+                    </LinearLayout>
 
-                                <EditText
-                                    android:id="@+id/et_qty"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:hint="Qty."
-                                    android:imeOptions="actionDone"
-                                    android:inputType="number"
-                                    android:text="1"
-                                    android:textAlignment="center"
-                                    android:textColor="#000"/>
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:orientation="horizontal">
 
-                                <Button
-                                    android:id="@+id/btn_increase"
-                                    android:layout_width="60dp"
-                                    android:layout_height="30dp"
-                                    android:layout_weight="1"
-                                    android:background="#fff"
-                                    android:text="+"
-                                    android:textSize="20sp"/>
-                            </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
 
                             <TextView
-                                android:id="@+id/tv_price"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_margin="1dp"
-                                android:layout_weight="1"
-                                android:padding="@dimen/margin_10"
-                                android:text="Price"
-                                android:textAlignment="center"
+                                android:padding="10dp"
+                                android:text="Total Qty.:"
+                                android:textColor="#000"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:padding="10dp"
+                                android:text="Total Tk.:"
+                                android:textColor="#000"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:padding="10dp"
+                                android:text="Discount Tk.:"
+                                android:textColor="#000"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="10dp"
+                                android:padding="10dp"
+                                android:text="Truck Fare Tk.:"
+                                android:textColor="#000"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:padding="10dp"
+                                android:text="Grand Total Tk.:"
+                                android:textColor="#000"/>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:focusableInTouchMode="true"
+                            android:orientation="vertical">
+
+
+                            <TextView
+                                android:id="@+id/tv_qty"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="Qty."
+                                android:padding="10dp"
+                                android:textColor="#000"/>
+
+                            <TextView
+                                android:id="@+id/tv_total"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="40000"
+                                android:padding="10dp"
                                 android:textColor="#000"/>
 
                             <EditText
                                 android:id="@+id/et_discount"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_margin="1dp"
-                                android:layout_weight="-2"
-                                android:hint="Discount"
-                                android:inputType="numberDecimal"
-                                android:padding="@dimen/margin_10"
-                                android:text="0.0"
-                                android:textAlignment="center"
-                                android:textColor="#000"/>
-
-                            <TextView
-                                android:id="@+id/tv_amount"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_margin="1dp"
-                                android:layout_weight="1"
-                                android:padding="@dimen/margin_10"
-                                android:text="0.0"
-                                android:textAlignment="center"
+                                android:hint="Discount"
+                                android:imeOptions="actionNext"
+                                android:inputType="numberDecimal"
+                                android:padding="10dp"
+                                android:text="0"
+                                android:textColor="#000"/>
+
+                            <EditText
+                                android:id="@+id/et_truck_fare"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="Truck Fare"
+                                android:imeOptions="actionNext"
+                                android:inputType="numberDecimal"
+                                android:padding="10dp"
+                                android:text="0"
                                 android:textColor="#000"/>
 
                             <TextView
-                                android:layout_width="wrap_content"
+                                android:id="@+id/tv_grand_total"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_margin="1dp"
-                                android:drawableTint="#d50000"
-                                android:gravity="center"
-                                android:padding="@dimen/margin_10"
-                                android:textAlignment="center"/>
-                        </TableRow>
-                    </TableLayout>
-                    <!--<LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="#ddd"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="1dp"
-                            android:layout_weight="2"
-                            android:background="#fff"
-                            android:padding="@dimen/margin_10"
-                            android:text="Product"
-                            android:textAlignment="center" />
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="1dp"
-                            android:layout_weight="2"
-                            android:background="#fff"
-                            android:padding="@dimen/margin_10"
-                            android:text="Qty."
-                            android:textAlignment="center" />
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="1dp"
-                            android:layout_weight="2"
-                            android:background="#fff"
-                            android:padding="@dimen/margin_10"
-                            android:text="Price"
-                            android:textAlignment="center" />
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="1dp"
-                            android:layout_weight="2"
-                            android:background="#fff"
-                            android:padding="@dimen/margin_10"
-                            android:text="Amt"
-                            android:textAlignment="center" />
-
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="1dp"
-                            android:layout_weight="1"
-                            android:background="#fff"
-                            android:padding="@dimen/margin_10"
-                            android:drawableLeft="@drawable/remove"
-                            android:drawableTint="#d50000"
-                            android:gravity="center"
-                            android:textAlignment="center" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="1dp"
-                            android:orientation="horizontal">
-
-                            <Spinner
-                                android:id="@+id/sp_product"
-                                style="@style/spinner_style"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:clickable="true"
-                                android:padding="@dimen/margin_10" />
-
-                            <LinearLayout
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:orientation="horizontal"
-                                android:paddingLeft="@dimen/margin_10"
-                                android:paddingRight="@dimen/margin_10">
-
-                                <Button
-                                    android:id="@+id/btn_decrease"
-                                    android:layout_width="60dp"
-                                    android:layout_height="30dp"
-                                    android:layout_weight="1"
-                                    android:background="#fff"
-                                    android:text="-"
-                                    android:textSize="20sp" />
-
-                                <EditText
-                                    android:id="@+id/et_qty"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:hint="Qty."
-                                    android:imeOptions="actionDone"
-                                    android:inputType="number"
-                                    android:text="1"
-                                    android:textAlignment="center" />
-
-                                <Button
-                                    android:id="@+id/btn_increase"
-                                    android:layout_width="60dp"
-                                    android:layout_height="30dp"
-                                    android:layout_weight="1"
-                                    android:background="#fff"
-                                    android:text="+"
-                                    android:textSize="20sp" />
-                            </LinearLayout>
-
-                            <TextView
-                                android:id="@+id/tv_price"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:padding="@dimen/margin_10"
-                                android:text="Price"
-                                android:textAlignment="center" />
-
-                            <TextView
-                                android:id="@+id/tv_amount"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:padding="@dimen/margin_10"
-                                android:text="Amt"
-                                android:textAlignment="center" />
-
-                            <Button
-                                android:id="@+id/btn_remove"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:drawableRight="@drawable/remove"
-                                android:drawableTint="#d50000"
-                                android:gravity="center"
-                                android:padding="@dimen/margin_10"
-                                android:textAlignment="center" />
+                                android:hint="Grand Total"
+                                android:padding="10dp"
+                                android:textColor="#000"/>
                         </LinearLayout>
-
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:background="#ddd" />
-                    </LinearLayout>-->
+                    </LinearLayout>
                 </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="right"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="10dp"
                     android:orientation="vertical">
 
-                    <LinearLayout
-                        android:layout_width="wrap_content"
+                    <RadioGroup
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="right"
-                        android:layout_marginRight="50dp"
                         android:orientation="horizontal">
 
-                        <TextView
-                            android:layout_width="wrap_content"
+                        <RadioButton
+                            android:id="@+id/rb_u_bend"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Total : "
-                            android:textAlignment="center"
-                            android:textColor="#000000"/>
+                            android:layout_weight="1"
+                            android:background="@drawable/radio_background"
+                            android:button="@null"
+                            android:checked="true"
+                            android:padding="10dp"
+                            android:text="U-Bend"
+                            android:textAlignment="center"/>
 
-                        <TextView
-                            android:id="@+id/tv_total_amt"
-                            android:layout_width="wrap_content"
+                        <RadioButton
+                            android:id="@+id/rb_straight"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="start"
-                            android:text="Total"
-                            android:textAlignment="textStart"/>
-                    </LinearLayout>
+                            android:layout_weight="1"
+                            android:background="@drawable/radio_background"
+                            android:button="@null"
+                            android:padding="10dp"
+                            android:text="Straight"
+                            android:textAlignment="center"/>
+                    </RadioGroup>
 
-                    <LinearLayout
-                        android:layout_width="wrap_content"
+                    <RadioGroup
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="right"
-                        android:layout_marginRight="50dp"
+                        android:layout_marginTop="10dp"
                         android:orientation="horizontal">
 
-                        <TextView
-                            android:layout_width="wrap_content"
+                        <RadioButton
+                            android:id="@+id/rb_cap"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Discount : "
-                            android:textAlignment="center"
-                            android:textColor="#000000"/>
+                            android:layout_weight="1"
+                            android:background="@drawable/radio_background"
+                            android:button="@null"
+                            android:checked="true"
+                            android:padding="10dp"
+                            android:text="Cap"
+                            android:textAlignment="center"/>
 
-                        <TextView
-                            android:id="@+id/tv_total_discnt"
-                            android:layout_width="wrap_content"
+                        <RadioButton
+                            android:id="@+id/rb_no_cap"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="start"
-                            android:text="Discount"
-                            android:textAlignment="textStart"/>
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="right"
-                        android:layout_marginRight="50dp"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Gr. Total : "
-                            android:textAlignment="center"
-                            android:textColor="#000000"/>
-
-                        <TextView
-                            android:id="@+id/tv_total_gr"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="start"
-                            android:text="Gr. Total"
-                            android:textAlignment="textStart"/>
-                    </LinearLayout>
+                            android:layout_weight="1"
+                            android:background="@drawable/radio_background"
+                            android:button="@null"
+                            android:padding="10dp"
+                            android:text="No Cap"
+                            android:textAlignment="center"/>
+                    </RadioGroup>
                 </LinearLayout>
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <EditText
+                        android:id="@+id/et_remarks"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Remarks"
+                        android:imeOptions="actionDone"
+                        android:inputType="textAutoComplete"/>
+                </android.support.design.widget.TextInputLayout>
 
                 <LinearLayout
                     android:layout_width="wrap_content"

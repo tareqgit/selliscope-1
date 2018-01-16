@@ -94,10 +94,8 @@ public interface SelliscopeApiEndpointInterface {
     @POST("visit/store")
     Call<ResponseBody> sendUserLocation(@Body UserLocation userLocation);
 
-    @POST("order/variant/store")
+    @POST("order/store")
     Call<AddNewOrder.OrderResponse> addOrder(@Body AddNewOrder order);
-    /*@POST("order/store")
-    Call<AddNewOrder.OrderResponse> addOrder(@Body AddNewOrder order);*/
 
     @POST("payment/collect")
     Call<PaymentResponse.PaymentSucessfull> payNow(@Body PaymentResponse payment);

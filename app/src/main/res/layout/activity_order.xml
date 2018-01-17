@@ -351,6 +351,19 @@
                     android:layout_height="wrap_content">
 
                     <EditText
+                        android:id="@+id/et_delivery_address"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Delivery Address"
+                        android:imeOptions="actionDone"
+                        android:inputType="textAutoComplete"/>
+                </android.support.design.widget.TextInputLayout>
+
+                <android.support.design.widget.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <EditText
                         android:id="@+id/et_remarks"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"

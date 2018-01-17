@@ -220,6 +220,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                     }
                     newOrder.discount = Double.parseDouble(binding.etDiscount.getText().toString());
                     newOrder.remarks = binding.etRemarks.getText().toString();
+                    newOrder.deliveryAddress = binding.etDeliveryAddress.getText().toString();
                     newOrder.products = products;
                     addNewOrder.newOrder = newOrder;
 

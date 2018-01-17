@@ -24,6 +24,8 @@ public class AddNewOrder implements Serializable {
         public int bend;
         @SerializedName("cap")
         public int cap;
+        @SerializedName("delivery_address")
+        public String deliveryAddress;
         @SerializedName("remarks")
         public String remarks;
         @SerializedName("products")

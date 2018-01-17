@@ -438,6 +438,30 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                     }
                 }
 
+                //For rate
+                et_rate.addTextChangedListener(new TextWatcher() {
+                    @Override
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        try {
+                            tv_total.setText(String.valueOf(Double.parseDouble(s.toString()) * Double.parseDouble(et_quantity.getText().toString())));
+                            price = s.toString();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+
+                    }
+                });
+                //For rate
+
                 //For quantity
                 et_quantity.addTextChangedListener(new TextWatcher() {
                     @Override

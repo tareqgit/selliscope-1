@@ -179,14 +179,41 @@
                     android:layout_height="wrap_content"
                     android:entries="@array/paymentType"
                     android:spinnerMode="dropdown"/>
-
-                <Button
-                    android:id="@+id/btn_pay"
-                    style="@android:style/Widget.Button.Small"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Pay Now"/>
             </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_check_details"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <EditText
+                    android:id="@+id/et_deposited_bank"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Deposited Bank"/>
+
+                <EditText
+                    android:id="@+id/et_deposited_account"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Deposited Account"/>
+
+                <EditText
+                    android:id="@+id/et_deposit_form"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Deposit Form"/>
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/btn_pay"
+                style="@android:style/Widget.Button.Small"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Pay Now"/>
         </LinearLayout>
     </android.support.v7.widget.CardView>
 </layout>

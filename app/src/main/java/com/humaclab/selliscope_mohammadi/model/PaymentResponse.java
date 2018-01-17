@@ -3,7 +3,7 @@ package com.humaclab.selliscope_mohammadi.model;
 import com.google.gson.annotations.SerializedName;
 
 /**
- * Created by tonmoy on 5/27/17.
+ * Created by Leon on 5/27/17.
  */
 
 public class PaymentResponse {
@@ -19,6 +19,13 @@ public class PaymentResponse {
         public int amount;
         @SerializedName("type")
         public int type;
+
+        @SerializedName("deposited_bank")
+        public String depositedBank;
+        @SerializedName("deposited_account")
+        public String depositedAccount;
+        @SerializedName("deposit_form")
+        public String depositForm;
     }
 
     public static class PaymentSucessfull {

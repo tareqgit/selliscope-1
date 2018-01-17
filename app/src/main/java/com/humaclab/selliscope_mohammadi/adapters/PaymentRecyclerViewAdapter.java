@@ -9,8 +9,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -58,6 +60,22 @@ public class PaymentRecyclerViewAdapter extends RecyclerView.Adapter<PaymentRecy
         final Payment.OrderList orderList = orderLists.get(position);
         holder.getBinding().setVariable(BR.payments, orderList);
         holder.getBinding().executePendingBindings();
+
+        holder.sp_payment_type.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (position == 1)
+                    holder.ll_check_details.setVisibility(View.VISIBLE);
+                else
+                    holder.ll_check_details.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
         holder.btn_pay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -71,6 +89,13 @@ public class PaymentRecyclerViewAdapter extends RecyclerView.Adapter<PaymentRecy
                 payment.order_id = orderList.orderId;
                 payment.outlet_id = orderList.outletId;
                 payment.type = (holder.sp_payment_type.getSelectedItemPosition() == 0) ? 1 : 2;
+
+                if (payment.type == 2) {
+                    payment.depositedBank = holder.et_deposited_bank.getText().toString();
+                    payment.depositedAccount = holder.et_deposited_account.getText().toString();
+                    payment.depositForm = holder.et_deposit_form.getText().toString();
+                }
+
                 payment.amount = Integer.parseInt(holder.et_payment.getText().toString());
                 paymentResponse.payment = payment;
                 Call<PaymentResponse.PaymentSucessfull> call = apiService.payNow(paymentResponse);
@@ -116,14 +141,19 @@ public class PaymentRecyclerViewAdapter extends RecyclerView.Adapter<PaymentRecy
         private ViewDataBinding binding;
         private Button btn_pay;
         private Spinner sp_payment_type;
-        private EditText et_payment;
+        private LinearLayout ll_check_details;
+        private EditText et_payment, et_deposited_bank, et_deposited_account, et_deposit_form;
 
         public PaymentViewHolder(View itemView) {
             super(itemView);
             binding = DataBindingUtil.bind(itemView);
-            btn_pay = (Button) itemView.findViewById(R.id.btn_pay);
-            sp_payment_type = (Spinner) itemView.findViewById(R.id.sp_payment_type);
-            et_payment = (EditText) itemView.findViewById(R.id.et_payment);
+            btn_pay = itemView.findViewById(R.id.btn_pay);
+            sp_payment_type = itemView.findViewById(R.id.sp_payment_type);
+            et_payment = itemView.findViewById(R.id.et_payment);
+            ll_check_details = itemView.findViewById(R.id.ll_check_details);
+            et_deposited_bank = itemView.findViewById(R.id.et_deposited_bank);
+            et_deposited_account = itemView.findViewById(R.id.et_deposited_account);
+            et_deposit_form = itemView.findViewById(R.id.et_deposit_form);
         }
 
         public ViewDataBinding getBinding() {

@@ -2,6 +2,7 @@ package com.humaclab.selliscope_mohammadi.activity;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -238,6 +239,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                                 if (response.code() == 201) {
                                     System.out.println(new Gson().toJson(response.body()));
                                     Toast.makeText(OrderActivity.this, "Order created successfully", Toast.LENGTH_LONG).show();
+                                    startActivity(new Intent(OrderActivity.this, PaymentActivity.class));
                                     finish();
                                 } else if (response.code() == 401) {
                                     System.out.println(new Gson().toJson(response.body()));

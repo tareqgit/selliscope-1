@@ -418,6 +418,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                                             ) {
                                         variantDetailsNames.add(s);
                                     }
+                                    variantNameList.remove(finalI);
                                     variantNameList.add(finalI, variantDetailsNames);
                                     ((Spinner) variantViews.get(finalI)).setAdapter(new ArrayAdapter<>(context, R.layout.spinner_item, variantNameList.get(finalI)));
                                     arrayAdapter.notifyDataSetChanged();
@@ -470,7 +471,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                 productStock.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
                 productStock.setTextSize(20);
                 //For product stock
-                variantPriceTypes.add("Select price type");
+                variantPriceTypes.add("Select price");
                 for (Integer integer : price_id) {
                     variantIDs.add(variantsItems.get(integer).getId());
                     variantPriceTypes.add(variantsItems.get(integer).getName());

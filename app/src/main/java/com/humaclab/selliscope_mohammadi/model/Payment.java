@@ -35,6 +35,8 @@ public class Payment implements Serializable {
         public String orderDate;
         @SerializedName("products")
         public List<Product> productList;
+        @SerializedName("truck_fare")
+        public int truckFare;
     }
 
     public static class Product implements Serializable {

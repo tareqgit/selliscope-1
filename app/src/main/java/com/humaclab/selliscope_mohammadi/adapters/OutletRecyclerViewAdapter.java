@@ -168,7 +168,7 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
                 if (response.code() == 201) {
                     try {
                         UserLocation.Successful userLocationSuccess = gson.fromJson(response.body().string(), UserLocation.Successful.class);
-                        Timber.d("Result:" + userLocationSuccess.result);
+                        Timber.d("PrefixResult:" + userLocationSuccess.result);
                         progressBar.setVisibility(View.INVISIBLE);
                         Toast.makeText(context, "You are checked In.", Toast.LENGTH_SHORT).show();
                     } catch (IOException e) {

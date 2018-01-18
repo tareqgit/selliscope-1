@@ -1,6 +1,7 @@
 package com.humaclab.selliscope_mohammadi.activity;
 
 import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -11,7 +12,9 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -28,6 +31,8 @@ import com.humaclab.selliscope_mohammadi.adapters.OutletTypeAdapter;
 import com.humaclab.selliscope_mohammadi.adapters.ThanaAdapter;
 import com.humaclab.selliscope_mohammadi.model.CreateOutlet;
 import com.humaclab.selliscope_mohammadi.model.District.District;
+import com.humaclab.selliscope_mohammadi.model.OutletPrefixResponse.PrefixItem;
+import com.humaclab.selliscope_mohammadi.model.OutletPrefixResponse.PrefixResponse;
 import com.humaclab.selliscope_mohammadi.model.OutletType.OutletType;
 import com.humaclab.selliscope_mohammadi.model.Outlets;
 import com.humaclab.selliscope_mohammadi.model.Thana.Thana;
@@ -37,6 +42,8 @@ import com.humaclab.selliscope_mohammadi.utils.SessionManager;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import okhttp3.ResponseBody;
@@ -54,7 +61,8 @@ public class EditOutletActivity extends AppCompatActivity {
     //    double latitude, longitude = 0.0;
     int outletTypeId, thanaId = -1;
     private EditText outletName, outletAddress, outletOwner, outletContactNumber;
-    private Spinner outletType, district, thana;
+    private EditText etCreditLimit, etBankName, etBGAmount, etExpDate, etOwnerEmail;
+    private Spinner spOutletPrefix, spPaymentType, outletType, district, thana;
     private ImageView iv_outlet;
     private Button submit, cancel;
     private String email, password;
@@ -69,6 +77,10 @@ public class EditOutletActivity extends AppCompatActivity {
 
     private Outlets.Successful.Outlet outlet;
 
+    private List<Integer> prefixID = new ArrayList<>();
+    private List<String> prefixName = new ArrayList<>();
+    private int paymentType;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,11 +93,52 @@ public class EditOutletActivity extends AppCompatActivity {
         sessionManager = new SessionManager(this);
         email = sessionManager.getUserEmail();
         password = sessionManager.getUserPassword();
+        apiService = SelliscopeApplication.getRetrofitInstance(email, password, false).create(SelliscopeApiEndpointInterface.class);
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("Add Outlet");
         setSupportActionBar(toolbar);
         outletName = findViewById(R.id.et_outlet_name);
         outletName.setText(outlet.outletName);
+
+        etCreditLimit = findViewById(R.id.et_credit_limit);
+        etBankName = findViewById(R.id.et_bank_name);
+        etBGAmount = findViewById(R.id.et_bg_amount);
+        etExpDate = findViewById(R.id.et_exp_date);
+        etExpDate.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    final Calendar myCalendar = Calendar.getInstance();
+                    DatePickerDialog datePickerDialog = new DatePickerDialog(v.getContext(), new DatePickerDialog.OnDateSetListener() {
+                        @Override
+                        public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                            etExpDate.setText(year + "/" + (month + 1) + "/" + dayOfMonth);
+                        }
+                    }, myCalendar.get(Calendar.YEAR), myCalendar.get(Calendar.MONTH), myCalendar.get(Calendar.DAY_OF_MONTH));
+                    datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
+                    datePickerDialog.show();
+                }
+            }
+        });
+        etExpDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final Calendar myCalendar = Calendar.getInstance();
+                DatePickerDialog datePickerDialog = new DatePickerDialog(v.getContext(), new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                        etExpDate.setText(year + "/" + (month + 1) + "/" + dayOfMonth);
+                    }
+                }, myCalendar.get(Calendar.YEAR), myCalendar.get(Calendar.MONTH), myCalendar.get(Calendar.DAY_OF_MONTH));
+                datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
+                datePickerDialog.show();
+            }
+        });
+        etOwnerEmail = findViewById(R.id.et_outlet_owner_email);
+
+        spOutletPrefix = findViewById(R.id.sp_outlet_prefix);
+        spPaymentType = findViewById(R.id.sp_payment_type);
 
         outletAddress = findViewById(R.id.et_outlet_address);
         outletAddress.setText(outlet.outletAddress);
@@ -95,6 +148,9 @@ public class EditOutletActivity extends AppCompatActivity {
 
         outletContactNumber = findViewById(R.id.et_outlet_contact_number);
         outletContactNumber.setText(outlet.phone);
+
+        etOwnerEmail = findViewById(R.id.et_outlet_owner_email);
+        etOwnerEmail.setText(outlet.outletEmail);
 
         district = findViewById(R.id.sp_district);
         thana = findViewById(R.id.sp_thana);
@@ -203,14 +259,113 @@ public class EditOutletActivity extends AppCompatActivity {
                         && outletTypeId != -1 && thanaId != -1) {
                     Timber.d("addOutletRun");
                     if (NetworkUtility.isNetworkAvailable(EditOutletActivity.this)) {
-                        updatedOutlet(email, password, outletTypeId, outletName.getText().toString().trim(),
-                                outletOwner.getText().toString().trim(),
-                                outletAddress.getText().toString().trim(), thanaId,
-                                outletContactNumber.getText().toString().trim(), outlet.outletLatitude, outlet.outletLongitude);
+                        if (spPaymentType.getSelectedItemPosition() > 0) {
+                            if (!isEmpty(spPaymentType.getSelectedItemPosition())) {
+                                updatedOutlet(email, password, outletTypeId, outletName.getText().toString().trim(),
+                                        outletOwner.getText().toString().trim(),
+                                        outletAddress.getText().toString().trim(), thanaId,
+                                        outletContactNumber.getText().toString().trim(), outlet.outletLatitude, outlet.outletLongitude);
+                            }
+                        }
                     } else
                         Toast.makeText(EditOutletActivity.this, "Connect to Wifi or Mobile Data",
                                 Toast.LENGTH_SHORT).show();
                 }
+            }
+        });
+
+        spPaymentType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                switch (position) {
+                    case 1:
+                        paymentType = 1;
+                        etBankName.setVisibility(View.VISIBLE);
+                        etBGAmount.setVisibility(View.VISIBLE);
+                        etExpDate.setVisibility(View.VISIBLE);
+
+                        etCreditLimit.setVisibility(View.GONE);
+                        break;
+                    case 2:
+                        paymentType = 2;
+                        etCreditLimit.setVisibility(View.VISIBLE);
+
+                        etBankName.setVisibility(View.GONE);
+                        etBGAmount.setVisibility(View.GONE);
+                        etExpDate.setVisibility(View.GONE);
+                        break;
+                    case 3:
+                        etBankName.setVisibility(View.GONE);
+                        etBGAmount.setVisibility(View.GONE);
+                        etExpDate.setVisibility(View.GONE);
+                        etCreditLimit.setVisibility(View.GONE);
+                        break;
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        getPrefix();
+    }
+
+    private boolean isEmpty(int selectedItemPosition) {
+        int count = 0;
+        View view = null;
+        if (selectedItemPosition == 0) {
+            if (etBankName.getText().toString().isEmpty()) {
+                etBankName.setError(getString(R.string.error_field_required));
+                view = etBankName;
+                view.requestFocus();
+                count++;
+            }
+            if (etBGAmount.getText().toString().isEmpty()) {
+                etBGAmount.setError(getString(R.string.error_field_required));
+                view = etBGAmount;
+                view.requestFocus();
+                count++;
+            }
+            if (etExpDate.getText().toString().isEmpty()) {
+                etExpDate.setError(getString(R.string.error_field_required));
+                view = etExpDate;
+                view.requestFocus();
+                count++;
+            }
+        }
+        if (selectedItemPosition == 1) {
+            if (etCreditLimit.getText().toString().isEmpty()) {
+                etCreditLimit.setError(getString(R.string.error_field_required));
+                view = etCreditLimit;
+                view.requestFocus();
+                count++;
+            }
+        }
+        return count != 0;
+    }
+
+    private void getPrefix() {
+        pd.setMessage("Loading outlet prefix....");
+        pd.show();
+        Call<PrefixResponse> call = apiService.getOutletPrefix();
+        call.enqueue(new Callback<PrefixResponse>() {
+            @Override
+            public void onResponse(Call<PrefixResponse> call, Response<PrefixResponse> response) {
+                List<PrefixItem> prefixItemList = response.body().getPrefixResult().getPrefix();
+
+                for (PrefixItem prefixItem : prefixItemList) {
+                    prefixID.add(prefixItem.getId());
+                    prefixName.add(prefixItem.getPrefix());
+                }
+                spOutletPrefix.setAdapter(new ArrayAdapter<>(EditOutletActivity.this, android.R.layout.simple_list_item_1, prefixName));
+                pd.dismiss();
+            }
+
+            @Override
+            public void onFailure(Call<PrefixResponse> call, Throwable t) {
+
             }
         });
     }
@@ -222,9 +377,25 @@ public class EditOutletActivity extends AppCompatActivity {
         pd.setCancelable(false);
         pd.show();
 
-        apiService = SelliscopeApplication.getRetrofitInstance(email, password, false).create(SelliscopeApiEndpointInterface.class);
-        Call<ResponseBody> call = apiService.updateOutlet(outlet.outletId,
-                new CreateOutlet(outletTypeId, outletName, ownerName, address, thanaId, phone, latitude, longitude, outletImage));
+        Call<ResponseBody> call = apiService.updateOutlet(outlet.outletId, new CreateOutlet(
+                        outletTypeId,
+                        outletName,
+                        ownerName,
+                        address,
+                        thanaId,
+                        phone,
+                        latitude,
+                        longitude,
+                        outletImage,
+                        prefixID.get(spOutletPrefix.getSelectedItemPosition()),
+                        paymentType,
+                        etBankName.getText().toString(),
+                        etBGAmount.getText().toString(),
+                        etExpDate.getText().toString(),
+                        etCreditLimit.getText().toString(),
+                        etOwnerEmail.getText().toString()
+                )
+        );
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {

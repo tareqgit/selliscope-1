@@ -136,7 +136,7 @@ public class SendUserLocationData {
                 if (response.code() == 201) {
                     try {
                         UserLocation.Successful userLocationSuccess = gson.fromJson(response.body().string(), UserLocation.Successful.class);
-                        Timber.d("Result:" + userLocationSuccess.result);
+                        Timber.d("PrefixResult:" + userLocationSuccess.result);
                         if (fromDB)
                             dbHandler.deleteUserVisit(visitId);
                     } catch (IOException e) {

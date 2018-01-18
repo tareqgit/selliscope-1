@@ -12,6 +12,7 @@ import com.humaclab.selliscope_mohammadi.model.GodownRespons;
 import com.humaclab.selliscope_mohammadi.model.IMEIandVerison;
 import com.humaclab.selliscope_mohammadi.model.InspectionResponse;
 import com.humaclab.selliscope_mohammadi.model.OrderResponse;
+import com.humaclab.selliscope_mohammadi.model.OutletPrefixResponse.PrefixResponse;
 import com.humaclab.selliscope_mohammadi.model.OutletType.OutletTypeResponse;
 import com.humaclab.selliscope_mohammadi.model.Payment;
 import com.humaclab.selliscope_mohammadi.model.PaymentResponse;
@@ -83,8 +84,10 @@ public interface SelliscopeApiEndpointInterface {
     @GET("diameter")
     Call<DiameterResponse> getDiameter();
 
-    //POST methods
+    @GET("outlet-prefix")
+    Call<PrefixResponse> getOutletPrefix();
 
+    //POST methods
     @POST("login")
     Call<ResponseBody> getUser();
 

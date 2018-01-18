@@ -49,6 +49,13 @@
         <item>Cheque</item>
     </string-array>
 
+    <string-array name="outletPaymentType">
+        <item>Select Payment Type</item>
+        <item>Bank</item>
+        <item>Credit</item>
+        <!--<item>Cash</item>-->
+    </string-array>
+
     <string-array name="returnCause">
         <item>Select cause of return</item>
         <item>Damaged product</item>

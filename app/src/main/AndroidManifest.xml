@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           xmlns:tools="http://schemas.android.com/tools"
-          package="com.humaclab.selliscope">
+          package="com.humaclab.selliscope_dimension_bd">
 
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
@@ -14,7 +14,7 @@
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
 
     <application
-        android:name=".SelliscopeApplication"
+        android:name="com.humaclab.selliscope_dimension_bd.SelliscopeApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -45,19 +45,19 @@
 
         <!--Services and Receivers-->
         <service
-            android:name=".service.FcmInstanceIdServices">
+            android:name="com.humaclab.selliscope_dimension_bd.service.FcmInstanceIdServices">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
             </intent-filter>
         </service>
         <service
-            android:name=".service.FcmGetNotificationService">
+            android:name="com.humaclab.selliscope_dimension_bd.service.FcmGetNotificationService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT"/>
             </intent-filter>
         </service>
         <service
-            android:name=".service.SendLocationDataService"
+            android:name="com.humaclab.selliscope_dimension_bd.service.SendLocationDataService"
             android:exported="false"
             android:permission="android.permission.RECEIVE_BOOT_COMPLETED"
             android:process=":selliscope_process">
@@ -69,7 +69,7 @@
         </service>
 
         <receiver
-            android:name=".receiver.InternetConnectivityChangeReceiver"
+            android:name="com.humaclab.selliscope_dimension_bd.receiver.InternetConnectivityChangeReceiver"
             android:enabled="true">
             <intent-filter>
                 <action
@@ -80,7 +80,7 @@
         <!--Services and Receivers-->
 
         <activity
-            android:name=".activity.SplashScreenActivity"
+            android:name="com.humaclab.selliscope_dimension_bd.activity.SplashScreenActivity"
             android:theme="@style/SplashScreenTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -88,31 +88,31 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".activity.LoginActivity"/>
+        <activity android:name="com.humaclab.selliscope_dimension_bd.activity.LoginActivity"/>
         <activity
-            android:name=".activity.HomeActivity"
+            android:name="com.humaclab.selliscope_dimension_bd.activity.HomeActivity"
             android:configChanges="orientation|screenSize"/>
-        <activity android:name=".activity.RouteActivity"/>
-        <activity android:name=".activity.OutletActivity"/>
-        <activity android:name=".activity.AddOutletActivity"/>
-        <activity android:name=".activity.OutletDetailsActivity"/>
-        <activity android:name=".activity.PrivacyPolicyActivity"/>
-        <activity android:name=".activity.ProductActivity"/>
+        <activity android:name="com.humaclab.selliscope_dimension_bd.activity.RouteActivity"/>
+        <activity android:name="com.humaclab.selliscope_dimension_bd.activity.OutletActivity"/>
+        <activity android:name="com.humaclab.selliscope_dimension_bd.activity.AddOutletActivity"/>
+        <activity android:name="com.humaclab.selliscope_dimension_bd.activity.OutletDetailsActivity"/>
+        <activity android:name="com.humaclab.selliscope_dimension_bd.activity.PrivacyPolicyActivity"/>
+        <activity android:name="com.humaclab.selliscope_dimension_bd.activity.ProductActivity"/>
         <activity
-            android:name=".activity.OrderActivity"
+            android:name="com.humaclab.selliscope_dimension_bd.activity.OrderActivity"
             android:screenOrientation="landscape"/>
-        <activity android:name=".activity.DeliveryListActivity"/>
+        <activity android:name="com.humaclab.selliscope_dimension_bd.activity.DeliveryListActivity"/>
         <activity
-            android:name=".activity.DeliveryDetailsActivity"
+            android:name="com.humaclab.selliscope_dimension_bd.activity.DeliveryDetailsActivity"
             android:screenOrientation="landscape"/>
-        <activity android:name=".activity.PaymentActivity"/>
-        <activity android:name=".activity.DueActivity"/>
-        <activity android:name=".activity.EditOutletActivity"/>
-        <activity android:name=".activity.CallCardActivity"/>
-        <activity android:name=".activity.InspectionActivity"/>
-        <activity android:name=".activity.SalesReturnActivity"/>
+        <activity android:name="com.humaclab.selliscope_dimension_bd.activity.PaymentActivity"/>
+        <activity android:name="com.humaclab.selliscope_dimension_bd.activity.DueActivity"/>
+        <activity android:name="com.humaclab.selliscope_dimension_bd.activity.EditOutletActivity"/>
+        <activity android:name="com.humaclab.selliscope_dimension_bd.activity.CallCardActivity"/>
+        <activity android:name="com.humaclab.selliscope_dimension_bd.activity.InspectionActivity"/>
+        <activity android:name="com.humaclab.selliscope_dimension_bd.activity.SalesReturnActivity"/>
         <activity
-            android:name=".activity.SalesReturnDetailsActivity"
+            android:name="com.humaclab.selliscope_dimension_bd.activity.SalesReturnDetailsActivity"
             android:screenOrientation="landscape"/>
     </application>
 

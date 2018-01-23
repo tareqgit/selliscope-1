@@ -6,9 +6,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -28,6 +31,7 @@ public class ProductActivity extends AppCompatActivity {
     private RecyclerView rv_product;
     private SwipeRefreshLayout srl_product;
     private Spinner sp_category, sp_brand;
+    private EditText et_search_product;
     private List<String> categoryName = new ArrayList<>(), brandName = new ArrayList<>();
     private List<Integer> categoryID = new ArrayList<>(), brandID = new ArrayList<>();
     private DatabaseHandler databaseHandler;
@@ -36,19 +40,36 @@ public class ProductActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("");
-        TextView toolbarTitle = (TextView) findViewById(R.id.tv_toolbar_title);
+        TextView toolbarTitle = findViewById(R.id.tv_toolbar_title);
         toolbarTitle.setText(getResources().getString(R.string.products));
         setSupportActionBar(toolbar);
 
         databaseHandler = new DatabaseHandler(this);
-        sp_category = (Spinner) findViewById(R.id.sp_category);
-        sp_brand = (Spinner) findViewById(R.id.sp_brand);
+        sp_category = findViewById(R.id.sp_category);
+        sp_brand = findViewById(R.id.sp_brand);
+        et_search_product = findViewById(R.id.et_search_product);
+        et_search_product.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-        rv_product = (RecyclerView) findViewById(R.id.rv_product);
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                rv_product.setAdapter(new ProductRecyclerViewAdapter(getApplication(), databaseHandler.getSearchedProduct(s.toString())));
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        rv_product = findViewById(R.id.rv_product);
         rv_product.setLayoutManager(new LinearLayoutManager(this));
-        srl_product = (SwipeRefreshLayout) findViewById(R.id.srl_product);
+        srl_product = findViewById(R.id.srl_product);
         srl_product.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {

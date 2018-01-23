@@ -37,6 +37,7 @@ import com.humaclab.selliscope_myone.model.VariantProduct.ProductsItem;
 import com.humaclab.selliscope_myone.utils.DatabaseHandler;
 import com.humaclab.selliscope_myone.utils.NetworkUtility;
 import com.humaclab.selliscope_myone.utils.SessionManager;
+import com.toptoche.searchablespinnerlibrary.SearchableSpinner;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,9 +77,9 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
 
         pd = new ProgressDialog(this);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("");
-        TextView toolbarTitle = (TextView) findViewById(R.id.tv_toolbar_title);
+        TextView toolbarTitle = findViewById(R.id.tv_toolbar_title);
         toolbarTitle.setText(getResources().getString(R.string.order));
         setSupportActionBar(toolbar);
 
@@ -332,7 +333,9 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
 
         final Spinner sp_product_category = dialogView.findViewById(R.id.sp_product_category);
         final Spinner sp_product_brand = dialogView.findViewById(R.id.sp_product_brand);
-        final Spinner sp_product_name = dialogView.findViewById(R.id.sp_product_name);
+        final SearchableSpinner sp_product_name = dialogView.findViewById(R.id.sp_product_name);
+        sp_product_name.setTitle("Select Product");
+        sp_product_name.setPositiveButton("OK");
         final TextView tv_simple_product_stock = dialogView.findViewById(R.id.tv_simple_product_stock);
         final Button btn_select_product = dialogView.findViewById(R.id.btn_select_product);
 

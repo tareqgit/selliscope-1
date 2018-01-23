@@ -451,6 +451,42 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return productList;
     }
 
+    public List<ProductsItem> getSearchedProduct(String searchedProduct) {
+        List<ProductsItem> productList = new ArrayList<>();
+        // Select All Query
+        String selectQuery = "SELECT  * FROM " + TABLE_PRODUCT + " WHERE " + KEY_PRODUCT_NAME + " LIKE '%" + searchedProduct + "%' ORDER BY " + KEY_PRODUCT_NAME + " ASC";
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                cursor.getColumnNames();
+                ProductsItem productsItem = new ProductsItem();
+                Category category = new Category();
+                Brand brand = new Brand();
+
+                productsItem.setId(cursor.getString(cursor.getColumnIndex(KEY_PRODUCT_ID)));
+                productsItem.setName(cursor.getString(cursor.getColumnIndex(KEY_PRODUCT_NAME)));
+                productsItem.setPrice(cursor.getString(cursor.getColumnIndex(KEY_PRODUCT_PRICE)));
+                productsItem.setImg(cursor.getString(cursor.getColumnIndex(KEY_PRODUCT_IMAGE)));
+                productsItem.setHasVariant(cursor.getInt(cursor.getColumnIndex(KEY_PRODUCT_VARIANT)));
+
+                category.setName(cursor.getString(cursor.getColumnIndex(KEY_CATEGORY_NAME)));
+                category.setId(String.valueOf(cursor.getInt(cursor.getColumnIndex(KEY_CATEGORY_ID))));
+                productsItem.setCategory(category);
+
+                brand.setId(String.valueOf(cursor.getInt(cursor.getColumnIndex(KEY_BRAND_ID))));
+                brand.setName(cursor.getString(cursor.getColumnIndex(KEY_BRAND_NAME)));
+                productsItem.setBrand(brand);
+
+                productList.add(productsItem);
+            } while (cursor.moveToNext());
+        }
+        return productList;
+    }
+
     public int getSizeOfProduct() {
         List<ProductsItem> productsItemList = new ArrayList<>();
         // Select All Query

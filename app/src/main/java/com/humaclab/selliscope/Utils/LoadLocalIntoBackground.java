@@ -53,6 +53,14 @@ public class LoadLocalIntoBackground {
         }
     }
 
+    public void updateAllData() {
+        this.loadProduct();
+        this.loadOutlet(true);
+        this.loadOutletType();
+        this.loadDistrict();
+        this.loadThana();
+    }
+
     public void loadProduct() {
         if (sessionManager.isLoggedIn()) {
             Call<VariantProductResponse> call = apiService.getProducts();
@@ -167,7 +175,7 @@ public class LoadLocalIntoBackground {
         });
     }
 
-    public void loadOutlet(final boolean fullUpdated) {
+    public void loadOutlet(final boolean fullUpdate) {
         Call<ResponseBody> call = apiService.getOutlets();
         call.enqueue(new Callback<ResponseBody>() {
             @Override
@@ -176,7 +184,7 @@ public class LoadLocalIntoBackground {
                 if (response.code() == 200) {
                     try {
                         Outlets.Successful getOutletListSuccessful = gson.fromJson(response.body().string(), Outlets.Successful.class);
-                        if (!fullUpdated) {
+                        if (!fullUpdate) {
                             if (getOutletListSuccessful.outletsResult.outlets.size() != databaseHandler.getSizeOfOutlet()) {
                                 databaseHandler.removeOutlet();
                                 databaseHandler.addOutlet(getOutletListSuccessful.outletsResult.outlets);

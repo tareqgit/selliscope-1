@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
@@ -280,6 +281,19 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             }
             case R.id.nav_check_update: {
                 CheckAppUpdated.checkAppUpdate(this);
+                break;
+            }
+            case R.id.nav_update_data: {
+                pd.setMessage("Local data is updating.\nPlease be patient....");
+                pd.setCancelable(false);
+                pd.show();
+                loadLocalIntoBackground.updateAllData();
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        pd.dismiss();
+                    }
+                }, 60000);
                 break;
             }
         }

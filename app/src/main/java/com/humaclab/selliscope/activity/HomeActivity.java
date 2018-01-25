@@ -61,15 +61,14 @@ import static com.humaclab.selliscope.R.id.content_fragment;
 
 @RuntimePermissions
 public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+    public static ScheduledExecutorService schedulerForMinute, schedulerForHour;
+    public static BroadcastReceiver receiver = new InternetConnectivityChangeReceiver();
     private FragmentManager fragmentManager;
     private SessionManager sessionManager;
     private SelliscopeApiEndpointInterface apiService;
     private DatabaseHandler databaseHandler;
     private ProgressDialog pd;
     private LoadLocalIntoBackground loadLocalIntoBackground;
-    private ScheduledExecutorService schedulerForMinute, schedulerForHour;
-
-    private BroadcastReceiver receiver = new InternetConnectivityChangeReceiver();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -251,7 +250,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 pd.setMessage("Login out...");
                 pd.show();
 //                if (databaseHandler.removeAll()) {
-                sessionManager.logoutUser();
+                sessionManager.logoutUser(false);
                 schedulerForMinute.shutdownNow();
                 schedulerForHour.shutdownNow();
                 stopService(new Intent(getApplicationContext(), SendLocationDataService.class));

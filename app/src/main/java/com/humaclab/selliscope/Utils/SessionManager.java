@@ -104,13 +104,15 @@ public class SessionManager {
     /**
      * Clear session details
      */
-    public void logoutUser() {
+    public void logoutUser(boolean hasUpdate) {
         editor.clear();
         editor.commit();
-        Intent i = new Intent(_context, LoginActivity.class);
-        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        _context.startActivity(i);
+        if (!hasUpdate) {
+            Intent i = new Intent(_context, LoginActivity.class);
+            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            _context.startActivity(i);
+        }
     }
 
     /**

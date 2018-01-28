@@ -341,9 +341,13 @@ public class AddOutletActivity extends AppCompatActivity {
             iv_outlet.setImageBitmap(photo);
         }
         if (requestCode == MAP_LOCATION) {
-            mLatitude = data.getDoubleExtra("latitude", 0.0);
-            mLongitude = data.getDoubleExtra("longitude", 0.0);
-            outletAddress.setText(data.getStringExtra("address"));
+            try {
+                mLatitude = data.getDoubleExtra("latitude", 0.0);
+                mLongitude = data.getDoubleExtra("longitude", 0.0);
+                outletAddress.setText(data.getStringExtra("address"));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 

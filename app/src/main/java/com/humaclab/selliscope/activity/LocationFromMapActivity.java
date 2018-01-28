@@ -25,7 +25,6 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.humaclab.selliscope.R;
-import com.humaclab.selliscope.utils.SendUserLocationData;
 
 import java.io.IOException;
 import java.util.List;
@@ -37,7 +36,6 @@ public class LocationFromMapActivity extends FragmentActivity implements OnMapRe
     private TextView resutText;
     private Button selectLocation;
 
-    private SendUserLocationData sendUserLocationData;
     private Double mLatitude, mLongitude;
     private int MAP_LOCATION = 512;
     private String address;
@@ -52,24 +50,21 @@ public class LocationFromMapActivity extends FragmentActivity implements OnMapRe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_location_from_map);
 
-        sendUserLocationData = new SendUserLocationData(this);
-        sendUserLocationData.getInstantLocation(this, new SendUserLocationData.OnGetLocation() {
-            @Override
-            public void getLocation(Double latitude, Double longitude) {
-
-            }
-        });
         resutText = findViewById(R.id.dragg_result);
         selectLocation = findViewById(R.id.btn_select_location);
         selectLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.putExtra("latitude", mLatitude);
-                intent.putExtra("longitude", mLongitude);
-                intent.putExtra("address", address);
-                setResult(MAP_LOCATION, intent);
-                finish();
+                try {
+                    Intent intent = new Intent();
+                    intent.putExtra("latitude", mLatitude);
+                    intent.putExtra("longitude", mLongitude);
+                    intent.putExtra("address", address);
+                    setResult(MAP_LOCATION, intent);
+                    finish();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
 

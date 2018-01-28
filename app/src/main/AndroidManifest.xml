@@ -111,6 +111,7 @@
         <activity android:name=".activity.CallCardActivity"/>
         <activity android:name=".activity.InspectionActivity"/>
         <activity android:name=".activity.SalesReturnActivity"/>
+        <activity android:name=".activity.LocationFromMapActivity"/>
         <activity
             android:name=".activity.SalesReturnDetailsActivity"
             android:screenOrientation="landscape"/>

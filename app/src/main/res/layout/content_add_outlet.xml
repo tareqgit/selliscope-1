@@ -101,28 +101,6 @@
         </LinearLayout>
 
         <TextView
-            android:id="@+id/tv_thana"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginTop="0dp"
-            android:paddingLeft="4dp"
-            android:text="Thana:"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
-
-        <Spinner
-            android:id="@+id/sp_thana"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="0dp"
-            android:spinnerMode="dropdown"/>
-
-        <TextView
             android:id="@+id/tv_district"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -137,6 +115,28 @@
 
         <Spinner
             android:id="@+id/sp_district"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="0dp"
+            android:spinnerMode="dropdown"/>
+
+        <TextView
+            android:id="@+id/tv_thana"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="0dp"
+            android:paddingLeft="4dp"
+            android:text="Thana:"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
+
+        <Spinner
+            android:id="@+id/sp_thana"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"

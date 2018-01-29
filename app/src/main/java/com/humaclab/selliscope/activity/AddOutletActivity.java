@@ -175,6 +175,8 @@ public class AddOutletActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(AddOutletActivity.this, LocationFromMapActivity.class);
+                intent.putExtra("latitude", mCurrentLatitude);
+                intent.putExtra("longitude", mCurrentLongitude);
                 startActivityForResult(intent, MAP_LOCATION);
             }
         });

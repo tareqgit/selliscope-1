@@ -61,7 +61,6 @@ public class SendLocationDataService extends Service {
         Timber.d("SendLocation service is stopped.");
         if (sessionManager.isLoggedIn()) {
             startService(new Intent(SendLocationDataService.this, SendLocationDataService.class));
-            sendBroadcast(new Intent(getApplicationContext(), SendLocationDataService.class));
         }
     }
 }

@@ -19,7 +19,11 @@
             android:checkable="false"
             android:icon="@drawable/ic_system_update_white_24dp"
             android:title="Check Update"/>
-
+        <item
+            android:id="@+id/nav_update_data"
+            android:checkable="false"
+            android:icon="@drawable/refresh"
+            android:title="Update Data" />
     </group>
     <group android:id="@+id/gp_nav_information">
         <item

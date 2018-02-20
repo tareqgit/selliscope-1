@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            xmlns:tools="http://schemas.android.com/tools"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            tools:context="com.humaclab.selliscope_mohammadi.activity.AddOutletActivity"
-            tools:showIn="@layout/activity_add_outlet">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.humaclab.selliscope_mohammadi.activity.AddOutletActivity"
+    tools:showIn="@layout/activity_add_outlet">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -25,7 +25,7 @@
             android:layout_marginRight="8dp"
             android:layout_marginStart="8dp"
             android:layout_marginTop="16dp"
-            app:srcCompat="@drawable/ic_add_outlet"/>
+            app:srcCompat="@drawable/ic_add_outlet" />
 
         <TextView
             android:id="@+id/tv_outlet_prefix"
@@ -38,7 +38,7 @@
             android:layout_marginTop="16dp"
             android:paddingLeft="4dp"
             android:text="Outlet Prefix:"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
         <Spinner
             android:id="@+id/sp_outlet_prefix"
@@ -48,7 +48,7 @@
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="0dp"/>
+            android:layout_marginTop="0dp" />
 
         <TextView
             android:id="@+id/tv_outlet_type"
@@ -61,7 +61,7 @@
             android:layout_marginTop="0dp"
             android:paddingLeft="4dp"
             android:text="Outlet Type:"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
         <Spinner
             android:id="@+id/sp_outlet_type"
@@ -72,7 +72,7 @@
             android:layout_marginRight="16dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="0dp"
-            android:spinnerMode="dropdown"/>
+            android:spinnerMode="dropdown" />
 
         <TextView
             android:id="@+id/tv_payment_type"
@@ -85,7 +85,7 @@
             android:layout_marginTop="0dp"
             android:paddingLeft="4dp"
             android:text="Payment Type:"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
         <Spinner
             android:id="@+id/sp_payment_type"
@@ -96,7 +96,7 @@
             android:layout_marginRight="16dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="0dp"
-            android:entries="@array/outletPaymentType"/>
+            android:entries="@array/outletPaymentType" />
 
         <EditText
             android:id="@+id/et_bank_name"
@@ -111,7 +111,7 @@
             android:hint="Bank Name"
             android:imeOptions="actionNext"
             android:inputType="text"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
         <EditText
             android:id="@+id/et_bg_amount"
@@ -126,7 +126,7 @@
             android:hint="BG amount"
             android:imeOptions="actionNext"
             android:inputType="numberDecimal"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
         <EditText
             android:id="@+id/et_exp_date"
@@ -141,7 +141,7 @@
             android:hint="Exp Date"
             android:imeOptions="actionNext"
             android:inputType="none"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
         <EditText
             android:id="@+id/et_credit_limit"
@@ -157,7 +157,7 @@
             android:hint="Credit Amount"
             android:imeOptions="actionNext"
             android:inputType="numberDecimal"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
         <EditText
             android:id="@+id/et_outlet_name"
@@ -171,7 +171,7 @@
             android:layout_marginTop="0dp"
             android:hint="Outlet Name"
             android:imeOptions="actionNext"
-            android:inputType="text"/>
+            android:inputType="text" />
 
         <EditText
             android:id="@+id/et_outlet_owner_name"
@@ -184,7 +184,7 @@
             android:layout_marginTop="0dp"
             android:hint="Owner Name"
             android:imeOptions="actionNext"
-            android:inputType="text"/>
+            android:inputType="text" />
 
         <EditText
             android:id="@+id/et_outlet_owner_email"
@@ -197,7 +197,7 @@
             android:layout_marginTop="0dp"
             android:hint="Owner Email"
             android:imeOptions="actionNext"
-            android:inputType="textEmailAddress"/>
+            android:inputType="textEmailAddress" />
 
         <TextView
             android:id="@+id/tv_district"
@@ -210,7 +210,7 @@
             android:layout_marginTop="0dp"
             android:paddingLeft="4dp"
             android:text="District:"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
         <Spinner
             android:id="@+id/sp_district"
@@ -221,7 +221,7 @@
             android:layout_marginRight="16dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="0dp"
-            android:spinnerMode="dropdown"/>
+            android:spinnerMode="dropdown" />
 
         <TextView
             android:id="@+id/tv_thana"
@@ -232,7 +232,7 @@
             android:layout_marginTop="0dp"
             android:paddingLeft="4dp"
             android:text="Thana:"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
         <Spinner
             android:id="@+id/sp_thana"
@@ -243,21 +243,33 @@
             android:layout_marginRight="16dp"
             android:layout_marginStart="16dp"
             android:layout_marginTop="0dp"
-            android:spinnerMode="dropdown"/>
+            android:spinnerMode="dropdown" />
 
 
-        <EditText
-            android:id="@+id/et_outlet_address"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="0dp"
-            android:hint="Outlet Address"
-            android:imeOptions="actionNext"
-            android:inputType="text"/>
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/et_outlet_address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="0dp"
+                android:layout_weight="1"
+                android:hint="Outlet Address"
+                android:inputType="text" />
+
+            <Button
+                android:id="@+id/btn_get_location"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginRight="16dp"
+                android:background="@drawable/outlet_marker" />
+        </LinearLayout>
 
         <EditText
             android:id="@+id/et_outlet_contact_number"
@@ -270,7 +282,7 @@
             android:layout_marginTop="0dp"
             android:hint="Contact Number"
             android:imeOptions="actionDone"
-            android:inputType="phone"/>
+            android:inputType="phone" />
 
 
         <Button
@@ -284,7 +296,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="32dp"
             android:elevation="5dp"
-            android:text="Done"/>
+            android:text="Done" />
 
         <Button
             android:id="@+id/btn_cancel"
@@ -298,6 +310,6 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:elevation="5dp"
-            android:text="Cancel"/>
+            android:text="Cancel" />
     </LinearLayout>
 </ScrollView>

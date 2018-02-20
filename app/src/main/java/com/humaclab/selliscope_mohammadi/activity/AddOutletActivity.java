@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -69,7 +70,7 @@ public class AddOutletActivity extends AppCompatActivity {
     boolean isValidOwnerName = true;
     boolean isValidAddress = true;
     boolean isValidPhone = true;
-    double mLatitude = 0.0, mLongitude = 0.0;
+    double mLatitude = 0.0, mLongitude = 0.0, mCurrentLongitude = 0.0, mCurrentLatitude = 0.0;
     private int outletTypeId, thanaId = -1;
     private SelliscopeApiEndpointInterface apiService;
     private SessionManager sessionManager;
@@ -77,7 +78,7 @@ public class AddOutletActivity extends AppCompatActivity {
     private EditText etCreditLimit, etBankName, etBGAmount, etExpDate, etOwnerEmail;
     private Spinner spOutletPrefix, spPaymentType, outletType, district, thana;
     private ImageView iv_outlet;
-    private Button submit, cancel;
+    private Button submit, cancel, getLocation;
     private OutletTypeAdapter outletTypeAdapter;
     private ThanaAdapter thanaAdapter;
     private DistrictAdapter districtAdapter;
@@ -86,6 +87,7 @@ public class AddOutletActivity extends AppCompatActivity {
     private DatabaseHandler databaseHandler;
 
     private ProgressDialog pd;
+    private int MAP_LOCATION = 512;
 
     private List<Integer> prefixID = new ArrayList<>();
     private List<String> prefixName = new ArrayList<>();
@@ -171,6 +173,7 @@ public class AddOutletActivity extends AppCompatActivity {
         spOutletPrefix = findViewById(R.id.sp_outlet_prefix);
         spPaymentType = findViewById(R.id.sp_payment_type);
         submit = findViewById(R.id.btn_add_outlet);
+        getLocation = findViewById(R.id.btn_get_location);
         cancel = findViewById(R.id.btn_cancel);
         getDistricts();
         getOutletTypes();
@@ -220,6 +223,15 @@ public class AddOutletActivity extends AppCompatActivity {
 
             }
         });
+        getLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(AddOutletActivity.this, LocationFromMapActivity.class);
+                intent.putExtra("latitude", mCurrentLatitude);
+                intent.putExtra("longitude", mCurrentLongitude);
+                startActivityForResult(intent, MAP_LOCATION);
+            }
+        });
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -229,30 +241,6 @@ public class AddOutletActivity extends AppCompatActivity {
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (outletName.getText().toString().trim().isEmpty()) {
-                    outletName.setError("Required!");
-                    isValidOutletName = false;
-                } else {
-                    isValidOutletName = true;
-                }
-                if (outletOwner.getText().toString().trim().isEmpty()) {
-                    outletName.setError("Required!");
-                    isValidOwnerName = false;
-                } else {
-                    isValidOwnerName = true;
-                }
-                if (outletContactNumber.getText().toString().trim().isEmpty()) {
-                    outletContactNumber.setError("Required!");
-                    isValidPhone = false;
-                } else {
-                    isValidPhone = true;
-                }
-                if (outletAddress.getText().toString().trim().isEmpty()) {
-                    outletAddress.setError("Required!");
-                    isValidAddress = false;
-                } else {
-                    isValidAddress = true;
-                }
                 Timber.d("Valid Address" + isValidAddress);
                 Timber.d("Valid Outle Name" + isValidOutletName);
                 Timber.d("valid owner naem" + isValidOwnerName);
@@ -262,30 +250,40 @@ public class AddOutletActivity extends AppCompatActivity {
                 Timber.d("Type id" + outletTypeId);
                 Timber.d("Thana id" + thanaId);
 
-                if (isValidAddress && isValidOutletName && isValidOwnerName
-                        && isValidPhone && mLatitude != 0.0 && mLongitude != 0.0
-                        && outletTypeId != -1 && thanaId != -1) {
-                    Timber.d("addOutletRun");
-                    if (NetworkUtility.isNetworkAvailable(AddOutletActivity.this)) {
-                        if (spPaymentType.getSelectedItemPosition() > 0) {
-                            if (!isEmpty(spPaymentType.getSelectedItemPosition())) {
-                                addOutlet(
-                                        outletTypeId, outletName.getText().toString().trim(),
-                                        outletOwner.getText().toString().trim(),
-                                        outletAddress.getText().toString().trim(),
-                                        thanaId,
-                                        outletContactNumber.getText().toString().trim(),
-                                        mLatitude,
-                                        mLongitude
-                                );
+                if (!isEmpty(spPaymentType.getSelectedItemPosition())) {
+                    if (mLatitude != 0.0 && mLongitude != 0.0) {
+                        Timber.d("addOutletRun");
+                        if (NetworkUtility.isNetworkAvailable(AddOutletActivity.this)) {
+                            Location currentLocation = new Location("");
+                            currentLocation.setLatitude(mCurrentLatitude);
+                            currentLocation.setLongitude(mCurrentLongitude);
+
+                            Location mapLocation = new Location("");
+                            mapLocation.setLatitude(mLatitude);
+                            mapLocation.setLongitude(mLongitude);
+
+                            if (mapLocation.distanceTo(currentLocation) <= 100) {
+                                if (spPaymentType.getSelectedItemPosition() > 0) {
+                                    addOutlet(
+                                            outletTypeId, outletName.getText().toString().trim(),
+                                            outletOwner.getText().toString().trim(),
+                                            outletAddress.getText().toString().trim(),
+                                            thanaId,
+                                            outletContactNumber.getText().toString().trim(),
+                                            mLatitude,
+                                            mLongitude
+                                    );
+                                } else {
+                                    Toast.makeText(AddOutletActivity.this, "Please select a payment type.", Toast.LENGTH_SHORT).show();
+                                }
+                            } else {
+                                Toast.makeText(AddOutletActivity.this, "Outlet location is not within your 100 meter radius.", Toast.LENGTH_SHORT).show();
                             }
-                        } else {
-                            Toast.makeText(AddOutletActivity.this, "Please select a payment type.", Toast.LENGTH_SHORT).show();
-                        }
-                    } else
-                        Toast.makeText(AddOutletActivity.this, "Connect to Wifi or Mobile Data", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(AddOutletActivity.this, "Could not found any location yet.\nPlease try again.", Toast.LENGTH_SHORT).show();
+                        } else
+                            Toast.makeText(AddOutletActivity.this, "Connect to Wifi or Mobile Data", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(AddOutletActivity.this, "Could not found any location yet.\nPlease try again.", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
         });
@@ -362,6 +360,30 @@ public class AddOutletActivity extends AppCompatActivity {
                 view.requestFocus();
                 count++;
             }
+        }
+        if (outletName.getText().toString().trim().isEmpty()) {
+            view = outletName;
+            outletName.setError(getString(R.string.error_field_required));
+            view.requestFocus();
+            count++;
+        }
+        if (outletOwner.getText().toString().trim().isEmpty()) {
+            view = outletOwner;
+            outletOwner.setError(getString(R.string.error_field_required));
+            view.requestFocus();
+            count++;
+        }
+        if (outletContactNumber.getText().toString().trim().isEmpty()) {
+            view = outletContactNumber;
+            outletContactNumber.setError(getString(R.string.error_field_required));
+            view.requestFocus();
+            count++;
+        }
+        if (outletAddress.getText().toString().trim().isEmpty()) {
+            view = outletAddress;
+            outletAddress.setError(getString(R.string.error_field_required));
+            view.requestFocus();
+            count++;
         }
         return count != 0;
     }
@@ -492,8 +514,8 @@ public class AddOutletActivity extends AppCompatActivity {
         sendUserLocationData.getInstantLocation(this, new SendUserLocationData.OnGetLocation() {
             @Override
             public void getLocation(Double latitude, Double longitude) {
-                mLatitude = latitude;
-                mLongitude = longitude;
+                mCurrentLatitude = latitude;
+                mCurrentLongitude = longitude;
             }
         });
     }
@@ -507,6 +529,15 @@ public class AddOutletActivity extends AppCompatActivity {
             photo.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
             outletImage = Base64.encodeToString(outputStream.toByteArray(), Base64.DEFAULT);
             iv_outlet.setImageBitmap(photo);
+        }
+        if (requestCode == MAP_LOCATION) {
+            try {
+                mLatitude = data.getDoubleExtra("latitude", 0.0);
+                mLongitude = data.getDoubleExtra("longitude", 0.0);
+                outletAddress.setText(data.getStringExtra("address"));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 

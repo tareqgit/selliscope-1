@@ -22,9 +22,9 @@ public class OutletDetailsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_outlet_details);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("");
-        TextView toolbarTitle = (TextView) findViewById(R.id.tv_toolbar_title);
+        TextView toolbarTitle = findViewById(R.id.tv_toolbar_title);
         toolbarTitle.setText("Outlet Information");
         setSupportActionBar(toolbar);
 
@@ -54,6 +54,14 @@ public class OutletDetailsActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), CallCardActivity.class);
+                intent.putExtra("outletDetails", outlet);
+                startActivity(intent);
+            }
+        });
+        binding.btnPurchaseHistory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), PurchaseHistoryActivity.class);
                 intent.putExtra("outletDetails", outlet);
                 startActivity(intent);
             }

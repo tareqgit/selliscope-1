@@ -58,13 +58,5 @@ public class OutletDetailsActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-        binding.btnPurchaseHistory.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), PurchaseHistoryActivity.class);
-                intent.putExtra("outletDetails", outlet);
-                startActivity(intent);
-            }
-        });
     }
 }

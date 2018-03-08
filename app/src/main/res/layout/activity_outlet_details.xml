@@ -40,6 +40,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:hint="Outlet Name"
                     android:padding="10dp"
                     android:text="@{outletDetails.outletName}"
                     android:textAlignment="center"
@@ -141,13 +142,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:orientation="horizontal">
+                    android:orientation="vertical">
 
                     <Button
                         android:id="@+id/btn_edit_outlet"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="5dp"
+                        android:layout_gravity="end"
                         android:background="#b7a639"
                         android:padding="10dp"
                         android:text="Edit"
@@ -166,18 +167,6 @@
                         android:textAllCaps="false"
                         android:textColor="#fff"
                         android:visibility="gone" />
-
-                    <Button
-                        android:id="@+id/btn_purchase_history"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
-                        android:layout_weight="1"
-                        android:background="#6f8cc6"
-                        android:padding="10dp"
-                        android:text="Purchase History"
-                        android:textAllCaps="false"
-                        android:textColor="#fff" />
                 </LinearLayout>
             </LinearLayout>
         </ScrollView>

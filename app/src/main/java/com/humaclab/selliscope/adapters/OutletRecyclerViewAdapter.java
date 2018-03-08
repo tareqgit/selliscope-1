@@ -29,6 +29,7 @@ import com.humaclab.selliscope.SelliscopeApiEndpointInterface;
 import com.humaclab.selliscope.SelliscopeApplication;
 import com.humaclab.selliscope.activity.OrderActivity;
 import com.humaclab.selliscope.activity.OutletDetailsActivity;
+import com.humaclab.selliscope.activity.PurchaseHistoryActivity;
 import com.humaclab.selliscope.model.Outlets;
 import com.humaclab.selliscope.model.UserLocation;
 import com.humaclab.selliscope.utils.GetAddressFromLatLang;
@@ -112,19 +113,27 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
                 });
             }
         });
-        holder.orderButton.setOnClickListener(new View.OnClickListener() {
+        holder.mapButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //TODO: add map direction layout here.
                 Intent intent = new Intent(context, OrderActivity.class);
                 intent.putExtra("outletName", outlet.outletName);
                 intent.putExtra("outletID", outlet.outletId);
                 context.startActivity(intent);
             }
         });
+        holder.historyButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, PurchaseHistoryActivity.class);
+                intent.putExtra("outletDetails", outlet);
+                context.startActivity(intent);
+            }
+        });
     }
 
-    private void getLocation(final int outletId, final Location outletLocation,
-                             final ProgressBar progressbar) {
+    private void getLocation(final int outletId, final Location outletLocation, final ProgressBar progressbar) {
         SendUserLocationData sendUserLocationData = new SendUserLocationData(context);
         sendUserLocationData.getInstantLocation(activity, new SendUserLocationData.OnGetLocation() {
             @Override
@@ -140,10 +149,8 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
                         sendUserLocation(location, outletId, progressbar);
                     } else {
                         progressbar.setVisibility(View.INVISIBLE);
-                        Toast.makeText(context, "Enable Wifi or Mobile data.",
-                                Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, "Enable Wifi or Mobile data.", Toast.LENGTH_SHORT).show();
                     }
-
                 } else {
                     progressbar.setVisibility(View.INVISIBLE);
                     Toast.makeText(context, "You are not within 70m radius of the outlet.", Toast.LENGTH_SHORT).show();
@@ -204,7 +211,7 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
         CardView cardView;
         ImageView iv_outlet;
         TextView tvOutletName, tvOutletAddress, tvOutletOwnerName, tvOutletContactNumber;
-        Button checkInButton, orderButton;
+        Button checkInButton, mapButton, historyButton;
         ProgressBar pbCheckIn;
 
 
@@ -217,7 +224,8 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
             tvOutletContactNumber = itemView.findViewById(R.id.tv_outlet_contact_number);
             tvOutletOwnerName = itemView.findViewById(R.id.tv_owner_name);
             checkInButton = itemView.findViewById(R.id.btn_check_in);
-            orderButton = itemView.findViewById(R.id.btn_order);
+            mapButton = itemView.findViewById(R.id.btn_map);
+            historyButton = itemView.findViewById(R.id.btn_history);
             pbCheckIn = itemView.findViewById(R.id.pb_check_in);
 
             itemView.setOnClickListener(new View.OnClickListener() {

@@ -114,6 +114,8 @@
             android:name=".activity.SalesReturnDetailsActivity"
             android:screenOrientation="landscape" />
         <activity android:name=".activity.PurchaseHistoryActivity" />
+        <activity android:name=".activity.ChangePasswordActivity" />
+        <activity android:name=".activity.PurchasedProductListActivity" />
     </application>
 
 </manifest>

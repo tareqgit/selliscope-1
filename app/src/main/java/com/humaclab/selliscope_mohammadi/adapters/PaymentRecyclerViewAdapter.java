@@ -88,48 +88,122 @@ public class PaymentRecyclerViewAdapter extends RecyclerView.Adapter<PaymentRecy
                 PaymentResponse.Payment payment = new PaymentResponse.Payment();
                 payment.order_id = orderList.orderId;
                 payment.outlet_id = orderList.outletId;
-                payment.type = (holder.sp_payment_type.getSelectedItemPosition() == 0) ? 1 : 2;
+                switch (holder.sp_payment_type.getSelectedItemPosition()) {
+                    case 0:
+                        payment.type = 1;
+                        break;
+                    case 1:
+                        payment.type = 2;
+                        break;
+                    case 2:
+                        payment.type = 3;
+                        break;
+                }
 
                 if (payment.type == 2) {
                     payment.depositedBank = holder.et_deposited_bank.getText().toString();
                     payment.depositedAccount = holder.et_deposited_account.getText().toString();
                     payment.depositForm = holder.et_deposit_form.getText().toString();
                 }
-
+                if (payment.type == 3) {
+                    payment.depositedBank = holder.et_deposited_bank.getText().toString();
+                    payment.depositedAccount = holder.et_deposited_account.getText().toString();
+                    payment.depositForm = holder.et_deposit_form.getText().toString();
+                }
                 payment.amount = Integer.parseInt(holder.et_payment.getText().toString());
                 paymentResponse.payment = payment;
-                Call<PaymentResponse.PaymentSucessfull> call = apiService.payNow(paymentResponse);
-                call.enqueue(new Callback<PaymentResponse.PaymentSucessfull>() {
-                    @Override
-                    public void onResponse(Call<PaymentResponse.PaymentSucessfull> call, Response<PaymentResponse.PaymentSucessfull> response) {
-                        if (response.code() == 201) {
-                            try {
-                                Log.d("Payment response", new Gson().toJson(response.body().result));
-                                pd.dismiss();
-                                Toast.makeText(context, "Payment received successfully.", Toast.LENGTH_SHORT).show();
-                                orderLists.remove(position);
-                                PaymentRecyclerViewAdapter.this.notifyItemRemoved(position);
-                                PaymentRecyclerViewAdapter.this.notifyItemRangeChanged(position, orderLists.size());
-                            } catch (Exception e) {
-                                pd.dismiss();
-                                e.printStackTrace();
-                            }
-                        } else if (response.code() == 400) {
-                            pd.dismiss();
-                        } else {
-                            pd.dismiss();
-                            Toast.makeText(context,
-                                    "Server Error! Try Again Later!", Toast.LENGTH_SHORT).show();
-                        }
-                    }
 
-                    @Override
-                    public void onFailure(Call<PaymentResponse.PaymentSucessfull> call, Throwable t) {
-                        pd.dismiss();
+                if (payment.type > 0) {
+                    if (!isEmpty(holder)) {
+                        Call<PaymentResponse.PaymentSucessfull> call = apiService.payNow(paymentResponse);
+                        call.enqueue(new Callback<PaymentResponse.PaymentSucessfull>() {
+                            @Override
+                            public void onResponse(Call<PaymentResponse.PaymentSucessfull> call, Response<PaymentResponse.PaymentSucessfull> response) {
+                                if (response.code() == 201) {
+                                    try {
+                                        Log.d("Payment response", new Gson().toJson(response.body().result));
+                                        pd.dismiss();
+                                        Toast.makeText(context, "Payment received successfully.", Toast.LENGTH_SHORT).show();
+                                        orderLists.remove(position);
+                                        PaymentRecyclerViewAdapter.this.notifyItemRemoved(position);
+                                        PaymentRecyclerViewAdapter.this.notifyItemRangeChanged(position, orderLists.size());
+                                    } catch (Exception e) {
+                                        pd.dismiss();
+                                        e.printStackTrace();
+                                    }
+                                } else if (response.code() == 400) {
+                                    pd.dismiss();
+                                } else {
+                                    pd.dismiss();
+                                    Toast.makeText(context,
+                                            "Server Error! Try Again Later!", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<PaymentResponse.PaymentSucessfull> call, Throwable t) {
+                                pd.dismiss();
+                            }
+                        });
                     }
-                });
+                } else {
+                    Call<PaymentResponse.PaymentSucessfull> call = apiService.payNow(paymentResponse);
+                    call.enqueue(new Callback<PaymentResponse.PaymentSucessfull>() {
+                        @Override
+                        public void onResponse(Call<PaymentResponse.PaymentSucessfull> call, Response<PaymentResponse.PaymentSucessfull> response) {
+                            if (response.code() == 201) {
+                                try {
+                                    Log.d("Payment response", new Gson().toJson(response.body().result));
+                                    pd.dismiss();
+                                    Toast.makeText(context, "Payment received successfully.", Toast.LENGTH_SHORT).show();
+                                    orderLists.remove(position);
+                                    PaymentRecyclerViewAdapter.this.notifyItemRemoved(position);
+                                    PaymentRecyclerViewAdapter.this.notifyItemRangeChanged(position, orderLists.size());
+                                } catch (Exception e) {
+                                    pd.dismiss();
+                                    e.printStackTrace();
+                                }
+                            } else if (response.code() == 400) {
+                                pd.dismiss();
+                            } else {
+                                pd.dismiss();
+                                Toast.makeText(context,
+                                        "Server Error! Try Again Later!", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<PaymentResponse.PaymentSucessfull> call, Throwable t) {
+                            pd.dismiss();
+                        }
+                    });
+                }
             }
         });
+    }
+
+    private boolean isEmpty(PaymentViewHolder holder) {
+        View view;
+        int count = 0;
+        if (holder.et_deposited_bank.getText().toString().isEmpty()) {
+            view = holder.et_deposited_bank;
+            holder.et_deposited_bank.setError(context.getString(R.string.error_field_required));
+            view.requestFocus();
+            count++;
+        }
+        if (holder.et_deposited_account.getText().toString().isEmpty()) {
+            view = holder.et_deposited_account;
+            holder.et_deposited_account.setError(context.getString(R.string.error_field_required));
+            view.requestFocus();
+            count++;
+        }
+        if (holder.et_deposit_form.getText().toString().isEmpty()) {
+            view = holder.et_deposit_form;
+            holder.et_deposit_form.setError(context.getString(R.string.error_field_required));
+            view.requestFocus();
+            count++;
+        }
+        return count != 0;
     }
 
     @Override

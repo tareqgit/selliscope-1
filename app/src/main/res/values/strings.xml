@@ -47,6 +47,7 @@
     <string-array name="paymentType">
         <item>Cash</item>
         <item>Cheque</item>
+        <item>Online</item>
     </string-array>
 
     <string-array name="outletPaymentType">

@@ -15,8 +15,11 @@ import com.humaclab.selliscope.model.OrderResponse;
 import com.humaclab.selliscope.model.OutletType.OutletTypeResponse;
 import com.humaclab.selliscope.model.Payment;
 import com.humaclab.selliscope.model.PaymentResponse;
+import com.humaclab.selliscope.model.PurchaseHistory.PurchaseHistoryResponse;
 import com.humaclab.selliscope.model.SellsReturnResponse;
 import com.humaclab.selliscope.model.Thana.ThanaResponse;
+import com.humaclab.selliscope.model.UpdatePassword.ChangePassword;
+import com.humaclab.selliscope.model.UpdatePassword.ChangePasswordResponse;
 import com.humaclab.selliscope.model.UserLocation;
 import com.humaclab.selliscope.model.VariantProduct.VariantProductResponse;
 
@@ -83,6 +86,8 @@ public interface SelliscopeApiEndpointInterface {
     @GET("diameter")
     Call<DiameterResponse> getDiameter();
 
+    @GET("outlet/{outlet_id}/purchase-history")
+    Call<PurchaseHistoryResponse> getPurchaseHistory(@Path("outlet_id") int outletID);
     //POST methods
 
     @POST("login")
@@ -113,6 +118,9 @@ public interface SelliscopeApiEndpointInterface {
 
     @POST("version-imei")
     Call<ResponseBody> sendIMEIAndVersion(@Body IMEIandVerison imeIandVerison);
+
+    @POST("change-password")
+    Call<ChangePasswordResponse> changePassword(@Body ChangePassword changePassword);
 
     @PUT("outlet/{id}/update")
     Call<ResponseBody> updateOutlet(@Path("id") int outletID, @Body CreateOutlet createOutlet);

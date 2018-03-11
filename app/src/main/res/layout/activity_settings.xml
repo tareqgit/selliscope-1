@@ -14,6 +14,7 @@
             android:id="@+id/tv_change_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:foreground="?android:attr/selectableItemBackground"
             android:padding="15dp"
             android:text="Change Password"
             android:textColor="#4e4e4e"

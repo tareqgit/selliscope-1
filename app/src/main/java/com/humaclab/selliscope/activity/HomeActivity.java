@@ -295,6 +295,10 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 }, 60000);
                 break;
             }
+            case R.id.nav_settings: {
+                startActivity(new Intent(HomeActivity.this, SettingsActivity.class));
+                break;
+            }
         }
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

@@ -246,7 +246,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         switch (item.getItemId()) {
-            case R.id.nav_logout: {
+            case R.id.nav_logout:
                 pd.setMessage("Login out...");
                 pd.show();
 //                if (databaseHandler.removeAll()) {
@@ -260,12 +260,10 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 finish();
 //                }
                 break;
-            }
-            case R.id.nav_privacy_policy: {
+            case R.id.nav_privacy_policy:
                 startActivity(new Intent(HomeActivity.this, PrivacyPolicyActivity.class));
                 break;
-            }
-            case R.id.nav_about_us: {
+            case R.id.nav_about_us:
                 final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
                 alertDialog.setTitle("About Us");
                 alertDialog.setMessage("ICT Incubator,\nSoftware Technology Park (4th Floor), Janata Tower,\nKawranbazar, Dhaka 1215, Bangladesh\ninfo@humaclab.com\nMobile: +8801711505322");
@@ -277,12 +275,10 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 });
                 alertDialog.show();
                 break;
-            }
-            case R.id.nav_check_update: {
+            case R.id.nav_check_update:
                 CheckAppUpdated.checkAppUpdate(this);
                 break;
-            }
-            case R.id.nav_update_data: {
+            case R.id.nav_update_data:
                 pd.setMessage("Local data is updating.\nPlease be patient....");
                 pd.setCancelable(false);
                 pd.show();
@@ -294,11 +290,12 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                     }
                 }, 60000);
                 break;
-            }
-            case R.id.nav_settings: {
+            case R.id.nav_settings:
                 startActivity(new Intent(HomeActivity.this, SettingsActivity.class));
                 break;
-            }
+            case R.id.nav_profile:
+                startActivity(new Intent(HomeActivity.this, ProfileActivity.class));
+                break;
         }
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

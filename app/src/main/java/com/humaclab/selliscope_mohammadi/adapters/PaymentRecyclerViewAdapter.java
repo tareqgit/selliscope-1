@@ -64,7 +64,7 @@ public class PaymentRecyclerViewAdapter extends RecyclerView.Adapter<PaymentRecy
         holder.sp_payment_type.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (position == 1)
+                if (position > 0)
                     holder.ll_check_details.setVisibility(View.VISIBLE);
                 else
                     holder.ll_check_details.setVisibility(View.GONE);

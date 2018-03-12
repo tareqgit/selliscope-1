@@ -90,6 +90,7 @@ public class SessionManager {
     public HashMap<String, String> getUserDetails() {
         HashMap<String, String> user = new HashMap<String, String>();
         user.put(KEY_USER_NAME, pref.getString(KEY_USER_NAME, null));
+        user.put(KEY_USER_EMAIL, pref.getString(KEY_USER_EMAIL, null));
         user.put(KEY_USER_PROFILE_PIC_URL, pref.getString(KEY_USER_PROFILE_PIC_URL, null));
         return user;
     }

@@ -9,7 +9,6 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.humaclab.selliscope.R;
 import com.humaclab.selliscope.databinding.ActivityOutletDetailsBinding;
 import com.humaclab.selliscope.model.Outlets;
@@ -37,9 +36,6 @@ public class OutletDetailsActivity extends AppCompatActivity {
 
         Glide.with(getApplicationContext()).load(outlet.outletImgUrl)
                 .thumbnail(0.5f)
-                .crossFade()
-                .placeholder(R.drawable.ic_outlet_bnw)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(binding.ivAddOutletImage);
 
         binding.btnEditOutlet.setOnClickListener(new View.OnClickListener() {

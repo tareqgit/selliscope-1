@@ -26,9 +26,9 @@ import com.google.gson.Gson;
 import com.humaclab.selliscope.R;
 import com.humaclab.selliscope.SelliscopeApiEndpointInterface;
 import com.humaclab.selliscope.SelliscopeApplication;
-import com.humaclab.selliscope.activity.OrderActivity;
 import com.humaclab.selliscope.activity.OutletDetailsActivity;
 import com.humaclab.selliscope.activity.PurchaseHistoryActivity;
+import com.humaclab.selliscope.activity.RouteActivity;
 import com.humaclab.selliscope.model.Outlets;
 import com.humaclab.selliscope.model.UserLocation;
 import com.humaclab.selliscope.utils.GetAddressFromLatLang;
@@ -113,7 +113,7 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
             @Override
             public void onClick(View v) {
                 //TODO: add map direction layout here.
-                Intent intent = new Intent(context, OrderActivity.class);
+                Intent intent = new Intent(context, RouteActivity.class);
                 intent.putExtra("outletName", outlet.outletName);
                 intent.putExtra("outletID", outlet.outletId);
                 context.startActivity(intent);

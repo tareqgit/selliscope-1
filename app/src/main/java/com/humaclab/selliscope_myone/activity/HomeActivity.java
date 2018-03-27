@@ -1,13 +1,11 @@
 package com.humaclab.selliscope_myone.activity;
 
-import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
@@ -20,7 +18,6 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.humaclab.selliscope_myone.BuildConfig;
 import com.humaclab.selliscope_myone.R;
@@ -40,12 +37,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import permissions.dispatcher.NeedsPermission;
-import permissions.dispatcher.OnNeverAskAgain;
-import permissions.dispatcher.OnPermissionDenied;
-import permissions.dispatcher.OnShowRationale;
-import permissions.dispatcher.PermissionRequest;
-import permissions.dispatcher.RuntimePermissions;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -53,7 +44,6 @@ import timber.log.Timber;
 
 import static com.humaclab.selliscope_myone.R.id.content_fragment;
 
-@RuntimePermissions
 public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private FragmentManager fragmentManager;
     private SessionManager sessionManager;
@@ -80,7 +70,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         TextView toolbarTitle = findViewById(R.id.tv_toolbar_title);
         toolbarTitle.setText(getResources().getString(R.string.home));
         setSupportActionBar(toolbar);
-        HomeActivityPermissionsDispatcher.startUserTrackingServiceWithCheck(this);
         fragmentManager = getSupportFragmentManager();
         getFragment(DashboardFragment.class);
 
@@ -159,38 +148,11 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-
-    @NeedsPermission(Manifest.permission.ACCESS_FINE_LOCATION)
-    void startUserTrackingService() {
-        startService(new Intent(
-                HomeActivity.this, SendLocationDataService.class));
-    }
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permission,
                                            @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permission, grantResults);
         // NOTE: delegate the permission handling to generated method
-        HomeActivityPermissionsDispatcher.onRequestPermissionsResult(this, requestCode, grantResults);
-    }
-
-    @OnShowRationale(Manifest.permission.ACCESS_FINE_LOCATION)
-    void showRationaleForLocation(final PermissionRequest request) {
-        String[] permissions = {
-                Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_COARSE_LOCATION
-        };
-        ActivityCompat.requestPermissions(this, permissions, 404);
-    }
-
-    @OnPermissionDenied(Manifest.permission.ACCESS_FINE_LOCATION)
-    void showDeniedForLocation() {
-        Toast.makeText(this, "Permission Denied!", Toast.LENGTH_SHORT).show();
-    }
-
-    @OnNeverAskAgain(Manifest.permission.ACCESS_FINE_LOCATION)
-    void showNeverAskForLocation() {
-        Toast.makeText(this, "Go Away", Toast.LENGTH_SHORT).show();
     }
 
     @Override

@@ -53,14 +53,11 @@ import java.io.IOException;
 import java.util.List;
 
 import okhttp3.ResponseBody;
-import permissions.dispatcher.NeedsPermission;
-import permissions.dispatcher.RuntimePermissions;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import timber.log.Timber;
 
-@RuntimePermissions
 public class RouteActivity extends AppCompatActivity implements OnMapReadyCallback,
         LocationSource.OnLocationChangedListener {
 
@@ -125,7 +122,6 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
         }
     }
 
-    @NeedsPermission(Manifest.permission.ACCESS_FINE_LOCATION)
     public void getLocation() {
         if (checkPermission(RouteActivity.this)) {
             Awareness.SnapshotApi.getLocation(googleApiClient)

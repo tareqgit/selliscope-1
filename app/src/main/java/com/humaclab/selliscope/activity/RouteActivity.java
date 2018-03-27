@@ -53,14 +53,11 @@ import java.io.IOException;
 import java.util.List;
 
 import okhttp3.ResponseBody;
-import permissions.dispatcher.NeedsPermission;
-import permissions.dispatcher.RuntimePermissions;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import timber.log.Timber;
 
-@RuntimePermissions
 public class RouteActivity extends AppCompatActivity implements OnMapReadyCallback,
         LocationSource.OnLocationChangedListener {
 
@@ -76,9 +73,9 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_route);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("");
-        TextView toolbarTitle = (TextView) findViewById(R.id.tv_toolbar_title);
+        TextView toolbarTitle = findViewById(R.id.tv_toolbar_title);
         toolbarTitle.setText(getResources().getString(R.string.route));
         setSupportActionBar(toolbar);
         googleApiClient = new GoogleApiClient.Builder(RouteActivity.this)
@@ -125,7 +122,6 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
         }
     }
 
-    @NeedsPermission(Manifest.permission.ACCESS_FINE_LOCATION)
     public void getLocation() {
         if (checkPermission(RouteActivity.this)) {
             Awareness.SnapshotApi.getLocation(googleApiClient)

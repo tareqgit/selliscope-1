@@ -5,28 +5,28 @@
         <item
             android:id="@+id/nav_profile"
             android:icon="@drawable/ic_menu_profile"
-            android:title="Profile"/>
+            android:title="Profile" />
         <item
             android:id="@+id/nav_logout"
             android:icon="@drawable/ic_menu_logout"
-            android:title="Logout"/>
+            android:title="Logout" />
         <item
             android:id="@+id/nav_settings"
             android:icon="@drawable/ic_menu_settings"
-            android:title="Settings"/>
+            android:title="Settings" />
         <item
             android:id="@+id/nav_check_update"
             android:checkable="false"
             android:icon="@drawable/ic_system_update_white_24dp"
-            android:title="Check Update"/>
+            android:title="Check Update" />
 
     </group>
     <group android:id="@+id/gp_nav_information">
         <item
             android:id="@+id/nav_privacy_policy"
-            android:title="Privacy Policy"/>
+            android:title="Privacy Policy" />
         <item
             android:id="@+id/nav_about_us"
-            android:title="About Us"/>
+            android:title="About Us" />
     </group>
 </menu>

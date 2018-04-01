@@ -1,21 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:focusableInTouchMode="true"
     android:orientation="vertical"
-    tools:context="com.humaclab.selliscope_myone.activity.ProductActivity">
+    tools:context="com.humaclab.selliscope_rangs.activity.ProductActivity">
 
-    <include layout="@layout/toolbar_layout"/>
+    <include layout="@layout/toolbar_layout" />
 
     <EditText
         android:id="@+id/et_search_product"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:drawableRight="@drawable/places_ic_search"
-        android:hint="Search product"/>
+        android:hint="Search product" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -29,7 +28,7 @@
             android:layout_margin="@dimen/margin_10"
             android:layout_weight="1"
             android:clickable="true"
-            android:spinnerMode="dropdown"/>
+            android:spinnerMode="dropdown" />
 
         <Spinner
             android:id="@+id/sp_brand"
@@ -38,7 +37,7 @@
             android:layout_margin="@dimen/margin_10"
             android:layout_weight="1"
             android:clickable="true"
-            android:spinnerMode="dropdown"/>
+            android:spinnerMode="dropdown" />
     </LinearLayout>
 
     <android.support.v4.widget.SwipeRefreshLayout
@@ -51,6 +50,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/background"
-            android:padding="@dimen/padding_5"/>
+            android:padding="@dimen/padding_5" />
     </android.support.v4.widget.SwipeRefreshLayout>
 </LinearLayout>

@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
         <variable
             name="deliveryDetails"
-            type="com.humaclab.selliscope_myone.model.DeliveryResponse.DeliveryList"/>
+            type="com.humaclab.selliscope_rangs.model.DeliveryResponse.DeliveryList" />
     </data>
 
     <android.support.v7.widget.CardView
@@ -40,7 +40,7 @@
                         android:padding="10dp"
                         android:text='@{deliveryDetails.outletName}'
                         android:textColor="#000"
-                        android:textSize="18sp"/>
+                        android:textSize="18sp" />
 
                     <TextView
                         android:id="@+id/tv_order_id"
@@ -52,7 +52,7 @@
                         android:text='@{"Order id: " + deliveryDetails.deliveryId}'
                         android:textAlignment="textEnd"
                         android:textColor="#000"
-                        android:textSize="18sp"/>
+                        android:textSize="18sp" />
                 </LinearLayout>
 
                 <TextView
@@ -61,14 +61,14 @@
                     android:layout_height="wrap_content"
                     android:padding="10dp"
                     android:text='@{"Order Date: " + deliveryDetails.deliveryDate}'
-                    android:textSize="17sp"/>
+                    android:textSize="17sp" />
             </LinearLayout>
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                app:srcCompat="@drawable/next"/>
+                app:srcCompat="@drawable/next" />
         </LinearLayout>
     </android.support.v7.widget.CardView>
 </layout>

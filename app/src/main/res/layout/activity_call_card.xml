@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        tools:context="com.humaclab.selliscope_myone.activity.CallCardActivity">
+        tools:context="com.humaclab.selliscope_rangs.activity.CallCardActivity">
 
-        <include layout="@layout/toolbar_layout"/>
+        <include layout="@layout/toolbar_layout" />
 
         <ScrollView
             android:layout_width="match_parent"
@@ -27,7 +27,7 @@
                     android:layout_height="wrap_content"
                     android:rating="3"
                     android:stepSize="1"
-                    android:visibility="gone"/>
+                    android:visibility="gone" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -53,7 +53,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_horizontal"
-                                android:src="@drawable/ic_products"/>
+                                android:src="@drawable/ic_products" />
 
                             <TextView
                                 android:layout_width="match_parent"
@@ -65,7 +65,7 @@
                                 android:padding="@dimen/padding_5"
                                 android:text="Product Pitch"
                                 android:textColor="@color/white"
-                                android:textStyle="bold"/>
+                                android:textStyle="bold" />
                         </LinearLayout>
                     </android.support.v7.widget.CardView>
 
@@ -88,7 +88,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_horizontal"
-                                android:src="@drawable/ic_order"/>
+                                android:src="@drawable/ic_order" />
 
                             <TextView
                                 android:layout_width="match_parent"
@@ -100,7 +100,7 @@
                                 android:padding="@dimen/padding_5"
                                 android:text="Order Collection"
                                 android:textColor="@color/white"
-                                android:textStyle="bold"/>
+                                android:textStyle="bold" />
                         </LinearLayout>
                     </android.support.v7.widget.CardView>
                 </LinearLayout>
@@ -165,7 +165,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_horizontal"
-                                app:srcCompat="@drawable/ic_return"/>
+                                app:srcCompat="@drawable/ic_return" />
 
                             <TextView
                                 android:layout_width="match_parent"
@@ -177,7 +177,7 @@
                                 android:padding="@dimen/padding_5"
                                 android:text="Sales Return"
                                 android:textColor="@color/white"
-                                android:textStyle="bold"/>
+                                android:textStyle="bold" />
                         </LinearLayout>
                     </android.support.v7.widget.CardView>
 
@@ -200,7 +200,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="center_horizontal"
-                                app:srcCompat="@drawable/ic_inspection"/>
+                                app:srcCompat="@drawable/ic_inspection" />
 
                             <TextView
                                 android:layout_width="match_parent"
@@ -212,7 +212,7 @@
                                 android:padding="@dimen/padding_5"
                                 android:text="Inspection"
                                 android:textColor="@color/white"
-                                android:textStyle="bold"/>
+                                android:textStyle="bold" />
                         </LinearLayout>
                     </android.support.v7.widget.CardView>
                 </LinearLayout>

@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
         <variable
             name="deliveryDetails"
-            type="com.humaclab.selliscope_myone.model.DeliveryResponse.DeliveryList"/>
+            type="com.humaclab.selliscope_rangs.model.DeliveryResponse.DeliveryList" />
     </data>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        tools:context="com.humaclab.selliscope_myone.activity.DeliveryDetailsActivity">
+        tools:context="com.humaclab.selliscope_rangs.activity.DeliveryDetailsActivity">
 
         <include
             android:id="@+id/include"
-            layout="@layout/toolbar_layout"/>
+            layout="@layout/toolbar_layout" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -44,7 +44,7 @@
                         android:padding="5dp"
                         android:text='@{deliveryDetails.outletName}'
                         android:textColor="#000"
-                        android:textSize="18sp"/>
+                        android:textSize="18sp" />
 
                     <TextView
                         android:id="@+id/tv_order_id"
@@ -56,7 +56,7 @@
                         android:text='@{"Order id: " + deliveryDetails.deliveryId}'
                         android:textAlignment="textEnd"
                         android:textColor="#000"
-                        android:textSize="18sp"/>
+                        android:textSize="18sp" />
                 </LinearLayout>
 
                 <TextView
@@ -65,13 +65,13 @@
                     android:layout_height="wrap_content"
                     android:padding="5dp"
                     android:text='@{"Order Date: " + deliveryDetails.deliveryDate}'
-                    android:textSize="17sp"/>
+                    android:textSize="17sp" />
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="2dp"
                     android:layout_marginBottom="5dp"
-                    android:background="#ddd"/>
+                    android:background="#ddd" />
             </LinearLayout>
 
             <LinearLayout
@@ -91,7 +91,7 @@
                     android:text="Items"
                     android:textAlignment="center"
                     android:textColor="#000"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -103,7 +103,7 @@
                     android:text="Godwon"
                     android:textAlignment="center"
                     android:textColor="#000"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -115,7 +115,7 @@
                     android:text="O.Qty."
                     android:textAlignment="center"
                     android:textColor="#000"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -127,7 +127,7 @@
                     android:text="D.Qty."
                     android:textAlignment="center"
                     android:textColor="#000"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="match_parent"
@@ -139,7 +139,7 @@
                     android:text="Deliver"
                     android:textAlignment="center"
                     android:textColor="#000"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold" />
             </LinearLayout>
 
             <android.support.v4.widget.SwipeRefreshLayout
@@ -150,7 +150,7 @@
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/rv_delivery_details"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
+                    android:layout_height="match_parent" />
             </android.support.v4.widget.SwipeRefreshLayout>
         </LinearLayout>
     </RelativeLayout>

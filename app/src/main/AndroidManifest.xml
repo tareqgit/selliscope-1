@@ -14,6 +14,13 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
 
+    <uses-feature
+        android:name="android.hardware.camera.any"
+        android:required="true" />
+    <uses-feature
+        android:name="android.hardware.camera.autofocus"
+        android:required="true" />
+
     <application
         android:name=".SelliscopeApplication"
         android:allowBackup="true"
@@ -23,14 +30,12 @@
         android:theme="@style/AppTheme">
 
         <!-- For debug APK -->
-        <!--
-        <meta-data
+        <!--<meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBZ5heET41mdUTW5UOouLZFn56kGsAocbM" />
         <meta-data
             android:name="com.google.android.awareness.API_KEY"
-            android:value="AIzaSyBZ5heET41mdUTW5UOouLZFn56kGsAocbM" />
-        -->
+            android:value="AIzaSyBZ5heET41mdUTW5UOouLZFn56kGsAocbM" />-->
         <!-- For debug APK -->
 
 

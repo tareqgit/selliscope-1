@@ -1,16 +1,13 @@
 package com.humaclab.selliscope.activity;
 
-import android.Manifest;
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.location.Location;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Base64;
@@ -37,6 +34,7 @@ import com.humaclab.selliscope.model.CreateOutlet;
 import com.humaclab.selliscope.model.District.District;
 import com.humaclab.selliscope.model.OutletType.OutletType;
 import com.humaclab.selliscope.model.Thana.Thana;
+import com.humaclab.selliscope.utils.AccessPermission;
 import com.humaclab.selliscope.utils.DatabaseHandler;
 import com.humaclab.selliscope.utils.LoadLocalIntoBackground;
 import com.humaclab.selliscope.utils.NetworkUtility;
@@ -80,15 +78,12 @@ public class AddOutletActivity extends AppCompatActivity {
     private ProgressDialog pd;
     private int MAP_LOCATION = 512;
 
-    public static boolean checkPermission(final Context context) {
-        return ActivityCompat.checkSelfPermission(context,
-                Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_outlet);
+        checkPermission();
+
         googleApiClient = new GoogleApiClient.Builder(AddOutletActivity.this)
                 .addApi(Awareness.API)
                 .addApi(LocationServices.API)
@@ -130,8 +125,10 @@ public class AddOutletActivity extends AppCompatActivity {
         iv_outlet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(cameraIntent, CAMERA_REQUEST);
+                Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                if (cameraIntent.resolveActivity(getPackageManager()) != null) {
+                    startActivityForResult(cameraIntent, CAMERA_REQUEST);
+                }
             }
         });
 
@@ -211,15 +208,19 @@ public class AddOutletActivity extends AppCompatActivity {
                             mapLocation.setLongitude(mLongitude);
 
                             if (mapLocation.distanceTo(currentLocation) <= 100) {
-                                addOutlet(
-                                        outletTypeId, outletName.getText().toString().trim(),
-                                        outletOwner.getText().toString().trim(),
-                                        outletAddress.getText().toString().trim(),
-                                        thanaId,
-                                        outletContactNumber.getText().toString().trim(),
-                                        mLatitude,
-                                        mLongitude
-                                );
+                                if (thanaId != 0) {
+                                    addOutlet(
+                                            outletTypeId, outletName.getText().toString().trim(),
+                                            outletOwner.getText().toString().trim(),
+                                            outletAddress.getText().toString().trim(),
+                                            thanaId,
+                                            outletContactNumber.getText().toString().trim(),
+                                            mLatitude,
+                                            mLongitude
+                                    );
+                                } else {
+                                    Toast.makeText(AddOutletActivity.this, "Please select a thana first", Toast.LENGTH_SHORT).show();
+                                }
                             } else {
                                 Toast.makeText(AddOutletActivity.this, "Outlet location is not within your 100 meter radius.", Toast.LENGTH_SHORT).show();
                             }
@@ -330,6 +331,10 @@ public class AddOutletActivity extends AppCompatActivity {
                 mCurrentLongitude = longitude;
             }
         });
+    }
+
+    private void checkPermission() {
+        AccessPermission.accessPermission(AddOutletActivity.this);
     }
 
     @Override

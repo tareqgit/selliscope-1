@@ -30,6 +30,7 @@ import com.humaclab.selliscope.model.District.District;
 import com.humaclab.selliscope.model.OutletType.OutletType;
 import com.humaclab.selliscope.model.Outlets;
 import com.humaclab.selliscope.model.Thana.Thana;
+import com.humaclab.selliscope.utils.AccessPermission;
 import com.humaclab.selliscope.utils.DatabaseHandler;
 import com.humaclab.selliscope.utils.NetworkUtility;
 import com.humaclab.selliscope.utils.SessionManager;
@@ -72,6 +73,7 @@ public class EditOutletActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_outlet);
+        checkPermission();
 
         databaseHandler = new DatabaseHandler(this);
         pd = new ProgressDialog(this);
@@ -112,7 +114,9 @@ public class EditOutletActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(cameraIntent, CAMERA_REQUEST);
+                if (cameraIntent.resolveActivity(getPackageManager()) != null) {
+                    startActivityForResult(cameraIntent, CAMERA_REQUEST);
+                }
             }
         });
 
@@ -300,6 +304,10 @@ public class EditOutletActivity extends AppCompatActivity {
         }
         thana.setSelection(position);
         //For selecting previous outlet type
+    }
+
+    private void checkPermission() {
+        AccessPermission.accessPermission(EditOutletActivity.this);
     }
 
     @Override

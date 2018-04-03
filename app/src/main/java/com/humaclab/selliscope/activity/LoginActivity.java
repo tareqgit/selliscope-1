@@ -22,6 +22,7 @@ import com.humaclab.selliscope.SelliscopeApiEndpointInterface;
 import com.humaclab.selliscope.SelliscopeApplication;
 import com.humaclab.selliscope.model.IMEIandVerison;
 import com.humaclab.selliscope.model.Login;
+import com.humaclab.selliscope.utils.AccessPermission;
 import com.humaclab.selliscope.utils.NetworkUtility;
 import com.humaclab.selliscope.utils.SessionManager;
 
@@ -166,6 +167,7 @@ public class LoginActivity extends AppCompatActivity {
 
                         @Override
                         public void onFailure(Call<ResponseBody> call, Throwable t) {
+                            t.printStackTrace();
                         }
                     });
                 }
@@ -181,15 +183,6 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void checkPermission() {
-        String[] permissions = {
-                android.Manifest.permission.READ_PHONE_STATE,
-                android.Manifest.permission.ACCESS_FINE_LOCATION,
-                android.Manifest.permission.ACCESS_COARSE_LOCATION
-        };
-        if (ActivityCompat.checkSelfPermission(LoginActivity.this, android.Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED
-                || ActivityCompat.checkSelfPermission(LoginActivity.this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                || ActivityCompat.checkSelfPermission(LoginActivity.this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(LoginActivity.this, permissions, 404);
-        }
+        AccessPermission.accessPermission(LoginActivity.this);
     }
 }

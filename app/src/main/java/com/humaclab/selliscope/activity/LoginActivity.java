@@ -64,6 +64,12 @@ public class LoginActivity extends AppCompatActivity {
 
         loginProgresssBar = findViewById(R.id.pb_login);
         forgotPassword = findViewById(R.id.tv_forgot_password);
+        forgotPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(LoginActivity.this, "Please contact to you admin.", Toast.LENGTH_SHORT).show();
+            }
+        });
         email = findViewById(R.id.et_email);
         password = findViewById(R.id.et_password);
         signIn = findViewById(R.id.btn_sign_in);

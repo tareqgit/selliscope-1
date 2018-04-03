@@ -123,6 +123,8 @@ public class LoginActivity extends AppCompatActivity {
                                 loginSuccessful.result.user.name,
                                 loginSuccessful.result.clientId,
                                 loginSuccessful.result.user.profilePictureUrl,
+                                loginSuccessful.result.user.dob,
+                                loginSuccessful.result.user.gender,
                                 email,
                                 password
                         );

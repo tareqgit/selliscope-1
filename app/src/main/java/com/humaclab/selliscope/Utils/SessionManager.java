@@ -8,6 +8,7 @@ import android.util.Log;
 
 import com.humaclab.selliscope.activity.HomeActivity;
 import com.humaclab.selliscope.activity.LoginActivity;
+import com.humaclab.selliscope.model.UpdateProfile.UpdateProfileResponse;
 
 import java.util.HashMap;
 
@@ -23,6 +24,8 @@ public class SessionManager {
     // All Shared Preferences Keys
     private static final String KEY_USER_NAME = "userName";
     private static final String KEY_USER_EMAIL = "email";
+    private static final String KEY_USER_DOB = "dob";
+    private static final String KEY_USER_GENDER = "gender";
     private static final String KEY_USER_PASSWORD = "password";
     private static final String KEY_CLIENT_ID = "client_id";
     private static final String KEY_USER_PROFILE_PIC_URL = "profilePictureUrl";
@@ -50,14 +53,22 @@ public class SessionManager {
     /**
      * Create login session
      */
-    public void createLoginSession(String userName, String clientId, String userProfilePicUrl, String email, String password) {
+    public void createLoginSession(String userName, String clientId, String userProfilePicUrl, String dob, String gender, String email, String password) {
         editor.putBoolean(IS_LOGGED_IN, true);
         editor.putString(KEY_USER_NAME, userName);
+        editor.putString(KEY_USER_DOB, dob);
+        editor.putString(KEY_USER_GENDER, gender);
         editor.putString(KEY_CLIENT_ID, clientId);
         editor.putString(KEY_USER_PROFILE_PIC_URL, userProfilePicUrl);
         editor.putString(KEY_USER_EMAIL, email);
         editor.putString(KEY_USER_PASSWORD, password);
         editor.commit();
+    }
+
+    public void updateProfile(UpdateProfileResponse.User user) {
+        editor.putString(KEY_USER_DOB, user.getDob());
+        editor.putString(KEY_USER_GENDER, user.getGender());
+        editor.putString(KEY_USER_PROFILE_PIC_URL, user.getImage());
     }
 
     public void setNewPassword(String password) {
@@ -91,6 +102,8 @@ public class SessionManager {
         HashMap<String, String> user = new HashMap<String, String>();
         user.put(KEY_USER_NAME, pref.getString(KEY_USER_NAME, null));
         user.put(KEY_USER_EMAIL, pref.getString(KEY_USER_EMAIL, null));
+        user.put(KEY_USER_DOB, pref.getString(KEY_USER_DOB, null));
+        user.put(KEY_USER_GENDER, pref.getString(KEY_USER_GENDER, null));
         user.put(KEY_USER_PROFILE_PIC_URL, pref.getString(KEY_USER_PROFILE_PIC_URL, null));
         return user;
     }

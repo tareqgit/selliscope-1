@@ -44,7 +44,6 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/et_password"
         android:layout_centerHorizontal="true"
-        android:clickable="true"
         android:padding="@dimen/padding_16"
         android:text="Forgot Password"
         android:textColor="@color/white"

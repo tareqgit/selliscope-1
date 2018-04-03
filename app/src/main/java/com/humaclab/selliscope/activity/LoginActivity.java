@@ -67,7 +67,7 @@ public class LoginActivity extends AppCompatActivity {
         forgotPassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(LoginActivity.this, "Please contact to you admin.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(LoginActivity.this, "Please contact to your admin.", Toast.LENGTH_SHORT).show();
             }
         });
         email = findViewById(R.id.et_email);

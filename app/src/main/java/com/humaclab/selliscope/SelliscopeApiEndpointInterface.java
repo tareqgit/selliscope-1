@@ -20,6 +20,8 @@ import com.humaclab.selliscope.model.SellsReturnResponse;
 import com.humaclab.selliscope.model.Thana.ThanaResponse;
 import com.humaclab.selliscope.model.UpdatePassword.ChangePassword;
 import com.humaclab.selliscope.model.UpdatePassword.ChangePasswordResponse;
+import com.humaclab.selliscope.model.UpdateProfile.UpdateProfile;
+import com.humaclab.selliscope.model.UpdateProfile.UpdateProfileResponse;
 import com.humaclab.selliscope.model.UserLocation;
 import com.humaclab.selliscope.model.VariantProduct.VariantProductResponse;
 
@@ -124,4 +126,7 @@ public interface SelliscopeApiEndpointInterface {
 
     @PUT("outlet/{id}/update")
     Call<ResponseBody> updateOutlet(@Path("id") int outletID, @Body CreateOutlet createOutlet);
+
+    @POST("profile/update")
+    Call<UpdateProfileResponse> updateProfile(@Body UpdateProfile updateProfile);
 }

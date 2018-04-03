@@ -1,6 +1,7 @@
 package com.humaclab.selliscope.activity;
 
 import android.app.DatePickerDialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
@@ -9,16 +10,25 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Base64;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.esafirm.imagepicker.features.ImagePicker;
 import com.esafirm.imagepicker.features.ReturnMode;
 import com.esafirm.imagepicker.model.Image;
+import com.google.gson.Gson;
 import com.humaclab.selliscope.R;
+import com.humaclab.selliscope.SelliscopeApiEndpointInterface;
+import com.humaclab.selliscope.SelliscopeApplication;
 import com.humaclab.selliscope.databinding.ActivityProfileBinding;
+import com.humaclab.selliscope.model.UpdateProfile.UpdateProfile;
+import com.humaclab.selliscope.model.UpdateProfile.UpdateProfileResponse;
 import com.humaclab.selliscope.utils.SessionManager;
 import com.squareup.picasso.Picasso;
 
@@ -26,14 +36,25 @@ import java.io.ByteArrayOutputStream;
 import java.util.Calendar;
 import java.util.Map;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class ProfileActivity extends AppCompatActivity {
     private ActivityProfileBinding binding;
     private SessionManager sessionManager;
+    private String profileImage = "";
+    private SelliscopeApiEndpointInterface apiService;
+    private ProgressDialog pd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_profile);
+        sessionManager = new SessionManager(this);
+        apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(), sessionManager.getUserPassword(), true).create(SelliscopeApiEndpointInterface.class);
+        pd = new ProgressDialog(this);
+        pd.setMessage("Updating profile...");
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("");
@@ -42,15 +63,29 @@ public class ProfileActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        sessionManager = new SessionManager(this);
 
         Map<String, String> map = sessionManager.getUserDetails();
 
         Picasso.with(this)
                 .load(sessionManager.getUserDetails().get("profilePictureUrl"))
                 .into(binding.ivProfileImage);
+
         binding.tvEmail.setText(map.get("email"));
         binding.tvUserName.setText(map.get("userName"));
+        binding.tvDateOfBirth.setText(map.get("dob"));
+
+        if (map.get("gender").equals("Male")) {
+            binding.rbMale.setSelected(true);
+            binding.rbFemale.setSelected(false);
+        } else {
+            binding.rbFemale.setSelected(true);
+            binding.rbMale.setSelected(false);
+        }
+
+        Glide.with(getApplicationContext()).load(sessionManager.getUserDetails().get("profilePictureUrl"))
+                .thumbnail(0.5f)
+                .into(binding.ivProfileImage);
+
         binding.btnChangeProfilePicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -95,7 +130,43 @@ public class ProfileActivity extends AppCompatActivity {
         binding.btnUpdateProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //TODO: complete profile update
+                if (!binding.tvDateOfBirth.getText().toString().equals("")) {
+                    if (!profileImage.equals("")) {
+                        pd.show();
+
+                        UpdateProfile updateProfile = new UpdateProfile(
+                                sessionManager.getUserDetails().get("userName"),
+                                sessionManager.getUserEmail(),
+                                binding.etAddress.getText().toString(),
+                                binding.rgGender.getCheckedRadioButtonId() == R.id.rb_male ? "Male" : "Female",
+                                binding.tvDateOfBirth.getText().toString(),
+                                profileImage
+                        );
+                        Log.e("test", new Gson().toJson(updateProfile));
+
+                        Call<UpdateProfileResponse> call = apiService.updateProfile(updateProfile);
+                        call.enqueue(new Callback<UpdateProfileResponse>() {
+                            @Override
+                            public void onResponse(Call<UpdateProfileResponse> call, Response<UpdateProfileResponse> response) {
+                                pd.dismiss();
+                                if (!response.body().isError()) {
+                                    sessionManager.updateProfile(response.body().getResult().getUser());
+                                }
+                                finish();
+                            }
+
+                            @Override
+                            public void onFailure(Call<UpdateProfileResponse> call, Throwable t) {
+                                pd.dismiss();
+                                t.printStackTrace();
+                            }
+                        });
+                    } else {
+                        Toast.makeText(getApplicationContext(), "Please select your profile image.", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Toast.makeText(getApplicationContext(), "Please select your birth date.", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
@@ -111,7 +182,7 @@ public class ProfileActivity extends AppCompatActivity {
                 binding.ivProfileImage.setImageBitmap(bmp);
                 bos = new ByteArrayOutputStream();
                 bmp.compress(Bitmap.CompressFormat.JPEG, 50, bos);
-//                profileImage = Base64.encodeToString(bos.toByteArray(), Base64.DEFAULT);
+                profileImage = Base64.encodeToString(bos.toByteArray(), Base64.DEFAULT);
             } catch (Exception e) {
                 e.printStackTrace();
             }

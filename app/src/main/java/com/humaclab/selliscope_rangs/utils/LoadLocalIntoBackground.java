@@ -11,6 +11,8 @@ import com.humaclab.selliscope_rangs.model.OutletType.OutletTypeResponse;
 import com.humaclab.selliscope_rangs.model.Outlets;
 import com.humaclab.selliscope_rangs.model.ProductResponse;
 import com.humaclab.selliscope_rangs.model.Thana.ThanaResponse;
+import com.humaclab.selliscope_rangs.model.promotion.PromotionQuantityResponse;
+import com.humaclab.selliscope_rangs.model.promotion.PromotionValueResponse;
 
 import java.io.IOException;
 import java.util.List;
@@ -39,6 +41,7 @@ public class LoadLocalIntoBackground {
 
     public void loadAll() {
         if (!sessionManager.isAllDataLoaded()) {
+            this.loadPromotion();
             this.loadProduct();
             this.loadOutlet();
             this.loadOutletType();
@@ -102,6 +105,35 @@ public class LoadLocalIntoBackground {
                 }
             });
         }
+    }
+
+    private void loadPromotion() {
+        databaseHandler.removePromotion();
+        Call<PromotionQuantityResponse> call = apiService.getPromotionQuantity();
+        Call<PromotionValueResponse> call1 = apiService.getPromotionValue();
+
+        call.enqueue(new Callback<PromotionQuantityResponse>() {
+            @Override
+            public void onResponse(Call<PromotionQuantityResponse> call, Response<PromotionQuantityResponse> response) {
+                databaseHandler.addProductPromotionQuantity(response.body().getPromotionQuantityItems());
+            }
+
+            @Override
+            public void onFailure(Call<PromotionQuantityResponse> call, Throwable t) {
+                t.printStackTrace();
+            }
+        });
+        call1.enqueue(new Callback<PromotionValueResponse>() {
+            @Override
+            public void onResponse(Call<PromotionValueResponse> call, Response<PromotionValueResponse> response) {
+                databaseHandler.addProductPromotionValue(response.body().getPromotionValueItems());
+            }
+
+            @Override
+            public void onFailure(Call<PromotionValueResponse> call, Throwable t) {
+                t.printStackTrace();
+            }
+        });
     }
 
     private void loadCategory() {

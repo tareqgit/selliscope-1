@@ -20,6 +20,8 @@ import com.humaclab.selliscope_rangs.model.ProductResponse;
 import com.humaclab.selliscope_rangs.model.SellsReturnResponse;
 import com.humaclab.selliscope_rangs.model.Thana.ThanaResponse;
 import com.humaclab.selliscope_rangs.model.UserLocation;
+import com.humaclab.selliscope_rangs.model.promotion.PromotionQuantityResponse;
+import com.humaclab.selliscope_rangs.model.promotion.PromotionValueResponse;
 import com.humaclab.selliscope_rangs.utils.StockResponse;
 
 import okhttp3.ResponseBody;
@@ -49,6 +51,12 @@ public interface SelliscopeApiEndpointInterface {
 
     @GET("product")
     Call<ProductResponse> getProducts();
+
+    @GET("product/promotion")
+    Call<PromotionQuantityResponse> getPromotionQuantity();
+
+    @GET("product/promotion/value")
+    Call<PromotionValueResponse> getPromotionValue();
 
     /*@GET("variant-product")
     Call<VariantProductResponse> getProducts();*/

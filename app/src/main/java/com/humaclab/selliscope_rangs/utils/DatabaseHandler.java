@@ -20,6 +20,8 @@ import com.humaclab.selliscope_rangs.model.VariantProduct.ProductsItem;
 import com.humaclab.selliscope_rangs.model.VariantProduct.VariantDetailsItem;
 import com.humaclab.selliscope_rangs.model.VariantProduct.VariantItem;
 import com.humaclab.selliscope_rangs.model.VariantProduct.VariantsItem;
+import com.humaclab.selliscope_rangs.model.promotion.PromotionQuantityResponse;
+import com.humaclab.selliscope_rangs.model.promotion.PromotionValueResponse;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -47,6 +49,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String TABLE_THANA = "thana";
     private static final String TABLE_DISTRICT = "district";
     private static final String TABLE_OUTLET_TYPE = "outlet_type";
+    private static final String TABLE_PROMOTION_QUANTITY = "promotion_quantity";
+    private static final String TABLE_PROMOTION_VALUE = "promotion_value";
 
     // Target Table Columns names
     private static final String KEY_TARGET_ID = "targetId";
@@ -125,6 +129,44 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     //Outlet type table column name
     private static final String KEY_TYPE_ID = "id";
     private static final String KEY_TYPE_NAME = "type";
+
+    //Quantity Promotion table column name
+    private static final String KEY_PROMOTION_QUANTITY_ID = "id";
+    private static final String KEY_PROMOTION_QUANTITY_ZID = "zid";
+    private static final String KEY_PROMOTION_QUANTITY_PROMO_NAME = "xpromo";
+    private static final String KEY_PROMOTION_QUANTITY_SOLD_PRODUCT_ID = "xitem";
+    private static final String KEY_PROMOTION_QUANTITY_xline = "xline";
+    private static final String KEY_PROMOTION_QUANTITY_xrowkit = "xrowkit";
+    private static final String KEY_PROMOTION_QUANTITY_FREE_PRODUCT_ID = "xcomp";
+    private static final String KEY_PROMOTION_QUANTITY_FREE_QUANTITY = "xqty";
+    private static final String KEY_PROMOTION_QUANTITY_SOLD_QUANTITY = "xqtyoff";
+    private static final String KEY_PROMOTION_QUANTITY_UNIT_TYPE = "xunitsel";
+    private static final String KEY_PROMOTION_QUANTITY_DISCOUNT_AMOUNT = "xdisc";
+    private static final String KEY_PROMOTION_QUANTITY_xunitalt = "xunitalt";
+    private static final String KEY_PROMOTION_QUANTITY_PRODUCT_PRICE = "xstdprice";
+    private static final String KEY_PROMOTION_QUANTITY_TERRITORY = "xtr";
+    private static final String KEY_PROMOTION_QUANTITY_CUSTOMER = "xgcus";
+    private static final String KEY_PROMOTION_QUANTITY_DATE_FROM = "xdateeff";
+    private static final String KEY_PROMOTION_QUANTITY_DATE_TO = "xdateexp";
+    private static final String KEY_PROMOTION_QUANTITY_CUSTOMER_TYPE = "xcustype";
+    private static final String KEY_PROMOTION_QUANTITY_zactive = "zactive";
+
+    //Value Promotion table column name
+    private static final String KEY_PROMOTION_VALUE_ID = "id";
+    private static final String KEY_PROMOTION_VALUE_ZID = "zid";
+    private static final String KEY_PROMOTION_VALUE_PROMO_NAME = "xpromo";
+    private static final String KEY_PROMOTION_VALUE_SOLD_PRODUCT_ID = "xitem";
+    private static final String KEY_PROMOTION_VALUE_xline = "xline";
+    private static final String KEY_PROMOTION_VALUE_SOLD_QUANTITY = "xqtyoff";
+    private static final String KEY_PROMOTION_VALUE_UNIT_TYPE = "xunitsel";
+    private static final String KEY_PROMOTION_VALUE_DISCOUNT_TYPE = "xtypealc";
+    private static final String KEY_PROMOTION_VALUE_DISCOUNT_AMOUNT = "xdiscload";
+    private static final String KEY_PROMOTION_VALUE_TERRITORY = "xtr";
+    private static final String KEY_PROMOTION_VALUE_CUSTOMER = "xgcus";
+    private static final String KEY_PROMOTION_VALUE_DATE_FROM = "xdateeff";
+    private static final String KEY_PROMOTION_VALUE_DATE_TO = "xdateexp";
+    private static final String KEY_PROMOTION_VALUE_CUSTOMER_TYPE = "xcustype";
+    private static final String KEY_PROMOTION_VALUE_zactive = "zactive";
 
     public DatabaseHandler(Context context) {
         super(context, Constants.databaseName, null, DATABASE_VERSION);
@@ -228,6 +270,44 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + KEY_TYPE_ID + " INTEGER  PRIMARY KEY,"
                 + KEY_TYPE_NAME + " TEXT"
                 + ")";
+        String CREATE_PROMOTION_QUANTITY_TABLE = "CREATE TABLE " + TABLE_PROMOTION_QUANTITY + "("
+                + KEY_PROMOTION_QUANTITY_ID + " INTEGER  PRIMARY KEY,"
+                + KEY_PROMOTION_QUANTITY_ZID + " INTEGER,"
+                + KEY_PROMOTION_QUANTITY_PROMO_NAME + " TEXT,"
+                + KEY_PROMOTION_QUANTITY_SOLD_PRODUCT_ID + " TEXT,"
+                + KEY_PROMOTION_QUANTITY_xline + " INTEGER,"
+                + KEY_PROMOTION_QUANTITY_xrowkit + " INTEGER,"
+                + KEY_PROMOTION_QUANTITY_FREE_PRODUCT_ID + " TEXT,"
+                + KEY_PROMOTION_QUANTITY_FREE_QUANTITY + " TEXT,"
+                + KEY_PROMOTION_QUANTITY_SOLD_QUANTITY + " TEXT,"
+                + KEY_PROMOTION_QUANTITY_UNIT_TYPE + " TEXT,"
+                + KEY_PROMOTION_QUANTITY_DISCOUNT_AMOUNT + " TEXT,"
+                + KEY_PROMOTION_QUANTITY_xunitalt + " TEXT,"
+                + KEY_PROMOTION_QUANTITY_PRODUCT_PRICE + " TEXT,"
+                + KEY_PROMOTION_QUANTITY_TERRITORY + " TEXT,"
+                + KEY_PROMOTION_QUANTITY_CUSTOMER + " TEXT,"
+                + KEY_PROMOTION_QUANTITY_DATE_FROM + " TEXT,"
+                + KEY_PROMOTION_QUANTITY_DATE_TO + " TEXT,"
+                + KEY_PROMOTION_QUANTITY_CUSTOMER_TYPE + " TEXT,"
+                + KEY_PROMOTION_QUANTITY_zactive + " TEXT"
+                + ")";
+        String CREATE_PROMOTION_VALUE_TABLE = "CREATE TABLE " + TABLE_PROMOTION_VALUE + "("
+                + KEY_PROMOTION_VALUE_ID + " INTEGER  PRIMARY KEY,"
+                + KEY_PROMOTION_VALUE_ZID + " INTEGER,"
+                + KEY_PROMOTION_VALUE_PROMO_NAME + " TEXT,"
+                + KEY_PROMOTION_VALUE_SOLD_PRODUCT_ID + " TEXT,"
+                + KEY_PROMOTION_VALUE_xline + " INTEGER,"
+                + KEY_PROMOTION_VALUE_SOLD_QUANTITY + " INTEGER,"
+                + KEY_PROMOTION_VALUE_UNIT_TYPE + " TEXT,"
+                + KEY_PROMOTION_VALUE_DISCOUNT_TYPE + " TEXT,"
+                + KEY_PROMOTION_VALUE_DISCOUNT_AMOUNT + " TEXT,"
+                + KEY_PROMOTION_VALUE_TERRITORY + " TEXT,"
+                + KEY_PROMOTION_VALUE_CUSTOMER + " TEXT,"
+                + KEY_PROMOTION_VALUE_DATE_FROM + " TEXT,"
+                + KEY_PROMOTION_VALUE_DATE_TO + " TEXT,"
+                + KEY_PROMOTION_VALUE_CUSTOMER_TYPE + " TEXT,"
+                + KEY_PROMOTION_VALUE_zactive + " TEXT"
+                + ")";
         db.execSQL(CREATE_TARGET_TABLE);
         db.execSQL(CREATE_TARGET_USER_VISITS);
         db.execSQL(CREATE_PRODUCT_TABLE);
@@ -241,6 +321,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL(CREATE_THANA_TABLE);
         db.execSQL(CREATE_DISTRICT_TABLE);
         db.execSQL(CREATE_OUTELT_TYPE_TABLE);
+        db.execSQL(CREATE_PROMOTION_QUANTITY_TABLE);
+        db.execSQL(CREATE_PROMOTION_VALUE_TABLE);
     }
 
     // Upgrading database
@@ -332,6 +414,78 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 new String[]{String.valueOf(visitId)});
         db.close();
     }
+
+    //Product promotion
+    public void addProductPromotionQuantity(List<PromotionQuantityResponse.PromotionQuantityItem> promotionQuantityItems) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        for (PromotionQuantityResponse.PromotionQuantityItem promotionQuantityItem : promotionQuantityItems) {
+            ContentValues values = new ContentValues();
+            values.put(KEY_PROMOTION_QUANTITY_ZID, promotionQuantityItem.getZid());
+            values.put(KEY_PROMOTION_QUANTITY_PROMO_NAME, promotionQuantityItem.getPromoName());
+            values.put(KEY_PROMOTION_QUANTITY_SOLD_PRODUCT_ID, promotionQuantityItem.getSoldProductId());
+            values.put(KEY_PROMOTION_QUANTITY_xline, promotionQuantityItem.getXline());
+            values.put(KEY_PROMOTION_QUANTITY_xrowkit, promotionQuantityItem.getXrowkit());
+            values.put(KEY_PROMOTION_QUANTITY_FREE_PRODUCT_ID, promotionQuantityItem.getFreeProductId());
+            values.put(KEY_PROMOTION_QUANTITY_FREE_QUANTITY, promotionQuantityItem.getFreeQuantity());
+            values.put(KEY_PROMOTION_QUANTITY_SOLD_QUANTITY, promotionQuantityItem.getSoldQuantity());
+            values.put(KEY_PROMOTION_QUANTITY_UNIT_TYPE, promotionQuantityItem.getUnitType());
+            values.put(KEY_PROMOTION_QUANTITY_DISCOUNT_AMOUNT, promotionQuantityItem.getDiscountAmount());
+            values.put(KEY_PROMOTION_QUANTITY_xunitalt, promotionQuantityItem.getXunitalt());
+            values.put(KEY_PROMOTION_QUANTITY_PRODUCT_PRICE, promotionQuantityItem.getProductPrice());
+            values.put(KEY_PROMOTION_QUANTITY_TERRITORY, promotionQuantityItem.getTerritory());
+            values.put(KEY_PROMOTION_QUANTITY_CUSTOMER, promotionQuantityItem.getCustomer());
+            values.put(KEY_PROMOTION_QUANTITY_DATE_FROM, promotionQuantityItem.getDateFrom());
+            values.put(KEY_PROMOTION_QUANTITY_DATE_TO, promotionQuantityItem.getDateTo());
+            values.put(KEY_PROMOTION_QUANTITY_CUSTOMER_TYPE, promotionQuantityItem.getCustomerType());
+            values.put(KEY_PROMOTION_QUANTITY_zactive, promotionQuantityItem.getZactive());
+
+            try {
+                db.insert(TABLE_PROMOTION_QUANTITY, null, values);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            values.clear();
+        }
+        db.close(); // Closing database connection
+    }
+
+    public void addProductPromotionValue(List<PromotionValueResponse.PromotionValueItem> promotionValueItems) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        for (PromotionValueResponse.PromotionValueItem promotionValueItem : promotionValueItems) {
+            ContentValues values = new ContentValues();
+
+            values.put(KEY_PROMOTION_VALUE_ZID, promotionValueItem.getZid());
+            values.put(KEY_PROMOTION_VALUE_PROMO_NAME, promotionValueItem.getPromoName());
+            values.put(KEY_PROMOTION_VALUE_SOLD_PRODUCT_ID, promotionValueItem.getSoldProductId());
+            values.put(KEY_PROMOTION_VALUE_xline, promotionValueItem.getXline());
+            values.put(KEY_PROMOTION_VALUE_SOLD_QUANTITY, promotionValueItem.getSoldQuantity());
+            values.put(KEY_PROMOTION_VALUE_UNIT_TYPE, promotionValueItem.getUnitType());
+            values.put(KEY_PROMOTION_VALUE_DISCOUNT_TYPE, promotionValueItem.getDiscountType());
+            values.put(KEY_PROMOTION_VALUE_DISCOUNT_AMOUNT, promotionValueItem.getDiscountAmount());
+            values.put(KEY_PROMOTION_VALUE_TERRITORY, promotionValueItem.getTerritory());
+            values.put(KEY_PROMOTION_VALUE_CUSTOMER, promotionValueItem.getCustomer());
+            values.put(KEY_PROMOTION_VALUE_DATE_FROM, promotionValueItem.getDateFrom());
+            values.put(KEY_PROMOTION_VALUE_DATE_TO, promotionValueItem.getDateTo());
+            values.put(KEY_PROMOTION_VALUE_CUSTOMER_TYPE, promotionValueItem.getCustomerType());
+            values.put(KEY_PROMOTION_VALUE_zactive, promotionValueItem.getZactive());
+
+            try {
+                db.insert(TABLE_PROMOTION_VALUE, null, values);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            values.clear();
+        }
+        db.close(); // Closing database connection
+    }
+
+    public void removePromotion() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_PROMOTION_VALUE, KEY_PROMOTION_VALUE_ID + " > ?", new String[]{String.valueOf(-1)});
+        db.delete(TABLE_PROMOTION_QUANTITY, KEY_PROMOTION_QUANTITY_ID + " > ?", new String[]{String.valueOf(-1)});
+        db.close();
+    }
+    //Product promotion
 
     public void addProduct(String productID, String productName, String price, String image, String brandName, String categoryName, String stock) {
         SQLiteDatabase db = this.getWritableDatabase();

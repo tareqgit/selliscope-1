@@ -201,7 +201,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
 
         //if this activity called from outlet activity
         if (getIntent().hasExtra("outletID")) {
-            int position = outletID.indexOf(getIntent().getIntExtra("outletID", 0));
+            int position = outletID.indexOf(getIntent().getStringExtra("outletID"));
             binding.spOutlet.setSelection(position);
         }
         //if this activity called from outlet activity

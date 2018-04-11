@@ -153,6 +153,7 @@ public class ProfileActivity extends AppCompatActivity {
                                 pd.dismiss();
                                 if (!response.body().isError()) {
                                     sessionManager.updateProfile(response.body().getResult().getUser());
+                                    Toast.makeText(getApplicationContext(), "Profile updated successfully.", Toast.LENGTH_SHORT).show();
                                 }
                                 finish();
                             }

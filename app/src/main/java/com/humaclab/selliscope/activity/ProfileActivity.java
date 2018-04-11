@@ -74,7 +74,7 @@ public class ProfileActivity extends AppCompatActivity {
         binding.tvUserName.setText(map.get("userName"));
         binding.tvDateOfBirth.setText(map.get("dob"));
 
-        if (map.get("gender").isEmpty()) {
+        if (map.get("gender") != null) {
             if (map.get("gender").equals("Male")) {
                 binding.rbMale.setSelected(true);
                 binding.rbFemale.setSelected(false);

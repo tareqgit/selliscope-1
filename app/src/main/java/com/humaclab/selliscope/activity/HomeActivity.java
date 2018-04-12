@@ -22,6 +22,8 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.CustomEvent;
 import com.humaclab.selliscope.BuildConfig;
 import com.humaclab.selliscope.R;
 import com.humaclab.selliscope.SelliscopeApiEndpointInterface;
@@ -104,6 +106,15 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             public void onTabReselected(TabLayout.Tab tab) {
             }
         });
+
+        //For log and track user
+        Answers.getInstance().logCustom(new CustomEvent("User Login")
+                .putCustomAttribute("User Name", sessionManager.getUserDetails().get("userName"))
+                .putCustomAttribute("User Email", sessionManager.getUserEmail())
+                .putCustomAttribute("Used version", "Version - " + BuildConfig.VERSION_NAME)
+        );
+        //For log and track user
+
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);

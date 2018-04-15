@@ -17,9 +17,9 @@ import com.humaclab.selliscope.model.Outlets;
 import com.humaclab.selliscope.model.Thana.Thana;
 import com.humaclab.selliscope.model.VariantProduct.Brand;
 import com.humaclab.selliscope.model.VariantProduct.Category;
+import com.humaclab.selliscope.model.VariantProduct.GodownItem;
 import com.humaclab.selliscope.model.VariantProduct.ProductsItem;
 import com.humaclab.selliscope.model.VariantProduct.VariantDetailsItem;
-import com.humaclab.selliscope.model.VariantProduct.VariantItem;
 import com.humaclab.selliscope.model.VariantProduct.VariantsItem;
 
 import java.util.ArrayList;
@@ -28,18 +28,16 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by leon on 8/20/2017.
+ * Created by leon on 19/3/18.
  */
 
 public class DatabaseHandler extends SQLiteOpenHelper {
-    private static final int DATABASE_VERSION = 7;
+    private static final int DATABASE_VERSION = 8;
 
     // Database Tables
     private static final String TABLE_TARGET = "targets";
     private static final String TABLE_USER_VISITS = "userVisits";
     private static final String TABLE_PRODUCT = "product";
-    private static final String TABLE_VARIANT_CATEGORY = "variant_category";
-    private static final String TABLE_VARIANT_DETAILS = "variant_details";
     private static final String TABLE_CATEGORY = "category";
     private static final String TABLE_BRAND = "brand";
     private static final String TABLE_DELIVERY = "delivery";
@@ -74,15 +72,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String KEY_BRAND_ID = "brand_id";
     private static final String KEY_BRAND_NAME = "brand_name";
     private static final String KEY_PRODUCT_STOCK = "stock";
-    private static final String KEY_PRODUCT_VARIANT = "variant";
-
-    //product variant category column name
-    private static final String KEY_VARIANT_CATEGORY_ID = "variant_category_id";
-    private static final String KEY_VARIANT_CATEGORY_NAME = "variant_category_name";
-    private static final String KEY_VARIANT_CATEGORY_TYPE = "variant_category_type";
-    //product variant details column name
-    private static final String KEY_VARIANT_DETAILS_ID = "variant_details_id";
-    private static final String KEY_VARIANT_DETAILS_NAME = "variant_details_name";
     private static final String KEY_VARIANT_ROW = "variant_row";
 
     //delivery table column names
@@ -148,14 +137,17 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + KEY_TARGET_TYPE + " TEXT,"
                 + KEY_TARGET_COUNT + " INTEGER,"
                 + KEY_TARGET_ACHIEVED + " INTEGER" + ")";
+
         String CREATE_TARGET_USER_VISITS = "CREATE TABLE " + TABLE_USER_VISITS + "("
                 + KEY_USER_VISIT_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
                 + KEY_LATITUDE + " REAL,"
                 + KEY_LONGITUDE + " REAL,"
                 + KEY_TIMESTAMP + " TEXT,"
                 + KEY_IS_UPDATED + " INTEGER" + ")";
+
         String CREATE_PRODUCT_TABLE = "CREATE TABLE " + TABLE_PRODUCT + "("
-                + KEY_PRODUCT_ID + " INTEGER PRIMARY KEY,"
+                + "ID INTEGER PRIMARY KEY,"
+                + KEY_PRODUCT_ID + " INTEGER,"
                 + KEY_PRODUCT_NAME + " TEXT,"
                 + KEY_PRODUCT_PRICE + " TEXT,"
                 + KEY_PRODUCT_IMAGE + " TEXT,"
@@ -164,30 +156,19 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + KEY_BRAND_ID + " INTEGER,"
                 + KEY_BRAND_NAME + " TEXT,"
                 + KEY_PRODUCT_STOCK + " TEXT,"
-                + KEY_PRODUCT_VARIANT + " INTEGER"
+                + KEY_VARIANT_ROW + " TEXT"
                 + ")";
-        String CREATE_VARIANT_CATEGORY_TABLE = "CREATE TABLE " + TABLE_VARIANT_CATEGORY + "("
-                + KEY_VARIANT_CATEGORY_ID + " INTEGER PRIMARY KEY,"
-                + KEY_VARIANT_CATEGORY_NAME + " TEXT,"
-                + KEY_VARIANT_CATEGORY_TYPE + " TEXT"
-                + ")";
-        String CREATE_VARIANT_DETAILS_TABLE = "CREATE TABLE " + TABLE_VARIANT_DETAILS + "("
-                + KEY_VARIANT_DETAILS_ID + " INTEGER PRIMARY KEY AUTOINCREMENT,"
-                + KEY_VARIANT_CATEGORY_ID + " INTEGER,"
-                + KEY_VARIANT_CATEGORY_NAME + " TEXT,"
-                + KEY_PRODUCT_ID + " INTEGER,"
-                + KEY_VARIANT_DETAILS_NAME + " TEXT,"
-                + KEY_VARIANT_ROW + " TEXT,"
-                + KEY_PRODUCT_STOCK + " TEXT"
-                + ")";
+
         String CREATE_CATEGORY_TABLE = "CREATE TABLE " + TABLE_CATEGORY + "("
                 + KEY_CATEGORY_ID + " INTEGER PRIMARY KEY,"
                 + KEY_CATEGORY_NAME + " TEXT"
                 + ")";
+
         String CREATE_BRAND_TABLE = "CREATE TABLE " + TABLE_BRAND + "("
                 + KEY_BRAND_ID + " INTEGER PRIMARY KEY,"
                 + KEY_BRAND_NAME + " TEXT"
                 + ")";
+
         String CREATE_DELIVERY_TABLE = "CREATE TABLE " + TABLE_DELIVERY + "("
                 + KEY_OUTLET_ID + " INTEGER,"
                 + KEY_ORDER_ID + " INTEGER,"
@@ -196,6 +177,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + KEY_AMOUNT + " TEXT,"
                 + KEY_ORDER_DATE + " TEXT"
                 + ")";
+
         String CREATE_DELIVERY_PRODUCT_TABLE = "CREATE TABLE " + TABLE_DELIVERY_PRODUCT + "("
                 + KEY_DELIVERY_PRODUCT_ID + " INTEGER,"
                 + KEY_ORDER_ID + " INTEGER,"
@@ -221,19 +203,23 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + KEY_OUTLET_LONGITUDE + " TEXT,"
                 + KEY_OUTLET_DUE + " TEXT"
                 + ")";
+
         String CREATE_DISTRICT_TABLE = "CREATE TABLE " + TABLE_DISTRICT + "("
                 + KEY_DISTRICT_ID + " INTEGER  PRIMARY KEY,"
                 + KEY_DISTRICT_NAME + " TEXT"
                 + ")";
+
         String CREATE_THANA_TABLE = "CREATE TABLE " + TABLE_THANA + "("
                 + KEY_THANA_ID + " INTEGER  PRIMARY KEY,"
                 + KEY_THANA_NAME + " TEXT,"
                 + KEY_DISTRICT_ID + " INTEGER"
                 + ")";
+
         String CREATE_OUTELT_TYPE_TABLE = "CREATE TABLE " + TABLE_OUTLET_TYPE + "("
                 + KEY_TYPE_ID + " INTEGER  PRIMARY KEY,"
                 + KEY_TYPE_NAME + " TEXT"
                 + ")";
+
         String CREATE_ORDER_TABLE = "CREATE TABLE " + TABLE_ORDER + "("
                 + KEY_ORDER_ID + " INTEGER  PRIMARY KEY AUTOINCREMENT,"
                 + KEY_ORDER_OUTLET_ID + " INTEGER,"
@@ -243,11 +229,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + KEY_ORDER_PRODUCT_PRICE + " TEXT,"
                 + KEY_ORDER_PRODUCT_DISCOUNT + " TEXT"
                 + ")";
+
         db.execSQL(CREATE_TARGET_TABLE);
         db.execSQL(CREATE_TARGET_USER_VISITS);
         db.execSQL(CREATE_PRODUCT_TABLE);
-        db.execSQL(CREATE_VARIANT_CATEGORY_TABLE);
-        db.execSQL(CREATE_VARIANT_DETAILS_TABLE);
         db.execSQL(CREATE_CATEGORY_TABLE);
         db.execSQL(CREATE_BRAND_TABLE);
         db.execSQL(CREATE_DELIVERY_TABLE);
@@ -266,8 +251,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_TARGET);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_USER_VISITS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_PRODUCT);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_VARIANT_CATEGORY);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_VARIANT_DETAILS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_CATEGORY);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_BRAND);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_DELIVERY);
@@ -350,28 +333,58 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.close();
     }
 
-    public void addProduct(int productID, String productName, String price, String image, int brandID, String brandName, int categoryID, String categoryName, String stock, boolean variant) {
+    public void addProduct(List<ProductsItem> products) {
         SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put(KEY_PRODUCT_ID, productID);
-        values.put(KEY_PRODUCT_NAME, productName);
-        values.put(KEY_PRODUCT_PRICE, price);
-        values.put(KEY_PRODUCT_IMAGE, image);
-        values.put(KEY_CATEGORY_ID, categoryID);
-        values.put(KEY_CATEGORY_NAME, categoryName);
-        values.put(KEY_BRAND_ID, brandID);
-        values.put(KEY_BRAND_NAME, brandName);
-        values.put(KEY_PRODUCT_STOCK, stock);
-        if (variant)
-            values.put(KEY_PRODUCT_VARIANT, 1);
-        else
-            values.put(KEY_PRODUCT_VARIANT, 0);
-        try {
-            db.insert(TABLE_PRODUCT, null, values);
-        } catch (Exception e) {
-            e.printStackTrace();
+        for (ProductsItem product : products) {
+            ContentValues values = new ContentValues();
+            String productName = product.getName();
+            values.put(KEY_PRODUCT_ID, product.getId());
+            values.put(KEY_PRODUCT_IMAGE, product.getImg());
+            values.put(KEY_CATEGORY_ID, product.getCategory().getId());
+            values.put(KEY_CATEGORY_NAME, product.getCategory().getName());
+            values.put(KEY_BRAND_ID, product.getBrand().getId());
+            values.put(KEY_BRAND_NAME, product.getBrand().getName());
+            if (product.getVariants().isEmpty()) {
+                values.put(KEY_PRODUCT_NAME, product.getName().toLowerCase());
+                values.put(KEY_PRODUCT_PRICE, product.getPrice());
+                int stock = 0;
+                for (GodownItem godownItem : product.getGodown()) {
+                    stock += Integer.parseInt(godownItem.getStock());
+                }
+                values.put(KEY_PRODUCT_STOCK, String.valueOf(stock));
+
+                try {
+                    db.insert(TABLE_PRODUCT, null, values);
+                    values.clear();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            } else {
+                for (VariantsItem variants : product.getVariants()) {
+                    for (VariantDetailsItem variantDetailsItem : variants.getVariantDetailsItems()) {
+                        if (variantDetailsItem.getRow() != null) {
+                            values.put(KEY_VARIANT_ROW, variantDetailsItem.getRow());
+                        } else if (variantDetailsItem.getStock() != null) {
+                            values.put(KEY_PRODUCT_STOCK, variantDetailsItem.getStock());
+                        } else {
+                            if (variantDetailsItem.getVariantCatName().toLowerCase().equals("price")) {
+                                values.put(KEY_PRODUCT_PRICE, variantDetailsItem.getName());
+                                productName += "-" + variantDetailsItem.getName();
+                            } else
+                                productName += "-" + variantDetailsItem.getName();
+                        }
+                    }
+                    values.put(KEY_PRODUCT_NAME, productName.toLowerCase().replace(" ", ""));
+
+                    try {
+                        db.insert(TABLE_PRODUCT, null, values);
+                        productName = product.getName();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
         }
-        values.clear();
         db.close(); // Closing database connection
     }
 
@@ -422,8 +435,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.delete(TABLE_PRODUCT, KEY_PRODUCT_ID + " > ?", new String[]{String.valueOf(-1)});
         db.delete(TABLE_CATEGORY, KEY_CATEGORY_ID + " > ?", new String[]{String.valueOf(-1)});
         db.delete(TABLE_BRAND, KEY_BRAND_ID + " > ?", new String[]{String.valueOf(-1)});
-        db.delete(TABLE_VARIANT_CATEGORY, KEY_VARIANT_CATEGORY_ID + " > ?", new String[]{String.valueOf(-1)});
-        db.delete(TABLE_VARIANT_DETAILS, KEY_VARIANT_DETAILS_ID + " > ?", new String[]{String.valueOf(-1)});
         db.close();
     }
 
@@ -459,7 +470,57 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 productsItem.setName(cursor.getString(cursor.getColumnIndex(KEY_PRODUCT_NAME)));
                 productsItem.setPrice(cursor.getString(cursor.getColumnIndex(KEY_PRODUCT_PRICE)));
                 productsItem.setImg(cursor.getString(cursor.getColumnIndex(KEY_PRODUCT_IMAGE)));
-                productsItem.setHasVariant(cursor.getInt(cursor.getColumnIndex(KEY_PRODUCT_VARIANT)));
+                productsItem.setStock(cursor.getString(cursor.getColumnIndex(KEY_PRODUCT_STOCK)));
+                productsItem.setVariantRow(cursor.getString(cursor.getColumnIndex(KEY_VARIANT_ROW)) == null ? "0" : cursor.getString(cursor.getColumnIndex(KEY_VARIANT_ROW)));
+
+                category.setName(cursor.getString(cursor.getColumnIndex(KEY_CATEGORY_NAME)));
+                category.setId(String.valueOf(cursor.getInt(cursor.getColumnIndex(KEY_CATEGORY_ID))));
+                productsItem.setCategory(category);
+
+                brand.setId(String.valueOf(cursor.getInt(cursor.getColumnIndex(KEY_BRAND_ID))));
+                brand.setName(cursor.getString(cursor.getColumnIndex(KEY_BRAND_NAME)));
+                productsItem.setBrand(brand);
+
+                productList.add(productsItem);
+            } while (cursor.moveToNext());
+        }
+        return productList;
+    }
+
+    public List<ProductsItem> getProduct(int categoryID, int brandID, String searchProduct) {
+        List<ProductsItem> productList = new ArrayList<>();
+        // Select All Query
+        String selectQuery;
+        if (categoryID != 0 && brandID != 0) {
+            selectQuery = "SELECT * FROM " + TABLE_PRODUCT
+                    + " WHERE " + KEY_CATEGORY_ID + "=" + categoryID
+                    + " AND " + KEY_BRAND_ID + "=" + brandID + " AND " + KEY_PRODUCT_NAME + " LIKE '%" + searchProduct.toLowerCase() + "%' ORDER BY " + KEY_PRODUCT_NAME + " ASC";
+        } else if (categoryID != 0 && brandID == 0) {
+            selectQuery = "SELECT * FROM " + TABLE_PRODUCT + " WHERE "
+                    + KEY_CATEGORY_ID + "=" + categoryID + " AND " + KEY_PRODUCT_NAME + " LIKE '%" + searchProduct.toLowerCase() + "%' ORDER BY " + KEY_PRODUCT_NAME + " ASC";
+        } else if (brandID != 0 && categoryID == 0) {
+            selectQuery = "SELECT * FROM " + TABLE_PRODUCT + " WHERE "
+                    + KEY_BRAND_ID + "=" + brandID + " AND " + KEY_PRODUCT_NAME + " LIKE '%" + searchProduct.toLowerCase() + "%' ORDER BY " + KEY_PRODUCT_NAME + " ASC";
+        } else {
+            selectQuery = "SELECT * FROM " + TABLE_PRODUCT + " WHERE " + KEY_PRODUCT_NAME + " LIKE '%" + searchProduct.toLowerCase() + "%' ORDER BY " + KEY_PRODUCT_NAME + " ASC";
+        }
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                cursor.getColumnNames();
+                ProductsItem productsItem = new ProductsItem();
+                Category category = new Category();
+                Brand brand = new Brand();
+
+                productsItem.setId(cursor.getInt(cursor.getColumnIndex(KEY_PRODUCT_ID)));
+                productsItem.setName(cursor.getString(cursor.getColumnIndex(KEY_PRODUCT_NAME)));
+                productsItem.setPrice(cursor.getString(cursor.getColumnIndex(KEY_PRODUCT_PRICE)));
+                productsItem.setImg(cursor.getString(cursor.getColumnIndex(KEY_PRODUCT_IMAGE)));
+                productsItem.setStock(cursor.getString(cursor.getColumnIndex(KEY_PRODUCT_STOCK)));
+                productsItem.setVariantRow(cursor.getString(cursor.getColumnIndex(KEY_VARIANT_ROW)) == null ? "0" : cursor.getString(cursor.getColumnIndex(KEY_VARIANT_ROW)));
 
                 category.setName(cursor.getString(cursor.getColumnIndex(KEY_CATEGORY_NAME)));
                 category.setId(String.valueOf(cursor.getInt(cursor.getColumnIndex(KEY_CATEGORY_ID))));
@@ -817,257 +878,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
     //For outlet
 
-    //Product Variant
-    public boolean isVariantExists() {
-        String selectQuery = "SELECT * FROM " + TABLE_VARIANT_CATEGORY;
-
-        SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery(selectQuery, null);
-        db.close();
-        return cursor.getColumnCount() != 0;
-    }
-
-    public boolean isThereAnyVariantForProduct(Integer productId) {
-        String selectQuery = "SELECT count(" + KEY_VARIANT_ROW + ") " + KEY_VARIANT_ROW + " FROM " + TABLE_VARIANT_DETAILS + " WHERE " + KEY_PRODUCT_ID + "=" + productId;
-        SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery(selectQuery, null);
-        cursor.moveToFirst();
-        String count = cursor.getString(cursor.getColumnIndex(KEY_VARIANT_ROW));
-        db.close();
-        return Integer.parseInt(count) != 0;
-    }
-
-    public List<VariantItem> getVariantCategories() {
-        String selectQuery = "SELECT  * FROM " + TABLE_VARIANT_CATEGORY;
-        SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery(selectQuery, null);
-
-        List<VariantItem> variantCategories = new ArrayList<>();
-        // looping through all rows and adding to list
-        if (cursor.moveToFirst()) {
-            do {
-                cursor.getColumnNames();
-                VariantItem item = new VariantItem();
-                item.setId(cursor.getInt(cursor.getColumnIndex(KEY_VARIANT_CATEGORY_ID)));
-                item.setName(cursor.getString(cursor.getColumnIndex(KEY_VARIANT_CATEGORY_NAME)));
-                item.setType(cursor.getString(cursor.getColumnIndex(KEY_VARIANT_CATEGORY_TYPE)));
-                variantCategories.add(item);
-            } while (cursor.moveToNext());
-        }
-        db.close();
-        return variantCategories;
-    }
-
-    public void setVariantCategories(List<VariantItem> variantItems, List<ProductsItem> productsItems) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        for (VariantItem item : variantItems) {
-            ContentValues values = new ContentValues();
-            values.put(KEY_VARIANT_CATEGORY_ID, item.getId());
-            values.put(KEY_VARIANT_CATEGORY_NAME, item.getName());
-            values.put(KEY_VARIANT_CATEGORY_TYPE, item.getType());
-            try {
-                db.insert(TABLE_VARIANT_CATEGORY, null, values);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        for (ProductsItem productsItem : productsItems) {
-            ContentValues values = new ContentValues();
-            values.clear();
-            values.put(KEY_PRODUCT_ID, productsItem.getId());
-            if (!productsItem.getVariants().isEmpty()) { //Check if there is any variants
-                for (VariantsItem variantsItem : productsItem.getVariants()) { //loop through all variants of product
-                    values.clear();
-
-                    for (int i = variantsItem.getVariantDetailsItems().size() - 1; i >= 0; i--) {//loop through all variant details list
-                        VariantDetailsItem variantDetailsItem = variantsItem.getVariantDetailsItems().get(i);
-                        if (variantDetailsItem.getStock() == null) {
-                            values.put(KEY_PRODUCT_ID, productsItem.getId());
-                            values.put(KEY_VARIANT_CATEGORY_ID, variantDetailsItem.getVariantCatId());
-                            values.put(KEY_VARIANT_CATEGORY_NAME, variantDetailsItem.getVariantCatName());
-                            values.put(KEY_VARIANT_DETAILS_NAME, variantDetailsItem.getName());
-                        } else {
-                            values.put(KEY_PRODUCT_ID, productsItem.getId());
-                            values.put(KEY_PRODUCT_STOCK, variantDetailsItem.getStock());
-                            i--;
-                            values.put(KEY_VARIANT_ROW, variantsItem.getVariantDetailsItems().get(i).getRow());
-                            continue;
-                        }
-                        try {
-                            db.insert(TABLE_VARIANT_DETAILS, null, values);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
-            } else {
-                try {
-                    db.insert(TABLE_VARIANT_DETAILS, null, values);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-        db.close();
-    }
-
-    public List<String> getVariants(int variantCatId, int productId) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        String query = "SELECT DISTINCT " + KEY_VARIANT_DETAILS_NAME
-                + "," + KEY_VARIANT_CATEGORY_NAME
-                + "," + KEY_VARIANT_CATEGORY_ID
-                + " FROM " + TABLE_VARIANT_DETAILS + " WHERE " + KEY_VARIANT_CATEGORY_ID + "=" + variantCatId + " AND " + KEY_PRODUCT_ID + "=" + productId;
-
-        Cursor cursor = db.rawQuery(query, null);
-
-        List<String> variantNames = new ArrayList<>();
-        // looping through all rows and adding to list
-        if (cursor.moveToFirst()) {
-            do {
-                cursor.getColumnNames();
-                variantNames.add(cursor.getString(cursor.getColumnIndex(KEY_VARIANT_DETAILS_NAME)));
-            } while (cursor.moveToNext());
-        }
-        db.close();
-        return variantNames;
-    }
-
-    public List<String> getVariantRows(int productId, int variantCatId, String variantName) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        String query = "SELECT DISTINCT " + KEY_VARIANT_ROW + " FROM " + TABLE_VARIANT_DETAILS
-                + " WHERE " + KEY_VARIANT_CATEGORY_ID + "=" + variantCatId
-                + " AND " + KEY_PRODUCT_ID + "=" + productId
-                + " AND " + KEY_VARIANT_DETAILS_NAME + "='" + variantName + "'";
-//        System.out.println("variant query" + query);
-
-        Cursor cursor = db.rawQuery(query, null);
-
-        List<String> rowList = new ArrayList<>();
-        if (cursor.moveToFirst()) {
-            do {
-                cursor.getColumnNames();
-                rowList.add(cursor.getString(cursor.getColumnIndex(KEY_VARIANT_ROW)));
-            } while (cursor.moveToNext());
-        }
-        db.close();
-        return rowList;
-    }
-
-    public List<String> getVariantRows(int productId, int variantCatId, String variantName, List<String> rowList) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        String rows = "";
-        for (int i = 0; i < rowList.size(); i++) {
-            rows += rowList.get(i);
-            if (i != (rowList.size() - 1))
-                rows += ",";
-        }
-
-        String query = "SELECT DISTINCT " + KEY_VARIANT_ROW
-                + " FROM " + TABLE_VARIANT_DETAILS
-                + " WHERE " + KEY_VARIANT_CATEGORY_ID + "=" + variantCatId
-                + " AND " + KEY_PRODUCT_ID + "=" + productId
-                + " AND " + KEY_VARIANT_DETAILS_NAME + "='" + variantName + "'"
-                + " AND " + KEY_VARIANT_ROW + " IN (" + rows + ")";
-//        System.out.println("variant query" + query);
-
-        Cursor cursor = db.rawQuery(query, null);
-
-        rowList = new ArrayList<>();
-        if (cursor.moveToFirst()) {
-            do {
-                cursor.getColumnNames();
-                rowList.add(cursor.getString(cursor.getColumnIndex(KEY_VARIANT_ROW)));
-            } while (cursor.moveToNext());
-        }
-        db.close();
-        return rowList;
-    }
-
-    public List<String> getAssociatedVariants(int productId, int variantCatId, String variantName, List<String> rowList) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        String rows = "";
-        for (int i = 0; i < rowList.size(); i++) {
-            rows += rowList.get(i);
-            if (i != (rowList.size() - 1))
-                rows += ",";
-        }
-
-        String query = "SELECT DISTINCT " + KEY_VARIANT_DETAILS_NAME
-                + " FROM " + TABLE_VARIANT_DETAILS
-                + " WHERE " + KEY_VARIANT_CATEGORY_ID + "=" + variantCatId
-                + " AND " + KEY_PRODUCT_ID + "=" + productId
-//                + " AND " + KEY_VARIANT_DETAILS_NAME + "='" + variantName + "'"
-                + " AND " + KEY_VARIANT_ROW
-                + " IN (" + rows + ")";
-//        System.out.println("variant query" + query);
-
-        Cursor cursor = db.rawQuery(query, null);
-
-        List<String> variantNames = new ArrayList<>();
-        // looping through all rows and adding to list
-        if (cursor.moveToFirst()) {
-            do {
-                cursor.getColumnNames();
-                variantNames.add(cursor.getString(cursor.getColumnIndex(KEY_VARIANT_DETAILS_NAME)));
-            } while (cursor.moveToNext());
-        }
-        db.close();
-        return variantNames;
-    }
-
-    public String getProductStock(int productId) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        String prouctStock = "";
-        String query = "SELECT DISTINCT " + KEY_PRODUCT_STOCK
-                + " FROM " + TABLE_PRODUCT
-                + " WHERE " + KEY_PRODUCT_ID + "=" + productId;
-//        System.out.println("variant query" + query);
-
-        Cursor cursor = db.rawQuery(query, null);
-
-        // looping through all rows and adding to list
-        if (cursor.moveToFirst()) {
-            do {
-                cursor.getColumnNames();
-                prouctStock = cursor.getString(cursor.getColumnIndex(KEY_PRODUCT_STOCK));
-            } while (cursor.moveToNext());
-        }
-        db.close();
-        return prouctStock;
-    }
-
-    public String getVariantProductStock(int productId, String row) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        String prouctStock = "";
-        String query = "SELECT DISTINCT " + KEY_PRODUCT_STOCK
-                + " FROM " + TABLE_VARIANT_DETAILS
-                + " WHERE " + KEY_PRODUCT_ID + "=" + productId
-                + " AND " + KEY_VARIANT_ROW + "=" + row;
-//        System.out.println("variant query" + query);
-
-        Cursor cursor = db.rawQuery(query, null);
-
-        // looping through all rows and adding to list
-        if (cursor.moveToFirst()) {
-            do {
-                cursor.getColumnNames();
-                prouctStock = cursor.getString(cursor.getColumnIndex(KEY_PRODUCT_STOCK));
-            } while (cursor.moveToNext());
-        }
-        db.close();
-        return prouctStock;
-    }
-
-    public void removeVariantCategories() {
-        SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(TABLE_VARIANT_CATEGORY, KEY_VARIANT_CATEGORY_ID + " > ?",
-                new String[]{String.valueOf(-1)});
-        db.close();
-    }
-    //Product Variant
-
     public List<District> getDistrict() {
         List<District> districtList = new ArrayList<>();
+
+        District district1 = new District();
+        district1.setId(0);
+        district1.setName("Select district");
+        districtList.add(district1);
+
         SQLiteDatabase db = this.getWritableDatabase();
         String query = "SELECT * FROM " + TABLE_DISTRICT;
 
@@ -1109,6 +927,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     public List<Thana> getThana(int districtId) {
         List<Thana> thanaList = new ArrayList<>();
+
+        Thana thana1 = new Thana();
+        thana1.setId(0);
+        thana1.setName("Select Thana");
+        thana1.setDistrictId(0);
+        thanaList.add(thana1);
+
         SQLiteDatabase db = this.getWritableDatabase();
         String query = "SELECT * FROM " + TABLE_THANA
                 + " WHERE " + KEY_DISTRICT_ID + "=" + districtId;
@@ -1266,8 +1091,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.delete(TABLE_DELIVERY, KEY_ORDER_ID + " > ?", new String[]{String.valueOf(-1)});
         db.delete(TABLE_DELIVERY_PRODUCT, KEY_DELIVERY_PRODUCT_ID + " > ?", new String[]{String.valueOf(-1)});
         db.delete(TABLE_PRODUCT, KEY_PRODUCT_ID + " > ?", new String[]{String.valueOf(-1)});
-        db.delete(TABLE_VARIANT_CATEGORY, KEY_VARIANT_CATEGORY_ID + " > ?", new String[]{String.valueOf(-1)});
-        db.delete(TABLE_VARIANT_DETAILS, KEY_VARIANT_DETAILS_ID + " > ?", new String[]{String.valueOf(-1)});
         db.delete(TABLE_CATEGORY, KEY_CATEGORY_ID + " > ?", new String[]{String.valueOf(-1)});
         db.delete(TABLE_BRAND, KEY_BRAND_ID + " > ?", new String[]{String.valueOf(-1)});
         db.close();

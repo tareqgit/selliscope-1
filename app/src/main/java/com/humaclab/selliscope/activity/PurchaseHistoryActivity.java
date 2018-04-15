@@ -55,7 +55,7 @@ public class PurchaseHistoryActivity extends AppCompatActivity {
         binding.btnOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(PurchaseHistoryActivity.this, OrderActivity.class);
+                Intent intent = new Intent(PurchaseHistoryActivity.this, OrderActivity1.class);
                 intent.putExtra("outletName", outlet.outletName);
                 intent.putExtra("outletID", outlet.outletId);
                 startActivity(intent);

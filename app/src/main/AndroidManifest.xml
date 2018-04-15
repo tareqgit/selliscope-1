@@ -108,6 +108,10 @@
         <activity
             android:name=".activity.OrderActivity"
             android:screenOrientation="landscape" />
+        <activity
+            android:name=".activity.OrderActivity1"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:label="Order" />
         <activity android:name=".activity.DeliveryListActivity" />
         <activity
             android:name=".activity.DeliveryDetailsActivity"

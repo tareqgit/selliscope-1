@@ -3,19 +3,16 @@ package com.humaclab.selliscope.activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
-import android.text.InputType;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -38,7 +35,6 @@ import com.humaclab.selliscope.model.Outlets;
 import com.humaclab.selliscope.model.VariantProduct.Brand;
 import com.humaclab.selliscope.model.VariantProduct.Category;
 import com.humaclab.selliscope.model.VariantProduct.ProductsItem;
-import com.humaclab.selliscope.model.VariantProduct.VariantItem;
 import com.humaclab.selliscope.utils.DatabaseHandler;
 import com.humaclab.selliscope.utils.NetworkUtility;
 import com.humaclab.selliscope.utils.SessionManager;
@@ -422,7 +418,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (position != 0) {
-                    if (databaseHandler.isVariantExists()) {
+                    /*if (databaseHandler.isVariantExists()) {
                         if (databaseHandler.isThereAnyVariantForProduct(productID.get(position))) {
                             tv_simple_product_stock.setVisibility(View.GONE);
                             variantViews.clear();
@@ -443,12 +439,12 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                             list.add("0");
                             variantRows.add(tableRowCount, list);
                         }
-                    }
+                    }*/
                 }
             }
 
             private void addVariantSpinner(final Context context) {
-                final List<VariantItem> variantsItems = databaseHandler.getVariantCategories();
+                /*final List<VariantItem> variantsItems = databaseHandler.getVariantCategories();
                 final List<Integer> price_id = new ArrayList<>();
                 for (int i = 0; i < variantsItems.size(); i++) {
                     if (!variantsItems.get(i).getType().toLowerCase().equals("input")) {
@@ -592,7 +588,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                 variantViews.add(editText);
                 variantViews.add(productStock);
                 for (View view : variantViews)
-                    ll_spinner_layout.addView(view);
+                    ll_spinner_layout.addView(view);*/
             }
 
             @Override

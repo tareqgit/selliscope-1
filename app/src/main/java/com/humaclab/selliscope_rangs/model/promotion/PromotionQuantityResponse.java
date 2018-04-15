@@ -28,7 +28,7 @@ public class PromotionQuantityResponse implements Serializable {
         this.error = error;
     }
 
-    public class PromotionQuantityItem implements Serializable {
+    public static class PromotionQuantityItem implements Serializable {
         @SerializedName("zid")
         private int zid;
 
@@ -46,9 +46,6 @@ public class PromotionQuantityResponse implements Serializable {
 
         @SerializedName("xitem")
         private String soldProductId;
-
-        @SerializedName("xtypealc")
-        private String discountType;
 
         @SerializedName("xunitsel")
         private String unitType;
@@ -85,14 +82,6 @@ public class PromotionQuantityResponse implements Serializable {
 
         @SerializedName("zactive")
         private String zactive;
-
-        public String getDiscountType() {
-            return discountType;
-        }
-
-        public void setDiscountType(String discountType) {
-            this.discountType = discountType;
-        }
 
         public int getZid() {
             return zid;

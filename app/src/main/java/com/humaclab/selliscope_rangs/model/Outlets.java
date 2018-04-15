@@ -62,7 +62,7 @@ public class Outlets implements Serializable {
             public String creditBalance;
 
             @SerializedName("xtr")
-            public String teritoryType;
+            public String territoryType;
 
             @SerializedName("xgcus")
             public String customerType;

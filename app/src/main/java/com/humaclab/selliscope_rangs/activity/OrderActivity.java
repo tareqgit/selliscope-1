@@ -34,13 +34,19 @@ import com.humaclab.selliscope_rangs.model.Outlets;
 import com.humaclab.selliscope_rangs.model.VariantProduct.Brand;
 import com.humaclab.selliscope_rangs.model.VariantProduct.Category;
 import com.humaclab.selliscope_rangs.model.VariantProduct.ProductsItem;
+import com.humaclab.selliscope_rangs.model.promotion.PromotionQuantityResponse;
+import com.humaclab.selliscope_rangs.model.promotion.PromotionValueResponse;
 import com.humaclab.selliscope_rangs.utils.DatabaseHandler;
 import com.humaclab.selliscope_rangs.utils.NetworkUtility;
 import com.humaclab.selliscope_rangs.utils.SessionManager;
 import com.toptoche.searchablespinnerlibrary.SearchableSpinner;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -85,25 +91,6 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
 
         binding.btnIncrease.setOnClickListener(this);
         binding.btnDecrease.setOnClickListener(this);
-
-        binding.etQty.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                try {
-                    binding.tvAmount.setText(String.valueOf(Integer.parseInt(s.toString()) * productPrice.get(selectedPosition)));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-            }
-        });
 
         if (NetworkUtility.isNetworkAvailable(this)) {
             getOutlets();
@@ -402,7 +389,6 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
 
         //For product selection in variant product
         sp_product_name.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (position != 0) {
@@ -429,7 +415,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                 if (outOfStock) {
                     Toast.makeText(v.getContext(), "Due to out of stock this product cannot be to added to product list.", Toast.LENGTH_LONG).show();
                 } else {
-                    addProduct(productID.get(sp_product_name.getSelectedItemPosition()), isVariant[0]);
+                    addProduct(productID.get(sp_product_name.getSelectedItemPosition()), isVariant[0], false);
                     builder.dismiss();
                 }
             }
@@ -438,7 +424,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
         builder.show();
     }
 
-    private void addFirstProduct(String productId, final boolean fromVariant) {
+    private void addFirstProduct(final String productId, final boolean fromVariant) {
         binding.spProduct.setSelection(productID.indexOf(productId));
         binding.spProduct.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -462,9 +448,57 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
 
             }
         });
+
+        binding.etQty.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                try {
+                    binding.tvAmount.setText(String.valueOf(Integer.parseInt(s.toString()) * productPrice.get(selectedPosition)));
+
+                    //For product promotion
+                    String outletId = outletID.get(binding.spOutlet.getSelectedItemPosition());
+                    String todayDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+                    Map<String, Object> promotion = databaseHandler.getPromotion(outletId, productId, todayDate, String.format("%.3f", Double.parseDouble(s.toString())));
+                    if (promotion.get("hasPromotion").equals(true)) {
+                        if (promotion.get("promotionType").equals("quantity")) {
+                            List<PromotionQuantityResponse.PromotionQuantityItem> promotionQuantityItems = (List<PromotionQuantityResponse.PromotionQuantityItem>) promotion.get("quantity");
+                            for (PromotionQuantityResponse.PromotionQuantityItem promotionQuantityItem : promotionQuantityItems) {
+                                addProduct(promotionQuantityItem.getFreeProductId(), false, true);
+                            }
+                        } else {
+                            List<PromotionValueResponse.PromotionValueItem> promotionValueItems = (List<PromotionValueResponse.PromotionValueItem>) promotion.get("value");
+                            productName.get(productID.indexOf(productId));
+                            if (promotionValueItems.get(0).getDiscountType().equals("Flat")) {
+                                binding.etDiscount.setText(
+                                        Integer.valueOf(binding.etDiscount.getText().toString())
+                                                +
+                                                (Integer.valueOf(s.toString()) / Integer.valueOf(promotionValueItems.get(0).getSoldQuantity())) * Integer.valueOf(promotionValueItems.get(0).getDiscountAmount())
+                                );
+                            } else {
+                                binding.etDiscount.setText(
+                                        Integer.valueOf(binding.etDiscount.getText().toString())
+                                                + (Integer.valueOf(binding.tvAmount.getText().toString()) * (Integer.valueOf(promotionValueItems.get(0).getDiscountAmount()) / 100))
+                                );
+                            }
+                        }
+                    }
+                    //For product promotion
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
     }
 
-    private void addProduct(String productId, final boolean fromVariant) {
+    private void addProduct(final String productId, final boolean fromVariant, final boolean isFreeProduct) {
         if (tableRowCount == 1) {
             addFirstProduct(productId, fromVariant);
             tableRowCount++;
@@ -489,7 +523,11 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                         newOrder.tvPrice.setText(String.valueOf(productPrice.get(position)));
                         newOrder.tvAmount.setText(String.valueOf(productPrice.get(position)));
                     }
-                    newOrder.etDiscount.setText(String.valueOf(productDiscount.get(position)));
+                    if (isFreeProduct) {
+                        newOrder.tvPrice.setText("0");
+                        newOrder.etDiscount.setText(String.valueOf(productPrice.get(position)));
+                    }
+                    newOrder.etDiscount.setText(String.valueOf(Integer.valueOf(newOrder.etDiscount.getText().toString()) + productDiscount.get(position)));
                     newOrder.etQty.setText("1");
                     qty[0] = 1;
                 }
@@ -499,7 +537,6 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
 
                 }
             });
-            newOrder.spProduct.setSelection(productID.indexOf(productId));
             newOrder.etQty.addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -510,6 +547,35 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                     try {
                         qty[0] = Integer.parseInt(s.toString());
                         newOrder.tvAmount.setText(String.valueOf(Integer.parseInt(s.toString()) * productPrice.get(selectedPosition[0])));
+
+                        //For product promotion
+                        String outletId = outletID.get(binding.spOutlet.getSelectedItemPosition());
+                        String todayDate = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+                        Map<String, Object> promotion = databaseHandler.getPromotion(outletId, productId, todayDate, String.format("%.3f", Double.parseDouble(s.toString())));
+                        if (promotion.get("hasPromotion").equals(true)) {
+                            if (promotion.get("promotionType").equals("quantity")) {
+                                List<PromotionQuantityResponse.PromotionQuantityItem> promotionQuantityItems = (List<PromotionQuantityResponse.PromotionQuantityItem>) promotion.get("quantity");
+                                for (PromotionQuantityResponse.PromotionQuantityItem promotionQuantityItem : promotionQuantityItems) {
+                                    addProduct(promotionQuantityItem.getFreeProductId(), false, true);
+                                }
+                            } else {
+                                List<PromotionValueResponse.PromotionValueItem> promotionValueItems = (List<PromotionValueResponse.PromotionValueItem>) promotion.get("value");
+                                productName.get(productID.indexOf(productId));
+                                if (promotionValueItems.get(0).getDiscountType().equals("Flat")) {
+                                    newOrder.etDiscount.setText(
+                                            Integer.valueOf(newOrder.etDiscount.getText().toString())
+                                                    +
+                                                    (Integer.valueOf(s.toString()) / Integer.valueOf(promotionValueItems.get(0).getSoldQuantity())) * Integer.valueOf(promotionValueItems.get(0).getDiscountAmount())
+                                    );
+                                } else {
+                                    newOrder.etDiscount.setText(
+                                            Integer.valueOf(newOrder.etDiscount.getText().toString())
+                                                    + (Integer.valueOf(newOrder.tvAmount.getText().toString()) * (Integer.valueOf(promotionValueItems.get(0).getDiscountAmount()) / 100))
+                                    );
+                                }
+                            }
+                        }
+                        //For product promotion
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

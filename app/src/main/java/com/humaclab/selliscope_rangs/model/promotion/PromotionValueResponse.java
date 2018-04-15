@@ -28,15 +28,12 @@ public class PromotionValueResponse implements Serializable {
         this.error = error;
     }
 
-    public class PromotionValueItem implements Serializable {
+    public static class PromotionValueItem implements Serializable {
         @SerializedName("zid")
         private int zid;
 
         @SerializedName("xpromo")
         private String promoName;
-
-        @SerializedName("xcomp")
-        private int freeProductId;
 
         @SerializedName("xline")
         private int xline;
@@ -73,14 +70,6 @@ public class PromotionValueResponse implements Serializable {
 
         @SerializedName("zactive")
         private String zactive;
-
-        public int getFreeProductId() {
-            return freeProductId;
-        }
-
-        public void setFreeProductId(int freeProductId) {
-            this.freeProductId = freeProductId;
-        }
 
         public int getZid() {
             return zid;

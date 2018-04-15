@@ -415,7 +415,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.close();
     }
 
-    //Product promotion
+    //For product promotion
     public void addProductPromotionQuantity(List<PromotionQuantityResponse.PromotionQuantityItem> promotionQuantityItems) {
         SQLiteDatabase db = this.getWritableDatabase();
         for (PromotionQuantityResponse.PromotionQuantityItem promotionQuantityItem : promotionQuantityItems) {
@@ -485,9 +485,131 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.delete(TABLE_PROMOTION_QUANTITY, KEY_PROMOTION_QUANTITY_ID + " > ?", new String[]{String.valueOf(-1)});
         db.close();
     }
-    //Product promotion
 
-    public void addProduct(String productID, String productName, String price, String image, String brandName, String categoryName, String stock) {
+    public Outlets.Successful.Outlet getOutlet(String outletID) {
+        Outlets.Successful.Outlet outlet = new Outlets.Successful.Outlet();
+
+        String selectQuery = "SELECT  * FROM " + TABLE_OUTLET + " WHERE " + KEY_OUTLET_ID + "='" + outletID + "'";
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                cursor.getColumnNames();
+                outlet.outletId = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_ID));
+                outlet.outletName = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_NAME));
+                outlet.outletType = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_TYPE));
+                outlet.ownerName = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_OWNER_NAME));
+                outlet.outletAddress = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_ADDRESS));
+                outlet.district = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_DISTRICT));
+                outlet.thana = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_THANA));
+                outlet.phone = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_PHONE));
+                outlet.outletImgUrl = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_IMAGE));
+                outlet.outletLongitude = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_LONGITUDE));
+                outlet.outletLatitude = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_LATITUDE));
+                outlet.territoryType = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_TERRITORY_TYPE));
+                outlet.customerType = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_CUSTOMER_TYPE));
+            } while (cursor.moveToNext());
+        }
+        db.close();
+        return outlet;
+    }
+
+    public Map<String, Object> getPromotion(String outletId, String productId, String todayDate, String qty) {
+        Map<String, Object> promotion = new HashMap<>();
+        List<PromotionQuantityResponse.PromotionQuantityItem> promotionQuantityItems = new ArrayList<>();
+        List<PromotionValueResponse.PromotionValueItem> promotionValueItems = new ArrayList<>();
+
+        Outlets.Successful.Outlet outlet = getOutlet(outletId);
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        String promotionQuantityQuery = "SELECT * FROM " + TABLE_PROMOTION_QUANTITY
+                + " WHERE " + KEY_PROMOTION_QUANTITY_SOLD_PRODUCT_ID + "='" + productId + "'"
+                + " AND " + KEY_PROMOTION_QUANTITY_SOLD_QUANTITY + "='" + qty + "'"
+                + " AND " + KEY_PROMOTION_QUANTITY_TERRITORY + "='" + (outlet.territoryType != null ? outlet.territoryType : "") + "'"
+                + " AND " + KEY_PROMOTION_QUANTITY_CUSTOMER + "='" + (outlet.outletType != null ? outlet.outletType : "") + "'"
+                + " AND " + KEY_PROMOTION_QUANTITY_CUSTOMER_TYPE + "='" + (outlet.customerType != null ? outlet.customerType : "") + "'"
+                + " AND '" + todayDate + "' BETWEEN " + KEY_PROMOTION_QUANTITY_DATE_FROM + " AND " + KEY_PROMOTION_QUANTITY_DATE_TO;
+
+        System.out.println(promotionQuantityQuery);
+        Cursor cursor = db.rawQuery(promotionQuantityQuery, null);
+        if (cursor.getCount() != 0) {
+            if (cursor.moveToFirst()) {
+                do {
+                    PromotionQuantityResponse.PromotionQuantityItem promotionQuantityItem = new PromotionQuantityResponse.PromotionQuantityItem();
+
+                    promotionQuantityItem.setZid(cursor.getInt(cursor.getColumnIndex(KEY_PROMOTION_QUANTITY_ZID)));
+                    promotionQuantityItem.setPromoName(cursor.getString(cursor.getColumnIndex(KEY_PROMOTION_QUANTITY_PROMO_NAME)));
+                    promotionQuantityItem.setSoldProductId(cursor.getString(cursor.getColumnIndex(KEY_PROMOTION_QUANTITY_SOLD_PRODUCT_ID)));
+                    promotionQuantityItem.setXline(cursor.getInt(cursor.getColumnIndex(KEY_PROMOTION_QUANTITY_xline)));
+                    promotionQuantityItem.setXrowkit(cursor.getInt(cursor.getColumnIndex(KEY_PROMOTION_QUANTITY_xrowkit)));
+                    promotionQuantityItem.setFreeProductId(cursor.getString(cursor.getColumnIndex(KEY_PROMOTION_QUANTITY_FREE_PRODUCT_ID)));
+                    promotionQuantityItem.setFreeQuantity(cursor.getString(cursor.getColumnIndex(KEY_PROMOTION_QUANTITY_FREE_QUANTITY)));
+                    promotionQuantityItem.setSoldQuantity(cursor.getString(cursor.getColumnIndex(KEY_PROMOTION_QUANTITY_SOLD_QUANTITY)));
+                    promotionQuantityItem.setUnitType(cursor.getString(cursor.getColumnIndex(KEY_PROMOTION_QUANTITY_UNIT_TYPE)));
+                    promotionQuantityItem.setDiscountAmount(cursor.getString(cursor.getColumnIndex(KEY_PROMOTION_QUANTITY_DISCOUNT_AMOUNT)));
+                    promotionQuantityItem.setXunitalt(cursor.getString(cursor.getColumnIndex(KEY_PROMOTION_QUANTITY_xunitalt)));
+                    promotionQuantityItem.setProductPrice(cursor.getString(cursor.getColumnIndex(KEY_PROMOTION_QUANTITY_PRODUCT_PRICE)));
+                    promotionQuantityItem.setTerritory(cursor.getString(cursor.getColumnIndex(KEY_PROMOTION_QUANTITY_TERRITORY)));
+                    promotionQuantityItem.setCustomer(cursor.getString(cursor.getColumnIndex(KEY_PROMOTION_QUANTITY_CUSTOMER)));
+                    promotionQuantityItem.setDateFrom(cursor.getString(cursor.getColumnIndex(KEY_PROMOTION_QUANTITY_DATE_FROM)));
+                    promotionQuantityItem.setDateTo(cursor.getString(cursor.getColumnIndex(KEY_PROMOTION_QUANTITY_DATE_TO)));
+                    promotionQuantityItem.setCustomerType(cursor.getString(cursor.getColumnIndex(KEY_PROMOTION_QUANTITY_CUSTOMER_TYPE)));
+                    promotionQuantityItem.setZactive(cursor.getString(cursor.getColumnIndex(KEY_PROMOTION_QUANTITY_zactive)));
+
+                    promotionQuantityItems.add(promotionQuantityItem);
+                } while (cursor.moveToNext());
+                promotion.put("hasPromotion", true);
+                promotion.put("promotionType", "quantity");
+                promotion.put("quantity", promotionQuantityItems);
+            }
+        } else {
+            qty = String.format("%.0f", Double.parseDouble(qty));
+            String promotionValueQuery = "SELECT * FROM " + TABLE_PROMOTION_VALUE
+                    + " WHERE " + KEY_PROMOTION_VALUE_SOLD_PRODUCT_ID + "='" + productId + "'"
+                    + " AND " + KEY_PROMOTION_VALUE_SOLD_QUANTITY + "='" + qty + "'"
+                    + " AND " + KEY_PROMOTION_VALUE_TERRITORY + "='" + (outlet.territoryType != null ? outlet.territoryType : "") + "'"
+                    + " AND " + KEY_PROMOTION_VALUE_CUSTOMER + "='" + (outlet.outletType != null ? outlet.outletType : "") + "'"
+                    + " AND " + KEY_PROMOTION_VALUE_CUSTOMER_TYPE + "='" + (outlet.customerType != null ? outlet.customerType : "") + "'"
+                    + " AND '" + todayDate + "' BETWEEN " + KEY_PROMOTION_QUANTITY_DATE_FROM + " AND " + KEY_PROMOTION_QUANTITY_DATE_TO;
+            Cursor cursor1 = db.rawQuery(promotionQuantityQuery, null);
+            System.out.println(promotionValueQuery);
+            if (cursor.getCount() != 0) {
+                if (cursor1.moveToFirst()) {
+                    do {
+                        PromotionValueResponse.PromotionValueItem promotionValueItem = new PromotionValueResponse.PromotionValueItem();
+
+                        promotionValueItem.setZid(cursor.getInt(cursor.getColumnIndex(KEY_PROMOTION_VALUE_ZID)));
+                        promotionValueItem.setPromoName(cursor.getString(cursor.getColumnIndex(KEY_PROMOTION_VALUE_PROMO_NAME)));
+                        promotionValueItem.setSoldProductId(cursor.getString(cursor.getColumnIndex(KEY_PROMOTION_VALUE_SOLD_PRODUCT_ID)));
+                        promotionValueItem.setXline(cursor.getInt(cursor.getColumnIndex(KEY_PROMOTION_VALUE_xline)));
+                        promotionValueItem.setSoldQuantity(cursor.getString(cursor.getColumnIndex(KEY_PROMOTION_VALUE_SOLD_QUANTITY)));
+                        promotionValueItem.setUnitType(cursor.getString(cursor.getColumnIndex(KEY_PROMOTION_VALUE_UNIT_TYPE)));
+                        promotionValueItem.setDiscountType(cursor.getString(cursor.getColumnIndex(KEY_PROMOTION_VALUE_DISCOUNT_TYPE)));
+                        promotionValueItem.setDiscountAmount(cursor.getString(cursor.getColumnIndex(KEY_PROMOTION_VALUE_DISCOUNT_AMOUNT)));
+                        promotionValueItem.setTerritory(cursor.getString(cursor.getColumnIndex(KEY_PROMOTION_VALUE_TERRITORY)));
+                        promotionValueItem.setCustomer(cursor.getString(cursor.getColumnIndex(KEY_PROMOTION_VALUE_CUSTOMER)));
+                        promotionValueItem.setDateFrom(cursor.getString(cursor.getColumnIndex(KEY_PROMOTION_VALUE_DATE_FROM)));
+                        promotionValueItem.setDateTo(cursor.getString(cursor.getColumnIndex(KEY_PROMOTION_VALUE_DATE_TO)));
+                        promotionValueItem.setCustomerType(cursor.getString(cursor.getColumnIndex(KEY_PROMOTION_VALUE_CUSTOMER_TYPE)));
+                        promotionValueItem.setZactive(cursor.getString(cursor.getColumnIndex(KEY_PROMOTION_VALUE_zactive)));
+
+                        promotionValueItems.add(promotionValueItem);
+                    } while (cursor1.moveToNext());
+                    promotion.put("hasPromotion", true);
+                    promotion.put("promotionType", "value");
+                    promotion.put("value", promotionValueItems);
+                }
+            } else {
+                promotion.put("hasPromotion", false);
+            }
+        }
+        return promotion;
+    }
+    //For product promotion
+
+    public void addProduct(String productID, String productName, String price, String
+            image, String brandName, String categoryName, String stock) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(KEY_PRODUCT_ID, productID);
@@ -876,7 +998,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 values.put(KEY_OUTLET_IMAGE, outlet.outletImgUrl);
                 values.put(KEY_OUTLET_LONGITUDE, outlet.outletLongitude);
                 values.put(KEY_OUTLET_LATITUDE, outlet.outletLatitude);
-                values.put(KEY_OUTLET_TERRITORY_TYPE, outlet.teritoryType);
+                values.put(KEY_OUTLET_TERRITORY_TYPE, outlet.territoryType);
                 values.put(KEY_OUTLET_CUSTOMER_TYPE, outlet.customerType);
                 try {
                     db.insert(TABLE_OUTLET, null, values);
@@ -914,7 +1036,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 outlet.outletImgUrl = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_IMAGE));
                 outlet.outletLongitude = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_LONGITUDE));
                 outlet.outletLatitude = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_LATITUDE));
-                outlet.teritoryType = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_TERRITORY_TYPE));
+                outlet.territoryType = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_TERRITORY_TYPE));
                 outlet.customerType = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_CUSTOMER_TYPE));
 
                 outletList.add(outlet);
@@ -1030,7 +1152,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return variantCategories;
     }
 
-    public void setVariantCategories(List<VariantItem> variantItems, List<ProductsItem> productsItems) {
+    public void setVariantCategories
+            (List<VariantItem> variantItems, List<ProductsItem> productsItems) {
         SQLiteDatabase db = this.getWritableDatabase();
         for (VariantItem item : variantItems) {
             ContentValues values = new ContentValues();
@@ -1125,7 +1248,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return rowList;
     }
 
-    public List<String> getVariantRows(int productId, int variantCatId, String variantName, List<String> rowList) {
+    public List<String> getVariantRows(int productId, int variantCatId, String
+            variantName, List<String> rowList) {
         SQLiteDatabase db = this.getWritableDatabase();
         String rows = "";
         for (int i = 0; i < rowList.size(); i++) {
@@ -1155,7 +1279,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return rowList;
     }
 
-    public List<String> getAssociatedVariants(int productId, int variantCatId, String variantName, List<String> rowList) {
+    public List<String> getAssociatedVariants(int productId, int variantCatId, String
+            variantName, List<String> rowList) {
         SQLiteDatabase db = this.getWritableDatabase();
         String rows = "";
         for (int i = 0; i < rowList.size(); i++) {

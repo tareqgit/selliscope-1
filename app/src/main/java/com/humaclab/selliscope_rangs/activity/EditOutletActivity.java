@@ -18,7 +18,6 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
 import com.humaclab.selliscope_rangs.R;
 import com.humaclab.selliscope_rangs.SelliscopeApiEndpointInterface;
@@ -107,9 +106,6 @@ public class EditOutletActivity extends AppCompatActivity {
         iv_outlet = findViewById(R.id.iv_outlet);
         Glide.with(getApplicationContext()).load(outlet.outletImgUrl)
                 .thumbnail(0.5f)
-                .crossFade()
-                .placeholder(R.drawable.ic_outlet_bnw)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(iv_outlet);
 
         iv_outlet.setOnClickListener(new View.OnClickListener() {

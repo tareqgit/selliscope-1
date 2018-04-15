@@ -9,7 +9,6 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.humaclab.selliscope_rangs.BR;
 import com.humaclab.selliscope_rangs.R;
 import com.humaclab.selliscope_rangs.databinding.ActivityOutletDetailsBinding;
@@ -23,9 +22,9 @@ public class OutletDetailsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_outlet_details);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("");
-        TextView toolbarTitle = (TextView) findViewById(R.id.tv_toolbar_title);
+        TextView toolbarTitle = findViewById(R.id.tv_toolbar_title);
         toolbarTitle.setText("Outlet Information");
         setSupportActionBar(toolbar);
 
@@ -39,9 +38,6 @@ public class OutletDetailsActivity extends AppCompatActivity {
 
         Glide.with(getApplicationContext()).load(outlet.outletImgUrl)
                 .thumbnail(0.5f)
-                .crossFade()
-                .placeholder(R.drawable.ic_outlet_bnw)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(binding.ivAddOutletImage);
 
         binding.btnEditOutlet.setOnClickListener(new View.OnClickListener() {

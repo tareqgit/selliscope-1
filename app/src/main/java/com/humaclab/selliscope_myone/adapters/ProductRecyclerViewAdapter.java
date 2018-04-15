@@ -13,7 +13,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.humaclab.selliscope_myone.R;
 import com.humaclab.selliscope_myone.activity.OrderActivity;
 import com.humaclab.selliscope_myone.model.VariantProduct.ProductsItem;
@@ -58,9 +57,6 @@ public class ProductRecyclerViewAdapter extends RecyclerView.Adapter<ProductRecy
                 .into(holder.iv_product);*/
         Glide.with(context).load(productResult.getImg())
                 .thumbnail(0.5f)
-                .crossFade()
-                .placeholder(R.drawable.ic_outlet_bnw)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(holder.iv_product);
 
         holder.iv_product_promo.setOnClickListener(new View.OnClickListener() {
@@ -70,9 +66,9 @@ public class ProductRecyclerViewAdapter extends RecyclerView.Adapter<ProductRecy
                 dialog.setCancelable(false);
                 dialog.setContentView(R.layout.product_promotion_dialog);
                 dialog.setTitle("Product Promotion");
-                TextView tv_product_description = (TextView) dialog.findViewById(R.id.tv_product_promotion);
-                TextView tv_product_usp = (TextView) dialog.findViewById(R.id.tv_product_usp);
-                TextView tv_product_tips = (TextView) dialog.findViewById(R.id.tv_product_tips);
+                TextView tv_product_description = dialog.findViewById(R.id.tv_product_promotion);
+                TextView tv_product_usp = dialog.findViewById(R.id.tv_product_usp);
+                TextView tv_product_tips = dialog.findViewById(R.id.tv_product_tips);
                 try {
                     tv_product_description.setText(productResult.getPromotion().getDiscount());
                 } catch (Exception e) {
@@ -91,7 +87,7 @@ public class ProductRecyclerViewAdapter extends RecyclerView.Adapter<ProductRecy
                     e.printStackTrace();
                     tv_product_tips.setText("This product has no Tips yet.");
                 }
-                Button btn_ok = (Button) dialog.findViewById(R.id.btn_ok);
+                Button btn_ok = dialog.findViewById(R.id.btn_ok);
                 btn_ok.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -132,14 +128,14 @@ public class ProductRecyclerViewAdapter extends RecyclerView.Adapter<ProductRecy
 
         public ProductsViewHolder(View itemView) {
             super(itemView);
-            ll_price = (LinearLayout) itemView.findViewById(R.id.ll_price);
-            iv_product = (ImageView) itemView.findViewById(R.id.iv_product);
-            iv_product_promo = (ImageView) itemView.findViewById(R.id.iv_product_promo);
-            tv_product_name = (TextView) itemView.findViewById(R.id.tv_product_name);
-            tv_category = (TextView) itemView.findViewById(R.id.tv_category);
-            tv_brand = (TextView) itemView.findViewById(R.id.tv_brand);
-            tv_price = (TextView) itemView.findViewById(R.id.tv_price);
-            btn_order = (Button) itemView.findViewById(R.id.btn_order);
+            ll_price = itemView.findViewById(R.id.ll_price);
+            iv_product = itemView.findViewById(R.id.iv_product);
+            iv_product_promo = itemView.findViewById(R.id.iv_product_promo);
+            tv_product_name = itemView.findViewById(R.id.tv_product_name);
+            tv_category = itemView.findViewById(R.id.tv_category);
+            tv_brand = itemView.findViewById(R.id.tv_brand);
+            tv_price = itemView.findViewById(R.id.tv_price);
+            btn_order = itemView.findViewById(R.id.btn_order);
         }
     }
 }

@@ -525,11 +525,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         String promotionQuantityQuery = "SELECT * FROM " + TABLE_PROMOTION_QUANTITY
                 + " WHERE " + KEY_PROMOTION_QUANTITY_SOLD_PRODUCT_ID + "='" + productId + "'"
-                + " AND " + KEY_PROMOTION_QUANTITY_SOLD_QUANTITY + "='" + qty + "'"
+                + " AND " + KEY_PROMOTION_QUANTITY_SOLD_QUANTITY + "='" + qty + "'";/*
                 + " AND " + KEY_PROMOTION_QUANTITY_TERRITORY + "='" + (outlet.territoryType != null ? outlet.territoryType : "") + "'"
                 + " AND " + KEY_PROMOTION_QUANTITY_CUSTOMER + "='" + (outlet.outletType != null ? outlet.outletType : "") + "'"
                 + " AND " + KEY_PROMOTION_QUANTITY_CUSTOMER_TYPE + "='" + (outlet.customerType != null ? outlet.customerType : "") + "'"
-                + " AND '" + todayDate + "' BETWEEN " + KEY_PROMOTION_QUANTITY_DATE_FROM + " AND " + KEY_PROMOTION_QUANTITY_DATE_TO;
+                + " AND '" + todayDate + "' BETWEEN " + KEY_PROMOTION_QUANTITY_DATE_FROM + " AND " + KEY_PROMOTION_QUANTITY_DATE_TO;*/
 
         System.out.println(promotionQuantityQuery);
         Cursor cursor = db.rawQuery(promotionQuantityQuery, null);
@@ -567,32 +567,32 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             qty = String.format("%.0f", Double.parseDouble(qty));
             String promotionValueQuery = "SELECT * FROM " + TABLE_PROMOTION_VALUE
                     + " WHERE " + KEY_PROMOTION_VALUE_SOLD_PRODUCT_ID + "='" + productId + "'"
-                    + " AND " + KEY_PROMOTION_VALUE_SOLD_QUANTITY + "='" + qty + "'"
+                    + " AND " + KEY_PROMOTION_VALUE_SOLD_QUANTITY + "='" + qty + "'";/*
                     + " AND " + KEY_PROMOTION_VALUE_TERRITORY + "='" + (outlet.territoryType != null ? outlet.territoryType : "") + "'"
                     + " AND " + KEY_PROMOTION_VALUE_CUSTOMER + "='" + (outlet.outletType != null ? outlet.outletType : "") + "'"
                     + " AND " + KEY_PROMOTION_VALUE_CUSTOMER_TYPE + "='" + (outlet.customerType != null ? outlet.customerType : "") + "'"
-                    + " AND '" + todayDate + "' BETWEEN " + KEY_PROMOTION_QUANTITY_DATE_FROM + " AND " + KEY_PROMOTION_QUANTITY_DATE_TO;
-            Cursor cursor1 = db.rawQuery(promotionQuantityQuery, null);
+                    + " AND '" + todayDate + "' BETWEEN " + KEY_PROMOTION_QUANTITY_DATE_FROM + " AND " + KEY_PROMOTION_QUANTITY_DATE_TO;*/
+            Cursor cursor1 = db.rawQuery(promotionValueQuery, null);
             System.out.println(promotionValueQuery);
-            if (cursor.getCount() != 0) {
+            if (cursor1.getCount() != 0) {
                 if (cursor1.moveToFirst()) {
                     do {
                         PromotionValueResponse.PromotionValueItem promotionValueItem = new PromotionValueResponse.PromotionValueItem();
 
-                        promotionValueItem.setZid(cursor.getInt(cursor.getColumnIndex(KEY_PROMOTION_VALUE_ZID)));
-                        promotionValueItem.setPromoName(cursor.getString(cursor.getColumnIndex(KEY_PROMOTION_VALUE_PROMO_NAME)));
-                        promotionValueItem.setSoldProductId(cursor.getString(cursor.getColumnIndex(KEY_PROMOTION_VALUE_SOLD_PRODUCT_ID)));
-                        promotionValueItem.setXline(cursor.getInt(cursor.getColumnIndex(KEY_PROMOTION_VALUE_xline)));
-                        promotionValueItem.setSoldQuantity(cursor.getString(cursor.getColumnIndex(KEY_PROMOTION_VALUE_SOLD_QUANTITY)));
-                        promotionValueItem.setUnitType(cursor.getString(cursor.getColumnIndex(KEY_PROMOTION_VALUE_UNIT_TYPE)));
-                        promotionValueItem.setDiscountType(cursor.getString(cursor.getColumnIndex(KEY_PROMOTION_VALUE_DISCOUNT_TYPE)));
-                        promotionValueItem.setDiscountAmount(cursor.getString(cursor.getColumnIndex(KEY_PROMOTION_VALUE_DISCOUNT_AMOUNT)));
-                        promotionValueItem.setTerritory(cursor.getString(cursor.getColumnIndex(KEY_PROMOTION_VALUE_TERRITORY)));
-                        promotionValueItem.setCustomer(cursor.getString(cursor.getColumnIndex(KEY_PROMOTION_VALUE_CUSTOMER)));
-                        promotionValueItem.setDateFrom(cursor.getString(cursor.getColumnIndex(KEY_PROMOTION_VALUE_DATE_FROM)));
-                        promotionValueItem.setDateTo(cursor.getString(cursor.getColumnIndex(KEY_PROMOTION_VALUE_DATE_TO)));
-                        promotionValueItem.setCustomerType(cursor.getString(cursor.getColumnIndex(KEY_PROMOTION_VALUE_CUSTOMER_TYPE)));
-                        promotionValueItem.setZactive(cursor.getString(cursor.getColumnIndex(KEY_PROMOTION_VALUE_zactive)));
+                        promotionValueItem.setZid(cursor1.getInt(cursor1.getColumnIndex(KEY_PROMOTION_VALUE_ZID)));
+                        promotionValueItem.setPromoName(cursor1.getString(cursor1.getColumnIndex(KEY_PROMOTION_VALUE_PROMO_NAME)));
+                        promotionValueItem.setSoldProductId(cursor1.getString(cursor1.getColumnIndex(KEY_PROMOTION_VALUE_SOLD_PRODUCT_ID)));
+                        promotionValueItem.setXline(cursor1.getInt(cursor1.getColumnIndex(KEY_PROMOTION_VALUE_xline)));
+                        promotionValueItem.setSoldQuantity(cursor1.getString(cursor1.getColumnIndex(KEY_PROMOTION_VALUE_SOLD_QUANTITY)));
+                        promotionValueItem.setUnitType(cursor1.getString(cursor1.getColumnIndex(KEY_PROMOTION_VALUE_UNIT_TYPE)));
+                        promotionValueItem.setDiscountType(cursor1.getString(cursor1.getColumnIndex(KEY_PROMOTION_VALUE_DISCOUNT_TYPE)));
+                        promotionValueItem.setDiscountAmount(cursor1.getString(cursor1.getColumnIndex(KEY_PROMOTION_VALUE_DISCOUNT_AMOUNT)));
+                        promotionValueItem.setTerritory(cursor1.getString(cursor1.getColumnIndex(KEY_PROMOTION_VALUE_TERRITORY)));
+                        promotionValueItem.setCustomer(cursor1.getString(cursor1.getColumnIndex(KEY_PROMOTION_VALUE_CUSTOMER)));
+                        promotionValueItem.setDateFrom(cursor1.getString(cursor1.getColumnIndex(KEY_PROMOTION_VALUE_DATE_FROM)));
+                        promotionValueItem.setDateTo(cursor1.getString(cursor1.getColumnIndex(KEY_PROMOTION_VALUE_DATE_TO)));
+                        promotionValueItem.setCustomerType(cursor1.getString(cursor1.getColumnIndex(KEY_PROMOTION_VALUE_CUSTOMER_TYPE)));
+                        promotionValueItem.setZactive(cursor1.getString(cursor1.getColumnIndex(KEY_PROMOTION_VALUE_zactive)));
 
                         promotionValueItems.add(promotionValueItem);
                     } while (cursor1.moveToNext());

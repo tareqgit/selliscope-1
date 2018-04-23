@@ -37,7 +37,6 @@ import com.humaclab.selliscope_rangs.model.VariantProduct.ProductsItem;
 import com.humaclab.selliscope_rangs.model.promotion.PromotionQuantityResponse;
 import com.humaclab.selliscope_rangs.model.promotion.PromotionValueResponse;
 import com.humaclab.selliscope_rangs.utils.DatabaseHandler;
-import com.humaclab.selliscope_rangs.utils.NetworkUtility;
 import com.humaclab.selliscope_rangs.utils.SessionManager;
 import com.toptoche.searchablespinnerlibrary.SearchableSpinner;
 
@@ -92,15 +91,10 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
         binding.btnIncrease.setOnClickListener(this);
         binding.btnDecrease.setOnClickListener(this);
 
-        if (NetworkUtility.isNetworkAvailable(this)) {
-            getOutlets();
-            getCategory();
-            getBrand();
-            getProducts();
-        } else {
-            Toast.makeText(this, "Connect to Wifi or Mobile Data",
-                    Toast.LENGTH_SHORT).show();
-        }
+        getOutlets();
+        getCategory();
+        getBrand();
+        getProducts();
 
         binding.btnOrder.setOnClickListener(this);
 
@@ -415,7 +409,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                 if (outOfStock) {
                     Toast.makeText(v.getContext(), "Due to out of stock this product cannot be to added to product list.", Toast.LENGTH_LONG).show();
                 } else {
-                    addProduct(productID.get(sp_product_name.getSelectedItemPosition()), isVariant[0], false);
+                    addProduct(productID.get(sp_product_name.getSelectedItemPosition()), isVariant[0], false, null);
                     builder.dismiss();
                 }
             }
@@ -467,17 +461,16 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                         if (promotion.get("promotionType").equals("quantity")) {
                             List<PromotionQuantityResponse.PromotionQuantityItem> promotionQuantityItems = (List<PromotionQuantityResponse.PromotionQuantityItem>) promotion.get("quantity");
                             for (PromotionQuantityResponse.PromotionQuantityItem promotionQuantityItem : promotionQuantityItems) {
-                                addProduct(promotionQuantityItem.getFreeProductId(), false, true);
+                                addProduct(promotionQuantityItem.getFreeProductId(), false, true, promotionQuantityItem);
                             }
                         } else {
                             List<PromotionValueResponse.PromotionValueItem> promotionValueItems = (List<PromotionValueResponse.PromotionValueItem>) promotion.get("value");
-                            productName.get(productID.indexOf(productId));
                             if (promotionValueItems.get(0).getDiscountType().equals("Flat")) {
-                                binding.etDiscount.setText(
-                                        Integer.valueOf(binding.etDiscount.getText().toString())
+                                binding.etDiscount.setText(String.valueOf(
+                                        Double.valueOf(binding.etDiscount.getText().toString())
                                                 +
-                                                (Integer.valueOf(s.toString()) / Integer.valueOf(promotionValueItems.get(0).getSoldQuantity())) * Integer.valueOf(promotionValueItems.get(0).getDiscountAmount())
-                                );
+                                                (Double.valueOf(s.toString()) / Double.valueOf(promotionValueItems.get(0).getSoldQuantity())) * Double.valueOf(promotionValueItems.get(0).getDiscountAmount())
+                                ));
                             } else {
                                 binding.etDiscount.setText(
                                         Integer.valueOf(binding.etDiscount.getText().toString())
@@ -498,7 +491,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
         });
     }
 
-    private void addProduct(final String productId, final boolean fromVariant, final boolean isFreeProduct) {
+    private void addProduct(final String productId, final boolean fromVariant, final boolean isFreeProduct, final PromotionQuantityResponse.PromotionQuantityItem promotionQuantityItem) {
         if (tableRowCount == 1) {
             addFirstProduct(productId, fromVariant);
             tableRowCount++;
@@ -526,9 +519,15 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                     if (isFreeProduct) {
                         newOrder.tvPrice.setText("0");
                         newOrder.etDiscount.setText(String.valueOf(productPrice.get(position)));
+                        try {
+                            newOrder.etQty.setText(String.valueOf(Integer.parseInt(String.format("%.0f", Double.parseDouble(promotionQuantityItem.getFreeQuantity())))));
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
-                    newOrder.etDiscount.setText(String.valueOf(Integer.valueOf(newOrder.etDiscount.getText().toString()) + productDiscount.get(position)));
-                    newOrder.etQty.setText("1");
+                    newOrder.etDiscount.setText(String.valueOf(Double.valueOf(newOrder.etDiscount.getText().toString()) + productDiscount.get(position)));
+                    newOrder.tvAmount.setText(String.valueOf(variantPrice - Double.valueOf(newOrder.etDiscount.getText().toString())));
+//                    newOrder.etQty.setText("1");
                     qty[0] = 1;
                 }
 
@@ -556,22 +555,21 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                             if (promotion.get("promotionType").equals("quantity")) {
                                 List<PromotionQuantityResponse.PromotionQuantityItem> promotionQuantityItems = (List<PromotionQuantityResponse.PromotionQuantityItem>) promotion.get("quantity");
                                 for (PromotionQuantityResponse.PromotionQuantityItem promotionQuantityItem : promotionQuantityItems) {
-                                    addProduct(promotionQuantityItem.getFreeProductId(), false, true);
+                                    addProduct(promotionQuantityItem.getFreeProductId(), false, true, promotionQuantityItem);
                                 }
                             } else {
                                 List<PromotionValueResponse.PromotionValueItem> promotionValueItems = (List<PromotionValueResponse.PromotionValueItem>) promotion.get("value");
-                                productName.get(productID.indexOf(productId));
                                 if (promotionValueItems.get(0).getDiscountType().equals("Flat")) {
-                                    newOrder.etDiscount.setText(
-                                            Integer.valueOf(newOrder.etDiscount.getText().toString())
+                                    newOrder.etDiscount.setText(String.valueOf(
+                                            Double.valueOf(newOrder.etDiscount.getText().toString())
                                                     +
-                                                    (Integer.valueOf(s.toString()) / Integer.valueOf(promotionValueItems.get(0).getSoldQuantity())) * Integer.valueOf(promotionValueItems.get(0).getDiscountAmount())
-                                    );
+                                                    Double.valueOf(promotionValueItems.get(0).getDiscountAmount())
+                                    ));
                                 } else {
-                                    newOrder.etDiscount.setText(
+                                    newOrder.etDiscount.setText(String.valueOf(
                                             Integer.valueOf(newOrder.etDiscount.getText().toString())
                                                     + (Integer.valueOf(newOrder.tvAmount.getText().toString()) * (Integer.valueOf(promotionValueItems.get(0).getDiscountAmount()) / 100))
-                                    );
+                                    ));
                                 }
                             }
                         }

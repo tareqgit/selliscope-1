@@ -7,6 +7,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
@@ -40,6 +41,7 @@ public class PurchaseHistoryActivity extends AppCompatActivity {
         TextView toolbarTitle = findViewById(R.id.tv_toolbar_title);
         toolbarTitle.setText("Purchase History-" + outlet.outletName);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         sessionManager = new SessionManager(this);
         apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(), sessionManager.getUserPassword(), false).create(SelliscopeApiEndpointInterface.class);
@@ -57,7 +59,7 @@ public class PurchaseHistoryActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(PurchaseHistoryActivity.this, OrderActivity.class);
                 intent.putExtra("outletName", outlet.outletName);
-                intent.putExtra("outletID", outlet.outletId);
+                intent.putExtra("outletID", String.valueOf(outlet.outletId));
                 startActivity(intent);
             }
         });
@@ -81,5 +83,21 @@ public class PurchaseHistoryActivity extends AppCompatActivity {
                 t.printStackTrace();
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

@@ -12,7 +12,6 @@ import com.humaclab.selliscope.model.District.DistrictResponse;
 import com.humaclab.selliscope.model.OutletType.OutletTypeResponse;
 import com.humaclab.selliscope.model.Outlets;
 import com.humaclab.selliscope.model.Thana.ThanaResponse;
-import com.humaclab.selliscope.model.VariantProduct.GodownItem;
 import com.humaclab.selliscope.model.VariantProduct.ProductsItem;
 import com.humaclab.selliscope.model.VariantProduct.VariantProductResponse;
 
@@ -72,44 +71,7 @@ public class LoadLocalIntoBackground {
                             List<ProductsItem> products = response.body().getResult().getProducts();
                             //for removing previous data
                             databaseHandler.removeProductCategoryBrand();
-                            for (ProductsItem result : products) {
-                                if (result.getGodown() == null) {
-                                    databaseHandler.addProduct(
-                                            result.getId(),
-                                            result.getName(),
-                                            result.getPrice(),
-                                            result.getImg(),
-                                            Integer.parseInt(result.getBrand().getId()),
-                                            result.getBrand().getName(),
-                                            Integer.parseInt(result.getCategory().getId()),
-                                            result.getCategory().getName(),
-                                            "",
-                                            !result.getVariants().isEmpty()
-                                    );
-                                } else {
-                                    int stock = 0;
-                                    for (GodownItem godownItem : result.getGodown()) {
-                                        stock += Integer.parseInt(godownItem.getStock());
-                                    }
-                                    databaseHandler.addProduct(
-                                            result.getId(),
-                                            result.getName(),
-                                            result.getPrice(),
-                                            result.getImg(),
-                                            Integer.parseInt(result.getBrand().getId()),
-                                            result.getBrand().getName(),
-                                            Integer.parseInt(result.getCategory().getId()),
-                                            result.getCategory().getName(),
-                                            String.valueOf(stock),
-                                            !result.getVariants().isEmpty()
-                                    );
-                                }
-                            }
-                            databaseHandler.removeVariantCategories();
-                            databaseHandler.setVariantCategories(
-                                    response.body().getResult().getVariant(),
-                                    response.body().getResult().getProducts()
-                            );
+                            databaseHandler.addProduct(products);
                             loadCategory();
                             loadBrand();
                         } catch (Exception e) {

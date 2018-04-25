@@ -13,6 +13,10 @@ public class ProductsItem {
     @SerializedName("img")
     private String img;
 
+    private String variantRow;
+
+    private String stock;
+
     @SerializedName("godown")
     private List<GodownItem> godown;
 
@@ -51,6 +55,22 @@ public class ProductsItem {
 
     public void setImg(String img) {
         this.img = img;
+    }
+
+    public String getVariantRow() {
+        return variantRow;
+    }
+
+    public void setVariantRow(String variantRow) {
+        this.variantRow = variantRow;
+    }
+
+    public String getStock() {
+        return stock;
+    }
+
+    public void setStock(String stock) {
+        this.stock = stock;
     }
 
     public List<GodownItem> getGodown() {
@@ -121,8 +141,8 @@ public class ProductsItem {
         return hasVariant;
     }
 
-    public void setHasVariant(int hasVariant) {
-        this.hasVariant = hasVariant == 1;
+    public void setHasVariant(boolean hasVariant) {
+        this.hasVariant = hasVariant;
     }
 
     public Category getCategory() {

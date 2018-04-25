@@ -80,7 +80,7 @@ public class DashboardFragment extends Fragment {
                                     }
                                     case 3: {
                                         getActivity().startActivity(new Intent(getActivity(),
-                                                OrderActivity1.class));
+                                                OrderActivity.class));
                                         break;
                                     }*/
                                     case 2: {

@@ -44,7 +44,7 @@ public class DashboardRecyclerViewAdapter extends RecyclerView.Adapter<Dashboard
 
     @Override
     public int getItemCount() {
-        return 8;
+        return dashboardItems.size();
     }
 
     public static class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
@@ -99,9 +99,9 @@ public class DashboardRecyclerViewAdapter extends RecyclerView.Adapter<Dashboard
 
         public DashboardViewHolder(View itemView) {
             super(itemView);
-            cardView = (CardView) itemView.findViewById(R.id.cv_dashboard_item);
-            itemImage = (ImageView) itemView.findViewById(R.id.iv_dashboard_item);
-            itemName = (TextView) itemView.findViewById(R.id.tv_dashboard_item_name);
+            cardView = itemView.findViewById(R.id.cv_dashboard_item);
+            itemImage = itemView.findViewById(R.id.iv_dashboard_item);
+            itemName = itemView.findViewById(R.id.tv_dashboard_item_name);
         }
     }
 }

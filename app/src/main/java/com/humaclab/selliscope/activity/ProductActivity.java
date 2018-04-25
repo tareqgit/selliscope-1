@@ -36,40 +36,26 @@ public class ProductActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("");
-        TextView toolbarTitle = (TextView) findViewById(R.id.tv_toolbar_title);
+        TextView toolbarTitle = findViewById(R.id.tv_toolbar_title);
         toolbarTitle.setText(getResources().getString(R.string.products));
         setSupportActionBar(toolbar);
 
         databaseHandler = new DatabaseHandler(this);
-        sp_category = (Spinner) findViewById(R.id.sp_category);
-        sp_brand = (Spinner) findViewById(R.id.sp_brand);
+        sp_category = findViewById(R.id.sp_category);
+        sp_brand = findViewById(R.id.sp_brand);
 
-        rv_product = (RecyclerView) findViewById(R.id.rv_product);
+        rv_product = findViewById(R.id.rv_product);
         rv_product.setLayoutManager(new LinearLayoutManager(this));
-        srl_product = (SwipeRefreshLayout) findViewById(R.id.srl_product);
+        srl_product = findViewById(R.id.srl_product);
         srl_product.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                /*if (NetworkUtility.isNetworkAvailable(ProductActivity.this)) {
-                    getCategory();
-                    getBrand();
-                    getProducts();
-                } else {*/
                 getFromLocal();
-                    /*Toast.makeText(ProductActivity.this, "Connect to Wifi or Mobile Data", Toast.LENGTH_SHORT).show();
-                }*/
             }
         });
-        /*if (NetworkUtility.isNetworkAvailable(this)) {
-            getCategory();
-            getBrand();
-            getProducts();
-        } else {*/
         getFromLocal();
-        /*Toast.makeText(this, "Connect to Wifi or Mobile Data", Toast.LENGTH_SHORT).show();
-        }*/
 
         //Populating spinner
         sp_category.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -104,49 +90,6 @@ public class ProductActivity extends AppCompatActivity {
         });
         //Populating spinner
     }
-
-    /*private void getProducts() {
-        final SessionManager sessionManager = new SessionManager(ProductActivity.this);
-        apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(),
-                sessionManager.getUserPassword(), false)
-                .create(SelliscopeApiEndpointInterface.class);
-        Call<ProductResponse> call = apiService.getProducts();
-        call.enqueue(new Callback<ProductResponse>() {
-            @Override
-            public void onResponse(Call<ProductResponse> call, Response<ProductResponse> response) {
-                if (response.code() == 200) {
-                    try {
-                        if (srl_product.isRefreshing())
-                            srl_product.setRefreshing(false);
-
-                        getFromLocal();
-                        List<ProductResponse.ProductResult> products = response.body().result.productResults;
-                        if (products.size() == databaseHandler.getSizeOfProduct()) {
-                            //for removing previous data
-                            databaseHandler.removeProductCategoryBrand();
-                            for (ProductResponse.ProductResult result : products) {
-                                databaseHandler.addProduct(result.id, result.name, result.price, result.img, result.brand.id, result.brand.name, result.category.id, result.category.name);
-                            }
-                            rv_product.setAdapter(new ProductRecyclerViewAdapter(getApplication(), products));
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                } else if (response.code() == 401) {
-                    Toast.makeText(ProductActivity.this,
-                            "Invalid Response from server.", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(ProductActivity.this,
-                            "Server Error! Try Again Later!", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ProductResponse> call, Throwable t) {
-                t.printStackTrace();
-            }
-        });
-    }*/
 
     private void getFromLocal() {
         if (srl_product.isRefreshing())

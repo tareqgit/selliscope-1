@@ -1,6 +1,7 @@
 package com.humaclab.selliscope.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.humaclab.selliscope.R;
@@ -29,6 +31,7 @@ import com.humaclab.selliscope.model.VariantProduct.ProductsItem;
 import com.humaclab.selliscope.utils.DatabaseHandler;
 import com.humaclab.selliscope.utils.SessionManager;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -231,6 +234,15 @@ public class OrderActivity extends AppCompatActivity implements OnSelectProduct 
                 onBackPressed();
                 return true;
             case R.id.action_cart:
+                if (!selectedProductList.isEmpty()) {
+                    Intent intent = new Intent(OrderActivity.this, ActivityCart.class);
+                    intent.putExtra("outletID", outletID);
+                    intent.putExtra("outletName", outletName);
+                    intent.putExtra("products", (Serializable) selectedProductList);
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(context, "No product selected yet.\nPlease select some product first.", Toast.LENGTH_SHORT).show();
+                }
                 break;
         }
         return super.onOptionsItemSelected(item);

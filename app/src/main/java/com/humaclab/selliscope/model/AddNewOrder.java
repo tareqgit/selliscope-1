@@ -21,6 +21,15 @@ public class AddNewOrder implements Serializable {
         @SerializedName("products")
         public List<Product> products;
 
+        @SerializedName("comment")
+        public String comment;
+
+        @SerializedName("lat")
+        public String latitude;
+
+        @SerializedName("long")
+        public String longitude;
+
         public static class Product {
             @SerializedName("id")
             public int id;

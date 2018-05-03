@@ -1,0 +1,86 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="selectedProduct"
+            type="com.humaclab.selliscope.helper.SelectedProductHelper" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/tv_product_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="1dp"
+                android:layout_weight="1"
+                android:background="#fff"
+                android:hint="Product Name"
+                android:padding="5dp"
+                android:text='@{selectedProduct.productName}'
+                android:textAlignment="center"
+                android:textColor="#000" />
+
+            <TextView
+                android:id="@+id/et_qty"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="1dp"
+                android:layout_weight="1"
+                android:background="#fff"
+                android:hint="Qty."
+                android:padding="5dp"
+                android:text='@{selectedProduct.productQuantity}'
+                android:textAlignment="center"
+                android:textColor="#000" />
+
+            <TextView
+                android:id="@+id/tv_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="1dp"
+                android:layout_weight="1"
+                android:background="#fff"
+                android:hint="Price"
+                android:padding="5dp"
+                android:text='@{selectedProduct.productPrice}'
+                android:textAlignment="center"
+                android:textColor="#000" />
+
+            <TextView
+                android:id="@+id/tv_amount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="1dp"
+                android:layout_weight="1"
+                android:background="#fff"
+                android:hint="Amount"
+                android:padding="5dp"
+                android:text='@{selectedProduct.totalPrice}'
+                android:textAlignment="center"
+                android:textColor="#000" />
+
+            <ImageView
+                android:id="@+id/btn_remove"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="1dp"
+                android:layout_weight="1"
+                android:background="#fff"
+                android:gravity="center"
+                android:textAlignment="center"
+                android:tint="#d50000"
+                app:srcCompat="@drawable/remove" />
+        </TableRow>
+    </LinearLayout>
+</layout>

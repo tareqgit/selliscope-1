@@ -102,7 +102,7 @@ public class OrderProductRecyclerAdapter extends RecyclerView.Adapter<OrderProdu
                         for (SelectedProductHelper selectedProductHelper : selectedProductList) {
                             if (selectedProductHelper.getProductID().equals(String.valueOf(productsItemList.get(getAdapterPosition()).getId())))
                                 if (selectedProductHelper.getProductRow().equals(productsItemList.get(getAdapterPosition()).getVariantRow())) {
-                                    showProductSelectionDialog.selectedProductHelper(selectedProductHelper);
+                                    showProductSelectionDialog.setSelectedProduct(selectedProductHelper);
                                     break;
                                 }
                         }

@@ -54,6 +54,13 @@ public class PurchaseHistoryActivity extends AppCompatActivity {
         });
         binding.srlPurchaseHistory.setRefreshing(true);
 
+        binding.btnPayment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(PurchaseHistoryActivity.this, PaymentActivity.class));
+            }
+        });
+
         binding.btnOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

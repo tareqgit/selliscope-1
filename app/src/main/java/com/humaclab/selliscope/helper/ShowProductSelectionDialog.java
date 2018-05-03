@@ -33,7 +33,7 @@ public class ShowProductSelectionDialog {
         this.alertDialog = new AlertDialog.Builder(context).create();
     }
 
-    public void selectedProductHelper(SelectedProductHelper selectedProductHelper) {
+    public void setSelectedProduct(SelectedProductHelper selectedProductHelper) {
         this.selectedProductHelper = selectedProductHelper;
     }
 
@@ -45,7 +45,7 @@ public class ShowProductSelectionDialog {
 
         if (selectedProductHelper != null) {
             binding.etProductQty.setText(selectedProductHelper.getProductQuantity());
-            binding.tvTotalPrice.setText(String.format("%.2f", Double.valueOf(binding.tvProductPrice.getText().toString()) * Double.valueOf(binding.etProductQty.getText().toString())));
+            binding.tvTotalPrice.setText(String.format("%.2f", Double.valueOf(binding.tvProductPrice.getText().toString().replace(",", "")) * Double.valueOf(binding.etProductQty.getText().toString())));
         }
 
         binding.etProductQty.addTextChangedListener(new TextWatcher() {
@@ -58,7 +58,7 @@ public class ShowProductSelectionDialog {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 try {
                     if (!s.toString().equals(""))
-                        binding.tvTotalPrice.setText(String.format("%.2f", Double.valueOf(binding.tvProductPrice.getText().toString()) * Double.valueOf(binding.etProductQty.getText().toString())));
+                        binding.tvTotalPrice.setText(String.format("%.2f", Double.valueOf(binding.tvProductPrice.getText().toString().replace(",", "")) * Double.valueOf(binding.etProductQty.getText().toString())));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

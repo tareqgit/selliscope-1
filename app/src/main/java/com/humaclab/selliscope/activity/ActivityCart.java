@@ -1,6 +1,7 @@
 package com.humaclab.selliscope.activity;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -95,9 +96,13 @@ public class ActivityCart extends AppCompatActivity implements OnSelectProduct {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                binding.tvGrandTotal.setText(String.valueOf(
-                        total - Double.parseDouble(s.toString())
-                ));
+                try {
+                    binding.tvGrandTotal.setText(String.valueOf(
+                            total - Double.parseDouble(s.toString())
+                    ));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
 
             @Override
@@ -167,6 +172,7 @@ public class ActivityCart extends AppCompatActivity implements OnSelectProduct {
                             System.out.println(new Gson().toJson(response.body()));
                             Toast.makeText(ActivityCart.this, "Order created successfully", Toast.LENGTH_LONG).show();
                             finish();
+                            startActivity(new Intent(ActivityCart.this, OutletActivity.class));
                         } else if (response.code() == 401) {
                             System.out.println(new Gson().toJson(response.body()));
                             Toast.makeText(ActivityCart.this, "Invalid Response from server.", Toast.LENGTH_SHORT).show();

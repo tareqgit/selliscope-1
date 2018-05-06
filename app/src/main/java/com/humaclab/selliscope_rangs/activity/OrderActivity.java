@@ -526,7 +526,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                         }
                     }
                     newOrder.etDiscount.setText(String.valueOf(Double.valueOf(newOrder.etDiscount.getText().toString()) + productDiscount.get(position)));
-                    newOrder.tvAmount.setText(String.valueOf(variantPrice - Double.valueOf(newOrder.etDiscount.getText().toString())));
+                    newOrder.tvAmount.setText(String.valueOf(productPrice.get(position)));
 //                    newOrder.etQty.setText("1");
                     qty[0] = 1;
                 }

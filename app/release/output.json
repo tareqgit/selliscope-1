@@ -7,7 +7,7 @@
       "type": "MAIN",
       "splits": [],
       "versionCode": 23,
-      "versionName": "test-2.27",
+      "versionName": "2.27",
       "enabled": true,
       "outputFile": "app-release.apk",
       "fullName": "release",

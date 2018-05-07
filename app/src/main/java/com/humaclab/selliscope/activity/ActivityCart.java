@@ -133,6 +133,7 @@ public class ActivityCart extends AppCompatActivity implements OnSelectProduct {
             AddNewOrder addNewOrder = new AddNewOrder();
             AddNewOrder.NewOrder newOrder = new AddNewOrder.NewOrder();
             List<AddNewOrder.NewOrder.Product> products = new ArrayList<>();
+            newOrder.discount = 0;
             newOrder.outletId = Integer.parseInt(outletID);
             newOrder.latitude = String.valueOf(lat);
             newOrder.longitude = String.valueOf(lon);

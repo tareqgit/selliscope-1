@@ -34,7 +34,6 @@
     <string name="title_activity_route">Route</string>
     <!-- Page Titles -->
     <string name="route">Route</string>
-    <string name="outle">Outlet</string>
     <string name="products">Products</string>
     <string name="order">Order</string>
     <string name="home">Home</string>

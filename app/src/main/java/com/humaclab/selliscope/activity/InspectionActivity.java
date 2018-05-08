@@ -50,9 +50,9 @@ public class InspectionActivity extends AppCompatActivity {
 
         pd = new ProgressDialog(this);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("");
-        TextView toolbarTitle = (TextView) findViewById(R.id.tv_toolbar_title);
+        TextView toolbarTitle = findViewById(R.id.tv_toolbar_title);
         toolbarTitle.setText("Inspection");
         setSupportActionBar(toolbar);
 
@@ -125,13 +125,12 @@ public class InspectionActivity extends AppCompatActivity {
                 Gson gson = new Gson();
                 if (response.code() == 200) {
                     try {
-                        Outlets.Successful getOutletListSuccessful = gson.fromJson(response.body()
-                                .string(), Outlets.Successful.class);
+                        Outlets getOutletListSuccessful = gson.fromJson(response.body().string(), Outlets.class);
                         if (!getOutletListSuccessful.outletsResult.outlets.isEmpty()) {
                             outletIDs = new ArrayList<>();
                             outletNames = new ArrayList<>();
 
-                            for (Outlets.Successful.Outlet outlet : getOutletListSuccessful.outletsResult.outlets) {
+                            for (Outlets.Outlet outlet : getOutletListSuccessful.outletsResult.outlets) {
                                 outletIDs.add(outlet.outletId);
                                 outletNames.add(outlet.outletName);
                             }

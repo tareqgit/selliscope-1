@@ -56,10 +56,10 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
     private SelliscopeApiEndpointInterface apiService;
     private Context context;
     private Activity activity;
-    private Outlets.Successful.OutletsResult outletItems;
+    private Outlets.OutletsResult outletItems;
     private SessionManager sessionManager;
 
-    public OutletRecyclerViewAdapter(Context context, Activity activity, Outlets.Successful.OutletsResult outletItems) {
+    public OutletRecyclerViewAdapter(Context context, Activity activity, Outlets.OutletsResult outletItems) {
         this.outletItems = outletItems;
         this.context = context;
         this.activity = activity;
@@ -74,7 +74,7 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
 
     @Override
     public void onBindViewHolder(final OutletViewHolder holder, final int position) {
-        final Outlets.Successful.Outlet outlet = outletItems.outlets.get(position);
+        final Outlets.Outlet outlet = outletItems.outlets.get(position);
         Glide.with(context).load(outlet.outletImgUrl)
                 .thumbnail(0.5f)
                 .into(holder.iv_outlet);

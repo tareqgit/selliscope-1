@@ -692,11 +692,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.close();
     }
 
-    public void addOutlet(List<Outlets.Successful.Outlet> outletList) {
+    public void addOutlet(List<Outlets.Outlet> outletList) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         try {
-            for (Outlets.Successful.Outlet outlet : outletList) {
+            for (Outlets.Outlet outlet : outletList) {
                 values.put(KEY_OUTLET_ID, outlet.outletId);
                 values.put(KEY_OUTLET_NAME, outlet.outletName);
                 values.put(KEY_OUTLET_TYPE, outlet.outletType);
@@ -721,9 +721,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.close();
     }
 
-    public Outlets.Successful.OutletsResult getAllOutlet() {
-        Outlets.Successful.OutletsResult outletsResult = new Outlets.Successful.OutletsResult();
-        List<Outlets.Successful.Outlet> outletList = new ArrayList<>();
+    public Outlets.OutletsResult getAllOutlet() {
+        Outlets.OutletsResult outletsResult = new Outlets.OutletsResult();
+        List<Outlets.Outlet> outletList = new ArrayList<>();
         // Select All Query
         String selectQuery = "SELECT * FROM " + TABLE_OUTLET + " ORDER BY " + KEY_OUTLET_NAME + " ASC";
         SQLiteDatabase db = this.getWritableDatabase();
@@ -733,7 +733,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             do {
                 cursor.getColumnNames();
-                Outlets.Successful.Outlet outlet = new Outlets.Successful.Outlet();
+                Outlets.Outlet outlet = new Outlets.Outlet();
                 outlet.outletId = cursor.getInt(cursor.getColumnIndex(KEY_OUTLET_ID));
                 outlet.outletName = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_NAME));
                 outlet.outletType = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_TYPE));
@@ -755,7 +755,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     public int getSizeOfOutlet() {
-        List<Outlets.Successful.Outlet> outletList = new ArrayList<>();
+        List<Outlets.Outlet> outletList = new ArrayList<>();
         // Select All Query
         String selectQuery = "SELECT * FROM " + TABLE_OUTLET + " ORDER BY " + KEY_OUTLET_NAME + " ASC";
         SQLiteDatabase db = this.getWritableDatabase();
@@ -765,7 +765,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             do {
                 cursor.getColumnNames();
-                Outlets.Successful.Outlet outlet = new Outlets.Successful.Outlet();
+                Outlets.Outlet outlet = new Outlets.Outlet();
                 outlet.outletId = cursor.getInt(cursor.getColumnIndex(KEY_OUTLET_ID));
                 outlet.outletName = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_NAME));
                 outlet.outletType = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_TYPE));
@@ -785,9 +785,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return outletList.size();
     }
 
-    public Outlets.Successful.OutletsResult getSearchedOutlet(String outletName) {
-        Outlets.Successful.OutletsResult outletsResult = new Outlets.Successful.OutletsResult();
-        List<Outlets.Successful.Outlet> outletList = new ArrayList<>();
+    public Outlets.OutletsResult getSearchedOutlet(String outletName) {
+        Outlets.OutletsResult outletsResult = new Outlets.OutletsResult();
+        List<Outlets.Outlet> outletList = new ArrayList<>();
         // Select All Query
         String selectQuery = "SELECT * FROM " + TABLE_OUTLET + " WHERE " + KEY_OUTLET_NAME + " LIKE \"" + outletName + "%\" ORDER BY " + KEY_OUTLET_NAME + " ASC";
         SQLiteDatabase db = this.getWritableDatabase();
@@ -797,7 +797,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             do {
                 cursor.getColumnNames();
-                Outlets.Successful.Outlet outlet = new Outlets.Successful.Outlet();
+                Outlets.Outlet outlet = new Outlets.Outlet();
                 outlet.outletId = cursor.getInt(cursor.getColumnIndex(KEY_OUTLET_ID));
                 outlet.outletName = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_NAME));
                 outlet.outletType = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_TYPE));

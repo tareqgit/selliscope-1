@@ -14,20 +14,20 @@ import com.humaclab.selliscope.model.Outlets;
 
 public class CallCardActivity extends AppCompatActivity {
     private ActivityCallCardBinding binding;
-    private Outlets.Successful.Outlet outlet;
+    private Outlets.Outlet outlet;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_call_card);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("");
-        TextView toolbarTitle = (TextView) findViewById(R.id.tv_toolbar_title);
+        TextView toolbarTitle = findViewById(R.id.tv_toolbar_title);
         toolbarTitle.setText("Call Card");
         setSupportActionBar(toolbar);
 
-        outlet = (Outlets.Successful.Outlet) getIntent().getSerializableExtra("outletDetails");
+        outlet = (Outlets.Outlet) getIntent().getSerializableExtra("outletDetails");
 
         binding.cvProductPitch.setOnClickListener(new View.OnClickListener() {
             @Override

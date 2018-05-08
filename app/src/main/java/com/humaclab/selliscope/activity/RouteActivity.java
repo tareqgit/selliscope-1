@@ -166,9 +166,8 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
                 Gson gson = new Gson();
                 if (response.code() == 200) {
                     try {
-                        Outlets.Successful getOutletListSuccessful = gson.fromJson(response.body()
-                                .string(), Outlets.Successful.class);
-                        List<Outlets.Successful.Outlet> outlets = getOutletListSuccessful
+                        Outlets getOutletListSuccessful = gson.fromJson(response.body().string(), Outlets.class);
+                        List<Outlets.Outlet> outlets = getOutletListSuccessful
                                 .outletsResult.outlets;
                         for (int i = 0; i < outlets.size(); i++) {
                             mMap.addMarker(new MarkerOptions().position(

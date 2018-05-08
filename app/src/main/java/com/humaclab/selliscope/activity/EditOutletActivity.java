@@ -67,7 +67,7 @@ public class EditOutletActivity extends AppCompatActivity {
     private ProgressDialog pd;
     private DatabaseHandler databaseHandler;
 
-    private Outlets.Successful.Outlet outlet;
+    private Outlets.Outlet outlet;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,7 +77,7 @@ public class EditOutletActivity extends AppCompatActivity {
 
         databaseHandler = new DatabaseHandler(this);
         pd = new ProgressDialog(this);
-        outlet = (Outlets.Successful.Outlet) getIntent().getSerializableExtra("outletDetails");
+        outlet = (Outlets.Outlet) getIntent().getSerializableExtra("outletDetails");
 
         sessionManager = new SessionManager(this);
         email = sessionManager.getUserEmail();

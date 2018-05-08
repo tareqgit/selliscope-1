@@ -145,7 +145,7 @@ public class LoadLocalIntoBackground {
                 Gson gson = new Gson();
                 if (response.code() == 200) {
                     try {
-                        Outlets.Successful getOutletListSuccessful = gson.fromJson(response.body().string(), Outlets.Successful.class);
+                        Outlets getOutletListSuccessful = gson.fromJson(response.body().string(), Outlets.class);
                         if (!fullUpdate) {
                             if (getOutletListSuccessful.outletsResult.outlets.size() != databaseHandler.getSizeOfOutlet()) {
                                 databaseHandler.removeOutlet();

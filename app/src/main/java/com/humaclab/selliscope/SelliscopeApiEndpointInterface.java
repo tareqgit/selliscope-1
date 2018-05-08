@@ -16,6 +16,8 @@ import com.humaclab.selliscope.model.OutletType.OutletTypeResponse;
 import com.humaclab.selliscope.model.Payment;
 import com.humaclab.selliscope.model.PaymentResponse;
 import com.humaclab.selliscope.model.PurchaseHistory.PurchaseHistoryResponse;
+import com.humaclab.selliscope.model.RoutePlan.RouteDetailsResponse;
+import com.humaclab.selliscope.model.RoutePlan.RouteResponse;
 import com.humaclab.selliscope.model.SellsReturnResponse;
 import com.humaclab.selliscope.model.Thana.ThanaResponse;
 import com.humaclab.selliscope.model.UpdatePassword.ChangePassword;
@@ -90,6 +92,12 @@ public interface SelliscopeApiEndpointInterface {
 
     @GET("outlet/{outlet_id}/purchase-history")
     Call<PurchaseHistoryResponse> getPurchaseHistory(@Path("outlet_id") int outletID);
+
+    @GET("route-plan")
+    Call<RouteResponse> getRoutes();
+
+    @GET("route-plan/{route_id}")
+    Call<RouteDetailsResponse> getRouteDetails(@Path("route_id") int routeId);
     //POST methods
 
     @POST("login")

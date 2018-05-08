@@ -20,14 +20,14 @@ import com.humaclab.selliscope.utils.SessionManager;
 public class PurchasedProductListActivity extends AppCompatActivity {
     private ActivityPurchasedProductListBinding binding;
     private SessionManager sessionManager;
-    private Outlets.Successful.Outlet outlet;
+    private Outlets.Outlet outlet;
     private PurchaseHistoryItem purchaseHistoryItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_purchased_product_list);
-        outlet = (Outlets.Successful.Outlet) getIntent().getSerializableExtra("outletDetails");
+        outlet = (Outlets.Outlet) getIntent().getSerializableExtra("outletDetails");
         purchaseHistoryItem = (PurchaseHistoryItem) getIntent().getSerializableExtra("product_list");
 
         Toolbar toolbar = findViewById(R.id.toolbar);

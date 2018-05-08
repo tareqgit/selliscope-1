@@ -7,7 +7,7 @@
 
         <variable
             name="outletDetails"
-            type="com.humaclab.selliscope.model.Outlets.Successful.Outlet" />
+            type="com.humaclab.selliscope.model.Outlets.Outlet" />
     </data>
 
     <LinearLayout

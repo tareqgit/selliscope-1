@@ -27,22 +27,26 @@
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:orientation="horizontal">
 
                         <TextView
                             android:id="@+id/tv_toolbar_title"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
+                            android:layout_weight="3"
                             android:textColor="@color/white"
                             android:textSize="@dimen/text_size_20"
                             android:textStyle="bold" />
 
                         <TextView
+                            android:gravity="right"
+                            android:layout_weight="1"
+                            android:text="00/10"
+                            android:background="#6b000000"
                             android:id="@+id/tv_check_in_count"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
                             android:layout_marginEnd="10dp"
                             android:textColor="@color/white"
                             android:textSize="@dimen/text_size_20"
@@ -52,11 +56,14 @@
             </android.support.design.widget.AppBarLayout>
 
             <EditText
+                android:layout_marginLeft="@dimen/margin_10"
+                android:layout_marginRight="@dimen/margin_10"
+                android:gravity="center"
                 android:id="@+id/tv_search_outlet"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:drawableRight="@drawable/places_ic_search"
-                android:hint="Seach outlet"
+                android:hint="Seach Outlet"
                 android:textSize="17sp" />
 
             <android.support.v4.widget.SwipeRefreshLayout

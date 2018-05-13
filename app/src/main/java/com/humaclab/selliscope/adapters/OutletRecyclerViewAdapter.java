@@ -80,6 +80,7 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
 
     @Override
     public void onBindViewHolder(final OutletViewHolder holder, final int position) {
+        holder.setIsRecyclable(false);
         final Outlets.Outlet outlet = outletItems.outlets.get(position);
         Glide.with(context).load(outlet.outletImgUrl)
                 .thumbnail(0.5f)

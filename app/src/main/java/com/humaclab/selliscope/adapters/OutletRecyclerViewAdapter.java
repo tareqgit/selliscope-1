@@ -28,6 +28,7 @@ import com.google.gson.Gson;
 import com.humaclab.selliscope.R;
 import com.humaclab.selliscope.SelliscopeApiEndpointInterface;
 import com.humaclab.selliscope.SelliscopeApplication;
+import com.humaclab.selliscope.activity.OutletActivity;
 import com.humaclab.selliscope.activity.OutletDetailsActivity;
 import com.humaclab.selliscope.activity.PurchaseHistoryActivity;
 import com.humaclab.selliscope.activity.RouteActivity;
@@ -88,7 +89,7 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
         holder.tvOutletContactNumber.setText(outlet.phone);
         holder.tvOutletOwnerName.setText(outlet.ownerName);
         holder.tv_checkroute.setText(outlet.outlet_routeplan);
-        if(outlet.outlet_routeplan.equals("1")){
+        if (outlet.outlet_routeplan.equals("1")) {
             holder.lo_routeplan_background.setBackgroundColor(Color.parseColor("#ff5722"));
 
         }
@@ -184,7 +185,10 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
                         Timber.d("Result:" + userLocationSuccess.result);
                         progressBar.setVisibility(View.INVISIBLE);
                         Toast.makeText(context, "You are checked In.", Toast.LENGTH_SHORT).show();
-                        databaseHandler.afterCheckin_updateOutletRoutePlan(outletId);
+                        databaseHandler.afterCheckinUpdateOutletRoutePlan(outletId);
+
+                        ((OutletActivity) context).getRoute();//For reloading the outlet recycler view
+                        ((OutletActivity) context).getOutlets();//For reloading the outlet recycler view
                     } catch (IOException e) {
                         progressBar.setVisibility(View.INVISIBLE);
                         Timber.d("Error:" + e.toString());

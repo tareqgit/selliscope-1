@@ -744,7 +744,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     //After Checking Update route Paln
 
-    public void afterCheckin_updateOutletRoutePlan(int id) {
+    public void afterCheckinUpdateOutletRoutePlan(int id) {
         try {
 
             String selectQuery = "UPDATE " + TABLE_OUTLET + " SET " + KEY_OUTLET_ROUTEPLAN + "= 0" + " WHERE " + KEY_OUTLET_ID + " = " + id;

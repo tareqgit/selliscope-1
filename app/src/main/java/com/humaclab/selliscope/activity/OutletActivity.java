@@ -13,7 +13,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
 import com.humaclab.selliscope.R;
 import com.humaclab.selliscope.SelliscopeApiEndpointInterface;
 import com.humaclab.selliscope.SelliscopeApplication;
@@ -42,6 +41,7 @@ public class OutletActivity extends AppCompatActivity {
     private SessionManager sessionManager;
     private Outlets.OutletsResult outletsResult;
     private LoadLocalIntoBackground loadLocalIntoBackground;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,6 +64,8 @@ public class OutletActivity extends AppCompatActivity {
                 startActivity(new Intent(OutletActivity.this, AddOutletActivity.class));
             }
         });
+
+        getRoute(); // For getting route plan data
 
         binding.rvOutlet.addItemDecoration(new VerticalSpaceItemDecoration(20));
         binding.rvOutlet.setLayoutManager(new LinearLayoutManager(this));
@@ -103,8 +105,7 @@ public class OutletActivity extends AppCompatActivity {
         getOutlets();
     }
 
-    private void getOutlets() {
-        getRoute();
+    public void getOutlets() {
         outletsResult = databaseHandler.getAllOutlet();
         if (!outletsResult.outlets.isEmpty()) {
             if (binding.srlOutlet.isRefreshing())
@@ -116,7 +117,10 @@ public class OutletActivity extends AppCompatActivity {
         }
     }
 
-    private void getRoute() {
+    /**
+     * For getting route-plan data
+     */
+    public void getRoute() {
         Call<RouteResponse> call = apiService.getRoutes();
         call.enqueue(new Callback<RouteResponse>() {
             @Override
@@ -136,28 +140,22 @@ public class OutletActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * For getting the details of route-plan by its ID
+     *
+     * @param routeID int
+     */
     private void getRouteDetails(int routeID) {
         Call<RouteDetailsResponse> call = apiService.getRouteDetails(routeID);
         call.enqueue(new Callback<RouteDetailsResponse>() {
             @Override
             public void onResponse(Call<RouteDetailsResponse> call, Response<RouteDetailsResponse> response) {
                 final List<RouteDetailsResponse.OutletItem> check = response.body().getResult().getOutletItemList();
-                if (response.isSuccessful()){
+                if (response.isSuccessful()) {
                     binding.tvCheckInCount.setText(response.body().getResult().getCheckedOutlet() + " / " + response.body().getResult().getTotalOutlet());
                     loadLocalIntoBackground.saveOutletRoutePlan(check);
+                    getOutlets(); //For reloading the outlet recycler view
                 }
-
-                /*binding.tvCheckInCount.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-
-
-                        Toast.makeText(OutletActivity.this, "Click", Toast.LENGTH_SHORT).show();
-
-
-                    }
-                });*/
-
             }
 
             @Override

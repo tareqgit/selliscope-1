@@ -33,6 +33,7 @@ import com.humaclab.selliscope.activity.PurchaseHistoryActivity;
 import com.humaclab.selliscope.activity.RouteActivity;
 import com.humaclab.selliscope.model.Outlets;
 import com.humaclab.selliscope.model.UserLocation;
+import com.humaclab.selliscope.utils.DatabaseHandler;
 import com.humaclab.selliscope.utils.GetAddressFromLatLang;
 import com.humaclab.selliscope.utils.NetworkUtility;
 import com.humaclab.selliscope.utils.SendUserLocationData;
@@ -60,6 +61,7 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
     private Activity activity;
     private Outlets.OutletsResult outletItems;
     private SessionManager sessionManager;
+    private DatabaseHandler databaseHandler;
 
     public OutletRecyclerViewAdapter(Context context, Activity activity, Outlets.OutletsResult outletItems) {
         this.outletItems = outletItems;
@@ -70,6 +72,7 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
 
     @Override
     public OutletViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        databaseHandler = new DatabaseHandler(context);
         View layoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.outlet_item, parent, false);
         return new OutletViewHolder(layoutView);
     }
@@ -162,7 +165,7 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
         });
     }
 
-    private void sendUserLocation(Location location, int outletId, final ProgressBar progressBar) {
+    private void sendUserLocation(Location location, final int outletId, final ProgressBar progressBar) {
         SessionManager sessionManager = new SessionManager(context);
         apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(),
                 sessionManager.getUserPassword(), false)
@@ -181,6 +184,7 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
                         Timber.d("Result:" + userLocationSuccess.result);
                         progressBar.setVisibility(View.INVISIBLE);
                         Toast.makeText(context, "You are checked In.", Toast.LENGTH_SHORT).show();
+                        databaseHandler.afterCheckin_updateOutletRoutePlan(outletId);
                     } catch (IOException e) {
                         progressBar.setVisibility(View.INVISIBLE);
                         Timber.d("Error:" + e.toString());

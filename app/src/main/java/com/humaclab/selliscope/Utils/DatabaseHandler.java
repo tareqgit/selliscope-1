@@ -14,6 +14,7 @@ import com.humaclab.selliscope.model.DeliveryResponse;
 import com.humaclab.selliscope.model.District.District;
 import com.humaclab.selliscope.model.OutletType.OutletType;
 import com.humaclab.selliscope.model.Outlets;
+import com.humaclab.selliscope.model.RoutePlan.RouteDetailsResponse;
 import com.humaclab.selliscope.model.Thana.Thana;
 import com.humaclab.selliscope.model.VariantProduct.Brand;
 import com.humaclab.selliscope.model.VariantProduct.Category;
@@ -32,7 +33,7 @@ import java.util.Map;
  */
 
 public class DatabaseHandler extends SQLiteOpenHelper {
-    private static final int DATABASE_VERSION = 8;
+    private static final int DATABASE_VERSION = 9;
 
     // Database Tables
     private static final String TABLE_TARGET = "targets";
@@ -102,6 +103,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String KEY_OUTLET_LONGITUDE = "outlet_longitude";
     private static final String KEY_OUTLET_LATITUDE = "outlet_latitude";
     private static final String KEY_OUTLET_DUE = "outlet_due";
+    private static final String KEY_OUTLET_ROUTEPLAN = "outlet_routeplan";
 
     //Thana table column name
     private static final String KEY_THANA_ID = "thana_id";
@@ -201,7 +203,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + KEY_OUTLET_IMAGE + " TEXT,"
                 + KEY_OUTLET_LATITUDE + " TEXT,"
                 + KEY_OUTLET_LONGITUDE + " TEXT,"
-                + KEY_OUTLET_DUE + " TEXT"
+                + KEY_OUTLET_DUE + " TEXT,"
+                + KEY_OUTLET_ROUTEPLAN + " TEXT"
                 + ")";
 
         String CREATE_DISTRICT_TABLE = "CREATE TABLE " + TABLE_DISTRICT + "("
@@ -709,6 +712,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 values.put(KEY_OUTLET_LONGITUDE, outlet.outletLongitude);
                 values.put(KEY_OUTLET_LATITUDE, outlet.outletLatitude);
                 values.put(KEY_OUTLET_DUE, outlet.outletDue);
+                values.put(KEY_OUTLET_ROUTEPLAN, "0");
                 try {
                     db.insert(TABLE_OUTLET, null, values);
                 } catch (Exception e) {
@@ -720,6 +724,22 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         }
         db.close();
     }
+
+    //for route plan update the portion
+
+    public void updateOutletRoutePlan(List<RouteDetailsResponse.OutletItem> outletItemList) {
+
+        try {
+            for (RouteDetailsResponse.OutletItem outlet : outletItemList) {
+                String selectQuery = "UPDATE " + TABLE_OUTLET + " SET " + KEY_OUTLET_ROUTEPLAN + "= 1" + " WHERE " + KEY_OUTLET_ID + " = " + outlet.getId();
+                SQLiteDatabase db = this.getWritableDatabase();
+                db.execSQL(selectQuery);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
     public Outlets.OutletsResult getAllOutlet() {
         Outlets.OutletsResult outletsResult = new Outlets.OutletsResult();
@@ -746,6 +766,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 outlet.outletLongitude = Double.parseDouble(cursor.getString(cursor.getColumnIndex(KEY_OUTLET_LONGITUDE)));
                 outlet.outletLatitude = Double.parseDouble(cursor.getString(cursor.getColumnIndex(KEY_OUTLET_LATITUDE)));
                 outlet.outletDue = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_DUE));
+                outlet.outlet_routeplan = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_ROUTEPLAN));
 
                 outletList.add(outlet);
             } while (cursor.moveToNext());

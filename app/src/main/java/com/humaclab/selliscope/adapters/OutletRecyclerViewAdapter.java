@@ -3,6 +3,7 @@ package com.humaclab.selliscope.adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -14,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -82,6 +84,11 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
         holder.tvOutletAddress.setText(outlet.outletAddress);
         holder.tvOutletContactNumber.setText(outlet.phone);
         holder.tvOutletOwnerName.setText(outlet.ownerName);
+        holder.tv_checkroute.setText(outlet.outlet_routeplan);
+        if(outlet.outlet_routeplan.equals("1")){
+            holder.lo_routeplan_background.setBackgroundColor(Color.parseColor("#ff5722"));
+
+        }
         holder.checkInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -209,7 +216,8 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
         TextView tvOutletName, tvOutletAddress, tvOutletOwnerName, tvOutletContactNumber;
         Button checkInButton, mapButton, historyButton;
         ProgressBar pbCheckIn;
-
+        TextView tv_checkroute;
+        LinearLayout lo_routeplan_background;
 
         public OutletViewHolder(View itemView) {
             super(itemView);
@@ -223,6 +231,8 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
             mapButton = itemView.findViewById(R.id.btn_map);
             historyButton = itemView.findViewById(R.id.btn_history);
             pbCheckIn = itemView.findViewById(R.id.pb_check_in);
+            tv_checkroute = itemView.findViewById(R.id.tv_checkroute);
+            lo_routeplan_background = itemView.findViewById(R.id.routeplan_background);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

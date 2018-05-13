@@ -48,5 +48,7 @@ public class Outlets implements Serializable {
         public Double outletLongitude;
         @SerializedName("due")
         public String outletDue;
+        @SerializedName("outlet_routeplan")
+        public String outlet_routeplan;
     }
 }

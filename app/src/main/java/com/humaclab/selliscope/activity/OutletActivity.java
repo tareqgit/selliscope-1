@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.humaclab.selliscope.R;
 import com.humaclab.selliscope.SelliscopeApiEndpointInterface;
 import com.humaclab.selliscope.SelliscopeApplication;
@@ -22,9 +23,12 @@ import com.humaclab.selliscope.model.Outlets;
 import com.humaclab.selliscope.model.RoutePlan.RouteDetailsResponse;
 import com.humaclab.selliscope.model.RoutePlan.RouteResponse;
 import com.humaclab.selliscope.utils.DatabaseHandler;
+import com.humaclab.selliscope.utils.LoadLocalIntoBackground;
 import com.humaclab.selliscope.utils.NetworkUtility;
 import com.humaclab.selliscope.utils.SessionManager;
 import com.humaclab.selliscope.utils.VerticalSpaceItemDecoration;
+
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -37,15 +41,17 @@ public class OutletActivity extends AppCompatActivity {
     private DatabaseHandler databaseHandler;
     private SessionManager sessionManager;
     private Outlets.OutletsResult outletsResult;
-
+    private LoadLocalIntoBackground loadLocalIntoBackground;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         binding = DataBindingUtil.setContentView(this, R.layout.activity_outlet);
         databaseHandler = new DatabaseHandler(this);
         sessionManager = new SessionManager(this);
         apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(), sessionManager.getUserPassword(), true).create(SelliscopeApiEndpointInterface.class);
 
+        loadLocalIntoBackground = new LoadLocalIntoBackground(this);
         setSupportActionBar(binding.toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -135,7 +141,22 @@ public class OutletActivity extends AppCompatActivity {
         call.enqueue(new Callback<RouteDetailsResponse>() {
             @Override
             public void onResponse(Call<RouteDetailsResponse> call, Response<RouteDetailsResponse> response) {
-                binding.tvCheckInCount.setText(response.body().getResult().getCheckedOutlet() + " / " + response.body().getResult().getTotalOutlet());
+                final List<RouteDetailsResponse.OutletItem> check = response.body().getResult().getOutletItemList();
+                if (response.isSuccessful()){
+                    binding.tvCheckInCount.setText(response.body().getResult().getCheckedOutlet() + " / " + response.body().getResult().getTotalOutlet());
+                    loadLocalIntoBackground.saveOutletRoutePlan(check);
+                }
+
+                /*binding.tvCheckInCount.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+
+                        Toast.makeText(OutletActivity.this, "Click", Toast.LENGTH_SHORT).show();
+
+
+                    }
+                });*/
 
             }
 

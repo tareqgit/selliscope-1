@@ -11,6 +11,7 @@ import com.humaclab.selliscope.model.CategoryResponse;
 import com.humaclab.selliscope.model.District.DistrictResponse;
 import com.humaclab.selliscope.model.OutletType.OutletTypeResponse;
 import com.humaclab.selliscope.model.Outlets;
+import com.humaclab.selliscope.model.RoutePlan.RouteDetailsResponse;
 import com.humaclab.selliscope.model.Thana.ThanaResponse;
 import com.humaclab.selliscope.model.VariantProduct.ProductsItem;
 import com.humaclab.selliscope.model.VariantProduct.VariantProductResponse;
@@ -166,6 +167,12 @@ public class LoadLocalIntoBackground {
                 t.printStackTrace();
             }
         });
+    }
+
+
+    public void saveOutletRoutePlan(List<RouteDetailsResponse.OutletItem> outletItemList){
+        //databaseHandler.removeOutlet();
+        databaseHandler.updateOutletRoutePlan(outletItemList);
     }
 
     private void loadDistrict() {

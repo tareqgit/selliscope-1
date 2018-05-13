@@ -740,12 +740,26 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         }
     }
 
+    //After Checking Update route Paln
+
+    public void afterCheckin_updateOutletRoutePlan(int id){
+        try {
+
+                String selectQuery = "UPDATE " + TABLE_OUTLET + " SET " + KEY_OUTLET_ROUTEPLAN + "= 0" + " WHERE " + KEY_OUTLET_ID + " = " + id;
+                SQLiteDatabase db = this.getWritableDatabase();
+                db.execSQL(selectQuery);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
     public Outlets.OutletsResult getAllOutlet() {
         Outlets.OutletsResult outletsResult = new Outlets.OutletsResult();
         List<Outlets.Outlet> outletList = new ArrayList<>();
         // Select All Query
-        String selectQuery = "SELECT * FROM " + TABLE_OUTLET + " ORDER BY " + KEY_OUTLET_NAME + " ASC";
+        String selectQuery = "SELECT * FROM " + TABLE_OUTLET + " ORDER BY " + KEY_OUTLET_ROUTEPLAN + " DESC";
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
 

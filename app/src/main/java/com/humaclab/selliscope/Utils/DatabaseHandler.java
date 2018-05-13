@@ -744,12 +744,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     //After Checking Update route Paln
 
-    public void afterCheckin_updateOutletRoutePlan(int id){
+    public void afterCheckin_updateOutletRoutePlan(int id) {
         try {
 
-                String selectQuery = "UPDATE " + TABLE_OUTLET + " SET " + KEY_OUTLET_ROUTEPLAN + "= 0" + " WHERE " + KEY_OUTLET_ID + " = " + id;
-                SQLiteDatabase db = this.getWritableDatabase();
-                db.execSQL(selectQuery);
+            String selectQuery = "UPDATE " + TABLE_OUTLET + " SET " + KEY_OUTLET_ROUTEPLAN + "= 0" + " WHERE " + KEY_OUTLET_ID + " = " + id;
+            SQLiteDatabase db = this.getWritableDatabase();
+            db.execSQL(selectQuery);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -847,6 +847,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 outlet.outletLongitude = Double.parseDouble(cursor.getString(cursor.getColumnIndex(KEY_OUTLET_LONGITUDE)));
                 outlet.outletLatitude = Double.parseDouble(cursor.getString(cursor.getColumnIndex(KEY_OUTLET_LATITUDE)));
                 outlet.outletDue = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_DUE));
+                outlet.outlet_routeplan = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_ROUTEPLAN));
 
                 outletList.add(outlet);
             } while (cursor.moveToNext());

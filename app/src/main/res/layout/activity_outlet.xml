@@ -42,7 +42,7 @@
                         <TextView
                             android:gravity="right"
                             android:layout_weight="1"
-                            android:text="00/10"
+                            android:text="00/00"
                             android:background="#6b000000"
                             android:id="@+id/tv_check_in_count"
                             android:layout_width="0dp"

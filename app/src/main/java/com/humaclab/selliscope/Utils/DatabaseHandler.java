@@ -731,9 +731,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         try {
             for (RouteDetailsResponse.OutletItem outlet : outletItemList) {
-                String selectQuery = "UPDATE " + TABLE_OUTLET + " SET " + KEY_OUTLET_ROUTEPLAN + "= 1" + " WHERE " + KEY_OUTLET_ID + " = " + outlet.getId();
-                SQLiteDatabase db = this.getWritableDatabase();
-                db.execSQL(selectQuery);
+                if (outlet.getCheckIn().equals("uncheck")) {
+                    String selectQuery = "UPDATE " + TABLE_OUTLET + " SET " + KEY_OUTLET_ROUTEPLAN + "= 1" + " WHERE " + KEY_OUTLET_ID + " = " + outlet.getId();
+                    SQLiteDatabase db = this.getWritableDatabase();
+                    db.execSQL(selectQuery);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();

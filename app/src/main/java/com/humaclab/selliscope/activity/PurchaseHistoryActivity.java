@@ -57,7 +57,9 @@ public class PurchaseHistoryActivity extends AppCompatActivity {
         binding.btnPayment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(PurchaseHistoryActivity.this, PaymentActivity.class));
+                Intent intent = new Intent(PurchaseHistoryActivity.this, PaymentActivity.class);
+                intent.putExtra("outletID",outlet.outletId);
+                startActivity(intent);
             }
         });
 

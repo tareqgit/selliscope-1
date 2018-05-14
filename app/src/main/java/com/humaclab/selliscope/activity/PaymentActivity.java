@@ -32,6 +32,7 @@ public class PaymentActivity extends AppCompatActivity {
     private RecyclerView rv_payment;
     private SwipeRefreshLayout srl_payment;
     private ProgressDialog pd;
+    private int outletId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +45,7 @@ public class PaymentActivity extends AppCompatActivity {
         toolbarTitle.setText("Payment");
         setSupportActionBar(toolbar);
 
+        outletId = getIntent().getIntExtra("outletID",0);
         databaseHandler = new DatabaseHandler(this);
         pd = new ProgressDialog(this);
 
@@ -74,7 +76,7 @@ public class PaymentActivity extends AppCompatActivity {
         SessionManager sessionManager = new SessionManager(PaymentActivity.this);
         apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(),
                 sessionManager.getUserPassword(), false).create(SelliscopeApiEndpointInterface.class);
-        Call<Payment> call = apiService.getPayment();
+        Call<Payment> call = apiService.getPayment(outletId);
         call.enqueue(new Callback<Payment>() {
             @Override
             public void onResponse(Call<Payment> call, Response<Payment> response) {

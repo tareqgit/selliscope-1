@@ -527,6 +527,8 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
+                    } else {
+                        productFlag.add("orderQty");
                     }
                     newOrder.etDiscount.setText(String.valueOf(Double.valueOf(newOrder.etDiscount.getText().toString()) + productDiscount.get(position)));
                     newOrder.tvAmount.setText(String.valueOf(productPrice.get(position)));

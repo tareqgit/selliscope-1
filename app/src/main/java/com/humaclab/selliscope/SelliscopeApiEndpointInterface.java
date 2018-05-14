@@ -60,6 +60,9 @@ public interface SelliscopeApiEndpointInterface {
     @GET("order")
     Call<OrderResponse> getOrders();
 
+    @GET("payment/{outlet_id}")
+    Call<Payment> getPayment(@Path("outlet_id") int outletId);
+
     @GET("payment")
     Call<Payment> getPayment();
 

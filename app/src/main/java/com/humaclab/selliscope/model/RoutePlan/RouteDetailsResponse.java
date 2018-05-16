@@ -93,7 +93,7 @@ public class RouteDetailsResponse implements Serializable {
         private String type;
 
         @SerializedName("thana")
-        private Object thana;
+        private String thana;
 
         @SerializedName("checkIn")
         private String checkIn;
@@ -108,7 +108,7 @@ public class RouteDetailsResponse implements Serializable {
         private String due;
 
         @SerializedName("district")
-        private Object district;
+        private String district;
 
         @SerializedName("name")
         private String name;
@@ -162,11 +162,11 @@ public class RouteDetailsResponse implements Serializable {
             this.type = type;
         }
 
-        public Object getThana() {
+        public String getThana() {
             return thana;
         }
 
-        public void setThana(Object thana) {
+        public void setThana(String thana) {
             this.thana = thana;
         }
 
@@ -202,11 +202,11 @@ public class RouteDetailsResponse implements Serializable {
             this.due = due;
         }
 
-        public Object getDistrict() {
+        public String getDistrict() {
             return district;
         }
 
-        public void setDistrict(Object district) {
+        public void setDistrict(String district) {
             this.district = district;
         }
 

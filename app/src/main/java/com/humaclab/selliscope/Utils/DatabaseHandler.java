@@ -725,21 +725,62 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.close();
     }
 
+    /**
+     * For adding extra temporary outlet which is added into from plan but not in the personal outlet list
+     *
+     * @param outlet RouteDetailsResponse.OutletItem
+     */
+    private void addExtraTempOutlet(RouteDetailsResponse.OutletItem outlet) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        try {
+            values.put(KEY_OUTLET_ID, outlet.getId());
+            values.put(KEY_OUTLET_NAME, outlet.getName());
+            values.put(KEY_OUTLET_TYPE, outlet.getType());
+            values.put(KEY_OUTLET_OWNER_NAME, outlet.getOwner());
+            values.put(KEY_OUTLET_ADDRESS, outlet.getAddress());
+            values.put(KEY_OUTLET_DISTRICT, outlet.getDistrict());
+            values.put(KEY_OUTLET_THANA, outlet.getThana());
+            values.put(KEY_OUTLET_PHONE, outlet.getPhone());
+            values.put(KEY_OUTLET_IMAGE, outlet.getImg());
+            values.put(KEY_OUTLET_LONGITUDE, outlet.getLongitude());
+            values.put(KEY_OUTLET_LATITUDE, outlet.getLatitude());
+            values.put(KEY_OUTLET_DUE, outlet.getDue());
+            values.put(KEY_OUTLET_ROUTEPLAN, "1");
+            try {
+                db.insert(TABLE_OUTLET, null, values);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        db.close();
+    }
+
     //for route plan update the portion
 
     public void updateOutletRoutePlan(List<RouteDetailsResponse.OutletItem> outletItemList) {
+        SQLiteDatabase db = this.getWritableDatabase();
 
         try {
             for (RouteDetailsResponse.OutletItem outlet : outletItemList) {
-                if (outlet.getCheckIn().equals("uncheck")) {
-                    String selectQuery = "UPDATE " + TABLE_OUTLET + " SET " + KEY_OUTLET_ROUTEPLAN + "= 1" + " WHERE " + KEY_OUTLET_ID + " = " + outlet.getId();
-                    SQLiteDatabase db = this.getWritableDatabase();
-                    db.execSQL(selectQuery);
+                String checkQuery = "SELECT * FROM " + TABLE_OUTLET + " WHERE " + KEY_OUTLET_ID + " = " + outlet.getId();
+                Cursor cursor = db.rawQuery(checkQuery, null);
+                if (cursor.getCount() == 0) {
+                    addExtraTempOutlet(outlet);
+                    cursor.close();
+                } else {
+                    if (outlet.getCheckIn().equals("uncheck")) {
+                        String selectQuery = "UPDATE " + TABLE_OUTLET + " SET " + KEY_OUTLET_ROUTEPLAN + "= 1" + " WHERE " + KEY_OUTLET_ID + " = " + outlet.getId();
+                        db.execSQL(selectQuery);
+                    }
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+        db.close();
     }
 
     //After Checking Update route Paln

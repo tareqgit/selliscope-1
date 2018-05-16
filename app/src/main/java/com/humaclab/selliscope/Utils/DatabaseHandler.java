@@ -758,18 +758,33 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.close();
     }
 
-    //for route plan update the portion
+    /**
+     * For checking if the provided outlet in the route plan is in the database
+     *
+     * @param outlet RouteDetailsResponse.OutletItem
+     * @return
+     */
+    private boolean checkExtraOutlet(RouteDetailsResponse.OutletItem outlet) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String checkQuery = "SELECT * FROM " + TABLE_OUTLET + " WHERE " + KEY_OUTLET_ID + " = " + outlet.getId();
+        Cursor cursor = db.rawQuery(checkQuery, null);
+        cursor.moveToFirst();
+        if (cursor.getCount() == 0) {
+            cursor.close();
+            return true;
+        } else {
+            return false;
+        }
+    }
 
+    //for route plan update the portion
     public void updateOutletRoutePlan(List<RouteDetailsResponse.OutletItem> outletItemList) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         try {
             for (RouteDetailsResponse.OutletItem outlet : outletItemList) {
-                String checkQuery = "SELECT * FROM " + TABLE_OUTLET + " WHERE " + KEY_OUTLET_ID + " = " + outlet.getId();
-                Cursor cursor = db.rawQuery(checkQuery, null);
-                if (cursor.getCount() == 0) {
+                if (checkExtraOutlet(outlet)) {
                     addExtraTempOutlet(outlet);
-                    cursor.close();
                 } else {
                     if (outlet.getCheckIn().equals("uncheck")) {
                         String selectQuery = "UPDATE " + TABLE_OUTLET + " SET " + KEY_OUTLET_ROUTEPLAN + "= 1" + " WHERE " + KEY_OUTLET_ID + " = " + outlet.getId();

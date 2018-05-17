@@ -733,29 +733,59 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private void addExtraTempOutlet(RouteDetailsResponse.OutletItem outlet) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        try {
-            values.put(KEY_OUTLET_ID, outlet.getId());
-            values.put(KEY_OUTLET_NAME, outlet.getName());
-            values.put(KEY_OUTLET_TYPE, outlet.getType());
-            values.put(KEY_OUTLET_OWNER_NAME, outlet.getOwner());
-            values.put(KEY_OUTLET_ADDRESS, outlet.getAddress());
-            values.put(KEY_OUTLET_DISTRICT, outlet.getDistrict());
-            values.put(KEY_OUTLET_THANA, outlet.getThana());
-            values.put(KEY_OUTLET_PHONE, outlet.getPhone());
-            values.put(KEY_OUTLET_IMAGE, outlet.getImg());
-            values.put(KEY_OUTLET_LONGITUDE, outlet.getLongitude());
-            values.put(KEY_OUTLET_LATITUDE, outlet.getLatitude());
-            values.put(KEY_OUTLET_DUE, outlet.getDue());
-            values.put(KEY_OUTLET_ROUTEPLAN, "1");
+
+        if (outlet.getCheckIn().equals("uncheck")) {
+
             try {
-                db.insert(TABLE_OUTLET, null, values);
+                values.put(KEY_OUTLET_ID, outlet.getId());
+                values.put(KEY_OUTLET_NAME, outlet.getName());
+                values.put(KEY_OUTLET_TYPE, outlet.getType());
+                values.put(KEY_OUTLET_OWNER_NAME, outlet.getOwner());
+                values.put(KEY_OUTLET_ADDRESS, outlet.getAddress());
+                values.put(KEY_OUTLET_DISTRICT, outlet.getDistrict());
+                values.put(KEY_OUTLET_THANA, outlet.getThana());
+                values.put(KEY_OUTLET_PHONE, outlet.getPhone());
+                values.put(KEY_OUTLET_IMAGE, outlet.getImg());
+                values.put(KEY_OUTLET_LONGITUDE, outlet.getLongitude());
+                values.put(KEY_OUTLET_LATITUDE, outlet.getLatitude());
+                values.put(KEY_OUTLET_DUE, outlet.getDue());
+                values.put(KEY_OUTLET_ROUTEPLAN, "1");
+                try {
+                    db.insert(TABLE_OUTLET, null, values);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
-        db.close();
+        else {
+            try {
+                values.put(KEY_OUTLET_ID, outlet.getId());
+                values.put(KEY_OUTLET_NAME, outlet.getName());
+                values.put(KEY_OUTLET_TYPE, outlet.getType());
+                values.put(KEY_OUTLET_OWNER_NAME, outlet.getOwner());
+                values.put(KEY_OUTLET_ADDRESS, outlet.getAddress());
+                values.put(KEY_OUTLET_DISTRICT, outlet.getDistrict());
+                values.put(KEY_OUTLET_THANA, outlet.getThana());
+                values.put(KEY_OUTLET_PHONE, outlet.getPhone());
+                values.put(KEY_OUTLET_IMAGE, outlet.getImg());
+                values.put(KEY_OUTLET_LONGITUDE, outlet.getLongitude());
+                values.put(KEY_OUTLET_LATITUDE, outlet.getLatitude());
+                values.put(KEY_OUTLET_DUE, outlet.getDue());
+                values.put(KEY_OUTLET_ROUTEPLAN, "0");
+                try {
+                    db.insert(TABLE_OUTLET, null, values);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+
+        //db.close();
     }
 
     /**

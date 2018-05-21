@@ -16,7 +16,7 @@ import com.humaclab.selliscope.databinding.ActivityPurchasedProductListBinding;
 import com.humaclab.selliscope.model.Outlets;
 import com.humaclab.selliscope.model.PurchaseHistory.PurchaseHistoryItem;
 import com.humaclab.selliscope.utils.SessionManager;
-
+// Purches History specific All Data
 public class PurchasedProductListActivity extends AppCompatActivity {
     private ActivityPurchasedProductListBinding binding;
     private SessionManager sessionManager;
@@ -41,15 +41,15 @@ public class PurchasedProductListActivity extends AppCompatActivity {
         sessionManager = new SessionManager(this);
         binding.rlPurchasedProduct.setLayoutManager(new LinearLayoutManager(this));
 
-        binding.btnOrder.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(PurchasedProductListActivity.this, OrderActivity.class);
-                intent.putExtra("outletName", outlet.outletName);
-                intent.putExtra("outletID", outlet.outletId);
-                startActivity(intent);
-            }
-        });
+//        binding.btnOrder.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(PurchasedProductListActivity.this, OrderActivity.class);
+//                intent.putExtra("outletName", outlet.outletName);
+//                intent.putExtra("outletID", outlet.outletId);
+//                startActivity(intent);
+//            }
+//        });
         getPurchasedProducts();
     }
 

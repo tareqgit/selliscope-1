@@ -5,7 +5,8 @@
     <string name="target_navigation_item">Target</string>
     <string name="dashboard_navigation_item">Dashboard</string>
     <string name="title_activity_login">Sign in</string>
-
+    <string name="language_setting">Change Language</string>
+    <string name="language_setting_additional">Select language you want</string>
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password (optional)</string>
@@ -82,5 +83,10 @@
         <item>Good</item>
         <item>Bad</item>
         <item>Moderate</item>
+    </string-array>
+    <!-- Language select dialog -->
+    <string-array name="lang_select">
+        <item>English</item>
+        <item>Bangla</item>
     </string-array>
 </resources>

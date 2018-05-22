@@ -73,17 +73,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        // For Shared Preferrence to Language
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
-        Configuration config = getBaseContext().getResources().getConfiguration();
 
-        String lang = settings.getString("LANG", "");
-        if (! "".equals(lang) && ! config.locale.getLanguage().equals(lang)) {
-            Locale locale = new Locale(lang);
-            Locale.setDefault(locale);
-            config.locale = locale;
-            getBaseContext().getResources().updateConfiguration(config, getBaseContext().getResources().getDisplayMetrics());
-        }
 
         sessionManager = new SessionManager(this);
         databaseHandler = new DatabaseHandler(this);
@@ -187,6 +177,20 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         IntentFilter filter = new IntentFilter();
         filter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
         registerReceiver(receiver, filter);
+
+
+        // For Shared Preferrence to Language
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+        Configuration config = getBaseContext().getResources().getConfiguration();
+
+        String lang = settings.getString("LANG", "");
+        if (! "".equals(lang) && ! config.locale.getLanguage().equals(lang)) {
+            Locale locale = new Locale(lang);
+            Locale.setDefault(locale);
+            config.locale = locale;
+            getBaseContext().getResources().updateConfiguration(config, getBaseContext().getResources().getDisplayMetrics());
+        }
+
     }
 
     private void setDiameter() {
@@ -332,15 +336,15 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 int langpos = spinner1.getSelectedItemPosition();
                 switch(langpos) {
                     case 0: //English
-                        PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putString("LANG", "en").commit();
+                        PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putString("LANG", "en").apply();
                         setLangRecreate("en");
                         return;
                     case 1: //Bangla
-                        PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putString("LANG", "bn").commit();
+                        PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putString("LANG", "bn").apply();
                         setLangRecreate("bn");
                         return;
                     default: //By default set to english
-                        PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putString("LANG", "en").commit();
+                        PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putString("LANG", "en").apply();
                         setLangRecreate("en");
                         return;
                 }
@@ -356,9 +360,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public void setLangRecreate(String langval) {
-        Locale locale;
         Configuration config = getBaseContext().getResources().getConfiguration();
-        locale = new Locale(langval);
+        Locale locale = new Locale(langval);
         Locale.setDefault(locale);
         config.locale = locale;
         getBaseContext().getResources().updateConfiguration(config, getBaseContext().getResources().getDisplayMetrics());

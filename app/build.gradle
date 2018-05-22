@@ -17,11 +17,11 @@ repositories {
 
 
 android {
-    compileSdkVersion 26
+    compileSdkVersion 27
     defaultConfig {
         applicationId "com.humaclab.selliscope"
         minSdkVersion 19
-        targetSdkVersion 26
+        targetSdkVersion 27
         versionCode 23
         versionName "test-2.27"
         vectorDrawables.useSupportLibrary = true
@@ -36,6 +36,11 @@ android {
 
     dataBinding {
         enabled true
+    }
+    lintOptions {
+        checkReleaseBuilds false
+        abortOnError false
+        ignoreWarnings true //false
     }
 }
 configurations.all {

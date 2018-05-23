@@ -133,11 +133,17 @@ public class ActivityCart extends AppCompatActivity implements OnSelectProduct {
             AddNewOrder addNewOrder = new AddNewOrder();
             AddNewOrder.NewOrder newOrder = new AddNewOrder.NewOrder();
             List<AddNewOrder.NewOrder.Product> products = new ArrayList<>();
-            newOrder.discount = 0;
+           // newOrder.discount = 0;
             newOrder.outletId = Integer.parseInt(outletID);
             newOrder.latitude = String.valueOf(lat);
             newOrder.longitude = String.valueOf(lon);
             newOrder.comment = binding.etComments.getText().toString();
+            if (binding.etDiscount.getText().toString().equals("")) {
+                newOrder.discount = 0;
+            } else {
+                newOrder.discount =  Integer.parseInt(binding.etDiscount.getText().toString());
+               // newOrder.discount = Double.parseDouble(binding.etDiscount.getText().toString());
+            }
 
             for (SelectedProductHelper selectedProduct : selectedProductList) {
                 AddNewOrder.NewOrder.Product product = new AddNewOrder.NewOrder.Product();
@@ -146,7 +152,7 @@ public class ActivityCart extends AppCompatActivity implements OnSelectProduct {
                 if (binding.etDiscount.getText().toString().equals("")) {
                     product.discount = 0.00;
                 } else {
-                    product.discount = Double.parseDouble(binding.etDiscount.getText().toString());
+                    product.discount = 0.00;
                 }
                 product.qty = Integer.parseInt(selectedProduct.getProductQuantity());
                 product.row = Integer.parseInt(selectedProduct.getProductRow());

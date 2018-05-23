@@ -63,18 +63,18 @@
                 android:orientation="horizontal">
 
                 <TextView
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_weight="1"
+                    android:layout_weight="0.75"
                     android:hint="Paid"
                     android:padding="10dp"
-                    android:text="Paid:"
+                    android:text="Paid"
                     android:textColor="#000" />
 
                 <TextView
                     android:id="@+id/tv_paid"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_weight="1"
@@ -82,12 +82,32 @@
                     android:padding="10dp"
                     android:text='@{purchaseHistory.paid}'
                     android:textColor="#000" />
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center|end"
+                    android:layout_weight="1.25"
+                    android:hint="Due"
+                    android:padding="10dp"
+                    android:text="Discount:"
+                    android:textAlignment="textEnd" />
 
                 <TextView
-                    android:layout_width="match_parent"
+                    android:id="@+id/tv_discount"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center|end"
                     android:layout_weight="1"
+                    android:hint="100"
+                    android:padding="10dp"
+                    android:text='@{purchaseHistory.discount}'
+                    android:textAlignment="textEnd" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center|end"
+                    android:layout_weight="0.75"
                     android:hint="Due"
                     android:padding="10dp"
                     android:text="Due:"
@@ -95,7 +115,7 @@
 
                 <TextView
                     android:id="@+id/tv_due"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center|end"
                     android:layout_weight="1"

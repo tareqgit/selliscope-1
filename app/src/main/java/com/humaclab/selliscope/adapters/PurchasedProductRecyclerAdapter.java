@@ -41,7 +41,8 @@ public class PurchasedProductRecyclerAdapter extends RecyclerView.Adapter<Purcha
 
     @Override
     public int getItemCount() {
-        return orderDetails.size();
+        //return orderDetails.size();
+        return (orderDetails == null) ? 0 : orderDetails.size();
     }
 
     public class PurchasedProductViewHolder extends RecyclerView.ViewHolder {

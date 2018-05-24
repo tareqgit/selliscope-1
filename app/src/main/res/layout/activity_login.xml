@@ -94,4 +94,45 @@
         android:textAlignment="center"
         android:textColor="#ddd"
         android:textSize="16sp" />
+
+    <RadioGroup
+        android:id="@+id/rg_language"
+        android:layout_width="250dp"
+        android:layout_height="30dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/pink_out_line"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/rbBangle"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="1dp"
+            android:layout_marginLeft="1dp"
+            android:layout_marginTop="1dp"
+            android:layout_weight="1"
+            android:background="@drawable/toggle_widget_background"
+            android:button="@null"
+            android:gravity="center"
+            android:text="Bangla"
+            android:textColor="@drawable/button_text"
+            android:textStyle="bold" />
+
+        <RadioButton
+            android:id="@+id/rbEnglish"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="1dp"
+            android:layout_marginRight="1dp"
+            android:layout_marginTop="1dp"
+            android:layout_weight="1"
+            android:background="@drawable/toggle_widget_background"
+            android:button="@null"
+            android:gravity="center"
+            android:text="English"
+            android:textColor="@drawable/button_text"
+            android:textStyle="bold" />
+    </RadioGroup>
 </RelativeLayout>

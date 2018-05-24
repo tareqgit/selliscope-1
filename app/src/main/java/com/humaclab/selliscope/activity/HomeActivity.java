@@ -9,7 +9,6 @@ import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
-import android.preference.PreferenceManager;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -21,11 +20,8 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ImageView;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.crashlytics.android.answers.Answers;
@@ -71,8 +67,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        LoadLocale();
         setContentView(R.layout.activity_home);
-
 
 
         sessionManager = new SessionManager(this);
@@ -180,7 +176,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
 
         // For Shared Preferrence to Language
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+        /*SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
         Configuration config = getBaseContext().getResources().getConfiguration();
 
         String lang = settings.getString("LANG", "");
@@ -189,7 +185,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             Locale.setDefault(locale);
             config.locale = locale;
             getBaseContext().getResources().updateConfiguration(config, getBaseContext().getResources().getDisplayMetrics());
-        }
+        }*/
 
     }
 
@@ -287,9 +283,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             case R.id.nav_profile:
                 startActivity(new Intent(HomeActivity.this, ProfileActivity.class));
                 break;
-            case R.id.action_change_language:
-                showChangeLangDialog();
-                break;
         }
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
@@ -305,66 +298,29 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    /*@Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        switch (id) {
-            case R.id.action_change_language:
-                showChangeLangDialog();
-                return true;
-
-            //similarly write for other actions
-
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }*/
-
-    public void showChangeLangDialog() {
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
-        LayoutInflater inflater = this.getLayoutInflater();
-        final View dialogView = inflater.inflate(R.layout.language_dialog, null);
-        dialogBuilder.setView(dialogView);
-
-        final Spinner spinner1 = (Spinner) dialogView.findViewById(R.id.spinner1);
-
-        dialogBuilder.setTitle(getResources().getString(R.string.language_setting));
-        dialogBuilder.setMessage(getResources().getString(R.string.language_setting_additional));
-        dialogBuilder.setPositiveButton("Change", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                int langpos = spinner1.getSelectedItemPosition();
-                switch(langpos) {
-                    case 0: //English
-                        PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putString("LANG", "en").apply();
-                        setLangRecreate("en");
-                        return;
-                    case 1: //Bangla
-                        PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putString("LANG", "bn").apply();
-                        setLangRecreate("bn");
-                        return;
-                    default: //By default set to english
-                        PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putString("LANG", "en").apply();
-                        setLangRecreate("en");
-                        return;
-                }
-            }
-        });
-        dialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                //pass
-            }
-        });
-        AlertDialog b = dialogBuilder.create();
-        b.show();
-    }
-
-    public void setLangRecreate(String langval) {
-        Configuration config = getBaseContext().getResources().getConfiguration();
-        Locale locale = new Locale(langval);
+    public void setLocale(String lang) {
+        Locale locale = new Locale(lang);
         Locale.setDefault(locale);
+        Configuration config = new Configuration();
         config.locale = locale;
         getBaseContext().getResources().updateConfiguration(config, getBaseContext().getResources().getDisplayMetrics());
-        recreate();
+
+        // Save To SharedPreference
+//        SharedPreferences sharedPreferencesLanguage = getSharedPreferences("Settings", MODE_PRIVATE);
+//        SharedPreferences.Editor editor = getSharedPreferences("Settings",MODE_PRIVATE).edit();
+//        editor.putString("My_Lang",lang);
+//        editor.apply();
+        SharedPreferences sharedPreferencesLanguage = getSharedPreferences("Settings", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferencesLanguage.edit();
+        editor.putString("My_Lang", lang);
+        editor.apply();
+    }
+
+
+    //Load
+    public void LoadLocale() {
+        SharedPreferences prefs = getSharedPreferences("Settings", MODE_PRIVATE);
+        String language = prefs.getString("My_Lang", "");
+        setLocale(language);
     }
 }

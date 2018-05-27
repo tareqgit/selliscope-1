@@ -90,7 +90,7 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
         holder.tvOutletContactNumber.setText(outlet.phone);
         holder.tvOutletOwnerName.setText(outlet.ownerName);
         if (outlet.outlet_routeplan.equals("1")) {
-            holder.cardView.setBackgroundColor(Color.parseColor("#ff7043"));
+            holder.lo_routeplan_background2.setBackgroundColor(Color.parseColor("#ff7043"));
 
         }
         holder.checkInButton.setOnClickListener(new View.OnClickListener() {
@@ -230,7 +230,7 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
         Button checkInButton, mapButton, historyButton;
         ProgressBar pbCheckIn;
         TextView tv_checkroute;
-        LinearLayout lo_routeplan_background;
+        LinearLayout lo_routeplan_background2;
 
         public OutletViewHolder(View itemView) {
             super(itemView);
@@ -244,7 +244,7 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
             mapButton = itemView.findViewById(R.id.btn_map);
             historyButton = itemView.findViewById(R.id.btn_history);
             pbCheckIn = itemView.findViewById(R.id.pb_check_in);
-            lo_routeplan_background = itemView.findViewById(R.id.routeplan_background);
+            lo_routeplan_background2 = itemView.findViewById(R.id.routeplan_background2);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

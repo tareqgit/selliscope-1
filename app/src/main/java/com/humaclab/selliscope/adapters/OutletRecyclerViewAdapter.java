@@ -3,6 +3,7 @@ package com.humaclab.selliscope.adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -14,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,11 +28,13 @@ import com.google.gson.Gson;
 import com.humaclab.selliscope.R;
 import com.humaclab.selliscope.SelliscopeApiEndpointInterface;
 import com.humaclab.selliscope.SelliscopeApplication;
+import com.humaclab.selliscope.activity.OutletActivity;
 import com.humaclab.selliscope.activity.OutletDetailsActivity;
 import com.humaclab.selliscope.activity.PurchaseHistoryActivity;
 import com.humaclab.selliscope.activity.RouteActivity;
 import com.humaclab.selliscope.model.Outlets;
 import com.humaclab.selliscope.model.UserLocation;
+import com.humaclab.selliscope.utils.DatabaseHandler;
 import com.humaclab.selliscope.utils.GetAddressFromLatLang;
 import com.humaclab.selliscope.utils.NetworkUtility;
 import com.humaclab.selliscope.utils.SendUserLocationData;
@@ -56,10 +60,11 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
     private SelliscopeApiEndpointInterface apiService;
     private Context context;
     private Activity activity;
-    private Outlets.Successful.OutletsResult outletItems;
+    private Outlets.OutletsResult outletItems;
     private SessionManager sessionManager;
+    private DatabaseHandler databaseHandler;
 
-    public OutletRecyclerViewAdapter(Context context, Activity activity, Outlets.Successful.OutletsResult outletItems) {
+    public OutletRecyclerViewAdapter(Context context, Activity activity, Outlets.OutletsResult outletItems) {
         this.outletItems = outletItems;
         this.context = context;
         this.activity = activity;
@@ -68,13 +73,15 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
 
     @Override
     public OutletViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        databaseHandler = new DatabaseHandler(context);
         View layoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.outlet_item, parent, false);
         return new OutletViewHolder(layoutView);
     }
 
     @Override
     public void onBindViewHolder(final OutletViewHolder holder, final int position) {
-        final Outlets.Successful.Outlet outlet = outletItems.outlets.get(position);
+        holder.setIsRecyclable(false);
+        final Outlets.Outlet outlet = outletItems.outlets.get(position);
         Glide.with(context).load(outlet.outletImgUrl)
                 .thumbnail(0.5f)
                 .into(holder.iv_outlet);
@@ -82,6 +89,10 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
         holder.tvOutletAddress.setText(outlet.outletAddress);
         holder.tvOutletContactNumber.setText(outlet.phone);
         holder.tvOutletOwnerName.setText(outlet.ownerName);
+        if (outlet.outlet_routeplan.equals("1")) {
+            holder.lo_routeplan_background2.setBackgroundColor(Color.parseColor("#ff7043"));
+
+        }
         holder.checkInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -155,7 +166,7 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
         });
     }
 
-    private void sendUserLocation(Location location, int outletId, final ProgressBar progressBar) {
+    private void sendUserLocation(Location location, final int outletId, final ProgressBar progressBar) {
         SessionManager sessionManager = new SessionManager(context);
         apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(),
                 sessionManager.getUserPassword(), false)
@@ -174,7 +185,16 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
                         UserLocation.Successful userLocationSuccess = gson.fromJson(response.body().string(), UserLocation.Successful.class);
                         Timber.d("Result:" + userLocationSuccess.result);
                         progressBar.setVisibility(View.INVISIBLE);
-                        Toast.makeText(context, "You are checked In.", Toast.LENGTH_SHORT).show();
+
+                        if (userLocationSuccess.msg.equals("")) { // To check if the user already checked in the outlet
+                            Toast.makeText(context, "You are checked in.", Toast.LENGTH_SHORT).show();
+                            databaseHandler.afterCheckinUpdateOutletRoutePlan(outletId);
+
+                            ((OutletActivity) context).getRoute();//For reloading the outlet recycler view
+                            ((OutletActivity) context).getOutlets();//For reloading the outlet recycler view
+                        } else {
+                            Toast.makeText(context, "You already checked in.", Toast.LENGTH_SHORT).show();
+                        }
                     } catch (IOException e) {
                         progressBar.setVisibility(View.INVISIBLE);
                         Timber.d("Error:" + e.toString());
@@ -210,7 +230,8 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
         TextView tvOutletName, tvOutletAddress, tvOutletOwnerName, tvOutletContactNumber;
         Button checkInButton, mapButton, historyButton;
         ProgressBar pbCheckIn;
-
+        TextView tv_checkroute;
+        LinearLayout lo_routeplan_background2;
 
         public OutletViewHolder(View itemView) {
             super(itemView);
@@ -224,6 +245,7 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
             mapButton = itemView.findViewById(R.id.btn_map);
             historyButton = itemView.findViewById(R.id.btn_history);
             pbCheckIn = itemView.findViewById(R.id.pb_check_in);
+            lo_routeplan_background2 = itemView.findViewById(R.id.routeplan_background2);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

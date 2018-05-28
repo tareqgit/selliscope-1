@@ -24,9 +24,9 @@ import java.util.List;
 public class PurchaseHistoryRecyclerAdapter extends RecyclerView.Adapter<PurchaseHistoryRecyclerAdapter.PurchaseHistoryViewHolder> {
     private Context context;
     private List<PurchaseHistoryItem> purchaseHistoryItemList;
-    private Outlets.Successful.Outlet outlet;
+    private Outlets.Outlet outlet;
 
-    public PurchaseHistoryRecyclerAdapter(Context context, List<PurchaseHistoryItem> purchaseHistoryItems, Outlets.Successful.Outlet outlet) {
+    public PurchaseHistoryRecyclerAdapter(Context context, List<PurchaseHistoryItem> purchaseHistoryItems, Outlets.Outlet outlet) {
         this.context = context;
         this.purchaseHistoryItemList = purchaseHistoryItems;
         this.outlet = outlet;

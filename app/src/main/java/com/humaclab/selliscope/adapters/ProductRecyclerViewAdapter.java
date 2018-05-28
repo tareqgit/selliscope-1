@@ -20,7 +20,7 @@ import com.humaclab.selliscope.model.VariantProduct.ProductsItem;
 import java.util.List;
 
 /**
- * Created by tonmoy on 5/6/17.
+ * Created by leon on 5/6/17.
  */
 
 public class ProductRecyclerViewAdapter extends RecyclerView.Adapter<ProductRecyclerViewAdapter.ProductsViewHolder> {

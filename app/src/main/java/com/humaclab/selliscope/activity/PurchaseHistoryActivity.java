@@ -7,6 +7,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
@@ -25,7 +26,7 @@ import retrofit2.Response;
 
 public class PurchaseHistoryActivity extends AppCompatActivity {
     private ActivityPurchaseHistoryBinding binding;
-    private Outlets.Successful.Outlet outlet;
+    private Outlets.Outlet outlet;
     private SelliscopeApiEndpointInterface apiService;
     private SessionManager sessionManager;
 
@@ -33,13 +34,14 @@ public class PurchaseHistoryActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_purchase_history);
-        outlet = (Outlets.Successful.Outlet) getIntent().getSerializableExtra("outletDetails");
+        outlet = (Outlets.Outlet) getIntent().getSerializableExtra("outletDetails");
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("");
         TextView toolbarTitle = findViewById(R.id.tv_toolbar_title);
         toolbarTitle.setText("Purchase History-" + outlet.outletName);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         sessionManager = new SessionManager(this);
         apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(), sessionManager.getUserPassword(), false).create(SelliscopeApiEndpointInterface.class);
@@ -52,12 +54,21 @@ public class PurchaseHistoryActivity extends AppCompatActivity {
         });
         binding.srlPurchaseHistory.setRefreshing(true);
 
+        binding.btnPayment.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(PurchaseHistoryActivity.this, PaymentActivity.class);
+                intent.putExtra("outletID",outlet.outletId);
+                startActivity(intent);
+            }
+        });
+
         binding.btnOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(PurchaseHistoryActivity.this, OrderActivity1.class);
                 intent.putExtra("outletName", outlet.outletName);
-                intent.putExtra("outletID", outlet.outletId);
+                intent.putExtra("outletID", String.valueOf(outlet.outletId));
                 startActivity(intent);
             }
         });
@@ -81,5 +92,21 @@ public class PurchaseHistoryActivity extends AppCompatActivity {
                 t.printStackTrace();
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

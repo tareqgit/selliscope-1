@@ -30,6 +30,7 @@
     <dimen name="elevation_5">5dp</dimen>
     <dimen name="grid_layout_margin">10dp</dimen>
     <dimen name="radius_3">3dp</dimen>
+    <dimen name="radius_10">10dp</dimen>
     <dimen name="margin_2">2dp</dimen>
     <dimen name="margin_5">5dp</dimen>
     <dimen name="margin_10">10dp</dimen>

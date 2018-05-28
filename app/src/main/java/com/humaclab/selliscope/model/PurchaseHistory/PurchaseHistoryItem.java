@@ -26,6 +26,20 @@ public class PurchaseHistoryItem implements Serializable {
     @SerializedName("order_id")
     private String orderId;
 
+
+    public String getDiscount() {
+        return discount;
+    }
+
+    public void setDiscount(String discount) {
+        this.discount = discount;
+    }
+
+    @SerializedName("discount")
+    private String discount;
+
+
+
     @SerializedName("order_details")
     private List<OrderDetailsItem> orderDetails;
 

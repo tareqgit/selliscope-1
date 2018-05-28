@@ -14,10 +14,8 @@ import android.widget.Toast;
 import com.humaclab.selliscope.R;
 import com.humaclab.selliscope.activity.DeliveryListActivity;
 import com.humaclab.selliscope.activity.InspectionActivity;
-import com.humaclab.selliscope.activity.OrderActivity;
 import com.humaclab.selliscope.activity.OutletActivity;
 import com.humaclab.selliscope.activity.PaymentActivity;
-import com.humaclab.selliscope.activity.ProductActivity;
 import com.humaclab.selliscope.activity.RouteActivity;
 import com.humaclab.selliscope.adapters.DashboardRecyclerViewAdapter;
 import com.humaclab.selliscope.model.DashboardItem;
@@ -42,12 +40,12 @@ public class DashboardFragment extends Fragment {
                              ViewGroup container,
                              Bundle savedInstanceState) {
         View dashboardView = inflater.inflate(R.layout.fragment_dashboard, container, false);
-        RecyclerView recyclerView = (RecyclerView) dashboardView.findViewById(R.id.rv_dashboard);
+        RecyclerView recyclerView = dashboardView.findViewById(R.id.rv_dashboard);
         dashboadItems = new ArrayList<>();
         dashboadItems.add(new DashboardItem("Route", R.drawable.ic_route));
         dashboadItems.add(new DashboardItem("Outlet", R.drawable.ic_outlet));
-        dashboadItems.add(new DashboardItem("Product", R.drawable.ic_products));
-        dashboadItems.add(new DashboardItem("Order", R.drawable.ic_order));
+//        dashboadItems.add(new DashboardItem("Product", R.drawable.ic_products));
+//        dashboadItems.add(new DashboardItem("Order", R.drawable.ic_order));
         dashboadItems.add(new DashboardItem("Deliver", R.drawable.ic_view_orders));
         dashboadItems.add(new DashboardItem("Payment", R.drawable.ic_payments));
         dashboadItems.add(new DashboardItem("Inspection", R.drawable.ic_inspection));
@@ -75,7 +73,7 @@ public class DashboardFragment extends Fragment {
                                                 OutletActivity.class));
                                         break;
                                     }
-                                    case 2: {
+                                    /*case 2: {
                                         getActivity().startActivity(new Intent(getActivity(),
                                                 ProductActivity.class));
                                         break;
@@ -84,23 +82,23 @@ public class DashboardFragment extends Fragment {
                                         getActivity().startActivity(new Intent(getActivity(),
                                                 OrderActivity.class));
                                         break;
-                                    }
-                                    case 4: {
+                                    }*/
+                                    case 2: {
                                         getActivity().startActivity(new Intent(getActivity(),
                                                 DeliveryListActivity.class));
                                         break;
                                     }
-                                    case 5: {
+                                    case 3: {
                                         getActivity().startActivity(new Intent(getActivity(),
                                                 PaymentActivity.class));
                                         break;
                                     }
-                                    case 6: {
+                                    case 4: {
                                         getActivity().startActivity(new Intent(getActivity(),
                                                 InspectionActivity.class));
                                         break;
                                     }
-                                    case 7: {
+                                    case 5: {
                                         Toast.makeText(getActivity(), "This feature is under development.",
                                                 Toast.LENGTH_SHORT).show();
                                         break;

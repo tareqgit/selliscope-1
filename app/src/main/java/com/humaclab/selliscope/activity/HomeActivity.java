@@ -283,7 +283,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 alertDialogContact.setButton(DialogInterface.BUTTON_POSITIVE, "CAll", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse("tel:" + "01707073175"));
+                        Intent intent = new Intent(Intent.ACTION_CALL, Uri.fromParts("tel", "+8801707073175", null));
                         if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
                             // TODO: Consider calling
                             //    ActivityCompat#requestPermissions
@@ -293,10 +293,12 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                             // to handle the case where the user grants the permission. See the documentation
                             // for ActivityCompat#requestPermissions for more details.
 
-
+                            alertDialogContact.dismiss();
                         }
-                        startActivity(intent);
-                        alertDialogContact.dismiss();
+                        else {
+                            startActivity(intent);
+                            alertDialogContact.dismiss();
+                        }
 
                     }
                 });

@@ -51,7 +51,7 @@ public class SendLocationDataService extends Service {
                 SendUserLocationData sendUserLocationData = new SendUserLocationData(getApplicationContext());
                 sendUserLocationData.getLocation();
             }
-        }, 0, 900000, TimeUnit.MILLISECONDS);
+        }, 0, 15, TimeUnit.MINUTES);
         return START_STICKY;
     }
 

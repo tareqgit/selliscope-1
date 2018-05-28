@@ -1,79 +1,80 @@
 package com.humaclab.selliscope.activity;
 
 import android.content.Intent;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.humaclab.selliscope.R;
+import com.humaclab.selliscope.SelliscopeApiEndpointInterface;
+import com.humaclab.selliscope.SelliscopeApplication;
 import com.humaclab.selliscope.adapters.OutletRecyclerViewAdapter;
+import com.humaclab.selliscope.databinding.ActivityOutletBinding;
 import com.humaclab.selliscope.model.Outlets;
+import com.humaclab.selliscope.model.RoutePlan.RouteDetailsResponse;
+import com.humaclab.selliscope.model.RoutePlan.RouteResponse;
 import com.humaclab.selliscope.utils.DatabaseHandler;
+import com.humaclab.selliscope.utils.LoadLocalIntoBackground;
 import com.humaclab.selliscope.utils.NetworkUtility;
+import com.humaclab.selliscope.utils.SessionManager;
 import com.humaclab.selliscope.utils.VerticalSpaceItemDecoration;
 
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class OutletActivity extends AppCompatActivity {
-    private EditText tv_search_outlet;
-    private RecyclerView recyclerView;
+    private ActivityOutletBinding binding;
+    private SelliscopeApiEndpointInterface apiService;
     private OutletRecyclerViewAdapter outletRecyclerViewAdapter;
-    private SwipeRefreshLayout swipeRefreshLayout;
     private DatabaseHandler databaseHandler;
+    private SessionManager sessionManager;
+    private Outlets.OutletsResult outletsResult;
+    private LoadLocalIntoBackground loadLocalIntoBackground;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_outlet);
-        databaseHandler = new DatabaseHandler(this);
 
-        FloatingActionButton addOutlet = (FloatingActionButton) findViewById(R.id.fab_add_outlet);
-        swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.srl_outlet);
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                if (NetworkUtility.isNetworkAvailable(OutletActivity.this)) {
-                    getOutlets();
-                } else {
-                    getOutlets();
-                    Toast.makeText(getApplicationContext(), "Connect to Wifi or Mobile Data for better performance.", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("");
-        TextView toolbarTitle = (TextView) findViewById(R.id.tv_toolbar_title);
-        toolbarTitle.setText(getResources().getString(R.string.outle));
-        setSupportActionBar(toolbar);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_outlet);
+        databaseHandler = new DatabaseHandler(this);
+        sessionManager = new SessionManager(this);
+        apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(), sessionManager.getUserPassword(), true).create(SelliscopeApiEndpointInterface.class);
+
+        loadLocalIntoBackground = new LoadLocalIntoBackground(this);
+        setSupportActionBar(binding.toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+
+        FloatingActionButton addOutlet = findViewById(R.id.fab_add_outlet);
+
         addOutlet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(OutletActivity.this, AddOutletActivity.class));
             }
         });
-        recyclerView = (RecyclerView) findViewById(R.id.rv_outlet);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(linearLayoutManager);
-        recyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
-        });
-        recyclerView.addItemDecoration(new VerticalSpaceItemDecoration(20));
-        if (NetworkUtility.isNetworkAvailable(this)) {
-            getOutlets();
-        } else {
-            getOutlets();
+
+        getRoute(); // For getting route plan data
+
+        binding.rvOutlet.addItemDecoration(new VerticalSpaceItemDecoration(20));
+        binding.rvOutlet.setLayoutManager(new LinearLayoutManager(this));
+
+        if (!NetworkUtility.isNetworkAvailable(this)) {
             Toast.makeText(this, "Connect to Wifi or Mobile Data for better performance.", Toast.LENGTH_SHORT).show();
         }
 
-        tv_search_outlet = (EditText) findViewById(R.id.tv_search_outlet);
-        tv_search_outlet.addTextChangedListener(new TextWatcher() {
+        binding.tvSearchOutlet.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -81,9 +82,9 @@ public class OutletActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                Outlets.Successful.OutletsResult outletsResult = databaseHandler.getSearchedOutlet(String.valueOf(s));
+                Outlets.OutletsResult outletsResult = databaseHandler.getSearchedOutlet(String.valueOf(s));
                 outletRecyclerViewAdapter = new OutletRecyclerViewAdapter(OutletActivity.this, OutletActivity.this, outletsResult);
-                recyclerView.setAdapter(outletRecyclerViewAdapter);
+                binding.rvOutlet.setAdapter(outletRecyclerViewAdapter);
             }
 
             @Override
@@ -91,18 +92,92 @@ public class OutletActivity extends AppCompatActivity {
 
             }
         });
+
+        binding.srlOutlet.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                if (!NetworkUtility.isNetworkAvailable(OutletActivity.this)) {
+                    Toast.makeText(getApplicationContext(), "Connect to Wifi or Mobile Data for better performance.", Toast.LENGTH_SHORT).show();
+                }
+                getOutlets();
+            }
+        });
+        getOutlets();
     }
 
-    void getOutlets() {
-        Outlets.Successful.OutletsResult outletsResult = databaseHandler.getAllOutlet();
-
+    public void getOutlets() {
+        outletsResult = databaseHandler.getAllOutlet();
         if (!outletsResult.outlets.isEmpty()) {
-            if (swipeRefreshLayout.isRefreshing())
-                swipeRefreshLayout.setRefreshing(false);
+            if (binding.srlOutlet.isRefreshing())
+                binding.srlOutlet.setRefreshing(false);
             outletRecyclerViewAdapter = new OutletRecyclerViewAdapter(OutletActivity.this, OutletActivity.this, outletsResult);
-            recyclerView.setAdapter(outletRecyclerViewAdapter);
+            binding.rvOutlet.setAdapter(outletRecyclerViewAdapter);
         } else {
             Toast.makeText(getApplicationContext(), "You don't have any outlet in your list.", Toast.LENGTH_LONG).show();
         }
+    }
+
+    /**
+     * For getting route-plan data
+     */
+    public void getRoute() {
+        Call<RouteResponse> call = apiService.getRoutes();
+        call.enqueue(new Callback<RouteResponse>() {
+            @Override
+            public void onResponse(Call<RouteResponse> call, Response<RouteResponse> response) {
+                if (!response.body().getResult().getRoute().isEmpty()) {
+                    binding.tvToolbarTitle.setText(response.body().getResult().getRoute().get(0).getName());
+                    getRouteDetails(response.body().getResult().getRoute().get(0).getId());
+                } else {
+                    binding.tvToolbarTitle.setText("Outlet");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<RouteResponse> call, Throwable t) {
+                t.printStackTrace();
+            }
+        });
+    }
+
+    /**
+     * For getting the details of route-plan by its ID
+     *
+     * @param routeID int
+     */
+    private void getRouteDetails(int routeID) {
+        Call<RouteDetailsResponse> call = apiService.getRouteDetails(routeID);
+        call.enqueue(new Callback<RouteDetailsResponse>() {
+            @Override
+            public void onResponse(Call<RouteDetailsResponse> call, Response<RouteDetailsResponse> response) {
+                final List<RouteDetailsResponse.OutletItem> check = response.body().getResult().getOutletItemList();
+                if (response.isSuccessful()) {
+                    binding.tvCheckInCount.setText(response.body().getResult().getCheckedOutlet() + " / " + response.body().getResult().getTotalOutlet());
+                    loadLocalIntoBackground.saveOutletRoutePlan(check);
+                    getOutlets(); //For reloading the outlet recycler view
+                }
+            }
+
+            @Override
+            public void onFailure(Call<RouteDetailsResponse> call, Throwable t) {
+                t.printStackTrace();
+            }
+        });
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

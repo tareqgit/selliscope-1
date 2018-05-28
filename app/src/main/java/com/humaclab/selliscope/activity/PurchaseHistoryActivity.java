@@ -26,7 +26,7 @@ import retrofit2.Response;
 
 public class PurchaseHistoryActivity extends AppCompatActivity {
     private ActivityPurchaseHistoryBinding binding;
-    private Outlets.Successful.Outlet outlet;
+    private Outlets.Outlet outlet;
     private SelliscopeApiEndpointInterface apiService;
     private SessionManager sessionManager;
 
@@ -34,7 +34,7 @@ public class PurchaseHistoryActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_purchase_history);
-        outlet = (Outlets.Successful.Outlet) getIntent().getSerializableExtra("outletDetails");
+        outlet = (Outlets.Outlet) getIntent().getSerializableExtra("outletDetails");
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("");
@@ -57,7 +57,9 @@ public class PurchaseHistoryActivity extends AppCompatActivity {
         binding.btnPayment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(PurchaseHistoryActivity.this, PaymentActivity.class));
+                Intent intent = new Intent(PurchaseHistoryActivity.this, PaymentActivity.class);
+                intent.putExtra("outletID",outlet.outletId);
+                startActivity(intent);
             }
         });
 

@@ -1,14 +1,20 @@
 package com.humaclab.selliscope.activity;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
@@ -40,6 +46,7 @@ import com.humaclab.selliscope.utils.LoadLocalIntoBackground;
 import com.humaclab.selliscope.utils.SessionManager;
 import com.squareup.picasso.Picasso;
 
+import java.util.Locale;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -64,7 +71,10 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+       // LoadLocale();
         setContentView(R.layout.activity_home);
+
+
         sessionManager = new SessionManager(this);
         databaseHandler = new DatabaseHandler(this);
         loadLocalIntoBackground = new LoadLocalIntoBackground(this);
@@ -167,6 +177,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         IntentFilter filter = new IntentFilter();
         filter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
         registerReceiver(receiver, filter);
+
+
+
     }
 
     private void setDiameter() {
@@ -233,6 +246,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
                 alertDialog.setTitle("About Us");
                 alertDialog.setMessage("ICT Incubator,\nSoftware Technology Park (4th Floor), Janata Tower,\nKawranbazar, Dhaka 1215, Bangladesh\ninfo@humaclab.com\nMobile: +8801711505322");
+                alertDialog.setMessage("Humac Lab ,\nHouse - 11, Road - 21\nSector - 04, Uttara ,\n Dhaka 1230, Bangladesh\ninfo@humaclab.com\nMobile: +8801711505322");
                 alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, "OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -262,6 +276,34 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             case R.id.nav_profile:
                 startActivity(new Intent(HomeActivity.this, ProfileActivity.class));
                 break;
+            case R.id.nav_contact:
+                final AlertDialog alertDialogContact = new AlertDialog.Builder(this).create();
+                alertDialogContact.setTitle("Contact Us");
+                alertDialogContact.setMessage("Email: support@humaclab.com \nMobile: 01707073175");
+                alertDialogContact.setButton(DialogInterface.BUTTON_POSITIVE, "CAll", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent intent = new Intent(Intent.ACTION_CALL, Uri.fromParts("tel", "+8801707073175", null));
+                        if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                            // TODO: Consider calling
+                            //    ActivityCompat#requestPermissions
+                            // here to request the missing permissions, and then overriding
+                            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                            //                                          int[] grantResults)
+                            // to handle the case where the user grants the permission. See the documentation
+                            // for ActivityCompat#requestPermissions for more details.
+
+                            alertDialogContact.dismiss();
+                        }
+                        else {
+                            startActivity(intent);
+                            alertDialogContact.dismiss();
+                        }
+
+                    }
+                });
+                alertDialogContact.show();
+                break;
         }
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
@@ -276,4 +318,25 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             startActivity(new Intent(getApplicationContext(), HomeActivity.class));
         }
     }
+
+/*    public void setLocale(String lang) {
+        Locale locale = new Locale(lang);
+        Locale.setDefault(locale);
+        Configuration config = new Configuration();
+        config.locale = locale;
+        getBaseContext().getResources().updateConfiguration(config, getBaseContext().getResources().getDisplayMetrics());
+
+        SharedPreferences sharedPreferencesLanguage = getSharedPreferences("Settings", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferencesLanguage.edit();
+        editor.putString("My_Lang", lang);
+        editor.apply();
+    }
+
+
+    //Load
+    public void LoadLocale() {
+        SharedPreferences prefs = getSharedPreferences("Settings", MODE_PRIVATE);
+        String language = prefs.getString("My_Lang", "");
+        setLocale(language);
+    }*/
 }

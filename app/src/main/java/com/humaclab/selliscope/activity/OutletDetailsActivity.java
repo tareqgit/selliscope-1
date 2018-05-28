@@ -15,7 +15,7 @@ import com.humaclab.selliscope.model.Outlets;
 
 public class OutletDetailsActivity extends AppCompatActivity {
     private ActivityOutletDetailsBinding binding;
-    private Outlets.Successful.Outlet outlet;
+    private Outlets.Outlet outlet;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,7 +27,7 @@ public class OutletDetailsActivity extends AppCompatActivity {
         toolbarTitle.setText("Outlet Information");
         setSupportActionBar(toolbar);
 
-        outlet = (Outlets.Successful.Outlet) getIntent().getSerializableExtra("outletDetails");
+        outlet = (Outlets.Outlet) getIntent().getSerializableExtra("outletDetails");
         binding.setVariable(com.humaclab.selliscope.BR.outletDetails, outlet);
 
         if (Float.parseFloat(outlet.outletDue.replace(",", "")) < 0) {

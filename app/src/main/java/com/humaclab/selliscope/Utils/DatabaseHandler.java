@@ -14,6 +14,7 @@ import com.humaclab.selliscope.model.DeliveryResponse;
 import com.humaclab.selliscope.model.District.District;
 import com.humaclab.selliscope.model.OutletType.OutletType;
 import com.humaclab.selliscope.model.Outlets;
+import com.humaclab.selliscope.model.RoutePlan.RouteDetailsResponse;
 import com.humaclab.selliscope.model.Thana.Thana;
 import com.humaclab.selliscope.model.VariantProduct.Brand;
 import com.humaclab.selliscope.model.VariantProduct.Category;
@@ -32,7 +33,7 @@ import java.util.Map;
  */
 
 public class DatabaseHandler extends SQLiteOpenHelper {
-    private static final int DATABASE_VERSION = 8;
+    private static final int DATABASE_VERSION = 9;
 
     // Database Tables
     private static final String TABLE_TARGET = "targets";
@@ -102,6 +103,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String KEY_OUTLET_LONGITUDE = "outlet_longitude";
     private static final String KEY_OUTLET_LATITUDE = "outlet_latitude";
     private static final String KEY_OUTLET_DUE = "outlet_due";
+    private static final String KEY_OUTLET_ROUTEPLAN = "outlet_routeplan";
 
     //Thana table column name
     private static final String KEY_THANA_ID = "thana_id";
@@ -201,7 +203,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + KEY_OUTLET_IMAGE + " TEXT,"
                 + KEY_OUTLET_LATITUDE + " TEXT,"
                 + KEY_OUTLET_LONGITUDE + " TEXT,"
-                + KEY_OUTLET_DUE + " TEXT"
+                + KEY_OUTLET_DUE + " TEXT,"
+                + KEY_OUTLET_ROUTEPLAN + " TEXT"
                 + ")";
 
         String CREATE_DISTRICT_TABLE = "CREATE TABLE " + TABLE_DISTRICT + "("
@@ -692,11 +695,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.close();
     }
 
-    public void addOutlet(List<Outlets.Successful.Outlet> outletList) {
+    public void addOutlet(List<Outlets.Outlet> outletList) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         try {
-            for (Outlets.Successful.Outlet outlet : outletList) {
+            for (Outlets.Outlet outlet : outletList) {
                 values.put(KEY_OUTLET_ID, outlet.outletId);
                 values.put(KEY_OUTLET_NAME, outlet.outletName);
                 values.put(KEY_OUTLET_TYPE, outlet.outletType);
@@ -709,6 +712,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 values.put(KEY_OUTLET_LONGITUDE, outlet.outletLongitude);
                 values.put(KEY_OUTLET_LATITUDE, outlet.outletLatitude);
                 values.put(KEY_OUTLET_DUE, outlet.outletDue);
+                values.put(KEY_OUTLET_ROUTEPLAN, "0");
                 try {
                     db.insert(TABLE_OUTLET, null, values);
                 } catch (Exception e) {
@@ -721,11 +725,129 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.close();
     }
 
-    public Outlets.Successful.OutletsResult getAllOutlet() {
-        Outlets.Successful.OutletsResult outletsResult = new Outlets.Successful.OutletsResult();
-        List<Outlets.Successful.Outlet> outletList = new ArrayList<>();
+    /**
+     * For adding extra temporary outlet which is added into from plan but not in the personal outlet list
+     *
+     * @param outlet RouteDetailsResponse.OutletItem
+     */
+    private void addExtraTempOutlet(RouteDetailsResponse.OutletItem outlet) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        if (outlet.getCheckIn().equals("uncheck")) {
+
+            try {
+                values.put(KEY_OUTLET_ID, outlet.getId());
+                values.put(KEY_OUTLET_NAME, outlet.getName());
+                values.put(KEY_OUTLET_TYPE, outlet.getType());
+                values.put(KEY_OUTLET_OWNER_NAME, outlet.getOwner());
+                values.put(KEY_OUTLET_ADDRESS, outlet.getAddress());
+                values.put(KEY_OUTLET_DISTRICT, outlet.getDistrict());
+                values.put(KEY_OUTLET_THANA, outlet.getThana());
+                values.put(KEY_OUTLET_PHONE, outlet.getPhone());
+                values.put(KEY_OUTLET_IMAGE, outlet.getImg());
+                values.put(KEY_OUTLET_LONGITUDE, outlet.getLongitude());
+                values.put(KEY_OUTLET_LATITUDE, outlet.getLatitude());
+                values.put(KEY_OUTLET_DUE, outlet.getDue());
+                values.put(KEY_OUTLET_ROUTEPLAN, "1");
+                try {
+                    db.insert(TABLE_OUTLET, null, values);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        else {
+            try {
+                values.put(KEY_OUTLET_ID, outlet.getId());
+                values.put(KEY_OUTLET_NAME, outlet.getName());
+                values.put(KEY_OUTLET_TYPE, outlet.getType());
+                values.put(KEY_OUTLET_OWNER_NAME, outlet.getOwner());
+                values.put(KEY_OUTLET_ADDRESS, outlet.getAddress());
+                values.put(KEY_OUTLET_DISTRICT, outlet.getDistrict());
+                values.put(KEY_OUTLET_THANA, outlet.getThana());
+                values.put(KEY_OUTLET_PHONE, outlet.getPhone());
+                values.put(KEY_OUTLET_IMAGE, outlet.getImg());
+                values.put(KEY_OUTLET_LONGITUDE, outlet.getLongitude());
+                values.put(KEY_OUTLET_LATITUDE, outlet.getLatitude());
+                values.put(KEY_OUTLET_DUE, outlet.getDue());
+                values.put(KEY_OUTLET_ROUTEPLAN, "0");
+                try {
+                    db.insert(TABLE_OUTLET, null, values);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+
+        //db.close();
+    }
+
+    /**
+     * For checking if the provided outlet in the route plan is in the database
+     *
+     * @param outlet RouteDetailsResponse.OutletItem
+     * @return
+     */
+    private boolean checkExtraOutlet(RouteDetailsResponse.OutletItem outlet) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String checkQuery = "SELECT * FROM " + TABLE_OUTLET + " WHERE " + KEY_OUTLET_ID + " = " + outlet.getId();
+        Cursor cursor = db.rawQuery(checkQuery, null);
+        cursor.moveToFirst();
+        if (cursor.getCount() == 0) {
+            cursor.close();
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    //for route plan update the portion
+    public void updateOutletRoutePlan(List<RouteDetailsResponse.OutletItem> outletItemList) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        try {
+            for (RouteDetailsResponse.OutletItem outlet : outletItemList) {
+                if (checkExtraOutlet(outlet)) {
+                    addExtraTempOutlet(outlet);
+                } else {
+                    if (outlet.getCheckIn().equals("uncheck")) {
+                        String selectQuery = "UPDATE " + TABLE_OUTLET + " SET " + KEY_OUTLET_ROUTEPLAN + "= 1" + " WHERE " + KEY_OUTLET_ID + " = " + outlet.getId();
+                        db.execSQL(selectQuery);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        db.close();
+    }
+
+    //After Checking Update route Paln
+
+    public void afterCheckinUpdateOutletRoutePlan(int id) {
+        try {
+
+            String selectQuery = "UPDATE " + TABLE_OUTLET + " SET " + KEY_OUTLET_ROUTEPLAN + "= 0" + " WHERE " + KEY_OUTLET_ID + " = " + id;
+            SQLiteDatabase db = this.getWritableDatabase();
+            db.execSQL(selectQuery);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public Outlets.OutletsResult getAllOutlet() {
+        Outlets.OutletsResult outletsResult = new Outlets.OutletsResult();
+        List<Outlets.Outlet> outletList = new ArrayList<>();
         // Select All Query
-        String selectQuery = "SELECT * FROM " + TABLE_OUTLET + " ORDER BY " + KEY_OUTLET_NAME + " ASC";
+        String selectQuery = "SELECT * FROM " + TABLE_OUTLET + " ORDER BY " + KEY_OUTLET_ROUTEPLAN + " DESC";
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
 
@@ -733,7 +855,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             do {
                 cursor.getColumnNames();
-                Outlets.Successful.Outlet outlet = new Outlets.Successful.Outlet();
+                Outlets.Outlet outlet = new Outlets.Outlet();
                 outlet.outletId = cursor.getInt(cursor.getColumnIndex(KEY_OUTLET_ID));
                 outlet.outletName = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_NAME));
                 outlet.outletType = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_TYPE));
@@ -746,6 +868,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 outlet.outletLongitude = Double.parseDouble(cursor.getString(cursor.getColumnIndex(KEY_OUTLET_LONGITUDE)));
                 outlet.outletLatitude = Double.parseDouble(cursor.getString(cursor.getColumnIndex(KEY_OUTLET_LATITUDE)));
                 outlet.outletDue = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_DUE));
+                outlet.outlet_routeplan = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_ROUTEPLAN));
 
                 outletList.add(outlet);
             } while (cursor.moveToNext());
@@ -755,7 +878,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     public int getSizeOfOutlet() {
-        List<Outlets.Successful.Outlet> outletList = new ArrayList<>();
+        List<Outlets.Outlet> outletList = new ArrayList<>();
         // Select All Query
         String selectQuery = "SELECT * FROM " + TABLE_OUTLET + " ORDER BY " + KEY_OUTLET_NAME + " ASC";
         SQLiteDatabase db = this.getWritableDatabase();
@@ -765,7 +888,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             do {
                 cursor.getColumnNames();
-                Outlets.Successful.Outlet outlet = new Outlets.Successful.Outlet();
+                Outlets.Outlet outlet = new Outlets.Outlet();
                 outlet.outletId = cursor.getInt(cursor.getColumnIndex(KEY_OUTLET_ID));
                 outlet.outletName = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_NAME));
                 outlet.outletType = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_TYPE));
@@ -785,9 +908,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return outletList.size();
     }
 
-    public Outlets.Successful.OutletsResult getSearchedOutlet(String outletName) {
-        Outlets.Successful.OutletsResult outletsResult = new Outlets.Successful.OutletsResult();
-        List<Outlets.Successful.Outlet> outletList = new ArrayList<>();
+    public Outlets.OutletsResult getSearchedOutlet(String outletName) {
+        Outlets.OutletsResult outletsResult = new Outlets.OutletsResult();
+        List<Outlets.Outlet> outletList = new ArrayList<>();
         // Select All Query
         String selectQuery = "SELECT * FROM " + TABLE_OUTLET + " WHERE " + KEY_OUTLET_NAME + " LIKE \"" + outletName + "%\" ORDER BY " + KEY_OUTLET_NAME + " ASC";
         SQLiteDatabase db = this.getWritableDatabase();
@@ -797,7 +920,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             do {
                 cursor.getColumnNames();
-                Outlets.Successful.Outlet outlet = new Outlets.Successful.Outlet();
+                Outlets.Outlet outlet = new Outlets.Outlet();
                 outlet.outletId = cursor.getInt(cursor.getColumnIndex(KEY_OUTLET_ID));
                 outlet.outletName = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_NAME));
                 outlet.outletType = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_TYPE));
@@ -810,6 +933,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 outlet.outletLongitude = Double.parseDouble(cursor.getString(cursor.getColumnIndex(KEY_OUTLET_LONGITUDE)));
                 outlet.outletLatitude = Double.parseDouble(cursor.getString(cursor.getColumnIndex(KEY_OUTLET_LATITUDE)));
                 outlet.outletDue = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_DUE));
+                outlet.outlet_routeplan = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_ROUTEPLAN));
 
                 outletList.add(outlet);
             } while (cursor.moveToNext());

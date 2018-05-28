@@ -39,16 +39,16 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import timber.log.Timber;
 
-public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
+public class LoginActivity extends AppCompatActivity  {
     private TextView forgotPassword;
     private EditText email, password;
     private Button signIn;
     private SelliscopeApiEndpointInterface apiService;
     private SessionManager sessionManager;
     private ProgressBar loginProgresssBar;
-    private RadioGroup rg_language;
+/*    private RadioGroup rg_language;
     private RadioButton rbEnglish, rbBangla;
-    final String KEY_SAVED_RADIO_BUTTON_INDEX = "SAVED_RADIO_BUTTON_INDEX";
+    final String KEY_SAVED_RADIO_BUTTON_INDEX = "SAVED_RADIO_BUTTON_INDEX";*/
 
     public final static boolean isValidEmail(CharSequence target) {
         if (target == null) {
@@ -61,41 +61,19 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        LoadLocale();
+//        LoadLocale();
         setContentView(R.layout.activity_login);
 
-        rg_language = findViewById(R.id.rg_language);
+/*        rg_language = findViewById(R.id.rg_language);
         rg_language.check(R.id.rbEnglish);
         rbBangla = findViewById(R.id.rbBangle);
         rbEnglish = findViewById(R.id.rbEnglish);
         rbBangla.setOnClickListener(this);
         rbEnglish.setOnClickListener(this);
 
-        LoadPreferences();
+        LoadPreferences();*/
         checkPermission();
 
-
-/*        rg_language.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                Log.d("chk", "id" + checkedId);
-                if (checkedId == R.id.rbBangle) {
-                    //some code
-                    Toast.makeText(LoginActivity.this, "bangla", Toast.LENGTH_SHORT).show();
-//                    PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putString("LANG", "bn").apply();
-//                    setLangRecreate("bn");
-                } else if (checkedId == R.id.rbEnglish) {
-                    //some code
-                    Toast.makeText(LoginActivity.this, "English", Toast.LENGTH_SHORT).show();
-//                    PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putString("LANG", "en").apply();
-//                    setLangRecreate("en");
-                }
-
-            }
-
-        });*/
-        //  rg_language.check(R.id.rbEnglish);
 
         //View version
         TextView tv_selliscope_version = findViewById(R.id.tv_selliscope_version);
@@ -235,71 +213,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
 
-   /* public void showChangeLangDialog() {
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
-        LayoutInflater inflater = this.getLayoutInflater();
-        final View dialogView = inflater.inflate(R.layout.language_dialog, null);
-        dialogBuilder.setView(dialogView);
-
-        final Spinner spinner1 = (Spinner) dialogView.findViewById(R.id.spinner1);
-
-        dialogBuilder.setTitle(getResources().getString(R.string.language_setting));
-        dialogBuilder.setMessage(getResources().getString(R.string.language_setting_additional));
-        dialogBuilder.setPositiveButton("Change", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                int langpos = spinner1.getSelectedItemPosition();
-                switch (langpos) {
-                    case 0: //English
-                        PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putString("LANG", "en").apply();
-                        setLangRecreate("en");
-                        return;
-                    case 1: //Bangla
-                        PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putString("LANG", "bn").apply();
-                        setLangRecreate("bn");
-                        return;
-                    default: //By default set to english
-                        PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putString("LANG", "en").apply();
-                        setLangRecreate("en");
-                        return;
-                }
-            }
-        });
-        dialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                //pass
-            }
-        });
-        AlertDialog b = dialogBuilder.create();
-        b.show();
-    }*/
-
-/*    public void setLangRecreate(String langval) {
-        Configuration config = getBaseContext().getResources().getConfiguration();
-        Locale locale = new Locale(langval);
-        Locale.setDefault(locale);
-        config.locale = locale;
-        getBaseContext().getResources().updateConfiguration(config, getBaseContext().getResources().getDisplayMetrics());
-        recreate();
-    }*/
-
-
-//    @Override
-//    public void onCheckedChanged(RadioGroup group, int checkedId) {
-//        Log.d("chk", "id" + checkedId);
-//        if (checkedId == R.id.rbBangle) {
-//            //some code
-//            Toast.makeText(LoginActivity.this, "bangla", Toast.LENGTH_SHORT).show();
-//                    PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putString("LANG", "bn").apply();
-//                    setLangRecreate("bn");
-//        } else {
-//            //some code
-//            Toast.makeText(LoginActivity.this, "English", Toast.LENGTH_SHORT).show();
-//                    PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putString("LANG", "en").apply();
-//                    setLangRecreate("en");
-//        }
-//    }
-
-    @Override
+    /*@Override
     public void onClick(View v) {
         int id = v.getId();
 
@@ -308,15 +222,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             SavePreferences(KEY_SAVED_RADIO_BUTTON_INDEX, 0);
             setLocale("bn");
             recreate();
-           /* PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putString("LANG", "bn").apply();
-            setLangRecreate("bn");*/
+           *//* PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putString("LANG", "bn").apply();
+            setLangRecreate("bn");*//*
             //  Toast.makeText(this, ""+checkedIndex, Toast.LENGTH_SHORT).show();
         } else if (id == R.id.rbEnglish) {
             SavePreferences(KEY_SAVED_RADIO_BUTTON_INDEX, 1);
             setLocale("en");
             recreate();
-            /*PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putString("LANG", "en").apply();
-            setLangRecreate("en");*/
+            *//*PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putString("LANG", "en").apply();
+            setLangRecreate("en");*//*
             //   Toast.makeText(this, ""+checkedIndex, Toast.LENGTH_SHORT).show();
         }
 
@@ -357,6 +271,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         SharedPreferences prefs = getSharedPreferences("Settings", MODE_PRIVATE);
         String language = prefs.getString("My_Lang", "");
         setLocale(language);
-    }
+    }*/
 
 }

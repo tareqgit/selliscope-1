@@ -71,7 +71,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        LoadLocale();
+       // LoadLocale();
         setContentView(R.layout.activity_home);
 
 
@@ -179,17 +179,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         registerReceiver(receiver, filter);
 
 
-        // For Shared Preferrence to Language
-        /*SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
-        Configuration config = getBaseContext().getResources().getConfiguration();
-
-        String lang = settings.getString("LANG", "");
-        if (! "".equals(lang) && ! config.locale.getLanguage().equals(lang)) {
-            Locale locale = new Locale(lang);
-            Locale.setDefault(locale);
-            config.locale = locale;
-            getBaseContext().getResources().updateConfiguration(config, getBaseContext().getResources().getDisplayMetrics());
-        }*/
 
     }
 
@@ -328,18 +317,13 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    public void setLocale(String lang) {
+/*    public void setLocale(String lang) {
         Locale locale = new Locale(lang);
         Locale.setDefault(locale);
         Configuration config = new Configuration();
         config.locale = locale;
         getBaseContext().getResources().updateConfiguration(config, getBaseContext().getResources().getDisplayMetrics());
 
-        // Save To SharedPreference
-//        SharedPreferences sharedPreferencesLanguage = getSharedPreferences("Settings", MODE_PRIVATE);
-//        SharedPreferences.Editor editor = getSharedPreferences("Settings",MODE_PRIVATE).edit();
-//        editor.putString("My_Lang",lang);
-//        editor.apply();
         SharedPreferences sharedPreferencesLanguage = getSharedPreferences("Settings", MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferencesLanguage.edit();
         editor.putString("My_Lang", lang);
@@ -352,5 +336,5 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         SharedPreferences prefs = getSharedPreferences("Settings", MODE_PRIVATE);
         String language = prefs.getString("My_Lang", "");
         setLocale(language);
-    }
+    }*/
 }

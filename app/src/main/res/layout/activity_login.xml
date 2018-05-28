@@ -95,7 +95,7 @@
         android:textColor="#ddd"
         android:textSize="16sp" />
 
-    <RadioGroup
+   <!-- <RadioGroup
         android:id="@+id/rg_language"
         android:layout_width="250dp"
         android:layout_height="30dp"
@@ -134,5 +134,5 @@
             android:text="English"
             android:textColor="@drawable/button_text"
             android:textStyle="bold" />
-    </RadioGroup>
+    </RadioGroup>-->
 </RelativeLayout>

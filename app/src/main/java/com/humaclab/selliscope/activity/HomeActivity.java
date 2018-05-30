@@ -3,6 +3,7 @@ package com.humaclab.selliscope.activity;
 import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -10,6 +11,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.NavigationView;
@@ -67,6 +69,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     private DatabaseHandler databaseHandler;
     private ProgressDialog pd;
     private LoadLocalIntoBackground loadLocalIntoBackground;
+    private Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -283,7 +286,41 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 alertDialogContact.setButton(DialogInterface.BUTTON_POSITIVE, "CAll", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        Intent intent = new Intent(Intent.ACTION_CALL, Uri.fromParts("tel", "+8801707073175", null));
+
+
+                        try
+                        {
+                            if(Build.VERSION.SDK_INT > 22)
+                            {
+                                if (ActivityCompat.checkSelfPermission(context, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                                    // TODO: Consider calling
+
+                                    ActivityCompat.requestPermissions(HomeActivity.this, new String[]{Manifest.permission.CALL_PHONE}, 101);
+
+                                    return;
+                                }
+
+                                Intent callIntent = new Intent(Intent.ACTION_CALL);
+                                callIntent.setData(Uri.parse("tel:" + "+8801707073175"));
+                                startActivity(callIntent);
+                                alertDialogContact.dismiss();
+
+                            }
+                            else {
+                                Intent callIntent = new Intent(Intent.ACTION_CALL);
+                                callIntent.setData(Uri.parse("tel:" + "+8801707073175"));
+                                startActivity(callIntent);
+                                alertDialogContact.dismiss();
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            ex.printStackTrace();
+                        }
+
+
+
+/*                        Intent intent = new Intent(Intent.ACTION_CALL, Uri.fromParts("tel", "+8801707073175", null));
                         if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
                             // TODO: Consider calling
                             //    ActivityCompat#requestPermissions
@@ -298,7 +335,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                         else {
                             startActivity(intent);
                             alertDialogContact.dismiss();
-                        }
+                        }*/
 
                     }
                 });

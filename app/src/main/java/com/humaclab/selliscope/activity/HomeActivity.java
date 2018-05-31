@@ -1,6 +1,7 @@
 package com.humaclab.selliscope.activity;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -29,6 +30,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
@@ -287,55 +289,33 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
+ //                       Intent intent = new Intent(Intent.ACTION_CALL, Uri.fromParts("tel", "+8801707073175" ));
+//                        if (ActivityCompat.checkSelfPermission((Activity)context, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+//                            // TODO: Consider calling
+//                            //    ActivityCompat#requestPermissions
+//                            // here to request the missing permissions, and then overriding
+//                            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+//                            //                                          int[] grantResults)
+//                            // to handle the case where the user grants the permission. See the documentation
+//                            // for ActivityCompat#requestPermissions for more details.
+//                            Toast.makeText(context, "Permission DisApproved", Toast.LENGTH_SHORT).show();
+//                            alertDialogContact.dismiss();
+//                        }
+//                        else {
+//                            startActivity(intent);
+//                            alertDialogContact.dismiss();
+//                        }
 
-                        try
-                        {
-                            if(Build.VERSION.SDK_INT > 22)
-                            {
-                                if (ActivityCompat.checkSelfPermission(context, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-                                    // TODO: Consider calling
 
-                                    ActivityCompat.requestPermissions(HomeActivity.this, new String[]{Manifest.permission.CALL_PHONE}, 101);
+                        Intent callIntent = new Intent(Intent.ACTION_CALL);
+                        callIntent.setData(Uri.parse("tel:8801707073175"));
 
-                                    return;
-                                }
-
-                                Intent callIntent = new Intent(Intent.ACTION_CALL);
-                                callIntent.setData(Uri.parse("tel:" + "+8801707073175"));
-                                startActivity(callIntent);
-                                alertDialogContact.dismiss();
-
-                            }
-                            else {
-                                Intent callIntent = new Intent(Intent.ACTION_CALL);
-                                callIntent.setData(Uri.parse("tel:" + "+8801707073175"));
-                                startActivity(callIntent);
-                                alertDialogContact.dismiss();
-                            }
+                        if (ActivityCompat.checkSelfPermission(HomeActivity.this,
+                                Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                            return;
                         }
-                        catch (Exception ex)
-                        {
-                            ex.printStackTrace();
-                        }
+                        startActivity(callIntent);
 
-
-
-/*                        Intent intent = new Intent(Intent.ACTION_CALL, Uri.fromParts("tel", "+8801707073175", null));
-                        if (ActivityCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
-                            // TODO: Consider calling
-                            //    ActivityCompat#requestPermissions
-                            // here to request the missing permissions, and then overriding
-                            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                            //                                          int[] grantResults)
-                            // to handle the case where the user grants the permission. See the documentation
-                            // for ActivityCompat#requestPermissions for more details.
-
-                            alertDialogContact.dismiss();
-                        }
-                        else {
-                            startActivity(intent);
-                            alertDialogContact.dismiss();
-                        }*/
 
                     }
                 });

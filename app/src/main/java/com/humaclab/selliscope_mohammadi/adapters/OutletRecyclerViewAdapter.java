@@ -77,9 +77,6 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
         final Outlets.Successful.Outlet outlet = outletItems.outlets.get(position);
         Glide.with(context).load(outlet.outletImgUrl)
                 .thumbnail(0.5f)
-                .crossFade()
-                .placeholder(R.drawable.ic_outlet_bnw)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(holder.iv_outlet);
         holder.tvOutletName.setText(outlet.outletName);
         holder.tvOutletAddress.setText(outlet.outletAddress);

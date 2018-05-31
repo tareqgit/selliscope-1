@@ -37,9 +37,6 @@ public class OutletDetailsActivity extends AppCompatActivity {
 
         Glide.with(getApplicationContext()).load(outlet.outletImgUrl)
                 .thumbnail(0.5f)
-                .crossFade()
-                .placeholder(R.drawable.ic_outlet_bnw)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(binding.ivAddOutletImage);
 
         binding.btnEditOutlet.setOnClickListener(new View.OnClickListener() {

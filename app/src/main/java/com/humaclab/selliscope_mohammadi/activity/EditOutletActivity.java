@@ -163,9 +163,6 @@ public class EditOutletActivity extends AppCompatActivity {
         iv_outlet = findViewById(R.id.iv_outlet);
         Glide.with(getApplicationContext()).load(outlet.outletImgUrl)
                 .thumbnail(0.5f)
-                .crossFade()
-                .placeholder(R.drawable.ic_outlet_bnw)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(iv_outlet);
 
         iv_outlet.setOnClickListener(new View.OnClickListener() {

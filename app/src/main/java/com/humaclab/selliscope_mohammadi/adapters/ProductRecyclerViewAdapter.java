@@ -58,9 +58,6 @@ public class ProductRecyclerViewAdapter extends RecyclerView.Adapter<ProductRecy
                 .into(holder.iv_product);*/
         Glide.with(context).load(productResult.getImg())
                 .thumbnail(0.5f)
-                .crossFade()
-                .placeholder(R.drawable.ic_outlet_bnw)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(holder.iv_product);
 
         holder.iv_product_promo.setOnClickListener(new View.OnClickListener() {

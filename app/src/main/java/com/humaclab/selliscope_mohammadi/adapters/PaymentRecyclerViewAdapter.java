@@ -151,7 +151,7 @@ public class PaymentRecyclerViewAdapter extends RecyclerView.Adapter<PaymentRecy
                             }
                         });
                     } else {
-                        Toast.makeText(context, "PAyment Is Empty", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, "Payment Is Empty", Toast.LENGTH_SHORT).show();
                     }
                 } else if (payment.type > 1) {
                     if (!isEmpty(holder)) {

@@ -24,6 +24,11 @@
             android:checkable="false"
             android:icon="@drawable/refresh"
             android:title="Update Data" />
+        <item
+            android:id="@+id/nav_contact"
+            android:checkable="false"
+            android:icon="@android:drawable/ic_menu_call"
+            android:title="Contact US" />
     </group>
     <group android:id="@+id/gp_nav_information">
         <item

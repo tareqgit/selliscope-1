@@ -5,7 +5,9 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -289,6 +291,48 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                         pd.dismiss();
                     }
                 }, 60000);
+                break;
+            }
+            case R.id.nav_contact: {
+                final AlertDialog alertDialogContact = new AlertDialog.Builder(this).create();
+                alertDialogContact.setTitle("Contact Us");
+                alertDialogContact.setMessage("Email: support@humaclab.com \nMobile: 01707073175");
+                alertDialogContact.setButton(DialogInterface.BUTTON_POSITIVE, "CAll", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        //                       Intent intent = new Intent(Intent.ACTION_CALL, Uri.fromParts("tel", "+8801707073175" ));
+//                        if (ActivityCompat.checkSelfPermission((Activity)context, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+//                            // TODO: Consider calling
+//                            //    ActivityCompat#requestPermissions
+//                            // here to request the missing permissions, and then overriding
+//                            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+//                            //                                          int[] grantResults)
+//                            // to handle the case where the user grants the permission. See the documentation
+//                            // for ActivityCompat#requestPermissions for more details.
+//                            Toast.makeText(context, "Permission DisApproved", Toast.LENGTH_SHORT).show();
+//                            alertDialogContact.dismiss();
+//                        }
+//                        else {
+//                            startActivity(intent);
+//                            alertDialogContact.dismiss();
+//                        }
+
+
+                        Intent callIntent = new Intent(Intent.ACTION_CALL);
+                        callIntent.setData(Uri.parse("tel:8801707073175"));
+
+                        if (ActivityCompat.checkSelfPermission(HomeActivity.this,
+                                Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                            return;
+                        }
+                        startActivity(callIntent);
+
+
+                    }
+                });
+
+                alertDialogContact.show();
                 break;
             }
         }

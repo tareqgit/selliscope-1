@@ -47,9 +47,9 @@ public class DashboardFragment extends Fragment {
 //        dashboadItems.add(new DashboardItem("Product", R.drawable.ic_products));
 //        dashboadItems.add(new DashboardItem("Order", R.drawable.ic_order));
         dashboadItems.add(new DashboardItem("Deliver", R.drawable.ic_view_orders));
-        dashboadItems.add(new DashboardItem("Payment", R.drawable.ic_payments));
+//        dashboadItems.add(new DashboardItem("Payment", R.drawable.ic_payments));
         dashboadItems.add(new DashboardItem("Inspection", R.drawable.ic_inspection));
-        dashboadItems.add(new DashboardItem("Insights", R.drawable.ic_insights));
+//        dashboadItems.add(new DashboardItem("Insights", R.drawable.ic_insights));
         gridLayoutManager = new GridLayoutManager(activity, itemNumber);
         recyclerView.setLayoutManager(gridLayoutManager);
         dashboardRecyclerViewAdapter = new DashboardRecyclerViewAdapter(activity, dashboadItems);
@@ -88,21 +88,21 @@ public class DashboardFragment extends Fragment {
                                                 DeliveryListActivity.class));
                                         break;
                                     }
-                                    case 3: {
+/*                                    case 3: {
                                         getActivity().startActivity(new Intent(getActivity(),
                                                 PaymentActivity.class));
                                         break;
-                                    }
-                                    case 4: {
+                                    }*/
+                                    case 3: {
                                         getActivity().startActivity(new Intent(getActivity(),
                                                 InspectionActivity.class));
                                         break;
                                     }
-                                    case 5: {
+/*                                    case 5: {
                                         Toast.makeText(getActivity(), "This feature is under development.",
                                                 Toast.LENGTH_SHORT).show();
                                         break;
-                                    }
+                                    }*/
                                     default: {
                                         Toast.makeText(getActivity(), "Please upgrade your package" +
                                                         " to use this feature",

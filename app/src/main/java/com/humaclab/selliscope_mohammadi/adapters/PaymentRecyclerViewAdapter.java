@@ -110,10 +110,50 @@ public class PaymentRecyclerViewAdapter extends RecyclerView.Adapter<PaymentRecy
                     payment.depositedAccount = holder.et_deposited_account.getText().toString();
                     payment.depositForm = holder.et_deposit_form.getText().toString();
                 }
-                payment.amount = Integer.parseInt(holder.et_payment.getText().toString());
+                if (holder.et_payment.getText().toString().isEmpty()) {
+                    holder.et_payment.setError(context.getString(R.string.error_field_required));
+                    pd.dismiss();
+                    return;
+                } else {
+                    payment.amount = Integer.parseInt(holder.et_payment.getText().toString());
+                }
                 paymentResponse.payment = payment;
+                if (payment.type == 1) {
+                    if (!holder.et_payment.getText().toString().isEmpty()) {
+                        Call<PaymentResponse.PaymentSucessfull> call = apiService.payNow(paymentResponse);
+                        call.enqueue(new Callback<PaymentResponse.PaymentSucessfull>() {
+                            @Override
+                            public void onResponse(Call<PaymentResponse.PaymentSucessfull> call, Response<PaymentResponse.PaymentSucessfull> response) {
+                                if (response.code() == 201) {
+                                    try {
+                                        Log.d("Payment response", new Gson().toJson(response.body().result));
+                                        pd.dismiss();
+                                        Toast.makeText(context, "Payment received successfully.", Toast.LENGTH_SHORT).show();
+                                        orderLists.remove(position);
+                                        PaymentRecyclerViewAdapter.this.notifyItemRemoved(position);
+                                        PaymentRecyclerViewAdapter.this.notifyItemRangeChanged(position, orderLists.size());
+                                    } catch (Exception e) {
+                                        pd.dismiss();
+                                        e.printStackTrace();
+                                    }
+                                } else if (response.code() == 400) {
+                                    pd.dismiss();
+                                } else {
+                                    pd.dismiss();
+                                    Toast.makeText(context,
+                                            "Server Error! Try Again Later!", Toast.LENGTH_SHORT).show();
+                                }
+                            }
 
-                if (payment.type > 0) {
+                            @Override
+                            public void onFailure(Call<PaymentResponse.PaymentSucessfull> call, Throwable t) {
+                                pd.dismiss();
+                            }
+                        });
+                    } else {
+                        Toast.makeText(context, "PAyment Is Empty", Toast.LENGTH_SHORT).show();
+                    }
+                } else if (payment.type > 1) {
                     if (!isEmpty(holder)) {
                         Call<PaymentResponse.PaymentSucessfull> call = apiService.payNow(paymentResponse);
                         call.enqueue(new Callback<PaymentResponse.PaymentSucessfull>() {

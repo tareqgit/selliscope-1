@@ -141,7 +141,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         ImageView profilePicture = navigationView.getHeaderView(0)
                 .findViewById(R.id.iv_profile_pic);
         userName.setText(sessionManager.getUserDetails().get("userName"));
-        Picasso.with(this)
+        Picasso.get()
                 .load(sessionManager.getUserDetails().get("profilePictureUrl"))
                 .into(profilePicture);
         navigationView.setNavigationItemSelectedListener(this);

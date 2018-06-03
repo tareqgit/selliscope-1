@@ -66,7 +66,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         Map<String, String> map = sessionManager.getUserDetails();
 
-        Picasso.with(this)
+        Picasso.get()
                 .load(sessionManager.getUserDetails().get("profilePictureUrl"))
                 .into(binding.ivProfileImage);
 

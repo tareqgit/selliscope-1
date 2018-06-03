@@ -20,11 +20,9 @@ public class CheckAppUpdated {
                 .setDisplay(Display.DIALOG)
                 .setUpdateFrom(UpdateFrom.GOOGLE_PLAY)
                 .showEvery(5)
-                .showAppUpdated(true)//need to be removed
                 .setTitleOnUpdateAvailable("Update available")
                 .setContentOnUpdateAvailable("Check out the latest version available on play store")
                 .setTitleOnUpdateNotAvailable("Latest Update")
-                .setContentOnUpdateNotAvailable("You have the latest update.")
                 .setButtonUpdate("Update now?")
                 .setButtonUpdateClickListener(new DialogInterface.OnClickListener() {
                     @Override

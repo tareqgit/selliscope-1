@@ -127,7 +127,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         ImageView profilePicture = navigationView.getHeaderView(0)
                 .findViewById(R.id.iv_profile_pic);
         userName.setText(sessionManager.getUserDetails().get("userName"));
-        Picasso.with(this)
+        Picasso.get()
                 .load(sessionManager.getUserDetails().get("profilePictureUrl"))
                 .into(profilePicture);
         navigationView.setNavigationItemSelectedListener(this);
@@ -293,7 +293,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 }, 60000);
                 break;
             }
-            case R.id.nav_contact: {
+            case R.id.nav_contact:
                 final AlertDialog alertDialogContact = new AlertDialog.Builder(this).create();
                 alertDialogContact.setTitle("Contact Us");
                 alertDialogContact.setMessage("Email: support@humaclab.com \nMobile: 01707073175");
@@ -331,10 +331,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
                     }
                 });
-
                 alertDialogContact.show();
                 break;
-            }
         }
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

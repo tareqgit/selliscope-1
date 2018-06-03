@@ -1,43 +1,39 @@
 {
   "project_info": {
-    "project_number": "208071747171",
-    "firebase_url": "https://selliscope-5bc4c.firebaseio.com",
-    "project_id": "selliscope-5bc4c",
-    "storage_bucket": "selliscope-5bc4c.appspot.com"
+    "project_number": "113519282843",
+    "firebase_url": "https://selliscope-554a4.firebaseio.com",
+    "project_id": "selliscope-554a4",
+    "storage_bucket": "selliscope-554a4.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:208071747171:android:04ade098b734696c",
+        "mobilesdk_app_id": "1:113519282843:android:04ade098b734696c",
         "android_client_info": {
           "package_name": "com.humaclab.selliscope"
         }
       },
       "oauth_client": [
         {
-          "client_id": "208071747171-iscqis0mqm5uqnrc5df7rp1bktjg0bdj.apps.googleusercontent.com",
+          "client_id": "113519282843-30o8o22nsvk4e2rq59t4mqu31i7agrld.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.humaclab.selliscope",
-            "certificate_hash": "041542b3c4220b56d5abf82a6dc255b43dcb4d20"
+            "certificate_hash": "86f22322851060b0b72596eeb2d7b4e9b35eafe4"
           }
         },
         {
-          "client_id": "208071747171-r2sn2kvbugju8dphfjn5tola85qg10so.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.humaclab.selliscope",
-            "certificate_hash": "bf4985fdf63f665a71ca385946458c86dd3dff59"
-          }
+          "client_id": "113519282843-3e8ihd241pttkurv27qomble2l8t3g06.apps.googleusercontent.com",
+          "client_type": 3
         },
         {
-          "client_id": "208071747171-nmn8gfg0tqc128rn0gn95jqru3mmad2h.apps.googleusercontent.com",
+          "client_id": "113519282843-3e8ihd241pttkurv27qomble2l8t3g06.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAc64ltaymDnSPKbr7k9aP85G1DCyS4h1A"
+          "current_key": "AIzaSyAt0TMOGj4mlEhQPYDNWV8tEw1UWOBYV8Q"
         }
       ],
       "services": {
@@ -48,7 +44,7 @@
           "status": 2,
           "other_platform_oauth_client": [
             {
-              "client_id": "208071747171-nmn8gfg0tqc128rn0gn95jqru3mmad2h.apps.googleusercontent.com",
+              "client_id": "113519282843-3e8ihd241pttkurv27qomble2l8t3g06.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

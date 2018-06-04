@@ -64,7 +64,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
 
     private DatabaseHandler databaseHandler;
     private SessionManager sessionManager;
-    private List<String> productName = new ArrayList<>(), outletName = new ArrayList<>(), productID = new ArrayList<>(), outletID = new ArrayList<>(), categoryName = new ArrayList<>(), brandName = new ArrayList<>();
+    private List<String> productName = new ArrayList<>(), productFlag = new ArrayList<>(), outletName = new ArrayList<>(), productID = new ArrayList<>(), outletID = new ArrayList<>(), categoryName = new ArrayList<>(), brandName = new ArrayList<>();
     private List<Integer> categoryID = new ArrayList<>(), brandID = new ArrayList<>(), productDiscount = new ArrayList<>();
     private List<Double> productPrice = new ArrayList<>();
 
@@ -244,6 +244,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                             }
                             product.qty = Integer.parseInt(etQty.getText().toString());
                             product.price = String.valueOf(productPrice.get(sp.getSelectedItemPosition()));
+                            product.flag = productFlag.get(i - 1);
                             products.add(product);
                         }
                     }
@@ -424,6 +425,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 selectedPosition = position;
+                productFlag.add("orderQty");
                 if (fromVariant) {
                     binding.tvPrice.setText(String.valueOf(variantPrice));
                     binding.tvAmount.setText(String.valueOf(variantPrice));
@@ -517,6 +519,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                         newOrder.tvAmount.setText(String.valueOf(productPrice.get(position)));
                     }
                     if (isFreeProduct) {
+                        productFlag.add("offerQty");
                         newOrder.tvPrice.setText("0");
                         newOrder.etDiscount.setText(String.valueOf(productPrice.get(position)));
                         try {
@@ -524,6 +527,8 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
+                    } else {
+                        productFlag.add("orderQty");
                     }
                     newOrder.etDiscount.setText(String.valueOf(Double.valueOf(newOrder.etDiscount.getText().toString()) + productDiscount.get(position)));
                     newOrder.tvAmount.setText(String.valueOf(productPrice.get(position)));

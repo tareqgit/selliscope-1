@@ -32,6 +32,8 @@ public class AddNewOrder implements Serializable {
             public String price;
             @SerializedName("discount")
             public Double discount;
+            @SerializedName("flag")
+            public String flag;
         }
     }
 

@@ -525,11 +525,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         String promotionQuantityQuery = "SELECT * FROM " + TABLE_PROMOTION_QUANTITY
                 + " WHERE " + KEY_PROMOTION_QUANTITY_SOLD_PRODUCT_ID + "='" + productId + "'"
-                + " AND " + KEY_PROMOTION_QUANTITY_SOLD_QUANTITY + "='" + qty + "'";/*
+                + " AND " + KEY_PROMOTION_QUANTITY_SOLD_QUANTITY + "='" + qty + "'"
                 + " AND " + KEY_PROMOTION_QUANTITY_TERRITORY + "='" + (outlet.territoryType != null ? outlet.territoryType : "") + "'"
                 + " AND " + KEY_PROMOTION_QUANTITY_CUSTOMER + "='" + (outlet.outletType != null ? outlet.outletType : "") + "'"
                 + " AND " + KEY_PROMOTION_QUANTITY_CUSTOMER_TYPE + "='" + (outlet.customerType != null ? outlet.customerType : "") + "'"
-                + " AND '" + todayDate + "' BETWEEN " + KEY_PROMOTION_QUANTITY_DATE_FROM + " AND " + KEY_PROMOTION_QUANTITY_DATE_TO;*/
+                + " AND '" + todayDate + "' BETWEEN " + KEY_PROMOTION_QUANTITY_DATE_FROM + " AND " + KEY_PROMOTION_QUANTITY_DATE_TO;
 
         System.out.println(promotionQuantityQuery);
         Cursor cursor = db.rawQuery(promotionQuantityQuery, null);
@@ -567,11 +567,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             qty = String.format("%.0f", Double.parseDouble(qty));
             String promotionValueQuery = "SELECT * FROM " + TABLE_PROMOTION_VALUE
                     + " WHERE " + KEY_PROMOTION_VALUE_SOLD_PRODUCT_ID + "='" + productId + "'"
-                    + " AND " + KEY_PROMOTION_VALUE_SOLD_QUANTITY + "='" + qty + "'";/*
+                    + " AND " + KEY_PROMOTION_VALUE_SOLD_QUANTITY + "='" + qty + "'"
                     + " AND " + KEY_PROMOTION_VALUE_TERRITORY + "='" + (outlet.territoryType != null ? outlet.territoryType : "") + "'"
                     + " AND " + KEY_PROMOTION_VALUE_CUSTOMER + "='" + (outlet.outletType != null ? outlet.outletType : "") + "'"
                     + " AND " + KEY_PROMOTION_VALUE_CUSTOMER_TYPE + "='" + (outlet.customerType != null ? outlet.customerType : "") + "'"
-                    + " AND '" + todayDate + "' BETWEEN " + KEY_PROMOTION_QUANTITY_DATE_FROM + " AND " + KEY_PROMOTION_QUANTITY_DATE_TO;*/
+                    + " AND '" + todayDate + "' BETWEEN " + KEY_PROMOTION_QUANTITY_DATE_FROM + " AND " + KEY_PROMOTION_QUANTITY_DATE_TO;
             Cursor cursor1 = db.rawQuery(promotionValueQuery, null);
             System.out.println(promotionValueQuery);
             if (cursor1.getCount() != 0) {

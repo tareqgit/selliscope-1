@@ -19,6 +19,7 @@ import com.humaclab.selliscope.model.PurchaseHistory.PurchaseHistoryResponse;
 import com.humaclab.selliscope.model.RoutePlan.RouteDetailsResponse;
 import com.humaclab.selliscope.model.RoutePlan.RouteResponse;
 import com.humaclab.selliscope.model.SellsReturnResponse;
+import com.humaclab.selliscope.model.Target.OutletTarget;
 import com.humaclab.selliscope.model.Thana.ThanaResponse;
 import com.humaclab.selliscope.model.UpdatePassword.ChangePassword;
 import com.humaclab.selliscope.model.UpdatePassword.ChangePasswordResponse;
@@ -62,6 +63,11 @@ public interface SelliscopeApiEndpointInterface {
 
     @GET("payment/{outlet_id}")
     Call<Payment> getPayment(@Path("outlet_id") int outletId);
+
+
+    //Outlet Wise Target
+    @GET("target/outlet/{outlet_id}")
+    Call<OutletTarget> getPutletTarget(@Path("outlet_id") int outletId);
 
     @GET("payment")
     Call<Payment> getPayment();

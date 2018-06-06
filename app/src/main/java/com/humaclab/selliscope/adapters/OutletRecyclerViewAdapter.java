@@ -251,6 +251,7 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
                 public void onClick(View v) {
                     Intent intent = new Intent(context, OutletDetailsActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    //intent.putExtra("outletID",outlet))
                     intent.putExtra("outletDetails", outletItems.outlets.get(getLayoutPosition()));
                     context.startActivity(intent);
                 }

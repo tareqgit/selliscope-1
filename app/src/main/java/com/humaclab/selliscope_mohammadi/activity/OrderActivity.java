@@ -124,7 +124,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                                 TextView tvTotalAmount = row.findViewById(R.id.tv_price);
                                 EditText etQty = row.findViewById(R.id.et_qty);
                                 totalAmount += Double.parseDouble(tvTotalAmount.getText().toString());
-                                totalQty += Integer.parseInt(etQty.getText().toString());
+                                totalQty += Double.parseDouble(etQty.getText().toString());
                             }
                         }
                         try {
@@ -196,7 +196,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                             TableRow row = (TableRow) view;
                             Spinner sp = row.findViewById(R.id.sp_product);
                             EditText etQty = row.findViewById(R.id.et_qty);
-                            TextView tv_rate = row.findViewById(R.id.tv_rate);
+                            EditText tv_rate = row.findViewById(R.id.tv_rate);
 
                             product.id = productID.get(sp.getSelectedItemPosition());
                             product.discount = 0.00;
@@ -585,7 +585,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
         builder.show();
     }
 
-    private void addProduct(List<String> productVariantList, final String rate, String quantity, Integer productId, final boolean fromVariant) {
+    private void addProduct(List<String> productVariantList, final String rate, final String quantity, Integer productId, final boolean fromVariant) {
         try {
             final int[] qty = {1}, selectedPosition = {0};
             final LayoutInflater inflater = (LayoutInflater) OrderActivity.this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -615,6 +615,26 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
             newOrder.tvDia.setText(productVariantList.get(0));
             newOrder.tvGrade.setText(productVariantList.get(1));
             newOrder.tvRate.setText(rate);
+            newOrder.tvRate.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int i, int i1, int i2) {
+                    try {
+                        newOrder.tvPrice.setText(String.valueOf(Double.parseDouble(quantity) * Double.parseDouble(s.toString())));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void afterTextChanged(Editable editable) {
+
+                }
+            });
             newOrder.tvPrice.setText(String.valueOf(Double.parseDouble(rate) * Double.parseDouble(quantity)));
             newOrder.etQty.setText(quantity);
             newOrder.etQty.addTextChangedListener(new TextWatcher() {

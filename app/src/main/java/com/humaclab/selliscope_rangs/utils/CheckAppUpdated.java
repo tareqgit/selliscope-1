@@ -19,8 +19,6 @@ public class CheckAppUpdated {
         AppUpdater appUpdater = new AppUpdater(context)
                 .setDisplay(Display.DIALOG)
                 .setUpdateFrom(UpdateFrom.GOOGLE_PLAY)
-                .showEvery(5)
-                .showAppUpdated(true)//need to be removed
                 .setTitleOnUpdateAvailable("Update available")
                 .setContentOnUpdateAvailable("Check out the latest version available on play store")
                 .setTitleOnUpdateNotAvailable("Latest Update")

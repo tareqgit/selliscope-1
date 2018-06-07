@@ -615,6 +615,8 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
             newOrder.tvDia.setText(productVariantList.get(0));
             newOrder.tvGrade.setText(productVariantList.get(1));
             newOrder.tvRate.setText(rate);
+
+            // quentity changed by edittext
             newOrder.tvRate.addTextChangedListener(new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {

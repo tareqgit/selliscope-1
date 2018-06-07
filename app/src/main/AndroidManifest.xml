@@ -100,7 +100,7 @@
         <activity android:name="com.humaclab.selliscope_mohammadi.activity.ProductActivity" />
         <activity
             android:name="com.humaclab.selliscope_mohammadi.activity.OrderActivity"
-            android:screenOrientation="landscape" />
+            android:screenOrientation="portrait" />
         <activity android:name="com.humaclab.selliscope_mohammadi.activity.DeliveryListActivity" />
         <activity
             android:name="com.humaclab.selliscope_mohammadi.activity.DeliveryDetailsActivity"

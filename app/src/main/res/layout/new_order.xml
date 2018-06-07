@@ -71,6 +71,7 @@
             android:gravity="center"
             android:padding="5dp"
             android:text="800"
+            android:inputType="number"
             android:textAlignment="center"
             android:textColor="#000"/>
 

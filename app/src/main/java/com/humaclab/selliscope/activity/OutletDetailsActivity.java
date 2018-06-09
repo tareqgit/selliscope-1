@@ -20,6 +20,10 @@ import com.humaclab.selliscope.model.Outlets;
 import com.humaclab.selliscope.model.Target.OutletTarget;
 import com.humaclab.selliscope.utils.SessionManager;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -84,17 +88,17 @@ public class OutletDetailsActivity extends AppCompatActivity {
                     binding.progressBar.setVisibility(View.GONE);
                     System.out.println("Response " + new Gson().toJson(response.body()));
 
-
-                    Double total = Double.valueOf(response.body().getResult().getSalesTarget().replace(",","").replace("BDT",""));
-                    Double achieved = Double.valueOf(response.body().getResult().getAchieved().replace(",","").replace("BDT",""));
+                    String sales_types = response.body().getResult().getSalesTypes();
+                    Double total = Double.valueOf(response.body().getResult().getSalesTarget());
+                    Double achieved = Double.valueOf(response.body().getResult().getAchieved());
                     Double remaining = total-achieved;
                     int completePersentage = (int) ((achieved * 100)/total);
 
                 binding.tvTargetLabel.setText(response.body().getResult().getTargetType());
-                binding.tvTargetAchieved.setText(response.body().getResult().getAchieved());
-                binding.tvTargetTotal.setText(response.body().getResult().getSalesTarget());
+                binding.tvTargetAchieved.setText(response.body().getResult().getAchieved()+" "+sales_types);
+                binding.tvTargetTotal.setText(response.body().getResult().getSalesTarget()+" "+sales_types);
                 binding.tvVisited.setText(response.body().getResult().getVisited().toString());
-                binding.tvTargetRemaining.setText(remaining.toString()+" BDT");
+                binding.tvTargetRemaining.setText(remaining.toString()+" "+sales_types);
                 binding.circleProgressView.setTextEnabled(false);
                 binding.circleProgressView.setInterpolator(new AccelerateDecelerateInterpolator());
                 binding.circleProgressView.setStartAngle(10);

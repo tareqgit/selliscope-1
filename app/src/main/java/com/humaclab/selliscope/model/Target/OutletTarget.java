@@ -33,6 +33,29 @@ public class OutletTarget implements Serializable {
         @SerializedName("target_type")
 
         private String targetType;
+        @SerializedName("date")
+
+        private String date;
+
+        public String getDate() {
+            return date;
+        }
+
+        public void setDate(String date) {
+            this.date = date;
+        }
+
+        public String getSalesTypes() {
+            return salesTypes;
+        }
+
+        public void setSalesTypes(String salesTypes) {
+            this.salesTypes = salesTypes;
+        }
+
+        @SerializedName("sales_types")
+
+        private String salesTypes;
         @SerializedName("sales_target")
 
         private String salesTarget;

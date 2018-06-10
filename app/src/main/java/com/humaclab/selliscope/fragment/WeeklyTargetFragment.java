@@ -60,7 +60,7 @@ public class WeeklyTargetFragment extends Fragment {
                              ViewGroup container,
                              Bundle savedInstanceState) {
         View weeklyTargetView = inflater.inflate(R.layout.target_layout, container, false);
-        recyclerView = (RecyclerView) weeklyTargetView.findViewById(R.id.rv_target);
+        //recyclerView = (RecyclerView) weeklyTargetView.findViewById(R.id.rv_target);
         swipeRefreshLayout = (SwipeRefreshLayout) weeklyTargetView.findViewById(R.id.srl_target);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override

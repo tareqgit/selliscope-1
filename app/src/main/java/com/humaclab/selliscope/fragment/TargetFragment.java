@@ -50,7 +50,7 @@ public class TargetFragment extends Fragment {
 
         @Override
         public int getCount() {
-            return (3);
+            return (1);
         }
 
         @Override
@@ -58,10 +58,10 @@ public class TargetFragment extends Fragment {
             switch (position) {
                 case 0:
                     return (DailyTargetFragment.newInstance(position));
-                case 1:
-                    return (WeeklyTargetFragment.newInstance(position));
-                case 2:
-                    return (MonthlyTargetFragment.newInstance(position));
+//                case 1:
+//                    return (WeeklyTargetFragment.newInstance(position));
+//                case 2:
+//                    return (MonthlyTargetFragment.newInstance(position));
             }
             return null;
 
@@ -72,11 +72,11 @@ public class TargetFragment extends Fragment {
             //return(TargetFragment.getTitle(ctxt, position));
             switch (position) {
                 case 0:
-                    return "Daily";
-                case 1:
-                    return "Weekly";
-                case 2:
-                    return "Monthly";
+                    return "Target Plan";
+//                case 1:
+//                    return "Weekly";
+//                case 2:
+//                    return "Monthly";
                 default:
                     return "Nothing";
             }

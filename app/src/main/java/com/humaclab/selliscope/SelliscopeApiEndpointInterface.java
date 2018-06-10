@@ -96,6 +96,9 @@ public interface SelliscopeApiEndpointInterface {
     @GET("target")
     Call<ResponseBody> getTargets();
 
+    @GET("target/user")
+    Call<OutletTarget> getTarget();
+
     @GET("diameter")
     Call<DiameterResponse> getDiameter();
 

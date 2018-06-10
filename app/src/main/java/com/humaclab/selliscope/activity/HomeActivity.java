@@ -27,19 +27,26 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.Window;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
+import com.google.gson.Gson;
 import com.humaclab.selliscope.BuildConfig;
 import com.humaclab.selliscope.R;
 import com.humaclab.selliscope.SelliscopeApiEndpointInterface;
 import com.humaclab.selliscope.SelliscopeApplication;
 import com.humaclab.selliscope.fragment.DashboardFragment;
 import com.humaclab.selliscope.fragment.TargetFragment;
+import com.humaclab.selliscope.model.AppVersion.AppVersion;
 import com.humaclab.selliscope.model.Diameter.DiameterResponse;
 import com.humaclab.selliscope.receiver.InternetConnectivityChangeReceiver;
 import com.humaclab.selliscope.service.SendLocationDataService;
@@ -182,7 +189,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         IntentFilter filter = new IntentFilter();
         filter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
         registerReceiver(receiver, filter);
-
+        LoadappsVertion();
 
 
     }
@@ -356,4 +363,65 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         String language = prefs.getString("My_Lang", "");
         setLocale(language);
     }*/
+
+
+
+    private void LoadappsVertion(){
+        apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(),sessionManager.getUserPassword(),false).create(SelliscopeApiEndpointInterface.class);
+        Call<AppVersion> call = apiService.getAppsversion();
+        call.enqueue(new Callback<AppVersion>() {
+            @Override
+            public void onResponse(Call<AppVersion> call, Response<AppVersion> response) {
+                if(response.code() == 200) {
+
+                    System.out.println("APPS VERTION " + new Gson().toJson(response.body()));
+
+                    int serverVersion = Integer.parseInt(response.body().getResult().getVersionCode());
+                    int appVersion = BuildConfig.VERSION_CODE;
+                    if(serverVersion<appVersion){
+                        Toast.makeText(HomeActivity.this, "Updated", Toast.LENGTH_SHORT).show();
+
+                        updateDialog(response.body().getResult().getVersionName(),response.body().getResult().getUrl());
+                    }
+
+
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<AppVersion> call, Throwable t) {
+                Toast.makeText(HomeActivity.this, "Loading Error", Toast.LENGTH_SHORT).show();
+            }
+
+        });
+
+    }
+    private void updateDialog(String version, final String link) {
+
+
+        final AlertDialog builder = new AlertDialog.Builder(this).create();
+        LayoutInflater inflater = LayoutInflater.from(this);
+        View dialogView = inflater.inflate(R.layout.information, null);
+        builder.setView(dialogView);
+
+        TextView tv_details_information = (TextView) dialogView.findViewById(R.id.tv_details_information);
+        TextView tv_title = (TextView) dialogView.findViewById(R.id.tv_title_name);
+
+
+        tv_details_information.setText("A new version is available on PlayStroe .Update it");
+        tv_title.setText("Update Available "+version);
+
+
+        Button iv_info_cancel =  dialogView.findViewById(R.id.btn_update);
+        iv_info_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                builder.dismiss();
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(link)));
+            }
+        });
+        builder.setCancelable(false);
+        builder.show();
+    }
 }

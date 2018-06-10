@@ -1,6 +1,7 @@
 package com.humaclab.selliscope;
 
 import com.humaclab.selliscope.model.AddNewOrder;
+import com.humaclab.selliscope.model.AppVersion.AppVersion;
 import com.humaclab.selliscope.model.BrandResponse;
 import com.humaclab.selliscope.model.CategoryResponse;
 import com.humaclab.selliscope.model.CreateOutlet;
@@ -110,6 +111,9 @@ public interface SelliscopeApiEndpointInterface {
 
     @GET("route-plan/{route_id}")
     Call<RouteDetailsResponse> getRouteDetails(@Path("route_id") int routeId);
+
+    @GET("app-version")
+    Call<AppVersion> getAppsversion();
     //POST methods
 
     @POST("login")

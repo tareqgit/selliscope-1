@@ -60,7 +60,7 @@ public class MonthlyTargetFragment extends Fragment {
                              ViewGroup container,
                              Bundle savedInstanceState) {
         View monthlyTargetView = inflater.inflate(R.layout.target_layout, container, false);
-        recyclerView = (RecyclerView) monthlyTargetView.findViewById(R.id.rv_target);
+        //recyclerView = (RecyclerView) monthlyTargetView.findViewById(R.id.rv_target);
         swipeRefreshLayout = (SwipeRefreshLayout) monthlyTargetView.findViewById(R.id.srl_target);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override

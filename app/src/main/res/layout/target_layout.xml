@@ -1,14 +1,131 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                              android:id="@+id/srl_target"
-                                              android:layout_width="match_parent"
-                                              android:layout_height="match_parent"
-                                              android:background="@color/background"
-                                              android:padding="@dimen/padding_10">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/srl_target"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    android:padding="@dimen/padding_10">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rv_target"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scrollbars="none"/>
+        android:background="?android:attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true"
+        android:padding="10dp">
+
+
+        <ImageView
+            android:id="@+id/icon_target"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginBottom="@dimen/margin_5"
+            android:src="@drawable/ic_target_sales"/>
+
+        <TextView
+            android:id="@+id/tv_target_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/margin_5"
+            android:layout_marginLeft="5dp"
+            android:layout_toRightOf="@id/icon_target"
+            android:text="@string/sales_target"
+            android:textStyle="bold"/>
+
+
+        <TextView
+            android:id="@+id/tv_completed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true"
+            android:text="@string/completed"
+            android:textColor="#000000"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv_target_achieved"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/tv_completed"
+            android:layout_alignParentStart="true"
+            android:text="0.0"
+            android:textColor="@color/colorPrimary"
+            android:textSize="28sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv_target_total"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/circle_progress_view"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:text="0.0"
+            android:textColor="#000000"
+            android:textSize="36sp"
+            android:textStyle="bold" />
+
+
+        <com.eralp.circleprogressview.CircleProgressView
+            android:id="@+id/circle_progress_view"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center"
+            app:cpv_background_circle_color="@color/red"
+            app:cpv_circle_color="@color/colorPrimary"
+            app:cpv_text_color="@color/colorPrimary"
+            app:cpv_text_prefix="%"
+            app:cpv_text_size="35" />
+
+        <TextView
+            android:id="@+id/tv_remaining"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignTop="@+id/tv_completed"
+            android:text="@string/remaining"
+            android:textColor="#000000"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv_target_remaining"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/tv_completed"
+            android:layout_toStartOf="@+id/takatwo"
+            android:text="0.0"
+            android:textColor="@color/red"
+            android:textSize="28sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:text="TextView" />
+
+        <ImageView
+            android:id="@+id/takaone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/tv_completed"
+            android:layout_toEndOf="@+id/tv_target_achieved"
+            android:src="@drawable/ic_action_taka" />
+
+        <ImageView
+            android:id="@+id/takatwo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/tv_completed"
+            android:layout_alignEnd="@+id/tv_target_total"
+            android:src="@drawable/ic_action_taka" />
+
+    </RelativeLayout>
 </android.support.v4.widget.SwipeRefreshLayout>

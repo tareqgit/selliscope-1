@@ -43,6 +43,12 @@
     <string name="sp_thana_title">Thana</string>
     <string name="sp_outlet_type">Type</string>
     <string name="stock">Stock: %1$s</string>
+    <string name="dashBoard_map">Map</string>
+    <string name="dashboard_Dealer">Dealer</string>
+    <string name="dashboard_delivery">Delivery</string>
+    <string name="dashboard_inspection">Inspection</string>
+    <string name="dashboard_productList">Product List</string>
+    <string name="dashboard_promotionAds">Promotional Ads</string>
 
     <string-array name="paymentType">
         <item>Cash</item>

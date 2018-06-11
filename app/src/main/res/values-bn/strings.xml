@@ -1,10 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Selliscope</string>
+
+    <string name="target">টার্গেট</string>
+    <string name="dashboard">ড্যাশবোর্ড</string>
+
+    <string name="sign_in">প্রবেশ করুন</string>
+    <string name="password">পাসওয়ার্ড</string>
     <string name="email">ই-মেইল</string>
     <string name="language_setting">ভাষা পরিবর্তন</string>
     <string name="sp_thana_title">থানা</string>
-    <string name="target">টার্গেট</string>
-    <string name="dashboard">ড্যাশবোর্ড</string>
-    <string name="password">পাসওয়ার্ড</string>
+
+
+    <string name="dashBoard_map">ম্যাপ </string>
+    <string name="dashboard_Dealer"> বিক্রয় কেন্দ্র</string>
+    <string name="dashboard_delivery">বিতরণ বর্ণনা</string>
+    <string name="dashboard_inspection">পরিদর্শন</string>
+    <string name="dashboard_productList">পণ্য বিবরন</string>
+    <string name="dashboard_promotionAds">অফার</string>
+
+
+    <string name="prompt_email">ইমেইল</string>
+    <string name="prompt_password">পাসওয়ার্ড (ঐচ্ছিক)</string>
+    <string name="action_sign_in">সাইন ইন বা রেজিস্টার করুন</string>
+    <string name="action_sign_in_short">প্রবেশ করুন</string>
+    <string name="error_invalid_email">এই ইমেইল ঠিকানাটি ঠিক না </string>
+    <string name="error_invalid_password">এই পাসওয়ার্ডটি খুব ছোট</string>
+    <string name="error_incorrect_password">এই পাসওয়ার্ডটি ভুল</string>
+    <string name="error_field_required">ঘরটি অবশ্যই পূরণ করতে হবে</string>
 </resources>

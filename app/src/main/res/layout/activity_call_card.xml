@@ -7,7 +7,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        tools:context="com.humaclab.selliscope.activity.CallCardActivity">
+        tools:context="com.humaclab.lalteer.activity.CallCardActivity">
 
         <include layout="@layout/toolbar_layout"/>
 

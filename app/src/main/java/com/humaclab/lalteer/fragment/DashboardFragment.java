@@ -65,8 +65,10 @@ public class DashboardFragment extends Fragment {
                             public void onItemClick(View view, int position) {
                                 switch (position) {
                                     case 0: {
-                                        getActivity().startActivity(new Intent(getActivity(),
-                                                RouteActivity.class));
+                                        /*getActivity().startActivity(new Intent(getActivity(),
+                                                RouteActivity.class));*/
+                                        Toast.makeText(getActivity(), "This feature is under development.",
+                                                Toast.LENGTH_SHORT).show();
                                         break;
                                     }
                                     case 1: {

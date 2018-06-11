@@ -19,6 +19,7 @@ import com.humaclab.lalteer.model.PurchaseHistory.PurchaseHistoryResponse;
 import com.humaclab.lalteer.model.RoutePlan.RouteDetailsResponse;
 import com.humaclab.lalteer.model.RoutePlan.RouteResponse;
 import com.humaclab.lalteer.model.SellsReturnResponse;
+import com.humaclab.lalteer.model.Target.OutletTarget;
 import com.humaclab.lalteer.model.Thana.ThanaResponse;
 import com.humaclab.lalteer.model.UpdatePassword.ChangePassword;
 import com.humaclab.lalteer.model.UpdatePassword.ChangePasswordResponse;
@@ -95,6 +96,9 @@ public interface SelliscopeApiEndpointInterface {
 
     @GET("outlet/{outlet_id}/purchase-history")
     Call<PurchaseHistoryResponse> getPurchaseHistory(@Path("outlet_id") int outletID);
+
+    @GET("target/user")
+    Call<OutletTarget> getTarget();
 
     @GET("route-plan")
     Call<RouteResponse> getRoutes();

@@ -17,6 +17,7 @@ import com.ogaclejapan.smarttablayout.SmartTabLayout;
 /**
  * Created by dipu_ on 2/25/2017.
  * Updated by Leon on 7/14/2017.
+ * Updated by Anam on 10/06/2018.
  */
 
 public class TargetFragment extends Fragment {
@@ -50,7 +51,7 @@ public class TargetFragment extends Fragment {
 
         @Override
         public int getCount() {
-            return (3);
+            return (1);
         }
 
         @Override
@@ -58,10 +59,10 @@ public class TargetFragment extends Fragment {
             switch (position) {
                 case 0:
                     return (DailyTargetFragment.newInstance(position));
-                case 1:
-                    return (WeeklyTargetFragment.newInstance(position));
-                case 2:
-                    return (MonthlyTargetFragment.newInstance(position));
+//                case 1:
+//                    return (WeeklyTargetFragment.newInstance(position));
+//                case 2:
+//                    return (MonthlyTargetFragment.newInstance(position));
             }
             return null;
 
@@ -72,11 +73,11 @@ public class TargetFragment extends Fragment {
             //return(TargetFragment.getTitle(ctxt, position));
             switch (position) {
                 case 0:
-                    return "Daily";
-                case 1:
-                    return "Weekly";
-                case 2:
-                    return "Monthly";
+                    return "Target Plan";
+//                case 1:
+//                    return "Weekly";
+//                case 2:
+//                    return "Monthly";
                 default:
                     return "Nothing";
             }

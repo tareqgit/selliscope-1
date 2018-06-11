@@ -42,14 +42,15 @@ public class DashboardFragment extends Fragment {
         View dashboardView = inflater.inflate(R.layout.fragment_dashboard, container, false);
         RecyclerView recyclerView = dashboardView.findViewById(R.id.rv_dashboard);
         dashboadItems = new ArrayList<>();
-        dashboadItems.add(new DashboardItem("Route", R.drawable.ic_route));
-        dashboadItems.add(new DashboardItem("Outlet", R.drawable.ic_outlet));
+        dashboadItems.add(new DashboardItem(getString(R.string.dashBoard_map), R.drawable.ic_map));
+        dashboadItems.add(new DashboardItem(getString(R.string.dashboard_Dealer), R.drawable.ic_outlet));
 //        dashboadItems.add(new DashboardItem("Product", R.drawable.ic_products));
 //        dashboadItems.add(new DashboardItem("Order", R.drawable.ic_order));
-        dashboadItems.add(new DashboardItem("Deliver", R.drawable.ic_view_orders));
-        dashboadItems.add(new DashboardItem("Payment", R.drawable.ic_payments));
-        dashboadItems.add(new DashboardItem("Inspection", R.drawable.ic_inspection));
-        dashboadItems.add(new DashboardItem("Insights", R.drawable.ic_insights));
+        dashboadItems.add(new DashboardItem(getString(R.string.dashboard_delivery), R.drawable.ic_view_orders));
+//        dashboadItems.add(new DashboardItem("Payment", R.drawable.ic_payments));
+        dashboadItems.add(new DashboardItem(getString(R.string.dashboard_inspection), R.drawable.ic_inspection));
+        dashboadItems.add(new DashboardItem(getString(R.string.dashboard_productList), R.drawable.ic_insights));
+        dashboadItems.add(new DashboardItem(getString(R.string.dashboard_promotionAds), R.drawable.ic_payments));
         gridLayoutManager = new GridLayoutManager(activity, itemNumber);
         recyclerView.setLayoutManager(gridLayoutManager);
         dashboardRecyclerViewAdapter = new DashboardRecyclerViewAdapter(activity, dashboadItems);
@@ -88,14 +89,19 @@ public class DashboardFragment extends Fragment {
                                                 DeliveryListActivity.class));
                                         break;
                                     }
-                                    case 3: {
+/*                                    case 3: {
                                         getActivity().startActivity(new Intent(getActivity(),
                                                 PaymentActivity.class));
                                         break;
-                                    }
-                                    case 4: {
+                                    }*/
+                                    case 3: {
                                         getActivity().startActivity(new Intent(getActivity(),
                                                 InspectionActivity.class));
+                                        break;
+                                    }
+                                    case 4: {
+                                        Toast.makeText(getActivity(), "This feature is under development.",
+                                                Toast.LENGTH_SHORT).show();
                                         break;
                                     }
                                     case 5: {

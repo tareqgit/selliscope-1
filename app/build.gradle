@@ -22,8 +22,8 @@ android {
         applicationId "com.humaclab.selliscope"
         minSdkVersion 19
         targetSdkVersion 27
-        versionCode 23
-        versionName "test-2.27"
+        versionCode 1
+        versionName "test-lalteer-1.0"
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }

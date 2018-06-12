@@ -179,10 +179,10 @@ public class DailyTargetFragment extends Fragment {
 
                     tv_date.setText(response.body().getResult().getDate());
                     tv_target_label.setText(response.body().getResult().getTargetType());
-                    tv_target_achieved.setText(response.body().getResult().getAchieved()+" "+sales_types);
-                    tv_total.setText(response.body().getResult().getSalesTarget());
+                    tv_target_achieved.setText(response.body().getResult().getAchieved()+" ");
+                    tv_total.setText(total.toString());
                     //tv_visited.setText(response.body().getResult().getVisited());
-                    tv_target_remaining.setText(remaining.toString()+" "+sales_types);
+                    tv_target_remaining.setText(remaining.toString()+" ");
                     circle_progress_view.setTextEnabled(true);
                     circle_progress_view.setInterpolator(new AccelerateDecelerateInterpolator());
                     circle_progress_view.setStartAngle(10);

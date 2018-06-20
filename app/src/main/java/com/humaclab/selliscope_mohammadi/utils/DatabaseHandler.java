@@ -1232,7 +1232,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                     do {
                         AddNewOrder.NewOrder.Product product = new AddNewOrder.NewOrder.Product();
                         product.id = cursorOrders.getInt(cursorOrders.getColumnIndex(KEY_ORDER_PRODUCT_ID));
-                        product.qty = cursorOrders.getInt(cursorOrders.getColumnIndex(KEY_ORDER_PRODUCT_QUANTITY));
+                        product.qty = cursorOrders.getDouble(cursorOrders.getColumnIndex(KEY_ORDER_PRODUCT_QUANTITY));
                         product.row = cursorOrders.getInt(cursorOrders.getColumnIndex(KEY_ORDER_PRODUCT_ROW));
                         product.price = cursorOrders.getString(cursorOrders.getColumnIndex(KEY_ORDER_PRODUCT_PRICE));
                         product.discount = Double.valueOf(cursorOrders.getString(cursorOrders.getColumnIndex(KEY_ORDER_PRODUCT_DISCOUNT)));

@@ -116,7 +116,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                     @Override
                     public void run() {
                         double totalAmount = 0;
-                        int totalQty = 0;
+                        double totalQty = 0;
                         for (int i = 1; i < binding.tblOrders.getChildCount(); i++) {
                             View view = binding.tblOrders.getChildAt(i);
                             if (view instanceof TableRow) {
@@ -124,7 +124,8 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                                 TextView tvTotalAmount = row.findViewById(R.id.tv_price);
                                 EditText etQty = row.findViewById(R.id.et_qty);
                                 totalAmount += Double.parseDouble(tvTotalAmount.getText().toString());
-                                totalQty += Double.parseDouble(etQty.getText().toString());
+                                //totalQty += Double.parseDouble(etQty.getText().toString());
+                                totalQty += ParseDouble(etQty.getText().toString());
                             }
                         }
                         try {
@@ -200,7 +201,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
 
                             product.id = productID.get(sp.getSelectedItemPosition());
                             product.discount = 0.00;
-                            product.qty = Integer.parseInt(etQty.getText().toString());
+                            product.qty = Double.parseDouble(etQty.getText().toString());
                             product.row = (variantRows.size() != 0) ? Integer.parseInt(variantRows.get(i).get(0)) : 0;
                             product.price = tv_rate.getText().toString();
                             products.add(product);
@@ -570,13 +571,20 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                     }
                 }
                 System.out.println("Selected variants: " + productVariantList);
-                if (!et_quantity.getText().toString().isEmpty()) {
+                if (!et_quantity.getText().toString().isEmpty() && !et_rate.getText().toString().isEmpty()) {
                     addProduct(productVariantList, price, quantity, productID.get(sp_product_name.getSelectedItemPosition()), isVariant[0]);
                     builder.dismiss();
                 } else {
-                    View view = et_quantity;
-                    et_quantity.setError("This field is required.");
-                    view.requestFocus();
+                    if (et_quantity.getText().toString().isEmpty()) {
+                        View view = et_quantity;
+                        et_quantity.setError("This field is required.");
+                        view.requestFocus();
+                    } else if (et_rate.getText().toString().isEmpty()) {
+                        View view = et_rate;
+                        et_rate.setError("This field is required.");
+                        view.requestFocus();
+
+                    }
                 }
             }
 //            }
@@ -687,5 +695,15 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
     protected void onDestroy() {
         super.onDestroy();
         scheduler.shutdown();
+    }
+
+    double ParseDouble(String strNumber) {
+        if (strNumber != null && strNumber.length() > 0) {
+            try {
+                return Double.parseDouble(strNumber);
+            } catch (Exception e) {
+                return -1;   // or some value to mark this field is wrong. or make a function validates field first ...
+            }
+        } else return 0;
     }
 }

@@ -115,7 +115,7 @@ public class PaymentRecyclerViewAdapter extends RecyclerView.Adapter<PaymentRecy
                     pd.dismiss();
                     return;
                 } else {
-                    payment.amount = Integer.parseInt(holder.et_payment.getText().toString());
+                    payment.amount = Double.parseDouble(holder.et_payment.getText().toString());
                 }
                 paymentResponse.payment = payment;
                 if (payment.type == 1) {

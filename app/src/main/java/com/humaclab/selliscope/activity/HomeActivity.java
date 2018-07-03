@@ -1,18 +1,16 @@
 package com.humaclab.selliscope.activity;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.content.res.Configuration;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.NavigationView;
@@ -30,8 +28,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
-import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -57,7 +53,6 @@ import com.humaclab.selliscope.utils.LoadLocalIntoBackground;
 import com.humaclab.selliscope.utils.SessionManager;
 import com.squareup.picasso.Picasso;
 
-import java.util.Locale;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -80,13 +75,14 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     private LoadLocalIntoBackground loadLocalIntoBackground;
     private Context context;
     private SendLocationDataService sendLocationDataService;
+    private BroadcastReceiver broadcastReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
        // LoadLocale();
         setContentView(R.layout.activity_home);
-
+        //registerReceiver();
         sendLocationDataService = new SendLocationDataService();
 
         sessionManager = new SessionManager(this);
@@ -346,6 +342,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         super.onDestroy();
         if (sessionManager.isLoggedIn()) {
             stopService(new Intent(HomeActivity.this, SendLocationDataService.class));
+            //unregisterReceiver(broadcastReceiver);
             unregisterReceiver(receiver);
 
             Timber.d("Home Activity stopped.");
@@ -388,7 +385,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
                     int serverVersion = Integer.parseInt(response.body().getResult().getVersionCode());
                     int appVersion = BuildConfig.VERSION_CODE;
-                    if(serverVersion<appVersion){
+                    if(serverVersion>appVersion){
                         updateDialog(response.body().getResult().getVersionName(),response.body().getResult().getUrl());
                     }
 
@@ -444,4 +441,49 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         super.onResume();
         LoadappsVertion();
     }
+
+    /**
+     * This method is responsible to register receiver with NETWORK_CHANGE_ACTION.
+     * */
+    /*private void registerReceiver()
+    {
+
+
+        if (broadcastReceiver == null) {
+
+            broadcastReceiver = new BroadcastReceiver() {
+
+                @Override
+                public void onReceive(Context context, Intent intent) {
+
+                    Bundle extras = intent.getExtras();
+
+                    NetworkInfo info = (NetworkInfo) extras
+                            .getParcelable("networkInfo");
+
+                    NetworkInfo.State state = info.getState();
+                    Log.d("InternalBroadcast", info.toString() + " "
+                            + state.toString());
+
+                    if (state == NetworkInfo.State.CONNECTED) {
+
+                        Toast.makeText(context, "CONNECTED", Toast.LENGTH_SHORT).show();
+                       // onNetworkUp();
+
+                    } else if (state == NetworkInfo.State.CONNECTED) {
+                        Toast.makeText(context, "not CONNECTED", Toast.LENGTH_SHORT).show();
+                       // onNetworkDown();
+
+                    }
+
+                }
+            };
+
+            final IntentFilter intentFilter = new IntentFilter();
+            intentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
+            registerReceiver(broadcastReceiver, intentFilter);
+        }
+
+    }*/
+
 }

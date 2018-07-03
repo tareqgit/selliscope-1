@@ -79,6 +79,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     private ProgressDialog pd;
     private LoadLocalIntoBackground loadLocalIntoBackground;
     private Context context;
+    private SendLocationDataService sendLocationDataService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +87,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
        // LoadLocale();
         setContentView(R.layout.activity_home);
 
+        sendLocationDataService = new SendLocationDataService();
 
         sessionManager = new SessionManager(this);
         databaseHandler = new DatabaseHandler(this);
@@ -189,7 +191,12 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         IntentFilter filter = new IntentFilter();
         filter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
         registerReceiver(receiver, filter);
-        LoadappsVertion();
+        //LoadappsVertion();
+
+
+        startService(new Intent(this, SendLocationDataService.class));
+
+
 
 
     }
@@ -244,7 +251,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 sessionManager.logoutUser(false);
                 schedulerForMinute.shutdownNow();
                 schedulerForHour.shutdownNow();
-                stopService(new Intent(getApplicationContext(), SendLocationDataService.class));
+                stopService(new Intent(HomeActivity.this, SendLocationDataService.class));
                 HomeActivity.this.deleteDatabase(Constants.databaseName);
                 pd.dismiss();
                 unregisterReceiver(receiver);
@@ -338,6 +345,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     protected void onDestroy() {
         super.onDestroy();
         if (sessionManager.isLoggedIn()) {
+            stopService(new Intent(HomeActivity.this, SendLocationDataService.class));
+            unregisterReceiver(receiver);
+
             Timber.d("Home Activity stopped.");
             startActivity(new Intent(getApplicationContext(), HomeActivity.class));
         }
@@ -379,8 +389,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                     int serverVersion = Integer.parseInt(response.body().getResult().getVersionCode());
                     int appVersion = BuildConfig.VERSION_CODE;
                     if(serverVersion<appVersion){
-                        Toast.makeText(HomeActivity.this, "Updated", Toast.LENGTH_SHORT).show();
-
                         updateDialog(response.body().getResult().getVersionName(),response.body().getResult().getUrl());
                     }
 
@@ -409,7 +417,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         TextView tv_title = (TextView) dialogView.findViewById(R.id.tv_title_name);
 
 
-        tv_details_information.setText("A new version is available on PlayStroe .Update it");
+        tv_details_information.setText("A new version is available on PlayStore .Please Update it");
         tv_title.setText("Update Available "+version);
 
 
@@ -418,10 +426,22 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onClick(View v) {
                 builder.dismiss();
-                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(link)));
+                final String appPackageName = getPackageName(); // getPackageName() from Context or Activity object
+                try {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
+                } catch (android.content.ActivityNotFoundException anfe) {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
+                }
             }
         });
         builder.setCancelable(false);
         builder.show();
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        LoadappsVertion();
     }
 }

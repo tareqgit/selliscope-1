@@ -57,10 +57,13 @@ public class SendLocationDataService extends Service {
 
     @Override
     public void onDestroy() {
-        SessionManager sessionManager = new SessionManager(getApplicationContext());
+        super.onDestroy();
+        scheduler.shutdownNow();
+        Timber.d("SendLocation service is stopped.");
+/*        SessionManager sessionManager = new SessionManager(getApplicationContext());
         Timber.d("SendLocation service is stopped.");
         if (sessionManager.isLoggedIn()) {
             startService(new Intent(SendLocationDataService.this, SendLocationDataService.class));
-        }
+        }*/
     }
 }

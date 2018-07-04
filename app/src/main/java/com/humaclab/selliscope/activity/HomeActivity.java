@@ -91,7 +91,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         loadLocalIntoBackground.loadAll();
         apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(), sessionManager.getUserPassword(), false).create(SelliscopeApiEndpointInterface.class);
         pd = new ProgressDialog(this);
-        CheckAppUpdated.checkAppUpdate(this);
+//        CheckAppUpdated.checkAppUpdate(this);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("");
@@ -269,9 +269,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                     }
                 });
                 alertDialog.show();
-                break;
-            case R.id.nav_check_update:
-                CheckAppUpdated.checkAppUpdate(this);
                 break;
             case R.id.nav_update_data:
                 pd.setMessage("Local data is updating.\nPlease be patient....");

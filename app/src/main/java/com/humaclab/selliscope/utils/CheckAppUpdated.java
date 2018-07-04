@@ -7,9 +7,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Handler;
 
-import com.github.javiersantos.appupdater.AppUpdater;
-import com.github.javiersantos.appupdater.enums.Display;
-import com.github.javiersantos.appupdater.enums.UpdateFrom;
+
 import com.humaclab.selliscope.activity.HomeActivity;
 import com.humaclab.selliscope.service.SendLocationDataService;
 
@@ -19,7 +17,7 @@ import com.humaclab.selliscope.service.SendLocationDataService;
 
 public class CheckAppUpdated {
 
-    public static void checkAppUpdate(final Context context) {
+    /*public static void checkAppUpdate(final Context context) {
         final SessionManager sessionManager = new SessionManager(context);
         final ProgressDialog pd = new ProgressDialog(context);
 
@@ -60,5 +58,5 @@ public class CheckAppUpdated {
                 .setButtonDoNotShowAgain(null)
                 .setCancelable(false); // Dialog could not be dismissable
         appUpdater.start();
-    }
+    }*/
 }

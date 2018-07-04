@@ -45,7 +45,7 @@ public class OutletDetailsActivity extends AppCompatActivity {
 
         outlet = (Outlets.Outlet) getIntent().getSerializableExtra("outletDetails");
         binding.setVariable(com.humaclab.selliscope.BR.outletDetails, outlet);
-        loadTargetOutlet();
+  //      loadTargetOutlet();
 /*        mCircleProgressView = (CircleProgressView) findViewById(R.id.circle_progress_view);
         mCircleProgressView.setTextEnabled(false);
         mCircleProgressView.setInterpolator(new AccelerateDecelerateInterpolator());

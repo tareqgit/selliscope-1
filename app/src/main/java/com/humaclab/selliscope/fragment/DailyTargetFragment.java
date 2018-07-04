@@ -87,24 +87,31 @@ public class DailyTargetFragment extends Fragment {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if (NetworkUtility.isNetworkAvailable(getActivity()))
+                //Forget Target
+/*                if (NetworkUtility.isNetworkAvailable(getActivity()))
                     //getTargets();
                     loadTargetOutlet();
                 else
                     Toast.makeText(getActivity(), "Connect to Wifi or Mobile Data",
-                            Toast.LENGTH_SHORT).show();
+                            Toast.LENGTH_SHORT).show();*/
             }
         });
 //        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 //        recyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
 //        });
 //        recyclerView.addItemDecoration(new VerticalSpaceItemDecoration(20));
+
+        // Target
+        /*
         if (NetworkUtility.isNetworkAvailable(getActivity()))
            //getTargets();
             loadTargetOutlet();
         else
             Toast.makeText(getActivity(), "Connect to Wifi or Mobile Data",
                     Toast.LENGTH_SHORT).show();
+                    */
+
+
         return dailyTargetView;
     }
 

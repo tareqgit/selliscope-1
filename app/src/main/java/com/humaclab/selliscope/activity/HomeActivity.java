@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -49,6 +50,7 @@ import com.humaclab.selliscope.service.SendLocationDataService;
 import com.humaclab.selliscope.utils.CheckAppUpdated;
 import com.humaclab.selliscope.utils.Constants;
 import com.humaclab.selliscope.utils.DatabaseHandler;
+import com.humaclab.selliscope.utils.ImportentFunction;
 import com.humaclab.selliscope.utils.LoadLocalIntoBackground;
 import com.humaclab.selliscope.utils.SessionManager;
 import com.squareup.picasso.Picasso;
@@ -76,7 +78,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     private Context context;
     private SendLocationDataService sendLocationDataService;
     private BroadcastReceiver broadcastReceiver;
-
+    boolean gpsStatus ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,7 +94,10 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(), sessionManager.getUserPassword(), false).create(SelliscopeApiEndpointInterface.class);
         pd = new ProgressDialog(this);
 //        CheckAppUpdated.checkAppUpdate(this);
-
+        /*
+        this segment helps you to check gps setting
+       gpsControl();
+       */
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("");
         TextView toolbarTitle = findViewById(R.id.tv_toolbar_title);
@@ -482,5 +487,18 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         }
 
     }*/
+    /*public  void gpsControl(){
 
+        LocationManager locManager = (LocationManager)getSystemService(LOCATION_SERVICE);
+
+        if (locManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
+            //GPS enabled
+
+        }
+
+        else{
+            //GPS disabled
+            ImportentFunction.displayPromptForEnablingGPS(this);
+        }
+    }*/
 }

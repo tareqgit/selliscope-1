@@ -109,7 +109,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_alignParentTop="true"
-            android:text="TextView" />
+            android:text="Date" />
 
         <ImageView
             android:id="@+id/takaone"

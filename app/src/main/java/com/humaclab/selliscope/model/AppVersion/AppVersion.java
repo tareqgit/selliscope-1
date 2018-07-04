@@ -40,9 +40,7 @@ public class AppVersion implements Serializable {
         @SerializedName("url")
 
         private String url;
-        @SerializedName("user_app_version_name")
 
-        private String userAppVersionName;
 
         public String getVersionCode() {
             return versionCode;
@@ -66,14 +64,6 @@ public class AppVersion implements Serializable {
 
         public void setUrl(String url) {
             this.url = url;
-        }
-
-        public String getUserAppVersionName() {
-            return userAppVersionName;
-        }
-
-        public void setUserAppVersionName(String userAppVersionName) {
-            this.userAppVersionName = userAppVersionName;
         }
 
     }

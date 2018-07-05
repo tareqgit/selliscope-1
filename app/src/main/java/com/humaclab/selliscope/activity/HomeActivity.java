@@ -25,6 +25,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -45,8 +46,10 @@ import com.humaclab.selliscope.fragment.DashboardFragment;
 import com.humaclab.selliscope.fragment.TargetFragment;
 import com.humaclab.selliscope.model.AppVersion.AppVersion;
 import com.humaclab.selliscope.model.Diameter.DiameterResponse;
+import com.humaclab.selliscope.model.IMEIandVerison;
 import com.humaclab.selliscope.receiver.InternetConnectivityChangeReceiver;
 import com.humaclab.selliscope.service.SendLocationDataService;
+import com.humaclab.selliscope.utils.AccessPermission;
 import com.humaclab.selliscope.utils.CheckAppUpdated;
 import com.humaclab.selliscope.utils.Constants;
 import com.humaclab.selliscope.utils.DatabaseHandler;
@@ -59,6 +62,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -82,7 +86,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-       // LoadLocale();
+        // LoadLocale();
         setContentView(R.layout.activity_home);
         //registerReceiver();
         sendLocationDataService = new SendLocationDataService();
@@ -301,7 +305,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
- //                       Intent intent = new Intent(Intent.ACTION_CALL, Uri.fromParts("tel", "+8801707073175" ));
+                        //                       Intent intent = new Intent(Intent.ACTION_CALL, Uri.fromParts("tel", "+8801707073175" ));
 //                        if (ActivityCompat.checkSelfPermission((Activity)context, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
 //                            // TODO: Consider calling
 //                            //    ActivityCompat#requestPermissions
@@ -425,6 +429,14 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onClick(View v) {
                 builder.dismiss();
+                sessionManager.logoutUser(false);
+                schedulerForMinute.shutdownNow();
+                schedulerForHour.shutdownNow();
+                stopService(new Intent(HomeActivity.this, SendLocationDataService.class));
+                HomeActivity.this.deleteDatabase(Constants.databaseName);
+                unregisterReceiver(receiver);
+                finish();
+
                 final String appPackageName = getPackageName(); // getPackageName() from Context or Activity object
                 try {
                     startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
@@ -441,6 +453,14 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onResume() {
         super.onResume();
+/*        final Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                //Do something after 100ms
+                LoadappsVertion();
+            }
+        }, 2000);*/
         LoadappsVertion();
     }
 

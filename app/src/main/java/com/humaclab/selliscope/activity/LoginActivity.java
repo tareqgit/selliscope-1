@@ -153,8 +153,10 @@ public class LoginActivity extends AppCompatActivity  {
                                 password
                         );
                         loginProgresssBar.setVisibility(View.INVISIBLE);
-                        startActivity(new Intent(LoginActivity.this, HomeActivity.class));
+
                         sendIMEIAndVersion();
+                        startActivity(new Intent(LoginActivity.this, HomeActivity.class));
+                        finish();
 
                     } catch (IOException e) {
                         e.printStackTrace();

@@ -1,39 +1,35 @@
 {
   "project_info": {
-    "project_number": "113519282843",
-    "firebase_url": "https://selliscope-554a4.firebaseio.com",
-    "project_id": "selliscope-554a4",
-    "storage_bucket": "selliscope-554a4.appspot.com"
+    "project_number": "606941747660",
+    "firebase_url": "https://salebeebd.firebaseio.com",
+    "project_id": "salebeebd",
+    "storage_bucket": "salebeebd.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:113519282843:android:04ade098b734696c",
+        "mobilesdk_app_id": "1:606941747660:android:76d372935a51a9e4",
         "android_client_info": {
-          "package_name": "com.humaclab.selliscope"
+          "package_name": "com.nexzen.salebeebd"
         }
       },
       "oauth_client": [
         {
-          "client_id": "113519282843-30o8o22nsvk4e2rq59t4mqu31i7agrld.apps.googleusercontent.com",
+          "client_id": "606941747660-uksqhr31sildsramla19ani9nibk7rnk.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.humaclab.selliscope",
+            "package_name": "com.nexzen.salebeebd",
             "certificate_hash": "86f22322851060b0b72596eeb2d7b4e9b35eafe4"
           }
         },
         {
-          "client_id": "113519282843-3e8ihd241pttkurv27qomble2l8t3g06.apps.googleusercontent.com",
-          "client_type": 3
-        },
-        {
-          "client_id": "113519282843-3e8ihd241pttkurv27qomble2l8t3g06.apps.googleusercontent.com",
+          "client_id": "606941747660-8d9imtth5o8ht34a4kvgagb1agta8jqs.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAt0TMOGj4mlEhQPYDNWV8tEw1UWOBYV8Q"
+          "current_key": "AIzaSyAhA3qRLiDgxTHsC2QaQd0pxgkweR4c4CM"
         }
       ],
       "services": {
@@ -44,7 +40,7 @@
           "status": 2,
           "other_platform_oauth_client": [
             {
-              "client_id": "113519282843-3e8ihd241pttkurv27qomble2l8t3g06.apps.googleusercontent.com",
+              "client_id": "606941747660-8d9imtth5o8ht34a4kvgagb1agta8jqs.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

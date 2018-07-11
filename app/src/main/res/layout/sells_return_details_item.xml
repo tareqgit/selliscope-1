@@ -5,7 +5,7 @@
 
         <variable
             name="product"
-            type="com.humaclab.selliscope.model.DeliveryResponse.Product"/>
+            type="com.nexzen.salebeebd.model.DeliveryResponse.Product"/>
     </data>
 
     <LinearLayout

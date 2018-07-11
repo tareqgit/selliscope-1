@@ -6,7 +6,7 @@
 
         <variable
             name="purchasedProduct"
-            type="com.humaclab.selliscope.model.PurchaseHistory.OrderDetailsItem" />
+            type="com.nexzen.salebeebd.model.PurchaseHistory.OrderDetailsItem" />
     </data>
 
     <android.support.v7.widget.CardView

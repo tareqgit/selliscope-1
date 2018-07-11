@@ -7,14 +7,14 @@
 
         <variable
             name="outletDetails"
-            type="com.humaclab.selliscope.model.Outlets.Outlet" />
+            type="com.nexzen.salebeebd.model.Outlets.Outlet" />
     </data>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        tools:context="com.humaclab.selliscope.activity.OutletDetailsActivity">
+        tools:context="com.nexzen.salebeebd.activity.OutletDetailsActivity">
 
         <include layout="@layout/toolbar_layout" />
 

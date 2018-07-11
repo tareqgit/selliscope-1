@@ -19,11 +19,11 @@ repositories {
 android {
     compileSdkVersion 27
     defaultConfig {
-        applicationId "com.humaclab.selliscope"
+        applicationId "com.nexzen.salebeebd"
         minSdkVersion 19
         targetSdkVersion 27
-        versionCode 25
-        versionName "2.29"
+        versionCode 1
+        versionName "1.00"
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }

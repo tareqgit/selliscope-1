@@ -5,7 +5,7 @@
 
         <variable
             name="selectedProduct"
-            type="com.humaclab.selliscope.helper.SelectedProductHelper" />
+            type="com.nexzen.salebeebd.helper.SelectedProductHelper" />
     </data>
 
     <LinearLayout

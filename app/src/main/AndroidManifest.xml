@@ -44,10 +44,10 @@
         <!-- For signed APK -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyApETZQS2EaUi5rC0E7eQlTI4sFIIuTibU" />
+            android:value="AIzaSyAhsz4pX62D7yu8twGT4ydn-_DRVB3p6_Y" />
         <meta-data
             android:name="com.google.android.awareness.API_KEY"
-            android:value="AIzaSyApETZQS2EaUi5rC0E7eQlTI4sFIIuTibU" />
+            android:value="AIzaSyAhsz4pX62D7yu8twGT4ydn-_DRVB3p6_Y" />
         <!-- For signed APK -->
 
         <meta-data

@@ -402,7 +402,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
             @Override
             public void onFailure(Call<AppVersion> call, Throwable t) {
-                Toast.makeText(HomeActivity.this, "Loading Error", Toast.LENGTH_SHORT).show();
+               Log.d("Version","Version Not Set");
             }
 
         });

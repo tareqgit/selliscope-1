@@ -269,8 +269,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             case R.id.nav_about_us:
                 final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
                 alertDialog.setTitle("About Us");
-                alertDialog.setMessage("ICT Incubator,\nSoftware Technology Park (4th Floor), Janata Tower,\nKawranbazar, Dhaka 1215, Bangladesh\ninfo@humaclab.com\nMobile: +8801711505322");
-                alertDialog.setMessage("Humac Lab ,\nHouse - 11, Road - 21\nSector - 04, Uttara ,\n Dhaka 1230, Bangladesh\ninfo@humaclab.com\nMobile: +8801711505322");
+                alertDialog.setMessage("Nexzen Solution Ltd.");
+                alertDialog.setMessage("Suite: B1,\n House: 660-662, R Road: 09\nAvenue: 04, Mirpur DOHS,\n Dhaka 1216, Bangladesh\nMobile: +8801613366999");
                 alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, "OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -300,7 +300,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             case R.id.nav_contact:
                 final AlertDialog alertDialogContact = new AlertDialog.Builder(this).create();
                 alertDialogContact.setTitle("Contact Us");
-                alertDialogContact.setMessage("Email: support@humaclab.com \nMobile: 01707073175");
+                alertDialogContact.setMessage("Email: support@humaclab.com \nMobile: 01613366999");
                 alertDialogContact.setButton(DialogInterface.BUTTON_POSITIVE, "CAll", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -324,7 +324,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
 
                         Intent callIntent = new Intent(Intent.ACTION_CALL);
-                        callIntent.setData(Uri.parse("tel:8801707073175"));
+                        callIntent.setData(Uri.parse("tel:8801613366999"));
 
                         if (ActivityCompat.checkSelfPermission(HomeActivity.this,
                                 Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {

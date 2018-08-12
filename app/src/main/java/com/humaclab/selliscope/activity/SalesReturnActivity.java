@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,6 +44,7 @@ public class SalesReturnActivity extends AppCompatActivity {
         TextView toolbarTitle = (TextView) findViewById(R.id.tv_toolbar_title);
         toolbarTitle.setText("Sells Return List");
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         sessionManager = new SessionManager(SalesReturnActivity.this);
         pd = new ProgressDialog(this);
@@ -76,7 +78,7 @@ public class SalesReturnActivity extends AppCompatActivity {
 
         apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(),
                 sessionManager.getUserPassword(), false).create(SelliscopeApiEndpointInterface.class);
-        Call<DeliveryResponse> call = apiService.getSalesReturn(outletID);
+        Call<DeliveryResponse> call = apiService.getSalesReturn();
         call.enqueue(new Callback<DeliveryResponse>() {
             @Override
             public void onResponse(Call<DeliveryResponse> call, Response<DeliveryResponse> response) {
@@ -97,7 +99,7 @@ public class SalesReturnActivity extends AppCompatActivity {
                             "Invalid Response from server.", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(SalesReturnActivity.this,
-                            "Server Error! Try Again Later!", Toast.LENGTH_SHORT).show();
+                            response.code()+" Server Error! Try Again Later!", Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -107,5 +109,20 @@ public class SalesReturnActivity extends AppCompatActivity {
                 t.printStackTrace();
             }
         });
+    }
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

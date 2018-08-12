@@ -12,11 +12,13 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.humaclab.selliscope.R;
+import com.humaclab.selliscope.activity.CallCardActivity;
 import com.humaclab.selliscope.activity.DeliveryListActivity;
 import com.humaclab.selliscope.activity.InspectionActivity;
 import com.humaclab.selliscope.activity.OutletActivity;
 import com.humaclab.selliscope.activity.PaymentActivity;
 import com.humaclab.selliscope.activity.RouteActivity;
+import com.humaclab.selliscope.activity.SalesReturnActivity;
 import com.humaclab.selliscope.adapters.DashboardRecyclerViewAdapter;
 import com.humaclab.selliscope.model.DashboardItem;
 import com.humaclab.selliscope.utils.RecyclerItemClickListener;
@@ -49,6 +51,7 @@ public class DashboardFragment extends Fragment {
         dashboadItems.add(new DashboardItem("Deliver", R.drawable.ic_view_orders));
 //        dashboadItems.add(new DashboardItem("Payment", R.drawable.ic_payments));
         dashboadItems.add(new DashboardItem("Inspection", R.drawable.ic_inspection));
+        dashboadItems.add(new DashboardItem("SalesReturn", R.drawable.ic_sales_return));
 //        dashboadItems.add(new DashboardItem("Insights", R.drawable.ic_insights));
         gridLayoutManager = new GridLayoutManager(activity, itemNumber);
         recyclerView.setLayoutManager(gridLayoutManager);
@@ -96,6 +99,11 @@ public class DashboardFragment extends Fragment {
                                     case 3: {
                                         getActivity().startActivity(new Intent(getActivity(),
                                                 InspectionActivity.class));
+                                        break;
+                                    }
+                                    case 4: {
+                                        getActivity().startActivity(new Intent(getActivity(),
+                                                SalesReturnActivity.class));
                                         break;
                                     }
 /*                                    case 5: {

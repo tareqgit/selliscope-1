@@ -185,7 +185,7 @@ public class ActivityCart extends AppCompatActivity implements OnSelectProduct {
                             Toast.makeText(ActivityCart.this, "Invalid Response from server.", Toast.LENGTH_SHORT).show();
                         } else {
                             System.out.println(new Gson().toJson(response.body()));
-                            Toast.makeText(ActivityCart.this, "Server Error! Try Again Later!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(ActivityCart.this, response.code()+" Server Error! Try Again Later!", Toast.LENGTH_SHORT).show();
                         }
                     }
 

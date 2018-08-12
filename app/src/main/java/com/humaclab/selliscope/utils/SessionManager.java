@@ -127,8 +127,9 @@ public class SessionManager {
         editor.commit();
         if (!hasUpdate) {
             Intent i = new Intent(_context, LoginActivity.class);
-            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            i.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
             _context.startActivity(i);
         }
     }

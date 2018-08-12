@@ -76,8 +76,8 @@ public interface SelliscopeApiEndpointInterface {
     @GET("delivery")
     Call<DeliveryResponse> getDelivery();
 
-    @GET("delivery")
-    Call<DeliveryResponse> getSalesReturn(@Query("outlet_id") int outletID);
+    @GET("return-products")
+    Call<DeliveryResponse> getSalesReturn();
 
     @GET("godown")
     Call<GodownRespons> getGodown();

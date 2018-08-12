@@ -133,6 +133,9 @@
         <activity android:name=".activity.PurchasedProductListActivity" />
         <activity android:name=".activity.SettingsActivity" />
         <activity android:name=".activity.ProfileActivity" />
+        <service android:name=".LocationMonitoringService"
+            android:enabled="true"
+            />
     </application>
 
 </manifest>

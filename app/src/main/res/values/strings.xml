@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Selliscope</string>
+    <string name="app_name">Selliscope Lalteer</string>
     <string name="target">Target</string>
     <string name="dashboard">Dashboard</string>
     <string name="target_navigation_item">Target</string>
@@ -49,6 +49,8 @@
     <string name="dashboard_inspection">Inspection</string>
     <string name="dashboard_productList">Product List</string>
     <string name="dashboard_promotionAds">Promotional Ads</string>
+    <string name="btn_update_profile">Update Profile</string>
+    <string name="search_outlet">Search Outlet</string>
 
     <string-array name="paymentType">
         <item>Cash</item>

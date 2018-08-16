@@ -28,4 +28,5 @@
     <string name="error_invalid_password">এই পাসওয়ার্ডটি খুব ছোট</string>
     <string name="error_incorrect_password">এই পাসওয়ার্ডটি ভুল</string>
     <string name="error_field_required">ঘরটি অবশ্যই পূরণ করতে হবে</string>
+    <string name="search_outlet">আউটলেট নাম সার্চ </string>
 </resources>

@@ -34,11 +34,13 @@ import com.humaclab.lalteer.activity.PurchaseHistoryActivity;
 import com.humaclab.lalteer.activity.RouteActivity;
 import com.humaclab.lalteer.model.Outlets;
 import com.humaclab.lalteer.model.UserLocation;
+import com.humaclab.lalteer.utils.Constants;
 import com.humaclab.lalteer.utils.DatabaseHandler;
 import com.humaclab.lalteer.utils.GetAddressFromLatLang;
 import com.humaclab.lalteer.utils.NetworkUtility;
 import com.humaclab.lalteer.utils.SendUserLocationData;
 import com.humaclab.lalteer.utils.SessionManager;
+import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -82,9 +84,12 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
     public void onBindViewHolder(final OutletViewHolder holder, final int position) {
         holder.setIsRecyclable(false);
         final Outlets.Outlet outlet = outletItems.outlets.get(position);
-        Glide.with(context).load(outlet.outletImgUrl)
-                .thumbnail(0.5f)
+
+        Picasso.with(context)
+                .load(Constants.baseUrl+outlet.outletImgUrl)
+                .placeholder(R.drawable.ic_outlet)
                 .into(holder.iv_outlet);
+
         holder.tvOutletName.setText(outlet.outletName);
         holder.tvOutletAddress.setText(outlet.outletAddress);
         holder.tvOutletContactNumber.setText(outlet.phone);

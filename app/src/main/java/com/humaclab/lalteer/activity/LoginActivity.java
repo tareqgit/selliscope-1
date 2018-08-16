@@ -122,10 +122,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 if (email.getText().toString().trim().isEmpty()) {
                     email.setError("Email is required!");
                     isValidEmail = false;
-                } else if (!isValidEmail(email.getText().toString().trim())) {
+                }
+                /*else if (!isValidEmail(email.getText().toString().trim())) {
                     email.setError("Invalid email address!");
                     isValidEmail = false;
-                } else {
+                } */
+                else {
                     isValidEmail = true;
                 }
                 if (password.getText().toString().trim().isEmpty()) {
@@ -159,7 +161,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 Gson gson = new Gson();
-                if (response.code() == 202) {
+                if (response.code() == 200) {
                     try {
                         Login.Successful loginSuccessful = gson.fromJson(response.body().string()
                                 , Login.Successful.class);
@@ -192,7 +194,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 } else {
                     loginProgresssBar.setVisibility(View.INVISIBLE);
                     Toast.makeText(LoginActivity.this,
-                            "Server Error! Try Again Later!", Toast.LENGTH_SHORT).show();
+                            response.code()+
+                            " Server Error! Try Again Later!", Toast.LENGTH_SHORT).show();
                 }
             }
 

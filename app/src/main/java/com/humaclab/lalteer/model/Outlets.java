@@ -40,7 +40,7 @@ public class Outlets implements Serializable {
         @SerializedName("phone")
         public String phone;
         @Nullable
-        @SerializedName("img")
+        @SerializedName("images")
         public String outletImgUrl;
         @SerializedName("latitude")
         public Double outletLatitude;

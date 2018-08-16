@@ -12,7 +12,7 @@ public class Thana implements Serializable {
     @SerializedName("id")
     private int id;
 
-    @SerializedName("district_id")
+    @SerializedName("districts_id")
     private int districtId;
 
     public String getName() {

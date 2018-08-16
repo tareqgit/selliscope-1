@@ -59,7 +59,7 @@ public class ProfileActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("");
         TextView toolbarTitle = findViewById(R.id.tv_toolbar_title);
-        toolbarTitle.setText("Change Password");
+        toolbarTitle.setText("Profile");
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -84,8 +84,13 @@ public class ProfileActivity extends AppCompatActivity {
             }
         }
 
-        Glide.with(getApplicationContext()).load(sessionManager.getUserDetails().get("profilePictureUrl"))
+/*        Glide.with(getApplicationContext()).load(sessionManager.getUserDetails().get("profilePictureUrl"))
                 .thumbnail(0.5f)
+                .into(binding.ivProfileImage);*/
+
+        Picasso.with(this)
+                .load(sessionManager.getUserDetails().get("profilePictureUrl"))
+                .placeholder(R.drawable.default_profile_pic)
                 .into(binding.ivProfileImage);
 
         binding.btnChangeProfilePicture.setOnClickListener(new View.OnClickListener() {

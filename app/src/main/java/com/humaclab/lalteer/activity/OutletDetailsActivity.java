@@ -12,6 +12,8 @@ import com.bumptech.glide.Glide;
 import com.humaclab.lalteer.R;
 import com.humaclab.lalteer.databinding.ActivityOutletDetailsBinding;
 import com.humaclab.lalteer.model.Outlets;
+import com.humaclab.lalteer.utils.Constants;
+import com.squareup.picasso.Picasso;
 
 public class OutletDetailsActivity extends AppCompatActivity {
     private ActivityOutletDetailsBinding binding;
@@ -34,8 +36,9 @@ public class OutletDetailsActivity extends AppCompatActivity {
             binding.tvDueAmount.setVisibility(View.GONE);
         }
 
-        Glide.with(getApplicationContext()).load(outlet.outletImgUrl)
-                .thumbnail(0.5f)
+        Picasso.with(this)
+                .load(Constants.baseUrl+outlet.outletImgUrl)
+                .placeholder(R.drawable.ic_outlet)
                 .into(binding.ivAddOutletImage);
 
         binding.btnEditOutlet.setOnClickListener(new View.OnClickListener() {

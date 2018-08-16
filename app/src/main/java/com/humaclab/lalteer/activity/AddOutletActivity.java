@@ -278,7 +278,7 @@ public class AddOutletActivity extends AppCompatActivity {
                 Gson gson = new Gson();
                 System.out.println("Response code: " + response.code());
                 pd.dismiss();
-                if (response.code() == 201) {
+                if (response.code() == 200) {
                     Toast.makeText(AddOutletActivity.this, "Outlet created successfully", Toast.LENGTH_SHORT).show();
                     LoadLocalIntoBackground loadLocalIntoBackground = new LoadLocalIntoBackground(AddOutletActivity.this);
                     loadLocalIntoBackground.loadOutlet(true);

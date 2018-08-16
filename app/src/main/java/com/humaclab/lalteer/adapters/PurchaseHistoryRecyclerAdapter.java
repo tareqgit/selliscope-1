@@ -46,7 +46,7 @@ public class PurchaseHistoryRecyclerAdapter extends RecyclerView.Adapter<Purchas
 
     @Override
     public int getItemCount() {
-        return purchaseHistoryItemList.size();
+        return (purchaseHistoryItemList == null) ? 0 : purchaseHistoryItemList.size();
     }
 
     public class PurchaseHistoryViewHolder extends RecyclerView.ViewHolder {

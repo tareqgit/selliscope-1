@@ -44,13 +44,13 @@ import retrofit2.http.Query;
 public interface SelliscopeApiEndpointInterface {
     //GET methods
 
-    @GET("outlet")
+    @GET("outlets")
     Call<ResponseBody> getOutlets();
 
-    @GET("product/category")
+    @GET("category")
     Call<CategoryResponse> getCategories();
 
-    @GET("product/brand")
+    @GET("brands")
     Call<BrandResponse> getBrands();
 
     /*@GET("product")
@@ -76,13 +76,13 @@ public interface SelliscopeApiEndpointInterface {
     @GET("godown")
     Call<GodownRespons> getGodown();
 
-    @GET("district")
+     @GET("district")
     Call<DistrictResponse> getDistricts();
 
-    @GET("thana")
+     @GET("thana")
     Call<ThanaResponse> getThanas();
 
-    @GET("outlet/type")
+    @GET("outlets-type")
     Call<OutletTypeResponse> getOutletTypes();
 
     @GET("visit")
@@ -94,26 +94,26 @@ public interface SelliscopeApiEndpointInterface {
     @GET("diameter")
     Call<DiameterResponse> getDiameter();
 
-    @GET("outlet/{outlet_id}/purchase-history")
+    @GET("outlets/{outlet_id}/purchase-history")
     Call<PurchaseHistoryResponse> getPurchaseHistory(@Path("outlet_id") int outletID);
 
     @GET("target/user")
     Call<OutletTarget> getTarget();
 
-    @GET("route-plan")
+     @GET("route-plan")
     Call<RouteResponse> getRoutes();
 
-    @GET("route-plan/{route_id}")
+     @GET("route-plan/{route_id}")
     Call<RouteDetailsResponse> getRouteDetails(@Path("route_id") int routeId);
     //POST methods
 
-    @POST("login")
+    @GET("login")
     Call<ResponseBody> getUser();
 
-    @POST("outlet/store")
+    @POST("outlets/create/")
     Call<ResponseBody> createOutlet(@Body CreateOutlet createOutlet);
 
-    @POST("visit/store")
+     @POST("visit/store")
     Call<ResponseBody> sendUserLocation(@Body UserLocation userLocation);
 
     @POST("order/variant/store")
@@ -139,7 +139,7 @@ public interface SelliscopeApiEndpointInterface {
     @POST("change-password")
     Call<ChangePasswordResponse> changePassword(@Body ChangePassword changePassword);
 
-    @PUT("outlet/{id}/update")
+    @PUT("outlets/{id}/edit/")
     Call<ResponseBody> updateOutlet(@Path("id") int outletID, @Body CreateOutlet createOutlet);
 
     @POST("profile/update")

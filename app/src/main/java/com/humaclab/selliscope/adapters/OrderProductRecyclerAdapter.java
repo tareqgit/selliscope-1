@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.humaclab.selliscope.BR;
 import com.humaclab.selliscope.R;
@@ -17,6 +18,7 @@ import com.humaclab.selliscope.helper.SelectedProductHelper;
 import com.humaclab.selliscope.helper.ShowProductSelectionDialog;
 import com.humaclab.selliscope.interfaces.OnSelectProduct;
 import com.humaclab.selliscope.model.VariantProduct.ProductsItem;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -47,6 +49,7 @@ public class OrderProductRecyclerAdapter extends RecyclerView.Adapter<OrderProdu
     @Override
     public void onBindViewHolder(final OrderProductViewHolder holder, final int position) {
         this.holder = holder;
+        holder.setIsRecyclable(false);
         ProductsItem products = productsItemList.get(position);
         if (!selectedProductList.isEmpty()) {
             for (final SelectedProductHelper selectedProductHelper : selectedProductList) {
@@ -70,6 +73,7 @@ public class OrderProductRecyclerAdapter extends RecyclerView.Adapter<OrderProdu
             }
         }
 
+        Picasso.get().load(products.getImg()).into(holder.imageView);
         holder.getBinding().setVariable(BR.product, products);
         holder.getBinding().executePendingBindings();
     }
@@ -83,11 +87,12 @@ public class OrderProductRecyclerAdapter extends RecyclerView.Adapter<OrderProdu
     public class OrderProductViewHolder extends RecyclerView.ViewHolder implements OnSelectProduct {
         private ItemOrderProductBinding binding;
         private CardView cv_product_background;
+        ImageView imageView;
 
         public OrderProductViewHolder(View itemView) {
             super(itemView);
             this.setIsRecyclable(false);
-
+            imageView = itemView.findViewById(R.id.iv_product_image);
             cv_product_background = itemView.findViewById(R.id.cv_product_background);
 
             binding = DataBindingUtil.bind(itemView);

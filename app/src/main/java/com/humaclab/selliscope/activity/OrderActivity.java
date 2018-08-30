@@ -65,7 +65,7 @@ public class OrderActivity extends AppCompatActivity implements OnSelectProduct 
         databaseHandler = new DatabaseHandler(this);
         sessionManager = new SessionManager(OrderActivity.this);
 
-        binding.rvProduct.setLayoutManager(new GridLayoutManager(context, 3));
+        binding.rvProduct.setLayoutManager(new GridLayoutManager(context, 2));
 
         getCategory();
         getBrand();

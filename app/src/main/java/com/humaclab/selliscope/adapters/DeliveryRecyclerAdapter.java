@@ -150,7 +150,7 @@ public class DeliveryRecyclerAdapter extends RecyclerView.Adapter<DeliveryRecycl
                                 } else if (response.code() == 401) {
                                     Toast.makeText(context, "Invalid Response from server.", Toast.LENGTH_SHORT).show();
                                 } else {
-                                    Toast.makeText(context, "Server Error! Try Again Later!", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(context, response.code()+"Server Error! Try Again Later!", Toast.LENGTH_SHORT).show();
                                 }
                             }
 

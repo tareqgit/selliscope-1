@@ -40,7 +40,7 @@ public class OrderActivity extends AppCompatActivity implements OnSelectProduct 
     private Context context;
     private DatabaseHandler databaseHandler;
     private SessionManager sessionManager;
-    private String outletName, outletID;
+    private String outletName, outletID,outletType;
     private List<String> categoryName = new ArrayList<>(), brandName = new ArrayList<>();
     private List<Integer> categoryID = new ArrayList<>(), brandID = new ArrayList<>();
 
@@ -54,6 +54,7 @@ public class OrderActivity extends AppCompatActivity implements OnSelectProduct 
 
         outletName = getIntent().getStringExtra("outletName");
         outletID = getIntent().getStringExtra("outletID");
+        outletType = getIntent().getStringExtra("outletType");
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("");
@@ -81,10 +82,10 @@ public class OrderActivity extends AppCompatActivity implements OnSelectProduct 
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (!s.toString().equals("")) {
                     List<ProductsItem> productsItemList = databaseHandler.getProduct(categoryID.get(binding.spProductCategory.getSelectedItemPosition()), brandID.get(binding.spProductBrand.getSelectedItemPosition()), s.toString());
-                    binding.rvProduct.setAdapter(new OrderProductRecyclerAdapter(context, OrderActivity.this, productsItemList, selectedProductList));
+                    binding.rvProduct.setAdapter(new OrderProductRecyclerAdapter(context, OrderActivity.this, productsItemList, selectedProductList,outletType));
                 } else {
                     List<ProductsItem> productsItemList = databaseHandler.getProduct(categoryID.get(binding.spProductCategory.getSelectedItemPosition()), brandID.get(binding.spProductBrand.getSelectedItemPosition()));
-                    binding.rvProduct.setAdapter(new OrderProductRecyclerAdapter(context, OrderActivity.this, productsItemList, selectedProductList));
+                    binding.rvProduct.setAdapter(new OrderProductRecyclerAdapter(context, OrderActivity.this, productsItemList, selectedProductList,outletType));
                 }
             }
 
@@ -118,7 +119,7 @@ public class OrderActivity extends AppCompatActivity implements OnSelectProduct 
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 binding.srlProduct.setRefreshing(false);
                 List<ProductsItem> productsItemList = databaseHandler.getProduct(categoryID.get(position), brandID.get(binding.spProductBrand.getSelectedItemPosition()));
-                binding.rvProduct.setAdapter(new OrderProductRecyclerAdapter(context, OrderActivity.this, productsItemList, selectedProductList));
+                binding.rvProduct.setAdapter(new OrderProductRecyclerAdapter(context, OrderActivity.this, productsItemList, selectedProductList,outletType));
             }
 
             @Override
@@ -143,7 +144,7 @@ public class OrderActivity extends AppCompatActivity implements OnSelectProduct 
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 binding.srlProduct.setRefreshing(false);
                 List<ProductsItem> productsItemList = databaseHandler.getProduct(categoryID.get(binding.spProductCategory.getSelectedItemPosition()), brandID.get(position));
-                binding.rvProduct.setAdapter(new OrderProductRecyclerAdapter(context, OrderActivity.this, productsItemList, selectedProductList));
+                binding.rvProduct.setAdapter(new OrderProductRecyclerAdapter(context, OrderActivity.this, productsItemList, selectedProductList,outletType));
             }
 
             @Override
@@ -155,7 +156,7 @@ public class OrderActivity extends AppCompatActivity implements OnSelectProduct 
     private void getProducts() {
         binding.srlProduct.setRefreshing(false);
         List<ProductsItem> productsItemList = databaseHandler.getProduct(0, 0);
-        binding.rvProduct.setAdapter(new OrderProductRecyclerAdapter(context, OrderActivity.this, productsItemList, selectedProductList));
+        binding.rvProduct.setAdapter(new OrderProductRecyclerAdapter(context, OrderActivity.this, productsItemList, selectedProductList , outletType));
         //if this activity called from product activity
     }
 

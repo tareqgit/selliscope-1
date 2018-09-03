@@ -32,12 +32,14 @@ public class OrderProductRecyclerAdapter extends RecyclerView.Adapter<OrderProdu
     private List<ProductsItem> productsItemList;
     private OrderProductViewHolder holder;
     private List<SelectedProductHelper> selectedProductList;
+    private String outletType;
 
-    public OrderProductRecyclerAdapter(Context context, OrderActivity orderActivity, List<ProductsItem> productsItemList, List<SelectedProductHelper> selectedProductList) {
+    public OrderProductRecyclerAdapter(Context context, OrderActivity orderActivity, List<ProductsItem> productsItemList, List<SelectedProductHelper> selectedProductList, String outletType) {
         this.orderActivity = orderActivity;
         this.context = context;
         this.productsItemList = productsItemList;
         this.selectedProductList = selectedProductList;
+        this.outletType = outletType;
     }
 
     @Override
@@ -102,7 +104,7 @@ public class OrderProductRecyclerAdapter extends RecyclerView.Adapter<OrderProdu
                     ShowProductSelectionDialog showProductSelectionDialog = new ShowProductSelectionDialog(
                             OrderProductRecyclerAdapter.OrderProductViewHolder.this,
                             context,
-                            productsItemList.get(getAdapterPosition()));
+                            productsItemList.get(getAdapterPosition()),outletType);
                     if (!selectedProductList.isEmpty()) {
                         for (SelectedProductHelper selectedProductHelper : selectedProductList) {
                             if (selectedProductHelper.getProductID().equals(String.valueOf(productsItemList.get(getAdapterPosition()).getId())))
@@ -121,12 +123,15 @@ public class OrderProductRecyclerAdapter extends RecyclerView.Adapter<OrderProdu
             return binding;
         }
 
+        //on selected product show the price and quenty
+
         @Override
         public void onSetSelectedProduct(SelectedProductHelper selectedProduct) {
             orderActivity.onSetSelectedProduct(selectedProduct);
             cv_product_background.setCardBackgroundColor(Color.GREEN);
             getBinding().llQuantity.setVisibility(View.VISIBLE);
             getBinding().tvProductQuantity.setText(selectedProduct.getProductQuantity());
+            getBinding().tvProductPrice.setText(selectedProduct.getProductPrice());
             getBinding().ivRemoveProduct.setVisibility(View.VISIBLE);
         }
 

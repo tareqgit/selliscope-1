@@ -12,7 +12,11 @@ import android.widget.Toast;
 import com.humaclab.selliscope.R;
 import com.humaclab.selliscope.adapters.OrderProductRecyclerAdapter;
 import com.humaclab.selliscope.databinding.ItemOrderProductSelectionBinding;
+import com.humaclab.selliscope.dbmodel.PriceVariationStartEnd;
 import com.humaclab.selliscope.model.VariantProduct.ProductsItem;
+import com.humaclab.selliscope.utils.DatabaseHandler;
+
+import java.util.List;
 
 /**
  * Created by leon on 14/3/18.
@@ -25,12 +29,16 @@ public class ShowProductSelectionDialog {
     private ItemOrderProductSelectionBinding binding;
     private AlertDialog alertDialog;
     private OrderProductRecyclerAdapter.OrderProductViewHolder orderProductRecyclerAdapter;
+    //Set a base Rate Global
+    private double priceOfRate;
+    private String outletType;
 
-    public ShowProductSelectionDialog(OrderProductRecyclerAdapter.OrderProductViewHolder orderProductRecyclerAdapter, Context context, ProductsItem productsItem) {
+    public ShowProductSelectionDialog(OrderProductRecyclerAdapter.OrderProductViewHolder orderProductRecyclerAdapter, Context context, ProductsItem productsItem, String outletType) {
         this.orderProductRecyclerAdapter = orderProductRecyclerAdapter;
         this.context = context;
         this.productsItem = productsItem;
         this.alertDialog = new AlertDialog.Builder(context).create();
+        this.outletType = outletType;
     }
 
     public void setSelectedProduct(SelectedProductHelper selectedProductHelper) {
@@ -38,9 +46,11 @@ public class ShowProductSelectionDialog {
     }
 
     public void showDialog() {
+        //Set the global Number
+        priceOfRate = Double.valueOf(productsItem.getPrice());
         binding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.item_order_product_selection, null, false);
         binding.tvProductName.setText(productsItem.getName());
-        binding.tvProductPrice.setText(productsItem.getPrice());
+        binding.tvProductPrice.setText(String.valueOf(priceOfRate));
         binding.tvProductStock.setText(productsItem.getStock());
 
         if (selectedProductHelper != null) {
@@ -56,8 +66,31 @@ public class ShowProductSelectionDialog {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                //Price Variation
+                DatabaseHandler databaseHandler = new DatabaseHandler(context);
+                List<PriceVariationStartEnd> priceVariationList = databaseHandler.getpriceVariationStartEndEprice(productsItem.getId(),outletType);
+                String outletTypeName= outletType;
+                int size = priceVariationList.size();
                 try {
-                    if (!s.toString().equals(""))
+                    String inputPrice = s.toString();
+                    double inputFinalPrice = Double.valueOf(inputPrice);
+                    if (!inputPrice.equals(""))
+                        for(int i = 0; i<size; i++ ){
+
+                            if(Math.max(priceVariationList.get(i).getStartRange(), inputFinalPrice) == Math.min(inputFinalPrice, priceVariationList.get(i).getEndRange())){
+                                //binding.tvProductPrice.setText(String.valueOf(priceVariationList.get(i).getPriceRange()));
+                                priceOfRate = priceVariationList.get(i).getPriceRange();
+                                //binding.tvProductPrice.setText(String.valueOf(priceOfRate));
+                                break;
+                            }
+                            else {
+                                priceOfRate = Double.valueOf(productsItem.getPrice());
+                            }
+
+                        }
+                        binding.tvProductPrice.setText(String.valueOf(priceOfRate));
+                        //binding.tvTotalPrice.setText(String.format("%.2f", Double.valueOf(binding.tvProductPrice.getText().toString().replace(",", "")) * Double.valueOf(binding.etProductQty.getText().toString())));
                         binding.tvTotalPrice.setText(String.format("%.2f", Double.valueOf(binding.tvProductPrice.getText().toString().replace(",", "")) * Double.valueOf(binding.etProductQty.getText().toString())));
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -78,7 +111,8 @@ public class ShowProductSelectionDialog {
                             String.valueOf(productsItem.getId()),
                             productsItem.getName(),
                             binding.etProductQty.getText().toString(),
-                            productsItem.getPrice(),
+                            //productsItem.getPrice(),
+                            binding.tvProductPrice.getText().toString(),
                             binding.tvTotalPrice.getText().toString(),
                             productsItem.getVariantRow() == null ? "0" : productsItem.getVariantRow()
                     );

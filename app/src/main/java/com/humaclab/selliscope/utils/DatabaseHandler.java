@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.google.gson.Gson;
+import com.humaclab.selliscope.dbmodel.PriceVariationStartEnd;
 import com.humaclab.selliscope.dbmodel.Target;
 import com.humaclab.selliscope.dbmodel.UserVisit;
 import com.humaclab.selliscope.model.AddNewOrder;
@@ -19,6 +20,8 @@ import com.humaclab.selliscope.model.Thana.Thana;
 import com.humaclab.selliscope.model.VariantProduct.Brand;
 import com.humaclab.selliscope.model.VariantProduct.Category;
 import com.humaclab.selliscope.model.VariantProduct.GodownItem;
+import com.humaclab.selliscope.model.PriceVariation.Product;
+import com.humaclab.selliscope.model.PriceVariation.PriceVariation;
 import com.humaclab.selliscope.model.VariantProduct.ProductsItem;
 import com.humaclab.selliscope.model.VariantProduct.VariantDetailsItem;
 import com.humaclab.selliscope.model.VariantProduct.VariantsItem;
@@ -33,7 +36,7 @@ import java.util.Map;
  */
 
 public class DatabaseHandler extends SQLiteOpenHelper {
-    private static final int DATABASE_VERSION = 9;
+    private static final int DATABASE_VERSION = 12;
 
     // Database Tables
     private static final String TABLE_TARGET = "targets";
@@ -48,6 +51,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String TABLE_DISTRICT = "district";
     private static final String TABLE_OUTLET_TYPE = "outlet_type";
     private static final String TABLE_ORDER = "order_table";
+    private static final String TABLE_PRICE_VARIATION = "priceVariation";
 
     // Target Table Columns names
     private static final String KEY_TARGET_ID = "targetId";
@@ -124,6 +128,16 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String KEY_ORDER_PRODUCT_ROW = "product_row";
     private static final String KEY_ORDER_PRODUCT_PRICE = "product_price";
     private static final String KEY_ORDER_PRODUCT_DISCOUNT = "product_discount";
+
+    //price variation table column name
+    private static final String KEY_PV_ID = "pv_id";
+    private static final String KEY_PV_PRODUCT_ID = "product_id";
+    private static final String KEY_PV_VARIANT_ROW = "variant_row";
+    private static final String KEY_PV_OUTLET_TYPE_ID = "outlet_type_id";
+    private static final String KEY_PV_OUTLET_TYPE = "outlet_type";
+    private static final String KEY_PV_STARTE_RANGE = "start_range";
+    private static final String KEY_PV_END_RANGE = "end_range";
+    private static final String KEY_PV_PRICE = "price";
 
     public DatabaseHandler(Context context) {
         super(context, Constants.databaseName, null, DATABASE_VERSION);
@@ -233,6 +247,17 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + KEY_ORDER_PRODUCT_DISCOUNT + " TEXT"
                 + ")";
 
+        String CREATE_PRICE_VARIATION_TABLE = "CREATE TABLE " + TABLE_PRICE_VARIATION + "("
+                + KEY_PV_ID + " INTEGER  PRIMARY KEY AUTOINCREMENT,"
+                + KEY_PV_PRODUCT_ID + " INTEGER,"
+                + KEY_PV_VARIANT_ROW + " INTEGER,"
+                + KEY_PV_OUTLET_TYPE_ID + " INTEGER,"
+                + KEY_PV_OUTLET_TYPE + " TEXT,"
+                + KEY_PV_STARTE_RANGE + " INTEGER,"
+                + KEY_PV_END_RANGE + " INTEGER,"
+                + KEY_PV_PRICE + " INTEGER"
+                + ")";
+
         db.execSQL(CREATE_TARGET_TABLE);
         db.execSQL(CREATE_TARGET_USER_VISITS);
         db.execSQL(CREATE_PRODUCT_TABLE);
@@ -245,6 +270,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL(CREATE_DISTRICT_TABLE);
         db.execSQL(CREATE_OUTELT_TYPE_TABLE);
         db.execSQL(CREATE_ORDER_TABLE);
+        db.execSQL(CREATE_PRICE_VARIATION_TABLE);
     }
 
     // Upgrading database
@@ -263,6 +289,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_DISTRICT);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_OUTLET_TYPE);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_ORDER);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_PRICE_VARIATION);
         // Create tables again
         onCreate(db);
     }
@@ -414,6 +441,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.delete(TABLE_PRODUCT, KEY_PRODUCT_ID + " > ?", new String[]{String.valueOf(-1)});
         db.delete(TABLE_CATEGORY, KEY_CATEGORY_ID + " > ?", new String[]{String.valueOf(-1)});
         db.delete(TABLE_BRAND, KEY_BRAND_ID + " > ?", new String[]{String.valueOf(-1)});
+        db.delete(TABLE_PRICE_VARIATION, KEY_PV_ID + " > ?", new String[]{String.valueOf(-1)});
         db.close();
     }
 
@@ -1149,4 +1177,51 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.close();
     }
     //Offline order taking
+
+    //Price Variation
+    public void add_price_Variation(List<Product> products) {
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        for (Product priceVariatiomItem : products) {
+            ContentValues values = new ContentValues();
+            //String productName = product.getName();
+            values.put(KEY_PV_PRODUCT_ID, priceVariatiomItem.getId());
+            for (PriceVariation variationModel : priceVariatiomItem.getPriceVariation()) {
+                values.put(KEY_PV_VARIANT_ROW, variationModel.getVariantRow());
+                values.put(KEY_PV_OUTLET_TYPE_ID, variationModel.getOutletTypeId());
+                values.put(KEY_PV_OUTLET_TYPE, variationModel.getOutletType());
+                values.put(KEY_PV_STARTE_RANGE, variationModel.getStartRange());
+                values.put(KEY_PV_END_RANGE, variationModel.getEndRange());
+                values.put(KEY_PV_PRICE, variationModel.getPrice());
+                try {
+                    db.insert(TABLE_PRICE_VARIATION, null, values);
+                    //productName = product.getName();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+        }
+        db.close(); // Closing database connection
+    }
+    public List<PriceVariationStartEnd> getpriceVariationStartEndEprice(int productID,String outletType){
+        List<PriceVariationStartEnd> priceVariationStartEndList = new ArrayList<PriceVariationStartEnd>();
+        String selectQuery = "SELECT  * FROM " + TABLE_PRICE_VARIATION
+                + " WHERE " + KEY_PV_PRODUCT_ID + "= "+productID+" AND "+KEY_PV_OUTLET_TYPE+ "= "+ "'"+outletType+"'";
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                PriceVariationStartEnd priceVariationStartEnd = new PriceVariationStartEnd(
+                        cursor.getDouble(cursor.getColumnIndex(KEY_PV_STARTE_RANGE)),
+                        cursor.getDouble(cursor.getColumnIndex(KEY_PV_END_RANGE)),
+                        cursor.getDouble(cursor.getColumnIndex(KEY_PV_PRICE))
+                        );
+                priceVariationStartEndList.add(priceVariationStartEnd);
+            } while (cursor.moveToNext());
+        }
+        // return visit list
+        return priceVariationStartEndList;
+    }
 }

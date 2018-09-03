@@ -2,6 +2,7 @@ package com.humaclab.selliscope.utils;
 
 import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.humaclab.selliscope.SelliscopeApiEndpointInterface;
@@ -11,6 +12,8 @@ import com.humaclab.selliscope.model.CategoryResponse;
 import com.humaclab.selliscope.model.District.DistrictResponse;
 import com.humaclab.selliscope.model.OutletType.OutletTypeResponse;
 import com.humaclab.selliscope.model.Outlets;
+import com.humaclab.selliscope.model.PriceVariation.PriceVariationResponse;
+import com.humaclab.selliscope.model.PriceVariation.Product;
 import com.humaclab.selliscope.model.RoutePlan.RouteDetailsResponse;
 import com.humaclab.selliscope.model.Thana.ThanaResponse;
 import com.humaclab.selliscope.model.VariantProduct.ProductsItem;
@@ -75,6 +78,7 @@ public class LoadLocalIntoBackground {
                             databaseHandler.addProduct(products);
                             loadCategory();
                             loadBrand();
+                            loadPriceVariation();
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -89,6 +93,34 @@ public class LoadLocalIntoBackground {
         }
     }
 
+    private void loadPriceVariation() {
+            Call<PriceVariationResponse> call = apiService.getPriceVariation();
+            call.enqueue(new Callback<PriceVariationResponse>() {
+                @Override
+                public void onResponse(Call<PriceVariationResponse> call, Response<PriceVariationResponse> response) {
+                    if(response.isSuccessful()) {
+                        if (response.code() == 200) {
+                            try {
+                                List<Product> products = response.body().getResult().getProducts();
+                                databaseHandler.add_price_Variation(products);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+
+                        }
+                    }
+                    else {
+                        response.errorBody();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<PriceVariationResponse> call, Throwable t) {
+                    t.getMessage();
+
+                }
+            });
+    }
     private void loadCategory() {
         Call<CategoryResponse> call = apiService.getCategories();
         call.enqueue(new Callback<CategoryResponse>() {

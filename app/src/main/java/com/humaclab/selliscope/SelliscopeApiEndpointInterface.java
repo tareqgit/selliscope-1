@@ -27,6 +27,7 @@ import com.humaclab.selliscope.model.UpdatePassword.ChangePasswordResponse;
 import com.humaclab.selliscope.model.UpdateProfile.UpdateProfile;
 import com.humaclab.selliscope.model.UpdateProfile.UpdateProfileResponse;
 import com.humaclab.selliscope.model.UserLocation;
+import com.humaclab.selliscope.model.PriceVariation.PriceVariationResponse;
 import com.humaclab.selliscope.model.VariantProduct.VariantProductResponse;
 
 import okhttp3.ResponseBody;
@@ -36,7 +37,6 @@ import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
-import retrofit2.http.Query;
 
 /**
  * Created by Leon on 9/3/2017.
@@ -44,6 +44,9 @@ import retrofit2.http.Query;
 
 public interface SelliscopeApiEndpointInterface {
     //GET methods
+    @GET("product/price-variation")
+    Call<PriceVariationResponse> getPriceVariation();
+
 
     @GET("outlet")
     Call<ResponseBody> getOutlets();

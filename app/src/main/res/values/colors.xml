@@ -6,6 +6,7 @@
     <color name="white">#FFFFFF</color>
     <color name="red">#e06165</color>
     <color name="background">#EEEFEF</color>
+    <color name="cart_button_shape">#e3e8f7</color>
 
     <!-- Button color -->
     <color name="colorDefault">@color/colorPrimary</color>

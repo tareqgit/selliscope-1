@@ -39,16 +39,17 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import timber.log.Timber;
 
-public class LoginActivity extends AppCompatActivity  {
+public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
     private TextView forgotPassword;
     private EditText email, password;
     private Button signIn;
     private SelliscopeApiEndpointInterface apiService;
     private SessionManager sessionManager;
     private ProgressBar loginProgresssBar;
-/*    private RadioGroup rg_language;
+    //For Bangla
+    private RadioGroup rg_language;
     private RadioButton rbEnglish, rbBangla;
-    final String KEY_SAVED_RADIO_BUTTON_INDEX = "SAVED_RADIO_BUTTON_INDEX";*/
+    final String KEY_SAVED_RADIO_BUTTON_INDEX = "SAVED_RADIO_BUTTON_INDEX";
 
     public final static boolean isValidEmail(CharSequence target) {
         if (target == null) {
@@ -61,17 +62,18 @@ public class LoginActivity extends AppCompatActivity  {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        LoadLocale();
+        //For Bangla
+        LoadLocale();
         setContentView(R.layout.activity_login);
-
-/*        rg_language = findViewById(R.id.rg_language);
+        //For Bangla
+        rg_language = findViewById(R.id.rg_language);
         rg_language.check(R.id.rbEnglish);
         rbBangla = findViewById(R.id.rbBangle);
         rbEnglish = findViewById(R.id.rbEnglish);
         rbBangla.setOnClickListener(this);
         rbEnglish.setOnClickListener(this);
 
-        LoadPreferences();*/
+        LoadPreferences();
         checkPermission();
 
 
@@ -214,8 +216,8 @@ public class LoginActivity extends AppCompatActivity  {
         AccessPermission.accessPermission(LoginActivity.this);
     }
 
-
-    /*@Override
+    //For Bangla
+    @Override
     public void onClick(View v) {
         int id = v.getId();
 
@@ -224,16 +226,11 @@ public class LoginActivity extends AppCompatActivity  {
             SavePreferences(KEY_SAVED_RADIO_BUTTON_INDEX, 0);
             setLocale("bn");
             recreate();
-           *//* PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putString("LANG", "bn").apply();
-            setLangRecreate("bn");*//*
-            //  Toast.makeText(this, ""+checkedIndex, Toast.LENGTH_SHORT).show();
+
         } else if (id == R.id.rbEnglish) {
             SavePreferences(KEY_SAVED_RADIO_BUTTON_INDEX, 1);
             setLocale("en");
             recreate();
-            *//*PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putString("LANG", "en").apply();
-            setLangRecreate("en");*//*
-            //   Toast.makeText(this, ""+checkedIndex, Toast.LENGTH_SHORT).show();
         }
 
 
@@ -273,6 +270,6 @@ public class LoginActivity extends AppCompatActivity  {
         SharedPreferences prefs = getSharedPreferences("Settings", MODE_PRIVATE);
         String language = prefs.getString("My_Lang", "");
         setLocale(language);
-    }*/
+    }
 
 }

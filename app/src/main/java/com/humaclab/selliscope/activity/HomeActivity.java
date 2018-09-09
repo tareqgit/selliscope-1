@@ -7,7 +7,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -70,6 +72,7 @@ import com.humaclab.selliscope.utils.SessionManager;
 import com.squareup.picasso.Picasso;
 
 import java.util.Calendar;
+import java.util.Locale;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -106,7 +109,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // LoadLocale();
+        //For Bangla
+        LoadLocale();
         setContentView(R.layout.activity_home);
         //registerReceiver();
         sendLocationDataService = new SendLocationDataService();
@@ -427,10 +431,13 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             startActivity(new Intent(getApplicationContext(), HomeActivity.class));
         }
     }
-
-/*    public void setLocale(String lang) {
+    //For Bangla
+    public void setLocale(String lang) {
         Locale locale = new Locale(lang);
-        Locale.setDefault(locale);
+        //Locale.setDefault(locale);
+        //Phone Default Language is English
+        Locale localeEN = new Locale("en");
+        Locale.setDefault(localeEN);
         Configuration config = new Configuration();
         config.locale = locale;
         getBaseContext().getResources().updateConfiguration(config, getBaseContext().getResources().getDisplayMetrics());
@@ -447,7 +454,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         SharedPreferences prefs = getSharedPreferences("Settings", MODE_PRIVATE);
         String language = prefs.getString("My_Lang", "");
         setLocale(language);
-    }*/
+    }
 
 
 

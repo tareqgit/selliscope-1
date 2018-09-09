@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.humaclab.selliscope.R;
 import com.humaclab.selliscope.SelliscopeApiEndpointInterface;
@@ -64,6 +65,9 @@ public class ChangePasswordActivity extends AppCompatActivity {
                 }
             }
         });
+        Glide.with(getApplicationContext()).load(sessionManager.getUserDetails().get("profilePictureUrl"))
+                .thumbnail(0.5f)
+                .into(binding.ivProfileImage);
     }
 
     private void updatePassword() {

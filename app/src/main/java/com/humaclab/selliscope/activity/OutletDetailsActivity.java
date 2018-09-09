@@ -45,7 +45,7 @@ public class OutletDetailsActivity extends AppCompatActivity {
 
         outlet = (Outlets.Outlet) getIntent().getSerializableExtra("outletDetails");
         binding.setVariable(com.humaclab.selliscope.BR.outletDetails, outlet);
-        loadTargetOutlet();
+       // loadTargetOutlet();
 /*        mCircleProgressView = (CircleProgressView) findViewById(R.id.circle_progress_view);
         mCircleProgressView.setTextEnabled(false);
         mCircleProgressView.setInterpolator(new AccelerateDecelerateInterpolator());
@@ -77,7 +77,7 @@ public class OutletDetailsActivity extends AppCompatActivity {
         });
     }
 
-    private void loadTargetOutlet(){
+    /*private void loadTargetOutlet(){
         SessionManager sessionManager = new SessionManager(OutletDetailsActivity.this);
         apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(),sessionManager.getUserPassword(),false).create(SelliscopeApiEndpointInterface.class);
         Call<OutletTarget> call = apiService.getPutletTarget(outlet.outletId);
@@ -122,5 +122,5 @@ public class OutletDetailsActivity extends AppCompatActivity {
             }
         });
 
-    }
+    }*/
 }

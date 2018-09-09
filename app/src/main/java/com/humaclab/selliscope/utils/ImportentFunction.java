@@ -1,35 +1,12 @@
 package com.humaclab.selliscope.utils;
 
 
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.provider.Settings;
-
 public class ImportentFunction {
 
-    public static void displayPromptForEnablingGPS(final Activity activity)
-    {
+    public static String convertToEnglishDigits(String value) {
+        String newValue = value.replace("১", "1").replace("২", "2").replace("৩", "3").replace("৪", "4").replace("৫", "5")
+                .replace("৬", "6").replace("৭", "7").replace("৮", "8").replace("৯", "9").replace("০", "0");
 
-        final AlertDialog.Builder builder =  new AlertDialog.Builder(activity);
-        final String action = Settings.ACTION_LOCATION_SOURCE_SETTINGS;
-        final String message = "Do you want open GPS setting?";
-
-        builder.setMessage(message)
-                .setPositiveButton("OK",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface d, int id) {
-                                activity.startActivity(new Intent(action));
-                                d.dismiss();
-                            }
-                        })
-                .setNegativeButton("Cancel",
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface d, int id) {
-                                d.cancel();
-                            }
-                        });
-        builder.create().show();
+        return newValue;
     }
 }

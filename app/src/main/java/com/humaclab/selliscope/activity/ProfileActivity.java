@@ -30,7 +30,6 @@ import com.humaclab.selliscope.databinding.ActivityProfileBinding;
 import com.humaclab.selliscope.model.UpdateProfile.UpdateProfile;
 import com.humaclab.selliscope.model.UpdateProfile.UpdateProfileResponse;
 import com.humaclab.selliscope.utils.SessionManager;
-import com.squareup.picasso.Picasso;
 
 import java.io.ByteArrayOutputStream;
 import java.util.Calendar;
@@ -59,28 +58,31 @@ public class ProfileActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("");
         TextView toolbarTitle = findViewById(R.id.tv_toolbar_title);
-        toolbarTitle.setText("Change Password");
+        toolbarTitle.setText("Update Profile");
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
         Map<String, String> map = sessionManager.getUserDetails();
 
-        Picasso.get()
+/*        Picasso.get()
                 .load(sessionManager.getUserDetails().get("profilePictureUrl"))
-                .into(binding.ivProfileImage);
+                .into(binding.ivProfileImage);*/
 
         binding.tvEmail.setText(map.get("email"));
         binding.tvUserName.setText(map.get("userName"));
         binding.tvDateOfBirth.setText(map.get("dob"));
 
-        if (map.get("gender") != null) {
-            if (map.get("gender").equals("Male")) {
-                binding.rbMale.setSelected(true);
-                binding.rbFemale.setSelected(false);
+        String gender = sessionManager.getUserDetails().get("gender");
+        if (gender != null) {
+            if (gender.equals("Male")) {
+                binding.rgGender.check(binding.rbMale.getId());
+               /* binding.rbMale.setSelected(true);
+                binding.rbFemale.setSelected(false);*/
             } else {
-                binding.rbFemale.setSelected(true);
-                binding.rbMale.setSelected(false);
+                binding.rgGender.check(binding.rbFemale.getId());
+/*                binding.rbFemale.setSelected(true);
+                binding.rbMale.setSelected(false);*/
             }
         }
 

@@ -222,7 +222,7 @@ public class LocationMonitoringService extends Service implements
                 } else if (response.code() == 400) {
 
                 } else {
-                    Toast.makeText(getApplicationContext(), "Server Error! Try Again Later!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), response.code()+" Server Error! Try Again Later!", Toast.LENGTH_SHORT).show();
                 }
             }
 

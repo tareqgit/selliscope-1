@@ -13,6 +13,7 @@ import com.humaclab.selliscope.R;
 import com.humaclab.selliscope.adapters.OrderProductRecyclerAdapter;
 import com.humaclab.selliscope.databinding.ItemOrderProductSelectionBinding;
 import com.humaclab.selliscope.dbmodel.PriceVariationStartEnd;
+import com.humaclab.selliscope.dbmodel.TradePromoionData;
 import com.humaclab.selliscope.model.VariantProduct.ProductsItem;
 import com.humaclab.selliscope.utils.DatabaseHandler;
 
@@ -32,6 +33,8 @@ public class ShowProductSelectionDialog {
     //Set a base Rate Global
     private double priceOfRate;
     private String outletType;
+    private double discount  = 0.0;
+    private double totalPrice = 0.0;
 
     public ShowProductSelectionDialog(OrderProductRecyclerAdapter.OrderProductViewHolder orderProductRecyclerAdapter, Context context, ProductsItem productsItem, String outletType) {
         this.orderProductRecyclerAdapter = orderProductRecyclerAdapter;
@@ -61,7 +64,10 @@ public class ShowProductSelectionDialog {
         binding.etProductQty.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
+                binding.tvOffer.setText("");
+                binding.tvDiscountName.setText("");
+                binding.tvDiscount.setText("");
+                binding.tvGrandTotal.setText(String.valueOf(totalPrice));
             }
 
             @Override
@@ -70,6 +76,7 @@ public class ShowProductSelectionDialog {
                 //Price Variation
                 DatabaseHandler databaseHandler = new DatabaseHandler(context);
                 List<PriceVariationStartEnd> priceVariationList = databaseHandler.getpriceVariationStartEndEprice(productsItem.getId(),outletType);
+                List<TradePromoionData> tradePromoionData = databaseHandler.getTradePromoion(productsItem.getId());
                 String outletTypeName= outletType;
                 int size = priceVariationList.size();
                 try {
@@ -92,6 +99,49 @@ public class ShowProductSelectionDialog {
                         binding.tvProductPrice.setText(String.valueOf(priceOfRate));
                         //binding.tvTotalPrice.setText(String.format("%.2f", Double.valueOf(binding.tvProductPrice.getText().toString().replace(",", "")) * Double.valueOf(binding.etProductQty.getText().toString())));
                         binding.tvTotalPrice.setText(String.format("%.2f", Double.valueOf(binding.tvProductPrice.getText().toString().replace(",", "")) * Double.valueOf(binding.etProductQty.getText().toString())));
+
+                        totalPrice = Double.valueOf(String.valueOf(binding.tvTotalPrice.getText()));
+                    if ( Double.valueOf(tradePromoionData.get(0).getPromoionValue())<= inputFinalPrice && !inputPrice.equals("")) {
+
+                        int countOfferNumber = (int) (inputFinalPrice/Double.valueOf(tradePromoionData.get(0).getPromoionValue()));
+                        double offerValue = Double.valueOf(tradePromoionData.get(0).getOfferValue());
+
+                        switch (tradePromoionData.get(0).getOfferType()){
+                            case "Percentage":
+
+                                discount =  (totalPrice*offerValue) / 100 ;
+                                break;
+                            case "Flat":
+                                discount = offerValue * countOfferNumber;
+                                break;
+                            default:
+                                discount = 0.0;
+                                break;
+
+                        }
+                        binding.tvOffer.setText(tradePromoionData.get(0).getPromoionTitle());
+                        binding.tvDiscountName.setText(tradePromoionData.get(0).getOfferType());
+                        binding.tvDiscount.setText((String.valueOf(discount)));
+                        /*
+                            if(tradePromoionData.get(0).getOfferType().equals("Percentage")){
+                            double totalPrice = Double.valueOf(String.valueOf(binding.tvTotalPrice.getText()));
+                            discount =  (totalPrice*offerValue) / 100 ;
+                        }
+                        else if(tradePromoionData.get(0).getOfferType().equals("Flat")){
+                            discount = offerValue * countOfferNumber;
+                        }
+
+                        binding.tvOffer.setText(tradePromoionData.get(0).getPromoionTitle());
+                        binding.tvDiscountName.setText(tradePromoionData.get(0).getOfferType());
+                        binding.tvDiscount.setText((String.valueOf(discount)));
+                        */
+
+                    }
+                binding.tvGrandTotal.setText(String.valueOf(totalPrice-discount));
+
+
+
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

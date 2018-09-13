@@ -85,6 +85,7 @@ import timber.log.Timber;
 
 import static com.humaclab.selliscope.R.id.content_fragment;
 import static com.humaclab.selliscope.R.id.tv_message;
+import static com.humaclab.selliscope.R.id.tv_name;
 
 public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     public static ScheduledExecutorService schedulerForMinute, schedulerForHour;
@@ -117,7 +118,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
         sessionManager = new SessionManager(this);
 
-        welcome();
+
 
         Timber.i("Send Location Data Service onStartCommand");
 
@@ -134,6 +135,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("");
         TextView toolbarTitle = findViewById(R.id.tv_toolbar_title);
+
         toolbarTitle.setText(getResources().getString(R.string.home));
         setSupportActionBar(toolbar);
 
@@ -538,6 +540,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onResume() {
         super.onResume();
+        welcome();
 /*        final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
@@ -552,7 +555,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     private void welcome(String message) {
 
 
-        final AlertDialog builder = new AlertDialog.Builder(this).create();
+/*        final AlertDialog builder = new AlertDialog.Builder(this).create();
         LayoutInflater inflater = LayoutInflater.from(this);
         View dialogView = inflater.inflate(R.layout.welcomescrn, null);
         builder.setView(dialogView);
@@ -574,7 +577,10 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             }
         });
         builder.setCancelable(true);
-        builder.show();
+        builder.show();*/
+        TextView welcome_text = findViewById(R.id.welcome_text);
+        welcome_text.setText(message+", "+sessionManager.getUserDetails().get("userName"));
+
     }
 
     /**

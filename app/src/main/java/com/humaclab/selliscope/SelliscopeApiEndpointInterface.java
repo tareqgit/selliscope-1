@@ -22,6 +22,7 @@ import com.humaclab.selliscope.model.RoutePlan.RouteResponse;
 import com.humaclab.selliscope.model.SellsReturnResponse;
 import com.humaclab.selliscope.model.Target.OutletTarget;
 import com.humaclab.selliscope.model.Thana.ThanaResponse;
+import com.humaclab.selliscope.model.TradePromotion.TradePromotion;
 import com.humaclab.selliscope.model.UpdatePassword.ChangePassword;
 import com.humaclab.selliscope.model.UpdatePassword.ChangePasswordResponse;
 import com.humaclab.selliscope.model.UpdateProfile.UpdateProfile;
@@ -47,6 +48,8 @@ public interface SelliscopeApiEndpointInterface {
     @GET("product/price-variation")
     Call<PriceVariationResponse> getPriceVariation();
 
+    @GET("product/trade-promotion")
+    Call<TradePromotion> getTradePromotion();
 
     @GET("outlet")
     Call<ResponseBody> getOutlets();

@@ -1,5 +1,6 @@
 package com.humaclab.selliscope.adapters;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
@@ -145,6 +146,7 @@ public class DeliveryRecyclerAdapter extends RecyclerView.Adapter<DeliveryRecycl
                                     holder.btn_deliver.setEnabled(false);
                                     holder.btn_deliver.setBackgroundColor(Color.parseColor("#dddddd"));
                                     Toast.makeText(context, "Product delivered successfully", Toast.LENGTH_SHORT).show();
+                                    ((Activity)context).finish();
                                 } else if (response.code() == 200) {
                                     Toast.makeText(context, response.body().result, Toast.LENGTH_LONG).show();
                                 } else if (response.code() == 401) {

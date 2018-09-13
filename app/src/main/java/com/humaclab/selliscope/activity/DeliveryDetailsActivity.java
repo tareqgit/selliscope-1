@@ -6,6 +6,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,7 +45,7 @@ public class DeliveryDetailsActivity extends AppCompatActivity {
         TextView toolbarTitle = (TextView) findViewById(R.id.tv_toolbar_title);
         toolbarTitle.setText("Delivery Product");
         setSupportActionBar(toolbar);
-
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         deliveryList = (DeliveryResponse.DeliveryList) getIntent().getSerializableExtra("deliveryList");
 
         binding.rvDeliveryDetails.setLayoutManager(new LinearLayoutManager(this));
@@ -105,5 +106,23 @@ public class DeliveryDetailsActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         finish();
+    }
+
+
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

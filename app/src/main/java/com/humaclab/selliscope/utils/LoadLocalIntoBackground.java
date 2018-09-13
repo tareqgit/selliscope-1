@@ -2,7 +2,6 @@ package com.humaclab.selliscope.utils;
 
 import android.content.Context;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.humaclab.selliscope.SelliscopeApiEndpointInterface;
@@ -16,6 +15,8 @@ import com.humaclab.selliscope.model.PriceVariation.PriceVariationResponse;
 import com.humaclab.selliscope.model.PriceVariation.Product;
 import com.humaclab.selliscope.model.RoutePlan.RouteDetailsResponse;
 import com.humaclab.selliscope.model.Thana.ThanaResponse;
+import com.humaclab.selliscope.model.TradePromotion.Result;
+import com.humaclab.selliscope.model.TradePromotion.TradePromotion;
 import com.humaclab.selliscope.model.VariantProduct.ProductsItem;
 import com.humaclab.selliscope.model.VariantProduct.VariantProductResponse;
 
@@ -79,6 +80,7 @@ public class LoadLocalIntoBackground {
                             loadCategory();
                             loadBrand();
                             loadPriceVariation();
+                            loadTradePromoion();
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -120,6 +122,34 @@ public class LoadLocalIntoBackground {
 
                 }
             });
+    }
+    private void loadTradePromoion() {
+        Call<TradePromotion> call = apiService.getTradePromotion();
+        call.enqueue(new Callback<TradePromotion>() {
+            @Override
+            public void onResponse(Call<TradePromotion> call, Response<TradePromotion> response) {
+                if(response.isSuccessful()) {
+                    if (response.code() == 200) {
+                        try {
+                            List<Result> results = response.body().getResult();
+                            databaseHandler.add_trade_promotion(results);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                }
+                else {
+                    response.errorBody();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<TradePromotion> call, Throwable t) {
+                t.getMessage();
+
+            }
+        });
     }
     private void loadCategory() {
         Call<CategoryResponse> call = apiService.getCategories();

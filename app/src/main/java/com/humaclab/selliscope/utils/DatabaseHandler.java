@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import com.google.gson.Gson;
 import com.humaclab.selliscope.dbmodel.PriceVariationStartEnd;
 import com.humaclab.selliscope.dbmodel.Target;
+import com.humaclab.selliscope.dbmodel.TradePromoionData;
 import com.humaclab.selliscope.dbmodel.UserVisit;
 import com.humaclab.selliscope.model.AddNewOrder;
 import com.humaclab.selliscope.model.DeliveryResponse;
@@ -17,6 +18,8 @@ import com.humaclab.selliscope.model.OutletType.OutletType;
 import com.humaclab.selliscope.model.Outlets;
 import com.humaclab.selliscope.model.RoutePlan.RouteDetailsResponse;
 import com.humaclab.selliscope.model.Thana.Thana;
+import com.humaclab.selliscope.model.TradePromotion.Promotion;
+import com.humaclab.selliscope.model.TradePromotion.Result;
 import com.humaclab.selliscope.model.VariantProduct.Brand;
 import com.humaclab.selliscope.model.VariantProduct.Category;
 import com.humaclab.selliscope.model.VariantProduct.GodownItem;
@@ -52,6 +55,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String TABLE_OUTLET_TYPE = "outlet_type";
     private static final String TABLE_ORDER = "order_table";
     private static final String TABLE_PRICE_VARIATION = "priceVariation";
+    private static final String TABLE_TRADE_PROMTOIN = "tradePromotion";
 
     // Target Table Columns names
     private static final String KEY_TARGET_ID = "targetId";
@@ -138,6 +142,16 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String KEY_PV_STARTE_RANGE = "start_range";
     private static final String KEY_PV_END_RANGE = "end_range";
     private static final String KEY_PV_PRICE = "price";
+
+    //price variation table column name
+    private static final String KEY_TP_ID = "tp_id";
+    private static final String KEY_TP_PRODUCT_ID = "product_id";
+    private static final String KEY_TP_PROMOTIONAL_TITLE = "promotion_title";
+    private static final String KEY_TP_PROMOTION_TYPE = "promotion_type";
+    private static final String KEY_TP_PROMOTION_VALUE = "promotion_value";
+    private static final String KEY_TP_OFFER_TYPE = "offer_type";
+    private static final String KEY_TP_OFFER_VALUE = "offer_value";
+
 
     public DatabaseHandler(Context context) {
         super(context, Constants.databaseName, null, DATABASE_VERSION);
@@ -257,6 +271,15 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + KEY_PV_END_RANGE + " INTEGER,"
                 + KEY_PV_PRICE + " INTEGER"
                 + ")";
+        String CREATE_PRODUCT_PROMOTION_TABLE = "CREATE TABLE " + TABLE_TRADE_PROMTOIN + "("
+                + KEY_TP_ID + " INTEGER  PRIMARY KEY AUTOINCREMENT,"
+                + KEY_TP_PRODUCT_ID + " INTEGER,"
+                + KEY_TP_PROMOTIONAL_TITLE + " TEXT,"
+                + KEY_TP_OFFER_TYPE + " TEXT,"
+                + KEY_TP_PROMOTION_VALUE + " INTEGER,"
+                + KEY_TP_PROMOTION_TYPE + " TEXT,"
+                + KEY_TP_OFFER_VALUE + " INTEGER"
+                + ")";
 
         db.execSQL(CREATE_TARGET_TABLE);
         db.execSQL(CREATE_TARGET_USER_VISITS);
@@ -271,6 +294,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL(CREATE_OUTELT_TYPE_TABLE);
         db.execSQL(CREATE_ORDER_TABLE);
         db.execSQL(CREATE_PRICE_VARIATION_TABLE);
+        db.execSQL(CREATE_PRODUCT_PROMOTION_TABLE);
     }
 
     // Upgrading database
@@ -290,6 +314,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_OUTLET_TYPE);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_ORDER);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_PRICE_VARIATION);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_TRADE_PROMTOIN);
         // Create tables again
         onCreate(db);
     }
@@ -442,6 +467,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.delete(TABLE_CATEGORY, KEY_CATEGORY_ID + " > ?", new String[]{String.valueOf(-1)});
         db.delete(TABLE_BRAND, KEY_BRAND_ID + " > ?", new String[]{String.valueOf(-1)});
         db.delete(TABLE_PRICE_VARIATION, KEY_PV_ID + " > ?", new String[]{String.valueOf(-1)});
+        db.delete(TABLE_TRADE_PROMTOIN, KEY_TP_ID + " > ?", new String[]{String.valueOf(-1)});
         db.close();
     }
 
@@ -1223,5 +1249,55 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         }
         // return visit list
         return priceVariationStartEndList;
+    }
+
+
+    //Price Variation
+    public void add_trade_promotion(List<Result> results) {
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        for (Result result : results) {
+            ContentValues values = new ContentValues();
+            //String productName = product.getName();
+            values.put(KEY_TP_PRODUCT_ID, result.getProductId());
+            for (Promotion promotion : result.getPromotion()) {
+                values.put(KEY_TP_PROMOTIONAL_TITLE, promotion.getPromotionTitle() );
+                values.put(KEY_TP_PROMOTION_TYPE, promotion.getPromotionType() );
+                values.put(KEY_TP_PROMOTION_VALUE, promotion.getPromotionValue() );
+                values.put(KEY_TP_OFFER_TYPE, promotion.getOfferType() );
+                values.put(KEY_TP_OFFER_VALUE,promotion.getOfferValue()  );
+                try {
+                    db.insert(TABLE_TRADE_PROMTOIN, null, values);
+                    //productName = product.getName();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+        }
+        db.close(); // Closing database connection
+    }
+
+    public List<TradePromoionData> getTradePromoion(int productID){
+        List<TradePromoionData> tradePromoionData = new ArrayList<TradePromoionData>();
+        String selectQuery = "SELECT  * FROM " + TABLE_TRADE_PROMTOIN
+                + " WHERE " + KEY_TP_PRODUCT_ID + "= "+productID;
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                TradePromoionData tradePromoionData1 = new TradePromoionData(
+                        cursor.getString(cursor.getColumnIndex(KEY_TP_PROMOTION_TYPE)),
+                        cursor.getString(cursor.getColumnIndex(KEY_TP_PROMOTIONAL_TITLE)),
+                        cursor.getString(cursor.getColumnIndex(KEY_TP_PROMOTION_VALUE)),
+                        cursor.getString(cursor.getColumnIndex(KEY_TP_OFFER_TYPE)),
+                        cursor.getString(cursor.getColumnIndex(KEY_TP_OFFER_VALUE))
+                );
+                tradePromoionData.add(tradePromoionData1);
+            } while (cursor.moveToNext());
+        }
+        // return visit list
+        return tradePromoionData;
     }
 }

@@ -3,6 +3,7 @@ package com.humaclab.selliscope.activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -81,7 +82,10 @@ public class ActivityCart extends AppCompatActivity implements OnSelectProduct {
 
         //For showing total amount
         for (SelectedProductHelper selectedProduct : selectedProductList) {
-            total += Double.valueOf(selectedProduct.getTotalPrice());
+          //this Segment Used for calculation of total price without promotion discount
+            //  total += Double.valueOf(selectedProduct.getTotalPrice());
+            //this Segment Used for calculation of total price with promotion discount
+            total += Double.valueOf(selectedProduct.getTppromotionGrandPrice());
         }
         binding.tvTotal.setText(String.valueOf(total));
         if (!binding.etDiscount.getText().toString().equals(""))
@@ -157,6 +161,7 @@ public class ActivityCart extends AppCompatActivity implements OnSelectProduct {
                 product.qty = Integer.parseInt(selectedProduct.getProductQuantity());
                 product.row = Integer.parseInt(selectedProduct.getProductRow());
                 product.price = selectedProduct.getProductPrice();
+                product.tpDiscount = Double.parseDouble(selectedProduct.getTpDiscount());
                 products.add(product);
             }
 
@@ -178,8 +183,11 @@ public class ActivityCart extends AppCompatActivity implements OnSelectProduct {
                         if (response.code() == 201) {
                             System.out.println(new Gson().toJson(response.body()));
                             Toast.makeText(ActivityCart.this, "Order created successfully", Toast.LENGTH_LONG).show();
-                            finish();
-                            startActivity(new Intent(ActivityCart.this, OutletActivity.class));
+                            Intent intent = new Intent(getApplicationContext(), OutletActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                            startActivity(intent);
+                            //finish();
+                            //startActivity(new Intent(ActivityCart.this, OutletActivity.class));
                         } else if (response.code() == 401) {
                             System.out.println(new Gson().toJson(response.body()));
                             Toast.makeText(ActivityCart.this, "Invalid Response from server.", Toast.LENGTH_SHORT).show();

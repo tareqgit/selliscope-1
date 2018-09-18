@@ -288,8 +288,11 @@ public class AddOutletActivity extends AppCompatActivity {
                         CreateOutlet createOutletResult = gson.fromJson(response.body().string(), CreateOutlet.class);
                         Toast.makeText(AddOutletActivity.this, createOutletResult.result, Toast.LENGTH_SHORT).show();
                         submit.setEnabled(false);
-                        finish();
-                        startActivity(new Intent(AddOutletActivity.this, OutletActivity.class));
+                        Intent intent = new Intent(getApplicationContext(), OutletActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
+                        //finish();
+                        //startActivity(new Intent(AddOutletActivity.this, OutletActivity.class));
                     } catch (IOException e) {
                         e.printStackTrace();
                     }

@@ -13,14 +13,28 @@ public class SelectedProductHelper implements Serializable {
     private String productPrice;
     private String totalPrice;
     private String productRow;
+    private String tpDiscount;
+    private String tppromotionGrandPrice;
 
-    public SelectedProductHelper(String productID, String productName, String productQuantity, String productPrice, String totalPrice, String productRow) {
+    public String getTppromotionGrandPrice() {
+        return tppromotionGrandPrice;
+    }
+
+    public void setTppromotionGrandPrice(String tppromotionGrandPrice) {
+        this.tppromotionGrandPrice = tppromotionGrandPrice;
+    }
+
+
+    public SelectedProductHelper(String productID, String productName, String productQuantity, String productPrice, String totalPrice, String productRow,
+                                 String tpDiscount, String tppromotionGrandPrice ) {
         this.productID = productID;
         this.productName = productName;
         this.productQuantity = productQuantity;
         this.productPrice = productPrice;
         this.totalPrice = totalPrice;
         this.productRow = productRow;
+        this.tpDiscount = tpDiscount;
+        this.tppromotionGrandPrice = tppromotionGrandPrice;
     }
 
     public String getProductID() {
@@ -69,5 +83,14 @@ public class SelectedProductHelper implements Serializable {
 
     public void setProductRow(String productRow) {
         this.productRow = productRow;
+    }
+
+
+    public String getTpDiscount() {
+        return tpDiscount;
+    }
+
+    public void setTpDiscount(String tpDiscount) {
+        this.tpDiscount = tpDiscount;
     }
 }

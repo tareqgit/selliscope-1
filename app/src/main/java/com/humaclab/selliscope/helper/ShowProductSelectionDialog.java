@@ -64,9 +64,10 @@ public class ShowProductSelectionDialog {
         binding.etProductQty.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                discount  = 0.0;
                 binding.tvOffer.setText("");
                 binding.tvDiscountName.setText("");
-                binding.tvDiscount.setText("");
+                binding.tvDiscount.setText((String.valueOf(discount)));
                 binding.tvGrandTotal.setText(String.valueOf(totalPrice));
             }
 
@@ -137,7 +138,6 @@ public class ShowProductSelectionDialog {
                         */
 
                     }
-                binding.tvGrandTotal.setText(String.valueOf(totalPrice-discount));
 
 
 
@@ -145,6 +145,8 @@ public class ShowProductSelectionDialog {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+
+                binding.tvGrandTotal.setText(String.valueOf(totalPrice-discount));
             }
 
             @Override
@@ -157,19 +159,28 @@ public class ShowProductSelectionDialog {
             @Override
             public void onClick(View v) {
                 if (!binding.etProductQty.getText().toString().equals("")) {
-                    SelectedProductHelper selectedProduct = new SelectedProductHelper(
-                            String.valueOf(productsItem.getId()),
-                            productsItem.getName(),
-                            binding.etProductQty.getText().toString(),
-                            //productsItem.getPrice(),
-                            binding.tvProductPrice.getText().toString(),
-                            binding.tvTotalPrice.getText().toString(),
-                            productsItem.getVariantRow() == null ? "0" : productsItem.getVariantRow()
-                    );
+                    if(!binding.etProductQty.getText().toString().equals("0")) {
+                        SelectedProductHelper selectedProduct = new SelectedProductHelper(
+                                String.valueOf(productsItem.getId()),
+                                productsItem.getName(),
+                                binding.etProductQty.getText().toString(),
+                                //productsItem.getPrice(),
+                                binding.tvProductPrice.getText().toString(),
+                                binding.tvTotalPrice.getText().toString(),
+                                productsItem.getVariantRow() == null ? "0" : productsItem.getVariantRow(),
+                                binding.tvDiscount.getText().toString() == null ? "0" : binding.tvDiscount.getText().toString(),
+                                binding.tvGrandTotal.getText().toString() == null ? "0" : binding.tvGrandTotal.getText().toString()
+                        );
 
-                    orderProductRecyclerAdapter.onSetSelectedProduct(selectedProduct);
-                    alertDialog.dismiss();
-                    Toast.makeText(context, "Product added successfully", Toast.LENGTH_SHORT).show();
+                        orderProductRecyclerAdapter.onSetSelectedProduct(selectedProduct);
+                        alertDialog.dismiss();
+                        Toast.makeText(context, "Product added successfully", Toast.LENGTH_SHORT).show();
+                    }
+                    else {
+                        View view = binding.etProductQty;
+                        binding.etProductQty.setError("0 should not be apply");
+                        view.requestFocus();
+                    }
                 } else {
                     View view = binding.etProductQty;
                     binding.etProductQty.setError(context.getString(R.string.error_field_required));

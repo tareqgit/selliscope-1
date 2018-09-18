@@ -43,7 +43,8 @@ public class SelectedProductRecyclerAdapter extends RecyclerView.Adapter<Selecte
                 SelectedProductRecyclerAdapter.this.notifyItemRemoved(position);
                 SelectedProductRecyclerAdapter.this.notifyItemRangeChanged(position, selectedProductList.size());
                 activityCart.onRemoveSelectedProduct(selectedProduct);
-            }
+                activityCart.finish();
+                context.startActivity(activityCart.getIntent());            }
         });
     }
 

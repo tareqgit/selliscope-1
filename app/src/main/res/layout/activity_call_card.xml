@@ -64,6 +64,7 @@
                                 android:gravity="center_horizontal"
                                 android:padding="@dimen/padding_5"
                                 android:text="Product Pitch"
+                                android:fontFamily="@font/gengkgasregular"
                                 android:textColor="@color/white"
                                 android:textStyle="bold"/>
                         </LinearLayout>
@@ -99,6 +100,7 @@
                                 android:gravity="center_horizontal"
                                 android:padding="@dimen/padding_5"
                                 android:text="Order Collection"
+                                android:fontFamily="@font/gengkgasregular"
                                 android:textColor="@color/white"
                                 android:textStyle="bold"/>
                         </LinearLayout>
@@ -176,6 +178,7 @@
                                 android:gravity="center_horizontal"
                                 android:padding="@dimen/padding_5"
                                 android:text="Sales Return"
+                                android:fontFamily="@font/gengkgasregular"
                                 android:textColor="@color/white"
                                 android:textStyle="bold"/>
                         </LinearLayout>
@@ -211,6 +214,7 @@
                                 android:gravity="center_horizontal"
                                 android:padding="@dimen/padding_5"
                                 android:text="Inspection"
+                                android:fontFamily="@font/gengkgasregular"
                                 android:textColor="@color/white"
                                 android:textStyle="bold"/>
                         </LinearLayout>

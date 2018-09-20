@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Base64;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -83,8 +84,9 @@ public class EditOutletActivity extends AppCompatActivity {
         email = sessionManager.getUserEmail();
         password = sessionManager.getUserPassword();
         Toolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle("Add Outlet");
+        toolbar.setTitle("Update Outlet");
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         outletName = findViewById(R.id.et_outlet_name);
         outletName.setText(outlet.outletName);
 
@@ -325,5 +327,14 @@ public class EditOutletActivity extends AppCompatActivity {
     @Override
     public void onDestroy() {
         super.onDestroy();
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

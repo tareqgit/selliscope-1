@@ -17,6 +17,7 @@
         android:background="@color/colorPrimary"
         app:tabIndicatorColor="@color/white"
         app:tabMode="fixed"
+        android:fontFamily="@font/genbkbasbold"
         app:tabSelectedTextColor="@color/white"
         app:tabTextColor="#b3ffffff">
 
@@ -24,12 +25,14 @@
             android:id="@+id/tab_item_target"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/target"/>
+            android:text="@string/target"
+            android:fontFamily="@font/genbkbasbold"/>
 
         <android.support.design.widget.TabItem
             android:id="@+id/tab_item_dashboard"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/genbkbasbold"
             android:text="@string/dashboard"/>
     </android.support.design.widget.TabLayout>
 

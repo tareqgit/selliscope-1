@@ -29,6 +29,7 @@
         android:textColor="@color/white"
         android:textSize="@dimen/text_size_16"
         android:textStyle="bold"
+        android:fontFamily="@font/genbkbasbold"
         tool:text="Nahidul Islam"/>
 
     <TextView
@@ -39,6 +40,7 @@
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         android:text="Verison"
+        android:fontFamily="@font/gengkgasregular"
         android:textAlignment="center"
         android:textColor="#b5d0fd"
         android:textSize="16sp"/>

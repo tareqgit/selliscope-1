@@ -48,6 +48,7 @@
                         android:layout_marginTop="8dp"
                         android:layout_weight="1"
                         android:text="Product Name"
+                        android:fontFamily="@font/genbkbasbold"
                         android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"/>
 
                     <ImageView
@@ -67,6 +68,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="8dp"
+                        android:fontFamily="@font/genbkbasbold"
                         android:text="Category: "/>
 
                     <TextView
@@ -74,6 +76,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="8dp"
+                        android:fontFamily="@font/gengkgasregular"
                         android:text="Category"/>
                 </LinearLayout>
 
@@ -86,6 +89,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="8dp"
+                        android:fontFamily="@font/genbkbasbold"
                         android:text="Brand: "/>
 
                     <TextView
@@ -93,6 +97,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="8dp"
+                        android:fontFamily="@font/gengkgasregular"
                         android:text="Brand Name: "/>
                 </LinearLayout>
 
@@ -106,6 +111,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="8dp"
+                        android:fontFamily="@font/genbkbasbold"
                         android:text="Price: "/>
 
                     <TextView
@@ -113,6 +119,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="8dp"
+                        android:fontFamily="@font/gengkgasregular"
                         android:text="Price: "/>
                 </LinearLayout>
             </LinearLayout>
@@ -126,6 +133,7 @@
                 android:layout_marginRight="8dp"
                 android:background="@drawable/button_shape"
                 android:text="Order"
+                android:fontFamily="@font/genbkbasbold"
                 android:textColor="@color/white"/>
         </LinearLayout>
     </LinearLayout>

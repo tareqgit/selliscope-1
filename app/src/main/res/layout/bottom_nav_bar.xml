@@ -12,6 +12,7 @@
         android:layout_width="0.0dip"
         android:layout_height="@dimen/navigation_bar_height_vertical"
         android:layout_weight="1.0"
+        android:fontFamily="@font/genbkbasbold"
         android:drawableTop="@drawable/target"
         android:text="@string/target_navigation_item"/>
 
@@ -20,6 +21,7 @@
         style="@style/BottomBarItemVertical"
         android:layout_width="0.0dip"
         android:layout_height="@dimen/navigation_bar_height_vertical"
+        android:fontFamily="@font/genbkbasbold"
         android:layout_weight="1.0"
         android:drawableTop="@drawable/ic_dashboard_white_24dp"
         android:text="@string/dashboard_navigation_item"/>

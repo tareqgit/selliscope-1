@@ -34,6 +34,7 @@
             android:layout_marginLeft="5dp"
             android:layout_toRightOf="@id/icon_target"
             android:text="@string/sales_target"
+            android:fontFamily="@font/genbkbasbold"
             android:textStyle="bold"/>
 
 
@@ -51,6 +52,7 @@
             android:layout_below="@id/tv_completed"
             android:layout_marginTop="@dimen/margin_20"
             android:text="0.0"
+            android:fontFamily="@font/gengkgasregular"
             android:textColor="@color/colorPrimary"
             android:textStyle="bold"/>
 
@@ -60,6 +62,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/tv_target_label"
             android:layout_centerHorizontal="true"
+            android:fontFamily="@font/gengkgasregular"
             android:text="0.0"/>
 
 
@@ -81,6 +84,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
+            android:fontFamily="@font/gengkgasregular"
             android:text="@string/remaining"/>
 
         <TextView
@@ -90,6 +94,7 @@
             android:layout_alignParentRight="true"
             android:layout_below="@id/tv_remaining"
             android:layout_marginTop="@dimen/margin_20"
+            android:fontFamily="@font/gengkgasregular"
             android:text="0.0"
             android:textColor="@color/red"
             android:textStyle="bold"/>

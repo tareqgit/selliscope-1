@@ -33,6 +33,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:hint="Outlet Name"
+                    android:fontFamily="@font/gengkgasregular"
                     android:padding="10dp"
                     android:text="@{outletDetails.outletName}"
                     android:textAlignment="center"
@@ -81,6 +82,7 @@
                             android:layout_marginLeft="5dp"
                             android:layout_toRightOf="@id/icon_target"
                             android:text="@string/sales_target"
+                            android:fontFamily="@font/genbkbasbold"
                             android:textStyle="bold" />
 
 
@@ -90,7 +92,8 @@
                             android:layout_height="wrap_content"
                             android:layout_alignBottom="@+id/circle_progress_view"
                             android:layout_alignStart="@+id/icon_target"
-                            android:text="@string/completed" />
+                            android:text="@string/completed"
+                            android:fontFamily="@font/gengkgasregular"/>
 
                         <TextView
                             android:id="@+id/tv_target_achieved"
@@ -99,6 +102,7 @@
                             android:layout_above="@+id/tv_achieved"
                             android:layout_alignStart="@+id/icon_target"
                             android:text="0.0"
+                            android:fontFamily="@font/gengkgasregular"
                             android:textColor="@color/colorPrimary"
                             android:textStyle="bold" />
 
@@ -109,6 +113,7 @@
                             android:layout_below="@id/tv_target_label"
                             android:layout_centerHorizontal="true"
                             android:text="0.0"
+                            android:fontFamily="@font/gengkgasregular"
                             android:textColor="#000000"
                             android:textSize="24sp"
                             android:textStyle="bold" />
@@ -136,7 +141,8 @@
                             android:layout_height="wrap_content"
                             android:layout_alignEnd="@+id/tv_visited"
                             android:layout_alignTop="@+id/tv_achieved"
-                            android:text="@string/remaining" />
+                            android:text="@string/remaining"
+                            android:fontFamily="@font/gengkgasregular"/>
 
                         <TextView
                             android:id="@+id/tv_target_remaining"
@@ -145,6 +151,7 @@
                             android:layout_above="@+id/tv_achieved"
                             android:layout_alignEnd="@+id/tv_remaining"
                             android:text="0.0"
+                            android:fontFamily="@font/gengkgasregular"
                             android:textColor="@color/red"
                             android:textStyle="bold" />
 
@@ -156,6 +163,7 @@
                             android:layout_alignParentEnd="true"
                             android:layout_alignTop="@+id/icon_target"
                             android:hint="1111"
+                            android:fontFamily="@font/gengkgasregular"
                             android:textAllCaps="true"
                             android:textSize="18sp"
                             android:textStyle="bold|italic" />
@@ -196,6 +204,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:padding="2dp"
+                        android:fontFamily="@font/gengkgasregular"
                         android:text="@{outletDetails.ownerName}" />
                 </LinearLayout>
 
@@ -209,6 +218,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:padding="2dp"
+                        android:fontFamily="@font/gengkgasregular"
                         android:text="Contact No." />
 
                     <TextView
@@ -216,6 +226,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:padding="2dp"
+                        android:fontFamily="@font/gengkgasregular"
                         android:text="@{outletDetails.phone}" />
                 </LinearLayout>
 
@@ -229,6 +240,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:padding="2dp"
+                        android:fontFamily="@font/gengkgasregular"
                         android:text="Address" />
 
                     <TextView
@@ -236,6 +248,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:padding="2dp"
+                        android:fontFamily="@font/gengkgasregular"
                         android:text="@{outletDetails.outletAddress}" />
                 </LinearLayout>
 
@@ -249,6 +262,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:padding="2dp"
+                        android:fontFamily="@font/gengkgasregular"
                         android:text="Outlet Type" />
 
                     <TextView
@@ -256,6 +270,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:padding="2dp"
+                        android:fontFamily="@font/gengkgasregular"
                         android:text="@{outletDetails.outletType}" />
                 </LinearLayout>
 
@@ -266,6 +281,7 @@
                     android:layout_marginTop="10dp"
                     android:background="@drawable/red_background_border"
                     android:padding="4dp"
+                    android:fontFamily="@font/gengkgasregular"
                     android:text='@{"Due in BDT " + outletDetails.outletDue}'
                     android:textAlignment="center"
                     android:textStyle="bold" />
@@ -284,6 +300,7 @@
                         android:background="#b7a639"
                         android:padding="10dp"
                         android:text="Edit"
+                        android:fontFamily="@font/gengkgasregular"
                         android:textAllCaps="false"
                         android:textColor="#fff" />
 

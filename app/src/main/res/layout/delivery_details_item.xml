@@ -23,6 +23,7 @@
             android:gravity="center"
             android:padding="10dp"
             android:text="@{product.name}"
+            android:fontFamily="@font/gengkgasregular"
             android:textAlignment="center"/>
 
         <Spinner
@@ -34,6 +35,7 @@
             android:layout_weight="1"
             android:clickable="true"
             android:gravity="center"
+            android:fontFamily="@font/gengkgasregular"
             android:spinnerMode="dropdown"/>
 
         <TextView
@@ -46,6 +48,7 @@
             android:gravity="center"
             android:padding="10dp"
             android:text="@{Integer.toString(product.qty - Integer.parseInt(product.dQty))}"
+            android:fontFamily="@font/gengkgasregular"
             android:textAlignment="center"/>
 
         <LinearLayout
@@ -67,6 +70,7 @@
                 android:layout_weight="1"
                 android:background="#ddd"
                 android:text="-"
+                android:fontFamily="@font/gengkgasregular"
                 android:textColor="#000"
                 android:textSize="20sp"/>
 
@@ -76,6 +80,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="2"
                 android:hint="Qty."
+                android:fontFamily="@font/gengkgasregular"
                 android:imeOptions="actionDone"
                 android:inputType="number"
                 android:text="0"
@@ -89,6 +94,7 @@
                 android:layout_weight="1"
                 android:background="#ddd"
                 android:text="+"
+                android:fontFamily="@font/gengkgasregular"
                 android:textColor="#000"
                 android:textSize="20sp"/>
         </LinearLayout>
@@ -102,6 +108,7 @@
             android:layout_weight="1"
             android:background="@drawable/button_shape"
             android:text="Deliver"
+            android:fontFamily="@font/genbkbasbold"
             android:textColor="#fff"/>
     </LinearLayout>
 </layout>

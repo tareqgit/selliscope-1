@@ -25,6 +25,7 @@
                 android:layout_height="wrap_content"
                 android:padding="5dp"
                 android:text="Outlet:"
+                android:fontFamily="@font/genbkbasbold"
                 android:textColor="#000"
                 android:textStyle="bold" />
 
@@ -33,6 +34,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:hint="Outlet Name"
+                android:fontFamily="@font/gengkgasregular"
                 android:padding="5dp"
                 android:textColor="#000" />
         </LinearLayout>
@@ -129,6 +131,7 @@
                     android:layout_height="match_parent"
                     android:padding="5dp"
                     android:text="Total: "
+                    android:fontFamily="@font/genbkbasbold"
                     android:textColor="#000"
                     android:textStyle="bold" />
 
@@ -138,6 +141,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Total "
+                    android:fontFamily="@font/gengkgasregular"
                     android:gravity="end"
                     android:padding="5dp"
                     android:textColor="#000" />
@@ -153,6 +157,7 @@
                     android:layout_height="wrap_content"
                     android:padding="5dp"
                     android:text="Discount: "
+                    android:fontFamily="@font/genbkbasbold"
                     android:textColor="#000"
                     android:textStyle="bold" />
 
@@ -162,6 +167,7 @@
                     android:layout_height="wrap_content"
                     android:inputType="numberDecimal"
                     android:hint="Discount"
+                    android:fontFamily="@font/gengkgasregular"
                     android:gravity="end"
                     android:text="0"
                     android:textColor="#000" />
@@ -177,6 +183,7 @@
                     android:layout_height="wrap_content"
                     android:padding="5dp"
                     android:text="Grand Total: "
+                    android:fontFamily="@font/genbkbasbold"
                     android:textColor="#000"
                     android:textStyle="bold" />
 
@@ -186,6 +193,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Grand Total"
+                    android:fontFamily="@font/gengkgasregular"
                     android:padding="5dp"
                     android:textColor="#000" />
             </LinearLayout>
@@ -200,6 +208,7 @@
                     android:layout_height="wrap_content"
                     android:padding="5dp"
                     android:text="Comment:"
+                    android:fontFamily="@font/genbkbasbold"
                     android:textColor="#000"
                     android:textStyle="bold" />
 
@@ -208,22 +217,24 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="end"
-                    android:hint="Comment" />
+                    android:hint="Comment"
+                    android:fontFamily="@font/gengkgasregular"/>
             </LinearLayout>
 
             <Button
                 android:id="@+id/btn_order"
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:layout_gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="10dp"
-                android:background="@drawable/button_shape"
-                android:drawablePadding="5dp"
-                android:drawableRight="@drawable/check"
-                android:drawableTint="#fff"
-                android:padding="5dp"
+                android:elevation="5dp"
+                android:fontFamily="@font/genbkbasbold"
                 android:text="Order"
-                android:textColor="#fff" />
+                android:drawableRight="@drawable/ic_if_circle_check"
+                android:textAllCaps="false"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
         </LinearLayout>
     </RelativeLayout>
 </layout>

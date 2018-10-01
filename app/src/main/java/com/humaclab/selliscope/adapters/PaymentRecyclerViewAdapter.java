@@ -71,7 +71,7 @@ public class PaymentRecyclerViewAdapter extends RecyclerView.Adapter<PaymentRecy
                 payment.order_id = orderList.orderId;
                 payment.outlet_id = orderList.outletId;
                 payment.type = (holder.sp_payment_type.getSelectedItemPosition() == 0) ? 1 : 2;
-                payment.amount = Integer.parseInt(holder.et_payment.getText().toString());
+                payment.amount = Double.parseDouble(holder.et_payment.getText().toString());
                 paymentResponse.payment = payment;
                 Call<PaymentResponse.PaymentSucessfull> call = apiService.payNow(paymentResponse);
                 call.enqueue(new Callback<PaymentResponse.PaymentSucessfull>() {

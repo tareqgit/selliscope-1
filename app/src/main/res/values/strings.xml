@@ -30,7 +30,7 @@
     <string name="action_settings">Settings</string>
     <string name="name">Name</string>
     <string name="completed">Completed</string>
-    <string name="sales_target">SALES TARGET</string>
+    <string name="sales_target">TARGET</string>
     <string name="remaining">Remaining</string>
     <string name="title_activity_route">Route</string>
     <!-- Page Titles -->

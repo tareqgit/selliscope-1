@@ -103,9 +103,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_above="@+id/tv_completed"
-            android:layout_toStartOf="@+id/takatwo"
-            android:text="0.0"
+            android:layout_alignParentEnd="true"
             android:fontFamily="@font/gengkgasregular"
+            android:text="0.0"
             android:textColor="@color/red"
             android:textSize="24sp"
             android:textStyle="bold" />
@@ -119,21 +119,8 @@
             android:text="Date"
             android:fontFamily="@font/gengkgasregular"/>
 
-        <ImageView
-            android:id="@+id/takaone"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_above="@+id/tv_completed"
-            android:layout_toEndOf="@+id/tv_target_achieved"
-            android:src="@drawable/ic_action_taka" />
 
-        <ImageView
-            android:id="@+id/takatwo"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_above="@+id/tv_completed"
-            android:layout_alignEnd="@+id/tv_target_total"
-            android:src="@drawable/ic_action_taka" />
+
 
     </RelativeLayout>
 </android.support.v4.widget.SwipeRefreshLayout>

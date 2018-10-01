@@ -171,7 +171,7 @@ public class DailyTargetFragment extends Fragment {
                         swipeRefreshLayout.setRefreshing(false);
                     System.out.println("Response " + new Gson().toJson(response.body()));
 
-                    String sales_types = response.body().getResult().getSalesTypes();
+                    String sales_types = response.body().getResult().getSalesTypes().replace("Quantity","qt");
                     Double total = Double.valueOf(response.body().getResult().getSalesTarget().replace(",",""));
                     Double achieved = Double.valueOf(response.body().getResult().getAchieved().replace(",",""));
                     Double remaining = total-achieved;
@@ -179,10 +179,10 @@ public class DailyTargetFragment extends Fragment {
 
                     tv_date.setText(response.body().getResult().getDate());
                     tv_target_label.setText(response.body().getResult().getTargetType());
-                    tv_target_achieved.setText(response.body().getResult().getAchieved()+" ");
-                    tv_total.setText(total.toString());
+                    tv_target_achieved.setText(response.body().getResult().getAchieved()+" "+sales_types);
+                    tv_total.setText(total.toString()+" "+sales_types);
                     //tv_visited.setText(response.body().getResult().getVisited());
-                    tv_target_remaining.setText(remaining.toString()+" ");
+                    tv_target_remaining.setText(remaining.toString()+" "+sales_types);
                     circle_progress_view.setTextEnabled(true);
                     circle_progress_view.setInterpolator(new AccelerateDecelerateInterpolator());
                     circle_progress_view.setStartAngle(10);

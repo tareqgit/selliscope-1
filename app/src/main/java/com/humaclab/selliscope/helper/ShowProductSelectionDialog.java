@@ -2,6 +2,7 @@ package com.humaclab.selliscope.helper;
 
 import android.content.Context;
 import android.databinding.DataBindingUtil;
+import android.os.Build;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -50,7 +51,7 @@ public class ShowProductSelectionDialog {
 
     public void showDialog() {
         //Set the global Number
-        priceOfRate = Double.valueOf(productsItem.getPrice());
+        priceOfRate = Double.valueOf(productsItem.getPrice().replace(",",""));
         binding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.item_order_product_selection, null, false);
         binding.tvProductName.setText(productsItem.getName());
         binding.tvProductPrice.setText(String.valueOf(priceOfRate));
@@ -76,7 +77,7 @@ public class ShowProductSelectionDialog {
 
                 //Price Variation
                 DatabaseHandler databaseHandler = new DatabaseHandler(context);
-                List<PriceVariationStartEnd> priceVariationList = databaseHandler.getpriceVariationStartEndEprice(productsItem.getId(),outletType);
+                List<PriceVariationStartEnd> priceVariationList = databaseHandler.getpriceVariationStartEndEprice(productsItem.getId(),outletType, Integer.parseInt(productsItem.getVariantRow()));
                 List<TradePromoionData> tradePromoionData = databaseHandler.getTradePromoion(productsItem.getId());
                 String outletTypeName= outletType;
                 int size = priceVariationList.size();
@@ -111,18 +112,35 @@ public class ShowProductSelectionDialog {
                             case "Percentage":
 
                                 discount =  (totalPrice*offerValue) / 100 ;
+                                binding.tvOffer.setText(tradePromoionData.get(0).getPromoionTitle());
+                                binding.tvDiscountName.setText(tradePromoionData.get(0).getOfferType());
+                                binding.tvDiscount.setText((String.valueOf(discount)));
                                 break;
                             case "Flat":
                                 discount = offerValue * countOfferNumber;
+                                binding.tvOffer.setText(tradePromoionData.get(0).getPromoionTitle());
+                                binding.tvDiscountName.setText(tradePromoionData.get(0).getOfferType());
+                                binding.tvDiscount.setText((String.valueOf(discount)));
+                                break;
+                            case "Qty":
+                                discount = 0.0;
+                                binding.tvDiscountName.setText(tradePromoionData.get(0).getProduct_qty());
+                                binding.tvOffer.setText("Free: "+tradePromoionData.get(0).getProduct_name());
+                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                                    binding.layoutSelect.setBackground(context.getDrawable(R.color.background));
+                                }
+                                binding.tvDiscount.setText((String.valueOf(discount)));
+
                                 break;
                             default:
                                 discount = 0.0;
                                 break;
 
                         }
-                        binding.tvOffer.setText(tradePromoionData.get(0).getPromoionTitle());
+                        //Changing for specific option
+                       /* binding.tvOffer.setText(tradePromoionData.get(0).getPromoionTitle());
                         binding.tvDiscountName.setText(tradePromoionData.get(0).getOfferType());
-                        binding.tvDiscount.setText((String.valueOf(discount)));
+                        binding.tvDiscount.setText((String.valueOf(discount)));*/
                         /*
                             if(tradePromoionData.get(0).getOfferType().equals("Percentage")){
                             double totalPrice = Double.valueOf(String.valueOf(binding.tvTotalPrice.getText()));

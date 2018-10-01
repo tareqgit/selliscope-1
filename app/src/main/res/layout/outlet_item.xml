@@ -70,8 +70,10 @@
                             android:layout_marginLeft="8dp"
                             android:layout_marginRight="8dp"
                             android:layout_marginTop="8dp"
-                            android:text="Outlet Name"
                             android:fontFamily="@font/genbkbasbold"
+                            android:text="Outlet Name"
+                            android:textColor="#000000"
+                            android:textSize="20sp"
                             android:textStyle="bold" />
 
                         <TextView

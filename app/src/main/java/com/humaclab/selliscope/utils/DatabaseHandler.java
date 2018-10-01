@@ -18,6 +18,7 @@ import com.humaclab.selliscope.model.OutletType.OutletType;
 import com.humaclab.selliscope.model.Outlets;
 import com.humaclab.selliscope.model.RoutePlan.RouteDetailsResponse;
 import com.humaclab.selliscope.model.Thana.Thana;
+import com.humaclab.selliscope.model.TradePromotion.OfferProduct;
 import com.humaclab.selliscope.model.TradePromotion.Promotion;
 import com.humaclab.selliscope.model.TradePromotion.Result;
 import com.humaclab.selliscope.model.VariantProduct.Brand;
@@ -39,7 +40,7 @@ import java.util.Map;
  */
 
 public class DatabaseHandler extends SQLiteOpenHelper {
-    private static final int DATABASE_VERSION = 12;
+    private static final int DATABASE_VERSION = 13;
 
     // Database Tables
     private static final String TABLE_TARGET = "targets";
@@ -152,6 +153,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String KEY_TP_OFFER_TYPE = "offer_type";
     private static final String KEY_TP_OFFER_VALUE = "offer_value";
 
+    private static final String KEY_TP_OFFER_PRODUCT_NAME = "product_name";
+    private static final String KEY_TP_OFFER_PRODUCT_QTY = "product_qty";
 
     public DatabaseHandler(Context context) {
         super(context, Constants.databaseName, null, DATABASE_VERSION);
@@ -278,7 +281,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + KEY_TP_OFFER_TYPE + " TEXT,"
                 + KEY_TP_PROMOTION_VALUE + " INTEGER,"
                 + KEY_TP_PROMOTION_TYPE + " TEXT,"
-                + KEY_TP_OFFER_VALUE + " INTEGER"
+                + KEY_TP_OFFER_VALUE + " INTEGER,"
+                + KEY_TP_OFFER_PRODUCT_NAME + " TEXT,"
+                + KEY_TP_OFFER_PRODUCT_QTY + " INTEGER"
                 + ")";
 
         db.execSQL(CREATE_TARGET_TABLE);
@@ -1230,10 +1235,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         }
         db.close(); // Closing database connection
     }
-    public List<PriceVariationStartEnd> getpriceVariationStartEndEprice(int productID,String outletType){
+    public List<PriceVariationStartEnd> getpriceVariationStartEndEprice(int productID,String outletType,int varianrRow){
         List<PriceVariationStartEnd> priceVariationStartEndList = new ArrayList<PriceVariationStartEnd>();
         String selectQuery = "SELECT  * FROM " + TABLE_PRICE_VARIATION
-                + " WHERE " + KEY_PV_PRODUCT_ID + "= "+productID+" AND "+KEY_PV_OUTLET_TYPE+ "= "+ "'"+outletType+"'";
+                + " WHERE " + KEY_PV_PRODUCT_ID + "= "+productID+" AND "+KEY_PV_OUTLET_TYPE+ "= "+ "'"+outletType+"'"+ "AND "+KEY_VARIANT_ROW +"= "+varianrRow;
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
         // looping through all rows and adding to list
@@ -1266,6 +1271,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 values.put(KEY_TP_PROMOTION_VALUE, promotion.getPromotionValue() );
                 values.put(KEY_TP_OFFER_TYPE, promotion.getOfferType() );
                 values.put(KEY_TP_OFFER_VALUE,promotion.getOfferValue()  );
+                if(!(promotion.getOfferProduct() == null)) {
+                    values.put(KEY_TP_OFFER_PRODUCT_NAME, promotion.getOfferProduct().get(0).getProductName());
+                    values.put(KEY_TP_OFFER_PRODUCT_QTY, promotion.getOfferProduct().get(0).getProductQty());
+                }
                 try {
                     db.insert(TABLE_TRADE_PROMTOIN, null, values);
                     //productName = product.getName();
@@ -1292,7 +1301,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                         cursor.getString(cursor.getColumnIndex(KEY_TP_PROMOTIONAL_TITLE)),
                         cursor.getString(cursor.getColumnIndex(KEY_TP_PROMOTION_VALUE)),
                         cursor.getString(cursor.getColumnIndex(KEY_TP_OFFER_TYPE)),
-                        cursor.getString(cursor.getColumnIndex(KEY_TP_OFFER_VALUE))
+                        cursor.getString(cursor.getColumnIndex(KEY_TP_OFFER_VALUE)),
+                        cursor.getString(cursor.getColumnIndex(KEY_TP_OFFER_PRODUCT_NAME)),
+                        cursor.getString(cursor.getColumnIndex(KEY_TP_OFFER_PRODUCT_QTY))
                 );
                 tradePromoionData.add(tradePromoionData1);
             } while (cursor.moveToNext());

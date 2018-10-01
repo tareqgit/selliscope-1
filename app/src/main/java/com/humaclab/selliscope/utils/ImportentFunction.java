@@ -1,6 +1,8 @@
 package com.humaclab.selliscope.utils;
 
 
+import java.util.ArrayList;
+
 public class ImportentFunction {
 
     public static String convertToEnglishDigits(String value) {
@@ -9,4 +11,5 @@ public class ImportentFunction {
 
         return newValue;
     }
+    public static ArrayList<Integer> deliveryArrayList = new ArrayList<>();
 }

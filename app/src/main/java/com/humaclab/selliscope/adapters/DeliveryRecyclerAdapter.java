@@ -1,12 +1,12 @@
 package com.humaclab.selliscope.adapters;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
-import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,24 +14,15 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.Toast;
 
-import com.google.gson.Gson;
 import com.humaclab.selliscope.BR;
 import com.humaclab.selliscope.R;
-import com.humaclab.selliscope.SelliscopeApiEndpointInterface;
-import com.humaclab.selliscope.SelliscopeApplication;
-import com.humaclab.selliscope.model.DeliverProductResponse;
 import com.humaclab.selliscope.model.DeliveryResponse;
 import com.humaclab.selliscope.model.GodownRespons;
-import com.humaclab.selliscope.utils.SessionManager;
+import com.humaclab.selliscope.utils.ImportentFunction;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 /**
  * Created by tonmoy on 5/18/17.
@@ -90,11 +81,14 @@ public class DeliveryRecyclerAdapter extends RecyclerView.Adapter<DeliveryRecycl
             public void onClick(View view) {
                 if (qty[0] < product.qty) {
                     holder.et_qty.setText(String.valueOf(qty[0] + 1));
+                    ImportentFunction.deliveryArrayList.set(holder.getAdapterPosition(),Integer.parseInt(String.valueOf(qty[0] + 1)));
                     qty[0] = qty[0] + 1;
                 } else {
                     holder.et_qty.setText("1");
+                    ImportentFunction.deliveryArrayList.set(holder.getAdapterPosition(),Integer.parseInt(String.valueOf("1")));
                     qty[0] = 1;
                 }
+
             }
         });
         holder.btn_decrease.setOnClickListener(new View.OnClickListener() {
@@ -102,16 +96,37 @@ public class DeliveryRecyclerAdapter extends RecyclerView.Adapter<DeliveryRecycl
             public void onClick(View view) {
                 if (qty[0] > 1) {
                     holder.et_qty.setText(String.valueOf(qty[0] - 1));
+                    ImportentFunction.deliveryArrayList.set(holder.getAdapterPosition(),Integer.parseInt(String.valueOf(qty[0] - 1)));
                     qty[0] = qty[0] - 1;
                 } else {
                     holder.et_qty.setText("0");
+                    ImportentFunction.deliveryArrayList.set(holder.getAdapterPosition(),Integer.parseInt(String.valueOf("0")));
                     qty[0] = 0;
                 }
+
             }
         });
         //For qty increase and decrease
 
-        holder.btn_deliver.setOnClickListener(new View.OnClickListener() {
+        holder.et_qty.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(!s.toString().equals(""))
+                {
+                ImportentFunction.deliveryArrayList.set(holder.getAdapterPosition(),Integer.parseInt(s.toString()));
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
+        /*holder.btn_deliver.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (holder.sp_godown.getSelectedItemPosition() != 0) {
@@ -171,7 +186,7 @@ public class DeliveryRecyclerAdapter extends RecyclerView.Adapter<DeliveryRecycl
                     Toast.makeText(context, "Please select a godown.", Toast.LENGTH_SHORT).show();
                 }
             }
-        });
+        });*/
     }
 
     @Override
@@ -191,7 +206,7 @@ public class DeliveryRecyclerAdapter extends RecyclerView.Adapter<DeliveryRecycl
             sp_godown = itemView.findViewById(R.id.sp_godown);
             btn_decrease = itemView.findViewById(R.id.btn_decrease);
             btn_increase = itemView.findViewById(R.id.btn_increase);
-            btn_deliver = itemView.findViewById(R.id.btn_deliver);
+           /* btn_deliver = itemView.findViewById(R.id.btn_deliver);*/
             et_qty = itemView.findViewById(R.id.et_qty);
         }
 

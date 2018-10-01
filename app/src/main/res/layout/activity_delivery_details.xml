@@ -30,6 +30,38 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_margin="@dimen/margin_10"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:layout_height="match_parent">
+                    <Button
+                        android:id="@+id/btn_deliver_cancel"
+                        android:layout_gravity="center"
+                        style="@android:style/Widget.Button.Small"
+                        android:textColor="#fff"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/button_shape"
+                        android:text="Cancel"
+                        android:fontFamily="@font/genbkbasbold" />
+                    <View
+                        android:layout_width="10dp"
+                        android:layout_height="match_parent"
+                        />
+                    <Button
+                        android:id="@+id/button"
+                        android:layout_gravity="center"
+                        style="@android:style/Widget.Button.Small"
+                        android:textColor="#fff"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/button_shape"
+                        android:text="Deliver"
+                        android:fontFamily="@font/genbkbasbold" />
+                </LinearLayout>
+
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -46,6 +78,8 @@
                         android:fontFamily="@font/gengkgasregular"
                         android:textColor="#000"
                         android:textSize="18sp"/>
+
+
 
                     <TextView
                         android:id="@+id/tv_order_id"
@@ -136,7 +170,7 @@
                     android:textColor="#000"
                     android:textStyle="bold"/>
 
-                <TextView
+<!--                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin=".5dp"
@@ -147,7 +181,7 @@
                     android:fontFamily="@font/genbkbasbold"
                     android:textAlignment="center"
                     android:textColor="#000"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold"/>-->
             </LinearLayout>
 
             <android.support.v4.widget.SwipeRefreshLayout

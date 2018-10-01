@@ -135,6 +135,7 @@
                 android:textColor="#000" />
         </LinearLayout>
         <LinearLayout
+            android:id="@+id/layoutSelect"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">

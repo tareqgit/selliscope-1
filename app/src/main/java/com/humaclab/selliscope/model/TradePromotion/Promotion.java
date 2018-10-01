@@ -23,7 +23,7 @@ public class Promotion {
     private Integer offerValue;
     @SerializedName("offer_product")
 
-    private List<OfferProduct> offerProduct = null;
+    private List<OfferProduct> offerProduct;
 
     public String getPromotionTitle() {
         return promotionTitle;

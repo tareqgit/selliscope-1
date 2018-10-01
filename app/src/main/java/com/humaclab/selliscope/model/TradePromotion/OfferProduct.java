@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 public class OfferProduct {
 
-
+    @SerializedName("product_id")
     private Integer productId;
     @SerializedName("product_name")
 

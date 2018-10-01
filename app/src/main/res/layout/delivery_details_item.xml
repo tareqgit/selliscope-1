@@ -83,7 +83,7 @@
                 android:fontFamily="@font/gengkgasregular"
                 android:imeOptions="actionDone"
                 android:inputType="number"
-                android:text="0"
+                android:text="@{Integer.toString(product.qty - Integer.parseInt(product.dQty))}"
                 android:textAlignment="center"
                 android:textColor="#000"/>
 
@@ -99,7 +99,7 @@
                 android:textSize="20sp"/>
         </LinearLayout>
 
-        <Button
+        <!--<Button
             android:id="@+id/btn_deliver"
             style="@android:style/Widget.Button.Small"
             android:layout_width="0dp"
@@ -109,6 +109,6 @@
             android:background="@drawable/button_shape"
             android:text="Deliver"
             android:fontFamily="@font/genbkbasbold"
-            android:textColor="#fff"/>
+            android:textColor="#fff"/>-->
     </LinearLayout>
 </layout>

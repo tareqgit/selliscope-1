@@ -17,7 +17,7 @@ public class AddNewOrder implements Serializable {
         @SerializedName("outlet_id")
         public int outletId;
         @SerializedName("discount")
-        public int discount;
+        public Double discount;
         @SerializedName("products")
         public List<Product> products;
 
@@ -63,7 +63,7 @@ public class AddNewOrder implements Serializable {
                 @SerializedName("outlet_id")
                 public int outlet_id;
                 @SerializedName("discount")
-                public int discount;
+                public Double discount;
             }
         }
     }

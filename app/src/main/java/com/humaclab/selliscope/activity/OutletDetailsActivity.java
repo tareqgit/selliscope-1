@@ -12,6 +12,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.eralp.circleprogressview.CircleProgressView;
 import com.google.gson.Gson;
 import com.humaclab.selliscope.R;
 import com.humaclab.selliscope.SelliscopeApiEndpointInterface;
@@ -46,12 +47,8 @@ public class OutletDetailsActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         outlet = (Outlets.Outlet) getIntent().getSerializableExtra("outletDetails");
         binding.setVariable(com.humaclab.selliscope.BR.outletDetails, outlet);
-       // loadTargetOutlet();
-/*        mCircleProgressView = (CircleProgressView) findViewById(R.id.circle_progress_view);
-        mCircleProgressView.setTextEnabled(false);
-        mCircleProgressView.setInterpolator(new AccelerateDecelerateInterpolator());
-        mCircleProgressView.setStartAngle(45);
-        mCircleProgressView.setProgressWithAnimation(85, 2000);*/
+        loadTargetOutlet();
+
         if (Float.parseFloat(outlet.outletDue.replace(",", "")) < 0) {
             binding.tvDueAmount.setVisibility(View.GONE);
         }
@@ -78,7 +75,7 @@ public class OutletDetailsActivity extends AppCompatActivity {
         });
     }
 
-    /*private void loadTargetOutlet(){
+    private void loadTargetOutlet(){
         SessionManager sessionManager = new SessionManager(OutletDetailsActivity.this);
         apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(),sessionManager.getUserPassword(),false).create(SelliscopeApiEndpointInterface.class);
         Call<OutletTarget> call = apiService.getPutletTarget(outlet.outletId);
@@ -90,8 +87,8 @@ public class OutletDetailsActivity extends AppCompatActivity {
                     System.out.println("Response " + new Gson().toJson(response.body()));
 
                     String sales_types = response.body().getResult().getSalesTypes();
-                    Double total = Double.valueOf(response.body().getResult().getSalesTarget());
-                    Double achieved = Double.valueOf(response.body().getResult().getAchieved());
+                    Double total = Double.valueOf(response.body().getResult().getSalesTarget().replace(",",""));
+                    Double achieved = Double.valueOf(response.body().getResult().getAchieved().replace(",",""));
                     Double remaining = total-achieved;
                     int completePersentage = (int) ((achieved * 100)/total);
 
@@ -123,7 +120,7 @@ public class OutletDetailsActivity extends AppCompatActivity {
             }
         });
 
-    }*/
+    }
     @Override
     public void onBackPressed() {
         super.onBackPressed();

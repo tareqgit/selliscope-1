@@ -1,12 +1,14 @@
 package com.humaclab.selliscope.dbmodel;
 
 public class TradePromoionData {
-    public TradePromoionData(String promoionType, String promoionTitle, String promoionValue, String offerType, String offerValue) {
+    public TradePromoionData(String promoionType, String promoionTitle, String promoionValue, String offerType, String offerValue, String product_name, String product_qty) {
         this.promoionType = promoionType;
         this.promoionTitle = promoionTitle;
         this.promoionValue = promoionValue;
         this.offerType = offerType;
         this.offerValue = offerValue;
+        this.product_name = product_name;
+        this.product_qty = product_qty;
     }
 
     public String getPromoionType() {
@@ -54,4 +56,23 @@ public class TradePromoionData {
     String promoionValue;
     String offerType;
     String offerValue;
+
+    public String getProduct_name() {
+        return product_name;
+    }
+
+    public void setProduct_name(String product_name) {
+        this.product_name = product_name;
+    }
+
+    public String getProduct_qty() {
+        return product_qty;
+    }
+
+    public void setProduct_qty(String product_qty) {
+        this.product_qty = product_qty;
+    }
+
+    String product_name;
+    String product_qty;
 }

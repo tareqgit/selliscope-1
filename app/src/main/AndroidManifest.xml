@@ -117,7 +117,7 @@
         <activity android:name=".activity.DeliveryListActivity" />
         <activity
             android:name=".activity.DeliveryDetailsActivity"
-            android:screenOrientation="landscape" />
+             />
         <activity android:name=".activity.PaymentActivity" />
         <activity android:name=".activity.DueActivity" />
         <activity android:name=".activity.EditOutletActivity" />

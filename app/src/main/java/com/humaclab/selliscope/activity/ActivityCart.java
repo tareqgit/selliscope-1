@@ -143,9 +143,9 @@ public class ActivityCart extends AppCompatActivity implements OnSelectProduct {
             newOrder.longitude = String.valueOf(lon);
             newOrder.comment = binding.etComments.getText().toString();
             if (binding.etDiscount.getText().toString().equals("")) {
-                newOrder.discount = 0;
+                newOrder.discount = 0.0;
             } else {
-                newOrder.discount =  Integer.parseInt(binding.etDiscount.getText().toString());
+                newOrder.discount =  Double.parseDouble(binding.etDiscount.getText().toString());
                // newOrder.discount = Double.parseDouble(binding.etDiscount.getText().toString());
             }
 

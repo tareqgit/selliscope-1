@@ -22,7 +22,10 @@ public class DeliverProductResponse implements Serializable {
         public int outletId;
         @SerializedName("products")
         public List<Product> products;
-
+        @SerializedName("comment")
+        public String comment;
+        @SerializedName("flag")
+        public int flag;
         public static class Product implements Serializable {
             @SerializedName("id")
             public int productId;

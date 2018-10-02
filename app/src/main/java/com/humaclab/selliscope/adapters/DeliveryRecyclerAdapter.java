@@ -70,8 +70,8 @@ public class DeliveryRecyclerAdapter extends RecyclerView.Adapter<DeliveryRecycl
             godownId.add(godown.getId());
             godownName.add(godown.getName());
         }
-        holder.sp_godown.setAdapter(new ArrayAdapter<>(context, R.layout.spinner_item, godownName));
-        holder.sp_godown.setSelection(0);
+        /*holder.sp_godown.setAdapter(new ArrayAdapter<>(context, R.layout.spinner_item, godownName));
+        holder.sp_godown.setSelection(0);*/
         //For godwon spinner
 
         //For qty increase and decrease
@@ -203,7 +203,7 @@ public class DeliveryRecyclerAdapter extends RecyclerView.Adapter<DeliveryRecycl
         public DeliveryDetailsViewHolder(View itemView) {
             super(itemView);
             binding = DataBindingUtil.bind(itemView);
-            sp_godown = itemView.findViewById(R.id.sp_godown);
+           /* sp_godown = itemView.findViewById(R.id.sp_godown);*/
             btn_decrease = itemView.findViewById(R.id.btn_decrease);
             btn_increase = itemView.findViewById(R.id.btn_increase);
            /* btn_deliver = itemView.findViewById(R.id.btn_deliver);*/

@@ -159,7 +159,11 @@ public class DeliveryDetailsActivity extends AppCompatActivity {
                 // pd.dismiss();
                 if (response.code() == 201) {
                     Toast.makeText(DeliveryDetailsActivity.this, "Product delivered successfully", Toast.LENGTH_SHORT).show();
-                    ((Activity) DeliveryDetailsActivity.this).finish();
+                    //((Activity) DeliveryDetailsActivity.this).finish();
+
+                    Intent intent = new Intent(getApplicationContext(), DeliveryListActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
                 } else if (response.code() == 200) {
                     Toast.makeText(DeliveryDetailsActivity.this, response.body().result, Toast.LENGTH_LONG).show();
                 } else if (response.code() == 401) {

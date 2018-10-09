@@ -86,6 +86,7 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
                 .thumbnail(0.5f)
                 .into(holder.iv_outlet);
         holder.tvOutletName.setText(outlet.outletName);
+        holder.tvOutletID.setText(outlet.ClientID == null ? "Pending" : outlet.ClientID);
         holder.tvOutletAddress.setText(outlet.outletAddress);
         holder.tvOutletContactNumber.setText(outlet.phone);
         holder.tvOutletOwnerName.setText(outlet.ownerName);
@@ -226,7 +227,7 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
     public class OutletViewHolder extends RecyclerView.ViewHolder {
         CardView cardView;
         ImageView iv_outlet;
-        TextView tvOutletName, tvOutletAddress, tvOutletOwnerName, tvOutletContactNumber;
+        TextView tvOutletName, tvOutletAddress, tvOutletOwnerName, tvOutletContactNumber,tvOutletID;
         Button checkInButton, mapButton, historyButton;
         ProgressBar pbCheckIn;
         TextView tv_checkroute;
@@ -237,6 +238,7 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
             iv_outlet = itemView.findViewById(R.id.iv_outlet);
             cardView = itemView.findViewById(R.id.cv_outlet_item);
             tvOutletName = itemView.findViewById(R.id.tv_outlet_name);
+            tvOutletID = itemView.findViewById(R.id.tv_client_id);
             tvOutletAddress = itemView.findViewById(R.id.tv_outlet_address);
             tvOutletContactNumber = itemView.findViewById(R.id.tv_outlet_contact_number);
             tvOutletOwnerName = itemView.findViewById(R.id.tv_owner_name);

@@ -29,6 +29,8 @@ public class Outlets implements Serializable {
         public String outletType;
         @SerializedName("name")
         public String outletName;
+        @SerializedName("ClientID")
+        public String ClientID;
         @SerializedName("owner")
         public String ownerName;
         @SerializedName("address")

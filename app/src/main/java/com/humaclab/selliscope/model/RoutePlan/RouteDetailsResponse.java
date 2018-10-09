@@ -113,6 +113,17 @@ public class RouteDetailsResponse implements Serializable {
         @SerializedName("name")
         private String name;
 
+        public String getClientID() {
+            return ClientID;
+        }
+
+        public void setClientID(String clientID) {
+            ClientID = clientID;
+        }
+
+        @SerializedName("ClientID")
+        private String ClientID;
+
         @SerializedName("credit_limit")
         private String creditLimit;
 

@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
         android:layout_marginTop="10dp"
-        android:fontFamily="@font/genbkbasbold"
+        android:fontFamily="@font/latobold"
         android:padding="10dp"/>
 
     <android.support.v4.widget.SwipeRefreshLayout

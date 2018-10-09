@@ -63,7 +63,7 @@
                 android:drawableRight="@drawable/places_ic_search"
                 android:gravity="center"
                 android:hint="Search Outlet"
-                android:fontFamily="@font/gengkgasregular"
+                android:fontFamily="@font/latoregular"
                 android:textSize="17sp" />
 
             <android.support.v4.widget.SwipeRefreshLayout

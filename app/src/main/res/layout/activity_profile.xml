@@ -60,7 +60,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:hint="User Name"
-                    android:fontFamily="@font/genbkbasbold"
+                    android:fontFamily="@font/latobold"
                     android:padding="10dp"
                     android:textColor="#ffffff"
                     android:textSize="18sp"
@@ -93,7 +93,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Email"
-                        android:fontFamily="@font/genbkbasbold"
+                        android:fontFamily="@font/latobold"
                         android:textStyle="bold"
                         android:textColor="#000000"
                         android:gravity="center"
@@ -121,7 +121,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Address"
-                        android:fontFamily="@font/gengkgasregular"
+                        android:fontFamily="@font/latoregular"
                         android:gravity="center"
                         android:imeOptions="actionDone"
                         android:inputType="textMultiLine"
@@ -156,7 +156,7 @@
                             android:layout_height="wrap_content"
                             android:background="@drawable/radio_background"
                             android:button="@null"
-                            android:fontFamily="@font/genbkbasbold"
+                            android:fontFamily="@font/latobold"
                             android:gravity="center"
                             android:checked="true"
                             android:padding="10dp"
@@ -171,7 +171,7 @@
                             android:button="@null"
                             android:padding="10dp"
                             android:text="Female"
-                            android:fontFamily="@font/genbkbasbold"
+                            android:fontFamily="@font/latobold"
                             android:textColor="#000" />
                     </RadioGroup>
                 </LinearLayout>
@@ -200,7 +200,7 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:hint="Date of Birth"
-                            android:fontFamily="@font/gengkgasregular"
+                            android:fontFamily="@font/latoregular"
                             android:padding="10dp"
                             android:textSize="16sp" />
 
@@ -227,7 +227,7 @@
                     android:backgroundTint="#325E94"
                     android:text="Update"
                     android:drawableRight="@drawable/ic_if_circle_check"
-                    android:fontFamily="@font/genbkbasbold"
+                    android:fontFamily="@font/latobold"
                     android:textColor="#fff"
                     android:textStyle="bold" />
             </LinearLayout>

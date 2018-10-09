@@ -6,7 +6,7 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:fontFamily">@font/genbkbasbold</item>
+        <item name="android:fontFamily">@font/latobold</item>
     </style>
 
     <style name="BottomBarItemVertical">
@@ -17,25 +17,25 @@
         <item name="android:background">@drawable/bottom_bar_item_ripple</item>
         <item name="android:paddingTop">@dimen/navigation_bar_y_top_padding</item>
         <item name="android:singleLine">true</item>
-        <item name="android:fontFamily">@font/genbkbasbold</item>
+        <item name="android:fontFamily">@font/latobold</item>
         <item name="android:drawablePadding">@dimen/navigation_bar_y_drawable_padding</item>
     </style>
 
     <style name="SplashScreenTheme" parent="AppTheme">
         <item name="android:windowBackground">@drawable/splash_screen</item>
-        <item name="android:fontFamily">@font/genbkbasbold</item>
+        <item name="android:fontFamily">@font/latobold</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
         <item name="android:textSize">@dimen/text_size_12</item>
         <item name="android:textColor">@color/white</item>
-        <item name="android:fontFamily">@font/genbkbasbold</item>
+        <item name="android:fontFamily">@font/latobold</item>
     </style>
 
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light">
         <item name="android:textSize">@dimen/text_size_12</item>
         <item name="android:textColor">@color/white</item>
-        <item name="android:fontFamily">@font/genbkbasbold</item>
+        <item name="android:fontFamily">@font/latobold</item>
     </style>
 </resources>

@@ -45,7 +45,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:fontFamily="@font/gengkgasregular"
+                        android:fontFamily="@font/latoregular"
                         android:padding="2dp"
                         android:text='@{deliveryDetails.outletName}'
                         android:textColor="#000"
@@ -58,7 +58,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="end"
                         android:layout_weight="1"
-                        android:fontFamily="@font/gengkgasregular"
+                        android:fontFamily="@font/latoregular"
                         android:padding="2dp"
                         android:text='@{"Order id: " + deliveryDetails.deliveryId}'
                         android:textAlignment="textEnd"
@@ -70,7 +70,7 @@
                     android:id="@+id/tv_order_date"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/gengkgasregular"
+                    android:fontFamily="@font/latoregular"
                     android:text='@{"Order Date: " + deliveryDetails.deliveryDate}'
                     android:textSize="13sp" />
 
@@ -93,7 +93,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin=".5dp"
                     android:layout_weight="1"
-                    android:fontFamily="@font/genbkbasbold"
+                    android:fontFamily="@font/latobold"
                     android:padding="10dp"
                     android:text="Items"
                     android:textAlignment="center"
@@ -108,7 +108,7 @@
                      android:background="#fff"
                      android:padding="10dp"
                      android:text="Godwon"
-                     android:fontFamily="@font/genbkbasbold"
+                     android:fontFamily="@font/latobold"
                      android:textAlignment="center"
                      android:textColor="#000"
                      android:textStyle="bold"/>-->
@@ -118,7 +118,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin=".5dp"
                     android:layout_weight="1"
-                    android:fontFamily="@font/genbkbasbold"
+                    android:fontFamily="@font/latobold"
                     android:padding="10dp"
                     android:text="O.Qty."
                     android:textAlignment="center"
@@ -130,7 +130,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin=".5dp"
                     android:layout_weight="1"
-                    android:fontFamily="@font/genbkbasbold"
+                    android:fontFamily="@font/latobold"
                     android:padding="10dp"
                     android:text="D.Qty."
                     android:textAlignment="center"
@@ -145,7 +145,7 @@
                                     android:background="#fff"
                                     android:padding="10dp"
                                     android:text="Deliver"
-                                    android:fontFamily="@font/genbkbasbold"
+                                    android:fontFamily="@font/latobold"
                                     android:textAlignment="center"
                                     android:textColor="#000"
                                     android:textStyle="bold"/>-->
@@ -199,7 +199,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:background="@drawable/button_cancel"
-                    android:fontFamily="@font/genbkbasbold"
+                    android:fontFamily="@font/latobold"
                     android:text="Cancel"
                     android:textColor="#fff" />
 
@@ -214,7 +214,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:background="@drawable/button_done"
-                    android:fontFamily="@font/genbkbasbold"
+                    android:fontFamily="@font/latobold"
                     android:text="Deliver"
                     android:textColor="#fff" />
             </LinearLayout>

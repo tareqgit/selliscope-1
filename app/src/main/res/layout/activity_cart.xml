@@ -25,7 +25,7 @@
                 android:layout_height="wrap_content"
                 android:padding="5dp"
                 android:text="Outlet:"
-                android:fontFamily="@font/genbkbasbold"
+                android:fontFamily="@font/latobold"
                 android:textColor="#000"
                 android:textStyle="bold" />
 
@@ -34,7 +34,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:hint="Outlet Name"
-                android:fontFamily="@font/gengkgasregular"
+                android:fontFamily="@font/latoregular"
                 android:padding="5dp"
                 android:textColor="#000" />
         </LinearLayout>
@@ -131,7 +131,7 @@
                     android:layout_height="match_parent"
                     android:padding="5dp"
                     android:text="Total: "
-                    android:fontFamily="@font/genbkbasbold"
+                    android:fontFamily="@font/latobold"
                     android:textColor="#000"
                     android:textStyle="bold" />
 
@@ -141,7 +141,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Total "
-                    android:fontFamily="@font/gengkgasregular"
+                    android:fontFamily="@font/latoregular"
                     android:gravity="end"
                     android:padding="5dp"
                     android:textColor="#000" />
@@ -157,7 +157,7 @@
                     android:layout_height="wrap_content"
                     android:padding="5dp"
                     android:text="Discount: "
-                    android:fontFamily="@font/genbkbasbold"
+                    android:fontFamily="@font/latobold"
                     android:textColor="#000"
                     android:textStyle="bold" />
 
@@ -167,7 +167,7 @@
                     android:layout_height="wrap_content"
                     android:inputType="numberDecimal"
                     android:hint="Discount"
-                    android:fontFamily="@font/gengkgasregular"
+                    android:fontFamily="@font/latoregular"
                     android:gravity="end"
                     android:text="0"
                     android:textColor="#000" />
@@ -183,7 +183,7 @@
                     android:layout_height="wrap_content"
                     android:padding="5dp"
                     android:text="Grand Total: "
-                    android:fontFamily="@font/genbkbasbold"
+                    android:fontFamily="@font/latobold"
                     android:textColor="#000"
                     android:textStyle="bold" />
 
@@ -193,7 +193,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Grand Total"
-                    android:fontFamily="@font/gengkgasregular"
+                    android:fontFamily="@font/latoregular"
                     android:padding="5dp"
                     android:textColor="#000" />
             </LinearLayout>
@@ -208,7 +208,7 @@
                     android:layout_height="wrap_content"
                     android:padding="5dp"
                     android:text="Comment:"
-                    android:fontFamily="@font/genbkbasbold"
+                    android:fontFamily="@font/latobold"
                     android:textColor="#000"
                     android:textStyle="bold" />
 
@@ -218,7 +218,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="end"
                     android:hint="Comment"
-                    android:fontFamily="@font/gengkgasregular"/>
+                    android:fontFamily="@font/latoregular"/>
             </LinearLayout>
 
             <Button
@@ -228,7 +228,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:elevation="5dp"
-                android:fontFamily="@font/genbkbasbold"
+                android:fontFamily="@font/latobold"
                 android:text="Order"
                 android:drawableRight="@drawable/ic_if_circle_check"
                 android:textAllCaps="false"

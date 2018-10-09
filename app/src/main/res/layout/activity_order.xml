@@ -45,7 +45,7 @@
                 android:drawableRight="@drawable/search"
                 android:gravity="center"
                 android:hint="Search Product"
-                android:fontFamily="@font/gengkgasregular"
+                android:fontFamily="@font/latoregular"
                 android:imeOptions="actionSearch"
                 android:inputType="text"
                 android:padding="10dp" />
@@ -85,7 +85,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Total:"
-                        android:fontFamily="@font/genbkbasbold"
+                        android:fontFamily="@font/latobold"
                         android:textStyle="bold" />
 
                     <TextView
@@ -93,7 +93,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:hint="Total"
-                        android:fontFamily="@font/gengkgasregular"/>
+                        android:fontFamily="@font/latoregular"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -106,7 +106,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Discount:"
-                        android:fontFamily="@font/genbkbasbold"
+                        android:fontFamily="@font/latobold"
                         android:textStyle="bold" />
 
                     <TextView
@@ -114,7 +114,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:hint="Discount"
-                        android:fontFamily="@font/gengkgasregular"/>
+                        android:fontFamily="@font/latoregular"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -127,14 +127,14 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Gr Total:"
-                        android:fontFamily="@font/genbkbasbold"
+                        android:fontFamily="@font/latobold"
                         android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/tv_total_gr"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/gengkgasregular"
+                        android:fontFamily="@font/latoregular"
                         android:hint="Grand Total" />
                 </LinearLayout>
             </LinearLayout>

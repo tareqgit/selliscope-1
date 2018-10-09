@@ -17,7 +17,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/white"
-            android:fontFamily="@font/genbkbasbold"
+            android:fontFamily="@font/latobold"
             android:textSize="@dimen/text_size_20"
             android:textStyle="bold"/>
     </android.support.v7.widget.Toolbar>

@@ -65,7 +65,7 @@
                         android:gravity="center"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
-                        android:fontFamily="@font/gengkgasregular"
+                        android:fontFamily="@font/latoregular"
                         android:hint="Outlet Name"
                         android:inputType="text"/>
 
@@ -91,7 +91,7 @@
                         android:layout_width="match_parent"
                         android:layout_marginLeft="10dp"
                         android:gravity="center"
-                        android:fontFamily="@font/gengkgasregular"
+                        android:fontFamily="@font/latoregular"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="0dp"
                         android:hint="Owner Name"/>
@@ -117,7 +117,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
-                        android:fontFamily="@font/gengkgasregular"
+                        android:fontFamily="@font/latoregular"
                         android:hint="Contact Number"
                         android:inputType="phone"/>
                 </LinearLayout>
@@ -140,7 +140,7 @@
                         android:layout_width="match_parent"
                         android:layout_marginLeft="10dp"
                         android:layout_height="wrap_content"
-                        android:fontFamily="@font/gengkgasregular"
+                        android:fontFamily="@font/latoregular"
                         android:layout_weight="1"
                         android:gravity="center"
                         android:hint="Outlet Address"
@@ -165,7 +165,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight=".70"
-                        android:fontFamily="@font/genbkbasbold"
+                        android:fontFamily="@font/latobold"
                         android:background="@drawable/border"
                         android:padding="4dp"
                         android:text="Outlet Type:"
@@ -196,7 +196,7 @@
                         android:background="@drawable/border"
                         android:padding="4dp"
                         android:text="District:"
-                        android:fontFamily="@font/genbkbasbold"
+                        android:fontFamily="@font/latobold"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                         android:textColor="#000000"
                         android:textStyle="bold" />
@@ -223,7 +223,7 @@
                         android:background="@drawable/border"
                         android:padding="4dp"
                         android:text="Thana:"
-                        android:fontFamily="@font/genbkbasbold"
+                        android:fontFamily="@font/latobold"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                         android:textColor="#000000"
                         android:textStyle="bold" />
@@ -249,7 +249,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:elevation="5dp"
-                        android:fontFamily="@font/genbkbasbold"
+                        android:fontFamily="@font/latobold"
                         android:text="Cancel"
                         android:drawableRight="@drawable/ic_if_circle_cross"
                         android:textAllCaps="false"
@@ -262,7 +262,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:elevation="5dp"
-                        android:fontFamily="@font/genbkbasbold"
+                        android:fontFamily="@font/latobold"
                         android:text="Update"
                         android:drawableRight="@drawable/ic_if_circle_check"
                         android:textAllCaps="false"

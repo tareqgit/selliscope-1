@@ -43,7 +43,7 @@
                         android:layout_weight="1"
                         android:padding="5dp"
                         android:text='@{deliveryDetails.outletName}'
-                        android:fontFamily="@font/gengkgasregular"
+                        android:fontFamily="@font/latoregular"
                         android:textColor="#000"
                         android:textSize="18sp"/>
 
@@ -55,7 +55,7 @@
                         android:layout_weight="1"
                         android:padding="5dp"
                         android:text='@{"Order id: " + deliveryDetails.deliveryId}'
-                        android:fontFamily="@font/gengkgasregular"
+                        android:fontFamily="@font/latoregular"
                         android:textAlignment="textEnd"
                         android:textColor="#000"
                         android:textSize="18sp"/>
@@ -67,7 +67,7 @@
                     android:layout_height="wrap_content"
                     android:padding="5dp"
                     android:text='@{"Order Date: " + deliveryDetails.deliveryDate}'
-                    android:fontFamily="@font/gengkgasregular"
+                    android:fontFamily="@font/latoregular"
                     android:textSize="17sp"/>
 
                 <View
@@ -92,7 +92,7 @@
                     android:background="#fff"
                     android:padding="10dp"
                     android:text="Items"
-                    android:fontFamily="@font/genbkbasbold"
+                    android:fontFamily="@font/latobold"
                     android:textAlignment="center"
                     android:textColor="#000"
                     android:textStyle="bold"/>
@@ -117,7 +117,7 @@
                     android:background="#fff"
                     android:padding="10dp"
                     android:text="O.Qty."
-                    android:fontFamily="@font/genbkbasbold"
+                    android:fontFamily="@font/latobold"
                     android:textAlignment="center"
                     android:textColor="#000"
                     android:textStyle="bold"/>
@@ -130,7 +130,7 @@
                     android:background="#fff"
                     android:padding="10dp"
                     android:text="D.Qty."
-                    android:fontFamily="@font/genbkbasbold"
+                    android:fontFamily="@font/latobold"
                     android:textAlignment="center"
                     android:textColor="#000"
                     android:textStyle="bold"/>
@@ -143,7 +143,7 @@
                     android:background="#fff"
                     android:padding="10dp"
                     android:text="R.Qty."
-                    android:fontFamily="@font/genbkbasbold"
+                    android:fontFamily="@font/latobold"
                     android:textAlignment="center"
                     android:textColor="#000"
                     android:textStyle="bold"/>
@@ -156,7 +156,7 @@
                     android:background="#fff"
                     android:padding="10dp"
                     android:text="Cause"
-                    android:fontFamily="@font/genbkbasbold"
+                    android:fontFamily="@font/latobold"
                     android:textAlignment="center"
                     android:textColor="#000"
                     android:textStyle="bold"/>
@@ -170,7 +170,7 @@
                     android:background="#fff"
                     android:padding="10dp"
                     android:text="Return"
-                    android:fontFamily="@font/genbkbasbold"
+                    android:fontFamily="@font/latobold"
                     android:textAlignment="center"
                     android:textColor="#000"
                     android:textStyle="bold"/>

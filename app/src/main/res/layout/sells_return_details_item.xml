@@ -24,7 +24,7 @@
             android:gravity="center"
             android:padding="10dp"
             android:text="@{product.name}"
-            android:fontFamily="@font/gengkgasregular"
+            android:fontFamily="@font/latoregular"
             android:textAlignment="center"/>
 
         <TextView
@@ -37,7 +37,7 @@
             android:gravity="center"
             android:padding="10dp"
             android:text="@{Integer.toString(product.qty)}"
-            android:fontFamily="@font/gengkgasregular"
+            android:fontFamily="@font/latoregular"
             android:textAlignment="center"/>
 
         <TextView
@@ -50,7 +50,7 @@
             android:gravity="center"
             android:padding="10dp"
             android:text="@{product.dQty}"
-            android:fontFamily="@font/gengkgasregular"
+            android:fontFamily="@font/latoregular"
             android:textAlignment="center"/>
 
         <LinearLayout
@@ -72,7 +72,7 @@
                 android:layout_weight="1"
                 android:background="#ddd"
                 android:text="-"
-                android:fontFamily="@font/gengkgasregular"
+                android:fontFamily="@font/latoregular"
                 android:textColor="#000"
                 android:textSize="20sp"/>
 
@@ -82,7 +82,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:hint="Qty."
-                android:fontFamily="@font/gengkgasregular"
+                android:fontFamily="@font/latoregular"
                 android:imeOptions="actionDone"
                 android:inputType="number"
                 android:text="0"
@@ -96,7 +96,7 @@
                 android:layout_weight="1"
                 android:background="#ddd"
                 android:text="+"
-                android:fontFamily="@font/gengkgasregular"
+                android:fontFamily="@font/latoregular"
                 android:textColor="#000"
                 android:textSize="20sp"/>
         </LinearLayout>
@@ -110,7 +110,7 @@
             android:layout_margin=".5dp"
             android:layout_weight="1"
             android:background="#fff"
-            android:fontFamily="@font/gengkgasregular"
+            android:fontFamily="@font/latoregular"
             android:entries="@array/returnCause"/>
 
         <Button
@@ -122,7 +122,7 @@
             android:layout_weight="1"
             android:background="@drawable/button_shape"
             android:text="Return"
-            android:fontFamily="@font/genbkbasbold"
+            android:fontFamily="@font/latobold"
             android:textColor="#fff"/>
     </LinearLayout>
 </layout>

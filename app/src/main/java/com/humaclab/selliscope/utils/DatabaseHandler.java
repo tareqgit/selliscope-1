@@ -40,7 +40,7 @@ import java.util.Map;
  */
 
 public class DatabaseHandler extends SQLiteOpenHelper {
-    private static final int DATABASE_VERSION = 13;
+    private static final int DATABASE_VERSION = 14;
 
     // Database Tables
     private static final String TABLE_TARGET = "targets";
@@ -113,6 +113,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String KEY_OUTLET_LATITUDE = "outlet_latitude";
     private static final String KEY_OUTLET_DUE = "outlet_due";
     private static final String KEY_OUTLET_ROUTEPLAN = "outlet_routeplan";
+    private static final String KEY_OUTLET_CLIENTID = "ClientID";
 
     //Thana table column name
     private static final String KEY_THANA_ID = "thana_id";
@@ -235,7 +236,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + KEY_OUTLET_LATITUDE + " TEXT,"
                 + KEY_OUTLET_LONGITUDE + " TEXT,"
                 + KEY_OUTLET_DUE + " TEXT,"
-                + KEY_OUTLET_ROUTEPLAN + " TEXT"
+                + KEY_OUTLET_ROUTEPLAN + " TEXT,"
+                + KEY_OUTLET_CLIENTID + " TEXT"
                 + ")";
 
         String CREATE_DISTRICT_TABLE = "CREATE TABLE " + TABLE_DISTRICT + "("
@@ -772,6 +774,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 values.put(KEY_OUTLET_LATITUDE, outlet.outletLatitude);
                 values.put(KEY_OUTLET_DUE, outlet.outletDue);
                 values.put(KEY_OUTLET_ROUTEPLAN, "0");
+                values.put(KEY_OUTLET_CLIENTID, outlet.ClientID);
                 try {
                     db.insert(TABLE_OUTLET, null, values);
                 } catch (Exception e) {
@@ -809,6 +812,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 values.put(KEY_OUTLET_LATITUDE, outlet.getLatitude());
                 values.put(KEY_OUTLET_DUE, outlet.getDue());
                 values.put(KEY_OUTLET_ROUTEPLAN, "1");
+                values.put(KEY_OUTLET_CLIENTID, outlet.getClientID());
                 try {
                     db.insert(TABLE_OUTLET, null, values);
                 } catch (Exception e) {
@@ -833,6 +837,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 values.put(KEY_OUTLET_LATITUDE, outlet.getLatitude());
                 values.put(KEY_OUTLET_DUE, outlet.getDue());
                 values.put(KEY_OUTLET_ROUTEPLAN, "0");
+                values.put(KEY_OUTLET_CLIENTID, outlet.getClientID());
                 try {
                     db.insert(TABLE_OUTLET, null, values);
                 } catch (Exception e) {
@@ -928,6 +933,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 outlet.outletLatitude = Double.parseDouble(cursor.getString(cursor.getColumnIndex(KEY_OUTLET_LATITUDE)));
                 outlet.outletDue = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_DUE));
                 outlet.outlet_routeplan = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_ROUTEPLAN));
+                outlet.ClientID = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_CLIENTID));
 
                 outletList.add(outlet);
             } while (cursor.moveToNext());
@@ -971,7 +977,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         Outlets.OutletsResult outletsResult = new Outlets.OutletsResult();
         List<Outlets.Outlet> outletList = new ArrayList<>();
         // Select All Query
-        String selectQuery = "SELECT * FROM " + TABLE_OUTLET + " WHERE " + KEY_OUTLET_NAME + " LIKE \"" + outletName + "%\" ORDER BY " + KEY_OUTLET_NAME + " ASC";
+        String selectQuery = "SELECT * FROM " + TABLE_OUTLET + " WHERE " + KEY_OUTLET_NAME + " LIKE \"" + outletName + "%\" OR "+ KEY_OUTLET_CLIENTID+" LIKE \""+ outletName + "%\" ORDER BY " + KEY_OUTLET_NAME + " ASC";
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
 
@@ -993,7 +999,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 outlet.outletLatitude = Double.parseDouble(cursor.getString(cursor.getColumnIndex(KEY_OUTLET_LATITUDE)));
                 outlet.outletDue = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_DUE));
                 outlet.outlet_routeplan = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_ROUTEPLAN));
-
+                outlet.ClientID = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_CLIENTID));
                 outletList.add(outlet);
             } while (cursor.moveToNext());
         }

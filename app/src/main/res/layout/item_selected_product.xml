@@ -31,7 +31,7 @@
                 android:layout_margin="1dp"
                 android:layout_weight="9"
                 android:hint="Product Name"
-                android:fontFamily="@font/genbkbasbold"
+                android:fontFamily="@font/latobold"
                 android:textStyle="bold"
                 android:padding="5dp"
                 android:text='@{selectedProduct.productName}'
@@ -63,7 +63,7 @@
                     android:layout_weight="2"
 
                     android:hint="Price"
-                    android:fontFamily="@font/gengkgasregular"
+                    android:fontFamily="@font/latoregular"
                     android:padding="5dp"
                     android:text='@{selectedProduct.productPrice}'
                     android:textAlignment="center"
@@ -75,7 +75,7 @@
                     android:layout_margin="1dp"
                     android:layout_weight=".2"
                     android:text="x"
-                    android:fontFamily="@font/gengkgasregular"
+                    android:fontFamily="@font/latoregular"
                     android:layout_gravity="center"
                     android:gravity="center"
                     android:textColor="#000" />
@@ -87,7 +87,7 @@
                     android:layout_weight="1"
 
                     android:hint="Qty."
-                    android:fontFamily="@font/gengkgasregular"
+                    android:fontFamily="@font/latoregular"
                     android:padding="5dp"
                     android:text='@{selectedProduct.productQuantity}'
                     android:textAlignment="center"
@@ -98,7 +98,7 @@
                     android:layout_margin="1dp"
                     android:layout_weight=".2"
                     android:text="="
-                    android:fontFamily="@font/genbkbasbold"
+                    android:fontFamily="@font/latobold"
                     android:layout_gravity="center"
                     android:gravity="center"
                     android:textColor="#000" />
@@ -110,7 +110,7 @@
                     android:layout_margin="1dp"
                     android:layout_weight="3"
                     android:hint="Amount"
-                    android:fontFamily="@font/genbkbasbold"
+                    android:fontFamily="@font/latobold"
                     android:padding="5dp"
                     android:text='@{selectedProduct.totalPrice}'
                     android:textStyle="bold"
@@ -126,7 +126,7 @@
                     android:layout_margin="1dp"
                     android:layout_weight="3.2"
                     android:text="Promotional Discount"
-                    android:fontFamily="@font/genbkbasbold"
+                    android:fontFamily="@font/latobold"
                     android:layout_gravity="center"
                     android:gravity="center"
                     android:textColor="#000" />
@@ -136,7 +136,7 @@
                     android:layout_margin="1dp"
                     android:layout_weight=".2"
                     android:text="="
-                    android:fontFamily="@font/genbkbasbold"
+                    android:fontFamily="@font/latobold"
                     android:layout_gravity="center"
                     android:gravity="center"
                     android:textColor="#000" />
@@ -148,7 +148,7 @@
                     android:layout_margin="1dp"
                     android:layout_weight="3"
                     android:hint="Amount"
-                    android:fontFamily="@font/genbkbasbold"
+                    android:fontFamily="@font/latobold"
                     android:padding="5dp"
                     android:text='@{selectedProduct.tpDiscount}'
                     android:textStyle="bold"
@@ -164,7 +164,7 @@
                     android:layout_margin="1dp"
                     android:layout_weight="3.2"
                     android:text="Total"
-                    android:fontFamily="@font/genbkbasbold"
+                    android:fontFamily="@font/latobold"
                     android:layout_gravity="center"
                     android:gravity="center"
                     android:textColor="#000" />
@@ -174,7 +174,7 @@
                     android:layout_margin="1dp"
                     android:layout_weight=".2"
                     android:text="="
-                    android:fontFamily="@font/genbkbasbold"
+                    android:fontFamily="@font/latobold"
                     android:layout_gravity="center"
                     android:gravity="center"
                     android:textColor="#000" />
@@ -186,7 +186,7 @@
                     android:layout_margin="1dp"
                     android:layout_weight="3"
                     android:hint="Amount"
-                    android:fontFamily="@font/genbkbasbold"
+                    android:fontFamily="@font/latobold"
                     android:padding="5dp"
                     android:text='@{Double.toString(Double.parseDouble(selectedProduct.totalPrice) - Double.parseDouble(selectedProduct.tpDiscount))}'
                     android:textStyle="bold"

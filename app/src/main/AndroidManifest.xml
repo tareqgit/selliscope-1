@@ -42,7 +42,7 @@
 
 
         <!-- For signed APK -->
-<!--        <meta-data
+       <!-- <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyAhsz4pX62D7yu8twGT4ydn-_DRVB3p6_Y" />
         <meta-data

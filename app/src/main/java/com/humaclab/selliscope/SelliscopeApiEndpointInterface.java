@@ -19,7 +19,9 @@ import com.humaclab.selliscope.model.PaymentResponse;
 import com.humaclab.selliscope.model.PurchaseHistory.PurchaseHistoryResponse;
 import com.humaclab.selliscope.model.RoutePlan.RouteDetailsResponse;
 import com.humaclab.selliscope.model.RoutePlan.RouteResponse;
-import com.humaclab.selliscope.model.SellsReturnResponse;
+import com.humaclab.selliscope.model.SalesReturn.SalesReturnHistory;
+import com.humaclab.selliscope.model.SalesReturn.SalesReturnResponse;
+import com.humaclab.selliscope.model.SalesReturn.SellsReturnResponsePost;
 import com.humaclab.selliscope.model.Target.OutletTarget;
 import com.humaclab.selliscope.model.Thana.ThanaResponse;
 import com.humaclab.selliscope.model.TradePromotion.TradePromotion;
@@ -45,6 +47,13 @@ import retrofit2.http.Path;
 
 public interface SelliscopeApiEndpointInterface {
     //GET methods
+
+    @GET("delivery/order")
+    Call<SalesReturnResponse> getSalesReturnDAta();
+
+    @GET("sales-return")
+    Call<SalesReturnHistory> getSalesReturnHistory();
+
     @GET("product/price-variation")
     Call<PriceVariationResponse> getPriceVariation();
 
@@ -142,8 +151,10 @@ public interface SelliscopeApiEndpointInterface {
     @POST("delivery/store")
     Call<DeliverProductResponse> deliverProduct(@Body DeliverProductResponse deliverProduct);
 
-    @POST("return-product")
-    Call<SellsReturnResponse> returnProduct(@Body SellsReturnResponse.SellsReturn returnProduct);
+/*    @POST("return-product")
+    Call<SellsReturnResponsePost> returnProduct(@Body SellsReturnResponsePost.SellsReturn returnProduct);*/
+    @POST("sales-return/store ")
+    Call<SellsReturnResponsePost> returnProduct(@Body SellsReturnResponsePost.SellsReturn returnProduct);
 
     @POST("inspection/store")
     Call<InspectionResponse> inspectOutlet(@Body InspectionResponse.Inspection inspection);

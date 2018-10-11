@@ -1,4 +1,4 @@
-package com.humaclab.selliscope.model;
+package com.humaclab.selliscope.model.SalesReturn;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -8,7 +8,7 @@ import java.io.Serializable;
  * Created by leon on 6/15/17.
  */
 
-public class SellsReturnResponse implements Serializable {
+public class SellsReturnResponsePost implements Serializable {
     @SerializedName("error")
     public String error;
     @SerializedName("message")
@@ -24,9 +24,17 @@ public class SellsReturnResponse implements Serializable {
         public int orderID;
         @SerializedName("product_id")
         public int productID;
+        @SerializedName("return_date")
+        public String mReturnDate;
+        @SerializedName("variant_row")
+        public int mVariantRow;
+        @SerializedName("note")
+        public String mNote;
+        @SerializedName("reason_id")
+        public int mReasonId;
+        @SerializedName("sku")
+        public String mSku;
         @SerializedName("quantity")
         public int quantity;
-        @SerializedName("cause")
-        public String cause;
     }
 }

@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
         <variable
             name="deliveryDetails"
-            type="com.humaclab.selliscope.model.DeliveryResponse.DeliveryList"/>
+            type="com.humaclab.selliscope.model.SalesReturn.SalesReturnResponse.DeliveryList"/>
     </data>
 
     <LinearLayout
@@ -29,46 +30,51 @@
                 android:id="@+id/linearLayout2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="horizontal">
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/iv_outlet"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:layout_gravity="center"
+                    android:layout_margin="10dp"
+                    android:src="@drawable/ic_outlet"
+                    app:civ_border_color="#000"
+                    app:civ_border_width="1dp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:layout_gravity="center"
+                    android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/tv_outlet_name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:padding="5dp"
-                        android:text='@{deliveryDetails.outletName}'
-                        android:fontFamily="@font/latoregular"
-                        android:textColor="#000"
-                        android:textSize="18sp"/>
 
+                        android:text='@{deliveryDetails.outletName}'
+                        android:hint="Outlet Name"
+                        android:fontFamily="@font/latobold"
+                        android:textStyle="bold"
+                        android:textColor="#000"
+                        android:textSize="21sp"/>
                     <TextView
-                        android:id="@+id/tv_order_id"
+                        android:id="@+id/tv_user_name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="end"
                         android:layout_weight="1"
-                        android:padding="5dp"
-                        android:text='@{"Order id: " + deliveryDetails.deliveryId}'
-                        android:fontFamily="@font/latoregular"
-                        android:textAlignment="textEnd"
+
+                        android:text='@{"Delivered By: "+deliveryDetails.user}'
+                        android:hint="User Name"
+                        android:fontFamily="@font/latobold"
+                        android:textStyle="bold"
                         android:textColor="#000"
-                        android:textSize="18sp"/>
+                        android:textSize="16sp"/>
+
+
                 </LinearLayout>
 
-                <TextView
-                    android:id="@+id/tv_order_date"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="5dp"
-                    android:text='@{"Order Date: " + deliveryDetails.deliveryDate}'
-                    android:fontFamily="@font/latoregular"
-                    android:textSize="17sp"/>
 
                 <View
                     android:layout_width="match_parent"
@@ -77,7 +83,7 @@
                     android:background="#ddd"/>
             </LinearLayout>
 
-            <LinearLayout
+            <!--<LinearLayout
                 android:id="@+id/linearLayout3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -97,7 +103,7 @@
                     android:textColor="#000"
                     android:textStyle="bold"/>
 
-                <!--<TextView
+                &lt;!&ndash;<TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin=".5dp"
@@ -107,20 +113,8 @@
                     android:text="Price"
                     android:textAlignment="center"
                     android:textColor="#000"
-                    android:textStyle="bold" />-->
+                    android:textStyle="bold" />&ndash;&gt;
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin=".5dp"
-                    android:layout_weight="1"
-                    android:background="#fff"
-                    android:padding="10dp"
-                    android:text="O.Qty."
-                    android:fontFamily="@font/latobold"
-                    android:textAlignment="center"
-                    android:textColor="#000"
-                    android:textStyle="bold"/>
 
                 <TextView
                     android:layout_width="match_parent"
@@ -175,7 +169,7 @@
                     android:textColor="#000"
                     android:textStyle="bold"/>
 
-                <!--<TextView
+                &lt;!&ndash;<TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin=".5dp"
@@ -197,8 +191,8 @@
                     android:text="Total"
                     android:textAlignment="center"
                     android:textColor="#000"
-                    android:textStyle="bold" />-->
-            </LinearLayout>
+                    android:textStyle="bold" />&ndash;&gt;
+            </LinearLayout>-->
 
             <android.support.v4.widget.SwipeRefreshLayout
                 android:id="@+id/srl_delivery_details"

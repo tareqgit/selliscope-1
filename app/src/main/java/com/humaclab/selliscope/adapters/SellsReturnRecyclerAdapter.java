@@ -13,18 +13,20 @@ import com.humaclab.selliscope.BR;
 import com.humaclab.selliscope.R;
 import com.humaclab.selliscope.activity.SalesReturnDetailsActivity;
 import com.humaclab.selliscope.model.DeliveryResponse;
+import com.humaclab.selliscope.model.SalesReturn.SalesReturnResponse;
 
 import java.util.List;
 
 /**
  * Created by tonmoy on 5/16/17.
+ * Updated by anam on 09/10/2018.
  */
 
 public class SellsReturnRecyclerAdapter extends RecyclerView.Adapter<SellsReturnRecyclerAdapter.DeliveryListViewHolder> {
     private Context context;
-    private List<DeliveryResponse.DeliveryList> deliveryLists;
+    private List<SalesReturnResponse.DeliveryList> deliveryLists;
 
-    public SellsReturnRecyclerAdapter(Context context, List<DeliveryResponse.DeliveryList> deliveryLists) {
+    public SellsReturnRecyclerAdapter(Context context, List<SalesReturnResponse.DeliveryList> deliveryLists) {
         this.context = context;
         this.deliveryLists = deliveryLists;
     }
@@ -37,8 +39,8 @@ public class SellsReturnRecyclerAdapter extends RecyclerView.Adapter<SellsReturn
 
     @Override
     public void onBindViewHolder(DeliveryListViewHolder holder, int position) {
-        DeliveryResponse.DeliveryList delivery = deliveryLists.get(position);
-        holder.getBinding().setVariable(BR.deliveryDetails, delivery);
+        SalesReturnResponse.DeliveryList delivery = deliveryLists.get(position);
+        holder.getBinding().setVariable(BR.sellsReturnOrder, delivery);
         holder.getBinding().executePendingBindings();
     }
 

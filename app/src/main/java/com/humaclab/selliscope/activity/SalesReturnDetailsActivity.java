@@ -13,11 +13,12 @@ import com.humaclab.selliscope.R;
 import com.humaclab.selliscope.adapters.SellsReturnDetailsRecyclerAdapter;
 import com.humaclab.selliscope.databinding.ActivitySalesReturnDetailsBinding;
 import com.humaclab.selliscope.model.DeliveryResponse;
+import com.humaclab.selliscope.model.SalesReturn.SalesReturnResponse;
 import com.humaclab.selliscope.utils.NetworkUtility;
 
 public class SalesReturnDetailsActivity extends AppCompatActivity {
     private ActivitySalesReturnDetailsBinding binding;
-    private DeliveryResponse.DeliveryList deliveryList;
+    private SalesReturnResponse.DeliveryList deliveryList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +31,7 @@ public class SalesReturnDetailsActivity extends AppCompatActivity {
         toolbarTitle.setText("Return Product");
         setSupportActionBar(toolbar);
 
-        deliveryList = (DeliveryResponse.DeliveryList) getIntent().getSerializableExtra("deliveryList");
+        deliveryList = (SalesReturnResponse.DeliveryList) getIntent().getSerializableExtra("deliveryList");
 
         binding.rvDeliveryDetails.setLayoutManager(new LinearLayoutManager(this));
         binding.setVariable(com.humaclab.selliscope.BR.deliveryDetails, deliveryList);

@@ -1,12 +1,15 @@
 package com.humaclab.selliscope.activity;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -16,7 +19,7 @@ import com.humaclab.selliscope.R;
 import com.humaclab.selliscope.SelliscopeApiEndpointInterface;
 import com.humaclab.selliscope.SelliscopeApplication;
 import com.humaclab.selliscope.adapters.SellsReturnRecyclerAdapter;
-import com.humaclab.selliscope.model.DeliveryResponse;
+import com.humaclab.selliscope.model.SalesReturn.SalesReturnResponse;
 import com.humaclab.selliscope.utils.NetworkUtility;
 import com.humaclab.selliscope.utils.SessionManager;
 
@@ -78,10 +81,11 @@ public class SalesReturnActivity extends AppCompatActivity {
 
         apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(),
                 sessionManager.getUserPassword(), false).create(SelliscopeApiEndpointInterface.class);
-        Call<DeliveryResponse> call = apiService.getSalesReturn();
-        call.enqueue(new Callback<DeliveryResponse>() {
+       // Call<DeliveryResponse> call = apiService.getSalesReturn();
+       Call<SalesReturnResponse> call = apiService.getSalesReturnDAta();
+        call.enqueue(new Callback<SalesReturnResponse>() {
             @Override
-            public void onResponse(Call<DeliveryResponse> call, Response<DeliveryResponse> response) {
+            public void onResponse(Call<SalesReturnResponse> call, Response<SalesReturnResponse> response) {
                 pd.dismiss();
                 if (response.code() == 200) {
                     try {
@@ -89,8 +93,8 @@ public class SalesReturnActivity extends AppCompatActivity {
                             srl_sells_return.setRefreshing(false);
 
                         System.out.println("Return Response " + new Gson().toJson(response.body()));
-                        List<DeliveryResponse.DeliveryList> delivers = response.body().result.deliveryList;
-                        rv_return_list.setAdapter(new SellsReturnRecyclerAdapter(getApplication(), delivers));
+                        List<SalesReturnResponse.DeliveryList> salesReturnOrder = response.body().result.deliveryList;
+                        rv_return_list.setAdapter(new SellsReturnRecyclerAdapter(getApplication(), salesReturnOrder));
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -104,7 +108,7 @@ public class SalesReturnActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<DeliveryResponse> call, Throwable t) {
+            public void onFailure(Call<SalesReturnResponse> call, Throwable t) {
                 pd.dismiss();
                 t.printStackTrace();
             }
@@ -122,7 +126,17 @@ public class SalesReturnActivity extends AppCompatActivity {
             case android.R.id.home:
                 onBackPressed();
                 return true;
+            case R.id.actionHistory:
+                Intent intent = new Intent(this, SalesReturnHistoryActivity.class);
+                startActivity(intent);
+                return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_history, menu);
+        return true;
     }
 }

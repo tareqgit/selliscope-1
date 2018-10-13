@@ -16,6 +16,7 @@ import com.humaclab.selliscope.model.DeliveryResponse;
 import com.humaclab.selliscope.model.District.District;
 import com.humaclab.selliscope.model.OutletType.OutletType;
 import com.humaclab.selliscope.model.Outlets;
+import com.humaclab.selliscope.model.Reason.ReasonResponse;
 import com.humaclab.selliscope.model.RoutePlan.RouteDetailsResponse;
 import com.humaclab.selliscope.model.Thana.Thana;
 import com.humaclab.selliscope.model.TradePromotion.OfferProduct;
@@ -40,7 +41,7 @@ import java.util.Map;
  */
 
 public class DatabaseHandler extends SQLiteOpenHelper {
-    private static final int DATABASE_VERSION = 14;
+    private static final int DATABASE_VERSION = 15;
 
     // Database Tables
     private static final String TABLE_TARGET = "targets";
@@ -57,6 +58,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String TABLE_ORDER = "order_table";
     private static final String TABLE_PRICE_VARIATION = "priceVariation";
     private static final String TABLE_TRADE_PROMTOIN = "tradePromotion";
+    private static final String TABLE_SELLS_REASON = "reason";
 
     // Target Table Columns names
     private static final String KEY_TARGET_ID = "targetId";
@@ -126,6 +128,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     //Outlet type table column name
     private static final String KEY_TYPE_ID = "id";
     private static final String KEY_TYPE_NAME = "type";
+
+    //Outlet type table column name
+    private static final String KEY_SREASONID = "sid";
+    private static final String KEY_REASON_ID = "id";
+    private static final String KEY_REASON_NAME = "name";
 
     //Order table column name
     private static final String KEY_ORDER_OUTLET_ID = "outlet_id";
@@ -287,6 +294,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + KEY_TP_OFFER_PRODUCT_NAME + " TEXT,"
                 + KEY_TP_OFFER_PRODUCT_QTY + " INTEGER"
                 + ")";
+        String CREATE_TABLE_REASON = "CREATE TABLE " + TABLE_SELLS_REASON + "("
+                + KEY_SREASONID + " INTEGER  PRIMARY KEY AUTOINCREMENT,"
+                + KEY_REASON_ID + " INTEGER,"
+                + KEY_REASON_NAME + " TEXT"
+                + ")";
 
         db.execSQL(CREATE_TARGET_TABLE);
         db.execSQL(CREATE_TARGET_USER_VISITS);
@@ -302,6 +314,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL(CREATE_ORDER_TABLE);
         db.execSQL(CREATE_PRICE_VARIATION_TABLE);
         db.execSQL(CREATE_PRODUCT_PROMOTION_TABLE);
+        db.execSQL(CREATE_TABLE_REASON);
     }
 
     // Upgrading database
@@ -322,6 +335,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_ORDER);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_PRICE_VARIATION);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_TRADE_PROMTOIN);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_SELLS_REASON);
         // Create tables again
         onCreate(db);
     }
@@ -1317,4 +1331,46 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         // return visit list
         return tradePromoionData;
     }
+
+    public void setSellsResponseReason(List<ReasonResponse.Result> responseReason) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        try {
+            for (ReasonResponse.Result reason : responseReason) {
+                values.put(KEY_REASON_ID, reason.getId());
+                values.put(KEY_REASON_NAME, reason.getName());
+                try {
+                    db.insert(TABLE_SELLS_REASON, null, values);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        db.close();
+    }
+
+    public List<ReasonResponse.Result> getSellsResponseReason(){
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "SELECT * FROM " + TABLE_SELLS_REASON;
+        List<ReasonResponse.Result> resultList = new ArrayList<>();
+
+        Cursor cursor = db.rawQuery(query,null);
+
+        if(cursor.moveToFirst()){
+            do {
+                cursor.getColumnNames();
+                ReasonResponse.Result result = new ReasonResponse.Result();
+                result.setId(cursor.getInt(cursor.getColumnIndex(KEY_REASON_ID)));
+                result.setName(cursor.getString(cursor.getColumnIndex(KEY_REASON_NAME)));
+                resultList.add(result);
+
+            }
+            while (cursor.moveToNext());
+        }
+        db.close();
+        return resultList;
+    }
+
 }

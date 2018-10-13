@@ -13,6 +13,7 @@ import com.humaclab.selliscope.model.OutletType.OutletTypeResponse;
 import com.humaclab.selliscope.model.Outlets;
 import com.humaclab.selliscope.model.PriceVariation.PriceVariationResponse;
 import com.humaclab.selliscope.model.PriceVariation.Product;
+import com.humaclab.selliscope.model.Reason.ReasonResponse;
 import com.humaclab.selliscope.model.RoutePlan.RouteDetailsResponse;
 import com.humaclab.selliscope.model.Thana.ThanaResponse;
 import com.humaclab.selliscope.model.TradePromotion.Result;
@@ -53,6 +54,7 @@ public class LoadLocalIntoBackground {
             this.loadOutletType();
             this.loadDistrict();
             this.loadThana();
+            this.loadReason();
             sessionManager.setAllDataLoaded();
         }
     }
@@ -63,6 +65,7 @@ public class LoadLocalIntoBackground {
         this.loadOutletType();
         this.loadDistrict();
         this.loadThana();
+        this.loadReason();
     }
 
     public void loadProduct() {
@@ -306,4 +309,28 @@ public class LoadLocalIntoBackground {
             }
         });
     }
+
+    private void loadReason(){
+        Call<ReasonResponse> resultCall = apiService.getSalesReturnReasony();
+        resultCall.enqueue(new Callback<ReasonResponse>() {
+            @Override
+            public void onResponse(Call<ReasonResponse> call, Response<ReasonResponse> response) {
+                if(response.code() == 200){
+                    try {
+                        databaseHandler.setSellsResponseReason(response.body().getResult());
+                    } catch (Exception e){
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ReasonResponse> call, Throwable t) {
+
+            }
+        });
+    }
+
+
+
 }

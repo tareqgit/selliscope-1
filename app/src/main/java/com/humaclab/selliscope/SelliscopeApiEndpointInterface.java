@@ -17,6 +17,7 @@ import com.humaclab.selliscope.model.OutletType.OutletTypeResponse;
 import com.humaclab.selliscope.model.Payment;
 import com.humaclab.selliscope.model.PaymentResponse;
 import com.humaclab.selliscope.model.PurchaseHistory.PurchaseHistoryResponse;
+import com.humaclab.selliscope.model.Reason.ReasonResponse;
 import com.humaclab.selliscope.model.RoutePlan.RouteDetailsResponse;
 import com.humaclab.selliscope.model.RoutePlan.RouteResponse;
 import com.humaclab.selliscope.model.SalesReturn.SalesReturnHistory;
@@ -50,6 +51,9 @@ public interface SelliscopeApiEndpointInterface {
 
     @GET("delivery/order")
     Call<SalesReturnResponse> getSalesReturnDAta();
+
+    @GET("sales-return/reason")
+    Call<ReasonResponse> getSalesReturnReasony();
 
     @GET("sales-return")
     Call<SalesReturnHistory> getSalesReturnHistory();

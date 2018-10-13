@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -21,8 +22,12 @@ import com.humaclab.selliscope.BR;
 import com.humaclab.selliscope.R;
 import com.humaclab.selliscope.SelliscopeApiEndpointInterface;
 import com.humaclab.selliscope.SelliscopeApplication;
+import com.humaclab.selliscope.activity.EditOutletActivity;
+import com.humaclab.selliscope.model.OutletType.OutletType;
+import com.humaclab.selliscope.model.Reason.ReasonResponse;
 import com.humaclab.selliscope.model.SalesReturn.SalesReturnResponse;
 import com.humaclab.selliscope.model.SalesReturn.SellsReturnResponsePost;
+import com.humaclab.selliscope.utils.DatabaseHandler;
 import com.humaclab.selliscope.utils.SessionManager;
 
 import java.text.SimpleDateFormat;
@@ -44,6 +49,8 @@ public class SellsReturnDetailsRecyclerAdapter extends RecyclerView.Adapter<Sell
     private List<SalesReturnResponse.Product> products;
     private SalesReturnResponse.DeliveryList deliveryList;
     private Calendar myCalendar = Calendar.getInstance();
+    private int reasonID;
+    DatabaseHandler  databaseHandler ;
     public SellsReturnDetailsRecyclerAdapter(Context context, SalesReturnResponse.DeliveryList deliveryList) {
         this.context = context;
         this.deliveryList = deliveryList;
@@ -110,6 +117,23 @@ public class SellsReturnDetailsRecyclerAdapter extends RecyclerView.Adapter<Sell
                 }
             }
         });
+
+
+        holder.sp_return_cause.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                ReasonResponse.Result result = (ReasonResponse.Result) parent.getItemAtPosition(position);
+                reasonID = result.getId();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+        databaseHandler = new DatabaseHandler(context);
+        List<ReasonResponse.Result> resultList = databaseHandler.getSellsResponseReason();
+        holder.sp_return_cause.setAdapter(new ReasonTypeAdapter(context ,resultList));
         holder.btn_return.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -121,9 +145,10 @@ public class SellsReturnDetailsRecyclerAdapter extends RecyclerView.Adapter<Sell
                 sellsReturn.mVariantRow = product.variantRow;
                 sellsReturn.mNote = holder.note.getText().toString();
                 //sellsReturn.mReasonId = holder.sp_return_cause.getSelectedItemPosition()+1;
-                sellsReturn.mReasonId = 1;
+                sellsReturn.mReasonId = reasonID;
                 sellsReturn.mSku = "";
                 sellsReturn.quantity = Integer.parseInt(holder.et_qty.getText().toString());
+
 
 
                 //Sells return api request
@@ -186,5 +211,19 @@ public class SellsReturnDetailsRecyclerAdapter extends RecyclerView.Adapter<Sell
         public ViewDataBinding getBinding() {
             return binding;
         }
+
+      /*  void getOutletTypes() {
+            List<ReasonResponse.Result> resultList = databaseHandler.getSellsResponseReason();
+            reasonTypeAdapter = new ReasonTypeAdapter(context, resultList);
+            sp_return_cause.setAdapter(reasonTypeAdapter);
+            //For selecting previous outlet type
+            int position = 0;
+            for (int i = 0; i < resultList.size(); i++) {
+                if (resultList.get(i).getName().equals(result.getName()))
+                    position = i;
+            }
+            sp_return_cause.setSelection(position);
+            //For selecting previous outlet type
+        }*/
     }
 }

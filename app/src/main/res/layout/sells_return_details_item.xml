@@ -173,7 +173,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="30dp"
+                android:layout_height="wrap_content"
                 android:gravity="center">
 
                 <TextView
@@ -189,13 +189,12 @@
                     android:layout_height="match_parent">
                     <Spinner
                         android:id="@+id/sp_return_cause"
-                        style="@style/Base.Widget.AppCompat.DropDownItem.Spinner"
                         android:layout_width="0dp"
                         android:layout_height="match_parent"
                         android:layout_gravity="center"
-                     android:layout_weight="1"
+                        android:layout_weight="1"
                         android:background="#fff"
-                        android:entries="@array/returnCause"
+                        android:spinnerMode="dropdown"
                         android:fontFamily="@font/latoregular" />
                     <ImageButton
                         android:layout_width="20dp"

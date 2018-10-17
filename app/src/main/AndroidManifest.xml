@@ -14,7 +14,7 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <uses-feature
         android:name="android.hardware.camera.any"
@@ -32,22 +32,24 @@
         android:theme="@style/AppTheme">
 
         <!-- For debug APK -->
-        <meta-data
+        <!--
+            <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBZ5heET41mdUTW5UOouLZFn56kGsAocbM" />
         <meta-data
             android:name="com.google.android.awareness.API_KEY"
             android:value="AIzaSyBZ5heET41mdUTW5UOouLZFn56kGsAocbM" />
+        -->
         <!-- For debug APK -->
 
 
         <!-- For signed APK -->
-       <!-- <meta-data
+        <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyAhsz4pX62D7yu8twGT4ydn-_DRVB3p6_Y" />
         <meta-data
             android:name="com.google.android.awareness.API_KEY"
-            android:value="AIzaSyAhsz4pX62D7yu8twGT4ydn-_DRVB3p6_Y" />-->
+            android:value="AIzaSyAhsz4pX62D7yu8twGT4ydn-_DRVB3p6_Y" />
         <!-- For signed APK -->
 
         <meta-data
@@ -115,9 +117,7 @@
             android:name=".activity.ActivityCart"
             android:configChanges="orientation|screenSize|keyboardHidden" />
         <activity android:name=".activity.DeliveryListActivity" />
-        <activity
-            android:name=".activity.DeliveryDetailsActivity"
-             />
+        <activity android:name=".activity.DeliveryDetailsActivity" />
         <activity android:name=".activity.PaymentActivity" />
         <activity android:name=".activity.DueActivity" />
         <activity android:name=".activity.EditOutletActivity" />
@@ -125,17 +125,18 @@
         <activity android:name=".activity.InspectionActivity" />
         <activity android:name=".activity.SalesReturnActivity" />
         <activity android:name=".activity.LocationFromMapActivity" />
-        <activity
-            android:name=".activity.SalesReturnDetailsActivity"
-            android:screenOrientation="landscape" />
+        <activity android:name=".activity.SalesReturnDetailsActivity" />
         <activity android:name=".activity.PurchaseHistoryActivity" />
         <activity android:name=".activity.ChangePasswordActivity" />
         <activity android:name=".activity.PurchasedProductListActivity" />
         <activity android:name=".activity.SettingsActivity" />
         <activity android:name=".activity.ProfileActivity" />
-        <service android:name=".LocationMonitoringService"
-            android:enabled="true"
-            />
+
+        <service
+            android:name=".LocationMonitoringService"
+            android:enabled="true" />
+
+        <activity android:name=".activity.SalesReturnHistoryActivity"></activity>
     </application>
 
 </manifest>

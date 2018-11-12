@@ -40,7 +40,7 @@ public class PurchaseHistoryItem implements Serializable {
 
 
 
-    @SerializedName("order_details")
+    @SerializedName("products")
     private List<OrderDetailsItem> orderDetails;
 
     public String getOrderDate() {

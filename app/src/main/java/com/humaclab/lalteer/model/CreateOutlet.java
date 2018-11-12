@@ -7,8 +7,10 @@ import com.google.gson.annotations.SerializedName;
  */
 
 public class CreateOutlet {
-    @SerializedName("type_id")
-    public double outletTypeId;
+    @SerializedName("outlet_type")
+    public int outletTypeId;
+    @SerializedName("credit_limit")
+    public int credit_limit;
     @SerializedName("name")
     public String outletName;
     @SerializedName("owner")
@@ -23,7 +25,7 @@ public class CreateOutlet {
     public double outletLatitude;
     @SerializedName("longitude")
     public double outletLongitude;
-    @SerializedName("img")
+    @SerializedName("image")
     public String outletImage;
     @SerializedName("error")
     public boolean error;
@@ -32,7 +34,7 @@ public class CreateOutlet {
 
     public CreateOutlet(int outletTypeId, String outletName, String ownerName, String address,
                         int outletThanaId, String outletPhoneNumber, double outletLatitude,
-                        double outletLongitude, String outletImage) {
+                        double outletLongitude, String outletImage, int credit_limit) {
         this.outletTypeId = outletTypeId;
         this.outletName = outletName;
         this.ownerName = ownerName;
@@ -42,5 +44,6 @@ public class CreateOutlet {
         this.outletLatitude = outletLatitude;
         this.outletLongitude = outletLongitude;
         this.outletImage = outletImage;
+        this.credit_limit = credit_limit;
     }
 }

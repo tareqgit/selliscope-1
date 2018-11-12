@@ -53,7 +53,7 @@ public class EditOutletActivity extends AppCompatActivity {
     boolean isValidPhone = true;
     //    double latitude, longitude = 0.0;
     int outletTypeId, thanaId = -1;
-    private EditText outletName, outletAddress, outletOwner, outletContactNumber;
+    private EditText outletName, outletAddress, outletOwner, outletContactNumber, creditLimit;
     private Spinner outletType, district, thana;
     private ImageView iv_outlet;
     private Button submit, cancel;
@@ -96,6 +96,9 @@ public class EditOutletActivity extends AppCompatActivity {
 
         outletContactNumber = findViewById(R.id.et_outlet_contact_number);
         outletContactNumber.setText(outlet.phone);
+
+        creditLimit = findViewById(R.id.et_creditLimit);
+        creditLimit.setText(String.valueOf(outlet.credit_limit));
 
         district = findViewById(R.id.sp_district);
         thana = findViewById(R.id.sp_thana);
@@ -206,7 +209,7 @@ public class EditOutletActivity extends AppCompatActivity {
                         updatedOutlet(email, password, outletTypeId, outletName.getText().toString().trim(),
                                 outletOwner.getText().toString().trim(),
                                 outletAddress.getText().toString().trim(), thanaId,
-                                outletContactNumber.getText().toString().trim(), outlet.outletLatitude, outlet.outletLongitude);
+                                outletContactNumber.getText().toString().trim(), outlet.outletLatitude, outlet.outletLongitude,Integer.parseInt(creditLimit.getText().toString()));
                     } else
                         Toast.makeText(EditOutletActivity.this, "Connect to Wifi or Mobile Data",
                                 Toast.LENGTH_SHORT).show();
@@ -217,21 +220,21 @@ public class EditOutletActivity extends AppCompatActivity {
 
     private void updatedOutlet(String email, String password, int outletTypeId, String outletName,
                                String ownerName, String address, int thanaId, String phone,
-                               double latitude, double longitude) {
+                               double latitude, double longitude,int creditLimit) {
         pd.setMessage("Outlet updating.....");
         pd.setCancelable(false);
         pd.show();
 
         apiService = SelliscopeApplication.getRetrofitInstance(email, password, false).create(SelliscopeApiEndpointInterface.class);
         Call<ResponseBody> call = apiService.updateOutlet(outlet.outletId,
-                new CreateOutlet(outletTypeId, outletName, ownerName, address, thanaId, phone, latitude, longitude, outletImage));
+                new CreateOutlet(outletTypeId, outletName, ownerName, address, thanaId, phone, latitude, longitude, outletImage, creditLimit));
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 pd.dismiss();
                 Gson gson = new Gson();
                 System.out.println("Response code: " + response.code());
-                if (response.code() == 202) {
+                if (response.code() == 200) {
                     try {
                         CreateOutlet createOutletResult =
                                 gson.fromJson(response.body().string()

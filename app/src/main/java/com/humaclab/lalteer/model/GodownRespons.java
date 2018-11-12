@@ -32,7 +32,7 @@ public class GodownRespons implements Serializable {
     }
 
     public static class Result implements Serializable {
-        @SerializedName("godowns")
+        @SerializedName("godown")
         private List<Godown> godownList;
 
         public List<Godown> getGodownList() {

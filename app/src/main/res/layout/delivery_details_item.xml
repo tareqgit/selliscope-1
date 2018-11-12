@@ -45,7 +45,7 @@
             android:background="#fff"
             android:gravity="center"
             android:padding="10dp"
-            android:text="@{Integer.toString(product.qty - Integer.parseInt(product.dQty))}"
+            android:text="@{Integer.toString(product.qty)}"
             android:textAlignment="center"/>
 
         <LinearLayout

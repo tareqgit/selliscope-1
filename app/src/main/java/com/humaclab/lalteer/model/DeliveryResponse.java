@@ -23,7 +23,7 @@ public class DeliveryResponse implements Serializable {
     public static class DeliveryList implements Serializable {
         @SerializedName("id")
         public int deliveryId;
-        @SerializedName("outlet_id")
+        @SerializedName("dealer_id")
         public int outletId;
         @SerializedName("outlet_name")
         public String outletName;
@@ -40,7 +40,7 @@ public class DeliveryResponse implements Serializable {
     public static class Product implements Serializable {
         @SerializedName("id")
         public int productId;
-        @SerializedName("name")
+        @SerializedName("product_name")
         public String name;
         @SerializedName("price")
         public String price;

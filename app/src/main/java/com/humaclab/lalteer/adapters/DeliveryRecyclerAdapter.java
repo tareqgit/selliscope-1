@@ -25,7 +25,10 @@ import com.humaclab.lalteer.model.DeliveryResponse;
 import com.humaclab.lalteer.model.GodownRespons;
 import com.humaclab.lalteer.utils.SessionManager;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import retrofit2.Call;
@@ -115,6 +118,12 @@ public class DeliveryRecyclerAdapter extends RecyclerView.Adapter<DeliveryRecycl
             public void onClick(View view) {
                 if (holder.sp_godown.getSelectedItemPosition() != 0) {
 
+
+                    Date todayDate = Calendar.getInstance().getTime();
+                    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+                    String todayString = formatter.format(todayDate);
+
+
                     pd.show();
                     DeliverProductResponse deliverProductResponse = new DeliverProductResponse();
                     DeliverProductResponse.Order order = new DeliverProductResponse.Order();
@@ -122,9 +131,10 @@ public class DeliveryRecyclerAdapter extends RecyclerView.Adapter<DeliveryRecycl
 
                     order.products = new ArrayList<>();
                     product1.productId = product.productId;
-                    product1.variantRow = product.variantRow;
+                    //product1.variantRow = product.variantRow;
                     product1.qty = Integer.parseInt(holder.et_qty.getText().toString());
                     product1.godownId = godownId.get(holder.sp_godown.getSelectedItemPosition());
+                    product1.delivery_date = todayString;
                     order.products.add(product1);
                     order.orderId = deliveryList.deliveryId;
                     order.outletId = deliveryList.outletId;
@@ -141,13 +151,11 @@ public class DeliveryRecyclerAdapter extends RecyclerView.Adapter<DeliveryRecycl
                             @Override
                             public void onResponse(Call<DeliverProductResponse> call, Response<DeliverProductResponse> response) {
                                 pd.dismiss();
-                                if (response.code() == 201) {
+                                if (response.code() == 200) {
                                     holder.btn_deliver.setEnabled(false);
                                     holder.btn_deliver.setBackgroundColor(Color.parseColor("#dddddd"));
                                     Toast.makeText(context, "Product delivered successfully", Toast.LENGTH_SHORT).show();
-                                } else if (response.code() == 200) {
-                                    Toast.makeText(context, response.body().result, Toast.LENGTH_LONG).show();
-                                } else if (response.code() == 401) {
+                                }else if (response.code() == 401) {
                                     Toast.makeText(context, "Invalid Response from server.", Toast.LENGTH_SHORT).show();
                                 } else {
                                     Toast.makeText(context, "Server Error! Try Again Later!", Toast.LENGTH_SHORT).show();

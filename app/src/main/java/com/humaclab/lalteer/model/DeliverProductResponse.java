@@ -16,7 +16,7 @@ public class DeliverProductResponse implements Serializable {
     public Order order;
 
     public static class Order implements Serializable {
-        @SerializedName("id")
+        @SerializedName("order_id")
         public int orderId;
         @SerializedName("outlet_id")
         public int outletId;
@@ -24,7 +24,7 @@ public class DeliverProductResponse implements Serializable {
         public List<Product> products;
 
         public static class Product implements Serializable {
-            @SerializedName("id")
+            @SerializedName("product_id")
             public int productId;
             @SerializedName("qty")
             public int qty;
@@ -32,6 +32,8 @@ public class DeliverProductResponse implements Serializable {
             public int godownId;
             @SerializedName("variant_row")
             public int variantRow;
+            @SerializedName("delivery_date")
+            public String delivery_date;
         }
     }
 }

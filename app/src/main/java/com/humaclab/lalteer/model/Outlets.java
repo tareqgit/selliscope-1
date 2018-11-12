@@ -50,5 +50,8 @@ public class Outlets implements Serializable {
         public String outletDue;
         @SerializedName("outlet_routeplan")
         public String outlet_routeplan;
+
+        @SerializedName("credit_limit")
+        public int credit_limit;
     }
 }

@@ -19,6 +19,8 @@ public class PaymentResponse {
         public int amount;
         @SerializedName("type")
         public int type;
+        @SerializedName("discount")
+        public int discount;
     }
 
     public static class PaymentSucessfull {

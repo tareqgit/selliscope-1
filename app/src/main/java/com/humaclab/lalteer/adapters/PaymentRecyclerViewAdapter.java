@@ -77,7 +77,7 @@ public class PaymentRecyclerViewAdapter extends RecyclerView.Adapter<PaymentRecy
                 call.enqueue(new Callback<PaymentResponse.PaymentSucessfull>() {
                     @Override
                     public void onResponse(Call<PaymentResponse.PaymentSucessfull> call, Response<PaymentResponse.PaymentSucessfull> response) {
-                        if (response.code() == 201) {
+                        if (response.code() == 200) {
                             try {
                                 Log.d("Payment response", new Gson().toJson(response.body().result));
                                 pd.dismiss();

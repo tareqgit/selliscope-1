@@ -51,7 +51,8 @@
     <string name="dashboard_promotionAds">Promotional Ads</string>
     <string name="btn_update_profile">Update Profile</string>
     <string name="search_outlet">Search Outlet</string>
-
+    <string name="permission_denied_explanation">permission denied</string>
+    <string name="settings">Setting</string>
     <string-array name="paymentType">
         <item>Cash</item>
         <item>Cheque</item>

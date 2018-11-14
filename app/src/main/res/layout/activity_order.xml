@@ -43,7 +43,9 @@
                 android:layout_below="@id/ll_spinner"
                 android:layout_margin="10dp"
                 android:drawableRight="@drawable/search"
+                android:gravity="center"
                 android:hint="Search Product"
+                android:fontFamily="@font/latoregular"
                 android:imeOptions="actionSearch"
                 android:inputType="text"
                 android:padding="10dp" />
@@ -83,13 +85,15 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Total:"
+                        android:fontFamily="@font/latobold"
                         android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/tv_total_amt"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:hint="Total" />
+                        android:hint="Total"
+                        android:fontFamily="@font/latoregular"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -102,13 +106,15 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Discount:"
+                        android:fontFamily="@font/latobold"
                         android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/tv_total_discnt"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:hint="Discount" />
+                        android:hint="Discount"
+                        android:fontFamily="@font/latoregular"/>
                 </LinearLayout>
 
                 <LinearLayout
@@ -121,12 +127,14 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Gr Total:"
+                        android:fontFamily="@font/latobold"
                         android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/tv_total_gr"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:fontFamily="@font/latoregular"
                         android:hint="Grand Total" />
                 </LinearLayout>
             </LinearLayout>

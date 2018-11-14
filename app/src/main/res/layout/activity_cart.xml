@@ -16,6 +16,7 @@
             android:id="@+id/ll_outlet"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="center"
             android:layout_below="@id/tl"
             android:orientation="horizontal">
 
@@ -24,6 +25,7 @@
                 android:layout_height="wrap_content"
                 android:padding="5dp"
                 android:text="Outlet:"
+                android:fontFamily="@font/latobold"
                 android:textColor="#000"
                 android:textStyle="bold" />
 
@@ -32,6 +34,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:hint="Outlet Name"
+                android:fontFamily="@font/latoregular"
                 android:padding="5dp"
                 android:textColor="#000" />
         </LinearLayout>
@@ -44,7 +47,7 @@
             android:background="#ddd"
             android:orientation="horizontal">
 
-            <TextView
+            <!--<TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="1dp"
@@ -99,7 +102,7 @@
                 android:padding="5dp"
                 android:text="Remove"
                 android:textAlignment="center"
-                android:textColor="#000" />
+                android:textColor="#000" />-->
         </LinearLayout>
 
         <android.support.v7.widget.RecyclerView
@@ -108,7 +111,7 @@
             android:layout_height="match_parent"
             android:layout_above="@id/ll_bottom"
             android:layout_below="@+id/ll_header"
-            android:background="#ddd" />
+            android:background="#fff" />
 
         <LinearLayout
             android:id="@+id/ll_bottom"
@@ -128,14 +131,18 @@
                     android:layout_height="match_parent"
                     android:padding="5dp"
                     android:text="Total: "
+                    android:fontFamily="@font/latobold"
                     android:textColor="#000"
                     android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/tv_total"
-                    android:layout_width="wrap_content"
+                    android:textStyle="bold"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Total "
+                    android:fontFamily="@font/latoregular"
+                    android:gravity="end"
                     android:padding="5dp"
                     android:textColor="#000" />
             </LinearLayout>
@@ -150,6 +157,7 @@
                     android:layout_height="wrap_content"
                     android:padding="5dp"
                     android:text="Discount: "
+                    android:fontFamily="@font/latobold"
                     android:textColor="#000"
                     android:textStyle="bold" />
 
@@ -157,7 +165,10 @@
                     android:id="@+id/et_discount"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:inputType="numberDecimal"
                     android:hint="Discount"
+                    android:fontFamily="@font/latoregular"
+                    android:gravity="end"
                     android:text="0"
                     android:textColor="#000" />
             </LinearLayout>
@@ -172,14 +183,17 @@
                     android:layout_height="wrap_content"
                     android:padding="5dp"
                     android:text="Grand Total: "
+                    android:fontFamily="@font/latobold"
                     android:textColor="#000"
                     android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/tv_grand_total"
-                    android:layout_width="wrap_content"
+                    android:gravity="end"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Grand Total"
+                    android:fontFamily="@font/latoregular"
                     android:padding="5dp"
                     android:textColor="#000" />
             </LinearLayout>
@@ -194,6 +208,7 @@
                     android:layout_height="wrap_content"
                     android:padding="5dp"
                     android:text="Comment:"
+                    android:fontFamily="@font/latobold"
                     android:textColor="#000"
                     android:textStyle="bold" />
 
@@ -201,22 +216,25 @@
                     android:id="@+id/et_comments"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Comment" />
+                    android:gravity="end"
+                    android:hint="Comment"
+                    android:fontFamily="@font/latoregular"/>
             </LinearLayout>
 
             <Button
                 android:id="@+id/btn_order"
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:layout_gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="10dp"
-                android:background="@drawable/button_background"
-                android:drawablePadding="5dp"
-                android:drawableRight="@drawable/check"
-                android:drawableTint="#fff"
-                android:padding="5dp"
+                android:elevation="5dp"
+                android:fontFamily="@font/latobold"
                 android:text="Order"
-                android:textColor="#fff" />
+                android:drawableRight="@drawable/ic_if_circle_check"
+                android:textAllCaps="false"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
         </LinearLayout>
     </RelativeLayout>
 </layout>

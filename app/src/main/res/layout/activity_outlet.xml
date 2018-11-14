@@ -62,7 +62,8 @@
                 android:layout_marginRight="@dimen/margin_10"
                 android:drawableRight="@drawable/places_ic_search"
                 android:gravity="center"
-                android:hint="@string/search_outlet"
+                android:hint="Search Outlet"
+                android:fontFamily="@font/latoregular"
                 android:textSize="17sp" />
 
             <android.support.v4.widget.SwipeRefreshLayout

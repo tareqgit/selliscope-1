@@ -51,6 +51,7 @@
                             android:layout_height="wrap_content"
                             android:padding="5dp"
                             android:text="Total Paid:"
+                            android:fontFamily="@font/latobold"
                             android:textStyle="bold" />
 
                         <TextView
@@ -59,6 +60,7 @@
                             android:layout_height="wrap_content"
                             android:padding="5dp"
                             android:text="paid"
+                            android:fontFamily="@font/latoregular"
                             android:textStyle="bold" />
                     </LinearLayout>
 
@@ -73,6 +75,7 @@
                             android:layout_height="wrap_content"
                             android:padding="5dp"
                             android:text="Total Due:"
+                            android:fontFamily="@font/latobold"
                             android:textStyle="bold" />
 
                         <TextView
@@ -81,6 +84,7 @@
                             android:layout_height="wrap_content"
                             android:padding="5dp"
                             android:text="due"
+                            android:fontFamily="@font/latoregular"
                             android:textStyle="bold" />
                     </LinearLayout>
                 </LinearLayout>
@@ -98,6 +102,7 @@
                         android:layout_height="35dp"
                         android:background="@drawable/button_shape"
                         android:text="Payment"
+                        android:fontFamily="@font/latobold"
                         android:textColor="@color/white" />
 
                     <Button
@@ -110,6 +115,7 @@
                         android:layout_gravity="right"
                         android:background="@drawable/button_shape"
                         android:text="Order"
+                        android:fontFamily="@font/latobold"
                         android:textColor="@color/white"
                         android:visibility="visible" />
                 </RelativeLayout>

@@ -43,7 +43,9 @@
                 android:layout_below="@id/ll_spinner"
                 android:layout_margin="10dp"
                 android:drawableRight="@drawable/search"
+                android:gravity="center"
                 android:hint="Search Product"
+                android:fontFamily="@font/latoregular"
                 android:imeOptions="actionSearch"
                 android:inputType="text"
                 android:padding="10dp" />

@@ -19,6 +19,8 @@ public class CreateOutlet {
     public int outletThanaId;
     @SerializedName("phone")
     public String outletPhoneNumber;
+    @SerializedName("refphone")
+    public String outletrefPhoneNumber;
     @SerializedName("latitude")
     public double outletLatitude;
     @SerializedName("longitude")
@@ -32,7 +34,7 @@ public class CreateOutlet {
 
     public CreateOutlet(int outletTypeId, String outletName, String ownerName, String address,
                         int outletThanaId, String outletPhoneNumber, double outletLatitude,
-                        double outletLongitude, String outletImage) {
+                        double outletLongitude, String outletImage,String outletrefPhoneNumber) {
         this.outletTypeId = outletTypeId;
         this.outletName = outletName;
         this.ownerName = ownerName;
@@ -42,5 +44,6 @@ public class CreateOutlet {
         this.outletLatitude = outletLatitude;
         this.outletLongitude = outletLongitude;
         this.outletImage = outletImage;
+        this.outletrefPhoneNumber = outletrefPhoneNumber;
     }
 }

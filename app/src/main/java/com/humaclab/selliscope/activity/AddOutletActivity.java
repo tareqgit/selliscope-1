@@ -65,7 +65,7 @@ public class AddOutletActivity extends AppCompatActivity {
     private int outletTypeId, thanaId = -1;
     private SelliscopeApiEndpointInterface apiService;
     private SessionManager sessionManager;
-    private EditText outletName, outletAddress, outletOwner, outletContactNumber;
+    private EditText outletName, outletAddress, outletOwner, outletContactNumber,outletrefnumber;
     private Spinner outletType, district, thana;
     private ImageView iv_outlet;
     private Button submit, cancel, getLocation;
@@ -114,6 +114,7 @@ public class AddOutletActivity extends AppCompatActivity {
         outletAddress = findViewById(R.id.et_outlet_address);
         outletOwner = findViewById(R.id.et_outlet_owner_name);
         outletContactNumber = findViewById(R.id.et_outlet_contact_number);
+        outletrefnumber = findViewById(R.id.et_outlet_ref_number);
         district = findViewById(R.id.sp_district);
         thana = findViewById(R.id.sp_thana);
         outletType = findViewById(R.id.sp_outlet_type);
@@ -218,7 +219,8 @@ public class AddOutletActivity extends AppCompatActivity {
                                             thanaId,
                                             outletContactNumber.getText().toString().trim(),
                                             mLatitude,
-                                            mLongitude
+                                            mLongitude,
+                                            outletrefnumber.getText().toString().trim()
                                     );
                                 } else {
                                     Toast.makeText(AddOutletActivity.this, "Please select a thana first", Toast.LENGTH_SHORT).show();
@@ -268,12 +270,12 @@ public class AddOutletActivity extends AppCompatActivity {
 
     private void addOutlet(int outletTypeId, String outletName,
                            String ownerName, String address, int thanaId, String phone,
-                           double latitude, double longitude) {
+                           double latitude, double longitude,String outletrefnumber) {
         pd.setMessage("Creating outlet......");
         pd.setCancelable(false);
         pd.show();
 
-        Call<ResponseBody> call = apiService.createOutlet(new CreateOutlet(outletTypeId, outletName, ownerName, address, thanaId, phone, latitude, longitude, outletImage));
+        Call<ResponseBody> call = apiService.createOutlet(new CreateOutlet(outletTypeId, outletName, ownerName, address, thanaId, phone, latitude, longitude, outletImage,outletrefnumber));
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {

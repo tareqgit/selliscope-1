@@ -118,6 +118,31 @@
             <ImageView
                 android:layout_gravity="center"
                 android:layout_width="wrap_content"
+
+                android:layout_height="wrap_content"
+                android:background="@drawable/ic_if_phone"
+                android:padding="10dp"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:layout_marginLeft="10dp"
+                android:id="@+id/et_outlet_ref_number"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:fontFamily="@font/latoregular"
+                android:hint="Refference Number"
+                android:inputType="phone"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/ic_address"
                 android:padding="10dp"

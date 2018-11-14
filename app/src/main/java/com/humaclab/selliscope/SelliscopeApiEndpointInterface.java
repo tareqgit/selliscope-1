@@ -7,6 +7,7 @@ import com.humaclab.selliscope.model.CategoryResponse;
 import com.humaclab.selliscope.model.CreateOutlet;
 import com.humaclab.selliscope.model.DeliverProductResponse;
 import com.humaclab.selliscope.model.DeliveryResponse;
+import com.humaclab.selliscope.model.ModelSalesReturnOld.DeliveryResponseOld;
 import com.humaclab.selliscope.model.Diameter.DiameterResponse;
 import com.humaclab.selliscope.model.District.DistrictResponse;
 import com.humaclab.selliscope.model.GodownRespons;
@@ -23,6 +24,7 @@ import com.humaclab.selliscope.model.RoutePlan.RouteResponse;
 import com.humaclab.selliscope.model.SalesReturn.SalesReturnHistory;
 import com.humaclab.selliscope.model.SalesReturn.SalesReturnResponse;
 import com.humaclab.selliscope.model.SalesReturn.SellsReturnResponsePost;
+import com.humaclab.selliscope.model.ModelSalesReturnOld.SellsReturnResponseOld;
 import com.humaclab.selliscope.model.Target.OutletTarget;
 import com.humaclab.selliscope.model.Thana.ThanaResponse;
 import com.humaclab.selliscope.model.TradePromotion.TradePromotion;
@@ -41,6 +43,7 @@ import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 /**
  * Created by Leon on 9/3/2017.
@@ -94,6 +97,9 @@ public interface SelliscopeApiEndpointInterface {
 
     @GET("delivery")
     Call<DeliveryResponse> getDelivery();
+    //for ols sellisreturn Mode
+    @GET("delivery")
+    Call<DeliveryResponseOld> getSalesReturnOld(@Query("outlet_id") int outletID);
 
     @GET("return-products")
     Call<DeliveryResponse> getSalesReturn();
@@ -159,7 +165,9 @@ public interface SelliscopeApiEndpointInterface {
     Call<SellsReturnResponsePost> returnProduct(@Body SellsReturnResponsePost.SellsReturn returnProduct);*/
     @POST("sales-return/store ")
     Call<SellsReturnResponsePost> returnProduct(@Body SellsReturnResponsePost.SellsReturn returnProduct);
-
+    //for ols sellisreturn Model
+    @POST("return-product")
+    Call<SellsReturnResponseOld> returnProductOld(@Body SellsReturnResponseOld.SellsReturn returnProduct);
     @POST("inspection/store")
     Call<InspectionResponse> inspectOutlet(@Body InspectionResponse.Inspection inspection);
 

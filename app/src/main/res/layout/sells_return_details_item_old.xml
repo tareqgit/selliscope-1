@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+        <variable
+            name="product"
+            type="com.humaclab.selliscope.model.ModelSalesReturnOld.DeliveryResponseOld.Product"/>
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#ddd"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_margin=".5dp"
+            android:layout_weight="1"
+            android:background="#fff"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="@{product.name}"
+            android:textAlignment="center"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_margin=".5dp"
+            android:layout_weight="1"
+            android:background="#fff"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="@{Integer.toString(product.qty)}"
+            android:textAlignment="center"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_margin=".5dp"
+            android:layout_weight="1"
+            android:background="#fff"
+            android:gravity="center"
+            android:padding="10dp"
+            android:text="@{product.dQty}"
+            android:textAlignment="center"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_margin=".5dp"
+            android:layout_weight="1"
+            android:background="#fff"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/margin_10"
+            android:paddingRight="@dimen/margin_10">
+
+            <Button
+                android:id="@+id/btn_decrease"
+                android:layout_width="80dp"
+                android:layout_height="30dp"
+                android:layout_weight="1"
+                android:background="#ddd"
+                android:text="-"
+                android:textColor="#000"
+                android:textSize="20sp"/>
+
+            <EditText
+                android:id="@+id/et_qty"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="Qty."
+                android:imeOptions="actionDone"
+                android:inputType="number"
+                android:text="0"
+                android:textAlignment="center"
+                android:textColor="#000"/>
+
+            <Button
+                android:id="@+id/btn_increase"
+                android:layout_width="80dp"
+                android:layout_height="30dp"
+                android:layout_weight="1"
+                android:background="#ddd"
+                android:text="+"
+                android:textColor="#000"
+                android:textSize="20sp"/>
+        </LinearLayout>
+
+        <Spinner
+            android:id="@+id/sp_return_cause"
+            style="@style/Base.Widget.AppCompat.DropDownItem.Spinner"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_margin=".5dp"
+            android:layout_weight="1"
+            android:background="#fff"
+            android:entries="@array/returnCause"/>
+
+        <Button
+            android:id="@+id/btn_return"
+            style="@android:style/Widget.Button.Small"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_margin="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/button_shape"
+            android:text="Return"
+            android:textColor="#fff"/>
+    </LinearLayout>
+</layout>

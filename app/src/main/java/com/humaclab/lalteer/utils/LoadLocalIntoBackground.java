@@ -11,6 +11,8 @@ import com.humaclab.lalteer.model.CategoryResponse;
 import com.humaclab.lalteer.model.District.DistrictResponse;
 import com.humaclab.lalteer.model.OutletType.OutletTypeResponse;
 import com.humaclab.lalteer.model.Outlets;
+import com.humaclab.lalteer.model.Products.Product;
+import com.humaclab.lalteer.model.Products.ProductResponse;
 import com.humaclab.lalteer.model.RoutePlan.RouteDetailsResponse;
 import com.humaclab.lalteer.model.Thana.ThanaResponse;
 import com.humaclab.lalteer.model.VariantProduct.ProductsItem;
@@ -63,13 +65,13 @@ public class LoadLocalIntoBackground {
 
     public void loadProduct() {
         if (sessionManager.isLoggedIn()) {
-            Call<VariantProductResponse> call = apiService.getProducts();
-            call.enqueue(new Callback<VariantProductResponse>() {
+            Call<ProductResponse> call = apiService.getProducts();
+            call.enqueue(new Callback<ProductResponse>() {
                 @Override
-                public void onResponse(Call<VariantProductResponse> call, Response<VariantProductResponse> response) {
+                public void onResponse(Call<ProductResponse> call, Response<ProductResponse> response) {
                     if (response.code() == 200) {
                         try {
-                            List<ProductsItem> products = response.body().getResult().getProducts();
+                            List<Product> products = response.body().getResult().getProducts();
                             //for removing previous data
                             databaseHandler.removeProductCategoryBrand();
                             databaseHandler.addProduct(products);
@@ -82,7 +84,7 @@ public class LoadLocalIntoBackground {
                 }
 
                 @Override
-                public void onFailure(Call<VariantProductResponse> call, Throwable t) {
+                public void onFailure(Call<ProductResponse> call, Throwable t) {
                     t.printStackTrace();
                 }
             });

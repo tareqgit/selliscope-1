@@ -175,17 +175,17 @@ public class ActivityCart extends AppCompatActivity implements OnSelectProduct {
                     @Override
                     public void onResponse(Call<AddNewOrder.OrderResponse> call, Response<AddNewOrder.OrderResponse> response) {
                         pd.dismiss();
-                        if (response.code() == 201) {
+                        if (response.code() == 200) {
                             System.out.println(new Gson().toJson(response.body()));
-                            Toast.makeText(ActivityCart.this, "Order created successfully", Toast.LENGTH_LONG).show();
+                            Toast.makeText(ActivityCart.this, response.body().result, Toast.LENGTH_LONG).show();
                             finish();
                             startActivity(new Intent(ActivityCart.this, OutletActivity.class));
                         } else if (response.code() == 401) {
                             System.out.println(new Gson().toJson(response.body()));
-                            Toast.makeText(ActivityCart.this, "Invalid Response from server.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(ActivityCart.this, response.code()+" Invalid Response from server.", Toast.LENGTH_SHORT).show();
                         } else {
                             System.out.println(new Gson().toJson(response.body()));
-                            Toast.makeText(ActivityCart.this, "Server Error! Try Again Later!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(ActivityCart.this, response.code()+" Server Error! Try Again Later!", Toast.LENGTH_SHORT).show();
                         }
                     }
 

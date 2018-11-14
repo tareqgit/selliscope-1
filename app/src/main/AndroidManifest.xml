@@ -15,7 +15,6 @@
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
 
-
     <uses-feature
         android:name="android.hardware.camera.any"
         android:required="true" />
@@ -32,12 +31,14 @@
         android:theme="@style/AppTheme">
 
         <!-- For debug APK -->
-        <!--<meta-data
+        <!--
+        <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBZ5heET41mdUTW5UOouLZFn56kGsAocbM" />
         <meta-data
             android:name="com.google.android.awareness.API_KEY"
-            android:value="AIzaSyBZ5heET41mdUTW5UOouLZFn56kGsAocbM" />-->
+            android:value="AIzaSyBZ5heET41mdUTW5UOouLZFn56kGsAocbM" />
+        -->
         <!-- For debug APK -->
 
 
@@ -133,6 +134,11 @@
         <activity android:name=".activity.PurchasedProductListActivity" />
         <activity android:name=".activity.SettingsActivity" />
         <activity android:name=".activity.ProfileActivity" />
+        <activity android:name=".activity.ProductListActivity"></activity>
+        <service
+            android:name=".LocationMonitoringService"
+            android:enabled="true" />
+
     </application>
 
 </manifest>

@@ -74,16 +74,17 @@ public class InspectionActivity extends AppCompatActivity {
                 pd.show();
 
                 InspectionResponse.Inspection inspection = new InspectionResponse.Inspection();
-                inspection.image = promotionImage;
+                inspection.img = promotionImage;
                 inspection.condition = binding.spCondition.getSelectedItem().toString();
-                inspection.iDamaged = binding.spIsDamaged.getSelectedItem().toString().equals("Yes");
-                inspection.outletID = outletIDs.get(binding.spOutlets.getSelectedItemPosition());
+                //inspection.damaged = String.valueOf(binding.spIsDamaged.getSelectedItem().toString().equals("Yes"));
+                inspection.damaged = String.valueOf("True");
+                inspection.dealer_id = outletIDs.get(binding.spOutlets.getSelectedItemPosition());
                 try {
-                    inspection.quantity = Integer.parseInt(binding.etQty.getText().toString());
+                    inspection.qty = Integer.parseInt(binding.etQty.getText().toString());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                inspection.promotionType = binding.spPromotionType.getSelectedItem().toString();
+                inspection.promotion = binding.spPromotionType.getSelectedItem().toString();
 
                 SessionManager sessionManager = new SessionManager(InspectionActivity.this);
                 SelliscopeApiEndpointInterface apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(),
@@ -93,8 +94,8 @@ public class InspectionActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(Call<InspectionResponse> call, Response<InspectionResponse> response) {
                         pd.dismiss();
-                        if (response.code() == 201) {
-                            Toast.makeText(InspectionActivity.this, "Inspection sent successfully", Toast.LENGTH_SHORT).show();
+                        if (response.code() == 200) {
+                            Toast.makeText(InspectionActivity.this, response.body().message, Toast.LENGTH_SHORT).show();
                             finish();
                         } else if (response.code() == 401) {
                             Toast.makeText(InspectionActivity.this, "Invalid Response from server.", Toast.LENGTH_SHORT).show();

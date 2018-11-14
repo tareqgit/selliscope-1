@@ -14,6 +14,7 @@ import com.humaclab.lalteer.model.DeliveryResponse;
 import com.humaclab.lalteer.model.District.District;
 import com.humaclab.lalteer.model.OutletType.OutletType;
 import com.humaclab.lalteer.model.Outlets;
+import com.humaclab.lalteer.model.Products.Product;
 import com.humaclab.lalteer.model.RoutePlan.RouteDetailsResponse;
 import com.humaclab.lalteer.model.Thana.Thana;
 import com.humaclab.lalteer.model.VariantProduct.Brand;
@@ -74,6 +75,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String KEY_BRAND_NAME = "brand_name";
     private static final String KEY_PRODUCT_STOCK = "stock";
     private static final String KEY_VARIANT_ROW = "variant_row";
+    private static final String KEY_SLUG = "slug";
+    private static final String KEY_DESC = "description";
+    private static final String KEY_HASVARIENT = "hasVariant";
+    private static final String KEY_STATUS = "status";
+    private static final String KEY_CREATEDATE = "created_date";
+    private static final String KEY_UPDATEDATE = "updated_date";
 
     //delivery table column names
     private static final String KEY_ORDER_ID = "order_id";
@@ -104,6 +111,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String KEY_OUTLET_LATITUDE = "outlet_latitude";
     private static final String KEY_OUTLET_DUE = "outlet_due";
     private static final String KEY_OUTLET_ROUTEPLAN = "outlet_routeplan";
+    private static final String KEY_OUTLET_CREDITLIMIT = "outlet_creditlimit";
 
     //Thana table column name
     private static final String KEY_THANA_ID = "thana_id";
@@ -158,7 +166,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + KEY_BRAND_ID + " INTEGER,"
                 + KEY_BRAND_NAME + " TEXT,"
                 + KEY_PRODUCT_STOCK + " TEXT,"
-                + KEY_VARIANT_ROW + " TEXT"
+                + KEY_VARIANT_ROW + " TEXT,"
+                + KEY_SLUG + " TEXT,"
+                + KEY_DESC + " TEXT,"
+                + KEY_HASVARIENT + " TEXT,"
+                + KEY_STATUS + " TEXT,"
+                + KEY_CREATEDATE + " TEXT,"
+                + KEY_UPDATEDATE + " TEXT"
                 + ")";
 
         String CREATE_CATEGORY_TABLE = "CREATE TABLE " + TABLE_CATEGORY + "("
@@ -204,7 +218,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + KEY_OUTLET_LATITUDE + " TEXT,"
                 + KEY_OUTLET_LONGITUDE + " TEXT,"
                 + KEY_OUTLET_DUE + " TEXT,"
-                + KEY_OUTLET_ROUTEPLAN + " TEXT"
+                + KEY_OUTLET_ROUTEPLAN + " TEXT,"
+                + KEY_OUTLET_CREDITLIMIT + " TEXT"
                 + ")";
 
         String CREATE_DISTRICT_TABLE = "CREATE TABLE " + TABLE_DISTRICT + "("
@@ -326,7 +341,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.close();
     }
 
-    public void addProduct(List<ProductsItem> products) {
+    /*public void addProduct(List<ProductsItem> products) {
         SQLiteDatabase db = this.getWritableDatabase();
         for (ProductsItem product : products) {
             ContentValues values = new ContentValues();
@@ -378,6 +393,33 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 }
             }
         }
+        db.close(); // Closing database connection
+    }*/
+    public void addProduct(List<Product> products) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        for (Product product : products) {
+            ContentValues values = new ContentValues();
+
+            values.put(KEY_PRODUCT_ID, product.getId());
+            values.put(KEY_BRAND_ID, product.getBrandId());
+            values.put(KEY_CATEGORY_ID, product.getCategoryId());
+            values.put(KEY_PRODUCT_NAME, product.getName());
+            values.put(KEY_SLUG, product.getSlug());
+            values.put(KEY_PRODUCT_PRICE, product.getPrice());
+            values.put(KEY_DESC, product.getDescription());
+            values.put(KEY_PRODUCT_IMAGE, product.getImage());
+            values.put(KEY_HASVARIENT, product.getHasVariant());
+            values.put(KEY_STATUS, product.getStatus());
+            values.put(KEY_CREATEDATE, product.getCreatedDate());
+            values.put(KEY_UPDATEDATE, product.getUpdatedDate());
+
+            try {
+                db.insert(TABLE_PRODUCT, null, values);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            }
         db.close(); // Closing database connection
     }
 
@@ -713,6 +755,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 values.put(KEY_OUTLET_LATITUDE, outlet.outletLatitude);
                 values.put(KEY_OUTLET_DUE, outlet.outletDue);
                 values.put(KEY_OUTLET_ROUTEPLAN, "0");
+                values.put(KEY_OUTLET_CREDITLIMIT, outlet.credit_limit);
                 try {
                     db.insert(TABLE_OUTLET, null, values);
                 } catch (Exception e) {
@@ -869,6 +912,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 outlet.outletLatitude = Double.parseDouble(cursor.getString(cursor.getColumnIndex(KEY_OUTLET_LATITUDE)));
                 outlet.outletDue = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_DUE));
                 outlet.outlet_routeplan = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_ROUTEPLAN));
+                outlet.credit_limit = cursor.getInt(cursor.getColumnIndex(KEY_OUTLET_CREDITLIMIT));
 
                 outletList.add(outlet);
             } while (cursor.moveToNext());

@@ -10,7 +10,7 @@ import java.io.Serializable;
 
 public class InspectionResponse implements Serializable {
     @SerializedName("error")
-    public String error;
+    public boolean error;
     @SerializedName("message")
     public String message;
 
@@ -18,16 +18,16 @@ public class InspectionResponse implements Serializable {
     public Inspection inspection;
 
     public static class Inspection implements Serializable {
-        @SerializedName("outlet_id")
-        public int outletID;
-        @SerializedName("image")
-        public String image;
-        @SerializedName("quantity")
-        public int quantity;
-        @SerializedName("promotion_type")
-        public String promotionType;
-        @SerializedName("is_damaged")
-        public boolean iDamaged;
+        @SerializedName("dealer_id")
+        public int dealer_id;
+        @SerializedName("img")
+        public String img;
+        @SerializedName("qty")
+        public int qty;
+        @SerializedName("promotion")
+        public String promotion;
+        @SerializedName("damaged")
+        public String damaged;
         @SerializedName("condition")
         public String condition;
     }

@@ -88,7 +88,6 @@ public class ProductListRecyclerAdapter extends RecyclerView.Adapter<ProductList
             super(itemView);
             this.setIsRecyclable(false);
 
-            cv_product_background = itemView.findViewById(R.id.cv_productlist_background);
 
             binding = DataBindingUtil.bind(itemView);
         }

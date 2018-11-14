@@ -44,7 +44,7 @@ public class AddNewOrder implements Serializable {
         }
     }
 
-    public static class OrderResponse {
+/*    public static class OrderResponse {
         @SerializedName("error")
         public boolean error;
         @SerializedName("result")
@@ -63,5 +63,11 @@ public class AddNewOrder implements Serializable {
                 public int discount;
             }
         }
+    }*/
+    public static class OrderResponse {
+        @SerializedName("error")
+        public boolean error;
+        @SerializedName("result")
+        public String result;
     }
 }

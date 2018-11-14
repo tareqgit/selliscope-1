@@ -3,16 +3,23 @@ package com.humaclab.lalteer.activity;
 import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -25,12 +32,17 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.humaclab.lalteer.BuildConfig;
+import com.humaclab.lalteer.LocationMonitoringService;
 import com.humaclab.lalteer.R;
 import com.humaclab.lalteer.SelliscopeApiEndpointInterface;
 import com.humaclab.lalteer.SelliscopeApplication;
@@ -38,14 +50,13 @@ import com.humaclab.lalteer.fragment.DashboardFragment;
 import com.humaclab.lalteer.fragment.TargetFragment;
 import com.humaclab.lalteer.model.Diameter.DiameterResponse;
 import com.humaclab.lalteer.receiver.InternetConnectivityChangeReceiver;
-import com.humaclab.lalteer.service.SendLocationDataService;
-import com.humaclab.lalteer.utils.CheckAppUpdated;
 import com.humaclab.lalteer.utils.Constants;
 import com.humaclab.lalteer.utils.DatabaseHandler;
 import com.humaclab.lalteer.utils.LoadLocalIntoBackground;
 import com.humaclab.lalteer.utils.SessionManager;
 import com.squareup.picasso.Picasso;
 
+import java.util.Calendar;
 import java.util.Locale;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -67,6 +78,12 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     private DatabaseHandler databaseHandler;
     private ProgressDialog pd;
     private LoadLocalIntoBackground loadLocalIntoBackground;
+    private static final String TAG = HomeActivity.class.getSimpleName();
+    /**
+     * Code used in requesting runtime permissions.
+     */
+    private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 34;
+    private boolean mAlreadyStartedService = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,7 +98,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         loadLocalIntoBackground.loadAll();
         apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(), sessionManager.getUserPassword(), false).create(SelliscopeApiEndpointInterface.class);
         pd = new ProgressDialog(this);
-        CheckAppUpdated.checkAppUpdate(this);
+
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("");
@@ -240,11 +257,19 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             case R.id.nav_logout:
                 pd.setMessage("Login out...");
                 pd.show();
+
+
+                stopService(new Intent(HomeActivity.this, LocationMonitoringService.class));
+                mAlreadyStartedService = false;
+
 //                if (databaseHandler.removeAll()) {
                 sessionManager.logoutUser(false);
                 schedulerForMinute.shutdownNow();
                 schedulerForHour.shutdownNow();
-                stopService(new Intent(getApplicationContext(), SendLocationDataService.class));
+
+
+
+                /*stopService(new Intent(HomeActivity.this, SendLocationDataService.class));*/
                 HomeActivity.this.deleteDatabase(Constants.databaseName);
                 pd.dismiss();
                 unregisterReceiver(receiver);
@@ -266,9 +291,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                     }
                 });
                 alertDialog.show();
-                break;
-            case R.id.nav_check_update:
-                CheckAppUpdated.checkAppUpdate(this);
                 break;
             case R.id.nav_update_data:
                 pd.setMessage("Local data is updating.\nPlease be patient....");
@@ -343,18 +365,23 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        welcome();
+        startStep1();
+    }
+
     public void setLocale(String lang) {
         Locale locale = new Locale(lang);
-        Locale.setDefault(locale);
+        //Locale.setDefault(locale);
+        //Phone Default Language is English
+        Locale localeEN = new Locale("en");
+        Locale.setDefault(localeEN);
         Configuration config = new Configuration();
         config.locale = locale;
         getBaseContext().getResources().updateConfiguration(config, getBaseContext().getResources().getDisplayMetrics());
 
-        // Save To SharedPreference
-//        SharedPreferences sharedPreferencesLanguage = getSharedPreferences("Settings", MODE_PRIVATE);
-//        SharedPreferences.Editor editor = getSharedPreferences("Settings",MODE_PRIVATE).edit();
-//        editor.putString("My_Lang",lang);
-//        editor.apply();
         SharedPreferences sharedPreferencesLanguage = getSharedPreferences("Settings", MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferencesLanguage.edit();
         editor.putString("My_Lang", lang);
@@ -367,5 +394,273 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         SharedPreferences prefs = getSharedPreferences("Settings", MODE_PRIVATE);
         String language = prefs.getString("My_Lang", "");
         setLocale(language);
+    }
+
+    /**
+     * Step 1: Check Google Play services
+     */
+    private void startStep1() {
+
+        //Check whether this user has installed Google play service which is being used by Location updates.
+        if (isGooglePlayServicesAvailable()) {
+
+            //Passing null to indicate that it is executing for the first time.
+            startStep2(null);
+
+        } else {
+            Toast.makeText(getApplicationContext(), "NO GOOGLE PLAYSTORE AVAILABLE", Toast.LENGTH_LONG).show();
+        }
+    }
+
+
+    /**
+     * Step 2: Check & Prompt Internet connection
+     */
+    private Boolean startStep2(DialogInterface dialog) {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+
+        if (activeNetworkInfo == null || !activeNetworkInfo.isConnected()) {
+            promptInternetConnect();
+            return false;
+        }
+
+
+        if (dialog != null) {
+            dialog.dismiss();
+        }
+
+        //Yes there is active internet connection. Next check Location is granted by user or not.
+
+        if (checkPermissions()) { //Yes permissions are granted by the user. Go to the next step.
+            startStep3();
+        } else {  //No user has not granted the permissions yet. Request now.
+            requestPermissions();
+        }
+        return true;
+    }
+
+    /**
+     * Show A Dialog with button to refresh the internet state.
+     */
+    private void promptInternetConnect() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this);
+        builder.setTitle("ERror");
+        builder.setMessage("No Internet ");
+
+        String positiveText = "Refresh";
+        builder.setPositiveButton(positiveText,
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+
+                        //Block the Application Execution until user grants the permissions
+                        if (startStep2(dialog)) {
+
+                            //Now make sure about location permission.
+                            if (checkPermissions()) {
+
+                                //Step 2: Start the Location Monitor Service
+                                //Everything is there to start the service.
+                                startStep3();
+                            } else if (!checkPermissions()) {
+                                requestPermissions();
+                            }
+
+                        }
+                    }
+                });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    /**
+     * Step 3: Start the Location Monitor Service
+     */
+    private void startStep3() {
+
+        //And it will be keep running until you close the entire application from task manager.
+        //This method will executed only once.
+
+        if (!mAlreadyStartedService) {
+
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                Intent intent2 = new Intent(this, LocationMonitoringService.class);
+                startForegroundService(intent2);
+            }
+
+            //mMsgView.setText("msg_location_service_started");
+
+            //Start location sharing service to app server.........
+            Intent intent = new Intent(this, LocationMonitoringService.class);
+            startService(intent);
+            mAlreadyStartedService = true;
+            //Ends................................................
+
+        }
+    }
+
+    /**
+     * Return the availability of GooglePlayServices
+     */
+    public boolean isGooglePlayServicesAvailable() {
+        GoogleApiAvailability googleApiAvailability = GoogleApiAvailability.getInstance();
+        int status = googleApiAvailability.isGooglePlayServicesAvailable(this);
+        if (status != ConnectionResult.SUCCESS) {
+            if (googleApiAvailability.isUserResolvableError(status)) {
+                googleApiAvailability.getErrorDialog(this, status, 2404).show();
+            }
+            return false;
+        }
+        return true;
+    }
+
+
+    /**
+     * Return the current state of the permissions needed.
+     */
+    private boolean checkPermissions() {
+        int permissionState1 = ActivityCompat.checkSelfPermission(this,
+                android.Manifest.permission.ACCESS_FINE_LOCATION);
+
+        int permissionState2 = ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_COARSE_LOCATION);
+
+        return permissionState1 == PackageManager.PERMISSION_GRANTED && permissionState2 == PackageManager.PERMISSION_GRANTED;
+
+    }
+
+    /**
+     * Start permissions requests.
+     */
+    private void requestPermissions() {
+
+        boolean shouldProvideRationale =
+                ActivityCompat.shouldShowRequestPermissionRationale(this,
+                        android.Manifest.permission.ACCESS_FINE_LOCATION);
+
+        boolean shouldProvideRationale2 =
+                ActivityCompat.shouldShowRequestPermissionRationale(this,
+                        Manifest.permission.ACCESS_COARSE_LOCATION);
+
+
+        // Provide an additional rationale to the img_user. This would happen if the img_user denied the
+        // request previously, but didn't check the "Don't ask again" checkbox.
+        if (shouldProvideRationale || shouldProvideRationale2) {
+            Log.i(TAG, "Displaying permission rationale to provide additional context.");
+            showSnackbar(R.string.permission_rationale,
+                    android.R.string.ok, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            // Request permission
+                            ActivityCompat.requestPermissions(HomeActivity.this,
+                                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
+                                    REQUEST_PERMISSIONS_REQUEST_CODE);
+                        }
+                    });
+        } else {
+            Log.i(TAG, "Requesting permission");
+            // Request permission. It's possible this can be auto answered if device policy
+            // sets the permission in a given state or the img_user denied the permission
+            // previously and checked "Never ask again".
+            ActivityCompat.requestPermissions(HomeActivity.this,
+                    new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
+                    REQUEST_PERMISSIONS_REQUEST_CODE);
+        }
+    }
+
+
+    /**
+     * Shows a {@link Snackbar}.
+     *
+     * @param mainTextStringId The id for the string resource for the Snackbar text.
+     * @param actionStringId   The text of the action item.
+     * @param listener         The listener associated with the Snackbar action.
+     */
+    private void showSnackbar(final int mainTextStringId, final int actionStringId,
+                              View.OnClickListener listener) {
+        Snackbar.make(
+                findViewById(android.R.id.content),
+                getString(mainTextStringId),
+                Snackbar.LENGTH_INDEFINITE)
+                .setAction(getString(actionStringId), listener).show();
+    }
+
+    /**
+     * Callback received when a permissions request has been completed.
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        Log.i(TAG, "onRequestPermissionResult");
+        if (requestCode == REQUEST_PERMISSIONS_REQUEST_CODE) {
+            if (grantResults.length <= 0) {
+                // If img_user interaction was interrupted, the permission request is cancelled and you
+                // receive empty arrays.
+                Log.i(TAG, "User interaction was cancelled.");
+            } else if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                Log.i(TAG, "Permission granted, updates requested, starting location updates");
+                startStep3();
+
+            } else {
+                // Permission denied.
+
+                // Notify the img_user via a SnackBar that they have rejected a core permission for the
+                // app, which makes the Activity useless. In a real app, core permissions would
+                // typically be best requested during a welcome-screen flow.
+
+                // Additionally, it is important to remember that a permission might have been
+                // rejected without asking the img_user for permission (device policy or "Never ask
+                // again" prompts). Therefore, a img_user interface affordance is typically implemented
+                // when permissions are denied. Otherwise, your app could appear unresponsive to
+                // touches or interactions which have required permissions.
+                showSnackbar(R.string.permission_denied_explanation,
+                        R.string.settings, new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                // Build intent that displays the App settings screen.
+                                Intent intent = new Intent();
+                                intent.setAction(
+                                        Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                                Uri uri = Uri.fromParts("package",
+                                        BuildConfig.APPLICATION_ID, null);
+                                intent.setData(uri);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startActivity(intent);
+                            }
+                        });
+            }
+        }
+    }
+
+    private void welcome() {
+        Calendar c = Calendar.getInstance();
+        int timeOfDay = c.get(Calendar.HOUR_OF_DAY);
+
+        if (timeOfDay >= 0 && timeOfDay < 12) {
+            welcome("Good Morning");
+
+        } else if (timeOfDay >= 12 && timeOfDay < 16) {
+            welcome("Good Afternoon");
+
+        } else if (timeOfDay >= 16 && timeOfDay < 21) {
+            welcome("Good Evening");
+
+        } else if (timeOfDay >= 21 && timeOfDay < 24) {
+            welcome("Good Night");
+
+        }
+    }
+
+    private void welcome(String message) {
+
+        TextView welcome_text = findViewById(R.id.welcome_text);
+        welcome_text.setText(message + ", " + sessionManager.getUserDetails().get("userName"));
+
     }
 }

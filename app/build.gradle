@@ -17,11 +17,11 @@ repositories {
 
 
 android {
-    compileSdkVersion 27
+    compileSdkVersion 28
     defaultConfig {
         applicationId "com.humaclab.lalteer"
         minSdkVersion 19
-        targetSdkVersion 27
+        targetSdkVersion 28
         versionCode 1
         versionName "test-lalteer-1.0"
         vectorDrawables.useSupportLibrary = true
@@ -78,7 +78,6 @@ dependencies {
     implementation 'com.google.firebase:firebase-messaging:15.0.2'
     implementation 'com.squareup.picasso:picasso:2.5.2'
     implementation 'com.github.bumptech.glide:glide:4.6.1'
-    implementation 'com.github.javiersantos:AppUpdater:2.6.3'
     implementation 'de.hdodenhof:circleimageview:2.2.0'
     implementation 'com.github.esafirm.android-image-picker:imagepicker:1.12.0'
     implementation('io.nlopez.smartlocation:library:3.3.2') {

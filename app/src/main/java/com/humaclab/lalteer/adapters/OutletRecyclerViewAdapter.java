@@ -184,7 +184,7 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 Timber.d("Code:" + response.code());
                 Gson gson = new Gson();
-                if (response.code() == 201) {
+                if (response.code() == 200) {
                     try {
                         UserLocation.Successful userLocationSuccess = gson.fromJson(response.body().string(), UserLocation.Successful.class);
                         Timber.d("Result:" + userLocationSuccess.result);

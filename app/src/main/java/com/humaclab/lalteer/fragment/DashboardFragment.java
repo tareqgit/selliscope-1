@@ -16,6 +16,7 @@ import com.humaclab.lalteer.activity.DeliveryListActivity;
 import com.humaclab.lalteer.activity.InspectionActivity;
 import com.humaclab.lalteer.activity.OutletActivity;
 import com.humaclab.lalteer.activity.PaymentActivity;
+import com.humaclab.lalteer.activity.ProductListActivity;
 import com.humaclab.lalteer.activity.RouteActivity;
 import com.humaclab.lalteer.adapters.DashboardRecyclerViewAdapter;
 import com.humaclab.lalteer.model.DashboardItem;
@@ -102,8 +103,7 @@ public class DashboardFragment extends Fragment {
                                         break;
                                     }
                                     case 4: {
-                                        Toast.makeText(getActivity(), "This feature is under development.",
-                                                Toast.LENGTH_SHORT).show();
+                                        getActivity().startActivity(new Intent(getActivity(),ProductListActivity.class));
                                         break;
                                     }
                                     case 5: {

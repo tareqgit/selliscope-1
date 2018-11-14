@@ -15,6 +15,7 @@ import com.humaclab.lalteer.model.OrderResponse;
 import com.humaclab.lalteer.model.OutletType.OutletTypeResponse;
 import com.humaclab.lalteer.model.Payment;
 import com.humaclab.lalteer.model.PaymentResponse;
+import com.humaclab.lalteer.model.Products.ProductResponse;
 import com.humaclab.lalteer.model.PurchaseHistory.PurchaseHistoryResponse;
 import com.humaclab.lalteer.model.RoutePlan.RouteDetailsResponse;
 import com.humaclab.lalteer.model.RoutePlan.RouteResponse;
@@ -32,6 +33,7 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
@@ -44,7 +46,7 @@ import retrofit2.http.Query;
 public interface SelliscopeApiEndpointInterface {
     //GET methods
 
-    @GET("outlets")
+    @GET("dealers")
     Call<ResponseBody> getOutlets();
 
     @GET("category")
@@ -53,21 +55,22 @@ public interface SelliscopeApiEndpointInterface {
     @GET("brands")
     Call<BrandResponse> getBrands();
 
-    /*@GET("product")
-    Call<ProductResponse> getProducts();*/
-    @GET("variant-product")
-    Call<VariantProductResponse> getProducts();
+    @GET("products")
+    Call<ProductResponse> getProducts();
+
+    /*@GET("variant-product")
+    Call<VariantProductResponse> getProducts();*/
 
     @GET("order")
     Call<OrderResponse> getOrders();
 
-    @GET("payment/{outlet_id}")
+    @GET("outlet-payment-order/{outlet_id}")
     Call<Payment> getPayment(@Path("outlet_id") int outletId);
 
     @GET("payment")
     Call<Payment> getPayment();
 
-    @GET("delivery")
+    @GET("order/delivery")
     Call<DeliveryResponse> getDelivery();
 
     @GET("delivery")
@@ -82,7 +85,7 @@ public interface SelliscopeApiEndpointInterface {
      @GET("thana")
     Call<ThanaResponse> getThanas();
 
-    @GET("outlets-type")
+    @GET("dealers-type")
     Call<OutletTypeResponse> getOutletTypes();
 
     @GET("visit")
@@ -94,7 +97,7 @@ public interface SelliscopeApiEndpointInterface {
     @GET("diameter")
     Call<DiameterResponse> getDiameter();
 
-    @GET("outlets/{outlet_id}/purchase-history")
+    @GET("dealers/{outlet_id}/purchase-history")
     Call<PurchaseHistoryResponse> getPurchaseHistory(@Path("outlet_id") int outletID);
 
     @GET("target/user")
@@ -110,27 +113,27 @@ public interface SelliscopeApiEndpointInterface {
     @GET("login")
     Call<ResponseBody> getUser();
 
-    @POST("outlets/create/")
+    @POST("dealers/create/")
     Call<ResponseBody> createOutlet(@Body CreateOutlet createOutlet);
 
-     @POST("visit/store")
+     @POST("visit/store/")
     Call<ResponseBody> sendUserLocation(@Body UserLocation userLocation);
 
-    @POST("order/variant/store")
+    @POST("order/store/")
     Call<AddNewOrder.OrderResponse> addOrder(@Body AddNewOrder order);
     /*@POST("order/store")
     Call<AddNewOrder.OrderResponse> addOrder(@Body AddNewOrder order);*/
 
-    @POST("payment/collect")
+    @POST("payment/collect/")
     Call<PaymentResponse.PaymentSucessfull> payNow(@Body PaymentResponse payment);
 
-    @POST("delivery/store")
+    @POST("order/delivery/store/")
     Call<DeliverProductResponse> deliverProduct(@Body DeliverProductResponse deliverProduct);
 
     @POST("return-product")
     Call<SellsReturnResponse> returnProduct(@Body SellsReturnResponse.SellsReturn returnProduct);
 
-    @POST("inspection/store")
+    @POST("inspection/store/")
     Call<InspectionResponse> inspectOutlet(@Body InspectionResponse.Inspection inspection);
 
     @POST("version-imei")
@@ -139,7 +142,7 @@ public interface SelliscopeApiEndpointInterface {
     @POST("change-password")
     Call<ChangePasswordResponse> changePassword(@Body ChangePassword changePassword);
 
-    @PUT("outlets/{id}/edit/")
+    @PUT("dealers/{id}/edit/")
     Call<ResponseBody> updateOutlet(@Path("id") int outletID, @Body CreateOutlet createOutlet);
 
     @POST("profile/update")

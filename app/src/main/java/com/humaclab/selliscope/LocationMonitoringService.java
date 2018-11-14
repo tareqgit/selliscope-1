@@ -2,18 +2,13 @@ package com.humaclab.selliscope;
 
 import android.Manifest;
 import android.app.Service;
-import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.os.PowerManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -35,10 +30,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.nlopez.smartlocation.OnLocationUpdatedListener;
-import io.nlopez.smartlocation.SmartLocation;
-import io.nlopez.smartlocation.location.config.LocationAccuracy;
-import io.nlopez.smartlocation.location.config.LocationParams;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -47,7 +38,7 @@ import timber.log.Timber;
 
 
 /**
- * Created by devdeeds.com on 27-09-2017.
+ * Created by anam on 27-09-2018.
  */
 
 public class LocationMonitoringService extends Service implements
@@ -59,7 +50,7 @@ public class LocationMonitoringService extends Service implements
     LocationRequest mLocationRequest = new LocationRequest();
     private DatabaseHandler dbHandler = new DatabaseHandler(this);
     private SessionManager sessionManager;
-   // public static final String ACTION_LOCATION_BROADCAST = LocationMonitoringService.class.getName() + "LocationBroadcast";
+    // public static final String ACTION_LOCATION_BROADCAST = LocationMonitoringService.class.getName() + "LocationBroadcast";
     public static final String EXTRA_LATITUDE = "extra_latitude";
     public static final String EXTRA_LONGITUDE = "extra_longitude";
 
@@ -86,9 +77,8 @@ public class LocationMonitoringService extends Service implements
         sessionManager =  new SessionManager(this);
 
 
-
-        mLocationRequest.setInterval(180*1000);
-        mLocationRequest.setFastestInterval(1000);
+        mLocationRequest.setInterval(600 * 1000);
+        mLocationRequest.setFastestInterval(300 * 1000);
 
         int priority = LocationRequest.PRIORITY_HIGH_ACCURACY; //by default
         //PRIORITY_BALANCED_POWER_ACCURACY, PRIORITY_LOW_POWER, PRIORITY_NO_POWER are the other priority modes
@@ -159,7 +149,7 @@ public class LocationMonitoringService extends Service implements
 
             Timber.d("Latitude: " + latitude + " Longitude: " + longitude);
             if (NetworkUtility.isNetworkAvailable(getApplicationContext())) {
-                sendUserLocation(latitude, longitude,  CurrentTimeUtilityClass.getCurrentTimeStamp(),false,-1);
+                sendUserLocation(latitude, longitude, CurrentTimeUtilityClass.getCurrentTimeStamp(), false, -1);
 /*                List<UserVisit> userVisits = dbHandler.getUSerVisits();
                 if (!userVisits.isEmpty())
                     for (UserVisit userVisit : userVisits) {
@@ -222,7 +212,7 @@ public class LocationMonitoringService extends Service implements
                 } else if (response.code() == 400) {
 
                 } else {
-                    Toast.makeText(getApplicationContext(), response.code()+" Server Error! Try Again Later!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), response.code() + " Server Error! Try Again Later!", Toast.LENGTH_SHORT).show();
                 }
             }
 

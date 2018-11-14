@@ -59,7 +59,7 @@ public class UserLocation {
         public boolean error;
         @SerializedName("result")
         public String result;
-        @SerializedName("msg")
+        @SerializedName("message")
         public String msg;
     }
 

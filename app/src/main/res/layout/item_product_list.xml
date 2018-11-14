@@ -10,7 +10,7 @@
     </data>
 
     <android.support.v7.widget.CardView
-        android:id="@+id/cv_productlist_background"
+        android:id="@+id/cv_product_background"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="3dp"
@@ -22,7 +22,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-
             <ImageView
                 android:id="@+id/iv_remove_product"
                 android:layout_width="20dp"
@@ -32,6 +31,22 @@
                 android:tint="#fff"
                 android:visibility="gone"
                 app:srcCompat="@drawable/remove" />
+            <LinearLayout
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/iv_product_image"
+                    android:layout_width="120dp"
+                    android:layout_height="120dp"
+                    android:layout_gravity="center"
+                    app:srcCompat="@drawable/ic_promotion" />
+
+
+            </LinearLayout>
+
 
             <TextView
                 android:id="@+id/tv_product_name"
@@ -40,6 +55,7 @@
                 android:hint="Product Name"
                 android:padding="5dp"
                 android:text='@{product.name}'
+                android:fontFamily="@font/latobold"
                 android:textStyle="bold" />
 
             <LinearLayout
@@ -51,6 +67,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/latobold"
                     android:text="Price: " />
 
                 <TextView
@@ -58,6 +75,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Product Price"
+                    android:fontFamily="@font/latoregular"
                     android:text='@{product.price}' />
             </LinearLayout>
 
@@ -72,13 +90,15 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Quantity: " />
+                    android:text="Quantity: "
+                    android:fontFamily="@font/latobold"/>
 
                 <TextView
                     android:id="@+id/tv_product_quantity"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Quantity" />
+                    android:hint="Quantity"
+                    android:fontFamily="@font/latoregular"/>
             </LinearLayout>
         </LinearLayout>
     </android.support.v7.widget.CardView>

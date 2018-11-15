@@ -59,7 +59,7 @@ public class OutletTarget implements Serializable {
         @SerializedName("sales_target")
 
         private String salesTarget;
-        @SerializedName("achieved")
+        @SerializedName("achievement")
 
         private String achieved;
         @SerializedName("visited")

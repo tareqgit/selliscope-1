@@ -171,25 +171,22 @@ public class DailyTargetFragment extends Fragment {
                         swipeRefreshLayout.setRefreshing(false);
                     System.out.println("Response " + new Gson().toJson(response.body()));
 
-                    String sales_types = response.body().getResult().getTargetType();
-                    //Double total = Double.valueOf(response.body().getResult().getSalesTarget().replace(",",""));
-                    Double total = Double.valueOf(50000);
-                    //Double achieved = Double.valueOf(response.body().getResult().getAchieved().replace(",",""));
-                    Double achieved = Double.valueOf(30000);
+                    String sales_types = response.body().getResult().getSalesTypes().replace("Quantity","qt");
+                    Double total = Double.valueOf(response.body().getResult().getSalesTarget().replace(",",""));
+                    Double achieved = Double.valueOf(response.body().getResult().getAchieved().replace(",",""));
                     Double remaining = total-achieved;
                     int completePersentage = (int) ((achieved * 100)/total);
 
                     tv_date.setText(response.body().getResult().getDate());
                     tv_target_label.setText(response.body().getResult().getTargetType());
-                    tv_target_achieved.setText(achieved.toString());
-                    tv_total.setText(total.toString());
+                    tv_target_achieved.setText(response.body().getResult().getAchieved()+" "+sales_types);
+                    tv_total.setText(total.toString()+" "+sales_types);
                     //tv_visited.setText(response.body().getResult().getVisited());
-                    tv_target_remaining.setText(remaining.toString());
+                    tv_target_remaining.setText(remaining.toString()+" "+sales_types);
                     circle_progress_view.setTextEnabled(true);
                     circle_progress_view.setInterpolator(new AccelerateDecelerateInterpolator());
                     circle_progress_view.setStartAngle(10);
                     circle_progress_view.setProgressWithAnimation(completePersentage,2000);
-
 
 
                 }else if (response.code() == 401) {

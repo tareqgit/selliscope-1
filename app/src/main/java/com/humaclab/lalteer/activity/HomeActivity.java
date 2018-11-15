@@ -31,8 +31,10 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -41,6 +43,7 @@ import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.gson.Gson;
 import com.humaclab.lalteer.BuildConfig;
 import com.humaclab.lalteer.LocationMonitoringService;
 import com.humaclab.lalteer.R;
@@ -48,6 +51,7 @@ import com.humaclab.lalteer.SelliscopeApiEndpointInterface;
 import com.humaclab.lalteer.SelliscopeApplication;
 import com.humaclab.lalteer.fragment.DashboardFragment;
 import com.humaclab.lalteer.fragment.TargetFragment;
+import com.humaclab.lalteer.model.AppVersion.AppVersion;
 import com.humaclab.lalteer.model.Diameter.DiameterResponse;
 import com.humaclab.lalteer.receiver.InternetConnectivityChangeReceiver;
 import com.humaclab.lalteer.utils.Constants;
@@ -368,6 +372,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onResume() {
         super.onResume();
+        LoadappsVertion();
         welcome();
         startStep1();
     }
@@ -388,6 +393,80 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         editor.apply();
     }
 
+    private void LoadappsVertion() {
+        apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(), sessionManager.getUserPassword(), false).create(SelliscopeApiEndpointInterface.class);
+        Call<AppVersion> call = apiService.getAppsversion();
+        call.enqueue(new Callback<AppVersion>() {
+            @Override
+            public void onResponse(Call<AppVersion> call, Response<AppVersion> response) {
+                if (response.code() == 200) {
+
+                    System.out.println("APPS VERTION " + new Gson().toJson(response.body()));
+
+                    int serverVersion = Integer.parseInt(response.body().getResult().getVersionCode());
+                    int appVersion = BuildConfig.VERSION_CODE;
+                    if (serverVersion > appVersion) {
+                        updateDialog(response.body().getResult().getVersionName(), response.body().getResult().getUrl());
+                    }
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<AppVersion> call, Throwable t) {
+                Toast.makeText(HomeActivity.this, "Loading Error", Toast.LENGTH_SHORT).show();
+            }
+
+        });
+
+    }
+
+    private void updateDialog(String version, final String link) {
+
+
+        final AlertDialog builder = new AlertDialog.Builder(this).create();
+        LayoutInflater inflater = LayoutInflater.from(this);
+        View dialogView = inflater.inflate(R.layout.information, null);
+        builder.setView(dialogView);
+
+        TextView tv_details_information = (TextView) dialogView.findViewById(R.id.tv_details_information);
+        TextView tv_title = (TextView) dialogView.findViewById(R.id.tv_title_name);
+
+
+        tv_details_information.setText("A new version is available on PlayStore. Please Update it");
+        tv_title.setText("Update Available " + version);
+
+
+        Button iv_info_cancel = dialogView.findViewById(R.id.btn_update);
+        iv_info_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                builder.dismiss();
+
+
+                stopService(new Intent(HomeActivity.this, LocationMonitoringService.class));
+                mAlreadyStartedService = false;
+
+
+                sessionManager.logoutUser(false);
+                schedulerForMinute.shutdownNow();
+                schedulerForHour.shutdownNow();
+                //stopService(new Intent(HomeActivity.this, SendLocationDataService.class));
+                HomeActivity.this.deleteDatabase(Constants.databaseName);
+                unregisterReceiver(receiver);
+                finish();
+
+                final String appPackageName = getPackageName(); // getPackageName() from Context or Activity object
+                try {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
+                } catch (android.content.ActivityNotFoundException anfe) {
+                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
+                }
+            }
+        });
+        builder.setCancelable(false);
+        builder.show();
+    }
 
     //Load
     public void LoadLocale() {

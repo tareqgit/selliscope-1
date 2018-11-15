@@ -1,6 +1,7 @@
 package com.humaclab.lalteer;
 
 import com.humaclab.lalteer.model.AddNewOrder;
+import com.humaclab.lalteer.model.AppVersion.AppVersion;
 import com.humaclab.lalteer.model.BrandResponse;
 import com.humaclab.lalteer.model.CategoryResponse;
 import com.humaclab.lalteer.model.CreateOutlet;
@@ -112,6 +113,14 @@ public interface SelliscopeApiEndpointInterface {
 
     @GET("login")
     Call<ResponseBody> getUser();
+
+    @GET("app-version")
+    Call<AppVersion> getAppsversion();
+
+    //Outlet Wise Target
+    @GET("target/dealer/{outlet_id}")
+    Call<OutletTarget> getPutletTarget(@Path("outlet_id") int outletId);
+
 
     @POST("dealers/create/")
     Call<ResponseBody> createOutlet(@Body CreateOutlet createOutlet);

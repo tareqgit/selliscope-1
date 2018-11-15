@@ -3,6 +3,7 @@ package com.humaclab.lalteer.model;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * Created by leon on 6/29/17.
@@ -11,7 +12,7 @@ import java.io.Serializable;
 public class InspectionResponse implements Serializable {
     @SerializedName("error")
     public boolean error;
-    @SerializedName("message")
+    @SerializedName("result")
     public String message;
 
     @SerializedName("inspection")
@@ -27,7 +28,7 @@ public class InspectionResponse implements Serializable {
         @SerializedName("promotion")
         public String promotion;
         @SerializedName("damaged")
-        public String damaged;
+        public int damaged;
         @SerializedName("condition")
         public String condition;
     }

@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
@@ -21,6 +22,7 @@ import com.humaclab.lalteer.SelliscopeApplication;
 import com.humaclab.lalteer.databinding.ActivityInspectionBinding;
 import com.humaclab.lalteer.model.InspectionResponse;
 import com.humaclab.lalteer.model.Outlets;
+import com.humaclab.lalteer.utils.AccessPermission;
 import com.humaclab.lalteer.utils.SessionManager;
 
 import java.io.ByteArrayOutputStream;
@@ -39,7 +41,7 @@ public class InspectionActivity extends AppCompatActivity {
     private ActivityInspectionBinding binding;
     private ProgressDialog pd;
     private String promotionImage;
-
+    SessionManager sessionManager;
     private List<Integer> outletIDs;
     private List<String> outletNames;
 
@@ -47,7 +49,8 @@ public class InspectionActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_inspection);
-
+        checkPermission();
+        sessionManager = new SessionManager(InspectionActivity.this);
         pd = new ProgressDialog(this);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -74,10 +77,10 @@ public class InspectionActivity extends AppCompatActivity {
                 pd.show();
 
                 InspectionResponse.Inspection inspection = new InspectionResponse.Inspection();
-                inspection.img = promotionImage;
+                inspection.img = String.valueOf(promotionImage);
                 inspection.condition = binding.spCondition.getSelectedItem().toString();
-                //inspection.damaged = String.valueOf(binding.spIsDamaged.getSelectedItem().toString().equals("Yes"));
-                inspection.damaged = String.valueOf("True");
+                inspection.damaged = binding.spIsDamaged.getSelectedItem().toString().equals("Yes") ? 1 : 0;
+
                 inspection.dealer_id = outletIDs.get(binding.spOutlets.getSelectedItemPosition());
                 try {
                     inspection.qty = Integer.parseInt(binding.etQty.getText().toString());
@@ -85,9 +88,11 @@ public class InspectionActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
                 inspection.promotion = binding.spPromotionType.getSelectedItem().toString();
+                InspectionResponse.Inspection a =inspection;
+                Log.d("response", new Gson().toJson(a));
 
-                SessionManager sessionManager = new SessionManager(InspectionActivity.this);
-                SelliscopeApiEndpointInterface apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(),
+                sessionManager = new SessionManager(InspectionActivity.this);
+                apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(),
                         sessionManager.getUserPassword(), false).create(SelliscopeApiEndpointInterface.class);
                 Call<InspectionResponse> call = apiService.inspectOutlet(inspection);
                 call.enqueue(new Callback<InspectionResponse>() {
@@ -115,7 +120,7 @@ public class InspectionActivity extends AppCompatActivity {
     }
 
     void getOutlets() {
-        SessionManager sessionManager = new SessionManager(InspectionActivity.this);
+
         apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(),
                 sessionManager.getUserPassword(), false)
                 .create(SelliscopeApiEndpointInterface.class);
@@ -169,7 +174,9 @@ public class InspectionActivity extends AppCompatActivity {
             binding.ivTakeImage.setImageBitmap(photo);
         }
     }
-
+    private void checkPermission() {
+        AccessPermission.accessPermission(InspectionActivity.this);
+    }
     @Override
     public void onDestroy() {
         super.onDestroy();

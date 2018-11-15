@@ -25,7 +25,7 @@ public class CreateOutlet {
     public double outletLatitude;
     @SerializedName("longitude")
     public double outletLongitude;
-    @SerializedName("image")
+    @SerializedName("img")
     public String outletImage;
     @SerializedName("error")
     public boolean error;

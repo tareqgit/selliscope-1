@@ -273,6 +273,9 @@ public class AddOutletActivity extends AppCompatActivity {
         pd.setCancelable(false);
         pd.show();
 
+        CreateOutlet createOutlet = new CreateOutlet(outletTypeId, outletName, ownerName, address, thanaId, phone, latitude, longitude, outletImage,creditLimit);
+        Log.d("response", new Gson().toJson(createOutlet));
+
         Call<ResponseBody> call = apiService.createOutlet(new CreateOutlet(outletTypeId, outletName, ownerName, address, thanaId, phone, latitude, longitude, outletImage,creditLimit));
         call.enqueue(new Callback<ResponseBody>() {
             @Override

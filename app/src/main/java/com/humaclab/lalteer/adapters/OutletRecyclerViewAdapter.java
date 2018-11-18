@@ -89,7 +89,7 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
                 .load(Constants.baseUrl+outlet.outletImgUrl)
                 .placeholder(R.drawable.ic_outlet)
                 .into(holder.iv_outlet);
-
+        holder.tv_outletCode.setText(outlet.outlet_code == null ? "Pending" : outlet.outlet_code);
         holder.tvOutletName.setText(outlet.outletName);
         holder.tvOutletAddress.setText(outlet.outletAddress);
         holder.tvOutletContactNumber.setText(outlet.phone);
@@ -231,7 +231,7 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
     public class OutletViewHolder extends RecyclerView.ViewHolder {
         CardView cardView;
         ImageView iv_outlet;
-        TextView tvOutletName, tvOutletAddress, tvOutletOwnerName, tvOutletContactNumber;
+        TextView tvOutletName, tvOutletAddress, tvOutletOwnerName, tvOutletContactNumber,tv_outletCode;
         Button checkInButton, mapButton, historyButton;
         ProgressBar pbCheckIn;
         TextView tv_checkroute;
@@ -239,6 +239,7 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
 
         public OutletViewHolder(View itemView) {
             super(itemView);
+            tv_outletCode = itemView.findViewById(R.id.tv_outletCode);
             iv_outlet = itemView.findViewById(R.id.iv_outlet);
             cardView = itemView.findViewById(R.id.cv_outlet_item);
             tvOutletName = itemView.findViewById(R.id.tv_outlet_name);

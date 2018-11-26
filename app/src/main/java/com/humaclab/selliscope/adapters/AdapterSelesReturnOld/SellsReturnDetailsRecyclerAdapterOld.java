@@ -97,7 +97,7 @@ public class SellsReturnDetailsRecyclerAdapterOld extends RecyclerView.Adapter<S
                 call.enqueue(new Callback<SellsReturnResponseOld>() {
                     @Override
                     public void onResponse(Call<SellsReturnResponseOld> call, Response<SellsReturnResponseOld> response) {
-                        if (response.code() == 200) {
+                        if (response.code() == 201) {
                             holder.btn_return.setEnabled(false);
                             holder.btn_return.setBackgroundColor(Color.parseColor("#dddddd"));
                             Toast.makeText(context, "Product returned successfully", Toast.LENGTH_SHORT).show();

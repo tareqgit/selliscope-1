@@ -97,8 +97,8 @@ public interface SelliscopeApiEndpointInterface {
 
     @GET("delivery")
     Call<DeliveryResponse> getDelivery();
-    //for ols sellisreturn Mode
-    @GET("delivery")
+    //for old sellisreturn Mode
+    @GET("return-products")
     Call<DeliveryResponseOld> getSalesReturnOld(@Query("outlet_id") int outletID);
 
     @GET("return-products")

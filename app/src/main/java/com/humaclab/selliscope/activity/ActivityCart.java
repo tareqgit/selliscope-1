@@ -142,6 +142,8 @@ public class ActivityCart extends AppCompatActivity implements OnSelectProduct {
             newOrder.latitude = String.valueOf(lat);
             newOrder.longitude = String.valueOf(lon);
             newOrder.comment = binding.etComments.getText().toString();
+            newOrder.orderTotal = Double.parseDouble(binding.tvTotal.getText().toString());
+            newOrder.orderGrandTotal = Double.parseDouble(binding.tvGrandTotal.getText().toString());
             if (binding.etDiscount.getText().toString().equals("")) {
                 newOrder.discount = 0.0;
             } else {
@@ -162,6 +164,8 @@ public class ActivityCart extends AppCompatActivity implements OnSelectProduct {
                 product.row = Integer.parseInt(selectedProduct.getProductRow());
                 product.price = selectedProduct.getProductPrice();
                 product.tpDiscount = Double.parseDouble(selectedProduct.getTpDiscount());
+                product.productTotal = Double.parseDouble(selectedProduct.getTotalPrice());
+                product.productSubTotal = Double.parseDouble(selectedProduct.getTppromotionGrandPrice());
                 products.add(product);
             }
 

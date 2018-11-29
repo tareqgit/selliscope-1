@@ -145,7 +145,7 @@ public interface SelliscopeApiEndpointInterface {
     @POST("inspection/store/")
     Call<InspectionResponse> inspectOutlet(@Body InspectionResponse.Inspection inspection);
 
-    @POST("version-imei")
+    @POST("version-imei/")
     Call<ResponseBody> sendIMEIAndVersion(@Body IMEIandVerison imeIandVerison);
 
     @POST("change-password")

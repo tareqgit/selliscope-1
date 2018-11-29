@@ -5,11 +5,19 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 
 public class UpdateProfileResponse implements Serializable {
+
+    @SerializedName("error")
+    private Boolean error;
     @SerializedName("result")
     private Result result;
 
-    @SerializedName("error")
-    private boolean error;
+    public Boolean getError() {
+        return error;
+    }
+
+    public void setError(Boolean error) {
+        this.error = error;
+    }
 
     public Result getResult() {
         return result;
@@ -19,15 +27,7 @@ public class UpdateProfileResponse implements Serializable {
         this.result = result;
     }
 
-    public boolean isError() {
-        return error;
-    }
-
-    public void setError(boolean error) {
-        this.error = error;
-    }
-
-    public class Result implements Serializable {
+    public class Result  implements Serializable{
 
         @SerializedName("user")
         private User user;
@@ -39,74 +39,90 @@ public class UpdateProfileResponse implements Serializable {
         public void setUser(User user) {
             this.user = user;
         }
-    }
 
-    public class User implements Serializable {
+        public class User implements Serializable{
 
-        @SerializedName("image")
-        private String image;
+            @SerializedName("username")
+            private String username;
+            @SerializedName("name")
+            private String name;
+            @SerializedName("email")
+            private String email;
+            @SerializedName("address")
+            private String address;
+            @SerializedName("phone")
+            private String phone;
+            @SerializedName("dob")
+            private String dob;
+            @SerializedName("gender")
+            private String gender;
+            @SerializedName("image")
+            private String image;
 
-        @SerializedName("address")
-        private Object address;
+            public String getUsername() {
+                return username;
+            }
 
-        @SerializedName("gender")
-        private String gender;
+            public void setUsername(String username) {
+                this.username = username;
+            }
 
-        @SerializedName("dob")
-        private String dob;
+            public String getName() {
+                return name;
+            }
 
-        @SerializedName("name")
-        private String name;
+            public void setName(String name) {
+                this.name = name;
+            }
 
-        @SerializedName("email")
-        private String email;
+            public String getEmail() {
+                return email;
+            }
 
-        public String getImage() {
-            return image;
+            public void setEmail(String email) {
+                this.email = email;
+            }
+
+            public String getAddress() {
+                return address;
+            }
+
+            public void setAddress(String address) {
+                this.address = address;
+            }
+
+            public String getPhone() {
+                return phone;
+            }
+
+            public void setPhone(String phone) {
+                this.phone = phone;
+            }
+
+            public String getDob() {
+                return dob;
+            }
+
+            public void setDob(String dob) {
+                this.dob = dob;
+            }
+
+            public String getGender() {
+                return gender;
+            }
+
+            public void setGender(String gender) {
+                this.gender = gender;
+            }
+
+            public String getImage() {
+                return image;
+            }
+
+            public void setImage(String image) {
+                this.image = image;
+            }
         }
 
-        public void setImage(String image) {
-            this.image = image;
-        }
-
-        public Object getAddress() {
-            return address;
-        }
-
-        public void setAddress(Object address) {
-            this.address = address;
-        }
-
-        public String getGender() {
-            return gender;
-        }
-
-        public void setGender(String gender) {
-            this.gender = gender;
-        }
-
-        public String getDob() {
-            return dob;
-        }
-
-        public void setDob(String dob) {
-            this.dob = dob;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public String getEmail() {
-            return email;
-        }
-
-        public void setEmail(String email) {
-            this.email = email;
-        }
     }
 }

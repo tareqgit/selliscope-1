@@ -73,7 +73,7 @@ public class ProfileActivity extends AppCompatActivity {
         binding.tvEmail.setText(map.get("email"));
         binding.tvUserName.setText(map.get("userName"));
         binding.tvDateOfBirth.setText(map.get("dob"));
-
+        binding.etAddress.setText(map.get("address"));
         if (map.get("gender") != null) {
             if (map.get("gender").equals("Male")) {
                 binding.rbMale.setSelected(true);
@@ -156,11 +156,16 @@ public class ProfileActivity extends AppCompatActivity {
                             @Override
                             public void onResponse(Call<UpdateProfileResponse> call, Response<UpdateProfileResponse> response) {
                                 pd.dismiss();
-                                if (!response.body().isError()) {
-                                    sessionManager.updateProfile(response.body().getResult().getUser());
-                                    Toast.makeText(getApplicationContext(), "Profile updated successfully.", Toast.LENGTH_SHORT).show();
-                                }
+                                    if (!response.body().getError() == true) {
+                                        sessionManager.updateProfile(response.body().getResult().getUser().getDob(),
+                                                response.body().getResult().getUser().getGender(),
+                                                response.body().getResult().getUser().getImage(),
+                                                response.body().getResult().getUser().getAddress());
+                                        Toast.makeText(getApplicationContext(), "Profile updated successfully.", Toast.LENGTH_SHORT).show();
+
+                                    }
                                 finish();
+
                             }
 
                             @Override

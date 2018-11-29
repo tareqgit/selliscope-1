@@ -26,6 +26,7 @@ public class SessionManager {
     private static final String KEY_USER_EMAIL = "email";
     private static final String KEY_USER_DOB = "dob";
     private static final String KEY_USER_GENDER = "gender";
+    private static final String KEY_USER_ADDRESS = "address";
     private static final String KEY_USER_PASSWORD = "password";
     private static final String KEY_CLIENT_ID = "client_id";
     private static final String KEY_USER_PROFILE_PIC_URL = "profilePictureUrl";
@@ -53,11 +54,12 @@ public class SessionManager {
     /**
      * Create login session
      */
-    public void createLoginSession(String userName, String clientId, String userProfilePicUrl, String dob, String gender, String email, String password) {
+    public void createLoginSession(String userName, String clientId, String userProfilePicUrl, String dob, String gender,String address, String email, String password) {
         editor.putBoolean(IS_LOGGED_IN, true);
         editor.putString(KEY_USER_NAME, userName);
         editor.putString(KEY_USER_DOB, dob);
         editor.putString(KEY_USER_GENDER, gender);
+        editor.putString(KEY_USER_ADDRESS, address);
         editor.putString(KEY_CLIENT_ID, clientId);
         editor.putString(KEY_USER_PROFILE_PIC_URL, userProfilePicUrl);
         editor.putString(KEY_USER_EMAIL, email);
@@ -65,10 +67,12 @@ public class SessionManager {
         editor.commit();
     }
 
-    public void updateProfile(UpdateProfileResponse.User user) {
-        editor.putString(KEY_USER_DOB, user.getDob());
-        editor.putString(KEY_USER_GENDER, user.getGender());
-        editor.putString(KEY_USER_PROFILE_PIC_URL, user.getImage());
+    public void updateProfile(String bod,String gender,String image,String address) {
+        editor.putString(KEY_USER_DOB, bod);
+        editor.putString(KEY_USER_GENDER, gender);
+        editor.putString(KEY_USER_PROFILE_PIC_URL, image);
+        editor.putString(KEY_USER_ADDRESS, address);
+        editor.commit();
     }
 
     public void setNewPassword(String password) {
@@ -105,6 +109,7 @@ public class SessionManager {
         user.put(KEY_USER_DOB, pref.getString(KEY_USER_DOB, null));
         user.put(KEY_USER_GENDER, pref.getString(KEY_USER_GENDER, null));
         user.put(KEY_USER_PROFILE_PIC_URL, pref.getString(KEY_USER_PROFILE_PIC_URL, null));
+        user.put(KEY_USER_ADDRESS, pref.getString(KEY_USER_ADDRESS, null));
         return user;
     }
 

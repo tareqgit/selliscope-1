@@ -40,6 +40,9 @@ public class Login {
 
             @SerializedName("profile_image")
             public String profilePictureUrl;
+
+            @SerializedName("address")
+            public String address;
         }
 
         public class Theme {

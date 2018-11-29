@@ -173,6 +173,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                 loginSuccessful.result.user.profilePictureUrl,
                                 loginSuccessful.result.user.dob,
                                 loginSuccessful.result.user.gender,
+                                loginSuccessful.result.user.address,
                                 email,
                                 password
                         );

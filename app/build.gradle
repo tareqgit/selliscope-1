@@ -9,7 +9,7 @@ buildscript {
 }
 apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
-
+apply plugin: 'realm-android'
 repositories {
     maven { url 'https://maven.fabric.io/public' }
     maven { url "https://jitpack.io" }
@@ -22,8 +22,8 @@ android {
         applicationId "com.humaclab.lalteer"
         minSdkVersion 19
         targetSdkVersion 28
-        versionCode 1
-        versionName "test-lalteer-1.0"
+        versionCode 3
+        versionName "1.3"
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -31,6 +31,10 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        compileOptions {
+            sourceCompatibility JavaVersion.VERSION_1_8
+            targetCompatibility JavaVersion.VERSION_1_8
         }
     }
 
@@ -78,6 +82,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-messaging:15.0.2'
     implementation 'com.squareup.picasso:picasso:2.5.2'
     implementation 'com.github.bumptech.glide:glide:4.6.1'
+    implementation 'io.realm:android-adapters:2.1.1'
     implementation 'de.hdodenhof:circleimageview:2.2.0'
     implementation 'com.github.esafirm.android-image-picker:imagepicker:1.12.0'
     implementation('io.nlopez.smartlocation:library:3.3.2') {

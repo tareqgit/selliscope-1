@@ -53,6 +53,7 @@
     <string name="search_outlet">Search Outlet</string>
     <string name="permission_denied_explanation">permission denied</string>
     <string name="settings">Setting</string>
+    <string name="txtPromotionalAdsTitle">Promotional Ads</string>
     <string-array name="paymentType">
         <item>Cash</item>
         <item>Cheque</item>

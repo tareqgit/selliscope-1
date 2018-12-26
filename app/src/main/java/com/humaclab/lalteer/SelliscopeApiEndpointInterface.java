@@ -17,6 +17,7 @@ import com.humaclab.lalteer.model.OutletType.OutletTypeResponse;
 import com.humaclab.lalteer.model.Payment;
 import com.humaclab.lalteer.model.PaymentResponse;
 import com.humaclab.lalteer.model.Products.ProductResponse;
+import com.humaclab.lalteer.model.PromotionalAds.PromotionalAds;
 import com.humaclab.lalteer.model.PurchaseHistory.PurchaseHistoryResponse;
 import com.humaclab.lalteer.model.RoutePlan.RouteDetailsResponse;
 import com.humaclab.lalteer.model.RoutePlan.RouteResponse;
@@ -120,6 +121,9 @@ public interface SelliscopeApiEndpointInterface {
     //Outlet Wise Target
     @GET("target/dealer/{outlet_id}")
     Call<OutletTarget> getPutletTarget(@Path("outlet_id") int outletId);
+
+    @GET("banner")
+    Call<PromotionalAds> getPromotionalAds();
 
 
     @POST("dealers/create/")

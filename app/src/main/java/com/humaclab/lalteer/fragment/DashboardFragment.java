@@ -15,15 +15,18 @@ import com.humaclab.lalteer.R;
 import com.humaclab.lalteer.activity.DeliveryListActivity;
 import com.humaclab.lalteer.activity.InspectionActivity;
 import com.humaclab.lalteer.activity.OutletActivity;
-import com.humaclab.lalteer.activity.PaymentActivity;
 import com.humaclab.lalteer.activity.ProductListActivity;
+import com.humaclab.lalteer.activity.PromotionalAdsActivity;
 import com.humaclab.lalteer.activity.RouteActivity;
 import com.humaclab.lalteer.adapters.DashboardRecyclerViewAdapter;
 import com.humaclab.lalteer.model.DashboardItem;
+import com.humaclab.lalteer.utils.RealmHelper;
 import com.humaclab.lalteer.utils.RecyclerItemClickListener;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import io.realm.Realm;
 
 /**
  * Created by Nahid on 3/1/2017.
@@ -35,12 +38,20 @@ public class DashboardFragment extends Fragment {
     private DashboardRecyclerViewAdapter dashboardRecyclerViewAdapter;
     private int itemNumber = 2;
     private Activity activity;
+    private RealmHelper helper;
+    private Realm realm;
 
     @Override
     public View onCreateView(LayoutInflater inflater,
                              ViewGroup container,
                              Bundle savedInstanceState) {
         View dashboardView = inflater.inflate(R.layout.fragment_dashboard, container, false);
+
+
+        realm = Realm.getDefaultInstance();
+        helper = new RealmHelper(realm);
+
+
         RecyclerView recyclerView = dashboardView.findViewById(R.id.rv_dashboard);
         dashboadItems = new ArrayList<>();
         dashboadItems.add(new DashboardItem(getString(R.string.dashBoard_map), R.drawable.ic_map));
@@ -66,15 +77,28 @@ public class DashboardFragment extends Fragment {
                             public void onItemClick(View view, int position) {
                                 switch (position) {
                                     case 0: {
-                                        getActivity().startActivity(new Intent(getActivity(),
-                                                RouteActivity.class));
+
+                                        int access = helper.accessList("Map");
+                                        if (access == 1) {
+                                            getActivity().startActivity(new Intent(getActivity(),
+                                                    RouteActivity.class));
+                                        } else {
+                                            Toast.makeText(activity, "You Don't Have access", Toast.LENGTH_SHORT).show();
+                                        }
                                         /*Toast.makeText(getActivity(), "This feature is under development.",
                                                 Toast.LENGTH_SHORT).show();*/
                                         break;
                                     }
                                     case 1: {
-                                        getActivity().startActivity(new Intent(getActivity(),
-                                                OutletActivity.class));
+                                        int access = helper.accessList("Dealer");
+                                        if (access == 1) {
+                                            getActivity().startActivity(new Intent(getActivity(),
+                                                    OutletActivity.class));
+                                        } else {
+                                            Toast.makeText(activity, "You Don't Have access", Toast.LENGTH_SHORT).show();
+                                        }
+
+
                                         break;
                                     }
                                     /*case 2: {
@@ -88,8 +112,15 @@ public class DashboardFragment extends Fragment {
                                         break;
                                     }*/
                                     case 2: {
-                                        getActivity().startActivity(new Intent(getActivity(),
-                                                DeliveryListActivity.class));
+                                        int access = helper.accessList("Delivery");
+                                        if (access == 1) {
+                                            getActivity().startActivity(new Intent(getActivity(),
+                                                    DeliveryListActivity.class));
+                                        } else {
+                                            Toast.makeText(activity, "You Don't Have access", Toast.LENGTH_SHORT).show();
+                                        }
+
+
                                         break;
                                     }
 /*                                    case 3: {
@@ -98,20 +129,41 @@ public class DashboardFragment extends Fragment {
                                         break;
                                     }*/
                                     case 3: {
-                                        getActivity().startActivity(new Intent(getActivity(),
-                                                InspectionActivity.class));
+                                        int access = helper.accessList("Inspection");
+                                        if (access == 1) {
+                                            getActivity().startActivity(new Intent(getActivity(),
+                                                    InspectionActivity.class));
+                                        } else {
+                                            Toast.makeText(activity, "You Don't Have access", Toast.LENGTH_SHORT).show();
+                                        }
+
+
                                         break;
                                     }
                                     case 4: {
-                                        getActivity().startActivity(new Intent(getActivity(),ProductListActivity.class));
+                                        int access = helper.accessList("Map");
+                                        if (access == 1) {
+                                            getActivity().startActivity(new Intent(getActivity(), ProductListActivity.class));
+                                        } else {
+                                            Toast.makeText(activity, "You Don't Have access", Toast.LENGTH_SHORT).show();
+                                        }
+
+
                                         break;
                                     }
                                     case 5: {
-                                        Toast.makeText(getActivity(), "This feature is under development.",
-                                                Toast.LENGTH_SHORT).show();
+                                        int access = helper.accessList("Map");
+                                        if (access == 1) {
+                                            getActivity().startActivity(new Intent(getActivity(), PromotionalAdsActivity.class));
+                                        } else {
+                                            Toast.makeText(activity, "You Don't Have access", Toast.LENGTH_SHORT).show();
+                                        }
+
                                         break;
                                     }
                                     default: {
+
+
                                         Toast.makeText(getActivity(), "Please upgrade your package" +
                                                         " to use this feature",
                                                 Toast.LENGTH_SHORT).show();

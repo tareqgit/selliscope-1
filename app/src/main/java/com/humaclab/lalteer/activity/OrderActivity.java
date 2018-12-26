@@ -65,7 +65,7 @@ public class OrderActivity extends AppCompatActivity implements OnSelectProduct 
         databaseHandler = new DatabaseHandler(this);
         sessionManager = new SessionManager(OrderActivity.this);
 
-        binding.rvProduct.setLayoutManager(new GridLayoutManager(context, 3));
+        binding.rvProduct.setLayoutManager(new GridLayoutManager(context, 2));
 
         getCategory();
         getBrand();
@@ -173,11 +173,12 @@ public class OrderActivity extends AppCompatActivity implements OnSelectProduct 
         Double totalDiscount = 0.00;
         for (SelectedProductHelper selectedProductHelper : selectedProductList) {
             totalAmt += Double.valueOf(selectedProductHelper.getTotalPrice());
-            totalDiscount += Double.valueOf(selectedProductHelper.getTotalPrice());
+            //totalDiscount += Double.valueOf(selectedProductHelper.getTotalPrice());
         }
         binding.tvTotalAmt.setText(String.format("%.2f", totalAmt));
 
-        binding.tvTotalGr.setText(String.format("%.2f", (totalAmt - totalDiscount)));
+        //binding.tvTotalGr.setText(String.format("%.2f", (totalAmt - totalDiscount)));
+        binding.tvTotalGr.setText(String.format("%.2f", (totalAmt)));
     }
 
     @Override

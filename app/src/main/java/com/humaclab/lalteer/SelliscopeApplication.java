@@ -12,6 +12,8 @@ import com.humaclab.lalteer.utils.HttpAuthInterceptor;
 import java.util.concurrent.TimeUnit;
 
 import io.fabric.sdk.android.Fabric;
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -62,5 +64,9 @@ public class SelliscopeApplication extends Application {
         }
         Stetho.initializeWithDefaults(this);
         Fabric.with(this, new Crashlytics());
+        Realm.init(this);
+        RealmConfiguration config = new RealmConfiguration.Builder().name("lalteer.realm").build();
+
+        Realm.setDefaultConfiguration(config);
     }
 }

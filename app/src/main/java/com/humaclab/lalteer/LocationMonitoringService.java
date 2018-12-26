@@ -75,8 +75,8 @@ public class LocationMonitoringService extends Service implements
         sessionManager = new SessionManager(this);
 
 
-        mLocationRequest.setInterval(240 * 1000);
-        mLocationRequest.setFastestInterval(120 * 1000);
+        mLocationRequest.setInterval(900 * 1000);
+        mLocationRequest.setFastestInterval(900 * 1000);
 
         int priority = LocationRequest.PRIORITY_HIGH_ACCURACY; //by default
         //PRIORITY_BALANCED_POWER_ACCURACY, PRIORITY_LOW_POWER, PRIORITY_NO_POWER are the other priority modes

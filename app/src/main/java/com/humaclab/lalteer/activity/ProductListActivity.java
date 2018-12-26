@@ -67,7 +67,7 @@ public class ProductListActivity extends AppCompatActivity  {
         databaseHandler = new DatabaseHandler(this);
         sessionManager = new SessionManager(ProductListActivity.this);
 
-        binding.rvProduct.setLayoutManager(new GridLayoutManager(context, 3));
+        binding.rvProduct.setLayoutManager(new GridLayoutManager(context, 2));
 
         getCategory();
         getBrand();

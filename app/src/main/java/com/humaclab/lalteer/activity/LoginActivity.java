@@ -24,6 +24,7 @@ import com.humaclab.lalteer.BuildConfig;
 import com.humaclab.lalteer.R;
 import com.humaclab.lalteer.SelliscopeApiEndpointInterface;
 import com.humaclab.lalteer.SelliscopeApplication;
+import com.humaclab.lalteer.model.Dashboard.Access;
 import com.humaclab.lalteer.model.IMEIandVerison;
 import com.humaclab.lalteer.model.Login;
 import com.humaclab.lalteer.utils.AccessPermission;
@@ -33,6 +34,7 @@ import com.humaclab.lalteer.utils.SessionManager;
 import java.io.IOException;
 import java.util.Locale;
 
+import io.realm.Realm;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -49,7 +51,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private RadioGroup rg_language;
     private RadioButton rbEnglish, rbBangla;
     final String KEY_SAVED_RADIO_BUTTON_INDEX = "SAVED_RADIO_BUTTON_INDEX";
-
+    private Realm realm;
+    private Login.Successful.LoginResult loginResult;
     public final static boolean isValidEmail(CharSequence target) {
         if (target == null) {
             return false;
@@ -63,6 +66,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         LoadLocale();
         setContentView(R.layout.activity_login);
+
+        realm = Realm.getDefaultInstance();
 
         rg_language = findViewById(R.id.rg_language);
         rg_language.check(R.id.rbEnglish);
@@ -163,10 +168,19 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 Gson gson = new Gson();
                 if (response.code() == 200) {
                     try {
+
+                        loginResult = new Login.Successful().result;
+
                         Login.Successful loginSuccessful = gson.fromJson(response.body().string()
                                 , Login.Successful.class);
                         Timber.d("Login Successful");
 
+                        loginResult = loginSuccessful.result;
+
+                        realm.beginTransaction();
+                        realm.copyToRealmOrUpdate(loginSuccessful.result.access);
+                        realm.commitTransaction();
+                        realm.close();
                         sessionManager.createLoginSession(
                                 loginSuccessful.result.user.name,
                                 loginSuccessful.result.clientId,

@@ -1,6 +1,9 @@
 package com.humaclab.lalteer.model;
 
 import com.google.gson.annotations.SerializedName;
+import com.humaclab.lalteer.model.Dashboard.Access;
+
+import java.util.List;
 
 /**
  * Updated by Leon on 9/3/2017.
@@ -26,6 +29,10 @@ public class Login {
 
             @SerializedName("theme")
             public Theme theme;
+
+            @SerializedName("access")
+            public List<Access> access ;
+
         }
 
         public class User {

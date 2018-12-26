@@ -24,7 +24,7 @@ public class Product {
     @SerializedName("name")
     private String mName;
     @SerializedName("price")
-    private Long mPrice;
+    private Double mPrice;
     @SerializedName("slug")
     private String mSlug;
     @SerializedName("status")
@@ -96,11 +96,11 @@ public class Product {
         mName = name;
     }
 
-    public Long getPrice() {
+    public Double getPrice() {
         return mPrice;
     }
 
-    public void setPrice(Long price) {
+    public void setPrice(Double price) {
         mPrice = price;
     }
 

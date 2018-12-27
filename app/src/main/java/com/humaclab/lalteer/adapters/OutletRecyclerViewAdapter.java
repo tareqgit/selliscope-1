@@ -98,7 +98,7 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
             holder.lo_routeplan_background2.setBackgroundColor(Color.parseColor("#ff7043"));
 
         }
-        holder.checkInButton.setOnClickListener(new View.OnClickListener() {
+        /*holder.checkInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 holder.pbCheckIn.setVisibility(View.VISIBLE);
@@ -124,7 +124,7 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
                     }
                 });
             }
-        });
+        });*/
         holder.mapButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -246,7 +246,7 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
             tvOutletAddress = itemView.findViewById(R.id.tv_outlet_address);
             tvOutletContactNumber = itemView.findViewById(R.id.tv_outlet_contact_number);
             tvOutletOwnerName = itemView.findViewById(R.id.tv_owner_name);
-            checkInButton = itemView.findViewById(R.id.btn_check_in);
+            //checkInButton = itemView.findViewById(R.id.btn_check_in);
             mapButton = itemView.findViewById(R.id.btn_map);
             historyButton = itemView.findViewById(R.id.btn_history);
             pbCheckIn = itemView.findViewById(R.id.pb_check_in);

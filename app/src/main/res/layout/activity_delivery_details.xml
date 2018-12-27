@@ -6,14 +6,14 @@
 
         <variable
             name="deliveryDetails"
-            type="com.humaclab.lalteer.model.DeliveryResponse.DeliveryList"/>
+            type="com.humaclab.lalteerdeaker.model.DeliveryResponse.DeliveryList"/>
     </data>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        tools:context="com.humaclab.lalteer.activity.DeliveryDetailsActivity">
+        tools:context="com.humaclab.lalteerdeaker.activity.DeliveryDetailsActivity">
 
         <include
             android:id="@+id/include"

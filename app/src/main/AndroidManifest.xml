@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.humaclab.lalteer">
+    package="com.humaclab.lalteerdeaker">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA" />
@@ -24,7 +24,7 @@
         android:required="true" />
 
     <application
-        android:name=".SelliscopeApplication"
+        android:name="com.humaclab.lalteerdeaker.SelliscopeApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -57,18 +57,18 @@
             android:value="c2bca7824e6a758388318ecf6635fd2e8e11979a" />
 
         <!-- Services and Receivers -->
-        <service android:name=".service.FcmInstanceIdServices">
+        <service android:name="com.humaclab.lalteerdeaker.service.FcmInstanceIdServices">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
-        <service android:name=".service.FcmGetNotificationService">
+        <service android:name="com.humaclab.lalteerdeaker.service.FcmGetNotificationService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
         <service
-            android:name=".service.SendLocationDataService"
+            android:name="com.humaclab.lalteerdeaker.service.SendLocationDataService"
             android:exported="false"
             android:permission="android.permission.RECEIVE_BOOT_COMPLETED"
             android:process=":selliscope_process">
@@ -80,7 +80,7 @@
         </service>
 
         <receiver
-            android:name=".receiver.InternetConnectivityChangeReceiver"
+            android:name="com.humaclab.lalteerdeaker.receiver.InternetConnectivityChangeReceiver"
             android:enabled="true">
             <intent-filter>
                 <action
@@ -91,7 +91,7 @@
         <!-- Services and Receivers -->
 
         <activity
-            android:name=".activity.SplashScreenActivity"
+            android:name="com.humaclab.lalteerdeaker.activity.SplashScreenActivity"
             android:theme="@style/SplashScreenTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -99,49 +99,49 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.LoginActivity" />
+        <activity android:name="com.humaclab.lalteerdeaker.activity.LoginActivity" />
         <activity
-            android:name=".activity.HomeActivity"
+            android:name="com.humaclab.lalteerdeaker.activity.HomeActivity"
             android:configChanges="orientation|screenSize" />
-        <activity android:name=".activity.RouteActivity" />
-        <activity android:name=".activity.OutletActivity" />
-        <activity android:name=".activity.AddOutletActivity" />
-        <activity android:name=".activity.OutletDetailsActivity" />
-        <activity android:name=".activity.PrivacyPolicyActivity" />
-        <activity android:name=".activity.ProductActivity" />
+        <activity android:name="com.humaclab.lalteerdeaker.activity.RouteActivity" />
+        <activity android:name="com.humaclab.lalteerdeaker.activity.OutletActivity" />
+        <activity android:name="com.humaclab.lalteerdeaker.activity.AddOutletActivity" />
+        <activity android:name="com.humaclab.lalteerdeaker.activity.OutletDetailsActivity" />
+        <activity android:name="com.humaclab.lalteerdeaker.activity.PrivacyPolicyActivity" />
+        <activity android:name="com.humaclab.lalteerdeaker.activity.ProductActivity" />
         <activity
-            android:name=".activity.OrderActivity"
+            android:name="com.humaclab.lalteerdeaker.activity.OrderActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:label="Order" />
         <activity
-            android:name=".activity.ActivityCart"
+            android:name="com.humaclab.lalteerdeaker.activity.ActivityCart"
             android:configChanges="orientation|screenSize|keyboardHidden" />
-        <activity android:name=".activity.DeliveryListActivity" />
+        <activity android:name="com.humaclab.lalteerdeaker.activity.DeliveryListActivity" />
         <activity
-            android:name=".activity.DeliveryDetailsActivity"
+            android:name="com.humaclab.lalteerdeaker.activity.DeliveryDetailsActivity"
             android:screenOrientation="landscape" />
-        <activity android:name=".activity.PaymentActivity" />
-        <activity android:name=".activity.DueActivity" />
-        <activity android:name=".activity.EditOutletActivity" />
-        <activity android:name=".activity.CallCardActivity" />
-        <activity android:name=".activity.InspectionActivity" />
-        <activity android:name=".activity.SalesReturnActivity" />
-        <activity android:name=".activity.LocationFromMapActivity" />
+        <activity android:name="com.humaclab.lalteerdeaker.activity.PaymentActivity" />
+        <activity android:name="com.humaclab.lalteerdeaker.activity.DueActivity" />
+        <activity android:name="com.humaclab.lalteerdeaker.activity.EditOutletActivity" />
+        <activity android:name="com.humaclab.lalteerdeaker.activity.CallCardActivity" />
+        <activity android:name="com.humaclab.lalteerdeaker.activity.InspectionActivity" />
+        <activity android:name="com.humaclab.lalteerdeaker.activity.SalesReturnActivity" />
+        <activity android:name="com.humaclab.lalteerdeaker.activity.LocationFromMapActivity" />
         <activity
-            android:name=".activity.SalesReturnDetailsActivity"
+            android:name="com.humaclab.lalteerdeaker.activity.SalesReturnDetailsActivity"
             android:screenOrientation="landscape" />
-        <activity android:name=".activity.PurchaseHistoryActivity" />
-        <activity android:name=".activity.ChangePasswordActivity" />
-        <activity android:name=".activity.PurchasedProductListActivity" />
-        <activity android:name=".activity.SettingsActivity" />
-        <activity android:name=".activity.ProfileActivity" />
-        <activity android:name=".activity.ProductListActivity" />
+        <activity android:name="com.humaclab.lalteerdeaker.activity.PurchaseHistoryActivity" />
+        <activity android:name="com.humaclab.lalteerdeaker.activity.ChangePasswordActivity" />
+        <activity android:name="com.humaclab.lalteerdeaker.activity.PurchasedProductListActivity" />
+        <activity android:name="com.humaclab.lalteerdeaker.activity.SettingsActivity" />
+        <activity android:name="com.humaclab.lalteerdeaker.activity.ProfileActivity" />
+        <activity android:name="com.humaclab.lalteerdeaker.activity.ProductListActivity" />
 
         <service
-            android:name=".LocationMonitoringService"
+            android:name="com.humaclab.lalteerdeaker.LocationMonitoringService"
             android:enabled="true" />
 
-        <activity android:name=".activity.PromotionalAdsActivity"></activity>
+        <activity android:name="com.humaclab.lalteerdeaker.activity.PromotionalAdsActivity"></activity>
     </application>
 
 </manifest>

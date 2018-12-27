@@ -5,7 +5,7 @@
 
         <variable
             name="product"
-            type="com.humaclab.lalteer.model.DeliveryResponse.Product"/>
+            type="com.humaclab.lalteerdeaker.model.DeliveryResponse.Product"/>
     </data>
 
     <LinearLayout

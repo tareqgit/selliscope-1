@@ -5,7 +5,7 @@
 
         <variable
             name="selectedProduct"
-            type="com.humaclab.lalteer.helper.SelectedProductHelper" />
+            type="com.humaclab.lalteerdeaker.helper.SelectedProductHelper" />
     </data>
     <LinearLayout
         android:background="@drawable/cart_button_shape"

@@ -21,12 +21,12 @@
         app:tabSelectedTextColor="@color/white"
         app:tabTextColor="#b3ffffff">
 
-        <android.support.design.widget.TabItem
+<!--       <android.support.design.widget.TabItem
             android:id="@+id/tab_item_target"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/target"
-            android:fontFamily="@font/latobold"/>
+            android:fontFamily="@font/latobold"/>-->
 
         <android.support.design.widget.TabItem
             android:id="@+id/tab_item_dashboard"

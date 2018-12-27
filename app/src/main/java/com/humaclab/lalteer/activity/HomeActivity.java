@@ -111,7 +111,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         setSupportActionBar(toolbar);
 
         fragmentManager = getSupportFragmentManager();
-        getFragment(TargetFragment.class);
+        getFragment(DashboardFragment.class);
         TabLayout tabLayout = findViewById(R.id.sliding_tabs);
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -119,13 +119,13 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 int position = tab.getPosition();
                 switch (position) {
                     case 0: {
-                        getFragment(TargetFragment.class);
-                        break;
-                    }
-                    case 1: {
                         getFragment(DashboardFragment.class);
                         break;
                     }
+                    /*case 1: {
+                        getFragment(TargetFragment.class);
+                        break;
+                    }*/
                 }
             }
 
@@ -166,7 +166,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         tv_selliscope_version.setText("Version - " + BuildConfig.VERSION_NAME);
 
         //For getting diameter
-        setDiameter();
+        //setDiameter();
 
         //loading Data into background
         schedulerForMinute = Executors.newSingleThreadScheduledExecutor();
@@ -215,7 +215,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
-    private void setDiameter() {
+/*    private void setDiameter() {
         Call<DiameterResponse> call = apiService.getDiameter();
         call.enqueue(new Callback<DiameterResponse>() {
             @Override
@@ -230,7 +230,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
             }
         });
-    }
+    }*/
 
     private void getFragment(Class createFragment) {
         try {
@@ -374,7 +374,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         super.onResume();
         LoadappsVertion();
         welcome();
-        startStep1();
+        //startStep1();
     }
 
     public void setLocale(String lang) {

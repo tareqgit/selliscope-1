@@ -55,7 +55,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:fontFamily="@font/latoregular"
-                android:hint="Outlet Name"
+                android:hint="@string/dealer_name"
                 android:inputType="text"/>
 
         </LinearLayout>
@@ -83,7 +83,7 @@
                 android:fontFamily="@font/latoregular"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="0dp"
-                android:hint="Owner Name"/>
+                android:hint="@string/owner_name"/>
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
@@ -107,7 +107,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:fontFamily="@font/latoregular"
-                android:hint="Contact Number"
+                android:hint="@string/contact_number"
                 android:inputType="phone"/>
         </LinearLayout>
         <LinearLayout
@@ -132,7 +132,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:fontFamily="@font/latoregular"
-                android:hint="Credit"
+                android:hint="@string/credit"
                 android:inputType="phone"/>
         </LinearLayout>
 <!--        <LinearLayout
@@ -182,7 +182,7 @@
                 android:fontFamily="@font/latoregular"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:hint="Outlet Address"
+                android:hint="@string/dealer_address"
                 android:inputType="text"/>
 
             <Button
@@ -207,7 +207,7 @@
                 android:fontFamily="@font/latobold"
                 android:background="@drawable/border"
                 android:padding="4dp"
-                android:text="Outlet Type:"
+                android:text="@string/dealer_type"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textColor="#000000"
                 android:textStyle="bold" />
@@ -234,7 +234,7 @@
                 android:layout_weight=".70"
                 android:background="@drawable/border"
                 android:padding="4dp"
-                android:text="District:"
+                android:text="@string/district"
                 android:fontFamily="@font/latobold"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textColor="#000000"
@@ -261,7 +261,7 @@
                 android:layout_weight=".70"
                 android:background="@drawable/border"
                 android:padding="4dp"
-                android:text="Thana:"
+                android:text="@string/thana"
                 android:fontFamily="@font/latobold"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textColor="#000000"
@@ -289,7 +289,7 @@
                 android:layout_height="wrap_content"
                 android:elevation="5dp"
                 android:fontFamily="@font/latobold"
-                android:text="Cancel "
+                android:text="@string/cancel"
                 android:drawableRight="@drawable/ic_if_circle_cross"
                 android:textAllCaps="false"
                 android:textSize="18sp"
@@ -302,7 +302,7 @@
                 android:layout_height="wrap_content"
                 android:elevation="5dp"
                 android:fontFamily="@font/latobold"
-                android:text="Add "
+                android:text="@string/add"
                 android:drawableRight="@drawable/ic_if_circle_check"
                 android:textAllCaps="false"
                 android:textSize="18sp"

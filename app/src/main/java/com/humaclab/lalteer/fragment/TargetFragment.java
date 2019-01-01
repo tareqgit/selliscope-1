@@ -73,7 +73,7 @@ public class TargetFragment extends Fragment {
             //return(TargetFragment.getTitle(ctxt, position));
             switch (position) {
                 case 0:
-                    return "Target Plan";
+                    return getString(R.string.myPerformance);
 //                case 1:
 //                    return "Weekly";
 //                case 2:

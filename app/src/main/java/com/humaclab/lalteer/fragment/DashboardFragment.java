@@ -83,7 +83,7 @@ public class DashboardFragment extends Fragment {
                                             getActivity().startActivity(new Intent(getActivity(),
                                                     RouteActivity.class));
                                         } else {
-                                            Toast.makeText(activity, "You Don't Have access", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(getActivity(), "You Don't Have access", Toast.LENGTH_SHORT).show();
                                         }
                                         /*Toast.makeText(getActivity(), "This feature is under development.",
                                                 Toast.LENGTH_SHORT).show();*/
@@ -95,7 +95,7 @@ public class DashboardFragment extends Fragment {
                                             getActivity().startActivity(new Intent(getActivity(),
                                                     OutletActivity.class));
                                         } else {
-                                            Toast.makeText(activity, "You Don't Have access", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(getActivity(), "You Don't Have access", Toast.LENGTH_SHORT).show();
                                         }
 
 
@@ -117,7 +117,7 @@ public class DashboardFragment extends Fragment {
                                             getActivity().startActivity(new Intent(getActivity(),
                                                     DeliveryListActivity.class));
                                         } else {
-                                            Toast.makeText(activity, "You Don't Have access", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(getActivity(), "You Don't Have access", Toast.LENGTH_SHORT).show();
                                         }
 
 
@@ -134,7 +134,7 @@ public class DashboardFragment extends Fragment {
                                             getActivity().startActivity(new Intent(getActivity(),
                                                     InspectionActivity.class));
                                         } else {
-                                            Toast.makeText(activity, "You Don't Have access", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(getActivity(), "You Don't Have access", Toast.LENGTH_SHORT).show();
                                         }
 
 
@@ -145,7 +145,7 @@ public class DashboardFragment extends Fragment {
                                         if (access == 1) {
                                             getActivity().startActivity(new Intent(getActivity(), ProductListActivity.class));
                                         } else {
-                                            Toast.makeText(activity, "You Don't Have access", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(getActivity(), "You Don't Have access", Toast.LENGTH_SHORT).show();
                                         }
 
 
@@ -156,7 +156,7 @@ public class DashboardFragment extends Fragment {
                                         if (access == 1) {
                                             getActivity().startActivity(new Intent(getActivity(), PromotionalAdsActivity.class));
                                         } else {
-                                            Toast.makeText(activity, "You Don't Have access", Toast.LENGTH_SHORT).show();
+                                            Toast.makeText(getActivity(), "You Don't Have access", Toast.LENGTH_SHORT).show();
                                         }
 
                                         break;

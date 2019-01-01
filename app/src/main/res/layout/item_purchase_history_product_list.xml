@@ -31,7 +31,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:padding="10dp"
-                    android:text="Product Name:"
+                    android:text="@string/product_name"
                     android:fontFamily="@font/latobold"
                     android:textColor="#000"
                     android:textStyle="bold" />
@@ -59,7 +59,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:padding="10dp"
-                    android:text="Quantity:"
+                    android:text="@string/quantity"
                     android:fontFamily="@font/latobold"
                     android:textColor="#000" />
 
@@ -79,7 +79,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:padding="10dp"
-                    android:text="Rate:"
+                    android:text="@string/rate"
                     android:fontFamily="@font/latobold"
                     android:textColor="#000" />
 
@@ -104,7 +104,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="10dp"
-                    android:text="Discount:"
+                    android:text="@string/discount"
                     android:fontFamily="@font/latobold"
                     android:textColor="#000" />
 
@@ -122,7 +122,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="10dp"
-                    android:text="Price:"
+                    android:text="@string/price"
                     android:fontFamily="@font/latobold"
                     android:textColor="#000" />
 

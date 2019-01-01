@@ -43,7 +43,7 @@ public class PaymentActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("");
         TextView toolbarTitle = (TextView) findViewById(R.id.tv_toolbar_title);
-        toolbarTitle.setText("Payment");
+        toolbarTitle.setText(getString(R.string.payment));
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 

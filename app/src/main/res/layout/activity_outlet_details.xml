@@ -36,7 +36,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:fontFamily="@font/latobold"
-                        android:hint="Outlet Name"
+                        android:hint="Dealer Name"
                         android:layout_weight="3"
                         android:padding="10dp"
                         android:text="@{outletDetails.outletName}"
@@ -52,7 +52,7 @@
                         android:layout_gravity="end"
                         android:background="@drawable/button_shape"
                         android:padding="4dp"
-                        android:text="Edit"
+                        android:text="@string/edit"
                         android:drawableStart="@drawable/ic_if_edit"
                         android:fontFamily="@font/latoregular"
                         android:textAllCaps="false"
@@ -81,7 +81,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Target Details"
+                    android:text="@string/target_details"
                     android:background="@color/colorPrimary"
                     android:layout_gravity="center"
                     android:textColor="#fff"
@@ -231,7 +231,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Outlet Details"
+                    android:text="@string/dealer_details"
                     android:background="@color/colorPrimary"
                     android:layout_gravity="center"
                     android:textColor="#fff"
@@ -248,7 +248,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:padding="2dp"
-                        android:text="Owner Name" />
+                        android:text="@string/owner_name" />
 
                     <TextView
                         android:layout_width="match_parent"
@@ -270,7 +270,7 @@
                         android:layout_weight="1"
                         android:padding="2dp"
                         android:fontFamily="@font/latoregular"
-                        android:text="Contact No." />
+                        android:text="@string/contact_number" />
 
                     <TextView
                         android:layout_width="match_parent"
@@ -292,7 +292,7 @@
                         android:layout_weight="1"
                         android:padding="2dp"
                         android:fontFamily="@font/latoregular"
-                        android:text="Address" />
+                        android:text="@string/dealer_address" />
 
                     <TextView
                         android:layout_width="match_parent"
@@ -314,7 +314,7 @@
                         android:layout_weight="1"
                         android:padding="2dp"
                         android:fontFamily="@font/latoregular"
-                        android:text="Outlet Type" />
+                        android:text="@string/dealer_type" />
 
                     <TextView
                         android:layout_width="match_parent"

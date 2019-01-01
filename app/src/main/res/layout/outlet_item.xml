@@ -141,7 +141,7 @@
                     android:layout_width="82dp"
                     android:layout_height="35dp"
                     android:background="@drawable/button_shape"
-                    android:text="Check In"
+                    android:text="@string/check_in"
                     android:fontFamily="@font/latobold"
                     android:textColor="@color/white" />
 
@@ -154,7 +154,7 @@
                     android:layout_alignParentTop="true"
                     android:layout_gravity="right"
                     android:background="@drawable/button_shape"
-                    android:text="History"
+                    android:text="@string/history"
                     android:fontFamily="@font/latobold"
                     android:textColor="@color/white" />
 
@@ -167,7 +167,7 @@
                     android:layout_centerHorizontal="true"
                     android:layout_gravity="right"
                     android:background="@drawable/button_shape"
-                    android:text="Map"
+                    android:text="@string/map"
                     android:fontFamily="@font/latobold"
                     android:textColor="@color/white"
                     android:visibility="visible" />

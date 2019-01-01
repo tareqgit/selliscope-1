@@ -60,7 +60,7 @@ public class ProductListActivity extends AppCompatActivity  {
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("");
         TextView toolbarTitle = findViewById(R.id.tv_toolbar_title);
-        toolbarTitle.setText("Product List");
+        toolbarTitle.setText(getString(R.string.product_list));
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -108,7 +108,7 @@ public class ProductListActivity extends AppCompatActivity  {
     private void getCategory() {
         List<Category> categories = databaseHandler.getCategory();
         categoryName.clear();
-        categoryName.add("Select Category");
+        categoryName.add(getString(R.string.select_category));
         categoryID.add(0);
         for (Category result : categories) {
             categoryName.add(result.getName());
@@ -133,7 +133,7 @@ public class ProductListActivity extends AppCompatActivity  {
     private void getBrand() {
         List<Brand> brands = databaseHandler.getBrand();
         brandName.clear();
-        brandName.add("Select Brand");
+        brandName.add(getString(R.string.select_brand));
         brandID.add(0);
         for (Brand result : brands) {
             brandName.add(result.getName());

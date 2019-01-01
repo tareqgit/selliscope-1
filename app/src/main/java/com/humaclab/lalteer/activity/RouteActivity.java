@@ -76,7 +76,7 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("");
         TextView toolbarTitle = findViewById(R.id.tv_toolbar_title);
-        toolbarTitle.setText(getResources().getString(R.string.route));
+        toolbarTitle.setText(getResources().getString(R.string.dashBoard_map));
         setSupportActionBar(toolbar);
         googleApiClient = new GoogleApiClient.Builder(RouteActivity.this)
                 .addApi(Awareness.API)

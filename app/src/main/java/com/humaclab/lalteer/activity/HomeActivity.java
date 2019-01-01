@@ -722,16 +722,16 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         int timeOfDay = c.get(Calendar.HOUR_OF_DAY);
 
         if (timeOfDay >= 0 && timeOfDay < 12) {
-            welcome("Good Morning");
+            welcome(getString(R.string.GoodMorning));
 
         } else if (timeOfDay >= 12 && timeOfDay < 16) {
-            welcome("Good Afternoon");
+            welcome(getString(R.string.GoodAfternoon));
 
         } else if (timeOfDay >= 16 && timeOfDay < 21) {
-            welcome("Good Evening");
+            welcome(getString(R.string.GoodEvening));
 
         } else if (timeOfDay >= 21 && timeOfDay < 24) {
-            welcome("Good Night");
+            welcome(getString(R.string.GoodNight));
 
         }
     }

@@ -44,7 +44,7 @@
                 android:layout_margin="10dp"
                 android:drawableRight="@drawable/search"
                 android:gravity="center"
-                android:hint="Search Product"
+                android:hint="@string/search_product"
                 android:fontFamily="@font/latoregular"
                 android:imeOptions="actionSearch"
                 android:inputType="text"

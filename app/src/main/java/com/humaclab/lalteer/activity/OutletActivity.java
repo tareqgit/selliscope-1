@@ -113,7 +113,7 @@ public class OutletActivity extends AppCompatActivity {
             outletRecyclerViewAdapter = new OutletRecyclerViewAdapter(OutletActivity.this, OutletActivity.this, outletsResult);
             binding.rvOutlet.setAdapter(outletRecyclerViewAdapter);
         } else {
-            Toast.makeText(getApplicationContext(), "You don't have any outlet in your list.", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "You don't have any Dealer in your list.", Toast.LENGTH_LONG).show();
         }
     }
 

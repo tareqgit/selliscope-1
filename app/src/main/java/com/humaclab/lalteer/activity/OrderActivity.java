@@ -106,7 +106,7 @@ public class OrderActivity extends AppCompatActivity implements OnSelectProduct 
     private void getCategory() {
         List<Category> categories = databaseHandler.getCategory();
         categoryName.clear();
-        categoryName.add("Select Category");
+        categoryName.add(getString(R.string.select_category));
         categoryID.add(0);
         for (Category result : categories) {
             categoryName.add(result.getName());
@@ -131,7 +131,7 @@ public class OrderActivity extends AppCompatActivity implements OnSelectProduct 
     private void getBrand() {
         List<Brand> brands = databaseHandler.getBrand();
         brandName.clear();
-        brandName.add("Select Brand");
+        brandName.add(getString(R.string.select_brand));
         brandID.add(0);
         for (Brand result : brands) {
             brandName.add(result.getName());

@@ -112,7 +112,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         forgotPassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(LoginActivity.this, "Please contact to your admin.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(LoginActivity.this, getString(R.string.contactAdmin), Toast.LENGTH_SHORT).show();
             }
         });
         email = findViewById(R.id.et_email);
@@ -125,7 +125,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 boolean isValidEmail = true;
                 boolean isValidPassword = true;
                 if (email.getText().toString().trim().isEmpty()) {
-                    email.setError("Email is required!");
+                    email.setError(getString(R.string.emailRequired));
                     isValidEmail = false;
                 }
                 /*else if (!isValidEmail(email.getText().toString().trim())) {
@@ -136,7 +136,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     isValidEmail = true;
                 }
                 if (password.getText().toString().trim().isEmpty()) {
-                    password.setError("Password is required!");
+                    password.setError(getString(R.string.passwordRequire));
                     isValidPassword = false;
                 } else {
                     isValidPassword = true;
@@ -192,8 +192,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                 password
                         );
                         loginProgresssBar.setVisibility(View.INVISIBLE);
-                        startActivity(new Intent(LoginActivity.this, HomeActivity.class));
+
                         sendIMEIAndVersion();
+                        startActivity(new Intent(LoginActivity.this, HomeActivity.class));
+                        finish();
 
                     } catch (IOException e) {
                         e.printStackTrace();

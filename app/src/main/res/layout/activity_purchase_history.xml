@@ -50,7 +50,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:padding="5dp"
-                            android:text="Total Paid:"
+                            android:text="@string/total_paid"
                             android:fontFamily="@font/latobold"
                             android:textStyle="bold" />
 
@@ -74,7 +74,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:padding="5dp"
-                            android:text="Total Due:"
+                            android:text="@string/total_due"
                             android:fontFamily="@font/latobold"
                             android:textStyle="bold" />
 
@@ -101,7 +101,7 @@
                         android:layout_width="82dp"
                         android:layout_height="35dp"
                         android:background="@drawable/button_shape"
-                        android:text="Payment"
+                        android:text="@string/payment"
                         android:fontFamily="@font/latobold"
                         android:textColor="@color/white" />
 
@@ -114,7 +114,7 @@
                         android:layout_alignParentTop="true"
                         android:layout_gravity="right"
                         android:background="@drawable/button_shape"
-                        android:text="Order"
+                        android:text="@string/order"
                         android:fontFamily="@font/latobold"
                         android:textColor="@color/white"
                         android:visibility="visible" />

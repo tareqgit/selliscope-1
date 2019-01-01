@@ -125,7 +125,7 @@ public class ActivityCart extends AppCompatActivity implements OnSelectProduct {
     }
 
     private void orderNow() {
-        pd.setMessage("Creating order....");
+        pd.setMessage(getString(R.string.creatingOrder));
         pd.setCancelable(false);
         pd.show();
 

@@ -107,7 +107,7 @@ public class AddOutletActivity extends AppCompatActivity {
         pd = new ProgressDialog(this);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle("Add Outlet");
+        toolbar.setTitle(R.string.add_dealer);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         outletName = findViewById(R.id.et_outlet_name);
@@ -223,15 +223,15 @@ public class AddOutletActivity extends AppCompatActivity {
                                             Integer.parseInt(creditLimit.getText().toString().trim())
                                     );
                                 } else {
-                                    Toast.makeText(AddOutletActivity.this, "Please select a thana first", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(AddOutletActivity.this, getString(R.string.Please_select_a_thana), Toast.LENGTH_SHORT).show();
                                 }
                             } else {
-                                Toast.makeText(AddOutletActivity.this, "Outlet location is not within your 100 meter radius.", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(AddOutletActivity.this, getString(R.string.Dealer_location_is), Toast.LENGTH_SHORT).show();
                             }
                         } else
-                            Toast.makeText(AddOutletActivity.this, "Connect to Wifi or Mobile Data", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(AddOutletActivity.this, getString(R.string.connect), Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(AddOutletActivity.this, "Could not found any location yet.\nPlease try again.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AddOutletActivity.this, getString(R.string.Could_not_found), Toast.LENGTH_SHORT).show();
                     }
                 }
             }
@@ -271,7 +271,7 @@ public class AddOutletActivity extends AppCompatActivity {
     private void addOutlet(int outletTypeId, String outletName,
                            String ownerName, String address, int thanaId, String phone,
                            double latitude, double longitude, int creditLimit) {
-        pd.setMessage("Creating outlet......");
+        pd.setMessage(getString(R.string.creating_Dealer));
         pd.setCancelable(false);
         pd.show();
 
@@ -286,7 +286,7 @@ public class AddOutletActivity extends AppCompatActivity {
                 System.out.println("Response code: " + response.code());
                 pd.dismiss();
                 if (response.code() == 200) {
-                    Toast.makeText(AddOutletActivity.this, "Outlet created successfully", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddOutletActivity.this, getString(R.string.dealer_created_msg), Toast.LENGTH_SHORT).show();
                     LoadLocalIntoBackground loadLocalIntoBackground = new LoadLocalIntoBackground(AddOutletActivity.this);
                     loadLocalIntoBackground.loadOutlet(true);
                     try {

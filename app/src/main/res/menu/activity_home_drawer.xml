@@ -7,34 +7,34 @@
         <item
             android:id="@+id/nav_profile"
             android:icon="@drawable/ic_menu_profile"
-            android:title="Profile" />
+            android:title="@string/profile" />
         <item
             android:id="@+id/nav_logout"
             android:icon="@drawable/ic_menu_logout"
-            android:title="Logout" />
+            android:title="@string/logout" />
         <item
             android:id="@+id/nav_settings"
             android:icon="@drawable/ic_menu_settings"
-            android:title="Settings" />
+            android:title="@string/settings" />
         <item
             android:id="@+id/nav_update_data"
             android:checkable="false"
             android:icon="@drawable/refresh"
-            android:title="Update Data" />
+            android:title="@string/update_data" />
 
         <item
             android:id="@+id/nav_contact"
             android:checkable="false"
             android:icon="@android:drawable/ic_menu_call"
-            android:title="Contact US" />
+            android:title="@string/contact_us" />
 
     </group>
     <group android:id="@+id/gp_nav_information">
         <item
             android:id="@+id/nav_privacy_policy"
-            android:title="Privacy Policy" />
+            android:title="@string/privacy_policy" />
         <item
             android:id="@+id/nav_about_us"
-            android:title="About Us" />
+            android:title="@string/about_us" />
     </group>
 </menu>

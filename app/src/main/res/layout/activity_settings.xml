@@ -16,7 +16,7 @@
             android:layout_height="wrap_content"
             android:foreground="?android:attr/selectableItemBackground"
             android:padding="15dp"
-            android:text="Change Password"
+            android:text="@string/change_password"
             android:textColor="#4e4e4e"
             android:textStyle="bold" />
 

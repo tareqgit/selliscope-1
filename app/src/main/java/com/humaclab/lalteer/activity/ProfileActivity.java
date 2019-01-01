@@ -54,12 +54,12 @@ public class ProfileActivity extends AppCompatActivity {
         sessionManager = new SessionManager(this);
         apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(), sessionManager.getUserPassword(), true).create(SelliscopeApiEndpointInterface.class);
         pd = new ProgressDialog(this);
-        pd.setMessage("Updating profile...");
+        pd.setMessage(getString(R.string.updating_profile));
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("");
         TextView toolbarTitle = findViewById(R.id.tv_toolbar_title);
-        toolbarTitle.setText("Profile");
+        toolbarTitle.setText(getString(R.string.profile));
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 

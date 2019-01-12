@@ -2,7 +2,10 @@ package com.humaclab.selliscope.activity;
 
 import android.Manifest;
 import android.app.ProgressDialog;
+import android.app.job.JobInfo;
+import android.app.job.JobScheduler;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -10,7 +13,6 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
-import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -18,7 +20,6 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.PowerManager;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -27,20 +28,17 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -51,6 +49,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.gson.Gson;
 import com.humaclab.selliscope.BuildConfig;
+import com.humaclab.selliscope.JobSheduler.MyJobScheduler;
 import com.humaclab.selliscope.LocationMonitoringService;
 import com.humaclab.selliscope.R;
 import com.humaclab.selliscope.SelliscopeApiEndpointInterface;
@@ -59,14 +58,10 @@ import com.humaclab.selliscope.fragment.DashboardFragment;
 import com.humaclab.selliscope.fragment.TargetFragment;
 import com.humaclab.selliscope.model.AppVersion.AppVersion;
 import com.humaclab.selliscope.model.Diameter.DiameterResponse;
-import com.humaclab.selliscope.model.IMEIandVerison;
 import com.humaclab.selliscope.receiver.InternetConnectivityChangeReceiver;
 import com.humaclab.selliscope.service.SendLocationDataService;
-import com.humaclab.selliscope.utils.AccessPermission;
-import com.humaclab.selliscope.utils.CheckAppUpdated;
 import com.humaclab.selliscope.utils.Constants;
 import com.humaclab.selliscope.utils.DatabaseHandler;
-import com.humaclab.selliscope.utils.ImportentFunction;
 import com.humaclab.selliscope.utils.LoadLocalIntoBackground;
 import com.humaclab.selliscope.utils.SessionManager;
 import com.squareup.picasso.Picasso;
@@ -77,15 +72,12 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import timber.log.Timber;
 
 import static com.humaclab.selliscope.R.id.content_fragment;
-import static com.humaclab.selliscope.R.id.tv_message;
-import static com.humaclab.selliscope.R.id.tv_name;
 
 public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     public static ScheduledExecutorService schedulerForMinute, schedulerForHour;
@@ -106,6 +98,10 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
      */
     private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 34;
     private boolean mAlreadyStartedService = false;
+
+    private static final int JOB_ID = 101;
+    private JobScheduler jobScheduler;
+    private JobInfo jobInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -248,22 +244,38 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         );*/
 
 
-    }
+        ComponentName componentName = new ComponentName(this,MyJobScheduler.class);
+
+        JobInfo.Builder builder = new JobInfo.Builder(JOB_ID,componentName);
+
+        //builder.setMinimumLatency(1);
+        //builder.setOverrideDeadline(1);
+        builder.setPeriodic(15*60*1000);
+        builder.setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY);
+        builder.setPersisted(true);
+
+
+
+        jobInfo = builder.build();
+        jobScheduler = (JobScheduler) getSystemService(JOB_SCHEDULER_SERVICE);
+        jobScheduler.schedule(jobInfo);
+        }
+
 
     private void welcome() {
         Calendar c = Calendar.getInstance();
         int timeOfDay = c.get(Calendar.HOUR_OF_DAY);
 
-        if(timeOfDay >= 0 && timeOfDay < 12){
+        if (timeOfDay >= 0 && timeOfDay < 12) {
             welcome("Good Morning");
 
-        }else if(timeOfDay >= 12 && timeOfDay < 16){
+        } else if (timeOfDay >= 12 && timeOfDay < 16) {
             welcome("Good Afternoon");
 
-        }else if(timeOfDay >= 16 && timeOfDay < 21){
+        } else if (timeOfDay >= 16 && timeOfDay < 21) {
             welcome("Good Evening");
 
-        }else if(timeOfDay >= 21 && timeOfDay < 24){
+        } else if (timeOfDay >= 21 && timeOfDay < 24) {
             welcome("Good Night");
 
         }
@@ -316,8 +328,11 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 pd.setMessage("Login out...");
                 pd.show();
 
-
+                jobScheduler.cancel(JOB_ID);
+                /*
+                //Stop Android Service for sending location to service
                 stopService(new Intent(HomeActivity.this, LocationMonitoringService.class));
+                */
                 mAlreadyStartedService = false;
 
 //                if (databaseHandler.removeAll()) {
@@ -550,36 +565,14 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             }
         }, 2000);*/
         LoadappsVertion();
+        /*
+        //Start Android Service for sending location to service
         startStep1();
+        */
     }
     private void welcome(String message) {
-
-
-/*        final AlertDialog builder = new AlertDialog.Builder(this).create();
-        LayoutInflater inflater = LayoutInflater.from(this);
-        View dialogView = inflater.inflate(R.layout.welcomescrn, null);
-        builder.setView(dialogView);
-
-        TextView tv_name =  dialogView.findViewById(R.id.tv_name);
-        TextView tv_message =  dialogView.findViewById(R.id.tv_message);
-
-
-
-        tv_name.setText(sessionManager.getUserDetails().get("userName"));
-        tv_message.setText(message);
-
-
-        ImageView iv_info_cancel =  dialogView.findViewById(R.id.close);
-        iv_info_cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                builder.dismiss();
-            }
-        });
-        builder.setCancelable(true);
-        builder.show();*/
         TextView welcome_text = findViewById(R.id.welcome_text);
-        welcome_text.setText(message+", "+sessionManager.getUserDetails().get("userName"));
+        welcome_text.setText(message + ", " + sessionManager.getUserDetails().get("userName"));
 
     }
 
@@ -730,10 +723,10 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         //And it will be keep running until you close the entire application from task manager.
         //This method will executed only once.
 
-        if (!mAlreadyStartedService ) {
+        if (!mAlreadyStartedService) {
 
 
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 Intent intent2 = new Intent(this, LocationMonitoringService.class);
                 startForegroundService(intent2);
             }
@@ -883,33 +876,33 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-/*    @Override
-    public void onStop() {
-        PowerManager pm = (PowerManager) this.getSystemService(Context.POWER_SERVICE);
-        if (pm.isScreenOn()) {
-            Log.e("ok","isScreenOn");
+    /*    @Override
+        public void onStop() {
+            PowerManager pm = (PowerManager) this.getSystemService(Context.POWER_SERVICE);
+            if (pm.isScreenOn()) {
+                Log.e("ok","isScreenOn");
+            }
+            else {
+                Log.e("ok","isScreenoff");
+            }
+            super.onStop();
+        }*/
+    public class backgroundTask extends AsyncTask<String, String, String> {
+
+        @Override
+        protected String doInBackground(String... strings) {
+            return null;
         }
-        else {
-            Log.e("ok","isScreenoff");
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
         }
-        super.onStop();
-    }*/
-public class backgroundTask extends AsyncTask<String,String,String>{
 
-    @Override
-    protected String doInBackground(String... strings) {
-        return null;
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+        }
     }
-
-    @Override
-    protected void onPreExecute() {
-        super.onPreExecute();
-    }
-
-    @Override
-    protected void onPostExecute(String s) {
-        super.onPostExecute(s);
-    }
-}
 
 }

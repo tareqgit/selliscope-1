@@ -54,23 +54,39 @@ public class PurchaseHistoryActivity extends AppCompatActivity {
         });
         binding.srlPurchaseHistory.setRefreshing(true);
 
-        binding.btnPayment.setOnClickListener(new View.OnClickListener() {
+        /*binding.btnPayment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(PurchaseHistoryActivity.this, PaymentActivity.class);
-                intent.putExtra("outletID",outlet.outletId);
+                intent.putExtra("outletID", outlet.outletId);
                 startActivity(intent);
             }
-        });
+        });*/
 
         binding.btnOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(PurchaseHistoryActivity.this, OrderActivity.class);
-                intent.putExtra("outletName", outlet.outletName);
-                intent.putExtra("outletID", String.valueOf(outlet.outletId));
-                intent.putExtra("outletType", String.valueOf(outlet.outletType));
-                startActivity(intent);
+                if (outlet.line.equals("A")) {
+
+                    Intent intent = new Intent(PurchaseHistoryActivity.this, ActivityLineA.class);
+                    intent.putExtra("outletName", outlet.outletName);
+                    intent.putExtra("outletID", String.valueOf(outlet.outletId));
+                    intent.putExtra("outletType", String.valueOf(outlet.outletType));
+                    startActivity(intent);
+
+                }
+                if (outlet.line.equals("B")) {
+                    Intent intent = new Intent(PurchaseHistoryActivity.this, ActivityLineB.class);
+                    intent.putExtra("outletName", outlet.outletName);
+                    intent.putExtra("outletID", String.valueOf(outlet.outletId));
+                    intent.putExtra("outletType", String.valueOf(outlet.outletType));
+                    startActivity(intent);
+                }
+                //Intent intent = new Intent(PurchaseHistoryActivity.this, OrderActivity.class);
+                //intent.putExtra("outletName", outlet.outletName);
+                //intent.putExtra("outletID", String.valueOf(outlet.outletId));
+                //intent.putExtra("outletType", String.valueOf(outlet.outletType));
+                //startActivity(intent);
             }
         });
         getPurchaseHistory();
@@ -81,8 +97,8 @@ public class PurchaseHistoryActivity extends AppCompatActivity {
         call.enqueue(new Callback<PurchaseHistoryResponse>() {
             @Override
             public void onResponse(Call<PurchaseHistoryResponse> call, Response<PurchaseHistoryResponse> response) {
-                binding.tvTotalPaid.setText(response.body().getResult().getTotalPaid());
-                binding.tvTotalDue.setText(response.body().getResult().getTotalDue());
+                //binding.tvTotalPaid.setText(response.body().getResult().getTotalPaid());
+                //binding.tvTotalDue.setText(response.body().getResult().getTotalDue());
                 binding.srlPurchaseHistory.setRefreshing(false);
                 binding.rlPurchaseHistory.setAdapter(new PurchaseHistoryRecyclerAdapter(PurchaseHistoryActivity.this, response.body().getResult().getPurchaseHistory(), outlet));
             }

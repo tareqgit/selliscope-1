@@ -40,7 +40,7 @@ import java.util.Map;
  */
 
 public class DatabaseHandler extends SQLiteOpenHelper {
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     // Database Tables
     private static final String TABLE_TARGET = "targets";
@@ -115,6 +115,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String KEY_OUTLET_DUE = "outlet_due";
     private static final String KEY_OUTLET_ROUTEPLAN = "outlet_routeplan";
     private static final String KEY_OUTLET_CLIENTID = "ClientID";
+    private static final String KEY_LINE = "line";
+    private static final String KEY_ROUTE_NAME = "route_name";
 
     //Thana table column name
     private static final String KEY_THANA_ID = "thana_id";
@@ -243,7 +245,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + KEY_OUTLET_LONGITUDE + " TEXT,"
                 + KEY_OUTLET_DUE + " TEXT,"
                 + KEY_OUTLET_ROUTEPLAN + " TEXT,"
-                + KEY_OUTLET_CLIENTID + " TEXT"
+                + KEY_OUTLET_CLIENTID + " TEXT,"
+                + KEY_LINE + " TEXT,"
+                + KEY_ROUTE_NAME + " TEXT"
                 + ")";
 
         String CREATE_DISTRICT_TABLE = "CREATE TABLE " + TABLE_DISTRICT + "("
@@ -788,6 +792,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 values.put(KEY_OUTLET_DUE, outlet.outletDue);
                 values.put(KEY_OUTLET_ROUTEPLAN, "0");
                 values.put(KEY_OUTLET_CLIENTID, outlet.ClientID);
+                values.put(KEY_LINE, outlet.line);
+                values.put(KEY_ROUTE_NAME, outlet.route_name);
+
                 try {
                     db.insert(TABLE_OUTLET, null, values);
                 } catch (Exception e) {
@@ -947,6 +954,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 outlet.outletDue = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_DUE));
                 outlet.outlet_routeplan = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_ROUTEPLAN));
                 outlet.ClientID = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_CLIENTID));
+                outlet.line = cursor.getString(cursor.getColumnIndex(KEY_LINE));
+                outlet.route_name = cursor.getString(cursor.getColumnIndex(KEY_ROUTE_NAME));
+
 
                 outletList.add(outlet);
             } while (cursor.moveToNext());

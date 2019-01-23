@@ -25,40 +25,35 @@
         android:required="true" />
 
     <application
-        android:name="com.humaclab.akij_selliscope.SelliscopeApplication"
+        android:name=".SelliscopeApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
-        <!-- For debug APK -->
+        <activity android:name=".activity.ActivityLineB"></activity>
+        <activity android:name=".activity.ActivityLineA" /> <!-- For debug APK -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBZ5heET41mdUTW5UOouLZFn56kGsAocbM" />
         <meta-data
             android:name="com.google.android.awareness.API_KEY"
-            android:value="AIzaSyBZ5heET41mdUTW5UOouLZFn56kGsAocbM" />
-        <!-- For debug APK -->
-
-
+            android:value="AIzaSyBZ5heET41mdUTW5UOouLZFn56kGsAocbM" /> <!-- For debug APK -->
         <!-- For signed APK -->
-        <!-- <meta-data
+        <!--
+ <meta-data
              android:name="com.google.android.geo.API_KEY"
              android:value="AIzaSyAhsz4pX62D7yu8twGT4ydn-_DRVB3p6_Y" />
          <meta-data
              android:name="com.google.android.awareness.API_KEY"
-             android:value="AIzaSyAhsz4pX62D7yu8twGT4ydn-_DRVB3p6_Y" />-->
+             android:value="AIzaSyAhsz4pX62D7yu8twGT4ydn-_DRVB3p6_Y" />
+        -->
         <!-- For signed APK -->
-
         <meta-data
             android:name="io.fabric.ApiKey"
-            android:value="c2bca7824e6a758388318ecf6635fd2e8e11979a" />
-
-        <!-- Services and Receivers -->
-
+            android:value="c2bca7824e6a758388318ecf6635fd2e8e11979a" /> <!-- Services and Receivers -->
         <service
-            android:name="com.humaclab.akij_selliscope.service.SendLocationDataService"
+            android:name=".service.SendLocationDataService"
             android:exported="false"
             android:permission="android.permission.RECEIVE_BOOT_COMPLETED"
             android:process=":selliscope_process">
@@ -70,18 +65,16 @@
         </service>
 
         <receiver
-            android:name="com.humaclab.akij_selliscope.receiver.InternetConnectivityChangeReceiver"
+            android:name=".receiver.InternetConnectivityChangeReceiver"
             android:enabled="true">
             <intent-filter>
                 <action
                     android:name="android.net.conn.CONNECTIVITY_CHANGE"
                     tools:ignore="BatteryLife" />
             </intent-filter>
-        </receiver>
-        <!-- Services and Receivers -->
-
+        </receiver> <!-- Services and Receivers -->
         <activity
-            android:name="com.humaclab.akij_selliscope.activity.SplashScreenActivity"
+            android:name=".activity.SplashScreenActivity"
             android:theme="@style/SplashScreenTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -89,53 +82,53 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.humaclab.akij_selliscope.activity.LoginActivity" />
+        <activity android:name=".activity.LoginActivity" />
         <activity
-            android:name="com.humaclab.akij_selliscope.activity.HomeActivity"
+            android:name=".activity.HomeActivity"
             android:configChanges="orientation|screenSize" />
-        <activity android:name="com.humaclab.akij_selliscope.activity.RouteActivity" />
-        <activity android:name="com.humaclab.akij_selliscope.activity.OutletActivity" />
-        <activity android:name="com.humaclab.akij_selliscope.activity.AddOutletActivity" />
-        <activity android:name="com.humaclab.akij_selliscope.activity.OutletDetailsActivity" />
-        <activity android:name="com.humaclab.akij_selliscope.activity.PrivacyPolicyActivity" />
-        <activity android:name="com.humaclab.akij_selliscope.activity.ProductActivity" />
+        <activity android:name=".activity.RouteActivity" />
+        <activity android:name=".activity.OutletActivity" />
+        <activity android:name=".activity.AddOutletActivity" />
+        <activity android:name=".activity.OutletDetailsActivity" />
+        <activity android:name=".activity.PrivacyPolicyActivity" />
+        <activity android:name=".activity.ProductActivity" />
         <activity
-            android:name="com.humaclab.akij_selliscope.activity.OrderActivity"
+            android:name=".activity.OrderActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:label="Order" />
         <activity
-            android:name="com.humaclab.akij_selliscope.activity.ActivityCart"
+            android:name=".activity.ActivityCart"
             android:configChanges="orientation|screenSize|keyboardHidden" />
-        <activity android:name="com.humaclab.akij_selliscope.activity.DeliveryListActivity" />
-        <activity android:name="com.humaclab.akij_selliscope.activity.DeliveryDetailsActivity" />
-        <activity android:name="com.humaclab.akij_selliscope.activity.PaymentActivity" />
-        <activity android:name="com.humaclab.akij_selliscope.activity.DueActivity" />
-        <activity android:name="com.humaclab.akij_selliscope.activity.EditOutletActivity" />
-        <activity android:name="com.humaclab.akij_selliscope.activity.CallCardActivity" />
-        <activity android:name="com.humaclab.akij_selliscope.activity.InspectionActivity" />
-        <activity android:name="com.humaclab.akij_selliscope.activity.SalesReturnActivity" />
-        <activity android:name="com.humaclab.akij_selliscope.activity.LocationFromMapActivity" />
-        <activity android:name="com.humaclab.akij_selliscope.activity.SalesReturnDetailsActivity" />
-        <activity android:name="com.humaclab.akij_selliscope.activity.PurchaseHistoryActivity" />
-        <activity android:name="com.humaclab.akij_selliscope.activity.ChangePasswordActivity" />
-        <activity android:name="com.humaclab.akij_selliscope.activity.PurchasedProductListActivity" />
-        <activity android:name="com.humaclab.akij_selliscope.activity.SettingsActivity" />
-        <activity android:name="com.humaclab.akij_selliscope.activity.ProfileActivity" />
-        <!--for ols sellisreturn Model-->
+        <activity android:name=".activity.DeliveryListActivity" />
+        <activity android:name=".activity.DeliveryDetailsActivity" />
+        <activity android:name=".activity.PaymentActivity" />
+        <activity android:name=".activity.DueActivity" />
+        <activity android:name=".activity.EditOutletActivity" />
+        <activity android:name=".activity.CallCardActivity" />
+        <activity android:name=".activity.InspectionActivity" />
+        <activity android:name=".activity.SalesReturnActivity" />
+        <activity android:name=".activity.LocationFromMapActivity" />
+        <activity android:name=".activity.SalesReturnDetailsActivity" />
+        <activity android:name=".activity.PurchaseHistoryActivity" />
+        <activity android:name=".activity.ChangePasswordActivity" />
+        <activity android:name=".activity.PurchasedProductListActivity" />
+        <activity android:name=".activity.SettingsActivity" />
+        <activity android:name=".activity.ProfileActivity" /> <!-- for ols sellisreturn Model -->
         <activity
-            android:name="com.humaclab.akij_selliscope.activity.ActivitySalesReturnOld.SalesReturnDetailsActivityOld"
+            android:name=".activity.ActivitySalesReturnOld.SalesReturnDetailsActivityOld"
             android:screenOrientation="landscape" />
-        <activity android:name="com.humaclab.akij_selliscope.activity.ActivitySalesReturnOld.SalesReturnActivityOld" />
+        <activity android:name=".activity.ActivitySalesReturnOld.SalesReturnActivityOld" />
 
         <service
-            android:name="com.humaclab.akij_selliscope.LocationMonitoringService"
+            android:name=".LocationMonitoringService"
             android:enabled="true" />
 
-        <activity android:name="com.humaclab.akij_selliscope.activity.SalesReturnHistoryActivity"></activity>
+        <activity android:name=".activity.SalesReturnHistoryActivity" />
+
         <service
-            android:name="com.humaclab.akij_selliscope.JobSheduler.MyJobScheduler"
-            android:permission="android.permission.BIND_JOB_SERVICE"
-            android:exported="true"/>
+            android:name=".JobSheduler.MyJobScheduler"
+            android:exported="true"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
     </application>
 
 </manifest>

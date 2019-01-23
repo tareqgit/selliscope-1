@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -19,6 +20,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.awareness.Awareness;
@@ -65,8 +67,8 @@ public class AddOutletActivity extends AppCompatActivity {
     private int outletTypeId, thanaId = -1;
     private SelliscopeApiEndpointInterface apiService;
     private SessionManager sessionManager;
-    private EditText outletName, outletAddress, outletOwner, outletContactNumber,outletrefnumber;
-    private Spinner outletType, district, thana;
+    private EditText outletName, outletAddress, outletOwner, outletContactNumber,commnet;
+    private Spinner outletType, district, thana,sp_otherbevarage,sp_coolerStatus,line;
     private ImageView iv_outlet;
     private Button submit, cancel, getLocation;
     private OutletTypeAdapter outletTypeAdapter;
@@ -114,15 +116,40 @@ public class AddOutletActivity extends AppCompatActivity {
         outletAddress = findViewById(R.id.et_outlet_address);
         outletOwner = findViewById(R.id.et_outlet_owner_name);
         outletContactNumber = findViewById(R.id.et_outlet_contact_number);
-        outletrefnumber = findViewById(R.id.et_outlet_ref_number);
+        commnet = findViewById(R.id.commnet);
         district = findViewById(R.id.sp_district);
+        line = findViewById(R.id.line);
+        sp_coolerStatus = findViewById(R.id.sp_coolerStatus);
+        /*sp_coolerStatus.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if(position==0){
+                    setSpinnerError(sp_coolerStatus,"field can't be empty");
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });*/
+        sp_otherbevarage = findViewById(R.id.sp_otherbevarage);
+
+       /* int selectedItemOfMySpinner = sp_coolerStatus.getSelectedItemPosition();
+        String actualPositionOfMySpinner = (String) sp_coolerStatus.getItemAtPosition(selectedItemOfMySpinner);
+
+        if (actualPositionOfMySpinner.isEmpty()) {
+            setSpinnerError(sp_coolerStatus,"field can't be empty");
+        }*/
+
+
         thana = findViewById(R.id.sp_thana);
         outletType = findViewById(R.id.sp_outlet_type);
         submit = findViewById(R.id.btn_add_outlet);
         getLocation = findViewById(R.id.btn_get_location);
         cancel = findViewById(R.id.btn_cancel);
         getDistricts();
-        getOutletTypes();
+        //getOutletTypes();
 
         iv_outlet = findViewById(R.id.iv_outlet);
         iv_outlet.setOnClickListener(new View.OnClickListener() {
@@ -159,7 +186,7 @@ public class AddOutletActivity extends AppCompatActivity {
 
             }
         });
-        outletType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        /*outletType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 OutletType outletType = (OutletType) parent.getItemAtPosition(position);
@@ -170,7 +197,7 @@ public class AddOutletActivity extends AppCompatActivity {
             public void onNothingSelected(AdapterView<?> parent) {
 
             }
-        });
+        });*/
         getLocation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -212,16 +239,27 @@ public class AddOutletActivity extends AppCompatActivity {
 
                             if (mapLocation.distanceTo(currentLocation) <= 100) {
                                 if (thanaId != 0) {
-                                    addOutlet(
-                                            outletTypeId, outletName.getText().toString().trim(),
-                                            outletOwner.getText().toString().trim(),
-                                            outletAddress.getText().toString().trim(),
-                                            thanaId,
-                                            outletContactNumber.getText().toString().trim(),
-                                            mLatitude,
-                                            mLongitude,
-                                            outletrefnumber.getText().toString().trim()
-                                    );
+                                    if(!(sp_coolerStatus.getSelectedItemPosition() == 0)){
+                                        if(!(sp_otherbevarage.getSelectedItemPosition() == 0)){
+                                            addOutlet(
+                                                    outletTypeId, outletName.getText().toString().trim(),
+                                                    outletOwner.getText().toString().trim(),
+                                                    outletAddress.getText().toString().trim(),
+                                                    thanaId,
+                                                    outletContactNumber.getText().toString().trim(),
+                                                    mLatitude,
+                                                    mLongitude,
+                                                    commnet.getText().toString().trim()
+                                            );
+                                        }
+                                        else {
+                                            setSpinnerError(sp_otherbevarage,"field can't be empty");
+                                        }
+                                    }
+                                    else {
+                                        setSpinnerError(sp_coolerStatus,"field can't be empty");
+                                    }
+
                                 } else {
                                     Toast.makeText(AddOutletActivity.this, "Please select a thana first", Toast.LENGTH_SHORT).show();
                                 }
@@ -270,12 +308,13 @@ public class AddOutletActivity extends AppCompatActivity {
 
     private void addOutlet(int outletTypeId, String outletName,
                            String ownerName, String address, int thanaId, String phone,
-                           double latitude, double longitude,String outletrefnumber) {
+                           double latitude, double longitude,String commnet) {
         pd.setMessage("Creating outlet......");
         pd.setCancelable(false);
         pd.show();
 
-        Call<ResponseBody> call = apiService.createOutlet(new CreateOutlet(outletTypeId, outletName, ownerName, address, thanaId, phone, latitude, longitude, outletImage,outletrefnumber));
+        Call<ResponseBody> call = apiService.createOutlet(new CreateOutlet(outletName,ownerName,address,thanaId,line.getSelectedItem().toString(),phone
+                ,commnet,latitude,longitude,outletImage,sp_coolerStatus.getSelectedItem().toString(),sp_otherbevarage.getSelectedItem().toString()));
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -384,5 +423,17 @@ public class AddOutletActivity extends AppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+    private void setSpinnerError(Spinner spinner, String error){
+        View selectedView = spinner.getSelectedView();
+        if (selectedView != null && selectedView instanceof TextView) {
+            spinner.requestFocus();
+            TextView selectedTextView = (TextView) selectedView;
+            selectedTextView.setError("error"); // any name of the error will do
+            selectedTextView.setTextColor(Color.RED); //text color in which you want your error message to be displayed
+            selectedTextView.setText(error); // actual error message
+            spinner.performClick(); // to open the spinner list if error is found.
+
+        }
     }
 }

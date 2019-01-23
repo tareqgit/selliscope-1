@@ -54,5 +54,9 @@ public class Outlets implements Serializable {
         public String outlet_routeplan;
         @SerializedName("refphone")
         public String outletrefPhoneNumber;
+        @SerializedName("line")
+        public String line;
+        @SerializedName("route_name")
+        public String route_name;
     }
 }

@@ -6,7 +6,7 @@ import java.util.List;
 
 public class Result {
 
-    @SerializedName("district")
+    @SerializedName("data")
     private List<District> district;
 
     public List<District> getDistrict() {

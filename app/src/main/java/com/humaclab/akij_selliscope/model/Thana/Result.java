@@ -6,7 +6,7 @@ import java.util.List;
 
 public class Result {
 
-    @SerializedName("thana")
+    @SerializedName("data")
     private List<Thana> thana;
 
     public List<Thana> getThana() {

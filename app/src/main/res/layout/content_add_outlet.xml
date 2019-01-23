@@ -110,31 +110,7 @@
                 android:hint="Contact Number"
                 android:inputType="phone"/>
         </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
 
-            <ImageView
-                android:layout_gravity="center"
-                android:layout_width="wrap_content"
-
-                android:layout_height="wrap_content"
-                android:background="@drawable/ic_if_phone"
-                android:padding="10dp"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-
-            <EditText
-                android:layout_marginLeft="10dp"
-                android:id="@+id/et_outlet_ref_number"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:fontFamily="@font/latoregular"
-                android:hint="Refference Number"
-                android:inputType="phone"/>
-        </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -179,18 +155,19 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight=".70"
-                android:fontFamily="@font/latobold"
                 android:background="@drawable/border"
+                android:fontFamily="@font/latobold"
                 android:padding="4dp"
-                android:text="Outlet Type:"
+                android:text="Line"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textColor="#000000"
                 android:textStyle="bold" />
 
             <Spinner
-                android:id="@+id/sp_outlet_type"
+                android:id="@+id/line"
                 android:layout_weight="1"
                 android:layout_width="0dp"
+                android:entries="@array/line"
                 android:layout_height="wrap_content"
                 android:spinnerMode="dropdown"/>
 
@@ -208,9 +185,9 @@
                 android:layout_height="wrap_content"
                 android:layout_weight=".70"
                 android:background="@drawable/border"
-                android:padding="4dp"
-                android:text="District:"
                 android:fontFamily="@font/latobold"
+                android:padding="4dp"
+                android:text="Point:"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textColor="#000000"
                 android:textStyle="bold" />
@@ -235,9 +212,9 @@
                 android:layout_height="wrap_content"
                 android:layout_weight=".70"
                 android:background="@drawable/border"
-                android:padding="4dp"
-                android:text="Thana:"
                 android:fontFamily="@font/latobold"
+                android:padding="4dp"
+                android:text="Route:"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textColor="#000000"
                 android:textStyle="bold" />
@@ -249,6 +226,89 @@
                 android:layout_height="wrap_content"
                 android:spinnerMode="dropdown"/>
 
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tv_coolerStatus"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".70"
+                android:background="@drawable/border"
+                android:fontFamily="@font/latobold"
+                android:padding="4dp"
+                android:text="Cooler Sattus"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textColor="#000000"
+                android:textStyle="bold" />
+
+            <Spinner
+                android:id="@+id/sp_coolerStatus"
+                android:layout_width="0dp"
+                android:entries="@array/coolerStatus"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:spinnerMode="dropdown" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tv_otherbevarage"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight=".70"
+                android:background="@drawable/border"
+                android:fontFamily="@font/latobold"
+                android:padding="4dp"
+                android:text="Other Beverage Tie Up"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textColor="#000000"
+                android:textStyle="bold" />
+
+            <Spinner
+                android:id="@+id/sp_otherbevarage"
+                android:layout_width="0dp"
+                android:entries="@array/otherbevarage"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:spinnerMode="dropdown" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+
+                android:layout_height="wrap_content"
+                android:background="@android:drawable/ic_menu_compass"
+                android:padding="10dp"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/commnet"
+                android:layout_width="match_parent"
+                android:inputType="textMultiLine"
+                android:lines="2"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:fontFamily="@font/latoregular"
+                android:gravity="center"
+                android:hint="Comment"
+                 />
         </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"

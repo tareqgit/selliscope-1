@@ -26,6 +26,9 @@ public class Login {
 
             @SerializedName("theme")
             public Theme theme;
+
+            @SerializedName("can_audit")
+            public String can_audit;
         }
 
         public class User {

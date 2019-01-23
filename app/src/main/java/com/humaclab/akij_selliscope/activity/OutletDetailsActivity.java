@@ -42,24 +42,24 @@ public class OutletDetailsActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         outlet = (Outlets.Outlet) getIntent().getSerializableExtra("outletDetails");
         binding.setVariable(com.humaclab.akij_selliscope.BR.outletDetails, outlet);
-        loadTargetOutlet();
+        //loadTargetOutlet();
 
-        if (Float.parseFloat(outlet.outletDue.replace(",", "")) < 0) {
+        /*if (Float.parseFloat(outlet.outletDue.replace(",", "")) < 0) {
             binding.tvDueAmount.setVisibility(View.GONE);
-        }
+        }*/
 
         Glide.with(getApplicationContext()).load(outlet.outletImgUrl)
                 .thumbnail(0.5f)
                 .into(binding.ivAddOutletImage);
 
-        binding.btnEditOutlet.setOnClickListener(new View.OnClickListener() {
+        /*binding.btnEditOutlet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), EditOutletActivity.class);
                 intent.putExtra("outletDetails", outlet);
                 startActivity(intent);
             }
-        });
+        });*/
         binding.btnCallCard.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -70,7 +70,7 @@ public class OutletDetailsActivity extends AppCompatActivity {
         });
     }
 
-    private void loadTargetOutlet(){
+    /*private void loadTargetOutlet(){
         SessionManager sessionManager = new SessionManager(OutletDetailsActivity.this);
         apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(),sessionManager.getUserPassword(),false).create(SelliscopeApiEndpointInterface.class);
         Call<OutletTarget> call = apiService.getPutletTarget(outlet.outletId);
@@ -115,7 +115,7 @@ public class OutletDetailsActivity extends AppCompatActivity {
             }
         });
 
-    }
+    }*/
     @Override
     public void onBackPressed() {
         super.onBackPressed();

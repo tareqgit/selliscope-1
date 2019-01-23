@@ -1,3 +1,4 @@
+/*
 package com.humaclab.akij_selliscope.activity;
 
 import android.app.Activity;
@@ -341,3 +342,4 @@ public class EditOutletActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 }
+*/

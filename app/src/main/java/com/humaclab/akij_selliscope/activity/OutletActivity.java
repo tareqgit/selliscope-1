@@ -58,6 +58,11 @@ public class OutletActivity extends AppCompatActivity {
 
         FloatingActionButton addOutlet = findViewById(R.id.fab_add_outlet);
 
+        //If Audit Cannot Create Outlet
+        if(Integer.parseInt(sessionManager.getKeyAudit())==1){
+            addOutlet.setVisibility(View.GONE);
+        }
+
         addOutlet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -65,7 +70,8 @@ public class OutletActivity extends AppCompatActivity {
             }
         });
 
-        getRoute(); // For getting route plan data
+/*        //Route Start
+        getRoute(); // For getting route plan data*/
 
         binding.rvOutlet.addItemDecoration(new VerticalSpaceItemDecoration(20));
         binding.rvOutlet.setLayoutManager(new LinearLayoutManager(this));

@@ -6,13 +6,13 @@ import java.io.Serializable;
 
 public class Thana implements Serializable {
 
-    @SerializedName("name")
+    @SerializedName("route_name")
     private String name;
 
     @SerializedName("id")
     private int id;
 
-    @SerializedName("district_id")
+    @SerializedName("point_id")
     private int districtId;
 
     public String getName() {

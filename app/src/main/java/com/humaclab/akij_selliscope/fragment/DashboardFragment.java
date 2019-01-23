@@ -42,14 +42,14 @@ public class DashboardFragment extends Fragment {
         View dashboardView = inflater.inflate(R.layout.fragment_dashboard, container, false);
         RecyclerView recyclerView = dashboardView.findViewById(R.id.rv_dashboard);
         dashboadItems = new ArrayList<>();
-        dashboadItems.add(new DashboardItem("Route", R.drawable.ic_route));
+        //dashboadItems.add(new DashboardItem("Route", R.drawable.ic_route));
         dashboadItems.add(new DashboardItem("Outlet", R.drawable.ic_outlet));
 //        dashboadItems.add(new DashboardItem("Product", R.drawable.ic_products));
 //        dashboadItems.add(new DashboardItem("Order", R.drawable.ic_order));
-        dashboadItems.add(new DashboardItem("Deliver", R.drawable.ic_view_orders));
+        //dashboadItems.add(new DashboardItem("Deliver", R.drawable.ic_view_orders));
 //        dashboadItems.add(new DashboardItem("Payment", R.drawable.ic_payments));
-        dashboadItems.add(new DashboardItem("Inspection", R.drawable.ic_inspection));
-        dashboadItems.add(new DashboardItem("SalesReturn", R.drawable.ic_sales_return));
+        //dashboadItems.add(new DashboardItem("Inspection", R.drawable.ic_inspection));
+        //dashboadItems.add(new DashboardItem("SalesReturn", R.drawable.ic_sales_return));
 //        dashboadItems.add(new DashboardItem("Insights", R.drawable.ic_insights));
         gridLayoutManager = new GridLayoutManager(activity, itemNumber);
         recyclerView.setLayoutManager(gridLayoutManager);
@@ -64,12 +64,12 @@ public class DashboardFragment extends Fragment {
                             @Override
                             public void onItemClick(View view, int position) {
                                 switch (position) {
-                                    case 0: {
+                                    /*case 0: {
                                         getActivity().startActivity(new Intent(getActivity(),
                                                 RouteActivity.class));
                                         break;
-                                    }
-                                    case 1: {
+                                    }*/
+                                    case 0: {
                                         getActivity().startActivity(new Intent(getActivity(),
                                                 OutletActivity.class));
                                         break;
@@ -84,21 +84,21 @@ public class DashboardFragment extends Fragment {
                                                 OrderActivity.class));
                                         break;
                                     }*/
-                                    case 2: {
+                                    /*case 2: {
                                         getActivity().startActivity(new Intent(getActivity(),
                                                 DeliveryListActivity.class));
                                         break;
-                                    }
+                                    }*/
 /*                                    case 3: {
                                         getActivity().startActivity(new Intent(getActivity(),
                                                 PaymentActivity.class));
                                         break;
                                     }*/
-                                    case 3: {
+                                    /*case 3: {
                                         getActivity().startActivity(new Intent(getActivity(),
                                                 InspectionActivity.class));
                                         break;
-                                    }
+                                    }*/
                                     /*
                                     //new Sales Return
                                     case 4: {
@@ -108,11 +108,11 @@ public class DashboardFragment extends Fragment {
                                     }*/
 
                                     //old Sales Return
-                                    case 4: {
+                                    /*case 4: {
                                         getActivity().startActivity(new Intent(getActivity(),
                                                 SalesReturnActivityOld.class));
                                         break;
-                                    }
+                                    }*/
 /*                                    case 5: {
                                         Toast.makeText(getActivity(), "This feature is under development.",
                                                 Toast.LENGTH_SHORT).show();

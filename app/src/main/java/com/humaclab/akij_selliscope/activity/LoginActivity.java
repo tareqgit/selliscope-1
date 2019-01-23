@@ -152,7 +152,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                 loginSuccessful.result.user.dob,
                                 loginSuccessful.result.user.gender,
                                 email,
-                                password
+                                password,
+                                loginSuccessful.result.can_audit
                         );
                         loginProgresssBar.setVisibility(View.INVISIBLE);
 

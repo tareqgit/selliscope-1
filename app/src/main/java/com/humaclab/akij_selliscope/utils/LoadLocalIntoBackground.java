@@ -51,7 +51,7 @@ public class LoadLocalIntoBackground {
         if (!sessionManager.isAllDataLoaded()) {
             this.loadProduct();
             this.loadOutlet(false);
-            this.loadOutletType();
+            //this.loadOutletType();
             this.loadDistrict();
             this.loadThana();
             this.loadReason();
@@ -62,7 +62,7 @@ public class LoadLocalIntoBackground {
     public void updateAllData() {
         this.loadProduct();
         this.loadOutlet(true);
-        this.loadOutletType();
+        //this.loadOutletType();
         this.loadDistrict();
         this.loadThana();
         this.loadReason();

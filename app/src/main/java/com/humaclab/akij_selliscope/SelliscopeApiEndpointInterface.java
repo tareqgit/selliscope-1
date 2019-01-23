@@ -13,6 +13,7 @@ import com.humaclab.akij_selliscope.model.District.DistrictResponse;
 import com.humaclab.akij_selliscope.model.GodownRespons;
 import com.humaclab.akij_selliscope.model.IMEIandVerison;
 import com.humaclab.akij_selliscope.model.InspectionResponse;
+import com.humaclab.akij_selliscope.model.Order.Order;
 import com.humaclab.akij_selliscope.model.OrderResponse;
 import com.humaclab.akij_selliscope.model.OutletType.OutletTypeResponse;
 import com.humaclab.akij_selliscope.model.Payment;
@@ -107,10 +108,10 @@ public interface SelliscopeApiEndpointInterface {
     @GET("godown")
     Call<GodownRespons> getGodown();
 
-    @GET("district")
+    @GET("outlet/line/point")
     Call<DistrictResponse> getDistricts();
 
-    @GET("thana")
+    @GET("outlet/point/route")
     Call<ThanaResponse> getThanas();
 
     @GET("outlet/type")
@@ -152,6 +153,9 @@ public interface SelliscopeApiEndpointInterface {
 
     @POST("order/variant/store")
     Call<AddNewOrder.OrderResponse> addOrder(@Body AddNewOrder order);
+
+    @POST("order/variant/store")
+    Call<Order.OrderResponse> order(@Body Order order);
     /*@POST("order/store")
     Call<AddNewOrder.OrderResponse> addOrder(@Body AddNewOrder order);*/
 

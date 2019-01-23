@@ -33,6 +33,7 @@ public class SessionManager {
     private static final String KEY_DIAMETER = "diameter";
     private static final String IS_LOGGED_IN = "IsLoggedIn";
     private static final String IS_ALL_DATA_LOADADE = "IsAllDataLoaded";
+    private static final String KEY_AUDIT = "can_audit";
 
     // Shared Preferences
     private SharedPreferences pref;
@@ -53,7 +54,7 @@ public class SessionManager {
     /**
      * Create login session
      */
-    public void createLoginSession(String userName, String clientId, String userProfilePicUrl, String dob, String gender, String email, String password) {
+    public void createLoginSession(String userName, String clientId, String userProfilePicUrl, String dob, String gender, String email, String password,String audit) {
         editor.putBoolean(IS_LOGGED_IN, true);
         editor.putString(KEY_USER_NAME, userName);
         editor.putString(KEY_USER_DOB, dob);
@@ -62,6 +63,7 @@ public class SessionManager {
         editor.putString(KEY_USER_PROFILE_PIC_URL, userProfilePicUrl);
         editor.putString(KEY_USER_EMAIL, email);
         editor.putString(KEY_USER_PASSWORD, password);
+        editor.putString(KEY_AUDIT, audit);
         editor.commit();
     }
 
@@ -119,6 +121,9 @@ public class SessionManager {
         return pref.getString(KEY_USER_PASSWORD, null);
     }
 
+    public String getKeyAudit(){
+        return  pref.getString(KEY_AUDIT,null);
+    }
     /**
      * Clear session details
      */

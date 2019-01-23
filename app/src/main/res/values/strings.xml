@@ -91,4 +91,28 @@
         <item>English</item>
         <item>Bangla</item>
     </string-array>
+
+    <string-array name="coolerStatus">
+        <item>Select Cooler Status</item>
+        <item>AFBL</item>
+        <item>PEPSI/7up</item>
+        <item>COKE/Sprite</item>
+        <item>Fresh</item>
+        <item>PRAN</item>
+    </string-array>
+
+    <string-array name="otherbevarage">
+        <item>Select Other Beverage TIE Up </item>
+        <item>7up/Pepsi</item>
+        <item>COKE/Sprite</item>
+        <item>Pranup</item>
+        <item>Fresh</item>
+    </string-array>
+
+    <string-array name="line">
+        <item>Line A</item>
+        <item>Line B</item>
+    </string-array>
+
+
 </resources>

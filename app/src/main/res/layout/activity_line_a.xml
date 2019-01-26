@@ -39,7 +39,7 @@
 
             <LinearLayout
                 android:id="@+id/ll_slab_one"
-                android:onClick="ll_slab_one"
+                android:onClick="a_ll_slab_one"
                 android:clickable="true"
                 android:layout_margin="@dimen/margin_10"
                 android:layout_width="match_parent"
@@ -51,7 +51,7 @@
                     android:layout_weight="4"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:src="@drawable/ic_products"/>
+                    android:src="@drawable/speedlogo"/>
 
                 <TextView
                     android:layout_width="match_parent"
@@ -66,31 +66,7 @@
 
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_margin="@dimen/margin_10"
-                android:layout_width="match_parent"
-                android:background="@drawable/border"
-                android:orientation="vertical"
-                android:layout_height="match_parent"
-                android:layout_weight="1">
-                <ImageView
-                    android:layout_weight="4"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:src="@drawable/ic_products"/>
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_gravity="center"
-                    android:layout_weight="1"
-                    android:fontFamily="@font/latobold"
-                    android:gravity="center"
-                    android:text="SLAB-1"
-                    android:textColor="#000000"
-                    android:textSize="16sp" />
-
-            </LinearLayout>
         </LinearLayout>
 
         <LinearLayout
@@ -99,9 +75,12 @@
             android:layout_weight="1"
             android:orientation="horizontal">
 
+
+
             <LinearLayout
                 android:layout_margin="@dimen/margin_10"
                 android:layout_width="match_parent"
+                android:onClick="a_ll_slab_two"
                 android:background="@drawable/border"
                 android:orientation="vertical"
                 android:layout_height="match_parent"
@@ -110,7 +89,7 @@
                     android:layout_weight="4"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:src="@drawable/ic_products"/>
+                    android:src="@drawable/speedlogo"/>
 
                 <TextView
                     android:layout_width="match_parent"
@@ -119,33 +98,7 @@
                     android:layout_weight="1"
                     android:fontFamily="@font/latobold"
                     android:gravity="center"
-                    android:text="SLAB-1"
-                    android:textColor="#000000"
-                    android:textSize="16sp" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_margin="@dimen/margin_10"
-                android:layout_width="match_parent"
-                android:background="@drawable/border"
-                android:orientation="vertical"
-                android:layout_height="match_parent"
-                android:layout_weight="1">
-                <ImageView
-                    android:layout_weight="4"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:src="@drawable/ic_products"/>
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_gravity="center"
-                    android:layout_weight="1"
-                    android:fontFamily="@font/latobold"
-                    android:gravity="center"
-                    android:text="SLAB-1"
+                    android:text="SLAB-2"
                     android:textColor="#000000"
                     android:textSize="16sp" />
 

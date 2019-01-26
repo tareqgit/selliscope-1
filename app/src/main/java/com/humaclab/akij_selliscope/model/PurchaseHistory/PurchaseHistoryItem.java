@@ -26,6 +26,52 @@ public class PurchaseHistoryItem implements Serializable {
     @SerializedName("order_id")
     private String orderId;
 
+    @SerializedName("line")
+    private String line;
+
+    @SerializedName("slab")
+    private String slab;
+
+    @SerializedName("outlet_img")
+    private String outlet_img;
+
+    @SerializedName("memo_img")
+    private String memo_img;
+
+
+    public String getLine() {
+        return line;
+    }
+
+    public void setLine(String line) {
+        this.line = line;
+    }
+
+    public String getSlab() {
+        return slab;
+    }
+
+    public void setSlab(String slab) {
+        this.slab = slab;
+    }
+
+    public String getOutlet_img() {
+        return outlet_img;
+    }
+
+    public void setOutlet_img(String outlet_img) {
+        this.outlet_img = outlet_img;
+    }
+
+    public String getMemo_img() {
+        return memo_img;
+    }
+
+    public void setMemo_img(String memo_img) {
+        this.memo_img = memo_img;
+    }
+
+
 
     public String getDiscount() {
         return discount;

@@ -62,6 +62,9 @@ public class PurchaseHistoryActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });*/
+        if(sessionManager.getKeyAudit().equals("1")){
+            binding.btnOrder.setVisibility(View.GONE);
+        }
 
         binding.btnOrder.setOnClickListener(new View.OnClickListener() {
             @Override

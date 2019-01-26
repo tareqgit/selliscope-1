@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -40,7 +41,7 @@ public class ActivityLineA extends AppCompatActivity {
     private SessionManager sessionManager;
     private String str_take_image_outlet, str_take_image_memo;
     private String outletName, outletID, outletType;
-    private ImageView iv_take_image_outlet, iv_take_image_memo;
+    private ImageView iv_take_image_outlet, iv_take_image_memo,detail_image;
     private TextView tv_quantity, text_take_image_outlet, text_take_image_memo;
     private AlertDialog builder;
     private Button btn_submit;
@@ -127,14 +128,19 @@ public class ActivityLineA extends AppCompatActivity {
         }
     }
 
-    public void ll_slab_one(View view) {
+    public void a_ll_slab_one(View view) {
 
 
-        updateDialog("10","slab-1");
+        updateDialog(R.drawable.add,"slab-1");
+
+    }
+    public void a_ll_slab_two(View view) {
+        updateDialog(R.drawable.addimage,"slab-2");
 
     }
 
-    public void updateDialog(String quantity, final String slab) {
+
+    public void updateDialog(   int image, final String slab) {
         builder = new AlertDialog.Builder(this).create();
         LayoutInflater inflater = LayoutInflater.from(this);
         View dialogView = inflater.inflate(R.layout.popup_order, null);
@@ -142,12 +148,14 @@ public class ActivityLineA extends AppCompatActivity {
 
 
         iv_take_image_outlet = dialogView.findViewById(R.id.iv_take_image_outlet);
+        detail_image = dialogView.findViewById(R.id.detail_image);
+        detail_image.setImageResource(image);
         iv_take_image_memo = dialogView.findViewById(R.id.iv_take_image_memo);
         text_take_image_memo = dialogView.findViewById(R.id.text_take_image_memo);
         text_take_image_outlet = dialogView.findViewById(R.id.text_take_image_outlet);
         btn_submit = dialogView.findViewById(R.id.btn_submit_inspection);
         tv_quantity = dialogView.findViewById(R.id.tv_quantity);
-        tv_quantity.setText(quantity);
+        tv_quantity.setText(slab);
 
         iv_take_image_outlet.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -218,4 +226,6 @@ public class ActivityLineA extends AppCompatActivity {
         builder.setCancelable(true);
         builder.show();
     }
+
+
 }

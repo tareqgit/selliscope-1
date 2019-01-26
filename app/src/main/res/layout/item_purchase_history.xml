@@ -60,7 +60,7 @@
                     android:textAlignment="textEnd" />
             </LinearLayout>
 
-            <!--<LinearLayout
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
@@ -79,7 +79,7 @@
                         android:hint="Paid"
                         android:fontFamily="@font/latobold"
                         android:padding="2dp"
-                        android:text="Paid"
+                        android:text="Line"
                         android:textColor="#000" />
 
                     <TextView
@@ -88,9 +88,9 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center|end"
                         android:layout_weight="3"
-                        android:hint="Paid"
+                        android:hint="Line"
                         android:padding="2dp"
-                        android:text='@{purchaseHistory.paid}'
+                        android:text='@{purchaseHistory.line}'
                         android:fontFamily="@font/latoregular"
                         android:textAlignment="textEnd"
                         android:textColor="#000" />
@@ -109,7 +109,7 @@
                         android:layout_weight="1"
                         android:hint="Due"
                         android:padding="2dp"
-                        android:text="Discount:"
+                        android:text="Slab:"
                         android:fontFamily="@font/latobold"/>
 
                     <TextView
@@ -121,12 +121,12 @@
                         android:hint="100"
                         android:fontFamily="@font/latoregular"
                         android:padding="2dp"
-                        android:text='@{purchaseHistory.discount}'
+                        android:text='@{purchaseHistory.slab}'
                         android:textAlignment="textEnd" />
 
                 </LinearLayout>
 
-                <LinearLayout
+                <!--<LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_weight=".90"
@@ -153,9 +153,9 @@
                         android:padding="2dp"
                         android:text='@{purchaseHistory.due}'
                         android:textAlignment="textEnd" />
-                </LinearLayout>
+                </LinearLayout>-->
 
-            </LinearLayout>-->
+            </LinearLayout>
         </LinearLayout>
     </android.support.v7.widget.CardView>
 </layout>

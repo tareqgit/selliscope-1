@@ -89,7 +89,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     private ProgressDialog pd;
     private LoadLocalIntoBackground loadLocalIntoBackground;
     private Context context;
-    private SendLocationDataService sendLocationDataService;
+    //private SendLocationDataService sendLocationDataService;
     private BroadcastReceiver broadcastReceiver;
     boolean gpsStatus ;
     private static final String TAG = HomeActivity.class.getSimpleName();
@@ -99,9 +99,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 34;
     private boolean mAlreadyStartedService = false;
 
-    private static final int JOB_ID = 101;
-    private JobScheduler jobScheduler;
-    private JobInfo jobInfo;
+    //private static final int JOB_ID = 101;
+    //private JobScheduler jobScheduler;
+    //private JobInfo jobInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,7 +110,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         LoadLocale();
         setContentView(R.layout.activity_home);
         //registerReceiver();
-        sendLocationDataService = new SendLocationDataService();
+        //sendLocationDataService = new SendLocationDataService();
 
         sessionManager = new SessionManager(this);
 
@@ -244,12 +244,13 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         );*/
 
 
+/*
+        //Job Scheduler
         ComponentName componentName = new ComponentName(this,MyJobScheduler.class);
 
         JobInfo.Builder builder = new JobInfo.Builder(JOB_ID,componentName);
 
-        //builder.setMinimumLatency(1);
-        //builder.setOverrideDeadline(1);
+
         builder.setPeriodic(15*60*1000);
         builder.setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY);
         builder.setPersisted(true);
@@ -259,6 +260,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         jobInfo = builder.build();
         jobScheduler = (JobScheduler) getSystemService(JOB_SCHEDULER_SERVICE);
         jobScheduler.schedule(jobInfo);
+        */
         }
 
 
@@ -328,7 +330,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 pd.setMessage("Login out...");
                 pd.show();
 
-                jobScheduler.cancel(JOB_ID);
+                //jobScheduler.cancel(JOB_ID);
                 /*
                 //Stop Android Service for sending location to service
                 stopService(new Intent(HomeActivity.this, LocationMonitoringService.class));
@@ -564,7 +566,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 LoadappsVertion();
             }
         }, 2000);*/
-        LoadappsVertion();
+        //LoadappsVertion();
         /*
         //Start Android Service for sending location to service
         startStep1();

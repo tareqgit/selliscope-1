@@ -2,6 +2,7 @@ package com.humaclab.akij_selliscope;
 
 import com.humaclab.akij_selliscope.model.AddNewOrder;
 import com.humaclab.akij_selliscope.model.AppVersion.AppVersion;
+import com.humaclab.akij_selliscope.model.Audit.Audit;
 import com.humaclab.akij_selliscope.model.BrandResponse;
 import com.humaclab.akij_selliscope.model.CategoryResponse;
 import com.humaclab.akij_selliscope.model.CreateOutlet;
@@ -123,7 +124,7 @@ public interface SelliscopeApiEndpointInterface {
     @GET("target")
     Call<ResponseBody> getTargets();
 
-    @GET("target/user")
+    @GET("target/route")
     Call<OutletTarget> getTarget();
 
     @GET("diameter")
@@ -186,4 +187,7 @@ public interface SelliscopeApiEndpointInterface {
 
     @POST("profile/update")
     Call<UpdateProfileResponse> updateProfile(@Body UpdateProfile updateProfile);
+
+    @POST("outlet/audit")
+    Call<Audit.AuditResponse> AUDIT_RESPONSE_CALL(@Body Audit audit);
 }

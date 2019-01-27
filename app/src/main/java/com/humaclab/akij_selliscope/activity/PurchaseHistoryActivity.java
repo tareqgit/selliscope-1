@@ -10,6 +10,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.humaclab.akij_selliscope.R;
 import com.humaclab.akij_selliscope.SelliscopeApiEndpointInterface;
@@ -69,22 +70,28 @@ public class PurchaseHistoryActivity extends AppCompatActivity {
         binding.btnOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (outlet.line.equals("A")) {
+                if(!(outlet.line ==null)){
+                    if (outlet.line.equals("A")) {
 
-                    Intent intent = new Intent(PurchaseHistoryActivity.this, ActivityLineA.class);
-                    intent.putExtra("outletName", outlet.outletName);
-                    intent.putExtra("outletID", String.valueOf(outlet.outletId));
-                    intent.putExtra("outletType", String.valueOf(outlet.outletType));
-                    startActivity(intent);
+                        Intent intent = new Intent(PurchaseHistoryActivity.this, ActivityLineA.class);
+                        intent.putExtra("outletName", outlet.outletName);
+                        intent.putExtra("outletID", String.valueOf(outlet.outletId));
+                        intent.putExtra("outletType", String.valueOf(outlet.outletType));
+                        startActivity(intent);
 
+                    }
+                    if (outlet.line.equals("B")) {
+                        Intent intent = new Intent(PurchaseHistoryActivity.this, ActivityLineB.class);
+                        intent.putExtra("outletName", outlet.outletName);
+                        intent.putExtra("outletID", String.valueOf(outlet.outletId));
+                        intent.putExtra("outletType", String.valueOf(outlet.outletType));
+                        startActivity(intent);
+                    }
                 }
-                if (outlet.line.equals("B")) {
-                    Intent intent = new Intent(PurchaseHistoryActivity.this, ActivityLineB.class);
-                    intent.putExtra("outletName", outlet.outletName);
-                    intent.putExtra("outletID", String.valueOf(outlet.outletId));
-                    intent.putExtra("outletType", String.valueOf(outlet.outletType));
-                    startActivity(intent);
+                else {
+                    Toast.makeText(PurchaseHistoryActivity.this, "Line Not Set", Toast.LENGTH_SHORT).show();
                 }
+
                 //Intent intent = new Intent(PurchaseHistoryActivity.this, OrderActivity.class);
                 //intent.putExtra("outletName", outlet.outletName);
                 //intent.putExtra("outletID", String.valueOf(outlet.outletId));

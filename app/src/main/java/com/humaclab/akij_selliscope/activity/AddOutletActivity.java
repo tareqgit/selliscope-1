@@ -35,7 +35,6 @@ import com.humaclab.akij_selliscope.adapters.OutletTypeAdapter;
 import com.humaclab.akij_selliscope.adapters.ThanaAdapter;
 import com.humaclab.akij_selliscope.model.CreateOutlet;
 import com.humaclab.akij_selliscope.model.District.District;
-import com.humaclab.akij_selliscope.model.OutletType.OutletType;
 import com.humaclab.akij_selliscope.model.Thana.Thana;
 import com.humaclab.akij_selliscope.utils.AccessPermission;
 import com.humaclab.akij_selliscope.utils.DatabaseHandler;
@@ -67,8 +66,8 @@ public class AddOutletActivity extends AppCompatActivity {
     private int outletTypeId, thanaId = -1;
     private SelliscopeApiEndpointInterface apiService;
     private SessionManager sessionManager;
-    private EditText outletName, outletAddress, outletOwner, outletContactNumber,commnet;
-    private Spinner outletType, district, thana,sp_otherbevarage,sp_coolerStatus,line;
+    private EditText outletName, outletAddress, outletOwner, outletContactNumber, commnet;
+    private Spinner outletType, district, thana, sp_otherbevarage, sp_coolerStatus, line;
     private ImageView iv_outlet;
     private Button submit, cancel, getLocation;
     private OutletTypeAdapter outletTypeAdapter;
@@ -225,53 +224,57 @@ public class AddOutletActivity extends AppCompatActivity {
                 Timber.d("Type id" + outletTypeId);
                 Timber.d("Thana id" + thanaId);
 
-                if (!isEmpty()) {
-                    if (mLatitude != 0.0 && mLongitude != 0.0) {
-                        Timber.d("addOutletRun");
-                        if (NetworkUtility.isNetworkAvailable(AddOutletActivity.this)) {
-                            Location currentLocation = new Location("");
-                            currentLocation.setLatitude(mCurrentLatitude);
-                            currentLocation.setLongitude(mCurrentLongitude);
+                if (!(outletImage == null)) {
+                    if (!isEmpty()) {
+                        if (mLatitude != 0.0 && mLongitude != 0.0) {
+                            Timber.d("addOutletRun");
+                            if (NetworkUtility.isNetworkAvailable(AddOutletActivity.this)) {
+                                Location currentLocation = new Location("");
+                                currentLocation.setLatitude(mCurrentLatitude);
+                                currentLocation.setLongitude(mCurrentLongitude);
 
-                            Location mapLocation = new Location("");
-                            mapLocation.setLatitude(mLatitude);
-                            mapLocation.setLongitude(mLongitude);
+                                Location mapLocation = new Location("");
+                                mapLocation.setLatitude(mLatitude);
+                                mapLocation.setLongitude(mLongitude);
 
-                            if (mapLocation.distanceTo(currentLocation) <= 100) {
-                                if (thanaId != 0) {
-                                    if(!(sp_coolerStatus.getSelectedItemPosition() == 0)){
-                                        if(!(sp_otherbevarage.getSelectedItemPosition() == 0)){
-                                            addOutlet(
-                                                    outletTypeId, outletName.getText().toString().trim(),
-                                                    outletOwner.getText().toString().trim(),
-                                                    outletAddress.getText().toString().trim(),
-                                                    thanaId,
-                                                    outletContactNumber.getText().toString().trim(),
-                                                    mLatitude,
-                                                    mLongitude,
-                                                    commnet.getText().toString().trim()
-                                            );
+                                if (mapLocation.distanceTo(currentLocation) <= 100) {
+                                    if (thanaId != 0) {
+                                        if (!(sp_coolerStatus.getSelectedItemPosition() == 0)) {
+                                            if (!(sp_otherbevarage.getSelectedItemPosition() == 0)) {
+                                                addOutlet(
+                                                        outletTypeId, outletName.getText().toString().trim(),
+                                                        outletOwner.getText().toString().trim(),
+                                                        outletAddress.getText().toString().trim(),
+                                                        thanaId,
+                                                        outletContactNumber.getText().toString().trim(),
+                                                        mLatitude,
+                                                        mLongitude,
+                                                        commnet.getText().toString().trim()
+                                                );
+                                            } else {
+                                                setSpinnerError(sp_otherbevarage, "field can't be empty");
+                                            }
+                                        } else {
+                                            setSpinnerError(sp_coolerStatus, "field can't be empty");
                                         }
-                                        else {
-                                            setSpinnerError(sp_otherbevarage,"field can't be empty");
-                                        }
-                                    }
-                                    else {
-                                        setSpinnerError(sp_coolerStatus,"field can't be empty");
-                                    }
 
+                                    } else {
+                                        Toast.makeText(AddOutletActivity.this, "Please select a thana first", Toast.LENGTH_SHORT).show();
+                                    }
                                 } else {
-                                    Toast.makeText(AddOutletActivity.this, "Please select a thana first", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(AddOutletActivity.this, "Outlet location is not within your 100 meter radius.", Toast.LENGTH_SHORT).show();
                                 }
-                            } else {
-                                Toast.makeText(AddOutletActivity.this, "Outlet location is not within your 100 meter radius.", Toast.LENGTH_SHORT).show();
-                            }
-                        } else
-                            Toast.makeText(AddOutletActivity.this, "Connect to Wifi or Mobile Data", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(AddOutletActivity.this, "Could not found any location yet.\nPlease try again.", Toast.LENGTH_SHORT).show();
+                            } else
+                                Toast.makeText(AddOutletActivity.this, "Connect to Wifi or Mobile Data", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(AddOutletActivity.this, "Could not found any location yet.\nPlease try again.", Toast.LENGTH_SHORT).show();
+                        }
                     }
+                } else {
+                    Toast.makeText(AddOutletActivity.this, "Image Not Capture", Toast.LENGTH_SHORT).show();
                 }
+
+
             }
         });
     }
@@ -308,13 +311,16 @@ public class AddOutletActivity extends AppCompatActivity {
 
     private void addOutlet(int outletTypeId, String outletName,
                            String ownerName, String address, int thanaId, String phone,
-                           double latitude, double longitude,String commnet) {
+                           double latitude, double longitude, String commnet) {
         pd.setMessage("Creating outlet......");
         pd.setCancelable(false);
         pd.show();
 
-        Call<ResponseBody> call = apiService.createOutlet(new CreateOutlet(outletName,ownerName,address,thanaId,line.getSelectedItem().toString(),phone
-                ,commnet,latitude,longitude,outletImage,sp_coolerStatus.getSelectedItem().toString(),sp_otherbevarage.getSelectedItem().toString()));
+
+
+        Call<ResponseBody> call = apiService.createOutlet(new CreateOutlet(outletName, ownerName, address, thanaId, line.getSelectedItem().toString(), phone
+                , commnet, latitude, longitude, outletImage, sp_coolerStatus.getSelectedItem().toString(), sp_otherbevarage.getSelectedItem().toString()));
+
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -424,7 +430,8 @@ public class AddOutletActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-    private void setSpinnerError(Spinner spinner, String error){
+
+    private void setSpinnerError(Spinner spinner, String error) {
         View selectedView = spinner.getSelectedView();
         if (selectedView != null && selectedView instanceof TextView) {
             spinner.requestFocus();

@@ -217,19 +217,19 @@ public class ActivityLineB extends AppCompatActivity {
     }
 
     public void b_ll_slab_one(View view) {
-        updateDialog(R.drawable.bottom_bar_item_ripple,"slab-1");
+        updateDialog(R.drawable.petslab1promo,"slab-1");
 
     }
 
     public void b_ll_slab_two(View view) {
-        updateDialog(R.drawable.addimage,"slab-2");
+        updateDialog(R.drawable.petslab2promo,"slab-2");
     }
 
     public void b_ll_slab_three(View view) {
-        updateDialog(R.drawable.addimage,"slab-3");
+        updateDialog(R.drawable.petslab3promo,"slab-3");
     }
 
     public void b_ll_slab_four(View view) {
-        updateDialog(R.drawable.addimage,"slab-4");
+        updateDialog(R.drawable.petslab4promo,"slab-4");
     }
 }

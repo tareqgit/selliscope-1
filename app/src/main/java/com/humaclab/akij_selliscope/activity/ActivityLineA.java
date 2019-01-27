@@ -131,11 +131,11 @@ public class ActivityLineA extends AppCompatActivity {
     public void a_ll_slab_one(View view) {
 
 
-        updateDialog(R.drawable.add,"slab-1");
+        updateDialog(R.drawable.canslab1promo,"slab-1");
 
     }
     public void a_ll_slab_two(View view) {
-        updateDialog(R.drawable.addimage,"slab-2");
+        updateDialog(R.drawable.canslab2promo,"slab-2");
 
     }
 

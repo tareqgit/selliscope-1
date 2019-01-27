@@ -51,9 +51,9 @@
                     android:layout_weight="4"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:src="@drawable/speedlogo"/>
+                    android:src="@drawable/slab01can1"/>
 
-                <TextView
+                <!--<TextView
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_gravity="center"
@@ -62,7 +62,7 @@
                     android:gravity="center"
                     android:text="SLAB-1"
                     android:textColor="#000000"
-                    android:textSize="16sp" />
+                    android:textSize="16sp" />-->
 
             </LinearLayout>
 
@@ -89,9 +89,9 @@
                     android:layout_weight="4"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:src="@drawable/speedlogo"/>
+                    android:src="@drawable/slab02can2"/>
 
-                <TextView
+                <!--<TextView
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
                     android:layout_gravity="center"
@@ -100,7 +100,7 @@
                     android:gravity="center"
                     android:text="SLAB-2"
                     android:textColor="#000000"
-                    android:textSize="16sp" />
+                    android:textSize="16sp" />-->
 
             </LinearLayout>
         </LinearLayout>

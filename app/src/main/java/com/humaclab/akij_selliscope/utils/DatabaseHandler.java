@@ -1036,7 +1036,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         District district1 = new District();
         district1.setId(0);
-        district1.setName("Select district");
+        district1.setName("Select Point");
         districtList.add(district1);
 
         SQLiteDatabase db = this.getWritableDatabase();
@@ -1083,7 +1083,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         Thana thana1 = new Thana();
         thana1.setId(0);
-        thana1.setName("Select Thana");
+        thana1.setName("Select Route");
         thana1.setDistrictId(0);
         thanaList.add(thana1);
 

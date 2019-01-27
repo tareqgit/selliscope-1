@@ -14,6 +14,7 @@ import com.humaclab.akij_selliscope.activity.PurchasedProductListActivity;
 import com.humaclab.akij_selliscope.databinding.ItemPurchaseHistoryBinding;
 import com.humaclab.akij_selliscope.model.Outlets;
 import com.humaclab.akij_selliscope.model.PurchaseHistory.PurchaseHistoryItem;
+import com.humaclab.akij_selliscope.utils.SessionManager;
 
 import java.util.List;
 
@@ -25,11 +26,13 @@ public class PurchaseHistoryRecyclerAdapter extends RecyclerView.Adapter<Purchas
     private Context context;
     private List<PurchaseHistoryItem> purchaseHistoryItemList;
     private Outlets.Outlet outlet;
+    private SessionManager sessionManager;
 
     public PurchaseHistoryRecyclerAdapter(Context context, List<PurchaseHistoryItem> purchaseHistoryItems, Outlets.Outlet outlet) {
         this.context = context;
         this.purchaseHistoryItemList = purchaseHistoryItems;
         this.outlet = outlet;
+        sessionManager = new SessionManager(context);
     }
 
     @Override
@@ -39,9 +42,29 @@ public class PurchaseHistoryRecyclerAdapter extends RecyclerView.Adapter<Purchas
     }
 
     @Override
-    public void onBindViewHolder(PurchaseHistoryViewHolder holder, int position) {
+    public void onBindViewHolder(PurchaseHistoryViewHolder holder, final int position) {
+        holder.setIsRecyclable(false);
         PurchaseHistoryItem purchaseHistory = purchaseHistoryItemList.get(position);
         holder.getBinding().setVariable(BR.purchaseHistory, purchaseHistory);
+
+        //1 == Auditor
+        //0 == user
+        if(Integer.parseInt(sessionManager.getKeyAudit())==1){
+            holder.binding.btnAudit.setVisibility(View.VISIBLE);
+        }
+
+        holder.binding.btnAudit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, PurchasedProductListActivity.class);
+                intent.putExtra("product_list", purchaseHistoryItemList.get(position));
+                intent.putExtra("outletDetails", outlet);
+                context.startActivity(intent);
+
+            }
+        });
+
+
     }
 
     @Override
@@ -58,10 +81,7 @@ public class PurchaseHistoryRecyclerAdapter extends RecyclerView.Adapter<Purchas
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(context, PurchasedProductListActivity.class);
-                    intent.putExtra("product_list", purchaseHistoryItemList.get(getAdapterPosition()));
-                    intent.putExtra("outletDetails", outlet);
-                    context.startActivity(intent);
+
                 }
             });
         }

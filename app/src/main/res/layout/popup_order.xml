@@ -48,10 +48,20 @@
 
 
         </LinearLayout>
+        <EditText
+            android:layout_margin="@dimen/elevation_5"
+            android:id="@+id/et_stock"
+            android:inputType="number"
+            android:hint="Stock"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_weight="1"

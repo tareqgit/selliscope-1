@@ -44,6 +44,17 @@ public class Order implements Serializable {
         @SerializedName("memo_img")
         public String memo_img;
 
+        public String getStock() {
+            return stock;
+        }
+
+        public void setStock(String stock) {
+            this.stock = stock;
+        }
+
+        @SerializedName("stock")
+        public String stock;
+
         public int getOutletId() {
             return outletId;
         }

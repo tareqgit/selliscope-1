@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -42,6 +43,7 @@ public class ActivityLineB extends AppCompatActivity {
     private String outletName, outletID, outletType;
     private ImageView iv_take_image_outlet, iv_take_image_memo,detail_image;
     private TextView tv_quantity, text_take_image_outlet, text_take_image_memo;
+    private EditText et_stock;
     private AlertDialog builder;
     private Button btn_submit;
     private ProgressDialog pd;
@@ -137,6 +139,7 @@ public class ActivityLineB extends AppCompatActivity {
 
 
         iv_take_image_outlet = dialogView.findViewById(R.id.iv_take_image_outlet);
+        et_stock = dialogView.findViewById(R.id.et_stock);
         detail_image = dialogView.findViewById(R.id.detail_image);
         detail_image.setImageResource(image);
         iv_take_image_memo = dialogView.findViewById(R.id.iv_take_image_memo);
@@ -164,6 +167,7 @@ public class ActivityLineB extends AppCompatActivity {
         btn_submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (!et_stock.getText().toString().isEmpty()) {
                 if (!(str_take_image_outlet == null)) {
 
                     if (!(str_take_image_memo == null)) {
@@ -184,7 +188,7 @@ public class ActivityLineB extends AppCompatActivity {
                         newOrder.setOutlet_img(str_take_image_outlet);
                         newOrder.setMemo_img(str_take_image_memo);
                         newOrder.setOrder_date(millisInString);
-
+                        newOrder.setStock(et_stock.getText().toString());
                         order.newOrder = newOrder;
                         Log.d("test", "" + new Gson().toJson(newOrder));
                         Call<Order.OrderResponse> orderResponseCall = apiService.order(order);
@@ -209,7 +213,9 @@ public class ActivityLineB extends AppCompatActivity {
                 } else {
                     text_take_image_outlet.setError("Capture Outlet Image");
                 }
-
+                } else {
+                    et_stock.setError("Must Be Set");
+                }
             }
         });
         builder.setCancelable(true);

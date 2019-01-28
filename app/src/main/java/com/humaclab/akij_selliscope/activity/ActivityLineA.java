@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -15,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -41,7 +41,8 @@ public class ActivityLineA extends AppCompatActivity {
     private SessionManager sessionManager;
     private String str_take_image_outlet, str_take_image_memo;
     private String outletName, outletID, outletType;
-    private ImageView iv_take_image_outlet, iv_take_image_memo,detail_image;
+    private ImageView iv_take_image_outlet, iv_take_image_memo, detail_image;
+    private EditText et_stock;
     private TextView tv_quantity, text_take_image_outlet, text_take_image_memo;
     private AlertDialog builder;
     private Button btn_submit;
@@ -131,16 +132,17 @@ public class ActivityLineA extends AppCompatActivity {
     public void a_ll_slab_one(View view) {
 
 
-        updateDialog(R.drawable.canslab1promo,"slab-1");
+        updateDialog(R.drawable.canslab1promo, "slab-1");
 
     }
+
     public void a_ll_slab_two(View view) {
-        updateDialog(R.drawable.canslab2promo,"slab-2");
+        updateDialog(R.drawable.canslab2promo, "slab-2");
 
     }
 
 
-    public void updateDialog(   int image, final String slab) {
+    public void updateDialog(int image, final String slab) {
         builder = new AlertDialog.Builder(this).create();
         LayoutInflater inflater = LayoutInflater.from(this);
         View dialogView = inflater.inflate(R.layout.popup_order, null);
@@ -148,6 +150,7 @@ public class ActivityLineA extends AppCompatActivity {
 
 
         iv_take_image_outlet = dialogView.findViewById(R.id.iv_take_image_outlet);
+        et_stock = dialogView.findViewById(R.id.et_stock);
         detail_image = dialogView.findViewById(R.id.detail_image);
         detail_image.setImageResource(image);
         iv_take_image_memo = dialogView.findViewById(R.id.iv_take_image_memo);
@@ -175,52 +178,58 @@ public class ActivityLineA extends AppCompatActivity {
         btn_submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!(str_take_image_outlet == null)) {
-
-                    if (!(str_take_image_memo == null)) {
-                        pd.setMessage("Submitting your Order......");
-                        pd.setCancelable(false);
-                        pd.show();
-                        Order order = new Order();
-                        Order.NewOrder newOrder = new Order.NewOrder();
+                if (!et_stock.getText().toString().isEmpty()) {
 
 
-                        newOrder.setComment("");
-                        newOrder.setDiscount(0.0);
-                        newOrder.setLatitude(lat.toString());
-                        newOrder.setLongitude(lon.toString());
-                        newOrder.setOutletId(Integer.parseInt(outletID));
-                        newOrder.setLine("A");
-                        newOrder.setSlab(slab);
-                        newOrder.setOutlet_img(str_take_image_outlet);
-                        newOrder.setMemo_img(str_take_image_memo);
-                        newOrder.setOrder_date(millisInString);
+                    if (!(str_take_image_outlet == null)) {
 
-                        order.newOrder = newOrder;
-                        Log.d("test", "" + new Gson().toJson(newOrder));
-                        Call<Order.OrderResponse> orderResponseCall = apiService.order(order);
-                        orderResponseCall.enqueue(new Callback<Order.OrderResponse>() {
-                            @Override
-                            public void onResponse(Call<Order.OrderResponse> call, Response<Order.OrderResponse> response) {
-                                pd.dismiss();
-                                response.code();
-                                if (response.code() == 201) {
-                                    builder.dismiss();
-                                    finish();
+                        if (!(str_take_image_memo == null)) {
+                            pd.setMessage("Submitting your Order......");
+                            pd.setCancelable(false);
+                            pd.show();
+                            Order order = new Order();
+                            Order.NewOrder newOrder = new Order.NewOrder();
+
+
+                            newOrder.setComment("");
+                            newOrder.setDiscount(0.0);
+                            newOrder.setLatitude(lat.toString());
+                            newOrder.setLongitude(lon.toString());
+                            newOrder.setOutletId(Integer.parseInt(outletID));
+                            newOrder.setLine("A");
+                            newOrder.setSlab(slab);
+                            newOrder.setOutlet_img(str_take_image_outlet);
+                            newOrder.setMemo_img(str_take_image_memo);
+                            newOrder.setOrder_date(millisInString);
+                            newOrder.setStock(et_stock.getText().toString());
+                            order.newOrder = newOrder;
+                            Log.d("test", "" + new Gson().toJson(newOrder));
+                            Call<Order.OrderResponse> orderResponseCall = apiService.order(order);
+                            orderResponseCall.enqueue(new Callback<Order.OrderResponse>() {
+                                @Override
+                                public void onResponse(Call<Order.OrderResponse> call, Response<Order.OrderResponse> response) {
+                                    pd.dismiss();
+                                    response.code();
+                                    if (response.code() == 201) {
+                                        builder.dismiss();
+                                        finish();
+                                    }
                                 }
-                            }
-                            @Override
-                            public void onFailure(Call<Order.OrderResponse> call, Throwable t) {
 
-                            }
-                        });
+                                @Override
+                                public void onFailure(Call<Order.OrderResponse> call, Throwable t) {
+
+                                }
+                            });
+                        } else {
+                            text_take_image_memo.setError("Capture Memo Image");
+                        }
                     } else {
-                        text_take_image_memo.setError("Capture Memo Image");
+                        text_take_image_outlet.setError("Capture Outlet Image");
                     }
                 } else {
-                    text_take_image_outlet.setError("Capture Outlet Image");
+                    et_stock.setError("Must Be Set");
                 }
-
             }
         });
         builder.setCancelable(true);

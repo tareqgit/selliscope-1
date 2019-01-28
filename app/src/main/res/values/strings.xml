@@ -99,6 +99,7 @@
         <item>COKE/Sprite</item>
         <item>Fresh</item>
         <item>PRAN</item>
+        <item>None</item>
     </string-array>
 
     <string-array name="otherbevarage">
@@ -107,6 +108,7 @@
         <item>COKE/Sprite</item>
         <item>Pranup</item>
         <item>Fresh</item>
+        <item>None</item>
     </string-array>
 
     <string-array name="line">

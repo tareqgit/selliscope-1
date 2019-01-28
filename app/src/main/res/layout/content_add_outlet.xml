@@ -238,57 +238,177 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:background="@drawable/border"
                     android:layout_marginTop="3dp"
-                    android:orientation="horizontal">
+                    android:orientation="vertical">
 
                     <TextView
+                        android:layout_gravity="center"
+                        android:gravity="center"
                         android:id="@+id/tv_coolerStatus"
-                        android:layout_width="0dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight=".70"
-                        android:background="@drawable/border"
+
                         android:fontFamily="@font/latobold"
                         android:padding="4dp"
-                        android:text="Cooler Sattus"
+                        android:text="Cooler Satus:"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                         android:textColor="#000000"
                         android:textStyle="bold" />
 
-                    <Spinner
+                    <!--<Spinner
                         android:id="@+id/sp_coolerStatus"
                         android:layout_width="0dp"
                         android:entries="@array/coolerStatus"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:spinnerMode="dropdown" />
+                        android:spinnerMode="dropdown" />-->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <CheckBox
+                            android:id="@+id/cb_1"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:fontFamily="@font/latoregular"
+                            android:text="AFBL" />
+
+                        <CheckBox
+                            android:id="@+id/cb_2"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:fontFamily="@font/latoregular"
+                            android:text="PEPSI/7up" />
+
+                        <CheckBox
+                            android:id="@+id/cb_3"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:fontFamily="@font/latoregular"
+                            android:text="Fresh" />
+
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <CheckBox
+                            android:id="@+id/cb_4"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:fontFamily="@font/latoregular"
+                            android:text="COKE/Sprite" />
+
+                        <CheckBox
+                            android:id="@+id/cb_5"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:fontFamily="@font/latoregular"
+                            android:text="PRAN" />
+
+                        <CheckBox
+                            android:id="@+id/cb_6"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:fontFamily="@font/latoregular"
+                            android:text="None" />
+                    </LinearLayout>
 
                 </LinearLayout>
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="3dp"
-                    android:orientation="horizontal">
+
+                    android:background="@drawable/border"
+                    android:orientation="vertical">
 
                     <TextView
+                        android:layout_gravity="center"
+                        android:gravity="center"
                         android:id="@+id/tv_otherbevarage"
-                        android:layout_width="0dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight=".70"
-                        android:background="@drawable/border"
                         android:fontFamily="@font/latobold"
                         android:padding="4dp"
                         android:text="Other Beverage Tie Up"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                         android:textColor="#000000"
                         android:textStyle="bold" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
 
-                    <Spinner
+                        <CheckBox
+                            android:id="@+id/cb_11"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:fontFamily="@font/latoregular"
+                            android:text="Pranup" />
+
+                        <CheckBox
+                            android:id="@+id/cb_12"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:fontFamily="@font/latoregular"
+                            android:text="Fresh" />
+
+                        <CheckBox
+                            android:id="@+id/cb_13"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:fontFamily="@font/latoregular"
+                            android:text="None" />
+
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <CheckBox
+                            android:id="@+id/cb_14"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:fontFamily="@font/latoregular"
+                            android:text="COKE/Sprite" />
+
+                        <CheckBox
+                            android:id="@+id/cb_15"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:fontFamily="@font/latoregular"
+                            android:text="7up/Pepsi" />
+
+
+                    </LinearLayout>
+                    <!--<Spinner
                         android:id="@+id/sp_otherbevarage"
                         android:layout_width="0dp"
                         android:entries="@array/otherbevarage"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:spinnerMode="dropdown" />
+                        android:spinnerMode="dropdown" />-->
 
                 </LinearLayout>
                 <LinearLayout

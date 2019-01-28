@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -76,6 +77,8 @@ public class AddOutletActivity extends AppCompatActivity {
     private GoogleApiClient googleApiClient;
     private String outletImage;
     private DatabaseHandler databaseHandler;
+    private String str_otherbevarage, str_coolerStatus;
+    private CheckBox cb_1,cb_2,cb_3,cb_4,cb_5,cb_6, cb_11,cb_12,cb_13,cb_14,cb_15;
 
     private ProgressDialog pd;
     private int MAP_LOCATION = 512;
@@ -118,7 +121,19 @@ public class AddOutletActivity extends AppCompatActivity {
         commnet = findViewById(R.id.commnet);
         district = findViewById(R.id.sp_district);
         line = findViewById(R.id.line);
-        sp_coolerStatus = findViewById(R.id.sp_coolerStatus);
+        cb_1 = findViewById(R.id.cb_1);
+        cb_2 = findViewById(R.id.cb_2);
+        cb_3 = findViewById(R.id.cb_3);
+        cb_4 = findViewById(R.id.cb_4);
+        cb_5 = findViewById(R.id.cb_5);
+        cb_6 = findViewById(R.id.cb_6);
+        cb_11 = findViewById(R.id.cb_11);
+        cb_12 = findViewById(R.id.cb_12);
+        cb_13 = findViewById(R.id.cb_13);
+        cb_14 = findViewById(R.id.cb_14);
+        cb_15 = findViewById(R.id.cb_15);
+
+        //sp_coolerStatus = findViewById(R.id.sp_coolerStatus);
         /*sp_coolerStatus.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -132,7 +147,7 @@ public class AddOutletActivity extends AppCompatActivity {
 
             }
         });*/
-        sp_otherbevarage = findViewById(R.id.sp_otherbevarage);
+        //sp_otherbevarage = findViewById(R.id.sp_otherbevarage);
 
        /* int selectedItemOfMySpinner = sp_coolerStatus.getSelectedItemPosition();
         String actualPositionOfMySpinner = (String) sp_coolerStatus.getItemAtPosition(selectedItemOfMySpinner);
@@ -239,8 +254,8 @@ public class AddOutletActivity extends AppCompatActivity {
 
                                 if (mapLocation.distanceTo(currentLocation) <= 100) {
                                     if (thanaId != 0) {
-                                        if (!(sp_coolerStatus.getSelectedItemPosition() == 0)) {
-                                            if (!(sp_otherbevarage.getSelectedItemPosition() == 0)) {
+                                       /* if (!(sp_coolerStatus.getSelectedItemPosition() == 0)) {
+                                            if (!(sp_otherbevarage.getSelectedItemPosition() == 0)) {*/
                                                 addOutlet(
                                                         outletTypeId, outletName.getText().toString().trim(),
                                                         outletOwner.getText().toString().trim(),
@@ -251,12 +266,12 @@ public class AddOutletActivity extends AppCompatActivity {
                                                         mLongitude,
                                                         commnet.getText().toString().trim()
                                                 );
-                                            } else {
+                                            /*} else {
                                                 setSpinnerError(sp_otherbevarage, "field can't be empty");
                                             }
                                         } else {
                                             setSpinnerError(sp_coolerStatus, "field can't be empty");
-                                        }
+                                        }*/
 
                                     } else {
                                         Toast.makeText(AddOutletActivity.this, "Please select a thana first", Toast.LENGTH_SHORT).show();
@@ -317,9 +332,56 @@ public class AddOutletActivity extends AppCompatActivity {
         pd.show();
 
 
+        StringBuffer coolerStatus = new StringBuffer();
 
+        if (cb_1.isChecked()) {
+            coolerStatus.append("AFBL, ");
+        }
+
+        if (cb_2.isChecked()) {
+            coolerStatus.append("PEPSI/7up, ");
+        }
+
+        if (cb_4.isChecked()) {
+            coolerStatus.append("COKE/Sprite, ");
+        }
+
+        if (cb_3.isChecked()) {
+            coolerStatus.append("Fresh, ");
+        }
+
+        if (cb_5.isChecked()) {
+            coolerStatus.append("PRAN, ");
+        }
+
+        if (cb_6.isChecked()) {
+            coolerStatus.append("None, ");}
+
+        str_coolerStatus = coolerStatus.toString();
+
+
+        StringBuffer otherbevarage = new StringBuffer();
+        if (cb_11.isChecked()){
+            otherbevarage.append("Pranup, " );
+        }
+        if (cb_12.isChecked()){
+            otherbevarage.append("Fresh, ");
+        }
+        if (cb_13.isChecked()){
+            otherbevarage.append("None, ");
+        }
+        if (cb_14.isChecked()){
+            otherbevarage.append("COKE/Sprite, ");
+        }
+        if (cb_15.isChecked()){
+            otherbevarage.append("7up/Pepsi, ");
+        }
+
+        str_otherbevarage = otherbevarage.toString();
+
+        Log.d("check",str_coolerStatus+" "+ str_otherbevarage);
         Call<ResponseBody> call = apiService.createOutlet(new CreateOutlet(outletName, ownerName, address, thanaId, line.getSelectedItem().toString(), phone
-                , commnet, latitude, longitude, outletImage, sp_coolerStatus.getSelectedItem().toString(), sp_otherbevarage.getSelectedItem().toString()));
+                , commnet, latitude, longitude, outletImage, str_coolerStatus, str_otherbevarage));
 
         call.enqueue(new Callback<ResponseBody>() {
             @Override

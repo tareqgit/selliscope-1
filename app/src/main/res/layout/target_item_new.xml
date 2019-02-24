@@ -1,19 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/srl_target"
+<android.support.v7.widget.CardView android:id="@+id/cv_target_item"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/background"
-    android:padding="@dimen/padding_10">
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rv_target"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+    android:layout_height="wrap_content"
+    android:background="?android:attr/selectableItemBackground"
+    android:clickable="true"
+    android:focusable="true"
+    android:layout_margin="2dp"
+    app:cardCornerRadius="@dimen/radius_3"
+    app:cardElevation="@dimen/elevation_5"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
-   <!-- <RelativeLayout
+    <RelativeLayout
+        android:layout_margin="5dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="200dp"
         android:background="?android:attr/selectableItemBackground"
         android:clickable="true"
         android:focusable="true"
@@ -28,7 +29,7 @@
             android:src="@drawable/ic_target_sales"/>
 
         <TextView
-            android:id="@+id/tv_target_label"
+            android:id="@+id/tv_slab_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/margin_5"
@@ -52,7 +53,7 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/tv_target_achieved"
+            android:id="@+id/tv_target_completed"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_above="@+id/tv_completed"
@@ -60,11 +61,11 @@
             android:text="0.0"
             android:fontFamily="@font/latoregular"
             android:textColor="@color/colorPrimary"
-            android:textSize="24sp"
+            android:textSize="18sp"
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/tv_target_total"
+            android:id="@+id/tv_target"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_above="@+id/circle_progress_view"
@@ -73,22 +74,22 @@
             android:text="0.0"
             android:fontFamily="@font/latoregular"
             android:textColor="#000000"
-            android:textSize="28sp"
+            android:textSize="20sp"
             android:textStyle="bold" />
 
 
         <com.eralp.circleprogressview.CircleProgressView
             android:id="@+id/circle_progress_view"
-            android:layout_width="150dp"
+            android:layout_width="80dp"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:layout_gravity="center"
             app:cpv_background_circle_color="@color/red"
             app:cpv_circle_color="@color/colorPrimary"
             app:cpv_text_color="@color/colorPrimary"
-            app:cpv_text_prefix="%"
+
             android:fontFamily="@font/latoregular"
-            app:cpv_text_size="20" />
+            app:cpv_text_size="17" />
 
         <TextView
             android:id="@+id/tv_remaining"
@@ -111,20 +112,18 @@
             android:fontFamily="@font/latoregular"
             android:text="0.0"
             android:textColor="@color/red"
-            android:textSize="24sp"
+            android:textSize="18sp"
             android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/tv_date"
+        <!--<TextView
+            android:id="@+id/tv_Line"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_alignParentTop="true"
-            android:text="Date"
-            android:fontFamily="@font/latoregular"/>
+            android:text=""
+            android:textColor="@color/red"
+            android:fontFamily="@font/latoregular"/>-->
+    </RelativeLayout>
 
 
-
-
-    </RelativeLayout>-->
-</android.support.v4.widget.SwipeRefreshLayout>
+</android.support.v7.widget.CardView>

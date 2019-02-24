@@ -27,7 +27,7 @@
     <application
         android:name=".SelliscopeApplication"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/akijlogo"
         android:label="@string/app_name"
         android:usesCleartextTraffic="true"
         android:supportsRtl="true"
@@ -70,7 +70,7 @@
             </intent-filter>
         </service>
 
-        <receiver
+        <!--<receiver
             android:name=".receiver.InternetConnectivityChangeReceiver"
             android:enabled="true">
             <intent-filter>
@@ -78,7 +78,7 @@
                     android:name="android.net.conn.CONNECTIVITY_CHANGE"
                     tools:ignore="BatteryLife" />
             </intent-filter>
-        </receiver> <!-- Services and Receivers -->
+        </receiver>--> <!-- Services and Receivers -->
         <activity
             android:name=".activity.SplashScreenActivity"
             android:theme="@style/SplashScreenTheme">
@@ -109,7 +109,7 @@
         <activity android:name=".activity.DeliveryDetailsActivity" />
         <activity android:name=".activity.PaymentActivity" />
         <activity android:name=".activity.DueActivity" />
-        <activity android:name=".activity.EditOutletActivity" />
+       <!-- <activity android:name=".activity.EditOutletActivity" />-->
         <activity android:name=".activity.CallCardActivity" />
         <activity android:name=".activity.InspectionActivity" />
         <activity android:name=".activity.SalesReturnActivity" />

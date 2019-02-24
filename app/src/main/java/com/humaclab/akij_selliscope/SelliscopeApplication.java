@@ -12,6 +12,8 @@ import com.humaclab.akij_selliscope.utils.HttpAuthInterceptor;
 import java.util.concurrent.TimeUnit;
 
 import io.fabric.sdk.android.Fabric;
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -57,6 +59,10 @@ public class SelliscopeApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
+        Realm.init(this);
+        RealmConfiguration config = new RealmConfiguration.Builder().name("akij.realm").deleteRealmIfMigrationNeeded().build();
+
+        Realm.setDefaultConfiguration(config);
         if (BuildConfig.DEBUG) {
             Timber.plant(new Timber.DebugTree());
         }

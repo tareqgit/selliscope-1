@@ -3,14 +3,33 @@ package com.humaclab.akij_selliscope.model.Target;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class OutletTarget implements Serializable {
     @SerializedName("error")
-
     private Boolean error;
-    @SerializedName("result")
 
-    private Result result;
+    public List<Result> getResult() {
+        return result;
+    }
+
+    public void setResult(List<Result> result) {
+        this.result = result;
+    }
+
+    @SerializedName("result")
+    private List<Result> result;
+    @SerializedName("line")
+    private String line;
+    public String getLine() {
+        return line;
+    }
+
+    public void setLine(String line) {
+        this.line = line;
+    }
+
+
 
     public Boolean getError() {
         return error;
@@ -20,66 +39,24 @@ public class OutletTarget implements Serializable {
         this.error = error;
     }
 
-    public Result getResult() {
-        return result;
-    }
 
-    public void setResult(Result result) {
-        this.result = result;
-    }
 
     public class Result {
 
-        @SerializedName("target_type")
-
-        private String targetType;
-        @SerializedName("date")
-
-        private String date;
-
-        public String getDate() {
-            return date;
+        public String getSlab() {
+            return slab;
         }
 
-        public void setDate(String date) {
-            this.date = date;
+        public void setSlab(String slab) {
+            this.slab = slab;
         }
 
-        public String getSalesTypes() {
-            return salesTypes;
+        public String getTarget() {
+            return target;
         }
 
-        public void setSalesTypes(String salesTypes) {
-            this.salesTypes = salesTypes;
-        }
-
-        @SerializedName("sales_types")
-
-        private String salesTypes;
-        @SerializedName("sales_target")
-
-        private String salesTarget;
-        @SerializedName("achieved")
-
-        private String achieved;
-        @SerializedName("visited")
-
-        private Integer visited;
-
-        public String getTargetType() {
-            return targetType;
-        }
-
-        public void setTargetType(String targetType) {
-            this.targetType = targetType;
-        }
-
-        public String getSalesTarget() {
-            return salesTarget;
-        }
-
-        public void setSalesTarget(String salesTarget) {
-            this.salesTarget = salesTarget;
+        public void setTarget(String target) {
+            this.target = target;
         }
 
         public String getAchieved() {
@@ -90,13 +67,14 @@ public class OutletTarget implements Serializable {
             this.achieved = achieved;
         }
 
-        public Integer getVisited() {
-            return visited;
-        }
+        @SerializedName("slab")
+        private String slab;
 
-        public void setVisited(Integer visited) {
-            this.visited = visited;
-        }
+        @SerializedName("target")
+        private String target;
+
+        @SerializedName("achieved")
+        private String achieved;
 
     }
 }

@@ -38,6 +38,40 @@ public class PurchaseHistoryItem implements Serializable {
     @SerializedName("memo_img")
     private String memo_img;
 
+    public String getOutlet() {
+        return outlet;
+    }
+
+    public void setOutlet(String outlet) {
+        this.outlet = outlet;
+    }
+
+    public String getOrder_by() {
+        return order_by;
+    }
+
+    public void setOrder_by(String order_by) {
+        this.order_by = order_by;
+    }
+
+    public String getDealer_stock() {
+        return dealer_stock;
+    }
+
+    public void setDealer_stock(String dealer_stock) {
+        this.dealer_stock = dealer_stock;
+    }
+
+    @SerializedName("outlet")
+    private String outlet;
+
+    @SerializedName("order_by")
+    private String order_by;
+
+    @SerializedName("dealer_stock")
+    private String dealer_stock;
+
+
 
     public String getLine() {
         return line;

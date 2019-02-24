@@ -1,5 +1,6 @@
 package com.humaclab.akij_selliscope;
 
+import com.humaclab.akij_selliscope.dbmodel.Target;
 import com.humaclab.akij_selliscope.model.AddNewOrder;
 import com.humaclab.akij_selliscope.model.AppVersion.AppVersion;
 import com.humaclab.akij_selliscope.model.Audit.Audit;
@@ -124,13 +125,13 @@ public interface SelliscopeApiEndpointInterface {
     @GET("target")
     Call<ResponseBody> getTargets();
 
-    @GET("target/route")
+    @GET("target/user/slab")
     Call<OutletTarget> getTarget();
 
     @GET("diameter")
     Call<DiameterResponse> getDiameter();
 
-    @GET("outlet/{outlet_id}/purchase-history")
+    @GET("outlet/audit/{outlet_id}/order")
     Call<PurchaseHistoryResponse> getPurchaseHistory(@Path("outlet_id") int outletID);
 
     @GET("route-plan")

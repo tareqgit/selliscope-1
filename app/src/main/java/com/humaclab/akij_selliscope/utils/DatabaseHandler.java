@@ -1023,6 +1023,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 outlet.outletDue = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_DUE));
                 outlet.outlet_routeplan = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_ROUTEPLAN));
                 outlet.ClientID = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_CLIENTID));
+                outlet.line = cursor.getString(cursor.getColumnIndex(KEY_LINE));
                 outletList.add(outlet);
             } while (cursor.moveToNext());
         }

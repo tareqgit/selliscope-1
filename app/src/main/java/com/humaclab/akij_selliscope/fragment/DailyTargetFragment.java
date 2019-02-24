@@ -3,6 +3,7 @@ package com.humaclab.akij_selliscope.fragment;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,6 +19,7 @@ import com.humaclab.akij_selliscope.R;
 import com.humaclab.akij_selliscope.SelliscopeApiEndpointInterface;
 import com.humaclab.akij_selliscope.SelliscopeApplication;
 import com.humaclab.akij_selliscope.adapters.TargetRecyclerViewAdapter;
+import com.humaclab.akij_selliscope.adapters.TargetRecyclerViewAdapter_new;
 import com.humaclab.akij_selliscope.dbmodel.Target;
 import com.humaclab.akij_selliscope.model.Target.OutletTarget;
 import com.humaclab.akij_selliscope.model.TargetItem;
@@ -27,6 +29,7 @@ import com.humaclab.akij_selliscope.utils.NetworkUtility;
 import com.humaclab.akij_selliscope.utils.SessionManager;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.ResponseBody;
@@ -44,11 +47,11 @@ public class DailyTargetFragment extends Fragment {
     SwipeRefreshLayout swipeRefreshLayout;
     RecyclerView recyclerView;
     DatabaseHandler dbHandler;
-    List<Target> targets;
-    private TargetRecyclerViewAdapter targetRecyclerViewAdapter;
+    List<OutletTarget.Result> targets;
+    private TargetRecyclerViewAdapter_new targetRecyclerViewAdapter;
+    private List<Target> targets_list;
     private List<TargetItem> targetItems;
     private TextView tv_total,tv_target_achieved,tv_target_remaining,tv_target_label,tv_date;
-
     private CircleProgressView circle_progress_view;
     public static DailyTargetFragment newInstance(int position) {
         DailyTargetFragment frag = new DailyTargetFragment();
@@ -68,12 +71,14 @@ public class DailyTargetFragment extends Fragment {
                              ViewGroup container,
                              Bundle savedInstanceState) {
         View dailyTargetView = inflater.inflate(R.layout.target_layout, container, false);
-        tv_total = dailyTargetView.findViewById(R.id.tv_target_total);
-        tv_date = dailyTargetView.findViewById(R.id.tv_date);
-        tv_target_achieved = dailyTargetView.findViewById(R.id.tv_target_achieved);
-        tv_target_remaining = dailyTargetView.findViewById(R.id.tv_target_remaining);
-        tv_target_label = dailyTargetView.findViewById(R.id.tv_target_label);
-
+        //tv_total = dailyTargetView.findViewById(R.id.tv_target_total);
+        //tv_date = dailyTargetView.findViewById(R.id.tv_date);
+        //tv_target_achieved = dailyTargetView.findViewById(R.id.tv_target_achieved);
+        //tv_target_remaining = dailyTargetView.findViewById(R.id.tv_target_remaining);
+        //tv_target_label = dailyTargetView.findViewById(R.id.tv_target_label);
+        recyclerView = dailyTargetView.findViewById(R.id.rv_target);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        targets = new ArrayList<>();
         circle_progress_view = (CircleProgressView) dailyTargetView.findViewById(R.id.circle_progress_view);
 //        dbHandler = new DatabaseHandler(getContext());
 //        targets = new ArrayList<>();
@@ -128,8 +133,8 @@ public class DailyTargetFragment extends Fragment {
 //                            targets.add(new Target("Regular Sales", "Daily", target.regularSales.target,
 //                                    target.mustSales.achieved));
 //                        }
-                        targetRecyclerViewAdapter = new TargetRecyclerViewAdapter(getContext(),
-                                getTargetListSuccessful.targetResult.dailyTarget);
+//                        targetRecyclerViewAdapter = new TargetRecyclerViewAdapter(getContext(),
+//                                getTargetListSuccessful.targetResult.dailyTarget);
 
                         recyclerView.setAdapter(targetRecyclerViewAdapter);
 
@@ -164,24 +169,29 @@ public class DailyTargetFragment extends Fragment {
                 if(response.code() == 200) {
                     if (swipeRefreshLayout.isRefreshing())
                         swipeRefreshLayout.setRefreshing(false);
-                    System.out.println("Response " + new Gson().toJson(response.body()));
+                    targets = response.body().getResult();
+                    System.out.println("Response_target " + new Gson().toJson(response.body()));
+                    targetRecyclerViewAdapter = new TargetRecyclerViewAdapter_new(getContext(),
+                            targets);
 
-                    String sales_types = response.body().getResult().getSalesTypes().replace("Quantity","qt");
-                    Double total = Double.valueOf(response.body().getResult().getSalesTarget().replace(",",""));
-                    Double achieved = Double.valueOf(response.body().getResult().getAchieved().replace(",",""));
-                    Double remaining = total-achieved;
-                    int completePersentage = (int) ((achieved * 100)/total);
+                    recyclerView.setAdapter(targetRecyclerViewAdapter);
 
-                    tv_date.setText(response.body().getResult().getDate());
-                    tv_target_label.setText(response.body().getResult().getTargetType());
-                    tv_target_achieved.setText(response.body().getResult().getAchieved()+" "+sales_types);
-                    tv_total.setText(total.toString()+" "+sales_types);
-                    //tv_visited.setText(response.body().getResult().getVisited());
-                    tv_target_remaining.setText(remaining.toString()+" "+sales_types);
-                    circle_progress_view.setTextEnabled(true);
-                    circle_progress_view.setInterpolator(new AccelerateDecelerateInterpolator());
-                    circle_progress_view.setStartAngle(10);
-                    circle_progress_view.setProgressWithAnimation(completePersentage,2000);
+                    //String sales_types = response.body().getResult().getSalesTypes().replace("Quantity","qt");
+                    //Double total = Double.valueOf(response.body().getResult().getSalesTarget().replace(",",""));
+                    //Double achieved = Double.valueOf(response.body().getResult().getAchieved().replace(",",""));
+                    //Double remaining = total-achieved;
+                    //int completePersentage = (int) ((achieved * 100)/total);
+//
+                    //tv_date.setText(response.body().getResult().getDate());
+                    //tv_target_label.setText(response.body().getResult().getTargetType());
+                    //tv_target_achieved.setText(response.body().getResult().getAchieved()+" "+sales_types);
+                    //tv_total.setText(total.toString()+" "+sales_types);
+                    ////tv_visited.setText(response.body().getResult().getVisited());
+                    //tv_target_remaining.setText(remaining.toString()+" "+sales_types);
+                    //circle_progress_view.setTextEnabled(true);
+                    //circle_progress_view.setInterpolator(new AccelerateDecelerateInterpolator());
+                    //circle_progress_view.setStartAngle(10);
+                    //circle_progress_view.setProgressWithAnimation(completePersentage,2000);
 
 
                 }else if (response.code() == 401) {

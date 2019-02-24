@@ -66,14 +66,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         LoadLocale();
         setContentView(R.layout.activity_login);
         //For Bangla
-        rg_language = findViewById(R.id.rg_language);
-        rg_language.check(R.id.rbEnglish);
-        rbBangla = findViewById(R.id.rbBangle);
-        rbEnglish = findViewById(R.id.rbEnglish);
-        rbBangla.setOnClickListener(this);
-        rbEnglish.setOnClickListener(this);
+        //rg_language = findViewById(R.id.rg_language);
+        //rg_language.check(R.id.rbEnglish);
+        //rbBangla = findViewById(R.id.rbBangle);
+        //rbEnglish = findViewById(R.id.rbEnglish);
+        //rbBangla.setOnClickListener(this);
+        //rbEnglish.setOnClickListener(this);
 
-        LoadPreferences();
+        //LoadPreferences();
         checkPermission();
 
 
@@ -222,7 +222,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public void onClick(View v) {
         int id = v.getId();
 
-        if (id == R.id.rbBangle) {
+        /*if (id == R.id.rbBangle) {
             //Do something
             SavePreferences(KEY_SAVED_RADIO_BUTTON_INDEX, 0);
             setLocale("bn");
@@ -232,7 +232,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             SavePreferences(KEY_SAVED_RADIO_BUTTON_INDEX, 1);
             setLocale("en");
             recreate();
-        }
+        }*/
 
 
     }

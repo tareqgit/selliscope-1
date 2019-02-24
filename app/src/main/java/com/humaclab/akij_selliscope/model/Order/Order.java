@@ -5,6 +5,8 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 import java.util.List;
 
+import io.realm.RealmObject;
+
 /**
  * Created by tonmoy on 5/13/17.
  */
@@ -13,7 +15,7 @@ public class Order implements Serializable {
     @SerializedName("order")
     public NewOrder newOrder;
 
-    public static class NewOrder {
+    public static class NewOrder  {
         @SerializedName("outlet_id")
         public int outletId;
 

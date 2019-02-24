@@ -4,6 +4,11 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.net.Uri;
+import android.os.StrictMode;
+import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -17,7 +22,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.esafirm.imagepicker.features.ImagePicker;
+import com.esafirm.imagepicker.features.ReturnMode;
+import com.esafirm.imagepicker.model.Image;
 import com.google.gson.Gson;
 import com.humaclab.akij_selliscope.R;
 import com.humaclab.akij_selliscope.SelliscopeApiEndpointInterface;
@@ -27,6 +36,10 @@ import com.humaclab.akij_selliscope.utils.SendUserLocationData;
 import com.humaclab.akij_selliscope.utils.SessionManager;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -112,20 +125,48 @@ public class ActivityLineB extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
-            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-            Bitmap photo = (Bitmap) data.getExtras().get("data");
-            assert photo != null;
-            photo.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
-            str_take_image_outlet = Base64.encodeToString(outputStream.toByteArray(), Base64.DEFAULT);
-            iv_take_image_outlet.setImageBitmap(photo);
+            //ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            //Bitmap photo = (Bitmap) data.getExtras().get("data");
+            //assert photo != null;
+            //photo.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+            //str_take_image_outlet = Base64.encodeToString(outputStream.toByteArray(), Base64.DEFAULT);
+            //iv_take_image_outlet.setImageBitmap(photo);
+
+            Image image = ImagePicker.getFirstImageOrNull(data);
+            Bitmap bmp;
+            ByteArrayOutputStream bos;
+            try {
+                bmp = BitmapFactory.decodeFile(image.getPath());
+                iv_take_image_outlet.setImageBitmap(bmp);
+                bos = new ByteArrayOutputStream();
+                bmp.compress(Bitmap.CompressFormat.JPEG, 50, bos);
+                str_take_image_outlet = Base64.encodeToString(bos.toByteArray(), Base64.DEFAULT);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         if (requestCode == CAMERA_REQUEST1 && resultCode == Activity.RESULT_OK) {
-            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-            Bitmap photo = (Bitmap) data.getExtras().get("data");
-            assert photo != null;
-            photo.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
-            str_take_image_memo = Base64.encodeToString(outputStream.toByteArray(), Base64.DEFAULT);
-            iv_take_image_memo.setImageBitmap(photo);
+            //ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            //Bitmap photo = (Bitmap) data.getExtras().get("data");
+            //assert photo != null;
+            //photo.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+            //str_take_image_memo = Base64.encodeToString(outputStream.toByteArray(), Base64.DEFAULT);
+            //iv_take_image_memo.setImageBitmap(photo);
+
+            Image image = ImagePicker.getFirstImageOrNull(data);
+            Bitmap bmp;
+            ByteArrayOutputStream bos;
+            try {
+                bmp = BitmapFactory.decodeFile(image.getPath());
+                iv_take_image_memo.setImageBitmap(bmp);
+                bos = new ByteArrayOutputStream();
+                bmp.compress(Bitmap.CompressFormat.JPEG, 50, bos);
+                str_take_image_memo = Base64.encodeToString(bos.toByteArray(), Base64.DEFAULT);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+
         }
     }
 
@@ -152,16 +193,41 @@ public class ActivityLineB extends AppCompatActivity {
         iv_take_image_outlet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(cameraIntent, CAMERA_REQUEST);
+                //Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                //startActivityForResult(cameraIntent, CAMERA_REQUEST);
+
+                ImagePicker.cameraOnly().start(ActivityLineB.this,CAMERA_REQUEST);
+/*                        .returnMode(ReturnMode.CAMERA_ONLY) // set whether pick and / or camera action should return immediate result or not.
+                        .folderMode(true) // folder mode (false by default)
+                        .toolbarFolderTitle("Folder") // folder selection title
+                        .toolbarImageTitle("Tap to select") // image selection title
+                        .toolbarArrowColor(Color.BLACK) // Toolbar 'up' arrow color
+                        .single() // single mode
+//                .multi() // multi mode (default mode)
+//                        .limit(10) // max images can be selected (99 by default)
+                        .showCamera(true) // show camera or not (true by default)
+                        //.imageDirectory("Camera") // directory name for captured image  ("Camera" folder by default)
+//                .origin(images) // original selected images, used in multi mode
+//                .exclude(images) // exclude anything that in image.getPath()
+//                .excludeFiles(files) // same as exclude but using ArrayList<File>
+//                .theme(R.style.CustomImagePickerTheme) // must inherit ef_BaseTheme. please refer to sample
+//                .enableLog(false) // disabling log
+//                .imageLoader(new GrayscaleImageLoder()) // custom image loader, must be serializeable
+
+                        .start(CAMERA_REQUEST); // start image picker activity with request code*/
+
             }
         });
 
         iv_take_image_memo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(cameraIntent, CAMERA_REQUEST1);
+               // Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+               // startActivityForResult(cameraIntent, CAMERA_REQUEST1);
+
+                ImagePicker.cameraOnly().start(ActivityLineB.this,CAMERA_REQUEST1);
+
+
             }
         });
         btn_submit.setOnClickListener(new View.OnClickListener() {
@@ -200,6 +266,9 @@ public class ActivityLineB extends AppCompatActivity {
                                 if (response.code() == 201) {
                                     builder.dismiss();
                                     finish();
+                                }
+                                else {
+                                    Toast.makeText(ActivityLineB.this, ""+response.code()+" Error", Toast.LENGTH_SHORT).show();
                                 }
                             }
                             @Override

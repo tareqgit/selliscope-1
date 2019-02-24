@@ -72,6 +72,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import io.realm.Realm;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -81,7 +82,7 @@ import static com.humaclab.akij_selliscope.R.id.content_fragment;
 
 public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     public static ScheduledExecutorService schedulerForMinute, schedulerForHour;
-    public static BroadcastReceiver receiver = new InternetConnectivityChangeReceiver();
+    //public static BroadcastReceiver receiver = new InternetConnectivityChangeReceiver();
     private FragmentManager fragmentManager;
     private SessionManager sessionManager;
     private SelliscopeApiEndpointInterface apiService;
@@ -93,6 +94,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     private BroadcastReceiver broadcastReceiver;
     boolean gpsStatus ;
     private static final String TAG = HomeActivity.class.getSimpleName();
+    Realm realm;
+
     /**
      * Code used in requesting runtime permissions.
      */
@@ -106,6 +109,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        realm = Realm.getDefaultInstance();
         //For Bangla
         LoadLocale();
         setContentView(R.layout.activity_home);
@@ -220,9 +224,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         //loading Data into background
 
         //Register receiver for Internet Connectivity change
-        IntentFilter filter = new IntentFilter();
+        /*IntentFilter filter = new IntentFilter();
         filter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
-        registerReceiver(receiver, filter);
+        registerReceiver(receiver, filter);*/
         //LoadappsVertion();
 
 
@@ -347,7 +351,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 /*stopService(new Intent(HomeActivity.this, SendLocationDataService.class));*/
                 HomeActivity.this.deleteDatabase(Constants.databaseName);
                 pd.dismiss();
-                unregisterReceiver(receiver);
+                /*unregisterReceiver(receiver);*/
                 finish();
 //                }
                 break;
@@ -538,7 +542,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 schedulerForHour.shutdownNow();
                 //stopService(new Intent(HomeActivity.this, SendLocationDataService.class));
                 HomeActivity.this.deleteDatabase(Constants.databaseName);
-                unregisterReceiver(receiver);
+                /*unregisterReceiver(receiver);*/
                 finish();
 
                 final String appPackageName = getPackageName(); // getPackageName() from Context or Activity object

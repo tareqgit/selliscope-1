@@ -121,7 +121,7 @@ public class LoginActivity extends AppCompatActivity {
                 if (response.code() == 200) {
                     try {
                         Timber.d("Login Successful");
-
+                        Log.d("Log Res", new Gson().toJson(response.body()));
                         sessionManager.createLoginSession(
                                 response.body().getLoginResult().getLoginUser().getName(),
                                 email,
@@ -159,11 +159,13 @@ public class LoginActivity extends AppCompatActivity {
                     imeIandVerison.setIMEIcode(telephonyManager.getDeviceId());
                     imeIandVerison.setAppVersion(BuildConfig.VERSION_NAME);
                     System.out.println("IMEI and version: " + new Gson().toJson(imeIandVerison));
+
                     Call<ResponseBody> call = apiService.sendIMEIAndVersion(imeIandVerison);
                     call.enqueue(new Callback<ResponseBody>() {
                         @Override
                         public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                             Timber.d("Status code: " + String.valueOf(response.code()));
+
                         }
 
                         @Override
@@ -193,5 +195,12 @@ public class LoginActivity extends AppCompatActivity {
                 || ActivityCompat.checkSelfPermission(LoginActivity.this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(LoginActivity.this, permissions, 404);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+
     }
 }

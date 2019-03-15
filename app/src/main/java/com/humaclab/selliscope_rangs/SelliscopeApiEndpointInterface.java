@@ -101,6 +101,11 @@ public interface SelliscopeApiEndpointInterface {
     @POST("login")
     Call<LoginResponse> getUser(@Body LoginResponse.LoginInformation loginInformation);
 
+
+    @POST("version-imei")
+    Call<ResponseBody> sendIMEIAndVersion(@Body IMEIandVerison imeIandVerison);
+
+
     @POST("outlet/store")
     Call<ResponseBody> createOutlet(@Body CreateOutlet createOutlet);
 
@@ -123,9 +128,6 @@ public interface SelliscopeApiEndpointInterface {
 
     @POST("inspection/store")
     Call<InspectionResponse> inspectOutlet(@Body InspectionResponse.Inspection inspection);
-
-    @POST("version-imei")
-    Call<ResponseBody> sendIMEIAndVersion(@Body IMEIandVerison imeIandVerison);
 
     @PUT("outlet/{id}/update")
     Call<ResponseBody> updateOutlet(@Path("id") String outletID, @Body CreateOutlet createOutlet);

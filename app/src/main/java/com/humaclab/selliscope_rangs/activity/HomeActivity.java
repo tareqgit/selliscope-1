@@ -19,6 +19,7 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.humaclab.selliscope_rangs.BuildConfig;
 import com.humaclab.selliscope_rangs.R;
 import com.humaclab.selliscope_rangs.SelliscopeApiEndpointInterface;
@@ -31,7 +32,7 @@ import com.humaclab.selliscope_rangs.utils.Constants;
 import com.humaclab.selliscope_rangs.utils.DatabaseHandler;
 import com.humaclab.selliscope_rangs.utils.LoadLocalIntoBackground;
 import com.humaclab.selliscope_rangs.utils.SessionManager;
-import com.squareup.picasso.Picasso;
+
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -61,6 +62,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         databaseHandler = new DatabaseHandler(this);
         loadLocalIntoBackground = new LoadLocalIntoBackground(this);
         loadLocalIntoBackground.loadAll();
+
         apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(), sessionManager.getUserPassword(), false).create(SelliscopeApiEndpointInterface.class);
         pd = new ProgressDialog(this);
         CheckAppUpdated.checkAppUpdate(this);
@@ -84,7 +86,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         ImageView profilePicture = navigationView.getHeaderView(0)
                 .findViewById(R.id.iv_profile_pic);
         userName.setText(sessionManager.getUserDetails().get("userName"));
-        Picasso.with(this)
+        Glide.with(this)
                 .load(sessionManager.getUserDetails().get("profilePictureUrl"))
                 .into(profilePicture);
         navigationView.setNavigationItemSelectedListener(this);
@@ -211,6 +213,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
+    /**
+     * Forcing user to start the app
+     */
     @Override
     protected void onDestroy() {
         super.onDestroy();

@@ -27,9 +27,9 @@ public class SessionManager {
     private static final String KEY_CLIENT_ID = "client_id";
     private static final String KEY_USER_PROFILE_PIC_URL = "profilePictureUrl";
     private static final String KEY_FCM_TOKEN = "fcmToken";
-    private static final String KEY_DIAMETER = "diameter";
+    private static final String KEY_DIAMETER = "diameter"; // diameter distance for map area comes from remote
     private static final String IS_LOGGED_IN = "IsLoggedIn";
-    private static final String IS_ALL_DATA_LOADADE = "IsAllDataLoaded";
+    private static final String IS_ALL_DATA_LOADADE = "IsAllDataLoaded"; //for updating data from local to remote
 
     // Shared Preferences
     private SharedPreferences pref;
@@ -67,6 +67,7 @@ public class SessionManager {
             Intent i = new Intent(_context, LoginActivity.class);
             i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
             _context.startActivity(i);
         } else {
             Intent i = new Intent(_context,
@@ -74,6 +75,7 @@ public class SessionManager {
             i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             _context.startActivity(i);
+
         }
 
     }

@@ -26,6 +26,9 @@ import retrofit2.Response;
  * Created by leon on 29/11/17.
  */
 
+/**
+ * update sqlite data from remote database
+ */
 public class LoadLocalIntoBackground {
     private Context context;
     private SessionManager sessionManager;
@@ -64,6 +67,9 @@ public class LoadLocalIntoBackground {
                             //for removing previous data
                             databaseHandler.removeProductCategoryBrand();
                             for (final ProductResponse.Product result : products) {
+                                //as product api  doesn't provide us stock
+                                //so we are getting stock from another api
+                                // and when we get product's info and stock info, we update the database
                                 Call<StockResponse> call1 = apiService.getProductStock(result.getId());
                                 call1.enqueue(new Callback<StockResponse>() {
                                     @Override
@@ -77,6 +83,8 @@ public class LoadLocalIntoBackground {
                                                 result.getCategory(),
                                                 response.body().getStock().getStock()
                                         );
+
+
                                     }
 
                                     @Override
@@ -86,6 +94,7 @@ public class LoadLocalIntoBackground {
                                 });
                             }
 
+                            //inserting category value from
                             new android.os.Handler().postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
@@ -152,6 +161,7 @@ public class LoadLocalIntoBackground {
                 Gson gson = new Gson();
                 if (response.code() == 200) {
                     try {
+                        //converting res
                         Outlets.Successful getOutletListSuccessful = gson.fromJson(response.body().string(), Outlets.Successful.class);
                         if (getOutletListSuccessful.outletsResult.outlets.size() != databaseHandler.getSizeOfOutlet()) {
                             databaseHandler.removeOutlet();

@@ -2,6 +2,7 @@
     <string name="app_name">Selliscope</string>
     <string name="target">Target</string>
     <string name="dashboard">Dashboard</string>
+    <string name="performance">Performance</string>
     <string name="target_navigation_item">Target</string>
     <string name="dashboard_navigation_item">Dashboard</string>
     <string name="title_activity_login">Sign in</string>

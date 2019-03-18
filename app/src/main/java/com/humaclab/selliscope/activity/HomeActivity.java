@@ -55,6 +55,7 @@ import com.humaclab.selliscope.R;
 import com.humaclab.selliscope.SelliscopeApiEndpointInterface;
 import com.humaclab.selliscope.SelliscopeApplication;
 import com.humaclab.selliscope.fragment.DashboardFragment;
+import com.humaclab.selliscope.fragment.PerformanceFragment;
 import com.humaclab.selliscope.fragment.TargetFragment;
 import com.humaclab.selliscope.model.AppVersion.AppVersion;
 import com.humaclab.selliscope.model.Diameter.DiameterResponse;
@@ -149,6 +150,10 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                     }
                     case 1: {
                         getFragment(DashboardFragment.class);
+                        break;
+                    }
+                    case 2: {
+                        getFragment(PerformanceFragment.class);
                         break;
                     }
                 }

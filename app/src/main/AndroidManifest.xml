@@ -87,7 +87,7 @@
         <activity android:name="com.humaclab.selliscope_rangs.activity.ProductActivity" />
         <activity
             android:name="com.humaclab.selliscope_rangs.activity.OrderActivity"
-            android:screenOrientation="landscape" />
+            android:screenOrientation="portrait"/>
         <activity android:name="com.humaclab.selliscope_rangs.activity.DeliveryListActivity" />
         <activity
             android:name="com.humaclab.selliscope_rangs.activity.DeliveryDetailsActivity"

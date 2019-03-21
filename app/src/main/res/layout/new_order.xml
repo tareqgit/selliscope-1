@@ -1,116 +1,191 @@
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <TableRow
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <Spinner
-            android:id="@+id/sp_product"
+        <android.support.v7.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="1dp"
             android:layout_weight="1"
-            android:clickable="true"
-            android:padding="@dimen/margin_10"
-            android:spinnerMode="dropdown" />
+            app:cardCornerRadius="3dp"
+            app:cardElevation="3dp"
+            app:cardUseCompatPadding="true"
+            >
 
-        <LinearLayout
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="1dp"
-            android:orientation="horizontal"
-            android:paddingLeft="@dimen/margin_10"
-            android:paddingRight="@dimen/margin_10">
-
-            <Button
-                android:id="@+id/btn_decrease"
-                android:layout_width="60dp"
-                android:layout_height="30dp"
-                android:layout_weight="1"
-                android:background="#fff"
-                android:text="-"
-                android:textColor="#000"
-                android:textSize="20sp" />
-
-            <EditText
-                android:id="@+id/et_qty"
+            <android.support.constraint.ConstraintLayout
                 android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <Spinner
+                    android:id="@+id/sp_product"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_weight="1"
+                    android:clickable="true"
+                    android:padding="@dimen/margin_10"
+                    android:spinnerMode="dropdown"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <LinearLayout
+                    android:id="@+id/linearLayout4"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="8dp"
+                    android:orientation="horizontal"
+                    android:paddingLeft="@dimen/margin_10"
+                    android:paddingRight="@dimen/margin_10"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/sp_product">
+
+                    <Button
+                        android:id="@+id/btn_decrease"
+                        android:layout_width="60dp"
+                        android:layout_height="30dp"
+                        android:layout_weight="1"
+                        android:background="#fff"
+                        android:text="-"
+                        android:textColor="#000"
+                        android:textSize="20sp" />
+
+                    <EditText
+                        android:id="@+id/et_qty"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:hint="Qty."
+                        android:imeOptions="actionDone"
+                        android:inputType="number"
+                        android:text="1"
+                        android:textAlignment="center"
+                        android:textColor="#000" />
+
+                    <Button
+                        android:id="@+id/btn_increase"
+                        android:layout_width="60dp"
+                        android:layout_height="30dp"
+                        android:layout_weight="1"
+                        android:background="#fff"
+                        android:text="+"
+                        android:textColor="#000"
+                        android:textSize="20sp" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tv_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:padding="@dimen/margin_10"
+                    android:text="Price"
+                    android:textAlignment="center"
+                    android:textColor="#000"
+                    app:layout_constraintBottom_toBottomOf="@+id/textView2"
+                    app:layout_constraintStart_toEndOf="@+id/textView2"
+                    app:layout_constraintStart_toStartOf="@+id/tv_amount"
+                    app:layout_constraintTop_toTopOf="@+id/textView2" />
+
+                <EditText
+                    android:id="@+id/et_discount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_weight="-2"
+                    android:hint="Discount"
+                    android:inputType="numberDecimal"
+                    android:padding="@dimen/margin_10"
+                    android:text="0.0"
+                    android:textAlignment="center"
+                    android:textColor="#000"
+                    app:layout_constraintBottom_toBottomOf="@+id/textView3"
+                    app:layout_constraintStart_toEndOf="@+id/textView3"
+                    app:layout_constraintTop_toTopOf="@+id/textView3" />
+
+                <TextView
+                    android:id="@+id/tv_amount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_weight="1"
+                    android:padding="@dimen/margin_10"
+                    android:text="0.0"
+                    android:textAlignment="center"
+                    android:textColor="#000"
+                    app:layout_constraintBottom_toBottomOf="@+id/textView5"
+                    app:layout_constraintStart_toStartOf="@+id/et_discount"
+                    app:layout_constraintTop_toTopOf="@+id/textView5" />
+
+                <ImageView
+                    android:id="@+id/btn_remove"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:background="#fff"
+                    android:gravity="center"
+                    android:padding="@dimen/margin_10"
+                    android:textAlignment="center"
+                    android:tint="#d50000"
+
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/sp_product"
+                    app:srcCompat="@drawable/remove" />
+
+                <TextView
+                    android:id="@+id/textView2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="40dp"
+                    android:text="x"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    app:layout_constraintBottom_toBottomOf="@+id/linearLayout4"
+                    app:layout_constraintStart_toEndOf="@+id/linearLayout4"
+                    app:layout_constraintTop_toTopOf="@+id/linearLayout4" />
+
+                <TextView
+                    android:id="@+id/textView3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="8dp"
+                    android:text="Promotional Discount ="
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView5" />
+
+                <TextView
+                    android:id="@+id/textView5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="24dp"
+                    android:text="Total ="
+                    app:layout_constraintEnd_toStartOf="@+id/tv_amount"
+                    app:layout_constraintTop_toBottomOf="@+id/linearLayout4" />
+
+                <!--
+            <TextView
+                android:id="@+id/btn_remove"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:hint="Qty."
-                android:imeOptions="actionDone"
-                android:inputType="number"
-                android:text="1"
-                android:textAlignment="center"
-                android:textColor="#000" />
+                android:layout_margin="1dp"
+                android:drawableLeft="@drawable/remove"
+                android:drawableTint="#d50000"
+                android:gravity="center"
+                android:padding="@dimen/margin_10"
+                android:textAlignment="center" />-->
+            </android.support.constraint.ConstraintLayout>
+        </android.support.v7.widget.CardView>
 
-            <Button
-                android:id="@+id/btn_increase"
-                android:layout_width="60dp"
-                android:layout_height="30dp"
-                android:layout_weight="1"
-                android:background="#fff"
-                android:text="+"
-                android:textColor="#000"
-                android:textSize="20sp" />
-        </LinearLayout>
 
-        <TextView
-            android:id="@+id/tv_price"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="1dp"
-            android:layout_weight="1"
-            android:padding="@dimen/margin_10"
-            android:text="Price"
-            android:textAlignment="center"
-            android:textColor="#000" />
-
-        <EditText
-            android:id="@+id/et_discount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="1dp"
-            android:layout_weight="-2"
-            android:hint="Discount"
-            android:inputType="numberDecimal"
-            android:padding="@dimen/margin_10"
-            android:text="0.0"
-            android:textAlignment="center"
-            android:textColor="#000" />
-
-        <TextView
-            android:id="@+id/tv_amount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="1dp"
-            android:layout_weight="1"
-            android:padding="@dimen/margin_10"
-            android:text="0.0"
-            android:textAlignment="center"
-            android:textColor="#000" />
-
-        <ImageView
-            android:id="@+id/btn_remove"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="1dp"
-            android:background="#fff"
-            android:gravity="center"
-            android:padding="@dimen/margin_10"
-            android:textAlignment="center"
-            android:tint="#d50000"
-            app:srcCompat="@drawable/remove" /><!--
-        <TextView
-            android:id="@+id/btn_remove"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="1dp"
-            android:drawableLeft="@drawable/remove"
-            android:drawableTint="#d50000"
-            android:gravity="center"
-            android:padding="@dimen/margin_10"
-            android:textAlignment="center" />-->
     </TableRow>
 </layout>

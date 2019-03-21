@@ -93,10 +93,15 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
                 googleApiClient.registerConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
                     @Override
                     public void onConnected(@Nullable Bundle bundle) {
-                        Location outletLocation = new Location("outlet_location");
-                        outletLocation.setLatitude(Double.parseDouble(outlet.outletLatitude));
-                        outletLocation.setLongitude(Double.parseDouble(outlet.outletLongitude));
-                        getLocation(outlet.outletId, outletLocation, holder.pbCheckIn);
+                      if(outlet.outletLatitude!=null && outlet.outletLongitude!=null) {
+                          Location outletLocation = new Location("outlet_location");
+                          outletLocation.setLatitude(Double.parseDouble(outlet.outletLatitude));
+                          outletLocation.setLongitude(Double.parseDouble(outlet.outletLongitude));
+                          getLocation(outlet.outletId, outletLocation, holder.pbCheckIn);
+                      }else{
+                          holder.pbCheckIn.setVisibility(View.INVISIBLE);
+                          Toast.makeText(context, "You have to create an order before Check-in", Toast.LENGTH_SHORT).show();
+                      }
                     }
 
                     @Override

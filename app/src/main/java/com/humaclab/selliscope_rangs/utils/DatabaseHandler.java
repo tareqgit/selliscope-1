@@ -67,6 +67,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String KEY_IS_UPDATED = "isUpdated";
 
     //product table column names
+
     private static final String KEY_PRODUCT_ID = "product_id";
     private static final String KEY_PRODUCT_NAME = "product_name";
     private static final String KEY_PRODUCT_PRICE = "product_price";
@@ -711,6 +712,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 Category category = new Category();
                 Brand brand = new Brand();
 
+                productsItem.setStock(cursor.getString(cursor.getColumnIndex(KEY_PRODUCT_STOCK))); //by tareq
+
                 productsItem.setId(cursor.getString(cursor.getColumnIndex(KEY_PRODUCT_ID)));
                 productsItem.setName(cursor.getString(cursor.getColumnIndex(KEY_PRODUCT_NAME)));
                 productsItem.setPrice(cursor.getString(cursor.getColumnIndex(KEY_PRODUCT_PRICE)));
@@ -732,9 +735,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     public List<ProductsItem> getSearchedProduct(String searchedProduct) {
+        String s= searchedProduct;
         List<ProductsItem> productList = new ArrayList<>();
         // Select All Query
-        String selectQuery = "SELECT  * FROM " + TABLE_PRODUCT + " WHERE " + KEY_PRODUCT_NAME + " LIKE '%" + searchedProduct + "%' ORDER BY " + KEY_PRODUCT_NAME + " ASC";
+
+        String selectQuery = "SELECT  * FROM " + TABLE_PRODUCT + " WHERE " + KEY_PRODUCT_NAME + " LIKE '%" + searchedProduct.toLowerCase() + "%' ";
 
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -746,6 +751,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 ProductsItem productsItem = new ProductsItem();
                 Category category = new Category();
                 Brand brand = new Brand();
+
+                productsItem.setStock(cursor.getString(cursor.getColumnIndex(KEY_PRODUCT_STOCK))); //by tareq
 
                 productsItem.setId(cursor.getString(cursor.getColumnIndex(KEY_PRODUCT_ID)));
                 productsItem.setName(cursor.getString(cursor.getColumnIndex(KEY_PRODUCT_NAME)));

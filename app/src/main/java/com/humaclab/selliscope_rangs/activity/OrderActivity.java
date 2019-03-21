@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -36,12 +37,15 @@ import com.humaclab.selliscope_rangs.model.VariantProduct.Category;
 import com.humaclab.selliscope_rangs.model.VariantProduct.ProductsItem;
 import com.humaclab.selliscope_rangs.model.promotion.PromotionQuantityResponse;
 import com.humaclab.selliscope_rangs.model.promotion.PromotionValueResponse;
+import com.humaclab.selliscope_rangs.productDialog.ProductDialogFragment;
 import com.humaclab.selliscope_rangs.utils.DatabaseHandler;
 import com.humaclab.selliscope_rangs.utils.SessionManager;
 import com.toptoche.searchablespinnerlibrary.SearchableSpinner;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -107,7 +111,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                     public void run() {
                         double totalAmount = 0;
                         double totalDiscount = 0;
-                        for (int i = 1; i < binding.tblOrders.getChildCount(); i++) {
+                        for (int i = 0; i < binding.tblOrders.getChildCount(); i++) {
                             View view = binding.tblOrders.getChildAt(i);
                             if (view instanceof TableRow) {
                                 TableRow row = (TableRow) view;
@@ -300,6 +304,9 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
     private void showProductSelectionDialog() {
         outOfStock = false;
 
+
+
+
         final boolean[] isVariant = {false};
         final AlertDialog builder = new AlertDialog.Builder(this, R.style.Theme_Design_Light).create();
         final View dialogView = LayoutInflater.from(this).inflate(R.layout.product_selection_dialog, null);
@@ -416,7 +423,30 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
             }
         });
 
-        builder.show();
+       // builder.show(); //by tarerq
+        // *tareq*//*
+        List<ProductsItem> productsItemList=new ArrayList<>();
+        try {
+         productsItemList = databaseHandler.getProduct(0, 0);
+            productName.clear();
+
+            productID.clear();
+
+            for (ProductsItem result : productsItemList) {
+                productName.add(result.getName());
+                productID.add(result.getId());
+            }
+        //    sp_product_name.setAdapter(new ArrayAdapter<>(getApplicationContext(), R.layout.spinner_item, productName));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        final FragmentManager fm=getSupportFragmentManager();
+      //  Toast.makeText(this, ""+ productsItemList.size(), Toast.LENGTH_SHORT).show();
+      //  ProductDialogFragment.products.addAll(productsItemList);
+
+        final ProductDialogFragment productDialogFragment = new ProductDialogFragment();
+        productDialogFragment.show(fm,"Product_Tag");
     }
 
     private void addFirstProduct(final String productId, final boolean fromVariant) {
@@ -493,7 +523,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
         });
     }
 
-    private void addProduct(final String productId, final boolean fromVariant, final boolean isFreeProduct, final PromotionQuantityResponse.PromotionQuantityItem promotionQuantityItem) {
+    public void addProduct(final String productId, final boolean fromVariant, final boolean isFreeProduct, final PromotionQuantityResponse.PromotionQuantityItem promotionQuantityItem) {
         if (tableRowCount == 1) {
             addFirstProduct(productId, fromVariant);
             tableRowCount++;

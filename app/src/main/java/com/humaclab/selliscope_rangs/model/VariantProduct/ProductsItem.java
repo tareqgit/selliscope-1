@@ -9,6 +9,17 @@ import java.util.List;
  */
 
 public class ProductsItem {
+  //by tareq
+  @SerializedName("stock")
+    private String stock;
+
+    public String getStock() {
+        return stock;
+    }
+
+    public void setStock(String stock) {
+        this.stock = stock;
+    }
 
     @SerializedName("img")
     private String img;

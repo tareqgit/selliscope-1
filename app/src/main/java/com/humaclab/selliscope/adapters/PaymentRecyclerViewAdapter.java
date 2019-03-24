@@ -73,13 +73,15 @@ public class PaymentRecyclerViewAdapter extends RecyclerView.Adapter<PaymentRecy
                 payment.type = (holder.sp_payment_type.getSelectedItemPosition() == 0) ? 1 : 2;
                 payment.amount = Double.parseDouble(holder.et_payment.getText().toString());
                 paymentResponse.payment = payment;
+                Log.d("Tareq" + getClass().getName(), ""+ new Gson().toJson(paymentResponse));
+
                 Call<PaymentResponse.PaymentSucessfull> call = apiService.payNow(paymentResponse);
                 call.enqueue(new Callback<PaymentResponse.PaymentSucessfull>() {
                     @Override
                     public void onResponse(Call<PaymentResponse.PaymentSucessfull> call, Response<PaymentResponse.PaymentSucessfull> response) {
                         if (response.code() == 201) {
                             try {
-                                Log.d("Payment response", new Gson().toJson(response.body().result));
+                               Log.d("Payment response", new Gson().toJson(response.body().result));
                                 pd.dismiss();
                                 Toast.makeText(context, "Payment received successfully.", Toast.LENGTH_SHORT).show();
                                 orderLists.remove(position);

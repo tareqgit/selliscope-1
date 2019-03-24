@@ -22,21 +22,22 @@
 
             <TableRow
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-            <TextView
-                android:id="@+id/tv_product_name"
-                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_margin="1dp"
-                android:layout_weight="9"
-                android:hint="Product Name"
-                android:fontFamily="@font/latobold"
-                android:textStyle="bold"
-                android:padding="5dp"
-                android:text='@{selectedProduct.productName}'
-                android:textAlignment="center"
-                android:textColor="#000" />
+                android:minHeight="40dp">
+
+                <TextView
+                    android:id="@+id/tv_product_name"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="1dp"
+                    android:layout_weight="9"
+                    android:fontFamily="@font/latobold"
+                    android:hint="Product Name"
+                    android:padding="5dp"
+                    android:text='@{selectedProduct.productName}'
+                    android:textAlignment="center"
+                    android:textColor="#000"
+                    android:textStyle="bold" />
 
                 <ImageView
                     android:id="@+id/btn_remove"

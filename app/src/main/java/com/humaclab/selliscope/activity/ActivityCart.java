@@ -36,6 +36,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.humaclab.selliscope.activity.OrderActivity.selectedProductList;
+
 public class ActivityCart extends AppCompatActivity implements OnSelectProduct {
     Double total = 0.0;
     private ActivityCartBinding binding;
@@ -46,7 +48,8 @@ public class ActivityCart extends AppCompatActivity implements OnSelectProduct {
     private SendUserLocationData sendUserLocationData;
     private Double lat = 0.0, lon = 0.0;
     private String outletName, outletID;
-    private List<SelectedProductHelper> selectedProductList;
+    SelectedProductRecyclerAdapter selectedProductRecyclerAdapter;
+    // private List<SelectedProductHelper> selectedProductList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +58,7 @@ public class ActivityCart extends AppCompatActivity implements OnSelectProduct {
 
         outletName = getIntent().getStringExtra("outletName");
         outletID = getIntent().getStringExtra("outletID");
-        selectedProductList = (List<SelectedProductHelper>) getIntent().getSerializableExtra("products");
+      // selectedProductList = (List<SelectedProductHelper>) getIntent().getSerializableExtra("products");
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("");
@@ -118,7 +121,8 @@ public class ActivityCart extends AppCompatActivity implements OnSelectProduct {
 
         binding.tvOutletName.setText(outletName);
         binding.rlSelectedProducts.setLayoutManager(new LinearLayoutManager(ActivityCart.this));
-        binding.rlSelectedProducts.setAdapter(new SelectedProductRecyclerAdapter(ActivityCart.this, ActivityCart.this, selectedProductList));
+    selectedProductRecyclerAdapter = new SelectedProductRecyclerAdapter(ActivityCart.this, ActivityCart.this, selectedProductList);
+        binding.rlSelectedProducts.setAdapter(selectedProductRecyclerAdapter);
 
         binding.btnOrder.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -256,5 +260,8 @@ public class ActivityCart extends AppCompatActivity implements OnSelectProduct {
             binding.tvGrandTotal.setText(String.valueOf(
                     total - Double.parseDouble(binding.etDiscount.getText().toString())
             ));
+        selectedProductRecyclerAdapter.notifyDataSetChanged();
     }
+
+
 }

@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.humaclab.selliscope.BR;
 import com.humaclab.selliscope.R;
@@ -15,16 +16,24 @@ import com.humaclab.selliscope.helper.SelectedProductHelper;
 
 import java.util.List;
 
+import io.fabric.sdk.android.services.common.SafeToast;
+
+import static com.humaclab.selliscope.activity.OrderActivity.selectedProductList;
+
 public class SelectedProductRecyclerAdapter extends RecyclerView.Adapter<SelectedProductRecyclerAdapter.SelectedProductViewHolder> {
     private ActivityCart activityCart;
     private Context context;
-    private List<SelectedProductHelper> selectedProductList;
+
+
+
 
     public SelectedProductRecyclerAdapter(Context context, ActivityCart activityCart, List<SelectedProductHelper> selectedProductList) {
         this.context = context;
         this.activityCart = activityCart;
-        this.selectedProductList = selectedProductList;
+        // this.selectedProductList = selectedProductList;
+
     }
+
 
     @Override
     public SelectedProductViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -39,12 +48,16 @@ public class SelectedProductRecyclerAdapter extends RecyclerView.Adapter<Selecte
         holder.getBinding().btnRemove.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                selectedProductList.remove(position);
-                SelectedProductRecyclerAdapter.this.notifyItemRemoved(position);
-                SelectedProductRecyclerAdapter.this.notifyItemRangeChanged(position, selectedProductList.size());
-                activityCart.onRemoveSelectedProduct(selectedProduct);
-                activityCart.finish();
-                context.startActivity(activityCart.getIntent());            }
+                if(selectedProductList.size()!=0) {
+                    selectedProductList.remove(position);
+                    SelectedProductRecyclerAdapter.this.notifyItemRemoved(position);
+                    SelectedProductRecyclerAdapter.this.notifyItemRangeChanged(position, selectedProductList.size());
+                    activityCart.onRemoveSelectedProduct(selectedProduct);
+                   // activityCart.finish();
+
+                   // context.startActivity(activityCart.getIntent());
+                }
+            }
         });
     }
 
@@ -65,4 +78,6 @@ public class SelectedProductRecyclerAdapter extends RecyclerView.Adapter<Selecte
             return binding;
         }
     }
+
+
 }

@@ -67,6 +67,7 @@ public interface SelliscopeApiEndpointInterface {
     @GET("product/trade-promotion")
     Call<TradePromotion> getTradePromotion();
 
+    //for route
     @GET("outlet")
     Call<ResponseBody> getOutlets();
 

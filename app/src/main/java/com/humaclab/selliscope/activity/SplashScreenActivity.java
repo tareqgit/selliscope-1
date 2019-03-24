@@ -12,7 +12,7 @@ public class SplashScreenActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         sessionManager = new SessionManager(this);
-        sessionManager.checkLogin();
+        sessionManager.checkLogin(); //for login
         finish();
     }
 }

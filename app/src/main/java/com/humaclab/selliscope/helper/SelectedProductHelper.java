@@ -12,7 +12,7 @@ public class SelectedProductHelper implements Serializable {
     private String productQuantity;
     private String productPrice;
     private String totalPrice;
-    private String productRow;
+    private String productRow; //not needed now
     private String tpDiscount;
     private String tppromotionGrandPrice;
 

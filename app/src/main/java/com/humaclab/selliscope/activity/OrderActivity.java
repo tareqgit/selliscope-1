@@ -22,6 +22,8 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.humaclab.selliscope.R;
 import com.humaclab.selliscope.adapters.OrderProductRecyclerAdapter;
+
+import com.humaclab.selliscope.adapters.SelectedProductRecyclerAdapter;
 import com.humaclab.selliscope.databinding.ActivityOrderBinding;
 import com.humaclab.selliscope.helper.SelectedProductHelper;
 import com.humaclab.selliscope.interfaces.OnSelectProduct;
@@ -35,7 +37,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OrderActivity extends AppCompatActivity implements OnSelectProduct {
+public class OrderActivity extends AppCompatActivity implements OnSelectProduct{
     private ActivityOrderBinding binding;
     private Context context;
     private DatabaseHandler databaseHandler;
@@ -44,7 +46,7 @@ public class OrderActivity extends AppCompatActivity implements OnSelectProduct 
     private List<String> categoryName = new ArrayList<>(), brandName = new ArrayList<>();
     private List<Integer> categoryID = new ArrayList<>(), brandID = new ArrayList<>();
 
-    private List<SelectedProductHelper> selectedProductList = new ArrayList<>();
+    public static List<SelectedProductHelper> selectedProductList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,6 +104,13 @@ public class OrderActivity extends AppCompatActivity implements OnSelectProduct 
             }
         });
         binding.srlProduct.setRefreshing(true);
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getProducts();
     }
 
     private void getCategory() {
@@ -153,7 +162,7 @@ public class OrderActivity extends AppCompatActivity implements OnSelectProduct 
         });
     }
 
-    private void getProducts() {
+    public void getProducts() {
         binding.srlProduct.setRefreshing(false);
         List<ProductsItem> productsItemList = databaseHandler.getProduct(0, 0);
         binding.rvProduct.setAdapter(new OrderProductRecyclerAdapter(context, OrderActivity.this, productsItemList, selectedProductList , outletType));
@@ -179,6 +188,8 @@ public class OrderActivity extends AppCompatActivity implements OnSelectProduct 
         binding.tvTotalAmt.setText(String.format("%.2f", totalAmt));
 
         binding.tvTotalGr.setText(String.format("%.2f", (totalAmt - totalDiscount)));
+
+        getProducts();//for refreshing adapter
     }
 
     @Override
@@ -193,9 +204,10 @@ public class OrderActivity extends AppCompatActivity implements OnSelectProduct 
         Double totalDiscount = 0.00;
         for (SelectedProductHelper selectedProductHelper : selectedProductList) {
             totalAmt += Double.valueOf(selectedProductHelper.getTotalPrice());
-            totalDiscount += Double.valueOf(selectedProductHelper.getTotalPrice());
+            totalDiscount += Double.valueOf(selectedProductHelper.getTpDiscount());
         }
         binding.tvTotalAmt.setText(String.format("%.2f", totalAmt));
+        binding.tvTotalDiscnt.setText(String.format("%2f", totalDiscount));
 
         binding.tvTotalGr.setText(String.format("%.2f", (totalAmt - totalDiscount)));
     }
@@ -248,4 +260,6 @@ public class OrderActivity extends AppCompatActivity implements OnSelectProduct 
         }
         return super.onOptionsItemSelected(item);
     }
+
+
 }

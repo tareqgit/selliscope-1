@@ -213,6 +213,7 @@ public class LoadLocalIntoBackground {
                     try {
                         Outlets getOutletListSuccessful = gson.fromJson(response.body().string(), Outlets.class);
                         if (!fullUpdate) {
+                            //outlets updates if outletsize in local database is not equal outlet size in remote database
                             if (getOutletListSuccessful.outletsResult.outlets.size() != databaseHandler.getSizeOfOutlet()) {
                                 databaseHandler.removeOutlet();
                                 databaseHandler.addOutlet(getOutletListSuccessful.outletsResult.outlets);

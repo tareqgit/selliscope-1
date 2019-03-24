@@ -53,9 +53,12 @@ public class OrderProductRecyclerAdapter extends RecyclerView.Adapter<OrderProdu
         this.holder = holder;
         holder.setIsRecyclable(false);
         ProductsItem products = productsItemList.get(position);
+        //on refresh adapter
         if (!selectedProductList.isEmpty()) {
             for (final SelectedProductHelper selectedProductHelper : selectedProductList) {
                 if (selectedProductHelper.getProductID().equals(String.valueOf(products.getId())))
+
+                    //need the logic
                     if (selectedProductHelper.getProductRow().equals(products.getVariantRow())) {
                         holder.cv_product_background.setCardBackgroundColor(Color.GREEN);
                         holder.getBinding().llQuantity.setVisibility(View.VISIBLE);
@@ -107,7 +110,9 @@ public class OrderProductRecyclerAdapter extends RecyclerView.Adapter<OrderProdu
                             productsItemList.get(getAdapterPosition()),outletType);
                     if (!selectedProductList.isEmpty()) {
                         for (SelectedProductHelper selectedProductHelper : selectedProductList) {
+
                             if (selectedProductHelper.getProductID().equals(String.valueOf(productsItemList.get(getAdapterPosition()).getId())))
+
                                 if (selectedProductHelper.getProductRow().equals(productsItemList.get(getAdapterPosition()).getVariantRow())) {
                                     showProductSelectionDialog.setSelectedProduct(selectedProductHelper);
                                     break;
@@ -133,6 +138,8 @@ public class OrderProductRecyclerAdapter extends RecyclerView.Adapter<OrderProdu
             getBinding().tvProductQuantity.setText(selectedProduct.getProductQuantity());
             getBinding().tvProductPrice.setText(selectedProduct.getProductPrice());
             getBinding().ivRemoveProduct.setVisibility(View.VISIBLE);
+
+
         }
 
         @Override

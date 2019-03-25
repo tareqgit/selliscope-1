@@ -18,6 +18,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.humaclab.selliscope_rangs.BuildConfig;
@@ -193,7 +194,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             case R.id.nav_about_us: {
                 final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
                 alertDialog.setTitle("About Us");
-                alertDialog.setMessage("ICT Incubator,\nSoftware Technology Park (4th Floor), Janata Tower,\nKawranbazar, Dhaka 1215, Bangladesh\ninfo@humaclab.com\nMobile: +8801711505322");
+                alertDialog.setMessage("Humac Lab ,\nHouse - 11, Road - 21\nSector - 04, Uttara ,\n Dhaka 1230, Bangladesh\ninfo@humaclab.com\nMobile: +8801711505322");
                 alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, "OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -205,6 +206,14 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             }
             case R.id.nav_check_update: {
                 CheckAppUpdated.checkAppUpdate(this);
+                break;
+            }
+            case R.id.nav_profile:{
+                Toast.makeText(this, "Coming soon", Toast.LENGTH_SHORT).show();
+                break;
+            }
+            case R.id.nav_settings:{
+                Toast.makeText(this, "Coming soon", Toast.LENGTH_SHORT).show();
                 break;
             }
         }

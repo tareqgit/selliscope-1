@@ -2,6 +2,7 @@ package com.humaclab.selliscope_rangs.activity;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
@@ -269,7 +270,9 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                             if (response.code() == 201) {
 //                                System.out.println(new Gson().toJson(response.body()));
                                 Toast.makeText(OrderActivity.this, "Order created successfully", Toast.LENGTH_LONG).show();
-//                                finish();
+
+                               finish();
+                               startActivity(new Intent(OrderActivity.this, OutletActivity.class));
                             } else if (response.code() == 401) {
 //                                System.out.println(new Gson().toJson(response.body()));
                                 Toast.makeText(OrderActivity.this, "Invalid Response from server.", Toast.LENGTH_SHORT).show();

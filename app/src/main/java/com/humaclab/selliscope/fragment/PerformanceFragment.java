@@ -12,14 +12,11 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.humaclab.selliscope.R;
-import com.humaclab.selliscope.activity.ActivitySalesReturnOld.SalesReturnActivityOld;
-import com.humaclab.selliscope.activity.DeliveryListActivity;
-import com.humaclab.selliscope.activity.InspectionActivity;
-import com.humaclab.selliscope.activity.OutletActivity;
 import com.humaclab.selliscope.activity.RouteActivity;
 import com.humaclab.selliscope.adapters.DashboardRecyclerViewAdapter;
 import com.humaclab.selliscope.adapters.PerformanceRecyclerViewAdapter;
 import com.humaclab.selliscope.model.DashboardItem;
+import com.humaclab.selliscope.orders.PerformanceOrdersActivity;
 import com.humaclab.selliscope.utils.RecyclerItemClickListener;
 
 import java.util.ArrayList;
@@ -68,6 +65,10 @@ public class PerformanceFragment extends Fragment {
                                     case 0: {
                                         getActivity().startActivity(new Intent(getActivity(),
                                                 RouteActivity.class));
+                                        break;
+                                    }
+                                    case 2: {
+                                        getActivity().startActivity(new Intent(getActivity(), PerformanceOrdersActivity.class));
                                         break;
                                     }
 

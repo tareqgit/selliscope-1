@@ -4,8 +4,10 @@ package com.humaclab.selliscope.model.PerformanceOrderModel;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 
-public class Product {
+
+public class Product implements Serializable {
 
     @SerializedName("amount")
     private Long mAmount;

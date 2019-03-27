@@ -185,5 +185,7 @@ public interface SelliscopeApiEndpointInterface {
     Call<UpdateProfileResponse> updateProfile(@Body UpdateProfile updateProfile);
 
     @GET("performance/order")
-    Call<PerformanceOrderResponse> performanceOrder(@Path("date_from") String date_from, @Path("date_to") String date_to);
+    Call<PerformanceOrderResponse> performanceOrder(@Query("date_from") String date_from, @Query("date_to") String date_to);
+
+
 }

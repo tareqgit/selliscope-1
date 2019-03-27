@@ -111,8 +111,8 @@ public class MyJobScheduler extends JobService {
     @Override
     public boolean onStopJob(JobParameters params) {
 
-        myExecuteTask.cancel(true);
-        return false;
+       // myExecuteTask.cancel(true);
+        return true;
     }
 
 

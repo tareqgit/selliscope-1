@@ -17,6 +17,7 @@ import com.humaclab.selliscope.activity.InspectionActivity;
 import com.humaclab.selliscope.activity.OutletActivity;
 import com.humaclab.selliscope.activity.RouteActivity;
 import com.humaclab.selliscope.activity.ActivitySalesReturnOld.SalesReturnActivityOld;
+import com.humaclab.selliscope.activity.SalesReturnActivity;
 import com.humaclab.selliscope.adapters.DashboardRecyclerViewAdapter;
 import com.humaclab.selliscope.model.DashboardItem;
 import com.humaclab.selliscope.utils.RecyclerItemClickListener;
@@ -99,20 +100,20 @@ public class DashboardFragment extends Fragment {
                                                 InspectionActivity.class));
                                         break;
                                     }
-                                    /*
+
                                     //new Sales Return
                                     case 4: {
                                         getActivity().startActivity(new Intent(getActivity(),
                                                 SalesReturnActivity.class));
                                         break;
-                                    }*/
+                                    }
 
                                     //old Sales Return
-                                    case 4: {
+                                   /* case 4: {
                                         getActivity().startActivity(new Intent(getActivity(),
                                                 SalesReturnActivityOld.class));
                                         break;
-                                    }
+                                    }*/
 /*                                    case 5: {
                                         Toast.makeText(getActivity(), "This feature is under development.",
                                                 Toast.LENGTH_SHORT).show();

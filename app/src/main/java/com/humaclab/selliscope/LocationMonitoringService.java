@@ -193,6 +193,8 @@ public class LocationMonitoringService extends Service implements
                 .create(SelliscopeApiEndpointInterface.class);
         List<UserLocation.Visit> userLocationVisits = new ArrayList<>();
         userLocationVisits.add(new UserLocation.Visit(latitude, longitude, GetAddressFromLatLang.getAddressFromLatLan(getApplicationContext(), latitude, longitude), timeStamp));
+         Log.d("Tareq " +getClass().getName(), "Location send from Location Monitoring service");
+        Toast.makeText(this, "Location send from Location Monitoring service", Toast.LENGTH_SHORT).show();
         Call<ResponseBody> call = apiService.sendUserLocation(new UserLocation(userLocationVisits));
         call.enqueue(new Callback<ResponseBody>() {
             @Override

@@ -112,7 +112,7 @@ public class MyJobScheduler extends JobService {
     public boolean onStopJob(JobParameters params) {
 
         myExecuteTask.cancel(true);
-        return false;
+        return true;
     }
 
 

@@ -844,6 +844,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
                 Log.i(TAG, "Permission granted, updates requested, starting location updates");
                 startStep3();
+                Toast.makeText(context, "start step 3", Toast.LENGTH_SHORT).show();
 
             } else {
                 // Permission denied.

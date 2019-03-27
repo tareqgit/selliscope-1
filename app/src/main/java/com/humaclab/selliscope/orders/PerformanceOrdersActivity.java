@@ -126,6 +126,7 @@ public class PerformanceOrdersActivity extends AppCompatActivity implements Perf
                         if(response.code()==200) {
                             Log.d("" + getClass().getName(), "" + response.code());
                             mActivityPerformanceOrdersBinding.ordersRecycler.setAdapter(new PerformenceOrdersAdapter(PerformanceOrdersActivity.this, response.body().getResult().getOrders(), PerformanceOrdersActivity.this));
+                            mActivityPerformanceOrdersBinding.totalAmountTextView.setText("Total: "+ response.body().getTotalAmount());
                             mActivityPerformanceOrdersBinding.recyclerLoader.setRefreshing(false);
                         }else{
                             Toast.makeText(PerformanceOrdersActivity.this, response.code()+": Server Error", Toast.LENGTH_SHORT).show();

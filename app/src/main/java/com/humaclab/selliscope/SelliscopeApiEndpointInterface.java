@@ -17,6 +17,7 @@ import com.humaclab.selliscope.model.OrderResponse;
 import com.humaclab.selliscope.model.OutletType.OutletTypeResponse;
 import com.humaclab.selliscope.model.Payment;
 import com.humaclab.selliscope.model.PaymentResponse;
+import com.humaclab.selliscope.model.PerformanceOrderModel.PerformanceOrderResponse;
 import com.humaclab.selliscope.model.PurchaseHistory.PurchaseHistoryResponse;
 import com.humaclab.selliscope.model.Reason.ReasonResponse;
 import com.humaclab.selliscope.model.RoutePlan.RouteDetailsResponse;
@@ -182,4 +183,7 @@ public interface SelliscopeApiEndpointInterface {
 
     @POST("profile/update")
     Call<UpdateProfileResponse> updateProfile(@Body UpdateProfile updateProfile);
+
+    @GET("performance/order")
+    Call<PerformanceOrderResponse> performanceOrder(@Path("date_from") String date_from, @Path("date_to") String date_to);
 }

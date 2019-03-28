@@ -1,5 +1,5 @@
 
-package com.humaclab.selliscope.model.PerformanceOrderModel;
+package com.humaclab.selliscope.model.performance.OrdersModel;
 
 import java.util.List;
 import com.google.gson.annotations.SerializedName;

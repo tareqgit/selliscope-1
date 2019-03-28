@@ -32,8 +32,9 @@
         android:networkSecurityConfig="@xml/network_security_config"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".orders.PerformanceOrdersProductsActivity"></activity>
-        <activity android:name=".orders.PerformanceOrdersActivity" />
+        <activity android:name=".performance.payments.PerformancePaymentsActivity"></activity>
+        <activity android:name=".performance.orders.PerformanceOrdersProductsActivity" />
+        <activity android:name=".performance.orders.PerformanceOrdersActivity" />
 
         <uses-library
             android:name="org.apache.http.legacy"

@@ -17,7 +17,7 @@ import com.humaclab.selliscope.model.OrderResponse;
 import com.humaclab.selliscope.model.OutletType.OutletTypeResponse;
 import com.humaclab.selliscope.model.Payment;
 import com.humaclab.selliscope.model.PaymentResponse;
-import com.humaclab.selliscope.model.PerformanceOrderModel.PerformanceOrderResponse;
+import com.humaclab.selliscope.model.performance.OrdersModel.PerformanceOrderResponse;
 import com.humaclab.selliscope.model.PurchaseHistory.PurchaseHistoryResponse;
 import com.humaclab.selliscope.model.Reason.ReasonResponse;
 import com.humaclab.selliscope.model.RoutePlan.RouteDetailsResponse;
@@ -36,6 +36,7 @@ import com.humaclab.selliscope.model.UpdateProfile.UpdateProfileResponse;
 import com.humaclab.selliscope.model.UserLocation;
 import com.humaclab.selliscope.model.PriceVariation.PriceVariationResponse;
 import com.humaclab.selliscope.model.VariantProduct.VariantProductResponse;
+import com.humaclab.selliscope.model.performance.paymentsModel.PaymentsResponse;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -187,5 +188,7 @@ public interface SelliscopeApiEndpointInterface {
     @GET("performance/order")
     Call<PerformanceOrderResponse> performanceOrder(@Query("date_from") String date_from, @Query("date_to") String date_to);
 
+    @GET("performance/payment")
+    Call<PaymentsResponse> performancePayments(@Query("date_from") String date_from, @Query("date_to") String date_to);
 
 }

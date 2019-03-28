@@ -4,18 +4,19 @@
  *  Last modified 3/27/19 3:47 PM
  */
 
-package com.humaclab.selliscope.orders;
+package com.humaclab.selliscope.performance.orders;
 
 import android.databinding.DataBindingUtil;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.humaclab.selliscope.R;
 import com.humaclab.selliscope.databinding.ActivityPerformanceOrdersProductsBinding;
-import com.humaclab.selliscope.model.PerformanceOrderModel.Product;
+import com.humaclab.selliscope.model.performance.OrdersModel.Product;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,5 +40,15 @@ public class PerformanceOrdersProductsActivity extends AppCompatActivity {
         mBinding.productRecycler.setLayoutManager(new LinearLayoutManager(this));
         mProductList= (List<Product>) getIntent().getSerializableExtra("products");
         mBinding.productRecycler.setAdapter(new PerformanceOrdersProductsActivityAdapter(this,mProductList));
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

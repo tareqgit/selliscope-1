@@ -16,7 +16,8 @@ import com.humaclab.selliscope.activity.RouteActivity;
 import com.humaclab.selliscope.adapters.DashboardRecyclerViewAdapter;
 import com.humaclab.selliscope.adapters.PerformanceRecyclerViewAdapter;
 import com.humaclab.selliscope.model.DashboardItem;
-import com.humaclab.selliscope.orders.PerformanceOrdersActivity;
+import com.humaclab.selliscope.performance.orders.PerformanceOrdersActivity;
+import com.humaclab.selliscope.performance.payments.PerformancePaymentsActivity;
 import com.humaclab.selliscope.utils.RecyclerItemClickListener;
 
 import java.util.ArrayList;
@@ -71,6 +72,11 @@ public class PerformanceFragment extends Fragment {
                                         getActivity().startActivity(new Intent(getActivity(), PerformanceOrdersActivity.class));
                                         break;
                                     }
+                                    case 3: {
+                                        getActivity().startActivity(new Intent(getActivity(), PerformancePaymentsActivity.class));
+                                        break;
+                                    }
+
 
                                     default: {
                                         Toast.makeText(getActivity(), "Please upgrade your package" +

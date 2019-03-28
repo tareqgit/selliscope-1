@@ -4,7 +4,7 @@
  *  Last modified 3/27/19 2:39 PM
  */
 
-package com.humaclab.selliscope.orders;
+package com.humaclab.selliscope.performance.orders;
 
 import android.content.Context;
 import android.databinding.DataBindingUtil;
@@ -14,10 +14,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.android.databinding.library.baseAdapters.BR;
+
+import com.humaclab.selliscope.BR;
 import com.humaclab.selliscope.R;
 import com.humaclab.selliscope.databinding.ActivityPerformenceOrdersModelBinding;
-import com.humaclab.selliscope.model.PerformanceOrderModel.Order;
+import com.humaclab.selliscope.model.performance.OrdersModel.Order;
 
 import java.util.List;
 

@@ -4,7 +4,7 @@
  *  Last modified 3/27/19 11:12 AM
  */
 
-package com.humaclab.selliscope.orders;
+package com.humaclab.selliscope.performance.orders;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.TextView;
@@ -23,9 +24,9 @@ import com.humaclab.selliscope.R;
 import com.humaclab.selliscope.SelliscopeApiEndpointInterface;
 import com.humaclab.selliscope.SelliscopeApplication;
 import com.humaclab.selliscope.databinding.ActivityPerformanceOrdersBinding;
-import com.humaclab.selliscope.model.PerformanceOrderModel.Order;
-import com.humaclab.selliscope.model.PerformanceOrderModel.PerformanceOrderResponse;
-import com.humaclab.selliscope.model.PerformanceOrderModel.Product;
+import com.humaclab.selliscope.model.performance.OrdersModel.Order;
+import com.humaclab.selliscope.model.performance.OrdersModel.PerformanceOrderResponse;
+import com.humaclab.selliscope.model.performance.OrdersModel.Product;
 import com.humaclab.selliscope.utils.SessionManager;
 
 import java.io.Serializable;
@@ -145,9 +146,19 @@ public class PerformanceOrdersActivity extends AppCompatActivity implements Perf
     @Override
     public void onOrderClick(Order order) {
         Intent intent=new Intent(PerformanceOrdersActivity.this,PerformanceOrdersProductsActivity.class);
-        Toast.makeText(this, ""+order.getProducts().get(0).getName(), Toast.LENGTH_SHORT).show();
+     //   Toast.makeText(this, ""+order.getProducts().get(0).getName(), Toast.LENGTH_SHORT).show();
         List<Product> mlist=order.getProducts();
         intent.putExtra("products", (Serializable) mlist);
         startActivity(intent);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

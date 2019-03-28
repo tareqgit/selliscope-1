@@ -44,7 +44,7 @@ public class OrderActivity extends AppCompatActivity implements OnSelectProduct 
     private List<String> categoryName = new ArrayList<>(), brandName = new ArrayList<>();
     private List<Integer> categoryID = new ArrayList<>(), brandID = new ArrayList<>();
 
-    private List<SelectedProductHelper> selectedProductList = new ArrayList<>();
+    public static List<SelectedProductHelper> selectedProductList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,7 +70,7 @@ public class OrderActivity extends AppCompatActivity implements OnSelectProduct 
 
         getCategory();
         getBrand();
-        getProducts();
+      //  getProducts();
 
         binding.etSearchProduct.addTextChangedListener(new TextWatcher() {
             @Override
@@ -103,7 +103,12 @@ public class OrderActivity extends AppCompatActivity implements OnSelectProduct 
         });
         binding.srlProduct.setRefreshing(true);
     }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getProducts();
 
+    }
     private void getCategory() {
         List<Category> categories = databaseHandler.getCategory();
         categoryName.clear();
@@ -117,9 +122,11 @@ public class OrderActivity extends AppCompatActivity implements OnSelectProduct 
         binding.spProductCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                binding.srlProduct.setRefreshing(false);
-                List<ProductsItem> productsItemList = databaseHandler.getProduct(categoryID.get(position), brandID.get(binding.spProductBrand.getSelectedItemPosition()));
-                binding.rvProduct.setAdapter(new OrderProductRecyclerAdapter(context, OrderActivity.this, productsItemList, selectedProductList,outletType));
+                if (position != 0) {
+                    binding.srlProduct.setRefreshing(false);
+                    List<ProductsItem> productsItemList = databaseHandler.getProduct(categoryID.get(position), brandID.get(binding.spProductBrand.getSelectedItemPosition()));
+                    binding.rvProduct.setAdapter(new OrderProductRecyclerAdapter(context, OrderActivity.this, productsItemList, selectedProductList, outletType));
+                }
             }
 
             @Override
@@ -142,9 +149,11 @@ public class OrderActivity extends AppCompatActivity implements OnSelectProduct 
         binding.spProductBrand.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                binding.srlProduct.setRefreshing(false);
-                List<ProductsItem> productsItemList = databaseHandler.getProduct(categoryID.get(binding.spProductCategory.getSelectedItemPosition()), brandID.get(position));
-                binding.rvProduct.setAdapter(new OrderProductRecyclerAdapter(context, OrderActivity.this, productsItemList, selectedProductList,outletType));
+                if (position != 0) {
+                    binding.srlProduct.setRefreshing(false);
+                    List<ProductsItem> productsItemList = databaseHandler.getProduct(categoryID.get(binding.spProductCategory.getSelectedItemPosition()), brandID.get(position));
+                    binding.rvProduct.setAdapter(new OrderProductRecyclerAdapter(context, OrderActivity.this, productsItemList, selectedProductList, outletType));
+                }
             }
 
             @Override
@@ -153,9 +162,9 @@ public class OrderActivity extends AppCompatActivity implements OnSelectProduct 
         });
     }
 
-    private void getProducts() {
+    public void getProducts() {
         binding.srlProduct.setRefreshing(false);
-        List<ProductsItem> productsItemList = databaseHandler.getProduct(0, 0);
+        List<ProductsItem> productsItemList = databaseHandler.getProduct(categoryID.get(binding.spProductCategory.getSelectedItemPosition()), brandID.get(binding.spProductBrand.getSelectedItemPosition()));
         binding.rvProduct.setAdapter(new OrderProductRecyclerAdapter(context, OrderActivity.this, productsItemList, selectedProductList , outletType));
         //if this activity called from product activity
     }
@@ -179,6 +188,8 @@ public class OrderActivity extends AppCompatActivity implements OnSelectProduct 
         binding.tvTotalAmt.setText(String.format("%.2f", totalAmt));
 
         binding.tvTotalGr.setText(String.format("%.2f", (totalAmt - totalDiscount)));
+
+        getProducts();//for refreshing
     }
 
     @Override
@@ -193,9 +204,10 @@ public class OrderActivity extends AppCompatActivity implements OnSelectProduct 
         Double totalDiscount = 0.00;
         for (SelectedProductHelper selectedProductHelper : selectedProductList) {
             totalAmt += Double.valueOf(selectedProductHelper.getTotalPrice());
-            totalDiscount += Double.valueOf(selectedProductHelper.getTotalPrice());
+            totalDiscount += Double.valueOf(selectedProductHelper.getTpDiscount());
         }
         binding.tvTotalAmt.setText(String.format("%.2f", totalAmt));
+        binding.tvTotalDiscnt.setText(String.format("%2f", totalDiscount));
 
         binding.tvTotalGr.setText(String.format("%.2f", (totalAmt - totalDiscount)));
     }

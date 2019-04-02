@@ -112,8 +112,14 @@
     <string name="pay_now">এখন পরিশোধ করুন</string>
     <string name="search_product">পণ্য অনুসন্ধান করুন</string>
     <string name="total">মোট:</string>
+    <string name="transport">পরিবহন</string>
     <string name="select_category">ক্যাটাগরি নির্বাচন করুন</string>
     <string name="select_brand">ব্র্যান্ড নির্বাচন করুন</string>
+    <string name="select_payment">চালান প্রকার</string>
+    <string name="select_payment_cash">নগদ</string>
+    <string name="select_payment_credit">ধার</string>
+    <string name="select_payment_advance">আগাম</string>
+
     <string name="stockDialogue">স্টক:</string>
     <string name="total_price">মোট দাম:</string>
     <string name="select">সিলেক্ট</string>

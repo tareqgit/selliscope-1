@@ -24,6 +24,12 @@ public class AddNewOrder implements Serializable {
         @SerializedName("comments")
         public String comment;
 
+        @SerializedName("transport")
+        public String transport;
+
+        @SerializedName("payment_type")
+        public int paymentType;
+
         @SerializedName("lat")
         public String latitude;
 

@@ -111,8 +111,14 @@
     <string name="pay_now">Pay Now</string>
     <string name="search_product">Search Product</string>
     <string name="total">Total:</string>
+    <string name="transport">Transport</string>
     <string name="select_category">Select Category</string>
     <string name="select_brand">Select Brand</string>
+    <string name="select_payment">Invoice Type</string>
+    <string name="select_payment_cash">Cash</string>
+    <string name="select_payment_credit">Credit</string>
+    <string name="select_payment_advance">Advance</string>
+
     <string name="stockDialogue">Stock:</string>
     <string name="total_price">Total Price:</string>
     <string name="select">Select</string>

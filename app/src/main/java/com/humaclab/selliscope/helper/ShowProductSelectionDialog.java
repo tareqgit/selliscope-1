@@ -51,6 +51,7 @@ public class ShowProductSelectionDialog {
 
     public void showDialog() {
         //Set the global Number
+        if(productsItem.getPrice()!=null)
         priceOfRate = Double.valueOf(productsItem.getPrice().replace(",",""));
         binding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.item_order_product_selection, null, false);
         binding.tvProductName.setText(productsItem.getName());

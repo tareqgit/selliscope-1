@@ -9,6 +9,7 @@ package com.humaclab.selliscope.performance.orders;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -27,6 +28,7 @@ import com.humaclab.selliscope.databinding.ActivityPerformanceOrdersBinding;
 import com.humaclab.selliscope.model.performance.OrdersModel.Order;
 import com.humaclab.selliscope.model.performance.OrdersModel.PerformanceOrderResponse;
 import com.humaclab.selliscope.model.performance.OrdersModel.Product;
+import com.humaclab.selliscope.utils.CurrentTimeUtilityClass;
 import com.humaclab.selliscope.utils.SessionManager;
 
 import java.io.Serializable;
@@ -41,7 +43,8 @@ public class PerformanceOrdersActivity extends AppCompatActivity implements Perf
 
     private SessionManager sessionManager;
     private SelliscopeApiEndpointInterface apiService;
-
+   private static String startDate="";
+   private static String endDate="";
 
     private     ActivityPerformanceOrdersBinding mActivityPerformanceOrdersBinding;
     @Override
@@ -62,9 +65,19 @@ public class PerformanceOrdersActivity extends AppCompatActivity implements Perf
 
         mActivityPerformanceOrdersBinding.ordersRecycler.setLayoutManager(new LinearLayoutManager(this));
 
-        mActivityPerformanceOrdersBinding.recyclerLoader.setRefreshing(true);
+       startDate= CurrentTimeUtilityClass.getCurrentTimeStampDate();
+       endDate=CurrentTimeUtilityClass.getCurrentTimeStampDate();
 
-        performanceOrderAction("",""); //for Initial value in recyclerview get the data of today
+        mActivityPerformanceOrdersBinding.recyclerLoader.setRefreshing(true);
+        mActivityPerformanceOrdersBinding.recyclerLoader.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                performanceOrderAction(startDate,endDate); //for Initial value in recyclerview get the data of today
+
+            }
+        });
+
+        performanceOrderAction(startDate,endDate); //for Initial value in recyclerview get the data of today
 
         mActivityPerformanceOrdersBinding.startDateText.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -77,11 +90,13 @@ public class PerformanceOrdersActivity extends AppCompatActivity implements Perf
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                         mActivityPerformanceOrdersBinding.startDateText.setText(year + "-"+ (month+1) + "-"+dayOfMonth);
+                        startDate=mActivityPerformanceOrdersBinding.startDateText.getText().toString();
+
                     }
                 },year,month,day);
                 datePickerDialog.getDatePicker().setMaxDate(c.getTimeInMillis());
                 datePickerDialog.show();
-            }
+                }
         });
 
         mActivityPerformanceOrdersBinding.endDateText.setOnClickListener(new View.OnClickListener() {
@@ -95,11 +110,13 @@ public class PerformanceOrdersActivity extends AppCompatActivity implements Perf
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                         mActivityPerformanceOrdersBinding.endDateText.setText(year + "-"+ (month+1) + "-"+dayOfMonth);
+                        endDate=mActivityPerformanceOrdersBinding.endDateText.getText().toString();
+
                     }
                 },year,month,day);
                 datePickerDialog.getDatePicker().setMaxDate(c.getTimeInMillis());
                 datePickerDialog.show();
-            }
+                          }
         });
 
         mActivityPerformanceOrdersBinding.searchButton.setOnClickListener(new View.OnClickListener() {
@@ -108,7 +125,8 @@ public class PerformanceOrdersActivity extends AppCompatActivity implements Perf
 
                 mActivityPerformanceOrdersBinding.recyclerLoader.setRefreshing(true);
 
-                performanceOrderAction(mActivityPerformanceOrdersBinding.startDateText.getText().toString(), mActivityPerformanceOrdersBinding.endDateText.getText().toString());
+
+                  performanceOrderAction(mActivityPerformanceOrdersBinding.startDateText.getText().toString(), mActivityPerformanceOrdersBinding.endDateText.getText().toString());
 
             }
 

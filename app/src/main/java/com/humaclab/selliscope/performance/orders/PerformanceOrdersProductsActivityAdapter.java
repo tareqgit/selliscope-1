@@ -49,7 +49,11 @@ public class PerformanceOrdersProductsActivityAdapter extends RecyclerView.Adapt
 
     @Override
     public int getItemCount() {
+
+        if(mProductList!=null)
         return mProductList.size();
+        else
+            return 0;
     }
 
     public class TViewHolder extends RecyclerView.ViewHolder{

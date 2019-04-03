@@ -8,6 +8,7 @@ package com.humaclab.selliscope.performance.payments;
 
 import android.app.DatePickerDialog;
 import android.databinding.DataBindingUtil;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -27,6 +28,7 @@ import com.humaclab.selliscope.model.performance.OrdersModel.PerformanceOrderRes
 import com.humaclab.selliscope.model.performance.paymentsModel.PaymentsResponse;
 import com.humaclab.selliscope.performance.orders.PerformanceOrdersActivity;
 import com.humaclab.selliscope.performance.orders.PerformenceOrdersAdapter;
+import com.humaclab.selliscope.utils.CurrentTimeUtilityClass;
 import com.humaclab.selliscope.utils.SessionManager;
 
 import java.util.Calendar;
@@ -39,6 +41,8 @@ public class PerformancePaymentsActivity extends AppCompatActivity {
     private SessionManager sessionManager;
     private SelliscopeApiEndpointInterface apiService;
     private ActivityPerformancePaymentsBinding mBinding;
+    private static String startDate="";
+    private static String endDate="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,9 +63,20 @@ public class PerformancePaymentsActivity extends AppCompatActivity {
 
        mBinding.ordersRecycler.setLayoutManager(new LinearLayoutManager(this));
 
-        mBinding.recyclerLoader.setRefreshing(true);
+        startDate= CurrentTimeUtilityClass.getCurrentTimeStampDate();
+        endDate=CurrentTimeUtilityClass.getCurrentTimeStampDate();
 
-        performanceOrderAction("","");
+        mBinding.recyclerLoader.setRefreshing(true);
+       // mBinding.recyclerLoader.setEnabled(false);
+        mBinding.recyclerLoader.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                performanceOrderAction(startDate,endDate); //for Initial value in recyclerview get the data of today
+
+            }
+        });
+
+        performanceOrderAction(startDate,endDate);
 
         mBinding.startDateText.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,6 +89,7 @@ public class PerformancePaymentsActivity extends AppCompatActivity {
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                         mBinding.startDateText.setText(year + "-"+ (month+1) + "-"+dayOfMonth);
+                        startDate=mBinding.startDateText.getText().toString();
                     }
                 },year,month,day);
                 datePickerDialog.getDatePicker().setMaxDate(c.getTimeInMillis());
@@ -92,6 +108,8 @@ public class PerformancePaymentsActivity extends AppCompatActivity {
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                         mBinding.endDateText.setText(year + "-"+ (month+1) + "-"+dayOfMonth);
+                        endDate=mBinding.endDateText.getText().toString();
+
                     }
                 },year,month,day);
                 datePickerDialog.getDatePicker().setMaxDate(c.getTimeInMillis());

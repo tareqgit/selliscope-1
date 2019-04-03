@@ -91,10 +91,12 @@ public class ActivityCart extends AppCompatActivity implements OnSelectProduct {
             total += Double.valueOf(selectedProduct.getTppromotionGrandPrice());
         }
         binding.tvTotal.setText(String.valueOf(total));
-        if (!binding.etDiscount.getText().toString().equals(""))
+        if (!binding.etDiscount.getText().toString().equals("")){
             binding.tvGrandTotal.setText(String.valueOf(
                     total - Double.parseDouble(binding.etDiscount.getText().toString())
             ));
+        }
+
         binding.etDiscount.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -191,9 +193,12 @@ public class ActivityCart extends AppCompatActivity implements OnSelectProduct {
                         if (response.code() == 201) {
                             System.out.println(new Gson().toJson(response.body()));
                             Toast.makeText(ActivityCart.this, "Order created successfully", Toast.LENGTH_LONG).show();
+                           //clear selected Item list
+                            selectedProductList.clear();
                             Intent intent = new Intent(getApplicationContext(), OutletActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                             startActivity(intent);
+
                             //finish();
                             //startActivity(new Intent(ActivityCart.this, OutletActivity.class));
                         } else if (response.code() == 401) {
@@ -256,10 +261,14 @@ public class ActivityCart extends AppCompatActivity implements OnSelectProduct {
             totalAmt += Double.valueOf(selectedProductHelper.getTotalPrice());
         }
         binding.tvTotal.setText(String.valueOf(totalAmt));
-        if (!binding.etDiscount.getText().toString().equals(""))
+
+        if (!binding.etDiscount.getText().toString().equals("")) {
             binding.tvGrandTotal.setText(String.valueOf(
-                    total - Double.parseDouble(binding.etDiscount.getText().toString())
+                    totalAmt - Double.parseDouble(binding.etDiscount.getText().toString())
             ));
+        }else{
+            binding.tvGrandTotal.setText(String.valueOf(totalAmt));
+        }
         selectedProductRecyclerAdapter.notifyDataSetChanged();
 
     }

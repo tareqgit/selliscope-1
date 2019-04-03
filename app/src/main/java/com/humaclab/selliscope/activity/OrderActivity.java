@@ -106,6 +106,7 @@ public class OrderActivity extends AppCompatActivity implements OnSelectProduct 
     @Override
     protected void onResume() {
         super.onResume();
+
         getProducts();
 
     }
@@ -237,6 +238,8 @@ public class OrderActivity extends AppCompatActivity implements OnSelectProduct 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        //clear selected Item list
+        selectedProductList.clear();
         finish();
     }
 

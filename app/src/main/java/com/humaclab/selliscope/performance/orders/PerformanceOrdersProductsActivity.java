@@ -33,7 +33,7 @@ public class PerformanceOrdersProductsActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("");
         TextView toolbarTitle = findViewById(R.id.tv_toolbar_title);
-        toolbarTitle.setText("Orders");
+        toolbarTitle.setText("Products");
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 

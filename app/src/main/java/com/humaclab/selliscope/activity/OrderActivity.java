@@ -175,8 +175,8 @@ public class OrderActivity extends AppCompatActivity implements OnSelectProduct 
     public void onSetSelectedProduct(SelectedProductHelper selectedProduct) {
 
          for (SelectedProductHelper selected: selectedProductList) {
-            if(selected.getProductID().equalsIgnoreCase(selectedProduct.getProductID())){
-                Log.d("tareq_test" , "product matched"+ selected.getProductID());
+            if(selected.getProductName().equalsIgnoreCase(selectedProduct.getProductName()) && selected.getProductID().equalsIgnoreCase(selectedProduct.getProductID()) ){
+                Log.d("tareq_test" , "product matched"+ selected.getProductName());
 
                 selectedProductList.remove(selected);
             }
@@ -193,11 +193,12 @@ public class OrderActivity extends AppCompatActivity implements OnSelectProduct 
         Double totalDiscount = 0.00;
         for (SelectedProductHelper selectedProductHelper : selectedProductList) {
             totalAmt += Double.valueOf(selectedProductHelper.getTotalPrice());
-            totalDiscount += Double.valueOf(selectedProductHelper.getTotalPrice());
+            totalDiscount += Double.valueOf(selectedProductHelper.getTpDiscount());
         }
         binding.tvTotalAmt.setText(String.format("%.2f", totalAmt));
-
+        binding.tvTotalDiscnt.setText(String.format("%.2f", totalDiscount));
         binding.tvTotalGr.setText(String.format("%.2f", (totalAmt - totalDiscount)));
+        Log.d("tareq_test" , ""+totalAmt+" "+totalDiscount+" ");
 
         getProducts();//for refreshing
     }
@@ -220,6 +221,7 @@ public class OrderActivity extends AppCompatActivity implements OnSelectProduct 
         binding.tvTotalDiscnt.setText(String.format("%2f", totalDiscount));
 
         binding.tvTotalGr.setText(String.format("%.2f", (totalAmt - totalDiscount)));
+        Log.d("tareq_test" , ""+totalAmt+" "+totalDiscount+" ");
     }
 
     @Override
@@ -229,7 +231,7 @@ public class OrderActivity extends AppCompatActivity implements OnSelectProduct 
         if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             binding.rvProduct.setLayoutManager(new GridLayoutManager(context, 4));
         } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
-            binding.rvProduct.setLayoutManager(new GridLayoutManager(context, 3));
+            binding.rvProduct.setLayoutManager(new GridLayoutManager(context, 2));
         }
     }
 

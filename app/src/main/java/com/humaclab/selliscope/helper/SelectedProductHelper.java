@@ -7,6 +7,7 @@ import java.io.Serializable;
  */
 
 public class SelectedProductHelper implements Serializable {
+
     private String productID;
     private String productName;
     private String productQuantity;

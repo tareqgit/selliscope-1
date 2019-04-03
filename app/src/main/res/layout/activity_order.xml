@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <LinearLayout
@@ -64,70 +65,88 @@
                     android:layout_height="match_parent" />
             </android.support.v4.widget.SwipeRefreshLayout>
 
-            <LinearLayout
+            <android.support.constraint.ConstraintLayout
                 android:id="@+id/ll_total"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentEnd="true"
                 android:layout_alignParentStart="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
                 android:background="#8990caf9"
                 android:orientation="horizontal"
                 android:padding="10dp">
 
                 <LinearLayout
+                    android:id="@+id/linearLayout6"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/linearLayout5"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Total:"
                         android:fontFamily="@font/latobold"
+                        android:text="Total:"
                         android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/tv_total_amt"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:hint="Total"
-                        android:fontFamily="@font/latoregular"/>
+                        android:fontFamily="@font/latoregular"
+                        android:hint="0.0" />
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/linearLayout5"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    app:layout_constraintBottom_toBottomOf="@+id/linearLayout6"
+                    app:layout_constraintEnd_toStartOf="@+id/linearLayout4"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/linearLayout6"
+                    app:layout_constraintTop_toTopOf="@+id/linearLayout6">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Discount:"
                         android:fontFamily="@font/latobold"
+                        android:text="Discount:"
                         android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/tv_total_discnt"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:hint="Discount"
-                        android:fontFamily="@font/latoregular"/>
+                        android:fontFamily="@font/latoregular"
+                        android:hint="0.0" />
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/linearLayout4"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    app:layout_constraintBottom_toBottomOf="@+id/linearLayout5"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/linearLayout5"
+                    app:layout_constraintTop_toTopOf="@+id/linearLayout5">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Gr Total:"
                         android:fontFamily="@font/latobold"
+                        android:text="Gr Total:"
                         android:textStyle="bold" />
 
                     <TextView
@@ -135,9 +154,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/latoregular"
-                        android:hint="Grand Total" />
+                        android:hint="0.0" />
                 </LinearLayout>
-            </LinearLayout>
+            </android.support.constraint.ConstraintLayout>
         </RelativeLayout>
     </LinearLayout>
 </layout>

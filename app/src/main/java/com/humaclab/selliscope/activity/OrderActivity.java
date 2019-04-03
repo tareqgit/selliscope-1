@@ -11,6 +11,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -172,11 +173,19 @@ public class OrderActivity extends AppCompatActivity implements OnSelectProduct 
 
     @Override
     public void onSetSelectedProduct(SelectedProductHelper selectedProduct) {
-        if (selectedProductList.contains(selectedProduct)) {
+
+         for (SelectedProductHelper selected: selectedProductList) {
+            if(selected.getProductID().equalsIgnoreCase(selectedProduct.getProductID())){
+                Log.d("tareq_test" , "product matched"+ selected.getProductID());
+
+                selectedProductList.remove(selected);
+            }
+        }
+     /*   if (selectedProductList.contains(selectedProduct)) {
             selectedProductList.remove(selectedProductList.indexOf(selectedProduct));
             selectedProductList.add(selectedProductList.indexOf(selectedProduct), selectedProduct);
         } else
-            selectedProductList.add(selectedProduct);
+     */       selectedProductList.add(selectedProduct);
 
         System.out.println("Product list:" + new Gson().toJson(selectedProductList) + "\nIndex: " + selectedProductList.indexOf(selectedProduct));
 

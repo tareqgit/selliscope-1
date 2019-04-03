@@ -7,7 +7,7 @@ import com.google.gson.annotations.SerializedName;
 public class Order {
 
     @SerializedName("grand_total")
-    private Long mGrandTotal;
+    private Double mGrandTotal;
     @SerializedName("order_date")
     private String mOrderDate;
     @SerializedName("order_id")
@@ -15,11 +15,11 @@ public class Order {
     @SerializedName("products")
     private List<Product> mProducts;
 
-    public Long getGrandTotal() {
+    public Double getGrandTotal() {
         return mGrandTotal;
     }
 
-    public void setGrandTotal(Long grandTotal) {
+    public void setGrandTotal(Double grandTotal) {
         mGrandTotal = grandTotal;
     }
 

@@ -11,7 +11,7 @@ public class Datum {
     @SerializedName("outlet_name")
     private String mOutletName;
     @SerializedName("total_amount")
-    private Long mTotalAmount;
+    private Double mTotalAmount;
 
     public String getOutletName() {
         return mOutletName;
@@ -21,11 +21,11 @@ public class Datum {
         mOutletName = outletName;
     }
 
-    public Long getTotalAmount() {
+    public Double getTotalAmount() {
         return mTotalAmount;
     }
 
-    public void setTotalAmount(Long totalAmount) {
+    public void setTotalAmount(Double totalAmount) {
         mTotalAmount = totalAmount;
     }
 

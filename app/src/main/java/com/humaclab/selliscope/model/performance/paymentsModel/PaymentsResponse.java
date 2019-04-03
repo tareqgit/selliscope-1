@@ -11,7 +11,7 @@ public class PaymentsResponse {
     @SerializedName("error")
     private Boolean mError;
     @SerializedName("grand_amount")
-    private Long mGrandAmount;
+    private Double mGrandAmount;
     @SerializedName("result")
     private Result mResult;
 
@@ -23,11 +23,11 @@ public class PaymentsResponse {
         mError = error;
     }
 
-    public Long getGrandAmount() {
+    public Double getGrandAmount() {
         return mGrandAmount;
     }
 
-    public void setGrandAmount(Long grandAmount) {
+    public void setGrandAmount(Double grandAmount) {
         mGrandAmount = grandAmount;
     }
 

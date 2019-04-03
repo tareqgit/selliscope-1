@@ -10,17 +10,17 @@ import java.io.Serializable;
 public class Product implements Serializable {
 
     @SerializedName("amount")
-    private Long mAmount;
+    private Double mAmount;
     @SerializedName("name")
     private String mName;
     @SerializedName("qty")
     private Long mQty;
 
-    public Long getAmount() {
+    public Double getAmount() {
         return mAmount;
     }
 
-    public void setAmount(Long amount) {
+    public void setAmount(Double amount) {
         mAmount = amount;
     }
 

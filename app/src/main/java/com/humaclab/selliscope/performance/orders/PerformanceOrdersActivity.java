@@ -141,6 +141,7 @@ public class PerformanceOrdersActivity extends AppCompatActivity implements Perf
                 .enqueue(new Callback<PerformanceOrderResponse>() {
                     @Override
                     public void onResponse(Call<PerformanceOrderResponse> call, Response<PerformanceOrderResponse> response) {
+                        Log.d("tareq_test" , ""+response.code());
 
                         if(response.code()==200) {
                             Log.d("" + getClass().getName(), "" + response.code());
@@ -148,13 +149,17 @@ public class PerformanceOrdersActivity extends AppCompatActivity implements Perf
                             mActivityPerformanceOrdersBinding.totalAmountTextView.setText("Total: "+ response.body().getTotalAmount());
                             mActivityPerformanceOrdersBinding.recyclerLoader.setRefreshing(false);
                         }else{
+                            mActivityPerformanceOrdersBinding.recyclerLoader.setRefreshing(false);
+                            Log.d("tareq_test" , ""+response.code());
                             Toast.makeText(PerformanceOrdersActivity.this, response.code()+": Server Error", Toast.LENGTH_SHORT).show();
                         }
                     }
 
                     @Override
                     public void onFailure(Call<PerformanceOrderResponse> call, Throwable t) {
-                        Log.d("" +getClass().getName(), ""+t.getMessage());
+                        Log.d("tareq_test" , ""+t.getMessage());
+
+
                         t.printStackTrace();
 
                     }

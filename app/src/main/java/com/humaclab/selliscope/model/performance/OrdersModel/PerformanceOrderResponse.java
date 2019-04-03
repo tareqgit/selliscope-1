@@ -12,7 +12,7 @@ public class PerformanceOrderResponse {
     @SerializedName("result")
     private Result mResult;
     @SerializedName("total_amount")
-    private Long mTotalAmount;
+    private Double mTotalAmount;
 
     public Boolean getError() {
         return mError;
@@ -30,11 +30,11 @@ public class PerformanceOrderResponse {
         mResult = result;
     }
 
-    public Long getTotalAmount() {
+    public Double getTotalAmount() {
         return mTotalAmount;
     }
 
-    public void setTotalAmount(Long totalAmount) {
+    public void setTotalAmount(Double totalAmount) {
         mTotalAmount = totalAmount;
     }
 

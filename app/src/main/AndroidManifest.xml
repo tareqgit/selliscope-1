@@ -145,6 +145,11 @@
             android:enabled="true" />
 
         <activity android:name=".activity.PromotionalAdsActivity"></activity>
+
+        <activity android:name=".performance.payments.PerformancePaymentsActivity"></activity>
+        <activity android:name=".performance.orders.PerformanceOrdersProductsActivity" />
+        <activity android:name=".performance.orders.PerformanceOrdersActivity" />
+
     </application>
 
 </manifest>

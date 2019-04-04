@@ -137,9 +137,15 @@
     <string name="contactAdmin">Please contact to your admin.</string>
     <string name="passwordRequire">Password is required!</string>
     <string name="emailRequired">Email is required!</string>
+    <string name="bank_name">ব্যাংকের নাম</string>
+    <string name="cheque_no">চেক নম্বর</string>
+    <string name="deposit_slip">জমা স্লিপ</string>
+    <string name="cheque_date">চেক তারিখ</string>
+    <string name="performance">অর্জন</string>
     <string-array name="paymentType">
         <item>পরিশোধ নগদ</item>
         <item>চেক </item>
+        <item>ব্যাংক</item>
     </string-array>
 
     <string-array name="returnCause">

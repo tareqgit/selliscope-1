@@ -136,9 +136,16 @@
     <string name="contactAdmin">Please contact to your admin.</string>
     <string name="passwordRequire">Password is required!</string>
     <string name="emailRequired">Email is required!</string>
+    <string name="bank_name">Bank Name</string>
+    <string name="cheque_no">Cheque No</string>
+
+    <string name="deposit_slip">Deposit Slip</string>
+    <string name="cheque_date">Cheque Date</string>
+    <string name="performance">performance</string>
     <string-array name="paymentType">
         <item>Cash</item>
         <item>Cheque</item>
+        <item>Bank</item>
     </string-array>
 
     <string-array name="returnCause">

@@ -93,4 +93,6 @@ dependencies {
     implementation('com.crashlytics.sdk.android:answers:1.4.1@aar') {
         transitive = true
     }
+    //for pojo
+    implementation 'org.glassfish:javax.annotation:10.0-b28'
 }

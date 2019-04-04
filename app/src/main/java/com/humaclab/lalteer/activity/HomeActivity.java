@@ -50,6 +50,7 @@ import com.humaclab.lalteer.R;
 import com.humaclab.lalteer.SelliscopeApiEndpointInterface;
 import com.humaclab.lalteer.SelliscopeApplication;
 import com.humaclab.lalteer.fragment.DashboardFragment;
+import com.humaclab.lalteer.fragment.PerformanceFragment;
 import com.humaclab.lalteer.fragment.TargetFragment;
 import com.humaclab.lalteer.model.AppVersion.AppVersion;
 import com.humaclab.lalteer.model.Diameter.DiameterResponse;
@@ -124,6 +125,10 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                     }
                     case 1: {
                         getFragment(DashboardFragment.class);
+                        break;
+                    }
+                    case 2: {
+                        getFragment(PerformanceFragment.class);
                         break;
                     }
                 }

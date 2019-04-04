@@ -158,35 +158,121 @@
                     android:text='@{Double.toString(Double.parseDouble(payments.amount.replace(",","")) - Double.parseDouble(payments.discount.replace(",","")))}'/>
             </LinearLayout>
 
-            <LinearLayout
+            <android.support.constraint.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
                 <EditText
                     android:id="@+id/et_payment"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
                     android:layout_weight="1"
                     android:hint="@string/pay"
                     android:imeOptions="actionDone"
                     android:inputType="numberDecimal"
-                    android:padding="15dp"/>
+                    android:padding="15dp"
+                    app:layout_constraintEnd_toStartOf="@+id/sp_payment_type"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <Spinner
                     android:id="@+id/sp_payment_type"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
                     android:entries="@array/paymentType"
-                    android:spinnerMode="dropdown"/>
+                    android:spinnerMode="dropdown"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/et_payment" />
 
                 <Button
                     android:id="@+id/btn_pay"
                     style="@android:style/Widget.Button.Small"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/pay_now"/>
-            </LinearLayout>
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:text="@string/pay_now"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/sp_payment_type"
+                    app:layout_constraintVertical_bias="1.0" />
+
+                <EditText
+                    android:id="@+id/et_bank_name"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:ems="10"
+                    android:hint="@string/bank_name"
+                    android:inputType="textPersonName"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toEndOf="@+id/et_payment"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/et_payment" />
+
+                <EditText
+                    android:id="@+id/et_cheque_no"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:ems="10"
+                    android:hint="@string/cheque_no"
+                    android:inputType="textPersonName"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toEndOf="@+id/et_bank_name"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/et_bank_name" />
+
+                <EditText
+                    android:id="@+id/et_deposit_slip"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:ems="10"
+                    android:hint="@string/deposit_slip"
+                    android:inputType="textPersonName"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toEndOf="@+id/et_cheque_no"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/et_cheque_no" />
+
+                <ImageView
+                    android:id="@+id/imageButton"
+                    android:layout_width="60dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:adjustViewBounds="true"
+                    android:scaleType="fitCenter"
+                    android:visibility="gone"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/textView_date"
+                    app:srcCompat="@drawable/addimage" />
+
+                <TextView
+                    android:id="@+id/textView_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/custom_background_selector"
+                    android:drawableStart="@drawable/ic_date_range_black_24dp"
+                    android:drawablePadding="4dp"
+                    android:hint="@string/cheque_date"
+                    android:visibility="gone"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/et_deposit_slip" />
+            </android.support.constraint.ConstraintLayout>
         </LinearLayout>
     </android.support.v7.widget.CardView>
 </layout>

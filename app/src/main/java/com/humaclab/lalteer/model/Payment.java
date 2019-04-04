@@ -1,5 +1,7 @@
 package com.humaclab.lalteer.model;
 
+import android.graphics.Bitmap;
+
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
@@ -35,6 +37,17 @@ public class Payment implements Serializable {
         public String orderDate;
         @SerializedName("products")
         public List<Product> productList;
+
+        public Bitmap getPhoto() {
+            return photo;
+        }
+
+        public void setPhoto(Bitmap photo) {
+            this.photo = photo;
+        }
+
+        private Bitmap photo;
+
     }
 
     public static class Product implements Serializable {

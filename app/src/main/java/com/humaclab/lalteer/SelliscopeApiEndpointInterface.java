@@ -30,6 +30,8 @@ import com.humaclab.lalteer.model.UpdateProfile.UpdateProfile;
 import com.humaclab.lalteer.model.UpdateProfile.UpdateProfileResponse;
 import com.humaclab.lalteer.model.UserLocation;
 import com.humaclab.lalteer.model.VariantProduct.VariantProductResponse;
+import com.humaclab.lalteer.model.performance.OrdersModel.PerformanceOrderResponse;
+import com.humaclab.lalteer.model.performance.paymentsModel.PaymentsResponse;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -160,4 +162,11 @@ public interface SelliscopeApiEndpointInterface {
 
     @POST("profile/update")
     Call<UpdateProfileResponse> updateProfile(@Body UpdateProfile updateProfile);
+
+    @GET("performance/order")
+    Call<PerformanceOrderResponse> performanceOrder(@Query("date_from") String date_from, @Query("date_to") String date_to);
+
+    @GET("performance/payment")
+    Call<PaymentsResponse> performancePayments(@Query("date_from") String date_from, @Query("date_to") String date_to);
+
 }

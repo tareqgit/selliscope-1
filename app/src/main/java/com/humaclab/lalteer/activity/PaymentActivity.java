@@ -1,12 +1,16 @@
 package com.humaclab.lalteer.activity;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Base64;
 import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,6 +25,7 @@ import com.humaclab.lalteer.utils.DatabaseHandler;
 import com.humaclab.lalteer.utils.NetworkUtility;
 import com.humaclab.lalteer.utils.SessionManager;
 
+import java.io.ByteArrayOutputStream;
 import java.util.List;
 
 import retrofit2.Call;
@@ -28,12 +33,20 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class PaymentActivity extends AppCompatActivity {
+    private final int CAMERA_REQUEST = 3214;
+
+    public void setOnImageResultAchiveListener(OnImageResultAchiveListener onImageResultAchiveListener) {
+        mOnImageResultAchiveListener = onImageResultAchiveListener;
+    }
+
+    private OnImageResultAchiveListener mOnImageResultAchiveListener;
     private SelliscopeApiEndpointInterface apiService;
     private DatabaseHandler databaseHandler;
     private RecyclerView rv_payment;
     private SwipeRefreshLayout srl_payment;
     private ProgressDialog pd;
     private int outletId;
+    PaymentRecyclerViewAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,7 +104,8 @@ public class PaymentActivity extends AppCompatActivity {
                         System.out.println("Response " + new Gson().toJson(response.body()));
                         List<Payment.OrderList> orders = response.body().result.orderList;
                         if (!orders.isEmpty()) {
-                            rv_payment.setAdapter(new PaymentRecyclerViewAdapter(getApplication(), orders));
+                             adapter = new PaymentRecyclerViewAdapter(PaymentActivity.this, orders);
+                            rv_payment.setAdapter(adapter);
                         } else {
                             Toast.makeText(getApplicationContext(), "You don't have any due payments.", Toast.LENGTH_LONG).show();
                         }
@@ -130,4 +144,30 @@ public class PaymentActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+   // public static Bitmap sBitmap;
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            Bitmap photo = (Bitmap) data.getExtras().get("data");
+            assert photo != null;
+            photo.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+            //promotionImage = Base64.encodeToString(outputStream.toByteArray(), Base64.DEFAULT);
+            // binding.ivTakeImage.setImageBitmap(photo);
+            Toast.makeText(this, ""+photo, Toast.LENGTH_SHORT).show();
+            mOnImageResultAchiveListener.onImageAchive(photo);
+
+        }
+    }
+
+
+   /* @Override
+    public void onImageClick() {
+        Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(cameraIntent, CAMERA_REQUEST);
+    }*/
+
+   public interface OnImageResultAchiveListener{
+       void onImageAchive(Bitmap image);
+   }
 }

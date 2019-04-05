@@ -241,7 +241,7 @@ public class AddOutletActivity extends AppCompatActivity {
 
                 if (!(outletImage == null)) {
                     if (!isEmpty()) {
-                        if (mLatitude != 0.0 && mLongitude != 0.0) {
+                       /* if (mLatitude != 0.0 && mLongitude != 0.0) {*/
                             Timber.d("addOutletRun");
                             if (NetworkUtility.isNetworkAvailable(AddOutletActivity.this)) {
                                 Location currentLocation = new Location("");
@@ -252,7 +252,7 @@ public class AddOutletActivity extends AppCompatActivity {
                                 mapLocation.setLatitude(mLatitude);
                                 mapLocation.setLongitude(mLongitude);
 
-                                if (mapLocation.distanceTo(currentLocation) <= 100) {
+                                /*if (mapLocation.distanceTo(currentLocation) <= 100) {*/
                                     if (thanaId != 0) {
                                        /* if (!(sp_coolerStatus.getSelectedItemPosition() == 0)) {
                                             if (!(sp_otherbevarage.getSelectedItemPosition() == 0)) {*/
@@ -276,14 +276,14 @@ public class AddOutletActivity extends AppCompatActivity {
                                     } else {
                                         Toast.makeText(AddOutletActivity.this, "Please select a thana first", Toast.LENGTH_SHORT).show();
                                     }
-                                } else {
+                                /*} else {
                                     Toast.makeText(AddOutletActivity.this, "Outlet location is not within your 100 meter radius.", Toast.LENGTH_SHORT).show();
-                                }
+                                }*/
                             } else
                                 Toast.makeText(AddOutletActivity.this, "Connect to Wifi or Mobile Data", Toast.LENGTH_SHORT).show();
-                        } else {
+                        /*} else {
                             Toast.makeText(AddOutletActivity.this, "Could not found any location yet.\nPlease try again.", Toast.LENGTH_SHORT).show();
-                        }
+                        }*/
                     }
                 } else {
                     Toast.makeText(AddOutletActivity.this, "Image Not Capture", Toast.LENGTH_SHORT).show();

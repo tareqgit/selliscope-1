@@ -22,6 +22,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.support.design.BuildConfig;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
@@ -48,7 +49,6 @@ import com.crashlytics.android.answers.CustomEvent;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.gson.Gson;
-import com.humaclab.akij_selliscope.BuildConfig;
 import com.humaclab.akij_selliscope.JobSheduler.MyJobScheduler;
 import com.humaclab.akij_selliscope.LocationMonitoringService;
 import com.humaclab.akij_selliscope.R;
@@ -58,8 +58,9 @@ import com.humaclab.akij_selliscope.fragment.DashboardFragment;
 import com.humaclab.akij_selliscope.fragment.TargetFragment;
 import com.humaclab.akij_selliscope.model.AppVersion.AppVersion;
 import com.humaclab.akij_selliscope.model.Diameter.DiameterResponse;
-import com.humaclab.akij_selliscope.receiver.InternetConnectivityChangeReceiver;
+
 import com.humaclab.akij_selliscope.service.SendLocationDataService;
+import com.humaclab.akij_selliscope.utils.ConnectivityChangeReceiver;
 import com.humaclab.akij_selliscope.utils.Constants;
 import com.humaclab.akij_selliscope.utils.DatabaseHandler;
 import com.humaclab.akij_selliscope.utils.LoadLocalIntoBackground;
@@ -95,7 +96,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     boolean gpsStatus ;
     private static final String TAG = HomeActivity.class.getSimpleName();
     Realm realm;
-
+    private BroadcastReceiver mNetworkReceiver;
     /**
      * Code used in requesting runtime permissions.
      */
@@ -109,6 +110,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mNetworkReceiver = new ConnectivityChangeReceiver();
         realm = Realm.getDefaultInstance();
         //For Bangla
         LoadLocale();
@@ -331,6 +333,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         // Handle navigation view item clicks here.
         switch (item.getItemId()) {
             case R.id.nav_logout:
+                unregisterNetworkChanges();
                 pd.setMessage("Login out...");
                 pd.show();
 
@@ -562,6 +565,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     protected void onResume() {
         super.onResume();
         welcome();
+        registerNetworkBroadcastForNougat();
 /*        final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
@@ -893,22 +897,21 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             }
             super.onStop();
         }*/
-    public class backgroundTask extends AsyncTask<String, String, String> {
 
-        @Override
-        protected String doInBackground(String... strings) {
-            return null;
+   private void registerNetworkBroadcastForNougat() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            registerReceiver(mNetworkReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
         }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
-        }
+        /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            registerReceiver(mNetworkReceiver, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+        }*/
     }
 
+    protected void unregisterNetworkChanges() {
+        try {
+            unregisterReceiver(mNetworkReceiver);
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        }
+    }
 }

@@ -4,7 +4,19 @@ import com.google.gson.annotations.SerializedName;
 
 import io.realm.RealmObject;
 
-public class NewOrder {
+public class NewOrder extends RealmObject{
+
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
+    @SerializedName("status")
+    public int status;
+
     @SerializedName("outlet_id")
     public int outletId;
 

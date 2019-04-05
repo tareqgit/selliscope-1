@@ -26,16 +26,20 @@ import com.google.gson.Gson;
 import com.humaclab.akij_selliscope.R;
 import com.humaclab.akij_selliscope.SelliscopeApiEndpointInterface;
 import com.humaclab.akij_selliscope.SelliscopeApplication;
+import com.humaclab.akij_selliscope.model.Order.NewOrder;
 import com.humaclab.akij_selliscope.model.Order.Order;
 import com.humaclab.akij_selliscope.utils.SendUserLocationData;
 import com.humaclab.akij_selliscope.utils.SessionManager;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import io.realm.Realm;
 import retrofit2.Call;
 import retrofit2.Callback;
+import retrofit2.HttpException;
 import retrofit2.Response;
 
 public class ActivityLineA extends AppCompatActivity {
@@ -54,12 +58,12 @@ public class ActivityLineA extends AppCompatActivity {
     private SendUserLocationData sendUserLocationData;
     private Double lat = 0.0, lon = 0.0;
     String millisInString;
-
+    Realm realm;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_line_a);
-
+        realm = Realm.getDefaultInstance();
         outletName = getIntent().getStringExtra("outletName");
         outletID = getIntent().getStringExtra("outletID");
         outletType = getIntent().getStringExtra("outletType");
@@ -256,7 +260,55 @@ public class ActivityLineA extends AppCompatActivity {
 
                                 @Override
                                 public void onFailure(Call<Order.OrderResponse> call, Throwable t) {
+                                    //pd.dismiss();
 
+                                    //pd.dismiss();
+
+                                    Log.d("fail1", "onFailure1: "+t.getMessage());
+                                    if (t instanceof IOException) {
+                                        //builder.dismiss();
+                                        //Toast.makeText(ActivityLineB.this, "" + t.getMessage(), Toast.LENGTH_SHORT).show();
+                                        Log.d("fail2", "onFailure2: "+t.getMessage());
+                                        realm.executeTransactionAsync(new Realm.Transaction() {
+                                            @Override
+                                            public void execute(Realm bgRealm) {
+                                                NewOrder newOrder1 = bgRealm.createObject(NewOrder.class);
+                                                newOrder1.comment = order.newOrder.comment;
+                                                newOrder1.discount = order.newOrder.discount;
+                                                newOrder1.latitude = order.newOrder.latitude;
+                                                newOrder1.longitude = order.newOrder.longitude;
+                                                newOrder1.line = order.newOrder.line;
+                                                newOrder1.memo_img = order.newOrder.memo_img;
+                                                newOrder1.order_date = order.newOrder.order_date;
+                                                newOrder1.outlet_img = order.newOrder.outlet_img;
+                                                newOrder1.outletId = order.newOrder.outletId;
+                                                newOrder1.slab = order.newOrder.slab;
+                                                newOrder1.stock = order.newOrder.stock;
+                                                newOrder1.status = 0;
+
+                                            }
+                                        }, new Realm.Transaction.OnSuccess() {
+                                            @Override
+                                            public void onSuccess() {
+                                                // Transaction was a success.
+                                                Toast.makeText(ActivityLineA.this, "Offline Data Saved", Toast.LENGTH_SHORT).show();
+                                                builder.dismiss();
+                                                finish();
+                                            }
+                                        }, new Realm.Transaction.OnError() {
+                                            @Override
+                                            public void onError(Throwable error) {
+                                                // Transaction failed and was automatically canceled.
+                                                Toast.makeText(ActivityLineA.this, error.getMessage(), Toast.LENGTH_SHORT).show();
+
+                                            }
+                                        });
+                                        //handle network error
+                                    } else if (t instanceof HttpException) {
+                                        //handle HTTP error response code
+                                    } else {
+                                        //handle other exceptions
+                                    }
                                 }
                             });
                         } else {

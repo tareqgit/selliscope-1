@@ -5,13 +5,9 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.net.Uri;
-import android.os.StrictMode;
-import android.provider.MediaStore;
+import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Base64;
 import android.util.Log;
@@ -25,26 +21,25 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.esafirm.imagepicker.features.ImagePicker;
-import com.esafirm.imagepicker.features.ReturnMode;
 import com.esafirm.imagepicker.model.Image;
 import com.google.gson.Gson;
 import com.humaclab.akij_selliscope.R;
 import com.humaclab.akij_selliscope.SelliscopeApiEndpointInterface;
 import com.humaclab.akij_selliscope.SelliscopeApplication;
+import com.humaclab.akij_selliscope.model.Order.NewOrder;
 import com.humaclab.akij_selliscope.model.Order.Order;
 import com.humaclab.akij_selliscope.utils.SendUserLocationData;
 import com.humaclab.akij_selliscope.utils.SessionManager;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-import java.text.DateFormat;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import io.realm.Realm;
 import retrofit2.Call;
 import retrofit2.Callback;
+import retrofit2.HttpException;
 import retrofit2.Response;
 
 public class ActivityLineB extends AppCompatActivity {
@@ -54,7 +49,7 @@ public class ActivityLineB extends AppCompatActivity {
     private SessionManager sessionManager;
     private String str_take_image_outlet, str_take_image_memo;
     private String outletName, outletID, outletType;
-    private ImageView iv_take_image_outlet, iv_take_image_memo,detail_image;
+    private ImageView iv_take_image_outlet, iv_take_image_memo, detail_image;
     private TextView tv_quantity, text_take_image_outlet, text_take_image_memo;
     private EditText et_stock;
     private AlertDialog builder;
@@ -63,12 +58,13 @@ public class ActivityLineB extends AppCompatActivity {
     private SendUserLocationData sendUserLocationData;
     private Double lat = 0.0, lon = 0.0;
     String millisInString;
+    Realm realm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_line_b);
-
+        realm = Realm.getDefaultInstance();
         outletName = getIntent().getStringExtra("outletName");
         outletID = getIntent().getStringExtra("outletID");
         outletType = getIntent().getStringExtra("outletType");
@@ -171,8 +167,7 @@ public class ActivityLineB extends AppCompatActivity {
     }
 
 
-
-    public void updateDialog( int image, final String slab) {
+    public void updateDialog(int image, final String slab) {
         builder = new AlertDialog.Builder(this).create();
         LayoutInflater inflater = LayoutInflater.from(this);
         View dialogView = inflater.inflate(R.layout.popup_order, null);
@@ -196,7 +191,7 @@ public class ActivityLineB extends AppCompatActivity {
                 //Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
                 //startActivityForResult(cameraIntent, CAMERA_REQUEST);
 
-                ImagePicker.cameraOnly().start(ActivityLineB.this,CAMERA_REQUEST);
+                ImagePicker.cameraOnly().start(ActivityLineB.this, CAMERA_REQUEST);
 /*                        .returnMode(ReturnMode.CAMERA_ONLY) // set whether pick and / or camera action should return immediate result or not.
                         .folderMode(true) // folder mode (false by default)
                         .toolbarFolderTitle("Folder") // folder selection title
@@ -222,10 +217,10 @@ public class ActivityLineB extends AppCompatActivity {
         iv_take_image_memo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               // Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-               // startActivityForResult(cameraIntent, CAMERA_REQUEST1);
+                // Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                // startActivityForResult(cameraIntent, CAMERA_REQUEST1);
 
-                ImagePicker.cameraOnly().start(ActivityLineB.this,CAMERA_REQUEST1);
+                ImagePicker.cameraOnly().start(ActivityLineB.this, CAMERA_REQUEST1);
 
 
             }
@@ -234,54 +229,137 @@ public class ActivityLineB extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (!et_stock.getText().toString().isEmpty()) {
-                if (!(str_take_image_outlet == null)) {
+                    if (!(str_take_image_outlet == null)) {
 
-                    if (!(str_take_image_memo == null)) {
-                        pd.setMessage("Submitting your Order......");
-                        pd.setCancelable(false);
-                        pd.show();
-                        Order order = new Order();
-                        Order.NewOrder newOrder = new Order.NewOrder();
+                        if (!(str_take_image_memo == null)) {
+                            pd.setMessage("Submitting your Order......");
+                            pd.setCancelable(false);
+                            pd.show();
+                            Order order = new Order();
+                            Order.NewOrder newOrder = new Order.NewOrder();
 
 
-                        newOrder.setComment("");
-                        newOrder.setDiscount(0.0);
-                        newOrder.setLatitude(lat.toString());
-                        newOrder.setLongitude(lon.toString());
-                        newOrder.setOutletId(Integer.parseInt(outletID));
-                        newOrder.setLine("B");
-                        newOrder.setSlab(slab);
-                        newOrder.setOutlet_img(str_take_image_outlet);
-                        newOrder.setMemo_img(str_take_image_memo);
-                        newOrder.setOrder_date(millisInString);
-                        newOrder.setStock(et_stock.getText().toString());
-                        order.newOrder = newOrder;
-                        Log.d("test", "" + new Gson().toJson(newOrder));
-                        Call<Order.OrderResponse> orderResponseCall = apiService.order(order);
-                        orderResponseCall.enqueue(new Callback<Order.OrderResponse>() {
-                            @Override
-                            public void onResponse(Call<Order.OrderResponse> call, Response<Order.OrderResponse> response) {
-                                pd.dismiss();
-                                response.code();
-                                if (response.code() == 201) {
-                                    builder.dismiss();
-                                    finish();
+                            newOrder.setComment("");
+                            newOrder.setDiscount(0.0);
+                            newOrder.setLatitude(lat.toString());
+                            newOrder.setLongitude(lon.toString());
+                            newOrder.setOutletId(Integer.parseInt(outletID));
+                            newOrder.setLine("B");
+                            newOrder.setSlab(slab);
+                            newOrder.setOutlet_img(str_take_image_outlet);
+                            newOrder.setMemo_img(str_take_image_memo);
+                            newOrder.setOrder_date(millisInString);
+                            newOrder.setStock(et_stock.getText().toString());
+                            order.newOrder = newOrder;
+                            Log.d("test", "" + new Gson().toJson(newOrder));
+
+//                        if (!InternetAvailable){
+//                            realm.executeTransactionAsync(new Realm.Transaction() {
+//                                @Override
+//                                public void execute(Realm bgRealm) {
+//                                    NewOrder newOrder1 = bgRealm.createObject(NewOrder.class);
+//                                    newOrder1.comment = order.newOrder.comment;
+//                                    newOrder1.discount = order.newOrder.discount;
+//                                    newOrder1.latitude = order.newOrder.latitude;
+//                                    newOrder1.longitude = order.newOrder.longitude;
+//                                    newOrder1.line = order.newOrder.line;
+//                                    newOrder1.memo_img = order.newOrder.memo_img;
+//                                    newOrder1.order_date = order.newOrder.order_date;
+//                                    newOrder1.outlet_img = order.newOrder.outlet_img;
+//                                    newOrder1.outletId = order.newOrder.outletId;
+//                                    newOrder1.slab = order.newOrder.slab;
+//                                    newOrder1.stock = order.newOrder.stock;
+//                                    newOrder1.status = 0;
+//
+//                                }
+//                            }, new Realm.Transaction.OnSuccess() {
+//                                @Override
+//                                public void onSuccess() {
+//                                    // Transaction was a success.
+//                                    Toast.makeText(ActivityLineB.this, "OK Done", Toast.LENGTH_SHORT).show();
+//                                    builder.dismiss();
+//                                    finish();
+//                                }
+//                            }, new Realm.Transaction.OnError() {
+//                                @Override
+//                                public void onError(Throwable error) {
+//                                    // Transaction failed and was automatically canceled.
+//                                    Toast.makeText(ActivityLineB.this, error.getMessage(), Toast.LENGTH_SHORT).show();
+//
+//                                }
+//                            });
+//                        }
+                            Call<Order.OrderResponse> orderResponseCall = apiService.order(order);
+                            orderResponseCall.enqueue(new Callback<Order.OrderResponse>() {
+                                @Override
+                                public void onResponse(Call<Order.OrderResponse> call, Response<Order.OrderResponse> response) {
+                                    pd.dismiss();
+                                    response.code();
+                                    if (response.code() == 201) {
+                                        builder.dismiss();
+                                        finish();
+                                    } else {
+                                        Toast.makeText(ActivityLineB.this, "" + response.code() + " Error", Toast.LENGTH_SHORT).show();
+                                    }
                                 }
-                                else {
-                                    Toast.makeText(ActivityLineB.this, ""+response.code()+" Error", Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                            @Override
-                            public void onFailure(Call<Order.OrderResponse> call, Throwable t) {
 
-                            }
-                        });
+                                @Override
+                                public void onFailure(Call<Order.OrderResponse> call, Throwable t) {
+                                    //pd.dismiss();
+
+                                    Log.d("fail1", "onFailure1: "+t.getMessage());
+                                    if (t instanceof IOException) {
+                                        //builder.dismiss();
+                                        //Toast.makeText(ActivityLineB.this, "" + t.getMessage(), Toast.LENGTH_SHORT).show();
+                                        Log.d("fail2", "onFailure2: "+t.getMessage());
+                                        realm.executeTransactionAsync(new Realm.Transaction() {
+                                            @Override
+                                            public void execute(Realm bgRealm) {
+                                                NewOrder newOrder1 = bgRealm.createObject(NewOrder.class);
+                                                newOrder1.comment = order.newOrder.comment;
+                                                newOrder1.discount = order.newOrder.discount;
+                                                newOrder1.latitude = order.newOrder.latitude;
+                                                newOrder1.longitude = order.newOrder.longitude;
+                                                newOrder1.line = order.newOrder.line;
+                                                newOrder1.memo_img = order.newOrder.memo_img;
+                                                newOrder1.order_date = order.newOrder.order_date;
+                                                newOrder1.outlet_img = order.newOrder.outlet_img;
+                                                newOrder1.outletId = order.newOrder.outletId;
+                                                newOrder1.slab = order.newOrder.slab;
+                                                newOrder1.stock = order.newOrder.stock;
+                                                newOrder1.status = 0;
+
+                                            }
+                                        }, new Realm.Transaction.OnSuccess() {
+                                            @Override
+                                            public void onSuccess() {
+                                                // Transaction was a success.
+                                                Toast.makeText(ActivityLineB.this, "Offline Data Saved", Toast.LENGTH_SHORT).show();
+                                                builder.dismiss();
+                                                finish();
+                                            }
+                                        }, new Realm.Transaction.OnError() {
+                                            @Override
+                                            public void onError(Throwable error) {
+                                                // Transaction failed and was automatically canceled.
+                                                Toast.makeText(ActivityLineB.this, error.getMessage(), Toast.LENGTH_SHORT).show();
+
+                                            }
+                                        });
+                                        //handle network error
+                                    } else if (t instanceof HttpException) {
+                                        //handle HTTP error response code
+                                    } else {
+                                        //handle other exceptions
+                                    }
+                                }
+                            });
+                        } else {
+                            text_take_image_memo.setError("Capture Memo Image");
+                        }
                     } else {
-                        text_take_image_memo.setError("Capture Memo Image");
+                        text_take_image_outlet.setError("Capture Outlet Image");
                     }
-                } else {
-                    text_take_image_outlet.setError("Capture Outlet Image");
-                }
                 } else {
                     et_stock.setError("Must Be Set");
                 }
@@ -292,19 +370,19 @@ public class ActivityLineB extends AppCompatActivity {
     }
 
     public void b_ll_slab_one(View view) {
-        updateDialog(R.drawable.petslab1promo,"slab-1");
+        updateDialog(R.drawable.petslab1promo, "slab-1");
 
     }
 
     public void b_ll_slab_two(View view) {
-        updateDialog(R.drawable.petslab2promo,"slab-2");
+        updateDialog(R.drawable.petslab2promo, "slab-2");
     }
 
     public void b_ll_slab_three(View view) {
-        updateDialog(R.drawable.petslab3promo,"slab-3");
+        updateDialog(R.drawable.petslab3promo, "slab-3");
     }
 
     public void b_ll_slab_four(View view) {
-        updateDialog(R.drawable.petslab4promo,"slab-4");
+        updateDialog(R.drawable.petslab4promo, "slab-4");
     }
 }

@@ -177,26 +177,27 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         schedulerForMinute = Executors.newSingleThreadScheduledExecutor();
         schedulerForMinute.scheduleAtFixedRate(new Runnable() {
             public void run() {
-                runOnUiThread(new Runnable() {
+               /* runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Log.v("Running threads", "Thread running in background for updating products and outlets");
+                 */       Log.v("Running threads", "Thread running in background for updating products and outlets");
                         loadLocalIntoBackground.loadOutlet(false);
                     }
-                });
-            }
+                //});
+           // }
         }, 0, 1, TimeUnit.MINUTES);
+
         schedulerForHour = Executors.newSingleThreadScheduledExecutor();
         schedulerForHour.scheduleAtFixedRate(new Runnable() {
             public void run() {
-                runOnUiThread(new Runnable() {
+             /*   runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Log.v("Running threads", "Thread running in background for updating products and outlets after 30 Minutes interval");
+              */          Log.v("Running threads", "Thread running in background for updating products and outlets after 30 Minutes interval");
                         loadLocalIntoBackground.loadProduct();
-                    }
+                /*    }
                 });
-            }
+ */           }
         }, 30, 30, TimeUnit.MINUTES);
         //loading Data into background
 

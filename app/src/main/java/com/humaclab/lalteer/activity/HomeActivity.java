@@ -143,13 +143,13 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             }
         });
 
-        //For log and track user
+        /*//For log and track user
         Answers.getInstance().logCustom(new CustomEvent("User Login")
                 .putCustomAttribute("User Name", sessionManager.getUserDetails().get("userName"))
                 .putCustomAttribute("User Email", sessionManager.getUserEmail())
                 .putCustomAttribute("Used version", "Version - " + BuildConfig.VERSION_NAME)
         );
-        //For log and track user
+        //For log and track user*/
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(

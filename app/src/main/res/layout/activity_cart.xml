@@ -43,7 +43,7 @@
         <LinearLayout
             android:id="@+id/ll_header"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="2dp"
             android:layout_below="@+id/ll_outlet"
             android:background="#ddd"
             android:orientation="horizontal">
@@ -109,9 +109,10 @@
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rl_selected_products"
             android:layout_width="match_parent"
-            android:layout_height="20dp"
+            android:layout_height="match_parent"
             android:layout_above="@id/ll_bottom"
             android:layout_below="@+id/ll_header"
+            android:layout_marginTop="8dp"
             android:background="#fff" />
 
         <android.support.constraint.ConstraintLayout

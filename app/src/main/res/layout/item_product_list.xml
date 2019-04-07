@@ -6,7 +6,7 @@
 
         <variable
             name="product"
-            type="com.humaclab.lalteer.model.VariantProduct.ProductsItem" />
+            type="com.humaclab.lalteer.model.variant_product.ProductsItem" />
     </data>
 
     <android.support.v7.widget.CardView

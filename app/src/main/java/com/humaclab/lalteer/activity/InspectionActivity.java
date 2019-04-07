@@ -95,6 +95,7 @@ public class InspectionActivity extends AppCompatActivity {
                 sessionManager = new SessionManager(InspectionActivity.this);
                 apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(),
                         sessionManager.getUserPassword(), false).create(SelliscopeApiEndpointInterface.class);
+              Log.d("tareq_test" , ""+new Gson().toJson(a));
                 Call<InspectionResponse> call = apiService.inspectOutlet(inspection);
                 call.enqueue(new Callback<InspectionResponse>() {
                     @Override

@@ -34,32 +34,30 @@
         <uses-library
             android:name="org.apache.http.legacy"
             android:required="false" />
-        <!-- For debug APK -->
-        <!--
-        <meta-data
+
+
+        <!-- For Debug -->
+     <!--   <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyBZ5heET41mdUTW5UOouLZFn56kGsAocbM" />
+            android:value="AIzaSyBZ5heET41mdUTW5UOouLZFn56kGsAocbM"/>
         <meta-data
             android:name="com.google.android.awareness.API_KEY"
-            android:value="AIzaSyBZ5heET41mdUTW5UOouLZFn56kGsAocbM" />
-        -->
-        <!-- For debug APK -->
-
-
+            android:value="AIzaSyBZ5heET41mdUTW5UOouLZFn56kGsAocbM"/>-->
         <!-- For signed APK -->
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyAhsz4pX62D7yu8twGT4ydn-_DRVB3p6_Y" />
         <meta-data
             android:name="com.google.android.awareness.API_KEY"
-            android:value="AIzaSyAhsz4pX62D7yu8twGT4ydn-_DRVB3p6_Y" />
-        <!-- For signed APK -->
+            android:value="AIzaSyAhsz4pX62D7yu8twGT4ydn-_DRVB3p6_Y"/>
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyAhsz4pX62D7yu8twGT4ydn-_DRVB3p6_Y"/>
 
+
+<!--
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="c2bca7824e6a758388318ecf6635fd2e8e11979a" />
 
-        <!-- Services and Receivers -->
+        &lt;!&ndash; Services and Receivers &ndash;&gt;
         <service android:name=".service.FcmInstanceIdServices">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
@@ -69,7 +67,7 @@
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
-        </service>
+        </service>-->
         <service
             android:name=".service.SendLocationDataService"
             android:exported="false"
@@ -98,6 +96,7 @@
             android:theme="@style/SplashScreenTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.VIEW"/>
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>

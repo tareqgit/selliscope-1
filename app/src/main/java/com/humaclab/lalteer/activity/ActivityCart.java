@@ -22,14 +22,11 @@ import com.google.gson.Gson;
 import com.humaclab.lalteer.R;
 import com.humaclab.lalteer.SelliscopeApiEndpointInterface;
 import com.humaclab.lalteer.SelliscopeApplication;
-import com.humaclab.lalteer.adapters.OrderProductRecyclerAdapter;
 import com.humaclab.lalteer.adapters.SelectedProductRecyclerAdapter;
 import com.humaclab.lalteer.databinding.ActivityCartBinding;
 import com.humaclab.lalteer.helper.SelectedProductHelper;
 import com.humaclab.lalteer.interfaces.OnSelectProduct;
 import com.humaclab.lalteer.model.AddNewOrder;
-import com.humaclab.lalteer.model.VariantProduct.Brand;
-import com.humaclab.lalteer.model.VariantProduct.ProductsItem;
 import com.humaclab.lalteer.utils.DatabaseHandler;
 import com.humaclab.lalteer.utils.NetworkUtility;
 import com.humaclab.lalteer.utils.SendUserLocationData;
@@ -41,6 +38,7 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import static com.humaclab.lalteer.activity.OrderActivity.selectedProductList;
 
 public class ActivityCart extends AppCompatActivity implements OnSelectProduct {
     Double total = 0.0;
@@ -52,7 +50,9 @@ public class ActivityCart extends AppCompatActivity implements OnSelectProduct {
     private SendUserLocationData sendUserLocationData;
     private Double lat = 0.0, lon = 0.0;
     private String outletName, outletID;
-    private List<SelectedProductHelper> selectedProductList;
+    SelectedProductRecyclerAdapter selectedProductRecyclerAdapter;
+
+   // private List<SelectedProductHelper> selectedProductList;
 
     private Context mContext;
 
@@ -63,7 +63,7 @@ public class ActivityCart extends AppCompatActivity implements OnSelectProduct {
         mContext=this;
         outletName = getIntent().getStringExtra("outletName");
         outletID = getIntent().getStringExtra("outletID");
-        selectedProductList = (List<SelectedProductHelper>) getIntent().getSerializableExtra("products");
+      //  selectedProductList = (List<SelectedProductHelper>) getIntent().getSerializableExtra("products");
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("");
@@ -79,12 +79,9 @@ public class ActivityCart extends AppCompatActivity implements OnSelectProduct {
 
         //For getting location
         sendUserLocationData = new SendUserLocationData(this);
-        sendUserLocationData.getInstantLocation(this, new SendUserLocationData.OnGetLocation() {
-            @Override
-            public void getLocation(Double latitude, Double longitude) {
-                lat = latitude;
-                lon = longitude;
-            }
+        sendUserLocationData.getInstantLocation(this, (latitude, longitude) -> {
+            lat = latitude;
+            lon = longitude;
         });
         //For getting location
 
@@ -123,14 +120,10 @@ public class ActivityCart extends AppCompatActivity implements OnSelectProduct {
 
         binding.tvOutletName.setText(outletName);
         binding.rlSelectedProducts.setLayoutManager(new LinearLayoutManager(ActivityCart.this));
-        binding.rlSelectedProducts.setAdapter(new SelectedProductRecyclerAdapter(ActivityCart.this, ActivityCart.this, selectedProductList));
+        selectedProductRecyclerAdapter=new SelectedProductRecyclerAdapter(ActivityCart.this, ActivityCart.this, selectedProductList);
+        binding.rlSelectedProducts.setAdapter(selectedProductRecyclerAdapter);
 
-        binding.btnOrder.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                orderNow();
-            }
-        });
+        binding.btnOrder.setOnClickListener(v -> orderNow());
 
         setPaymentTypeSprinner();
     }
@@ -217,8 +210,11 @@ public class ActivityCart extends AppCompatActivity implements OnSelectProduct {
                         pd.dismiss();
                         if (response.code() == 200) {
                             System.out.println(new Gson().toJson(response.body()));
-                            Toast.makeText(ActivityCart.this, response.body().result, Toast.LENGTH_LONG).show();
                             Toast.makeText(ActivityCart.this, "Order created successfully", Toast.LENGTH_LONG).show();
+
+                            //clear selected Item list
+                            selectedProductList.clear();
+
                             Intent intent = new Intent(getApplicationContext(), OutletActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                             startActivity(intent);
@@ -284,9 +280,15 @@ public class ActivityCart extends AppCompatActivity implements OnSelectProduct {
             totalAmt += Double.valueOf(selectedProductHelper.getTotalPrice());
         }
         binding.tvTotal.setText(String.valueOf(totalAmt));
-        if (!binding.etDiscount.getText().toString().equals(""))
+
+        if (!binding.etDiscount.getText().toString().equals("")) {
             binding.tvGrandTotal.setText(String.valueOf(
-                    total - Double.parseDouble(binding.etDiscount.getText().toString())
+                    totalAmt - Double.parseDouble(binding.etDiscount.getText().toString())
             ));
+        }else{
+            binding.tvGrandTotal.setText(String.valueOf(totalAmt));
+        }
+
+        selectedProductRecyclerAdapter.notifyDataSetChanged();
     }
 }

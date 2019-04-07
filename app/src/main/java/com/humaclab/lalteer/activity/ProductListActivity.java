@@ -1,7 +1,6 @@
 package com.humaclab.lalteer.activity;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.res.Configuration;
 import android.databinding.DataBindingUtil;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -11,29 +10,22 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.gson.Gson;
 import com.humaclab.lalteer.R;
-import com.humaclab.lalteer.adapters.OrderProductRecyclerAdapter;
 import com.humaclab.lalteer.adapters.ProductListRecyclerAdapter;
-import com.humaclab.lalteer.databinding.ActivityOrderBinding;
 import com.humaclab.lalteer.databinding.ActivityProductListBinding;
 import com.humaclab.lalteer.helper.SelectedProductHelper;
-import com.humaclab.lalteer.interfaces.OnSelectProduct;
-import com.humaclab.lalteer.model.VariantProduct.Brand;
-import com.humaclab.lalteer.model.VariantProduct.Category;
-import com.humaclab.lalteer.model.VariantProduct.ProductsItem;
+import com.humaclab.lalteer.model.variant_product.Brand;
+import com.humaclab.lalteer.model.variant_product.Category;
+import com.humaclab.lalteer.model.variant_product.ProductsItem;
 import com.humaclab.lalteer.utils.DatabaseHandler;
 import com.humaclab.lalteer.utils.SessionManager;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 

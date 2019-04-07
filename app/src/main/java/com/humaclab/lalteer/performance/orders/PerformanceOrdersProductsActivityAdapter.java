@@ -23,7 +23,7 @@ import android.view.ViewGroup;
 import com.humaclab.lalteer.BR;
 import com.humaclab.lalteer.R;
 import com.humaclab.lalteer.databinding.ActivityPerformanceOrdersProductsModelBinding;
-import com.humaclab.lalteer.model.performance.OrdersModel.Product;
+import com.humaclab.lalteer.model.performance.orders_model.Product;
 
 
 import java.util.List;

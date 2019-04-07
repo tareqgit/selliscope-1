@@ -17,12 +17,9 @@ import com.humaclab.lalteer.model.Outlets;
 import com.humaclab.lalteer.model.Products.Product;
 import com.humaclab.lalteer.model.RoutePlan.RouteDetailsResponse;
 import com.humaclab.lalteer.model.Thana.Thana;
-import com.humaclab.lalteer.model.VariantProduct.Brand;
-import com.humaclab.lalteer.model.VariantProduct.Category;
-import com.humaclab.lalteer.model.VariantProduct.GodownItem;
-import com.humaclab.lalteer.model.VariantProduct.ProductsItem;
-import com.humaclab.lalteer.model.VariantProduct.VariantDetailsItem;
-import com.humaclab.lalteer.model.VariantProduct.VariantsItem;
+import com.humaclab.lalteer.model.variant_product.Brand;
+import com.humaclab.lalteer.model.variant_product.Category;
+import com.humaclab.lalteer.model.variant_product.ProductsItem;
 
 import java.util.ArrayList;
 import java.util.HashMap;

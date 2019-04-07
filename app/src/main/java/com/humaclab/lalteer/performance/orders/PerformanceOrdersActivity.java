@@ -32,9 +32,9 @@ import com.humaclab.lalteer.R;
 import com.humaclab.lalteer.SelliscopeApiEndpointInterface;
 import com.humaclab.lalteer.SelliscopeApplication;
 import com.humaclab.lalteer.databinding.ActivityPerformanceOrdersBinding;
-import com.humaclab.lalteer.model.performance.OrdersModel.Order;
-import com.humaclab.lalteer.model.performance.OrdersModel.PerformanceOrderResponse;
-import com.humaclab.lalteer.model.performance.OrdersModel.Product;
+import com.humaclab.lalteer.model.performance.orders_model.Order;
+import com.humaclab.lalteer.model.performance.orders_model.PerformanceOrderResponse;
+import com.humaclab.lalteer.model.performance.orders_model.Product;
 import com.humaclab.lalteer.utils.CurrentTimeUtilityClass;
 import com.humaclab.lalteer.utils.SessionManager;
 

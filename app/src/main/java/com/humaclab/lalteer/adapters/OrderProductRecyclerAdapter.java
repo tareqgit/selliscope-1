@@ -16,7 +16,7 @@ import com.humaclab.lalteer.databinding.ItemOrderProductBinding;
 import com.humaclab.lalteer.helper.SelectedProductHelper;
 import com.humaclab.lalteer.helper.ShowProductSelectionDialog;
 import com.humaclab.lalteer.interfaces.OnSelectProduct;
-import com.humaclab.lalteer.model.VariantProduct.ProductsItem;
+import com.humaclab.lalteer.model.variant_product.ProductsItem;
 
 import java.util.List;
 
@@ -57,14 +57,11 @@ public class OrderProductRecyclerAdapter extends RecyclerView.Adapter<OrderProdu
                         holder.getBinding().tvProductQuantity.setText(selectedProductHelper.getProductQuantity());
                         holder.getBinding().ivRemoveProduct.setVisibility(View.VISIBLE);
 
-                        holder.getBinding().ivRemoveProduct.setOnClickListener(new View.OnClickListener() {
-                            @Override
-                            public void onClick(View v) {
-                                orderActivity.onRemoveSelectedProduct(selectedProductHelper);
-                                holder.getBinding().ivRemoveProduct.setVisibility(View.GONE);
-                                holder.getBinding().llQuantity.setVisibility(View.GONE);
-                                holder.cv_product_background.setCardBackgroundColor(Color.WHITE);
-                            }
+                        holder.getBinding().ivRemoveProduct.setOnClickListener(v -> {
+                            orderActivity.onRemoveSelectedProduct(selectedProductHelper);
+                            holder.getBinding().ivRemoveProduct.setVisibility(View.GONE);
+                            holder.getBinding().llQuantity.setVisibility(View.GONE);
+                            holder.cv_product_background.setCardBackgroundColor(Color.WHITE);
                         });
                     }
             }

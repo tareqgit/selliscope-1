@@ -15,7 +15,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.humaclab.lalteer.R;
 import com.humaclab.lalteer.activity.OrderActivity;
-import com.humaclab.lalteer.model.VariantProduct.ProductsItem;
+import com.humaclab.lalteer.model.variant_product.ProductsItem;
 
 import java.util.List;
 

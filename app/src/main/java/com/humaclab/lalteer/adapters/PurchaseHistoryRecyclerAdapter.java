@@ -13,7 +13,7 @@ import com.humaclab.lalteer.R;
 import com.humaclab.lalteer.activity.PurchasedProductListActivity;
 import com.humaclab.lalteer.databinding.ItemPurchaseHistoryBinding;
 import com.humaclab.lalteer.model.Outlets;
-import com.humaclab.lalteer.model.PurchaseHistory.PurchaseHistoryItem;
+import com.humaclab.lalteer.model.purchase_history.PurchaseHistoryItem;
 
 import java.util.List;
 

@@ -12,12 +12,9 @@ import android.view.ViewGroup;
 import com.humaclab.lalteer.BR;
 import com.humaclab.lalteer.R;
 import com.humaclab.lalteer.activity.ProductListActivity;
-import com.humaclab.lalteer.databinding.ItemOrderProductBinding;
 import com.humaclab.lalteer.databinding.ItemProductListBinding;
 import com.humaclab.lalteer.helper.SelectedProductHelper;
-import com.humaclab.lalteer.helper.ShowProductSelectionDialog;
-import com.humaclab.lalteer.interfaces.OnSelectProduct;
-import com.humaclab.lalteer.model.VariantProduct.ProductsItem;
+import com.humaclab.lalteer.model.variant_product.ProductsItem;
 
 import java.util.List;
 

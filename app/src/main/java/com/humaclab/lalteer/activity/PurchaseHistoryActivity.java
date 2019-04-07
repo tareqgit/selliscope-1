@@ -10,7 +10,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.humaclab.lalteer.R;
 import com.humaclab.lalteer.SelliscopeApiEndpointInterface;
@@ -18,7 +17,7 @@ import com.humaclab.lalteer.SelliscopeApplication;
 import com.humaclab.lalteer.adapters.PurchaseHistoryRecyclerAdapter;
 import com.humaclab.lalteer.databinding.ActivityPurchaseHistoryBinding;
 import com.humaclab.lalteer.model.Outlets;
-import com.humaclab.lalteer.model.PurchaseHistory.PurchaseHistoryResponse;
+import com.humaclab.lalteer.model.purchase_history.PurchaseHistoryResponse;
 import com.humaclab.lalteer.utils.SessionManager;
 
 import retrofit2.Call;

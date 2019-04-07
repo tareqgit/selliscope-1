@@ -6,7 +6,7 @@
 
         <variable
             name="purchaseHistory"
-            type="com.humaclab.lalteer.model.PurchaseHistory.PurchaseHistoryItem" />
+            type="com.humaclab.lalteer.model.purchase_history.PurchaseHistoryItem" />
     </data>
 
     <android.support.v7.widget.CardView

@@ -5,12 +5,12 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,9 +25,9 @@ import com.humaclab.lalteer.adapters.OrderProductRecyclerAdapter;
 import com.humaclab.lalteer.databinding.ActivityOrderBinding;
 import com.humaclab.lalteer.helper.SelectedProductHelper;
 import com.humaclab.lalteer.interfaces.OnSelectProduct;
-import com.humaclab.lalteer.model.VariantProduct.Brand;
-import com.humaclab.lalteer.model.VariantProduct.Category;
-import com.humaclab.lalteer.model.VariantProduct.ProductsItem;
+import com.humaclab.lalteer.model.variant_product.Brand;
+import com.humaclab.lalteer.model.variant_product.Category;
+import com.humaclab.lalteer.model.variant_product.ProductsItem;
 import com.humaclab.lalteer.utils.DatabaseHandler;
 import com.humaclab.lalteer.utils.SessionManager;
 
@@ -44,7 +44,7 @@ public class OrderActivity extends AppCompatActivity implements OnSelectProduct 
     private List<String> categoryName = new ArrayList<>(), brandName = new ArrayList<>();
     private List<Integer> categoryID = new ArrayList<>(), brandID = new ArrayList<>();
 
-    private List<SelectedProductHelper> selectedProductList = new ArrayList<>();
+    public static List<SelectedProductHelper> selectedProductList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +69,7 @@ public class OrderActivity extends AppCompatActivity implements OnSelectProduct 
 
         getCategory();
         getBrand();
-        getProducts();
+        //  getProducts();
 
         binding.etSearchProduct.addTextChangedListener(new TextWatcher() {
             @Override
@@ -94,13 +94,18 @@ public class OrderActivity extends AppCompatActivity implements OnSelectProduct 
             }
         });
 
-        binding.srlProduct.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                getProducts();
-            }
+        binding.srlProduct.setOnRefreshListener(() -> {
+            getProducts();
         });
         binding.srlProduct.setRefreshing(true);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        getProducts();
+
     }
 
     private void getCategory() {
@@ -116,9 +121,12 @@ public class OrderActivity extends AppCompatActivity implements OnSelectProduct 
         binding.spProductCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                binding.srlProduct.setRefreshing(false);
-                List<ProductsItem> productsItemList = databaseHandler.getProduct(categoryID.get(position), brandID.get(binding.spProductBrand.getSelectedItemPosition()));
-                binding.rvProduct.setAdapter(new OrderProductRecyclerAdapter(context, OrderActivity.this, productsItemList, selectedProductList));
+                if (position != 0) {
+
+                    binding.srlProduct.setRefreshing(false);
+                    List<ProductsItem> productsItemList = databaseHandler.getProduct(categoryID.get(position), brandID.get(binding.spProductBrand.getSelectedItemPosition()));
+                    binding.rvProduct.setAdapter(new OrderProductRecyclerAdapter(context, OrderActivity.this, productsItemList, selectedProductList));
+                }
             }
 
             @Override
@@ -141,9 +149,12 @@ public class OrderActivity extends AppCompatActivity implements OnSelectProduct 
         binding.spProductBrand.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                binding.srlProduct.setRefreshing(false);
-                List<ProductsItem> productsItemList = databaseHandler.getProduct(categoryID.get(binding.spProductCategory.getSelectedItemPosition()), brandID.get(position));
-                binding.rvProduct.setAdapter(new OrderProductRecyclerAdapter(context, OrderActivity.this, productsItemList, selectedProductList));
+                if (position != 0) {
+
+                    binding.srlProduct.setRefreshing(false);
+                    List<ProductsItem> productsItemList = databaseHandler.getProduct(categoryID.get(binding.spProductCategory.getSelectedItemPosition()), brandID.get(position));
+                    binding.rvProduct.setAdapter(new OrderProductRecyclerAdapter(context, OrderActivity.this, productsItemList, selectedProductList));
+                }
             }
 
             @Override
@@ -153,19 +164,43 @@ public class OrderActivity extends AppCompatActivity implements OnSelectProduct 
     }
 
     private void getProducts() {
+
         binding.srlProduct.setRefreshing(false);
-        List<ProductsItem> productsItemList = databaseHandler.getProduct(0, 0);
+        List<ProductsItem> productsItemList = databaseHandler.getProduct(categoryID.get(binding.spProductCategory.getSelectedItemPosition()), brandID.get(binding.spProductBrand.getSelectedItemPosition()));
         binding.rvProduct.setAdapter(new OrderProductRecyclerAdapter(context, OrderActivity.this, productsItemList, selectedProductList));
         //if this activity called from product activity
+        updateTotal_Discount_Grnd();
+    }
+
+    void updateTotal_Discount_Grnd() {
+
+        Double totalAmt = 0.00;
+        Double totalDiscount = 0.00;
+        for (SelectedProductHelper selectedProductHelper : selectedProductList) {
+            totalAmt += Double.valueOf(selectedProductHelper.getTotalPrice());
+            //totalDiscount += Double.valueOf(selectedProductHelper.getTotalPrice());
+        }
+        binding.tvTotalAmt.setText(String.format("%.2f", totalAmt));
+
+        //binding.tvTotalGr.setText(String.format("%.2f", (totalAmt - totalDiscount)));
+        binding.tvTotalGr.setText(String.format("%.2f", (totalAmt)));
+
     }
 
     @Override
     public void onSetSelectedProduct(SelectedProductHelper selectedProduct) {
-        if (selectedProductList.contains(selectedProduct)) {
+        for (SelectedProductHelper selected : selectedProductList) {
+            if (selected.getProductName().equalsIgnoreCase(selectedProduct.getProductName()) && selected.getProductID().equalsIgnoreCase(selectedProduct.getProductID())) {
+                Log.d("tareq_test", "product matched" + selected.getProductName());
+
+                selectedProductList.remove(selected);
+            }
+        }
+     /*   if (selectedProductList.contains(selectedProduct)) {
             selectedProductList.remove(selectedProductList.indexOf(selectedProduct));
             selectedProductList.add(selectedProductList.indexOf(selectedProduct), selectedProduct);
-        } else
-            selectedProductList.add(selectedProduct);
+        } else*/
+        selectedProductList.add(selectedProduct);
 
         System.out.println("Product list:" + new Gson().toJson(selectedProductList) + "\nIndex: " + selectedProductList.indexOf(selectedProduct));
 
@@ -179,6 +214,8 @@ public class OrderActivity extends AppCompatActivity implements OnSelectProduct 
 
         //binding.tvTotalGr.setText(String.format("%.2f", (totalAmt - totalDiscount)));
         binding.tvTotalGr.setText(String.format("%.2f", (totalAmt)));
+
+        getProducts();//for refreshing
     }
 
     @Override
@@ -190,14 +227,14 @@ public class OrderActivity extends AppCompatActivity implements OnSelectProduct 
         System.out.println("Product list:" + new Gson().toJson(selectedProductList) + "\nIndex: " + selectedProductList.indexOf(selectedProduct));
 
         Double totalAmt = 0.00;
-        Double totalDiscount = 0.00;
+
         for (SelectedProductHelper selectedProductHelper : selectedProductList) {
             totalAmt += Double.valueOf(selectedProductHelper.getTotalPrice());
-            totalDiscount += Double.valueOf(selectedProductHelper.getTotalPrice());
+
         }
         binding.tvTotalAmt.setText(String.format("%.2f", totalAmt));
 
-        binding.tvTotalGr.setText(String.format("%.2f", (totalAmt - totalDiscount)));
+        binding.tvTotalGr.setText(String.format("%.2f", (totalAmt)));
     }
 
     @Override
@@ -207,7 +244,7 @@ public class OrderActivity extends AppCompatActivity implements OnSelectProduct 
         if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
             binding.rvProduct.setLayoutManager(new GridLayoutManager(context, 4));
         } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
-            binding.rvProduct.setLayoutManager(new GridLayoutManager(context, 3));
+            binding.rvProduct.setLayoutManager(new GridLayoutManager(context, 2));
         }
     }
 
@@ -219,12 +256,16 @@ public class OrderActivity extends AppCompatActivity implements OnSelectProduct 
 
     @Override
     protected void onDestroy() {
+        //clear selected Item list
+        selectedProductList.clear();
         super.onDestroy();
     }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        //clear selected Item list
+        selectedProductList.clear();
         finish();
     }
 

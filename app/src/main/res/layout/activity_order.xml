@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <LinearLayout
@@ -41,11 +42,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/ll_spinner"
-                android:layout_margin="10dp"
-                android:drawableRight="@drawable/search"
+                android:layout_marginStart="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="10dp"
+                android:drawableEnd="@drawable/ic_search_black_24dp"
+                android:drawableRight="@drawable/ic_search_black_24dp"
+                android:fontFamily="@font/latoregular"
                 android:gravity="center"
                 android:hint="@string/search_product"
-                android:fontFamily="@font/latoregular"
                 android:imeOptions="actionSearch"
                 android:inputType="text"
                 android:padding="10dp" />
@@ -64,70 +69,88 @@
                     android:layout_height="match_parent" />
             </android.support.v4.widget.SwipeRefreshLayout>
 
-            <LinearLayout
+            <android.support.constraint.ConstraintLayout
                 android:id="@+id/ll_total"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentEnd="true"
                 android:layout_alignParentStart="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentBottom="true"
                 android:background="#8990caf9"
                 android:orientation="horizontal"
-                android:padding="10dp">
+                android:padding="10dp"
+                android:weightSum="2">
 
                 <LinearLayout
+                    android:id="@+id/linearLayout10"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/linearLayout9"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/total"
                         android:fontFamily="@font/latobold"
+                        android:text="@string/total"
                         android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/tv_total_amt"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:hint="Total"
-                        android:fontFamily="@font/latoregular"/>
+                        android:fontFamily="@font/latoregular"
+                        android:hint="Total" />
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/linearLayout9"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toStartOf="@+id/linearLayout8"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/linearLayout10"
+                    app:layout_constraintTop_toTopOf="@+id/linearLayout10">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/discount"
                         android:fontFamily="@font/latobold"
+                        android:text="@string/discount"
                         android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/tv_total_discnt"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:hint="Discount"
-                        android:fontFamily="@font/latoregular"/>
+                        android:fontFamily="@font/latoregular"
+                        android:hint="Discount" />
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/linearLayout8"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/linearLayout9"
+                    app:layout_constraintTop_toTopOf="@+id/linearLayout9">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/grand_total"
                         android:fontFamily="@font/latobold"
+                        android:text="@string/grand_total"
                         android:textStyle="bold" />
 
                     <TextView
@@ -137,7 +160,7 @@
                         android:fontFamily="@font/latoregular"
                         android:hint="Grand Total" />
                 </LinearLayout>
-            </LinearLayout>
+            </android.support.constraint.ConstraintLayout>
         </RelativeLayout>
     </LinearLayout>
 </layout>

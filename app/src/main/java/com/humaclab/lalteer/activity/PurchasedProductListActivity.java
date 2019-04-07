@@ -1,20 +1,18 @@
 package com.humaclab.lalteer.activity;
 
-import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.TextView;
 
 import com.humaclab.lalteer.R;
 import com.humaclab.lalteer.adapters.PurchasedProductRecyclerAdapter;
 import com.humaclab.lalteer.databinding.ActivityPurchasedProductListBinding;
 import com.humaclab.lalteer.model.Outlets;
-import com.humaclab.lalteer.model.PurchaseHistory.PurchaseHistoryItem;
+import com.humaclab.lalteer.model.purchase_history.PurchaseHistoryItem;
 import com.humaclab.lalteer.utils.SessionManager;
 // Purches History specific All Data
 public class PurchasedProductListActivity extends AppCompatActivity {

@@ -17,7 +17,7 @@
     <data>
         <variable
             name="Product"
-            type="com.humaclab.lalteer.model.performance.OrdersModel.Product" />
+            type="com.humaclab.lalteer.model.performance.orders_model.Product" />
 
     </data>
 

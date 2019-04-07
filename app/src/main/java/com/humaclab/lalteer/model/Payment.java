@@ -38,6 +38,18 @@ public class Payment implements Serializable {
         @SerializedName("products")
         public List<Product> productList;
 
+       /*By tareq for adapter perticular photo select*/
+        private Bitmap photo;
+        private String img;
+
+        public String getImg() {
+            return img;
+        }
+
+        public void setImg(String img) {
+            this.img = img;
+        }
+
         public Bitmap getPhoto() {
             return photo;
         }
@@ -45,8 +57,6 @@ public class Payment implements Serializable {
         public void setPhoto(Bitmap photo) {
             this.photo = photo;
         }
-
-        private Bitmap photo;
 
     }
 

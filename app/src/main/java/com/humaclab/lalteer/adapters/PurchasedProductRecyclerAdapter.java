@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import com.humaclab.lalteer.BR;
 import com.humaclab.lalteer.R;
 import com.humaclab.lalteer.databinding.ItemPurchaseHistoryProductListBinding;
-import com.humaclab.lalteer.model.PurchaseHistory.OrderDetailsItem;
+import com.humaclab.lalteer.model.purchase_history.OrderDetailsItem;
 
 import java.util.List;
 

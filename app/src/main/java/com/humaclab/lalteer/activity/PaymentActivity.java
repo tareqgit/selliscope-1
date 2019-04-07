@@ -11,6 +11,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Base64;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -152,10 +153,11 @@ public class PaymentActivity extends AppCompatActivity {
             Bitmap photo = (Bitmap) data.getExtras().get("data");
             assert photo != null;
             photo.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
-            //promotionImage = Base64.encodeToString(outputStream.toByteArray(), Base64.DEFAULT);
+            String promotionImage = Base64.encodeToString(outputStream.toByteArray(), Base64.DEFAULT);
             // binding.ivTakeImage.setImageBitmap(photo);
-            Toast.makeText(this, ""+photo, Toast.LENGTH_SHORT).show();
-            mOnImageResultAchiveListener.onImageAchive(photo);
+            Log.d("tareq_test" , ""+promotionImage);
+            Toast.makeText(this, ""+promotionImage, Toast.LENGTH_SHORT).show();
+            mOnImageResultAchiveListener.onImageAchive(photo, promotionImage);
 
         }
     }
@@ -168,6 +170,6 @@ public class PaymentActivity extends AppCompatActivity {
     }*/
 
    public interface OnImageResultAchiveListener{
-       void onImageAchive(Bitmap image);
+       void onImageAchive(Bitmap image, String img);
    }
 }

@@ -15,9 +15,9 @@ import android.widget.TextView;
 import com.humaclab.lalteer.R;
 import com.humaclab.lalteer.SelliscopeApiEndpointInterface;
 import com.humaclab.lalteer.adapters.ProductRecyclerViewAdapter;
-import com.humaclab.lalteer.model.VariantProduct.Brand;
-import com.humaclab.lalteer.model.VariantProduct.Category;
-import com.humaclab.lalteer.model.VariantProduct.ProductsItem;
+import com.humaclab.lalteer.model.variant_product.Brand;
+import com.humaclab.lalteer.model.variant_product.Category;
+import com.humaclab.lalteer.model.variant_product.ProductsItem;
 import com.humaclab.lalteer.utils.DatabaseHandler;
 
 import java.util.ArrayList;

@@ -12,7 +12,7 @@ import android.widget.Toast;
 import com.humaclab.lalteer.R;
 import com.humaclab.lalteer.adapters.OrderProductRecyclerAdapter;
 import com.humaclab.lalteer.databinding.ItemOrderProductSelectionBinding;
-import com.humaclab.lalteer.model.VariantProduct.ProductsItem;
+import com.humaclab.lalteer.model.variant_product.ProductsItem;
 
 /**
  * Created by leon on 14/3/18.

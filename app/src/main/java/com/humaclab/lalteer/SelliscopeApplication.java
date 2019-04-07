@@ -63,7 +63,7 @@ public class SelliscopeApplication extends Application {
             Timber.plant(new Timber.DebugTree());
         }
         Stetho.initializeWithDefaults(this);
-        Fabric.with(this, new Crashlytics());
+       /* Fabric.with(this, new Crashlytics());*/
         Realm.init(this);
         RealmConfiguration config = new RealmConfiguration.Builder().name("lalteer.realm").build();
 

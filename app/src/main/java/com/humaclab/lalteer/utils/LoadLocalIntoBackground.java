@@ -15,8 +15,6 @@ import com.humaclab.lalteer.model.Products.Product;
 import com.humaclab.lalteer.model.Products.ProductResponse;
 import com.humaclab.lalteer.model.RoutePlan.RouteDetailsResponse;
 import com.humaclab.lalteer.model.Thana.ThanaResponse;
-import com.humaclab.lalteer.model.VariantProduct.ProductsItem;
-import com.humaclab.lalteer.model.VariantProduct.VariantProductResponse;
 
 import java.io.IOException;
 import java.util.List;

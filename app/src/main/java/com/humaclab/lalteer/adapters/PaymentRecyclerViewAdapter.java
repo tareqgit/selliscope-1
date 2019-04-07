@@ -108,7 +108,15 @@ private static int butClickedPos=0;
                 payment.type = holder.sp_payment_type.getSelectedItemPosition() +1;
 
                 payment.amount = Integer.parseInt(holder.et_payment.getText().toString());
+
+                payment.bank_name=holder.bankName.getText().toString();
+                payment.cheque_no=holder.chequeNumber.getText().toString();
+                payment.deposit_slip=holder.depositSlip.getText().toString();
+                payment.cheque_date=holder.date_view.getText().toString();
+                payment.img= orderLists.get(butClickedPos).getImg(); //as this is getting from activity using listener
                 paymentResponse.payment = payment;
+
+                Log.d("tareq_test" , ""+new Gson().toJson(paymentResponse));
                 Call<PaymentResponse.PaymentSucessfull> call = apiService.payNow(paymentResponse);
                 call.enqueue(new Callback<PaymentResponse.PaymentSucessfull>() {
                     @Override
@@ -153,9 +161,10 @@ private static int butClickedPos=0;
      * @param image
      */
     @Override
-    public void onImageAchive(Bitmap image) {
+    public void onImageAchive(Bitmap image, String img) {
         //Update new data into holder; this is the only way
          orderLists.get(butClickedPos).setPhoto(image);
+         orderLists.get(butClickedPos).setImg(img);
           notifyDataSetChanged();
 
     }

@@ -21,6 +21,16 @@ public class PaymentResponse {
         public int type;
         @SerializedName("discount")
         public int discount;
+        @SerializedName("bank_name")
+        public  String bank_name;
+        @SerializedName("cheque_no")
+        public String cheque_no;
+        @SerializedName("deposit_slip")
+        public String deposit_slip;
+        @SerializedName("cheque_date")
+        public String cheque_date;
+        @SerializedName("img")
+        public String img;
     }
 
     public static class PaymentSucessfull {

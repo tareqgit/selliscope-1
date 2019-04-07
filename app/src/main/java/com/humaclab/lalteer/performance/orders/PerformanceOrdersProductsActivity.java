@@ -22,7 +22,7 @@ import android.widget.TextView;
 
 import com.humaclab.lalteer.R;
 import com.humaclab.lalteer.databinding.ActivityPerformanceOrdersProductsBinding;
-import com.humaclab.lalteer.model.performance.OrdersModel.Product;
+import com.humaclab.lalteer.model.performance.orders_model.Product;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -13,8 +13,8 @@
     app:cardPreventCornerOverlap="true"
     app:cardUseCompatPadding="true"
 
-    app:cardCornerRadius="@dimen/radius_10"
-    app:cardElevation="@dimen/elevation_5"
+    app:cardCornerRadius="5dp"
+    app:cardElevation="3dp"
     >
 
     <android.support.constraint.ConstraintLayout

@@ -22,6 +22,8 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.facebook.shimmer.Shimmer;
+import com.facebook.shimmer.ShimmerDrawable;
 import com.google.android.gms.awareness.Awareness;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
@@ -58,6 +60,7 @@ import timber.log.Timber;
  */
 
 public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecyclerViewAdapter.OutletViewHolder> {
+    private Shimmer shimmer;
 
     private GoogleApiClient googleApiClient;
     private SelliscopeApiEndpointInterface apiService;
@@ -72,6 +75,12 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
         this.context = context;
         this.activity = activity;
         this.sessionManager = new SessionManager(context);
+
+
+        shimmer= new Shimmer.ColorHighlightBuilder()
+                .setBaseAlpha(.85f)
+                .setIntensity(0)
+                .build();
     }
 
     @Override
@@ -86,10 +95,15 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
         holder.setIsRecyclable(false);
         final Outlets.Outlet outlet = outletItems.outlets.get(position);
 
+        ShimmerDrawable shimmerDrawable=new ShimmerDrawable();
+        shimmerDrawable.setShimmer(shimmer);
+
 
         Glide.with(context)
                 .load(Constants.baseUrl+outlet.outletImgUrl)
-                .placeholder(R.drawable.ic_outlet)
+                .placeholder(shimmerDrawable)
+                .centerCrop()
+
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
                 .into(holder.iv_outlet);
 

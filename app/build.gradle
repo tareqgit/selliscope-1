@@ -96,6 +96,10 @@ dependencies {
     annotationProcessor "com.github.bumptech.glide:compiler:4.9.0"
     implementation 'com.caverock:androidsvg:1.2.1' //added progourd exception
 
+    //Shimmer effect
+    implementation 'com.facebook.shimmer:shimmer:0.3.0'
+
+
     implementation 'io.realm:android-adapters:2.1.1'
     implementation 'de.hdodenhof:circleimageview:2.2.0'
     implementation 'com.github.esafirm.android-image-picker:imagepicker:1.12.0'

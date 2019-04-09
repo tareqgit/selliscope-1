@@ -14,7 +14,8 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            >
 
             <LinearLayout
                 android:id="@+id/ll_spinner"
@@ -26,15 +27,18 @@
                     android:id="@+id/sp_product_category"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:layout_weight="1" />
+                    android:layout_weight="1"
+                    android:layout_marginBottom="5dp"/>
 
                 <Spinner
                     android:id="@+id/sp_product_brand"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:layout_weight="1" />
+                    android:layout_marginBottom="5dp"
+                    android:layout_weight="1"
+
+
+                    />
             </LinearLayout>
 
             <EditText
@@ -42,10 +46,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/ll_spinner"
-                android:layout_marginStart="10dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginEnd="10dp"
-                android:layout_marginBottom="10dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
                 android:drawableEnd="@drawable/ic_search_black_24dp"
                 android:drawableRight="@drawable/ic_search_black_24dp"
                 android:fontFamily="@font/latoregular"
@@ -53,7 +55,8 @@
                 android:hint="@string/search_product"
                 android:imeOptions="actionSearch"
                 android:inputType="text"
-                android:padding="10dp" />
+
+                />
 
             <android.support.v4.widget.SwipeRefreshLayout
                 android:id="@+id/srl_product"
@@ -79,7 +82,8 @@
                 android:background="#8990caf9"
                 android:orientation="horizontal"
                 android:padding="10dp"
-                android:weightSum="2">
+                android:weightSum="2"
+                android:elevation="3dp">
 
                 <LinearLayout
                     android:id="@+id/linearLayout10"

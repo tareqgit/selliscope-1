@@ -8,11 +8,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.humaclab.lalteer.R;
 import com.humaclab.lalteer.model.PromotionalAds.PromotionalAds;
 import com.humaclab.lalteer.model.PromotionalAds.Result;
 import com.humaclab.lalteer.utils.Constants;
-import com.squareup.picasso.Picasso;
+
 
 import java.util.List;
 
@@ -34,7 +35,7 @@ public class PromotionalAdsAdapter extends RecyclerView.Adapter<PromotionalAdsAd
     public void onBindViewHolder(PromotionViewHolder holder, int position) {
 
         holder.txtName.setText(resultList.get(position).getTitle());
-        Picasso.with(context)
+        Glide.with(context)
                 .load(Constants.baseUrl+resultList.get(position).getImage())
                 .placeholder(R.drawable.placeholder)
                 .into(holder.imageView);

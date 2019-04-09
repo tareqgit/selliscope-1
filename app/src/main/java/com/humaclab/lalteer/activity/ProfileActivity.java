@@ -30,7 +30,7 @@ import com.humaclab.lalteer.databinding.ActivityProfileBinding;
 import com.humaclab.lalteer.model.UpdateProfile.UpdateProfile;
 import com.humaclab.lalteer.model.UpdateProfile.UpdateProfileResponse;
 import com.humaclab.lalteer.utils.SessionManager;
-import com.squareup.picasso.Picasso;
+
 
 import java.io.ByteArrayOutputStream;
 import java.util.Calendar;
@@ -66,7 +66,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         Map<String, String> map = sessionManager.getUserDetails();
 
-        Picasso.with(this)
+        Glide.with(this)
                 .load(sessionManager.getUserDetails().get("profilePictureUrl"))
                 .into(binding.ivProfileImage);
 
@@ -88,7 +88,7 @@ public class ProfileActivity extends AppCompatActivity {
                 .thumbnail(0.5f)
                 .into(binding.ivProfileImage);*/
 
-        Picasso.with(this)
+        Glide.with(this)
                 .load(sessionManager.getUserDetails().get("profilePictureUrl"))
                 .placeholder(R.drawable.default_profile_pic)
                 .into(binding.ivProfileImage);

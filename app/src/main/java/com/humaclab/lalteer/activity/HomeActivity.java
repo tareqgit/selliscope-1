@@ -39,6 +39,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
 import com.google.android.gms.common.ConnectionResult;
@@ -59,7 +60,7 @@ import com.humaclab.lalteer.utils.Constants;
 import com.humaclab.lalteer.utils.DatabaseHandler;
 import com.humaclab.lalteer.utils.LoadLocalIntoBackground;
 import com.humaclab.lalteer.utils.SessionManager;
-import com.squareup.picasso.Picasso;
+
 
 import java.util.Calendar;
 import java.util.Locale;
@@ -108,6 +109,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("");
         TextView toolbarTitle = findViewById(R.id.tv_toolbar_title);
+        toolbarTitle.setVisibility(View.VISIBLE);
         toolbarTitle.setText(getResources().getString(R.string.home));
         setSupportActionBar(toolbar);
 
@@ -162,7 +164,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         ImageView profilePicture = navigationView.getHeaderView(0)
                 .findViewById(R.id.iv_profile_pic);
         userName.setText(sessionManager.getUserDetails().get("userName"));
-        Picasso.with(this)
+        Glide.with(this)
                 .load(sessionManager.getUserDetails().get("profilePictureUrl"))
                 .placeholder(R.drawable.default_profile_pic)
                 .into(profilePicture);
@@ -745,6 +747,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     private void welcome(String message) {
 
         TextView welcome_text = findViewById(R.id.welcome_text);
+        welcome_text.setVisibility(View.VISIBLE);
         welcome_text.setText(message + ", " + sessionManager.getUserDetails().get("userName"));
 
     }

@@ -21,7 +21,7 @@ import com.humaclab.lalteer.model.Outlets;
 import com.humaclab.lalteer.model.Target.OutletTarget;
 import com.humaclab.lalteer.utils.Constants;
 import com.humaclab.lalteer.utils.SessionManager;
-import com.squareup.picasso.Picasso;
+
 
 import retrofit2.Call;
 import retrofit2.Callback;

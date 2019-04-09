@@ -21,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.gms.awareness.Awareness;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
@@ -40,7 +41,7 @@ import com.humaclab.lalteer.utils.GetAddressFromLatLang;
 import com.humaclab.lalteer.utils.NetworkUtility;
 import com.humaclab.lalteer.utils.SendUserLocationData;
 import com.humaclab.lalteer.utils.SessionManager;
-import com.squareup.picasso.Picasso;
+
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -85,10 +86,12 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
         holder.setIsRecyclable(false);
         final Outlets.Outlet outlet = outletItems.outlets.get(position);
 
-        Picasso.with(context)
+
+        Glide.with(context)
                 .load(Constants.baseUrl+outlet.outletImgUrl)
                 .placeholder(R.drawable.ic_outlet)
                 .into(holder.iv_outlet);
+
         holder.tv_outletCode.setText(outlet.outlet_code == null ? "Pending" : outlet.outlet_code);
         holder.tvOutletName.setText(outlet.outletName);
         holder.tvOutletAddress.setText(outlet.outletAddress);

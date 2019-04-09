@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.humaclab.lalteer.R;
 import com.humaclab.lalteer.SelliscopeApiEndpointInterface;
 import com.humaclab.lalteer.SelliscopeApplication;
@@ -64,6 +65,7 @@ public class OutletActivity extends AppCompatActivity {
                 startActivity(new Intent(OutletActivity.this, AddOutletActivity.class));
             }
         });
+
 
         getRoute(); // For getting route plan data
 

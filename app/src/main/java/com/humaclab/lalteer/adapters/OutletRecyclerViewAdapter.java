@@ -90,6 +90,7 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
         Glide.with(context)
                 .load(Constants.baseUrl+outlet.outletImgUrl)
                 .placeholder(R.drawable.ic_outlet)
+                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
                 .into(holder.iv_outlet);
 
         holder.tv_outletCode.setText(outlet.outlet_code == null ? "Pending" : outlet.outlet_code);

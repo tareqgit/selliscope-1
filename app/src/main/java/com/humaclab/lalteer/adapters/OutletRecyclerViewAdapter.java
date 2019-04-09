@@ -105,7 +105,7 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
                 .centerCrop()
 
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
-                .into(holder.iv_outlet);
+                .into(holder.iv_outlet_image);
 
         holder.tv_outletCode.setText(outlet.outlet_code == null ? "Pending" : outlet.outlet_code);
         holder.tvOutletName.setText(outlet.outletName);
@@ -113,7 +113,7 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
         holder.tvOutletContactNumber.setText(outlet.phone);
         holder.tvOutletOwnerName.setText(outlet.ownerName);
         if (outlet.outlet_routeplan.equals("1")) {
-            holder.lo_routeplan_background2.setBackgroundColor(Color.parseColor("#ff7043"));
+            holder.lo_routeplan_background2.setImageResource(R.drawable.moss_gradient2);
 
         }
         holder.checkInButton.setOnClickListener(new View.OnClickListener() {
@@ -248,17 +248,17 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
 
     public class OutletViewHolder extends RecyclerView.ViewHolder {
         CardView cardView;
-        ImageView iv_outlet;
+        ImageView iv_outlet_image;
         TextView tvOutletName, tvOutletAddress, tvOutletOwnerName, tvOutletContactNumber,tv_outletCode;
         Button checkInButton, mapButton, historyButton;
         ProgressBar pbCheckIn;
         TextView tv_checkroute;
-        LinearLayout lo_routeplan_background2;
+        ImageView lo_routeplan_background2;
 
         public OutletViewHolder(View itemView) {
             super(itemView);
             tv_outletCode = itemView.findViewById(R.id.tv_outletCode);
-            iv_outlet = itemView.findViewById(R.id.iv_outlet);
+            iv_outlet_image = itemView.findViewById(R.id.iv_outlet_image);
             cardView = itemView.findViewById(R.id.cv_outlet_item);
             tvOutletName = itemView.findViewById(R.id.tv_outlet_name);
             tvOutletAddress = itemView.findViewById(R.id.tv_outlet_address);

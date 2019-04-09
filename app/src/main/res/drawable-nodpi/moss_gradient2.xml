@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Created by Tareq Islam on 2/19/19 12:04 AM
+  ~
+  ~  Last modified 2/18/19 11:51 PM
+  -->
+
+<!--
+  ~ Created by Tareq Islam on 2/18/19 11:46 PM
+  ~
+  ~  Last modified 2/18/19 11:46 PM
+  -->
+
+<shape android:shape="rectangle"
+    xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <gradient
+        android:startColor="#FCCF31"
+        android:endColor="#F55555"
+        android:type="linear"
+        android:angle="0"
+        />
+    <corners
+        android:bottomLeftRadius="20dp"
+         />
+</shape>

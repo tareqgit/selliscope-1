@@ -190,15 +190,21 @@ public class OrderActivity extends AppCompatActivity implements OnSelectProduct 
 
     @Override
     public void onSetSelectedProduct(SelectedProductHelper selectedProduct) {
+        for (Iterator<SelectedProductHelper> iterator = selectedProductList.iterator(); iterator.hasNext(); ) {
+            SelectedProductHelper selected = iterator.next();
+            if (selected.getProductName().equalsIgnoreCase(selectedProduct.getProductName()) && selected.getProductID().equalsIgnoreCase(selectedProduct.getProductID())) {
+                Log.d("tareq_test", "product matched" + selected.getProductName());
+                iterator.remove();
+            }
+        }
 
-
-            for ( SelectedProductHelper selected : selectedProductList) {
+        /*for (SelectedProductHelper selected : selectedProductList) {
             if (selected.getProductName().equalsIgnoreCase(selectedProduct.getProductName()) && selected.getProductID().equalsIgnoreCase(selectedProduct.getProductID())) {
                 Log.d("tareq_test", "product matched" + selected.getProductName());
 
                 selectedProductList.remove(selected);
             }
-        }
+        }*/
      /*   if (selectedProductList.contains(selectedProduct)) {
             selectedProductList.remove(selectedProductList.indexOf(selectedProduct));
             selectedProductList.add(selectedProductList.indexOf(selectedProduct), selectedProduct);

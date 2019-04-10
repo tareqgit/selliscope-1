@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.facebook.shimmer.Shimmer;
 import com.facebook.shimmer.ShimmerDrawable;
 import com.google.android.gms.awareness.Awareness;
@@ -92,21 +93,26 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
 
     @Override
     public void onBindViewHolder(final OutletViewHolder holder, final int position) {
-        holder.setIsRecyclable(false);
+      //  holder.setIsRecyclable(false);
         final Outlets.Outlet outlet = outletItems.outlets.get(position);
 
         ShimmerDrawable shimmerDrawable=new ShimmerDrawable();
         shimmerDrawable.setShimmer(shimmer);
 
-
-        Glide.with(context)
-                .load(Constants.baseUrl+outlet.outletImgUrl)
-                .placeholder(shimmerDrawable)
-                .centerCrop()
-
-                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
-                .into(holder.iv_outlet_image);
-
+        Log.d("tareq_test" , "Img: " +outlet.outletImgUrl);
+        assert outlet.outletImgUrl != null;
+        if(!outlet.outletImgUrl.equals("")) {
+            Glide.with(context)
+                    .load(Constants.baseUrl + outlet.outletImgUrl)
+                    .placeholder(shimmerDrawable)
+                    .centerCrop()
+                    .thumbnail(0.1f)
+                    .transition(DrawableTransitionOptions.withCrossFade())
+                    .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+                    .into(holder.iv_outlet_image);
+        }else{
+            holder.iv_outlet_image.setImageResource(R.drawable.selliscope_splash);
+        }
         holder.tv_outletCode.setText(outlet.outlet_code == null ? "Pending" : outlet.outlet_code);
         holder.tvOutletName.setText(outlet.outletName);
         holder.tvOutletAddress.setText(outlet.outletAddress);
@@ -117,8 +123,10 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
 
         }
         holder.checkInButton.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
+
                 holder.pbCheckIn.setVisibility(View.VISIBLE);
                 googleApiClient = new GoogleApiClient.Builder(context)
                         .addApi(Awareness.API)
@@ -147,9 +155,13 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
             @Override
             public void onClick(View v) {
                 //TODO: add map direction layout here.
+                Log.d("tareq_test" , ""+outlet.outletLatitude);
+
                 Intent intent = new Intent(context, RouteActivity.class);
                 intent.putExtra("outletName", outlet.outletName);
                 intent.putExtra("outletID", outlet.outletId);
+                intent.putExtra("outletLat", outlet.outletLatitude);
+                intent.putExtra("outletLong", outlet.outletLongitude);
                 context.startActivity(intent);
             }
         });

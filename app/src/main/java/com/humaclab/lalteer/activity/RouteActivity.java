@@ -98,6 +98,8 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        Log.d("tareq_test" , ""+getIntent().getDoubleExtra("outletLat",0));
     }
 
     @Override
@@ -133,15 +135,29 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
                                 if (mMap != null) {
                                     LatLng currentLocation = new LatLng(Double.parseDouble(String.format("%.05f", location.getLatitude())),
                                             Double.parseDouble(String.format("%.05f", location.getLongitude())));
+
+
+                                    LatLng outletLocation = new LatLng(getIntent().getDoubleExtra("outletLat",0),
+                                            getIntent().getDoubleExtra("outletLong",0));
+
+
+                                 //   Location outletLocation = new Location("outlet_location");
+                                //    outletLocation.setLatitude(Double.parseDouble(getIntent().getStringExtra("outletLat")));
+                                  //  outletLocation.setLongitude(Double.parseDouble(getIntent().getStringExtra("outletLong")));
+
+
                                     mMap.addMarker(new MarkerOptions().position(currentLocation)
                                             .title("You are here!")
                                             .icon(BitmapDescriptorFactory.fromResource(
                                                     R.drawable.ic_user_current_location)));
                                     CameraPosition cameraPosition = new CameraPosition(
-                                            currentLocation, 15, 70, 0);
+                                            outletLocation, 15, 70, 0);
                                     CameraUpdate yourLocation = CameraUpdateFactory
-                                            .newCameraPosition(cameraPosition);
+                                                            .newLatLngZoom(outletLocation,21f);
+
+
                                     mMap.animateCamera(yourLocation);
+
                                     getVisits();
                                 }
                             } else {

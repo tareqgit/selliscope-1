@@ -203,11 +203,14 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         }, 30, 30, TimeUnit.MINUTES);
         //loading Data into background
 
-        //Register receiver for Internet Connectivity change
-        IntentFilter filter = new IntentFilter();
-        filter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
-        registerReceiver(receiver, filter);
-
+        try {
+            //Register receiver for Internet Connectivity change
+            IntentFilter filter = new IntentFilter();
+            filter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
+            registerReceiver(receiver, filter);
+        }catch (Exception e){
+            Log.d("tareq_test" , ""+e.getMessage());
+        }
 
         // For Shared Preferrence to Language
         /*SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);

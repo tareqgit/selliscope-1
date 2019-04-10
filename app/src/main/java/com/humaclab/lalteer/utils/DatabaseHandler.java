@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.humaclab.lalteer.dbmodel.Target;
@@ -31,7 +32,7 @@ import java.util.Map;
  */
 
 public class DatabaseHandler extends SQLiteOpenHelper {
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
 
     // Database Tables
     private static final String TABLE_TARGET = "targets";
@@ -125,6 +126,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     //Order table column name
     private static final String KEY_ORDER_OUTLET_ID = "outlet_id";
+    private static final String KEY_ORDER_COMMENT="comment";
+    private static final String KEY_ORDER_TRANSPORT="transport";
+    private static final String KEY_ORDER_INVOICE_TYPE="invoice_type";
+    private static final String KEY_ORDER_LAT="lat";
+    private static  final String KEY_ORDER_LONG="long";
     private static final String KEY_ORDER_PRODUCT_ID = "product_id";
     private static final String KEY_ORDER_PRODUCT_QUANTITY = "product_quantity";
     private static final String KEY_ORDER_PRODUCT_ROW = "product_row";
@@ -240,6 +246,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         String CREATE_ORDER_TABLE = "CREATE TABLE " + TABLE_ORDER + "("
                 + KEY_ORDER_ID + " INTEGER  PRIMARY KEY AUTOINCREMENT,"
                 + KEY_ORDER_OUTLET_ID + " INTEGER,"
+                + KEY_ORDER_COMMENT + " TEXT,"
+                + KEY_ORDER_TRANSPORT + " TEXT,"
+                + KEY_ORDER_INVOICE_TYPE + " INTERGER,"
+                + KEY_ORDER_LAT + " TEXT,"
+                + KEY_ORDER_LONG + " TEXT,"
                 + KEY_ORDER_PRODUCT_ID + " INTEGER,"
                 + KEY_ORDER_PRODUCT_QUANTITY + " INTEGER,"
                 + KEY_ORDER_PRODUCT_ROW + " INTEGER,"
@@ -1130,7 +1141,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     //Offline order taking
     public List<AddNewOrder> getOrder() {
         SQLiteDatabase db = this.getWritableDatabase();
-        String outletIds = "SELECT distinct " + KEY_ORDER_OUTLET_ID + " FROM " + TABLE_ORDER;
+        String outletIds = "SELECT distinct " + KEY_ORDER_OUTLET_ID +
+                " , "+ KEY_ORDER_COMMENT +
+                " , "+ KEY_ORDER_TRANSPORT +
+                " , "+ KEY_ORDER_INVOICE_TYPE +
+                " , "+ KEY_ORDER_LAT +
+                " , "+ KEY_ORDER_LONG +
+                " FROM " + TABLE_ORDER;
 
         List<AddNewOrder> addNewOrderList = new ArrayList<>();
 
@@ -1144,10 +1161,21 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 List<AddNewOrder.NewOrder.Product> productList = new ArrayList<>();
                 cursorOutletID.getColumnNames();
                 newOrder.outletId = cursorOutletID.getInt(cursorOutletID.getColumnIndex(KEY_ORDER_OUTLET_ID));
+
+                newOrder.comment=cursorOutletID.getString(cursorOutletID.getColumnIndex(KEY_ORDER_COMMENT));
+                newOrder.transport=cursorOutletID.getString(cursorOutletID.getColumnIndex(KEY_ORDER_TRANSPORT));
+                newOrder.paymentType=cursorOutletID.getInt(cursorOutletID.getColumnIndex(KEY_ORDER_INVOICE_TYPE));
+                newOrder.latitude=cursorOutletID.getString(cursorOutletID.getColumnIndex(KEY_ORDER_LAT));
+                newOrder.longitude=cursorOutletID.getString(cursorOutletID.getColumnIndex(KEY_ORDER_LONG));
+
                 String orders = "SELECT * FROM " + TABLE_ORDER + " WHERE " + KEY_ORDER_OUTLET_ID + "=" + newOrder.outletId;
                 Cursor cursorOrders = db.rawQuery(orders, null);
                 if (cursorOrders.moveToFirst()) {
+
+
                     do {
+
+
                         AddNewOrder.NewOrder.Product product = new AddNewOrder.NewOrder.Product();
                         product.id = cursorOrders.getInt(cursorOrders.getColumnIndex(KEY_ORDER_PRODUCT_ID));
                         product.qty = cursorOrders.getInt(cursorOrders.getColumnIndex(KEY_ORDER_PRODUCT_QUANTITY));
@@ -1170,6 +1198,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(KEY_ORDER_OUTLET_ID, addNewOrder.newOrder.outletId);
+        values.put(KEY_ORDER_COMMENT, addNewOrder.newOrder.comment);
+        values.put(KEY_ORDER_TRANSPORT, addNewOrder.newOrder.transport);
+        values.put(KEY_ORDER_INVOICE_TYPE, addNewOrder.newOrder.paymentType);
+        values.put(KEY_ORDER_LAT, addNewOrder.newOrder.latitude);
+        values.put(KEY_ORDER_LONG, addNewOrder.newOrder.longitude);
+
         try {
             for (AddNewOrder.NewOrder.Product product : addNewOrder.newOrder.products) {
                 values.put(KEY_ORDER_PRODUCT_ID, product.id);

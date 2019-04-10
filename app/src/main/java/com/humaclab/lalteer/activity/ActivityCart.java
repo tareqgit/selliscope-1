@@ -218,7 +218,7 @@ public class ActivityCart extends AppCompatActivity implements OnSelectProduct {
                             Intent intent = new Intent(getApplicationContext(), OutletActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                             startActivity(intent);
-                            //finish();
+                            finish();
                             //startActivity(new Intent(ActivityCart.this, OutletActivity.class));
                         } else if (response.code() == 401) {
                             System.out.println(new Gson().toJson(response.body()));
@@ -236,9 +236,16 @@ public class ActivityCart extends AppCompatActivity implements OnSelectProduct {
                     }
                 });
             } else {
+                Log.d("tareq_test" , "Order has been queued in database");
                 databaseHandler.setOrder(addNewOrder);
                 Toast.makeText(ActivityCart.this, "Order created successfully", Toast.LENGTH_LONG).show();
                 pd.dismiss();
+                //clear selected Item list
+                selectedProductList.clear();
+
+                Intent intent = new Intent(getApplicationContext(), OutletActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
                 finish();
             }
         } catch (Exception e) {

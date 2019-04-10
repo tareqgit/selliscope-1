@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.util.Log;
 
 import com.humaclab.lalteer.SelliscopeApiEndpointInterface;
 import com.humaclab.lalteer.SelliscopeApplication;
@@ -67,10 +68,12 @@ public class InternetConnectivityChangeReceiver extends BroadcastReceiver {
             call.enqueue(new Callback<AddNewOrder.OrderResponse>() {
                 @Override
                 public void onResponse(Call<AddNewOrder.OrderResponse> call, Response<AddNewOrder.OrderResponse> response) {
-                    Timber.e("Offline order: Order completed.");
-                    if (response.code() == 201) {
+                    //Timber.e("Offline order: Order completed.");
+                    Log.d("tareq_test" , "Offline order: Order completed");
+                    if (response.code() == 200) {
                         databaseHandler.removeOrder(addNewOrder.newOrder.outletId);
-                        Timber.e("Offline order: Order removed.");
+                   //     Timber.e("Offline order: Order removed.");
+                        Log.d("tareq_test" , "Offline order: Order removed.");
                     }
                 }
 

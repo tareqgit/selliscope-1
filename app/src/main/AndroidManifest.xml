@@ -106,6 +106,7 @@
             android:name=".activity.HomeActivity"
             android:configChanges="orientation|screenSize" />
         <activity android:name=".activity.RouteActivity" />
+        <activity android:name=".activity.OutletMapActivity"/>
         <activity android:name=".activity.OutletActivity" />
         <activity android:name=".activity.AddOutletActivity" />
         <activity android:name=".activity.OutletDetailsActivity" />

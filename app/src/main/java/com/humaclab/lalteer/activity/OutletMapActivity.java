@@ -1,3 +1,9 @@
+/*
+ * Created by Tareq Islam on 4/11/19 12:41 PM
+ *
+ *  Last modified 4/10/19 3:14 PM
+ */
+
 package com.humaclab.lalteer.activity;
 
 import android.Manifest;
@@ -58,7 +64,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import timber.log.Timber;
 
-public class RouteActivity extends AppCompatActivity implements OnMapReadyCallback,
+public class OutletMapActivity extends AppCompatActivity implements OnMapReadyCallback,
         LocationSource.OnLocationChangedListener {
 
     private GoogleMap mMap;
@@ -78,7 +84,7 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
         TextView toolbarTitle = findViewById(R.id.tv_toolbar_title);
         toolbarTitle.setText(getResources().getString(R.string.dashBoard_map));
         setSupportActionBar(toolbar);
-        googleApiClient = new GoogleApiClient.Builder(RouteActivity.this)
+        googleApiClient = new GoogleApiClient.Builder(OutletMapActivity.this)
                 .addApi(Awareness.API)
                 .build();
         googleApiClient.connect();
@@ -99,13 +105,13 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-
+        Log.d("tareq_test" , ""+getIntent().getDoubleExtra("outletLat",0));
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        if (checkPermission(RouteActivity.this))
+        if (checkPermission(OutletMapActivity.this))
             mMap.getUiSettings().setMapToolbarEnabled(true);
         if (isGPSEnabled()) {
             getLocation();
@@ -125,7 +131,7 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
     }
 
     public void getLocation() {
-        if (checkPermission(RouteActivity.this)) {
+        if (checkPermission(OutletMapActivity.this)) {
             Awareness.SnapshotApi.getLocation(googleApiClient)
                     .setResultCallback(new ResultCallback<LocationResult>() {
                         @Override
@@ -137,15 +143,23 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
                                             Double.parseDouble(String.format("%.05f", location.getLongitude())));
 
 
+                                    LatLng outletLocation = new LatLng(getIntent().getDoubleExtra("outletLat",0),
+                                            getIntent().getDoubleExtra("outletLong",0));
+
+
+                                 //   Location outletLocation = new Location("outlet_location");
+                                //    outletLocation.setLatitude(Double.parseDouble(getIntent().getStringExtra("outletLat")));
+                                  //  outletLocation.setLongitude(Double.parseDouble(getIntent().getStringExtra("outletLong")));
+
 
                                     mMap.addMarker(new MarkerOptions().position(currentLocation)
                                             .title("You are here!")
                                             .icon(BitmapDescriptorFactory.fromResource(
                                                     R.drawable.ic_user_current_location)));
                                     CameraPosition cameraPosition = new CameraPosition(
-                                            currentLocation, 15, 70, 0);
+                                            outletLocation, 15, 70, 0);
                                     CameraUpdate yourLocation = CameraUpdateFactory
-                                                            .newCameraPosition(cameraPosition);
+                                                            .newLatLngZoom(outletLocation,21f);
 
 
                                     mMap.animateCamera(yourLocation);
@@ -163,7 +177,7 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
     }
 
     void getVisits() {
-        SessionManager sessionManager = new SessionManager(RouteActivity.this);
+        SessionManager sessionManager = new SessionManager(OutletMapActivity.this);
         SelliscopeApiEndpointInterface apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(),
                 sessionManager.getUserPassword(), false)
                 .create(SelliscopeApiEndpointInterface.class);
@@ -190,10 +204,10 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
                         e.printStackTrace();
                     }
                 } else if (response.code() == 401) {
-                    Toast.makeText(RouteActivity.this,
+                    Toast.makeText(OutletMapActivity.this,
                             "Invalid Response from server.", Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(RouteActivity.this,
+                    Toast.makeText(OutletMapActivity.this,
                             "Server Error! Try Again Later!", Toast.LENGTH_SHORT).show();
                 }
             }

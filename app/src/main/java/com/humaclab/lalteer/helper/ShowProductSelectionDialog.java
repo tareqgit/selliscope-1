@@ -24,14 +24,23 @@ public class ShowProductSelectionDialog {
     private SelectedProductHelper selectedProductHelper;
     private ItemOrderProductSelectionBinding binding;
     private AlertDialog alertDialog;
-    private OrderProductRecyclerAdapter.OrderProductViewHolder orderProductRecyclerAdapter;
+    private OnDialogSelectListener mOnDialogSelectListener;
+   // private OrderProductRecyclerAdapter.OrderProductViewHolder orderProductRecyclerAdapter;
 
-    public ShowProductSelectionDialog(OrderProductRecyclerAdapter.OrderProductViewHolder orderProductRecyclerAdapter, Context context, ProductsItem productsItem) {
-        this.orderProductRecyclerAdapter = orderProductRecyclerAdapter;
+    public ShowProductSelectionDialog( Context context, ProductsItem productsItem) {
+     //   this.orderProductRecyclerAdapter = orderProductRecyclerAdapter;
         this.context = context;
         this.productsItem = productsItem;
         this.alertDialog = new AlertDialog.Builder(context).create();
     }
+
+    public ShowProductSelectionDialog( Context context, ProductsItem productsItem, OnDialogSelectListener onDialogSelectListener) {
+        this.context = context;
+        this.productsItem = productsItem;
+        this.alertDialog = new AlertDialog.Builder(context).create();
+        mOnDialogSelectListener=onDialogSelectListener;
+    }
+
 
     public void setSelectedProduct(SelectedProductHelper selectedProductHelper) {
         this.selectedProductHelper = selectedProductHelper;
@@ -43,6 +52,7 @@ public class ShowProductSelectionDialog {
         binding.tvProductPrice.setText(productsItem.getPrice());
         binding.tvProductStock.setText(productsItem.getStock());
 
+        //if product is already selected than show the item of product has been selected
         if (selectedProductHelper != null) {
             binding.etProductQty.setText(selectedProductHelper.getProductQuantity());
             binding.tvTotalPrice.setText(String.format("%.2f", Double.valueOf(binding.tvProductPrice.getText().toString().replace(",", "")) * Double.valueOf(binding.etProductQty.getText().toString())));
@@ -82,8 +92,8 @@ public class ShowProductSelectionDialog {
                             binding.tvTotalPrice.getText().toString(),
                             productsItem.getVariantRow() == null ? "0" : productsItem.getVariantRow()
                     );
-
-                    orderProductRecyclerAdapter.onSetSelectedProduct(selectedProduct);
+                    mOnDialogSelectListener.onFinalSelect(selectedProduct);
+           //         orderProductRecyclerAdapter.onSetSelectedProduct(selectedProduct);
                     alertDialog.dismiss();
                     Toast.makeText(context, "Product added successfully", Toast.LENGTH_SHORT).show();
                 } else {
@@ -103,5 +113,10 @@ public class ShowProductSelectionDialog {
 
         alertDialog.setView(binding.getRoot());
         alertDialog.show();
+    }
+
+
+    public interface OnDialogSelectListener{
+        void onFinalSelect(SelectedProductHelper selectedProductHelper);
     }
 }

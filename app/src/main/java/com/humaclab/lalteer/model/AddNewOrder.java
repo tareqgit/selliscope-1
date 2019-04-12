@@ -36,6 +36,9 @@ public class AddNewOrder implements Serializable {
         @SerializedName("long")
         public String longitude;
 
+        @SerializedName("order_timestamp")
+        public String orderTimeStamp;
+
         public static class Product {
             @SerializedName("id")
             public int id;

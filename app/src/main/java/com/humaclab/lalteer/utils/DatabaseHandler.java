@@ -32,7 +32,7 @@ import java.util.Map;
  */
 
 public class DatabaseHandler extends SQLiteOpenHelper {
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 4;
 
     // Database Tables
     private static final String TABLE_TARGET = "targets";
@@ -131,6 +131,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String KEY_ORDER_INVOICE_TYPE="invoice_type";
     private static final String KEY_ORDER_LAT="lat";
     private static  final String KEY_ORDER_LONG="long";
+    private static final String KEY_ORDER_TIMESTAMP="order_timestamp";
     private static final String KEY_ORDER_PRODUCT_ID = "product_id";
     private static final String KEY_ORDER_PRODUCT_QUANTITY = "product_quantity";
     private static final String KEY_ORDER_PRODUCT_ROW = "product_row";
@@ -251,6 +252,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + KEY_ORDER_INVOICE_TYPE + " INTERGER,"
                 + KEY_ORDER_LAT + " TEXT,"
                 + KEY_ORDER_LONG + " TEXT,"
+                + KEY_ORDER_TIMESTAMP + " TEXT,"
                 + KEY_ORDER_PRODUCT_ID + " INTEGER,"
                 + KEY_ORDER_PRODUCT_QUANTITY + " INTEGER,"
                 + KEY_ORDER_PRODUCT_ROW + " INTEGER,"
@@ -1147,6 +1149,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 " , "+ KEY_ORDER_INVOICE_TYPE +
                 " , "+ KEY_ORDER_LAT +
                 " , "+ KEY_ORDER_LONG +
+                " , "+ KEY_ORDER_TIMESTAMP +
                 " FROM " + TABLE_ORDER;
 
         List<AddNewOrder> addNewOrderList = new ArrayList<>();
@@ -1167,6 +1170,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 newOrder.paymentType=cursorOutletID.getInt(cursorOutletID.getColumnIndex(KEY_ORDER_INVOICE_TYPE));
                 newOrder.latitude=cursorOutletID.getString(cursorOutletID.getColumnIndex(KEY_ORDER_LAT));
                 newOrder.longitude=cursorOutletID.getString(cursorOutletID.getColumnIndex(KEY_ORDER_LONG));
+                newOrder.orderTimeStamp=cursorOutletID.getString(cursorOutletID.getColumnIndex(KEY_ORDER_TIMESTAMP));
 
                 String orders = "SELECT * FROM " + TABLE_ORDER + " WHERE " + KEY_ORDER_OUTLET_ID + "=" + newOrder.outletId;
                 Cursor cursorOrders = db.rawQuery(orders, null);
@@ -1203,7 +1207,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(KEY_ORDER_INVOICE_TYPE, addNewOrder.newOrder.paymentType);
         values.put(KEY_ORDER_LAT, addNewOrder.newOrder.latitude);
         values.put(KEY_ORDER_LONG, addNewOrder.newOrder.longitude);
-
+        values.put(KEY_ORDER_TIMESTAMP, addNewOrder.newOrder.orderTimeStamp);
         try {
             for (AddNewOrder.NewOrder.Product product : addNewOrder.newOrder.products) {
                 values.put(KEY_ORDER_PRODUCT_ID, product.id);

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.Toolbar;
@@ -36,7 +37,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class OrderActivity extends AppCompatActivity implements OnSelectProduct {
+public class OrderActivity extends AppCompatActivity implements OrderProductRecyclerAdapter.OnSelectProductListener {
+
     private ActivityOrderBinding binding;
     private Context context;
     private DatabaseHandler databaseHandler;
@@ -46,6 +48,10 @@ public class OrderActivity extends AppCompatActivity implements OnSelectProduct 
     private List<Integer> categoryID = new ArrayList<>(), brandID = new ArrayList<>();
 
     public static List<SelectedProductHelper> selectedProductList = new ArrayList<>();
+
+
+    // Save state
+    private Parcelable recyclerViewState; //for storing recycler scroll postion
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,10 +88,10 @@ public class OrderActivity extends AppCompatActivity implements OnSelectProduct 
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (!s.toString().equals("")) {
                     List<ProductsItem> productsItemList = databaseHandler.getProduct(categoryID.get(binding.spProductCategory.getSelectedItemPosition()), brandID.get(binding.spProductBrand.getSelectedItemPosition()), s.toString());
-                    binding.rvProduct.setAdapter(new OrderProductRecyclerAdapter(context, OrderActivity.this, productsItemList, selectedProductList));
+                    binding.rvProduct.setAdapter(new OrderProductRecyclerAdapter(context, OrderActivity.this, productsItemList, selectedProductList, OrderActivity.this));
                 } else {
                     List<ProductsItem> productsItemList = databaseHandler.getProduct(categoryID.get(binding.spProductCategory.getSelectedItemPosition()), brandID.get(binding.spProductBrand.getSelectedItemPosition()));
-                    binding.rvProduct.setAdapter(new OrderProductRecyclerAdapter(context, OrderActivity.this, productsItemList, selectedProductList));
+                    binding.rvProduct.setAdapter(new OrderProductRecyclerAdapter(context, OrderActivity.this, productsItemList, selectedProductList, OrderActivity.this));
                 }
             }
 
@@ -99,13 +105,17 @@ public class OrderActivity extends AppCompatActivity implements OnSelectProduct 
             getProducts();
         });
         binding.srlProduct.setRefreshing(true);
+
+        getProducts();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        getProducts();
+        mOrderProductRecyclerAdapter.notifyDataSetChanged(); //we are Notify to update recycler view cz if we delete any Item from cart should be live in this activity also
+        // Restore state
+        binding.rvProduct.getLayoutManager().onRestoreInstanceState(recyclerViewState); //we are restoring recycler position
 
     }
 
@@ -126,7 +136,7 @@ public class OrderActivity extends AppCompatActivity implements OnSelectProduct 
 
                     binding.srlProduct.setRefreshing(false);
                     List<ProductsItem> productsItemList = databaseHandler.getProduct(categoryID.get(position), brandID.get(binding.spProductBrand.getSelectedItemPosition()));
-                    binding.rvProduct.setAdapter(new OrderProductRecyclerAdapter(context, OrderActivity.this, productsItemList, selectedProductList));
+                    binding.rvProduct.setAdapter(new OrderProductRecyclerAdapter(context, OrderActivity.this, productsItemList, selectedProductList, OrderActivity.this));
                 }
             }
 
@@ -154,7 +164,7 @@ public class OrderActivity extends AppCompatActivity implements OnSelectProduct 
 
                     binding.srlProduct.setRefreshing(false);
                     List<ProductsItem> productsItemList = databaseHandler.getProduct(categoryID.get(binding.spProductCategory.getSelectedItemPosition()), brandID.get(position));
-                    binding.rvProduct.setAdapter(new OrderProductRecyclerAdapter(context, OrderActivity.this, productsItemList, selectedProductList));
+                    binding.rvProduct.setAdapter(new OrderProductRecyclerAdapter(context, OrderActivity.this, productsItemList, selectedProductList, OrderActivity.this));
                 }
             }
 
@@ -164,11 +174,14 @@ public class OrderActivity extends AppCompatActivity implements OnSelectProduct 
         });
     }
 
+    OrderProductRecyclerAdapter mOrderProductRecyclerAdapter;
+
     private void getProducts() {
 
         binding.srlProduct.setRefreshing(false);
         List<ProductsItem> productsItemList = databaseHandler.getProduct(categoryID.get(binding.spProductCategory.getSelectedItemPosition()), brandID.get(binding.spProductBrand.getSelectedItemPosition()));
-        binding.rvProduct.setAdapter(new OrderProductRecyclerAdapter(context, OrderActivity.this, productsItemList, selectedProductList));
+        mOrderProductRecyclerAdapter = new OrderProductRecyclerAdapter(context, OrderActivity.this, productsItemList, selectedProductList, this);
+        binding.rvProduct.setAdapter(mOrderProductRecyclerAdapter);
         //if this activity called from product activity
         updateTotal_Discount_Grnd();
     }
@@ -209,7 +222,9 @@ public class OrderActivity extends AppCompatActivity implements OnSelectProduct 
             selectedProductList.remove(selectedProductList.indexOf(selectedProduct));
             selectedProductList.add(selectedProductList.indexOf(selectedProduct), selectedProduct);
         } else*/
+
         selectedProductList.add(selectedProduct);
+        Log.d("tareq_test", "product added in selected product list :" + selectedProductList.size());
 
         System.out.println("Product list:" + new Gson().toJson(selectedProductList) + "\nIndex: " + selectedProductList.indexOf(selectedProduct));
 
@@ -224,7 +239,7 @@ public class OrderActivity extends AppCompatActivity implements OnSelectProduct 
         //binding.tvTotalGr.setText(String.format("%.2f", (totalAmt - totalDiscount)));
         binding.tvTotalGr.setText(String.format("%.2f", (totalAmt)));
 
-        getProducts();//for refreshing
+        //   getProducts();//for refreshing
     }
 
     @Override
@@ -290,6 +305,10 @@ public class OrderActivity extends AppCompatActivity implements OnSelectProduct 
                     intent.putExtra("outletID", outletID);
                     intent.putExtra("outletName", outletName);
                     intent.putExtra("products", (Serializable) selectedProductList);
+
+
+                    recyclerViewState = binding.rvProduct.getLayoutManager().onSaveInstanceState(); //before moving to another activity store recycler state
+
                     startActivity(intent);
                 } else {
                     Toast.makeText(context, "No product selected yet.\nPlease select some product first.", Toast.LENGTH_SHORT).show();
@@ -298,4 +317,5 @@ public class OrderActivity extends AppCompatActivity implements OnSelectProduct 
         }
         return super.onOptionsItemSelected(item);
     }
+
 }

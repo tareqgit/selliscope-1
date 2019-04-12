@@ -100,7 +100,7 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
         ShimmerDrawable shimmerDrawable=new ShimmerDrawable();
         shimmerDrawable.setShimmer(shimmer);
 
-        Log.d("tareq_test" , "Img: " +outlet.outletImgUrl);
+
         assert outlet.outletImgUrl != null;
         if(!outlet.outletImgUrl.equals("")) {
             Glide.with(context)

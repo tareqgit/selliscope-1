@@ -16,7 +16,7 @@ import com.humaclab.lalteer.activity.OrderActivity;
 import com.humaclab.lalteer.databinding.ItemOrderProductBinding;
 import com.humaclab.lalteer.helper.SelectedProductHelper;
 import com.humaclab.lalteer.helper.ShowProductSelectionDialog;
-import com.humaclab.lalteer.interfaces.OnSelectProduct;
+
 import com.humaclab.lalteer.model.variant_product.ProductsItem;
 
 import java.util.List;

@@ -25,7 +25,7 @@ import com.humaclab.lalteer.R;
 import com.humaclab.lalteer.adapters.OrderProductRecyclerAdapter;
 import com.humaclab.lalteer.databinding.ActivityOrderBinding;
 import com.humaclab.lalteer.helper.SelectedProductHelper;
-import com.humaclab.lalteer.interfaces.OnSelectProduct;
+
 import com.humaclab.lalteer.model.variant_product.Brand;
 import com.humaclab.lalteer.model.variant_product.Category;
 import com.humaclab.lalteer.model.variant_product.ProductsItem;

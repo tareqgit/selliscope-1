@@ -25,7 +25,7 @@ import com.humaclab.lalteer.SelliscopeApplication;
 import com.humaclab.lalteer.adapters.SelectedProductRecyclerAdapter;
 import com.humaclab.lalteer.databinding.ActivityCartBinding;
 import com.humaclab.lalteer.helper.SelectedProductHelper;
-import com.humaclab.lalteer.interfaces.OnSelectProduct;
+
 import com.humaclab.lalteer.model.AddNewOrder;
 import com.humaclab.lalteer.utils.CurrentTimeUtilityClass;
 import com.humaclab.lalteer.utils.DatabaseHandler;
@@ -41,7 +41,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import static com.humaclab.lalteer.activity.OrderActivity.selectedProductList;
 
-public class ActivityCart extends AppCompatActivity implements OnSelectProduct {
+public class ActivityCart extends AppCompatActivity implements SelectedProductRecyclerAdapter.OnRemoveFromCartListener {
     Double total = 0.0;
     private ActivityCartBinding binding;
     private SelliscopeApiEndpointInterface apiService;
@@ -271,13 +271,12 @@ public class ActivityCart extends AppCompatActivity implements OnSelectProduct {
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onSetSelectedProduct(SelectedProductHelper selectedProduct) {
 
-    }
 
     @Override
     public void onRemoveSelectedProduct(SelectedProductHelper selectedProduct) {
+        Log.d("tareq_test" , "Item removed from cart");
+        
         if (selectedProductList.contains(selectedProduct)) {
             selectedProductList.remove(selectedProductList.indexOf(selectedProduct));
         }

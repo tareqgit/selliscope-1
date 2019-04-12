@@ -23,10 +23,18 @@ public class SelectedProductRecyclerAdapter extends RecyclerView.Adapter<Selecte
     private Context context;
   //  private List<SelectedProductHelper> selectedProductList;
 
+    OnRemoveFromCartListener mOnRemoveFromCartListener;
+
     public SelectedProductRecyclerAdapter(Context context, ActivityCart activityCart, List<SelectedProductHelper> selectedProductList) {
         this.context = context;
         this.activityCart = activityCart;
       //  this.selectedProductList = selectedProductList;
+    }
+
+    public SelectedProductRecyclerAdapter(Context context, ActivityCart activityCart, OnRemoveFromCartListener onRemoveFromCartListener) {
+        this.context = context;
+        this.activityCart = activityCart;
+          this.mOnRemoveFromCartListener = onRemoveFromCartListener;
     }
 
     @Override
@@ -45,7 +53,7 @@ public class SelectedProductRecyclerAdapter extends RecyclerView.Adapter<Selecte
                 selectedProductList.remove(position);
                 SelectedProductRecyclerAdapter.this.notifyItemRemoved(position);
                 SelectedProductRecyclerAdapter.this.notifyItemRangeChanged(position, selectedProductList.size());
-                activityCart.onRemoveSelectedProduct(selectedProduct);
+                mOnRemoveFromCartListener.onRemoveSelectedProduct(selectedProduct);
             } });
     }
 
@@ -65,5 +73,15 @@ public class SelectedProductRecyclerAdapter extends RecyclerView.Adapter<Selecte
         public ItemSelectedProductBinding getBinding() {
             return binding;
         }
+    }
+
+
+    public interface OnRemoveFromCartListener{
+       /**
+               * Update UI when product is removed from order
+     *
+             * @param selectedProduct SelectedProductHelper removed product details
+     */
+        void onRemoveSelectedProduct(SelectedProductHelper selectedProduct);
     }
 }

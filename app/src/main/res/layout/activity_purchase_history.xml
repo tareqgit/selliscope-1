@@ -32,6 +32,8 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:orientation="vertical"
+                android:elevation="5dp"
+                android:background="@drawable/cus_shadow"
                 android:padding="10dp">
 
                 <LinearLayout

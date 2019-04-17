@@ -22,14 +22,15 @@
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:layout_gravity="center_horizontal"
-            android:elevation="@dimen/elevation_5"/>
+            android:elevation="@dimen/elevation_5"
+            android:layout_marginTop="@dimen/padding_8"/>
 
         <TextView
             android:id="@+id/tv_dashboard_item_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_2"
-            android:background="@color/colorPrimary"
+            android:layout_marginTop="4dp"
+            android:background="@drawable/moss_gradient"
             android:elevation="@dimen/elevation_5"
             android:gravity="center_horizontal"
             android:padding="@dimen/padding_5"

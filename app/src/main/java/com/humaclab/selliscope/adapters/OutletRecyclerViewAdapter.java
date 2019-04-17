@@ -21,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.gms.awareness.Awareness;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
@@ -86,6 +87,7 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
                 load(outlet.outletImgUrl)
                 .thumbnail(0.1f)
                 .placeholder(R.drawable.ic_outlet)
+                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
                 .into(holder.iv_outlet);
 
         holder.tvOutletName.setText(outlet.outletName);

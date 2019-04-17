@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.humaclab.selliscope.BR;
 import com.humaclab.selliscope.R;
 import com.humaclab.selliscope.activity.OrderActivity;
@@ -79,6 +80,7 @@ public class OrderProductRecyclerAdapter extends RecyclerView.Adapter<OrderProdu
         Glide.with(holder.imageView)
                 .load(products.getImg())
                 .thumbnail(0.1f)
+                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
                 .into(holder.imageView);
         holder.getBinding().setVariable(BR.product, products);
         holder.getBinding().executePendingBindings();

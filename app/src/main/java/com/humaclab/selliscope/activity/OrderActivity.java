@@ -41,7 +41,7 @@ public class OrderActivity extends AppCompatActivity implements OnSelectProduct 
     private Context context;
     private DatabaseHandler databaseHandler;
     private SessionManager sessionManager;
-    private String outletName, outletID,outletType;
+    private String outletName, outletID, outletType;
     private List<String> categoryName = new ArrayList<>(), brandName = new ArrayList<>();
     private List<Integer> categoryID = new ArrayList<>(), brandID = new ArrayList<>();
 
@@ -71,7 +71,7 @@ public class OrderActivity extends AppCompatActivity implements OnSelectProduct 
 
         getCategory();
         getBrand();
-      //  getProducts();
+        //  getProducts();
 
         binding.etSearchProduct.addTextChangedListener(new TextWatcher() {
             @Override
@@ -83,10 +83,10 @@ public class OrderActivity extends AppCompatActivity implements OnSelectProduct 
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (!s.toString().equals("")) {
                     List<ProductsItem> productsItemList = databaseHandler.getProduct(categoryID.get(binding.spProductCategory.getSelectedItemPosition()), brandID.get(binding.spProductBrand.getSelectedItemPosition()), s.toString());
-                    binding.rvProduct.setAdapter(new OrderProductRecyclerAdapter(context, OrderActivity.this, productsItemList, selectedProductList,outletType));
+                    binding.rvProduct.setAdapter(new OrderProductRecyclerAdapter(context, OrderActivity.this, productsItemList, selectedProductList, outletType));
                 } else {
                     List<ProductsItem> productsItemList = databaseHandler.getProduct(categoryID.get(binding.spProductCategory.getSelectedItemPosition()), brandID.get(binding.spProductBrand.getSelectedItemPosition()));
-                    binding.rvProduct.setAdapter(new OrderProductRecyclerAdapter(context, OrderActivity.this, productsItemList, selectedProductList,outletType));
+                    binding.rvProduct.setAdapter(new OrderProductRecyclerAdapter(context, OrderActivity.this, productsItemList, selectedProductList, outletType));
                 }
             }
 
@@ -104,6 +104,7 @@ public class OrderActivity extends AppCompatActivity implements OnSelectProduct 
         });
         binding.srlProduct.setRefreshing(true);
     }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -111,6 +112,7 @@ public class OrderActivity extends AppCompatActivity implements OnSelectProduct 
         getProducts();
 
     }
+
     private void getCategory() {
         List<Category> categories = databaseHandler.getCategory();
         categoryName.clear();
@@ -167,16 +169,31 @@ public class OrderActivity extends AppCompatActivity implements OnSelectProduct 
     public void getProducts() {
         binding.srlProduct.setRefreshing(false);
         List<ProductsItem> productsItemList = databaseHandler.getProduct(categoryID.get(binding.spProductCategory.getSelectedItemPosition()), brandID.get(binding.spProductBrand.getSelectedItemPosition()));
-        binding.rvProduct.setAdapter(new OrderProductRecyclerAdapter(context, OrderActivity.this, productsItemList, selectedProductList , outletType));
+        binding.rvProduct.setAdapter(new OrderProductRecyclerAdapter(context, OrderActivity.this, productsItemList, selectedProductList, outletType));
         //if this activity called from product activity
+        update_Total_Discount_Grnd();
+    }
+
+    private void update_Total_Discount_Grnd() {
+
+        Double totalAmt = 0.00;
+        Double totalDiscount = 0.00;
+        for (SelectedProductHelper selectedProductHelper : selectedProductList) {
+            totalAmt += Double.valueOf(selectedProductHelper.getTotalPrice());
+            totalDiscount += Double.valueOf(selectedProductHelper.getTpDiscount());
+        }
+        binding.tvTotalAmt.setText(String.format("%.2f", totalAmt));
+        binding.tvTotalDiscnt.setText(String.format("%.2f", totalDiscount));
+        binding.tvTotalGr.setText(String.format("%.2f", (totalAmt - totalDiscount)));
+
     }
 
     @Override
     public void onSetSelectedProduct(SelectedProductHelper selectedProduct) {
 
-         for (SelectedProductHelper selected: selectedProductList) {
-            if(selected.getProductName().equalsIgnoreCase(selectedProduct.getProductName()) && selected.getProductID().equalsIgnoreCase(selectedProduct.getProductID()) ){
-                Log.d("tareq_test" , "product matched"+ selected.getProductName());
+        for (SelectedProductHelper selected : selectedProductList) {
+            if (selected.getProductName().equalsIgnoreCase(selectedProduct.getProductName()) && selected.getProductID().equalsIgnoreCase(selectedProduct.getProductID())) {
+                Log.d("tareq_test", "product matched" + selected.getProductName());
 
                 selectedProductList.remove(selected);
             }
@@ -185,7 +202,8 @@ public class OrderActivity extends AppCompatActivity implements OnSelectProduct 
             selectedProductList.remove(selectedProductList.indexOf(selectedProduct));
             selectedProductList.add(selectedProductList.indexOf(selectedProduct), selectedProduct);
         } else
-     */       selectedProductList.add(selectedProduct);
+     */
+        selectedProductList.add(selectedProduct);
 
         System.out.println("Product list:" + new Gson().toJson(selectedProductList) + "\nIndex: " + selectedProductList.indexOf(selectedProduct));
 
@@ -198,7 +216,7 @@ public class OrderActivity extends AppCompatActivity implements OnSelectProduct 
         binding.tvTotalAmt.setText(String.format("%.2f", totalAmt));
         binding.tvTotalDiscnt.setText(String.format("%.2f", totalDiscount));
         binding.tvTotalGr.setText(String.format("%.2f", (totalAmt - totalDiscount)));
-        Log.d("tareq_test" , ""+totalAmt+" "+totalDiscount+" ");
+        Log.d("tareq_test", "" + totalAmt + " " + totalDiscount + " ");
 
         getProducts();//for refreshing
     }
@@ -221,7 +239,7 @@ public class OrderActivity extends AppCompatActivity implements OnSelectProduct 
         binding.tvTotalDiscnt.setText(String.format("%2f", totalDiscount));
 
         binding.tvTotalGr.setText(String.format("%.2f", (totalAmt - totalDiscount)));
-        Log.d("tareq_test" , ""+totalAmt+" "+totalDiscount+" ");
+        Log.d("tareq_test", "" + totalAmt + " " + totalDiscount + " ");
     }
 
     @Override

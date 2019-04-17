@@ -10,6 +10,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.humaclab.selliscope.R;
 import com.humaclab.selliscope.SelliscopeApiEndpointInterface;
@@ -81,12 +82,15 @@ public class PurchaseHistoryActivity extends AppCompatActivity {
         call.enqueue(new Callback<PurchaseHistoryResponse>() {
             @Override
             public void onResponse(Call<PurchaseHistoryResponse> call, Response<PurchaseHistoryResponse> response) {
-                binding.tvTotalPaid.setText(response.body().getResult().getTotalPaid());
-                binding.tvTotalDue.setText(response.body().getResult().getTotalDue());
-                binding.srlPurchaseHistory.setRefreshing(false);
-                binding.rlPurchaseHistory.setAdapter(new PurchaseHistoryRecyclerAdapter(PurchaseHistoryActivity.this, response.body().getResult().getPurchaseHistory(), outlet));
+                if (response.code() == 200) {
+                    binding.tvTotalPaid.setText(response.body().getResult().getTotalPaid());
+                    binding.tvTotalDue.setText(response.body().getResult().getTotalDue());
+                    binding.srlPurchaseHistory.setRefreshing(false);
+                    binding.rlPurchaseHistory.setAdapter(new PurchaseHistoryRecyclerAdapter(PurchaseHistoryActivity.this, response.body().getResult().getPurchaseHistory(), outlet));
+                } else {
+                    Toast.makeText(PurchaseHistoryActivity.this, "Server error: " + response.code(), Toast.LENGTH_SHORT).show();
+                }
             }
-
             @Override
             public void onFailure(Call<PurchaseHistoryResponse> call, Throwable t) {
                 binding.srlPurchaseHistory.setRefreshing(false);

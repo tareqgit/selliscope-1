@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.facebook.shimmer.Shimmer;
 import com.facebook.shimmer.ShimmerDrawable;
 import com.google.android.gms.awareness.Awareness;
@@ -92,20 +93,26 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
 
     @Override
     public void onBindViewHolder(final OutletViewHolder holder, final int position) {
-        holder.setIsRecyclable(false);
+       // holder.setIsRecyclable(false);
         final Outlets.Outlet outlet = outletItems.outlets.get(position);
 
         ShimmerDrawable shimmerDrawable=new ShimmerDrawable();
         shimmerDrawable.setShimmer(shimmer);
 
+        Log.d("tareq_test" , "Img: " +outlet.outletImgUrl);
+        assert outlet.outletImgUrl != null;
+        if(!outlet.outletImgUrl.equals("")) {
         Glide.with(context).
                 load(outlet.outletImgUrl)
                 .thumbnail(0.1f)
                 .placeholder(shimmerDrawable)
                 .centerCrop()
+                .transition(DrawableTransitionOptions.withCrossFade())
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
                 .into(holder.iv_outlet_image);
-
+        }else{
+            holder.iv_outlet_image.setImageResource(R.drawable.selliscope_splash);
+        }
         holder.tvOutletName.setText(outlet.outletName);
         holder.tvOutletID.setText(outlet.ClientID == null ? "Pending" : outlet.ClientID);
         holder.tvOutletAddress.setText(outlet.outletAddress);

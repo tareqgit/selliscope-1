@@ -132,6 +132,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("");
         TextView toolbarTitle = findViewById(R.id.tv_toolbar_title);
+        toolbarTitle.setVisibility(View.VISIBLE);
 
         toolbarTitle.setText(getResources().getString(R.string.home));
         setSupportActionBar(toolbar);
@@ -577,6 +578,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     }
     private void welcome(String message) {
         TextView welcome_text = findViewById(R.id.welcome_text);
+        welcome_text.setVisibility(View.VISIBLE); //as this is disabled for other uses
         welcome_text.setText(message + ", " + sessionManager.getUserDetails().get("userName"));
 
     }
@@ -892,22 +894,5 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             }
             super.onStop();
         }*/
-    public class backgroundTask extends AsyncTask<String, String, String> {
-
-        @Override
-        protected String doInBackground(String... strings) {
-            return null;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
-
-        @Override
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
-        }
-    }
 
 }

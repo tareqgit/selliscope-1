@@ -28,25 +28,31 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:orientation="horizontal">
+                        android:orientation="horizontal"
+                        android:weightSum="10">
 
                         <TextView
                             android:id="@+id/tv_toolbar_title"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="3"
+                            android:layout_weight="9"
                             android:textColor="@color/white"
                             android:textSize="@dimen/text_size_20"
                             android:textStyle="bold" />
 
                         <TextView
                             android:id="@+id/tv_check_in_count"
-                            android:layout_width="0dp"
+                            android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:layout_marginEnd="10dp"
                             android:layout_weight="1"
                             android:background="#6b000000"
                             android:gravity="right"
+                            android:text="14/3"
+                            android:padding="2dp"
+                            android:textAlignment="center"
+                            android:foreground="@drawable/custom_background_selector"
+
                             android:textColor="@color/white"
                             android:textSize="@dimen/text_size_20"
                             android:textStyle="bold" />
@@ -76,7 +82,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@color/background"
-                    android:padding="@dimen/padding_10" />
+                    android:padding="8dp" />
             </android.support.v4.widget.SwipeRefreshLayout>
 
         </LinearLayout>

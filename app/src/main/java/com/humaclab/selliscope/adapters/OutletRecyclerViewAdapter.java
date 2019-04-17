@@ -103,7 +103,7 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
                 .placeholder(shimmerDrawable)
                 .centerCrop()
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
-                .into(holder.iv_outlet);
+                .into(holder.iv_outlet_image);
 
         holder.tvOutletName.setText(outlet.outletName);
         holder.tvOutletID.setText(outlet.ClientID == null ? "Pending" : outlet.ClientID);
@@ -111,7 +111,7 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
         holder.tvOutletContactNumber.setText(outlet.phone);
         holder.tvOutletOwnerName.setText(outlet.ownerName);
         if (outlet.outlet_routeplan.equals("1")) {
-            holder.lo_routeplan_background2.setBackgroundColor(Color.parseColor("#ff7043"));
+            holder.lo_routeplan_background2.setImageResource(R.drawable.moss_gradient2);
 
         }
         holder.checkInButton.setOnClickListener(new View.OnClickListener() {
@@ -246,16 +246,17 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
 
     public class OutletViewHolder extends RecyclerView.ViewHolder {
         CardView cardView;
-        ImageView iv_outlet;
+        ImageView iv_outlet_image;
+
         TextView tvOutletName, tvOutletAddress, tvOutletOwnerName, tvOutletContactNumber,tvOutletID;
         Button checkInButton, mapButton, historyButton;
         ProgressBar pbCheckIn;
         TextView tv_checkroute;
-        LinearLayout lo_routeplan_background2;
+        ImageView lo_routeplan_background2;
 
         public OutletViewHolder(View itemView) {
             super(itemView);
-            iv_outlet = itemView.findViewById(R.id.iv_outlet);
+
             cardView = itemView.findViewById(R.id.cv_outlet_item);
             tvOutletName = itemView.findViewById(R.id.tv_outlet_name);
             tvOutletID = itemView.findViewById(R.id.tv_client_id);
@@ -266,6 +267,8 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
             mapButton = itemView.findViewById(R.id.btn_map);
             historyButton = itemView.findViewById(R.id.btn_history);
             pbCheckIn = itemView.findViewById(R.id.pb_check_in);
+            iv_outlet_image = itemView.findViewById(R.id.iv_outlet_image);
+
             lo_routeplan_background2 = itemView.findViewById(R.id.routeplan_background2);
 
             itemView.setOnClickListener(new View.OnClickListener() {

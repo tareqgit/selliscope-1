@@ -46,6 +46,9 @@
     <string name="stock">Stock: %1$s</string>
     <string name="permission_denied_explanation">permission denied</string>
     <string name="settings">Setting</string>
+    <string name="history">History</string>
+    <string name="map">Map</string>
+    <string name="check_in">Check-In</string>
 
     <string-array name="paymentType">
         <item>Cash</item>

@@ -86,8 +86,9 @@ public class ProfileActivity extends AppCompatActivity {
             }
         }
 
-        Glide.with(getApplicationContext()).load(sessionManager.getUserDetails().get("profilePictureUrl"))
-                .thumbnail(0.5f)
+        Glide.with(getApplicationContext())
+                .load(sessionManager.getUserDetails().get("profilePictureUrl"))
+                .thumbnail(0.1f)
                 .into(binding.ivProfileImage);
 
         binding.btnChangeProfilePicture.setOnClickListener(new View.OnClickListener() {

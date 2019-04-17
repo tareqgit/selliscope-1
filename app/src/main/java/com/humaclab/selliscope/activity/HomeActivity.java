@@ -43,6 +43,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
 import com.google.android.gms.common.ConnectionResult;
@@ -65,7 +66,7 @@ import com.humaclab.selliscope.utils.Constants;
 import com.humaclab.selliscope.utils.DatabaseHandler;
 import com.humaclab.selliscope.utils.LoadLocalIntoBackground;
 import com.humaclab.selliscope.utils.SessionManager;
-import com.squareup.picasso.Picasso;
+
 
 import java.util.Calendar;
 import java.util.Locale;
@@ -188,8 +189,10 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         ImageView profilePicture = navigationView.getHeaderView(0)
                 .findViewById(R.id.iv_profile_pic);
         userName.setText(sessionManager.getUserDetails().get("userName"));
-        Picasso.get()
+        Glide.with(this)
                 .load(sessionManager.getUserDetails().get("profilePictureUrl"))
+                .thumbnail(0.1f)
+                .placeholder(R.drawable.default_profile_pic)
                 .into(profilePicture);
         navigationView.setNavigationItemSelectedListener(this);
         TextView tv_selliscope_version = navigationView.getHeaderView(0).findViewById(R.id.tv_selliscope_version);

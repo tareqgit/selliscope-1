@@ -82,9 +82,12 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
     public void onBindViewHolder(final OutletViewHolder holder, final int position) {
         holder.setIsRecyclable(false);
         final Outlets.Outlet outlet = outletItems.outlets.get(position);
-        Glide.with(context).load(outlet.outletImgUrl)
-                .thumbnail(0.5f)
+        Glide.with(context).
+                load(outlet.outletImgUrl)
+                .thumbnail(0.1f)
+                .placeholder(R.drawable.ic_outlet)
                 .into(holder.iv_outlet);
+
         holder.tvOutletName.setText(outlet.outletName);
         holder.tvOutletID.setText(outlet.ClientID == null ? "Pending" : outlet.ClientID);
         holder.tvOutletAddress.setText(outlet.outletAddress);

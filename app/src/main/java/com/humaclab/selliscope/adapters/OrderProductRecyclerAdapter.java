@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
 import com.humaclab.selliscope.BR;
 import com.humaclab.selliscope.R;
 import com.humaclab.selliscope.activity.OrderActivity;
@@ -18,7 +19,7 @@ import com.humaclab.selliscope.helper.SelectedProductHelper;
 import com.humaclab.selliscope.helper.ShowProductSelectionDialog;
 import com.humaclab.selliscope.interfaces.OnSelectProduct;
 import com.humaclab.selliscope.model.VariantProduct.ProductsItem;
-import com.squareup.picasso.Picasso;
+
 
 import java.util.List;
 
@@ -75,7 +76,10 @@ public class OrderProductRecyclerAdapter extends RecyclerView.Adapter<OrderProdu
             }
         }
 
-        Picasso.get().load(products.getImg()).into(holder.imageView);
+        Glide.with(holder.imageView)
+                .load(products.getImg())
+                .thumbnail(0.1f)
+                .into(holder.imageView);
         holder.getBinding().setVariable(BR.product, products);
         holder.getBinding().executePendingBindings();
     }

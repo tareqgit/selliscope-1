@@ -12,4 +12,8 @@
     <color name="colorDefault">@color/colorPrimary</color>
     <color name="colorPressed">@color/colorPrimaryDark</color>
     <color name="colorFocused">@color/colorPrimaryDark</color>
+
+
+
+    <color name="background_shimmer">#dddddd</color>
 </resources>

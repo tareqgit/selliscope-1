@@ -91,7 +91,7 @@
             android:theme="@style/SplashScreenTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
+                <action android:name="android.intent.action.VIEW"/>
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -100,6 +100,7 @@
             android:name=".activity.HomeActivity"
             android:configChanges="orientation|screenSize" />
         <activity android:name=".activity.RouteActivity" />
+        <activity android:name=".activity.OutletMapActivity"/>
         <activity android:name=".activity.OutletActivity" />
         <activity android:name=".activity.AddOutletActivity" />
         <activity android:name=".activity.OutletDetailsActivity" />

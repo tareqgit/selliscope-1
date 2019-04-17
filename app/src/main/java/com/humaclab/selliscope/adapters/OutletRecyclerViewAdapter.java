@@ -33,6 +33,7 @@ import com.humaclab.selliscope.SelliscopeApiEndpointInterface;
 import com.humaclab.selliscope.SelliscopeApplication;
 import com.humaclab.selliscope.activity.OutletActivity;
 import com.humaclab.selliscope.activity.OutletDetailsActivity;
+import com.humaclab.selliscope.activity.OutletMapActivity;
 import com.humaclab.selliscope.activity.PurchaseHistoryActivity;
 import com.humaclab.selliscope.activity.RouteActivity;
 import com.humaclab.selliscope.model.Outlets;
@@ -145,9 +146,12 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
             @Override
             public void onClick(View v) {
                 //TODO: add map direction layout here.
-                Intent intent = new Intent(context, RouteActivity.class);
+                Intent intent = new Intent(context, OutletMapActivity.class);
                 intent.putExtra("outletName", outlet.outletName);
                 intent.putExtra("outletID", outlet.outletId);
+                intent.putExtra("outletLat", outlet.outletLatitude);
+                intent.putExtra("outletLong", outlet.outletLongitude);
+
                 context.startActivity(intent);
             }
         });

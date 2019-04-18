@@ -130,11 +130,11 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
        gpsControl();
        */
         Toolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle("");
+        toolbar.setTitle("Target Plan");
         TextView toolbarTitle = findViewById(R.id.tv_toolbar_title);
         toolbarTitle.setVisibility(View.VISIBLE);
 
-        toolbarTitle.setText(getResources().getString(R.string.home));
+
         setSupportActionBar(toolbar);
 
         fragmentManager = getSupportFragmentManager();
@@ -146,14 +146,17 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 int position = tab.getPosition();
                 switch (position) {
                     case 0: {
+                        toolbar.setTitle("Target Plan");
                         getFragment(TargetFragment.class);
                         break;
                     }
                     case 1: {
+                        toolbar.setTitle("Dashboard");
                         getFragment(DashboardFragment.class);
                         break;
                     }
                     case 2: {
+                        toolbar.setTitle("Performance");
                         getFragment(PerformanceFragment.class);
                         break;
                     }

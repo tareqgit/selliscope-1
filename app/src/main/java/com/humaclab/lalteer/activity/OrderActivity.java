@@ -117,6 +117,7 @@ public class OrderActivity extends AppCompatActivity implements OrderProductRecy
         // Restore state
         binding.rvProduct.getLayoutManager().onRestoreInstanceState(recyclerViewState); //we are restoring recycler position
 
+        updateTotal_Discount_Grnd(); //need to update snackbar on resume
     }
 
     private void getCategory() {

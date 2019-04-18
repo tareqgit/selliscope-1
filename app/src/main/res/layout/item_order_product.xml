@@ -80,7 +80,7 @@
                 android:ellipsize="end"
                 android:ems="3"
 
-                android:maxLines="2"
+                android:maxLines="5"
                 android:paddingBottom="8dp"
                 android:text='@{product.name}'
                 android:textAppearance="@style/TextAppearance.AppCompat.Title"

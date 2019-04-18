@@ -31,7 +31,7 @@ public class SelectedProductRecyclerAdapter extends RecyclerView.Adapter<Selecte
       //  this.selectedProductList = selectedProductList;
     }
 
-    public SelectedProductRecyclerAdapter(Context context, ActivityCart activityCart, OnRemoveFromCartListener onRemoveFromCartListener) {
+    public SelectedProductRecyclerAdapter(Context context, ActivityCart activityCart, List<SelectedProductHelper> selectedProductList, OnRemoveFromCartListener onRemoveFromCartListener) {
         this.context = context;
         this.activityCart = activityCart;
           this.mOnRemoveFromCartListener = onRemoveFromCartListener;

@@ -142,10 +142,11 @@
     <string name="deposit_slip">Deposit Slip</string>
     <string name="cheque_date">Cheque Date</string>
     <string name="performance">performance</string>
+    <string name="deposit_to">Deposit To</string>
     <string-array name="paymentType">
         <item>Cash</item>
         <item>Cheque</item>
-        <item>Bank</item>
+        <item>Online</item>
     </string-array>
 
     <string-array name="returnCause">

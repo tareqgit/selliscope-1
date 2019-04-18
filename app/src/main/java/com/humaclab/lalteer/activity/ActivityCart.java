@@ -1,5 +1,6 @@
 package com.humaclab.lalteer.activity;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -29,6 +30,7 @@ import com.humaclab.lalteer.helper.SelectedProductHelper;
 import com.humaclab.lalteer.model.AddNewOrder;
 import com.humaclab.lalteer.utils.CurrentTimeUtilityClass;
 import com.humaclab.lalteer.utils.DatabaseHandler;
+import com.humaclab.lalteer.utils.GetAddressFromLatLang;
 import com.humaclab.lalteer.utils.NetworkUtility;
 import com.humaclab.lalteer.utils.SendUserLocationData;
 import com.humaclab.lalteer.utils.SessionManager;
@@ -121,7 +123,7 @@ public class ActivityCart extends AppCompatActivity implements SelectedProductRe
 
         binding.tvOutletName.setText(outletName);
         binding.rlSelectedProducts.setLayoutManager(new LinearLayoutManager(ActivityCart.this));
-        selectedProductRecyclerAdapter=new SelectedProductRecyclerAdapter(ActivityCart.this, ActivityCart.this, selectedProductList);
+        selectedProductRecyclerAdapter=new SelectedProductRecyclerAdapter(ActivityCart.this, ActivityCart.this, selectedProductList, ActivityCart.this);
         binding.rlSelectedProducts.setAdapter(selectedProductRecyclerAdapter);
 
         binding.btnOrder.setOnClickListener(v -> orderNow());
@@ -171,7 +173,7 @@ public class ActivityCart extends AppCompatActivity implements SelectedProductRe
             newOrder.comment = binding.etComments.getText().toString();
             newOrder.transport=binding.etTransport.getText().toString();
             newOrder.paymentType=binding.spinnerPaymentType.getSelectedItemPosition();
-            newOrder.orderTimeStamp= CurrentTimeUtilityClass.getCurrentTimeStamp();
+            newOrder.orderTimeStamp= CurrentTimeUtilityClass.getCurrentTimeStampDate();
 
             if (binding.etDiscount.getText().toString().equals("")) {
                 newOrder.discount = 0;
@@ -190,7 +192,7 @@ public class ActivityCart extends AppCompatActivity implements SelectedProductRe
                     product.discount = 0.00;
                 }
                 product.qty = Integer.parseInt(selectedProduct.getProductQuantity());
-                product.row = Integer.parseInt(selectedProduct.getProductRow());
+             //   product.row = Integer.parseInt(selectedProduct.getProductRow());
                 product.price = selectedProduct.getProductPrice();
                 products.add(product);
             }
@@ -204,6 +206,8 @@ public class ActivityCart extends AppCompatActivity implements SelectedProductRe
 
 
             if (NetworkUtility.isNetworkAvailable(ActivityCart.this)) {
+               addNewOrder.newOrder.address= String.valueOf(GetAddressFromLatLang.getAddressFromLatLan(this, lat,lon));
+
                 Log.d("tareq_test" , ""+new Gson().toJson(addNewOrder));
                 Call<AddNewOrder.OrderResponse> call = apiService.addOrder(addNewOrder);
                 call.enqueue(new Callback<AddNewOrder.OrderResponse>() {

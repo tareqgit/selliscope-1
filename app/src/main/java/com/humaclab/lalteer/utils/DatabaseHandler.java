@@ -1183,7 +1183,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                         AddNewOrder.NewOrder.Product product = new AddNewOrder.NewOrder.Product();
                         product.id = cursorOrders.getInt(cursorOrders.getColumnIndex(KEY_ORDER_PRODUCT_ID));
                         product.qty = cursorOrders.getInt(cursorOrders.getColumnIndex(KEY_ORDER_PRODUCT_QUANTITY));
-                        product.row = cursorOrders.getInt(cursorOrders.getColumnIndex(KEY_ORDER_PRODUCT_ROW));
+                   //     product.row = cursorOrders.getInt(cursorOrders.getColumnIndex(KEY_ORDER_PRODUCT_ROW));
                         product.price = cursorOrders.getString(cursorOrders.getColumnIndex(KEY_ORDER_PRODUCT_PRICE));
                         product.discount = Double.valueOf(cursorOrders.getString(cursorOrders.getColumnIndex(KEY_ORDER_PRODUCT_DISCOUNT)));
                         productList.add(product);
@@ -1212,7 +1212,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             for (AddNewOrder.NewOrder.Product product : addNewOrder.newOrder.products) {
                 values.put(KEY_ORDER_PRODUCT_ID, product.id);
                 values.put(KEY_ORDER_PRODUCT_QUANTITY, product.qty);
-                values.put(KEY_ORDER_PRODUCT_ROW, product.row);
+             //   values.put(KEY_ORDER_PRODUCT_ROW, product.row);
                 values.put(KEY_ORDER_PRODUCT_PRICE, product.price);
                 values.put(KEY_ORDER_PRODUCT_DISCOUNT, product.discount);
                 try {

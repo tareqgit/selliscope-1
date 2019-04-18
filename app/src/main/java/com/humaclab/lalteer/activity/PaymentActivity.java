@@ -85,7 +85,7 @@ public class PaymentActivity extends AppCompatActivity {
         }
     }
 
-    private void loadPayments() {
+    public void loadPayments() {
         pd.setMessage("Loading payment list.....");
         pd.show();
 
@@ -105,7 +105,12 @@ public class PaymentActivity extends AppCompatActivity {
                         System.out.println("Response " + new Gson().toJson(response.body()));
                         List<Payment.OrderList> orders = response.body().result.orderList;
                         if (!orders.isEmpty()) {
-                             adapter = new PaymentRecyclerViewAdapter(PaymentActivity.this, orders);
+                             adapter = new PaymentRecyclerViewAdapter(PaymentActivity.this, orders, new PaymentRecyclerViewAdapter.OnPaymentListener() {
+                                 @Override
+                                 public void onPaymentComplete() {
+                                     loadPayments();
+                                 }
+                             });
                             rv_payment.setAdapter(adapter);
                         } else {
                             Toast.makeText(getApplicationContext(), "You don't have any due payments.", Toast.LENGTH_LONG).show();
@@ -161,6 +166,7 @@ public class PaymentActivity extends AppCompatActivity {
 
         }
     }
+
 
 
    /* @Override

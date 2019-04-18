@@ -25,8 +25,13 @@ public class PaymentResponse {
         public  String bank_name;
         @SerializedName("cheque_no")
         public String cheque_no;
-        @SerializedName("deposit_slip")
+        @SerializedName("depositedSlipNumber")
         public String deposit_slip;
+        @SerializedName("deposit_to")
+        public String deposit_to;
+        @SerializedName("deposit_from")
+        public String deposit_from;
+
         @SerializedName("cheque_date")
         public String cheque_date;
         @SerializedName("img")

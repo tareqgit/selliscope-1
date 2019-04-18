@@ -7,10 +7,12 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
 
+import com.google.gson.Gson;
 import com.humaclab.lalteer.SelliscopeApiEndpointInterface;
 import com.humaclab.lalteer.SelliscopeApplication;
 import com.humaclab.lalteer.model.AddNewOrder;
 import com.humaclab.lalteer.utils.DatabaseHandler;
+import com.humaclab.lalteer.utils.GetAddressFromLatLang;
 import com.humaclab.lalteer.utils.SessionManager;
 
 import java.util.List;
@@ -63,7 +65,9 @@ public class InternetConnectivityChangeReceiver extends BroadcastReceiver {
 
     private void uploadOrderToServer() {
         List<AddNewOrder> addNewOrderList = databaseHandler.getOrder();
-        for (final AddNewOrder addNewOrder : addNewOrderList) {
+        for (AddNewOrder addNewOrder : addNewOrderList) {
+           addNewOrder.newOrder.address=String.valueOf(GetAddressFromLatLang.getAddressFromLatLan(context,Double.valueOf(addNewOrder.newOrder.latitude),Double.valueOf(addNewOrder.newOrder.longitude)));
+            Log.d("tareq_test" , ""+new Gson().toJson(addNewOrder));
             Call<AddNewOrder.OrderResponse> call = apiService.addOrder(addNewOrder);
             call.enqueue(new Callback<AddNewOrder.OrderResponse>() {
                 @Override

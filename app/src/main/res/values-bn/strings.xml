@@ -142,10 +142,11 @@
     <string name="deposit_slip">জমা স্লিপ</string>
     <string name="cheque_date">চেক তারিখ</string>
     <string name="performance">অর্জন</string>
+    <string name="deposit_to">জমা প্রতি</string>
     <string-array name="paymentType">
         <item>পরিশোধ নগদ</item>
         <item>চেক </item>
-        <item>ব্যাংক</item>
+        <item>অনলাইন</item>
     </string-array>
 
     <string-array name="returnCause">

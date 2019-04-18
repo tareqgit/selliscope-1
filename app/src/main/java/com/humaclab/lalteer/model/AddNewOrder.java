@@ -21,7 +21,7 @@ public class AddNewOrder implements Serializable {
         @SerializedName("products")
         public List<Product> products;
 
-        @SerializedName("comments")
+        @SerializedName("notes")
         public String comment;
 
         @SerializedName("transport")
@@ -33,19 +33,22 @@ public class AddNewOrder implements Serializable {
         @SerializedName("lat")
         public String latitude;
 
-        @SerializedName("long")
+        @SerializedName("lng")
         public String longitude;
 
-        @SerializedName("order_timestamp")
+        @SerializedName("order_date")
         public String orderTimeStamp;
+
+        @SerializedName("address")
+        public String address;
 
         public static class Product {
             @SerializedName("id")
             public int id;
             @SerializedName("qty")
             public int qty;
-            @SerializedName("row")
-            public int row;
+           /* @SerializedName("row")
+            public int row;*/
             @SerializedName("price")
             public String price;
             @SerializedName("discount")

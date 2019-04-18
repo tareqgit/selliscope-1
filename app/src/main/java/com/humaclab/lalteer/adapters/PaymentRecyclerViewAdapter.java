@@ -55,12 +55,18 @@ public class PaymentRecyclerViewAdapter extends RecyclerView.Adapter<PaymentRecy
     public List<Payment.OrderList> orderLists;
     private SelliscopeApiEndpointInterface apiService;
     private ProgressDialog pd;
+    private OnPaymentListener mOnPaymentListener;
+
 private static int butClickedPos=0;
-    public PaymentRecyclerViewAdapter(Context context, List<Payment.OrderList> orderLists) {
+    /*public PaymentRecyclerViewAdapter(Context context, List<Payment.OrderList> orderLists) {
         this.context = context;
         this.orderLists = orderLists;
+    }*/
+    public PaymentRecyclerViewAdapter(Context context, List<Payment.OrderList> orderLists, OnPaymentListener onPaymentListener) {
+        this.context = context;
+        this.orderLists = orderLists;
+        this.mOnPaymentListener=onPaymentListener;
     }
-
 
 
     @Override
@@ -107,12 +113,60 @@ private static int butClickedPos=0;
 //                payment.type = (holder.sp_payment_type.getSelectedItemPosition() == 0) ? 1 : 2;
                 payment.type = holder.sp_payment_type.getSelectedItemPosition() +1;
 
-                payment.amount = Integer.parseInt(holder.et_payment.getText().toString());
+                if(holder.et_payment.getText().toString().equals("")){
+                    View view = holder.et_payment;
+                    holder.et_payment.setError(context.getString(R.string.error_field_required));
+                    view.requestFocus();
+                    pd.dismiss();
+                    return;
+                }else{
+                    payment.amount = Integer.parseInt(holder.et_payment.getText().toString());
+
+                }
 
                 payment.bank_name=holder.bankName.getText().toString();
+
+                if(payment.type==2){ //for cheque
+                    if(holder.chequeNumber.getText().toString().equals("")) {
+                        View view = holder.chequeNumber;
+                        holder.chequeNumber.setError(context.getString(R.string.error_field_required));
+                        view.requestFocus();
+                        pd.dismiss();
+                        return;
+                    }
+
+
+
+
+                    if(holder.date_view.getText().toString().equals("")){
+                        View view = holder.date_view;
+                        holder.date_view.setError(context.getString(R.string.error_field_required));
+                        view.requestFocus();
+                        pd.dismiss();
+                        return;
+
+                    }
+
+
+
+                }
                 payment.cheque_no=holder.chequeNumber.getText().toString();
-                payment.deposit_slip=holder.depositSlip.getText().toString();
-                payment.cheque_date=holder.date_view.getText().toString();
+                payment.cheque_date = holder.date_view.getText().toString();
+                payment.deposit_to=holder.depositTo.getText().toString();
+                payment.deposit_from=sessionManager.getUserEmail().toString();
+                if(payment.type==3) {
+                    if(holder.depositSlip.getText().toString().equals("")){
+                        View view = holder.depositSlip;
+                        holder.depositSlip.setError(context.getString(R.string.error_field_required));
+                        view.requestFocus();
+                        pd.dismiss();
+                        return;
+
+                    }
+
+                }
+                payment.deposit_slip = holder.depositSlip.getText().toString();
+
                 payment.img= orderLists.get(butClickedPos).getImg(); //as this is getting from activity using listener
                 paymentResponse.payment = payment;
 
@@ -129,6 +183,7 @@ private static int butClickedPos=0;
                                 orderLists.remove(position);
                                 PaymentRecyclerViewAdapter.this.notifyItemRemoved(position);
                                 PaymentRecyclerViewAdapter.this.notifyItemRangeChanged(position, orderLists.size());
+                                mOnPaymentListener.onPaymentComplete();
                             } catch (Exception e) {
                                 pd.dismiss();
                                 e.printStackTrace();
@@ -173,7 +228,7 @@ private static int butClickedPos=0;
         public ViewDataBinding binding;
         private Button btn_pay;
         private Spinner sp_payment_type;
-        private EditText et_payment, bankName, chequeNumber, depositSlip;
+        private EditText et_payment, bankName, chequeNumber, depositSlip,depositTo;
         private TextView date_view;
         private ImageView mImageButton;
         public PaymentViewHolder(View itemView) {
@@ -187,6 +242,7 @@ private static int butClickedPos=0;
             depositSlip = (EditText) itemView.findViewById(R.id.et_deposit_slip);
             mImageButton=itemView.findViewById(R.id.imageButton);
             date_view = itemView.findViewById(R.id.textView_date);
+            depositTo=itemView.findViewById(R.id.et_deposit_to);
 
 
             /**
@@ -195,20 +251,36 @@ private static int butClickedPos=0;
             sp_payment_type.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    if(position==2){
-                        bankName.setVisibility(View.VISIBLE);
-                        chequeNumber.setVisibility(View.VISIBLE);
-                        depositSlip.setVisibility(View.VISIBLE);
-                        date_view.setVisibility(View.VISIBLE);
-                        mImageButton.setVisibility(View.VISIBLE);
+                    switch (position) {
 
-                    }else{
-                        bankName.setVisibility(View.GONE);
-                        chequeNumber.setVisibility(View.GONE);
-                        depositSlip.setVisibility(View.GONE);
+                        case 0:{
+                            bankName.setVisibility(View.GONE);
+                            chequeNumber.setVisibility(View.GONE);
+                            depositTo.setVisibility(View.VISIBLE);
+                            depositSlip.setVisibility(View.VISIBLE);
+                            date_view.setVisibility(View.GONE);
+                            mImageButton.setVisibility(View.GONE);
+                            break;
+                        }
+                        case 1:{
+                            bankName.setVisibility(View.VISIBLE);
+                            chequeNumber.setVisibility(View.VISIBLE);
+                            depositTo.setVisibility(View.VISIBLE);
+                            depositSlip.setVisibility(View.VISIBLE);
+                            date_view.setVisibility(View.VISIBLE);
+                            mImageButton.setVisibility(View.VISIBLE);
+                            break;
+                        }
 
-                        date_view.setVisibility(View.GONE);
-                        mImageButton.setVisibility(View.GONE);
+                        case 2: {
+                            bankName.setVisibility(View.VISIBLE);
+                            chequeNumber.setVisibility(View.GONE);
+                            depositTo.setVisibility(View.VISIBLE);
+                            depositSlip.setVisibility(View.VISIBLE);
+                            date_view.setVisibility(View.VISIBLE);
+                            mImageButton.setVisibility(View.VISIBLE);
+                            break;
+                        }
 
                     }
                 }
@@ -261,5 +333,7 @@ private static int butClickedPos=0;
         }
     }
 
-
+public interface  OnPaymentListener{
+        void onPaymentComplete();
+}
 }

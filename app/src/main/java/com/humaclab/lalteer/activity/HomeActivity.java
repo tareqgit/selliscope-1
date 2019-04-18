@@ -199,7 +199,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                         loadLocalIntoBackground.loadProduct();
                 /*    }
                 });
- */           }
+ */
+            }
         }, 30, 30, TimeUnit.MINUTES);
         //loading Data into background
 

@@ -21,6 +21,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
@@ -139,7 +140,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
         fragmentManager = getSupportFragmentManager();
         getFragment(TargetFragment.class);
-        TabLayout tabLayout = findViewById(R.id.sliding_tabs);
+      /*  TabLayout tabLayout = findViewById(R.id.sliding_tabs);
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
@@ -171,6 +172,32 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             public void onTabReselected(TabLayout.Tab tab) {
             }
         });
+*/
+
+        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
+
+        navigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.navigation_target:
+                        toolbar.setTitle("Target Plan");
+                        getFragment(TargetFragment.class);
+
+                        return true;
+                    case R.id.navigation_dashboard:
+                        toolbar.setTitle("Dashboard");
+                        getFragment(DashboardFragment.class);
+                        return true;
+                    case R.id.navigation_performance:
+                        toolbar.setTitle("Performance");
+                        getFragment(PerformanceFragment.class);
+                        return true;
+                }
+                return false;
+            }
+        });
+
 
         //For log and track user
         Answers.getInstance().logCustom(new CustomEvent("User Login")

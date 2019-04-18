@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 xmlns:tools="http://schemas.android.com/tools"
                 android:id="@+id/content_home"
@@ -9,7 +9,16 @@
                 tools:context="com.humaclab.selliscope.activity.HomeActivity"
                 tools:showIn="@layout/app_bar_home">
 
-    <android.support.design.widget.TabLayout
+    <RelativeLayout
+        android:id="@+id/content_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/navigation"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+   <!-- <android.support.design.widget.TabLayout
         android:id="@+id/sliding_tabs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -25,6 +34,7 @@
             android:id="@+id/tab_item_target"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:icon="@drawable/ic_target_sales_white"
             android:text="@string/target"
             android:fontFamily="@font/latobold"/>
 
@@ -41,11 +51,21 @@
             android:fontFamily="@font/latobold"
             android:text="@string/performance"/>
     </android.support.design.widget.TabLayout>
+-->
 
-    <RelativeLayout
-        android:id="@+id/content_fragment"
+    <android.support.design.widget.BottomNavigationView
+        android:id="@+id/navigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@id/sliding_tabs"/>
-
-</RelativeLayout>
+        android:layout_gravity="bottom"
+        android:background="@color/colorPrimary"
+        android:foreground="?attr/selectableItemBackground"
+        app:itemBackground="@color/colorPrimary"
+        app:itemIconTint="@drawable/selector"
+        app:itemTextColor="@android:color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:menu="@menu/bottom_navigation"
+        android:elevation="5dp"/>
+</android.support.constraint.ConstraintLayout>

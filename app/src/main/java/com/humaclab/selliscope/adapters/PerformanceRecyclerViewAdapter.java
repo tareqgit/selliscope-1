@@ -11,6 +11,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.humaclab.selliscope.R;
 import com.humaclab.selliscope.model.DashboardItem;
 
@@ -39,7 +41,11 @@ public class PerformanceRecyclerViewAdapter extends RecyclerView.Adapter<Perform
 
     @Override
     public void onBindViewHolder(PerformanceViewHolder holder, final int position) {
-        holder.itemImage.setImageResource(performanceItems.get(position).getItemImageId());
+       Glide.with(holder.itemImage)
+                .load(performanceItems.get(position).getItemImageId())
+                .centerCrop()
+                .into(holder.itemImage);
+      //  holder.itemImage.setImageResource(performanceItems.get(position).getItemImageId());
         holder.itemName.setText(performanceItems.get(position).getItemName());
     }
 

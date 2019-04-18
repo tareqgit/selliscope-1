@@ -31,7 +31,7 @@ public class PerformanceFragment extends Fragment {
     List<DashboardItem> performanceItems;
     private GridLayoutManager gridLayoutManager;
     private PerformanceRecyclerViewAdapter performanceRecyclerViewAdapter;
-    private int itemNumber = 1;
+    private int itemNumber = 2;
     private Activity activity;
 
     @Override
@@ -51,11 +51,13 @@ public class PerformanceFragment extends Fragment {
         performanceItems.add(new DashboardItem("Attendance", R.drawable.ic_attendance));
 
         gridLayoutManager = new GridLayoutManager(activity, itemNumber);
-        recyclerView.setLayoutManager(gridLayoutManager);
-        performanceRecyclerViewAdapter = new PerformanceRecyclerViewAdapter(activity, performanceItems);
         int spacingInPixels = getResources().getDimensionPixelSize(R.dimen.grid_layout_margin);
+
         recyclerView.addItemDecoration(new DashboardRecyclerViewAdapter
                 .GridSpacingItemDecoration(2, spacingInPixels, true, 0));
+        recyclerView.setLayoutManager(gridLayoutManager);
+        performanceRecyclerViewAdapter = new PerformanceRecyclerViewAdapter(activity, performanceItems);
+
         recyclerView.setAdapter(performanceRecyclerViewAdapter);
         recyclerView.addOnItemTouchListener(
                 new RecyclerItemClickListener(activity, recyclerView,

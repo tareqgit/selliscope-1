@@ -29,6 +29,7 @@ import com.humaclab.selliscope.utils.DatabaseHandler;
 import com.humaclab.selliscope.utils.NetworkUtility;
 import com.humaclab.selliscope.utils.SessionManager;
 import com.humaclab.selliscope.utils.VerticalSpaceItemDecoration;
+import com.liulishuo.magicprogresswidget.MagicProgressCircle;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -52,9 +53,9 @@ public class DailyTargetFragment extends Fragment {
     List<Target> targets;
     private TargetRecyclerViewAdapter targetRecyclerViewAdapter;
     private List<TargetItem> targetItems;
-    private TextView tv_total,tv_target_achieved,tv_target_remaining,tv_target_label,tv_date;
+    private TextView tv_total,tv_target_achieved,tv_target_remaining,tv_target_label,tv_date,percentView;
 
-    private CircleProgressView circle_progress_view;
+    private MagicProgressCircle circle_progress_view;
     public static DailyTargetFragment newInstance(int position) {
         DailyTargetFragment frag = new DailyTargetFragment();
         Bundle args = new Bundle();
@@ -79,7 +80,8 @@ public class DailyTargetFragment extends Fragment {
         tv_target_remaining = dailyTargetView.findViewById(R.id.tv_target_remaining);
         tv_target_label = dailyTargetView.findViewById(R.id.tv_target_label);
 
-        circle_progress_view = (CircleProgressView) dailyTargetView.findViewById(R.id.circle_progress_view);
+        circle_progress_view = dailyTargetView.findViewById(R.id.circle_progress_view);
+        percentView=dailyTargetView.findViewById(R.id.percentView);
 //        dbHandler = new DatabaseHandler(getContext());
 //        targets = new ArrayList<>();
 //        recyclerView = (RecyclerView) dailyTargetView.findViewById(R.id.rv_target);
@@ -183,10 +185,13 @@ public class DailyTargetFragment extends Fragment {
                     tv_total.setText(total.toString()+" "+sales_types);
                     //tv_visited.setText(response.body().getResult().getVisited());
                     tv_target_remaining.setText(remaining.toString()+" "+sales_types);
-                    circle_progress_view.setTextEnabled(true);
-                    circle_progress_view.setInterpolator(new AccelerateDecelerateInterpolator());
-                    circle_progress_view.setStartAngle(10);
-                    circle_progress_view.setProgressWithAnimation(completePersentage,2000);
+                 //   circle_progress_view.setTextEnabled(true);
+                 //   circle_progress_view.setInterpolator(new AccelerateDecelerateInterpolator());
+                 //   circle_progress_view.setStartAngle(90);
+                  //  circle_progress_view.setProgressWithAnimation(completePersentage,2000);
+                   circle_progress_view.setSmoothPercent(completePersentage*.01f);
+                   percentView.setText(completePersentage+"%");
+
 
 
                 }else if (response.code() == 401) {

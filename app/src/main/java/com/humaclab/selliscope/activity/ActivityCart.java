@@ -1,9 +1,9 @@
 package com.humaclab.selliscope.activity;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -24,7 +24,6 @@ import com.humaclab.selliscope.SelliscopeApplication;
 import com.humaclab.selliscope.adapters.SelectedProductRecyclerAdapter;
 import com.humaclab.selliscope.databinding.ActivityCartBinding;
 import com.humaclab.selliscope.helper.SelectedProductHelper;
-import com.humaclab.selliscope.interfaces.OnSelectProduct;
 import com.humaclab.selliscope.model.AddNewOrder;
 import com.humaclab.selliscope.utils.DatabaseHandler;
 import com.humaclab.selliscope.utils.NetworkUtility;
@@ -38,7 +37,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class ActivityCart extends AppCompatActivity implements OnSelectProduct {
+public class ActivityCart extends AppCompatActivity implements  SelectedProductRecyclerAdapter.OnRemoveFromCartListener{
     Double total = 0.0;
     private ActivityCartBinding binding;
     private SelliscopeApiEndpointInterface apiService;
@@ -123,7 +122,7 @@ public class ActivityCart extends AppCompatActivity implements OnSelectProduct {
 
         binding.tvOutletName.setText(outletName);
         binding.rlSelectedProducts.setLayoutManager(new LinearLayoutManager(ActivityCart.this));
-        selectedProductRecyclerAdapter = new SelectedProductRecyclerAdapter(ActivityCart.this, ActivityCart.this, selectedProductList);
+        selectedProductRecyclerAdapter = new SelectedProductRecyclerAdapter(ActivityCart.this, ActivityCart.this,  ActivityCart.this);
         binding.rlSelectedProducts.setAdapter(selectedProductRecyclerAdapter);
 
         binding.btnOrder.setOnClickListener(new View.OnClickListener() {
@@ -249,10 +248,6 @@ public class ActivityCart extends AppCompatActivity implements OnSelectProduct {
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onSetSelectedProduct(SelectedProductHelper selectedProduct) {
-
-    }
 
     @Override
     public void onRemoveSelectedProduct(SelectedProductHelper selectedProduct) {

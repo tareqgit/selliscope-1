@@ -43,6 +43,10 @@ android {
     dataBinding {
         enabled true
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 configurations.all {
     resolutionStrategy.eachDependency { details ->
@@ -78,18 +82,16 @@ dependencies {
     implementation 'com.google.android.gms:play-services-awareness:15.0.1'
     implementation 'com.google.firebase:firebase-messaging:17.0.0'
     implementation 'com.google.firebase:firebase-core:16.0.0'
-
     /*implementation 'com.squareup.picasso:picasso:2.5.2'
-*/
+    */
     //For Svg and  image fetching
     implementation 'com.kirich1409.svgplugin:glide4:1.0.0'
     implementation 'com.github.bumptech.glide:glide:4.9.0'
     annotationProcessor "com.github.bumptech.glide:compiler:4.9.0"
-    implementation 'com.caverock:androidsvg:1.2.1' //added progourd exception
-
+    implementation 'com.caverock:androidsvg:1.2.1'
+    //added progourd exception
     //Shimmer effect
     implementation 'com.facebook.shimmer:shimmer:0.3.0'
-
     implementation 'de.hdodenhof:circleimageview:2.2.0'
     implementation 'uk.co.chrisjenx:calligraphy:2.2.0'
     implementation 'com.github.esafirm.android-image-picker:imagepicker:1.12.0'
@@ -103,6 +105,5 @@ dependencies {
     }
     //for pojo
     implementation 'org.glassfish:javax.annotation:10.0-b28'
-
 }
 apply plugin: 'com.google.gms.google-services'

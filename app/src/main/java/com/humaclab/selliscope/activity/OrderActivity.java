@@ -119,7 +119,7 @@ public class OrderActivity extends AppCompatActivity implements OrderProductRecy
         mOrderProductRecyclerAdapter.notifyDataSetChanged(); //we are Notify to update recycler view cz if we delete any Item from cart should be live in this activity also
         // Restore state
         binding.rvProduct.getLayoutManager().onRestoreInstanceState(recyclerViewState); //we are restoring recycler position
-
+        update_Total_Discount_Grnd();
 
     }
 
@@ -282,6 +282,8 @@ public class OrderActivity extends AppCompatActivity implements OrderProductRecy
 
     @Override
     protected void onDestroy() {
+        //clear selected Item list
+        selectedProductList.clear();
         super.onDestroy();
     }
 

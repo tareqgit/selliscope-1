@@ -19,11 +19,11 @@
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="10"
+
         android:background="@drawable/cart_button_shape"
         android:orientation="vertical"
         android:padding="2dp"
-        android:elevation="@dimen/elevation_5"
+        android:elevation="3dp"
         android:layout_marginBottom="@dimen/margin_10">
 
         <TextView

@@ -1,22 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+    <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fitsSystemWindows="true">
 
-        <LinearLayout
+        <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:focusableInTouchMode="true"
             android:orientation="vertical">
 
             <android.support.design.widget.AppBarLayout
+                android:id="@+id/appBarLayout3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:theme="@style/AppTheme.AppBarOverlay">
+                android:theme="@style/AppTheme.AppBarOverlay"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
                 <android.support.v7.widget.Toolbar
                     android:id="@+id/toolbar"
@@ -46,12 +51,12 @@
                             android:layout_height="match_parent"
                             android:layout_marginEnd="10dp"
                             android:layout_weight="1"
-                            android:background="#6b000000"
-                            android:gravity="right"
-                            android:text="14/3"
-                            android:padding="2dp"
-                            android:textAlignment="center"
+
                             android:foreground="@drawable/custom_background_selector"
+                            android:gravity="right"
+                            android:padding="2dp"
+                            android:text="14/3"
+                            android:textAlignment="center"
 
                             android:textColor="@color/white"
                             android:textSize="@dimen/text_size_20"
@@ -64,28 +69,42 @@
                 android:id="@+id/tv_search_outlet"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/margin_10"
-                android:layout_marginRight="@dimen/margin_10"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/moss_back2"
                 android:drawableRight="@drawable/places_ic_search"
+                android:elevation="2dp"
+                android:fontFamily="@font/latoregular"
                 android:gravity="center"
                 android:hint="Search Outlet"
-                android:fontFamily="@font/latoregular"
-                android:textSize="17sp" />
+                android:padding="5dp"
+                android:textSize="17sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/appBarLayout3" />
 
             <android.support.v4.widget.SwipeRefreshLayout
                 android:id="@+id/srl_outlet"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="0dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/appBarLayout3">
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/rv_outlet"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@color/background"
-                    android:padding="8dp" />
+                    android:clipToPadding="false"
+                    android:paddingTop="36dp" />
             </android.support.v4.widget.SwipeRefreshLayout>
 
-        </LinearLayout>
+        </android.support.constraint.ConstraintLayout>
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/fab_add_outlet"

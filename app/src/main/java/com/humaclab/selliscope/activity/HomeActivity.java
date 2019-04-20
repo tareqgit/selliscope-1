@@ -132,8 +132,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
        */
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("Target Plan");
-        TextView toolbarTitle = findViewById(R.id.tv_toolbar_title);
-        toolbarTitle.setVisibility(View.VISIBLE);
+      //  TextView toolbarTitle = findViewById(R.id.tv_toolbar_title);
+     //   toolbarTitle.setVisibility(View.VISIBLE);
 
 
         setSupportActionBar(toolbar);
@@ -311,7 +311,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         Calendar c = Calendar.getInstance();
         int timeOfDay = c.get(Calendar.HOUR_OF_DAY);
 
-        if (timeOfDay >= 0 && timeOfDay < 12) {
+        if (timeOfDay >= 6 && timeOfDay < 12) {
             welcome("Good Morning");
 
         } else if (timeOfDay >= 12 && timeOfDay < 16) {
@@ -323,6 +323,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         } else if (timeOfDay >= 21 && timeOfDay < 24) {
             welcome("Good Night");
 
+        }else{
+            welcome("Good Night");
         }
     }
 
@@ -616,7 +618,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         */
     }
     private void welcome(String message) {
-        TextView welcome_text = findViewById(R.id.welcome_text);
+        TextView welcome_text = findViewById(R.id.textview_greeting);
         welcome_text.setVisibility(View.VISIBLE); //as this is disabled for other uses
         welcome_text.setText(message + ", " + sessionManager.getUserDetails().get("userName"));
 

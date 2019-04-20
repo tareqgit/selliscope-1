@@ -20,15 +20,15 @@
         <TextView
             android:id="@+id/tv_target_label"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
+            android:layout_height="31dp"
             android:layout_toRightOf="@id/icon_target"
+            android:background="@drawable/moss_back"
             android:drawableStart="@drawable/ic_target_sales"
-          android:gravity="center"
-            android:text="@string/sales_target"
-           android:drawablePadding="2dp"
+            android:drawablePadding="2dp"
 
+            android:gravity="center"
+            android:padding="5dp"
+            android:text="@string/sales_target"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -75,26 +75,38 @@
             android:layout_height="wrap_content"
             android:layout_above="@+id/circle_progress_view"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="8dp"
-            android:background="@drawable/moss_gradient4"
-            android:gravity="center"
-            android:shadowColor="@color/text_shadow"
-            android:shadowDx="1"
-
-            android:shadowDy="1"
-            android:shadowRadius="2"
-            android:text="0.0"
+            android:background="@drawable/moss_gradient5"
             android:drawableStart="@drawable/ic_target_sales_white"
             android:drawablePadding="2dp"
+            android:gravity="center"
+            android:padding="6dp"
+            android:shadowColor="@color/text_shadow"
 
-            android:paddingRight="@dimen/margin_10"
-            android:paddingLeft="@dimen/margin_10"
+            android:shadowDx="1"
+            android:shadowDy="1"
+
+            android:shadowRadius="2"
+            android:text="0.0"
             android:textColor="@color/light_font"
-            android:textSize="28sp"
+            android:textSize="18sp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@+id/circle_progress_view"
+            android:translationZ="3dp"
+            android:visibility="visible"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView5" />
+
+        <TextView
+            android:id="@+id/imageView5"
+            android:layout_width="162dp"
+            android:layout_height="162dp"
+            android:adjustViewBounds="true"
+            app:layout_constraintBottom_toBottomOf="@+id/circle_progress_view"
+            app:layout_constraintEnd_toEndOf="@+id/circle_progress_view"
+            app:layout_constraintStart_toStartOf="@+id/circle_progress_view"
+            app:layout_constraintTop_toTopOf="@+id/circle_progress_view"
+            android:background="@drawable/moss_back3"
+            android:elevation="2dp"/>
 
         <com.liulishuo.magicprogresswidget.MagicProgressCircle
             android:id="@+id/circle_progress_view"
@@ -108,10 +120,12 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
+            android:translationZ="2dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.41000003"
             app:mpc_default_color="#9E9E9E"
             app:mpc_end_color="@color/mpc_end_color"
             app:mpc_percent="0"
@@ -192,7 +206,8 @@
             app:layout_constraintBottom_toBottomOf="@+id/circle_progress_view"
             app:layout_constraintEnd_toEndOf="@+id/circle_progress_view"
             app:layout_constraintStart_toStartOf="@+id/circle_progress_view"
-            app:layout_constraintTop_toTopOf="@+id/circle_progress_view" />
+            app:layout_constraintTop_toTopOf="@+id/circle_progress_view"
+            android:translationZ="3dp"/>
 
 
     </android.support.constraint.ConstraintLayout>

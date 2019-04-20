@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Created by Tareq Islam on 7/24/18 1:35 AM
+  ~
+  ~  Last modified 7/24/18 1:35 AM
+  -->
+
+<set xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shareInterpolator="false" >
+    <translate android:duration="750" android:fromXDelta="0%" android:toXDelta="-100%"/>
+    <alpha android:duration="750" android:fromAlpha="1.0" android:toAlpha="0.0" />
+</set>

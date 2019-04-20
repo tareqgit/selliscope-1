@@ -28,6 +28,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -69,6 +70,7 @@ import com.humaclab.selliscope.utils.SessionManager;
 
 
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -80,8 +82,13 @@ import retrofit2.Response;
 import timber.log.Timber;
 
 import static com.humaclab.selliscope.R.id.content_fragment;
+import static com.humaclab.selliscope.R.id.default_activity_button;
+import static com.humaclab.selliscope.R.id.sp_brand;
 
 public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+    public enum FRAGMENT_TAGS{
+        Target_Fragment  ,Dashboard_Fragment,Performance_Fragment
+    }
     public static ScheduledExecutorService schedulerForMinute, schedulerForHour;
     public static BroadcastReceiver receiver = new InternetConnectivityChangeReceiver();
     private FragmentManager fragmentManager;
@@ -139,7 +146,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         setSupportActionBar(toolbar);
 
         fragmentManager = getSupportFragmentManager();
-        getFragment(TargetFragment.class);
+        getFragment(TargetFragment.class,FRAGMENT_TAGS.Target_Fragment);
       /*  TabLayout tabLayout = findViewById(R.id.sliding_tabs);
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -182,16 +189,16 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 switch (item.getItemId()) {
                     case R.id.navigation_target:
                         toolbar.setTitle("Target Plan");
-                        getFragment(TargetFragment.class);
+                        getFragment(TargetFragment.class,FRAGMENT_TAGS.Target_Fragment);
 
                         return true;
                     case R.id.navigation_dashboard:
                         toolbar.setTitle("Dashboard");
-                        getFragment(DashboardFragment.class);
+                        getFragment(DashboardFragment.class,FRAGMENT_TAGS.Dashboard_Fragment);
                         return true;
                     case R.id.navigation_performance:
                         toolbar.setTitle("Performance");
-                        getFragment(PerformanceFragment.class);
+                        getFragment(PerformanceFragment.class,FRAGMENT_TAGS.Performance_Fragment);
                         return true;
                 }
                 return false;
@@ -344,16 +351,54 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             }
         });
     }
+    public Fragment getVisibleFragment(){
+        FragmentManager fragmentManager =HomeActivity.this.getSupportFragmentManager();
+        List<Fragment> fragments = fragmentManager.getFragments();
+        if(fragments != null){
+            for(Fragment fragment : fragments){
+                if(fragment != null && fragment.isVisible()) {
 
-    private void getFragment(Class createFragment) {
+                    return fragment;
+                }
+            }
+        }
+        return null;
+    }
+
+    private void getFragment(Class createFragment,FRAGMENT_TAGS fragTag) {
+
+        Fragment fragment = null;
         try {
-            Fragment fragment = (Fragment) createFragment.newInstance();
-            fragmentManager.beginTransaction()
-                    .replace(content_fragment, fragment)
-                    .commit();
-        } catch (Exception e) {
+            fragment = (Fragment) createFragment.newInstance();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
             e.printStackTrace();
         }
+        FragmentTransaction fragmentTransaction= fragmentManager.beginTransaction();
+       switch (fragTag)
+       {
+
+           case Performance_Fragment:
+            fragmentTransaction.setCustomAnimations(R.anim.right_to_left ,R.anim.right_out_left);
+            break;
+           case Target_Fragment:
+               fragmentTransaction.setCustomAnimations(R.anim.left_to_right, R.anim.left_out_right);
+               break;
+          case Dashboard_Fragment:
+                if(getVisibleFragment()!=null) {
+                   if (getVisibleFragment().getTag().equalsIgnoreCase(FRAGMENT_TAGS.Target_Fragment.toString()))
+                       fragmentTransaction.setCustomAnimations(R.anim.right_to_left ,R.anim.right_out_left);
+                   else if (getVisibleFragment().getTag().equalsIgnoreCase(FRAGMENT_TAGS.Performance_Fragment.toString()))
+                       fragmentTransaction.setCustomAnimations(R.anim.left_to_right, R.anim.left_out_right);
+               }
+
+               break;
+        }
+
+                fragmentTransaction .replace(content_fragment, fragment,fragTag.toString())
+                    .commit();
+
     }
     boolean doubleBackToExitPressedOnce =false;
 

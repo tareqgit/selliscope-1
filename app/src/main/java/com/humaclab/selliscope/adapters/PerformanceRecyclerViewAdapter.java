@@ -41,11 +41,11 @@ public class PerformanceRecyclerViewAdapter extends RecyclerView.Adapter<Perform
 
     @Override
     public void onBindViewHolder(PerformanceViewHolder holder, final int position) {
-       Glide.with(holder.itemImage)
+    /*   Glide.with(holder.itemImage)
                 .load(performanceItems.get(position).getItemImageId())
                 .centerCrop()
-                .into(holder.itemImage);
-      //  holder.itemImage.setImageResource(performanceItems.get(position).getItemImageId());
+                .into(holder.itemImage);*/
+        holder.itemImage.setImageResource(performanceItems.get(position).getItemImageId());
         holder.itemName.setText(performanceItems.get(position).getItemName());
     }
 

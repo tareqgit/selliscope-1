@@ -86,9 +86,10 @@ import static com.humaclab.selliscope.R.id.default_activity_button;
 import static com.humaclab.selliscope.R.id.sp_brand;
 
 public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
-    public enum FRAGMENT_TAGS{
-        Target_Fragment  ,Dashboard_Fragment,Performance_Fragment
+    public enum FRAGMENT_TAGS {
+        Target_Fragment, Dashboard_Fragment, Performance_Fragment
     }
+
     public static ScheduledExecutorService schedulerForMinute, schedulerForHour;
     public static BroadcastReceiver receiver = new InternetConnectivityChangeReceiver();
     private FragmentManager fragmentManager;
@@ -100,7 +101,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     private Context context;
     private SendLocationDataService sendLocationDataService;
     private BroadcastReceiver broadcastReceiver;
-    boolean gpsStatus ;
+    boolean gpsStatus;
     private static final String TAG = HomeActivity.class.getSimpleName();
     /**
      * Code used in requesting runtime permissions.
@@ -124,7 +125,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         sessionManager = new SessionManager(this);
 
 
-
         Timber.i("Send Location Data Service onStartCommand");
 
         databaseHandler = new DatabaseHandler(this);
@@ -139,14 +139,14 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
        */
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("Target Plan");
-      //  TextView toolbarTitle = findViewById(R.id.tv_toolbar_title);
-     //   toolbarTitle.setVisibility(View.VISIBLE);
+        //  TextView toolbarTitle = findViewById(R.id.tv_toolbar_title);
+        //   toolbarTitle.setVisibility(View.VISIBLE);
 
 
         setSupportActionBar(toolbar);
 
         fragmentManager = getSupportFragmentManager();
-        getFragment(TargetFragment.class,FRAGMENT_TAGS.Target_Fragment);
+        getFragment(TargetFragment.class, FRAGMENT_TAGS.Target_Fragment);
       /*  TabLayout tabLayout = findViewById(R.id.sliding_tabs);
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
@@ -189,16 +189,16 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 switch (item.getItemId()) {
                     case R.id.navigation_target:
                         toolbar.setTitle("Target Plan");
-                        getFragment(TargetFragment.class,FRAGMENT_TAGS.Target_Fragment);
+                        getFragment(TargetFragment.class, FRAGMENT_TAGS.Target_Fragment);
 
                         return true;
                     case R.id.navigation_dashboard:
                         toolbar.setTitle("Dashboard");
-                        getFragment(DashboardFragment.class,FRAGMENT_TAGS.Dashboard_Fragment);
+                        getFragment(DashboardFragment.class, FRAGMENT_TAGS.Dashboard_Fragment);
                         return true;
                     case R.id.navigation_performance:
                         toolbar.setTitle("Performance");
-                        getFragment(PerformanceFragment.class,FRAGMENT_TAGS.Performance_Fragment);
+                        getFragment(PerformanceFragment.class, FRAGMENT_TAGS.Performance_Fragment);
                         return true;
                 }
                 return false;
@@ -244,8 +244,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                /* runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-               */         Log.v("Running threads", "Thread running in background for updating products and outlets");
-                        loadLocalIntoBackground.loadOutlet(false);
+               */
+                Log.v("Running threads", "Thread running in background for updating products and outlets");
+                loadLocalIntoBackground.loadOutlet(false);
                 /*    }
                 });*/
             }
@@ -256,22 +257,24 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
               /*  runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-              */          Log.v("Running threads", "Thread running in background for updating products and outlets after 30 Minutes interval");
-                        loadLocalIntoBackground.loadProduct();
+              */
+                Log.v("Running threads", "Thread running in background for updating products and outlets after 30 Minutes interval");
+                loadLocalIntoBackground.loadProduct();
                 /*    }
                 });
-*/            }
+*/
+            }
         }, 30, 30, TimeUnit.MINUTES);
         //loading Data into background
 
         try {
 
             //Register receiver for Internet Connectivity change
-        IntentFilter filter = new IntentFilter();
-        filter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
-        registerReceiver(receiver, filter);
-        }catch (Exception e){
-            Log.d("tareq_test" , ""+e.getMessage());
+            IntentFilter filter = new IntentFilter();
+            filter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
+            registerReceiver(receiver, filter);
+        } catch (Exception e) {
+            Log.d("tareq_test", "" + e.getMessage());
         }
 
 
@@ -296,22 +299,21 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         );*/
 
 
-        ComponentName componentName = new ComponentName(this,MyJobScheduler.class);
+        ComponentName componentName = new ComponentName(this, MyJobScheduler.class);
 
-        JobInfo.Builder builder = new JobInfo.Builder(JOB_ID,componentName);
+        JobInfo.Builder builder = new JobInfo.Builder(JOB_ID, componentName);
 
         //builder.setMinimumLatency(1);
         //builder.setOverrideDeadline(1);
-        builder.setPeriodic(15*60*1000);
+        builder.setPeriodic(15 * 60 * 1000);
         builder.setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY);
         builder.setPersisted(true);
-
 
 
         jobInfo = builder.build();
         jobScheduler = (JobScheduler) getSystemService(JOB_SCHEDULER_SERVICE);
         jobScheduler.schedule(jobInfo);
-        }
+    }
 
 
     private void welcome() {
@@ -330,7 +332,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         } else if (timeOfDay >= 21 && timeOfDay < 24) {
             welcome("Good Night");
 
-        }else{
+        } else {
             welcome("Good Night");
         }
     }
@@ -351,12 +353,13 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             }
         });
     }
-    public Fragment getVisibleFragment(){
-        FragmentManager fragmentManager =HomeActivity.this.getSupportFragmentManager();
+
+    public Fragment getVisibleFragment() {
+        FragmentManager fragmentManager = HomeActivity.this.getSupportFragmentManager();
         List<Fragment> fragments = fragmentManager.getFragments();
-        if(fragments != null){
-            for(Fragment fragment : fragments){
-                if(fragment != null && fragment.isVisible()) {
+        if (fragments != null) {
+            for (Fragment fragment : fragments) {
+                if (fragment != null && fragment.isVisible()) {
 
                     return fragment;
                 }
@@ -365,7 +368,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         return null;
     }
 
-    private void getFragment(Class createFragment,FRAGMENT_TAGS fragTag) {
+    private void getFragment(Class createFragment, FRAGMENT_TAGS fragTag) {
 
         Fragment fragment = null;
         try {
@@ -375,32 +378,36 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         } catch (InstantiationException e) {
             e.printStackTrace();
         }
-        FragmentTransaction fragmentTransaction= fragmentManager.beginTransaction();
-       switch (fragTag)
-       {
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        switch (fragTag) {
 
-           case Performance_Fragment:
-            fragmentTransaction.setCustomAnimations(R.anim.right_to_left ,R.anim.right_out_left);
-            break;
-           case Target_Fragment:
-               fragmentTransaction.setCustomAnimations(R.anim.left_to_right, R.anim.left_out_right);
-               break;
-          case Dashboard_Fragment:
-                if(getVisibleFragment()!=null) {
-                   if (getVisibleFragment().getTag().equalsIgnoreCase(FRAGMENT_TAGS.Target_Fragment.toString()))
-                       fragmentTransaction.setCustomAnimations(R.anim.right_to_left ,R.anim.right_out_left);
-                   else if (getVisibleFragment().getTag().equalsIgnoreCase(FRAGMENT_TAGS.Performance_Fragment.toString()))
-                       fragmentTransaction.setCustomAnimations(R.anim.left_to_right, R.anim.left_out_right);
-               }
+            case Performance_Fragment:
+                if (getVisibleFragment() != null && !getVisibleFragment().getTag().equalsIgnoreCase(FRAGMENT_TAGS.Performance_Fragment.toString()))
 
-               break;
+                    fragmentTransaction.setCustomAnimations(R.anim.right_to_left, R.anim.right_out_left);
+                break;
+            case Target_Fragment:
+                if (getVisibleFragment() != null && !getVisibleFragment().getTag().equalsIgnoreCase(FRAGMENT_TAGS.Target_Fragment.toString()))
+
+                    fragmentTransaction.setCustomAnimations(R.anim.left_to_right, R.anim.left_out_right);
+                break;
+            case Dashboard_Fragment:
+                if (getVisibleFragment() != null) {
+                    if (getVisibleFragment().getTag().equalsIgnoreCase(FRAGMENT_TAGS.Target_Fragment.toString()))
+                        fragmentTransaction.setCustomAnimations(R.anim.right_to_left, R.anim.right_out_left);
+                    else if (getVisibleFragment().getTag().equalsIgnoreCase(FRAGMENT_TAGS.Performance_Fragment.toString()))
+                        fragmentTransaction.setCustomAnimations(R.anim.left_to_right, R.anim.left_out_right);
+                }
+
+                break;
         }
 
-                fragmentTransaction .replace(content_fragment, fragment,fragTag.toString())
-                    .commit();
+        fragmentTransaction.replace(content_fragment, fragment, fragTag.toString())
+                .commit();
 
     }
-    boolean doubleBackToExitPressedOnce =false;
+
+    boolean doubleBackToExitPressedOnce = false;
 
     @Override
     public void onBackPressed() {
@@ -417,7 +424,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             this.doubleBackToExitPressedOnce = true;
             Toast.makeText(this, "Tap BACK again to Exit", Toast.LENGTH_SHORT).show();
 
-            new Handler().postDelayed(() -> doubleBackToExitPressedOnce=false, 2000);
+            new Handler().postDelayed(() -> doubleBackToExitPressedOnce = false, 2000);
         }
     }
 
@@ -550,6 +557,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             startActivity(new Intent(getApplicationContext(), HomeActivity.class));
         }
     }
+
     //For Bangla
     public void setLocale(String lang) {
         Locale locale = new Locale(lang);
@@ -576,21 +584,20 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     }
 
 
-
-    private void LoadappsVertion(){
-        apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(),sessionManager.getUserPassword(),false).create(SelliscopeApiEndpointInterface.class);
+    private void LoadappsVertion() {
+        apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(), sessionManager.getUserPassword(), false).create(SelliscopeApiEndpointInterface.class);
         Call<AppVersion> call = apiService.getAppsversion();
         call.enqueue(new Callback<AppVersion>() {
             @Override
             public void onResponse(Call<AppVersion> call, Response<AppVersion> response) {
-                if(response.code() == 200) {
+                if (response.code() == 200) {
 
                     System.out.println("APPS VERTION " + new Gson().toJson(response.body()));
 
                     int serverVersion = Integer.parseInt(response.body().getResult().getVersionCode());
                     int appVersion = BuildConfig.VERSION_CODE;
-                    if(serverVersion>appVersion){
-                        updateDialog(response.body().getResult().getVersionName(),response.body().getResult().getUrl());
+                    if (serverVersion > appVersion) {
+                        updateDialog(response.body().getResult().getVersionName(), response.body().getResult().getUrl());
                     }
 
 
@@ -606,6 +613,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         });
 
     }
+
     private void updateDialog(String version, final String link) {
 
 
@@ -619,10 +627,10 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
 
         tv_details_information.setText("A new version is available on PlayStore .Please Update it");
-        tv_title.setText("Update Available "+version);
+        tv_title.setText("Update Available " + version);
 
 
-        Button iv_info_cancel =  dialogView.findViewById(R.id.btn_update);
+        Button iv_info_cancel = dialogView.findViewById(R.id.btn_update);
         iv_info_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -672,6 +680,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         startStep1();
         */
     }
+
     private void welcome(String message) {
         TextView welcome_text = findViewById(R.id.textview_greeting);
         welcome_text.setVisibility(View.VISIBLE); //as this is disabled for other uses

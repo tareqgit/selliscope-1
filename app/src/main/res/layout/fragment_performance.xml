@@ -13,5 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="?android:attr/selectableItemBackground"
-        android:scrollbars="none"/>
+        android:scrollbars="none"
+        android:clipToPadding="false"
+        android:paddingTop="6dp"/>
 </RelativeLayout>

@@ -12,58 +12,75 @@
 
         <include layout="@layout/toolbar_layout" />
 
-        <RelativeLayout
+        <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent">
 
-            <LinearLayout
-                android:id="@+id/ll_spinner"
-                android:layout_width="match_parent"
+            <Spinner
+                android:id="@+id/sp_product_category"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:layout_weight="1"
+                app:layout_constraintEnd_toStartOf="@+id/sp_product_brand"
+                app:layout_constraintHorizontal_bias="0.53"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-                <Spinner
-                    android:id="@+id/sp_product_category"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginBottom="5dp" />
-
-                <Spinner
-                    android:id="@+id/sp_product_brand"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="5dp"
-                    android:layout_weight="1" />
-            </LinearLayout>
+            <Spinner
+                android:id="@+id/sp_product_brand"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/sp_product_category"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <EditText
                 android:id="@+id/et_search_product"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/ll_spinner"
+
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="8dp"
-                android:drawableRight="@drawable/search"
+                android:background="@drawable/moss_back2"
+
+                android:drawableRight="@drawable/places_ic_search"
+                android:elevation="2dp"
+                android:fontFamily="@font/latoregular"
                 android:gravity="center"
                 android:hint="Search Product"
-                android:fontFamily="@font/latoregular"
                 android:imeOptions="actionSearch"
                 android:inputType="text"
-                android:padding="10dp" />
+                android:padding="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/sp_product_category" />
 
             <android.support.v4.widget.SwipeRefreshLayout
                 android:id="@+id/srl_product"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="0dp"
                 android:layout_above="@id/ll_total"
-                android:layout_below="@id/et_search_product"
-                android:orientation="horizontal">
+                android:layout_alignTop="@+id/et_search_product"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="18dp"
+                android:layout_marginEnd="8dp"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toTopOf="@+id/ll_total"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/sp_product_category">
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/rv_product"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="16dp"
+                    android:clipToPadding="false"
+
+
+                    android:paddingTop="36dp" />
             </android.support.v4.widget.SwipeRefreshLayout>
 
             <android.support.constraint.ConstraintLayout
@@ -74,10 +91,14 @@
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentBottom="true"
                 android:background="#8990caf9"
+                android:elevation="3dp"
                 android:orientation="horizontal"
                 android:padding="10dp"
                 android:weightSum="2"
-                android:elevation="3dp">
+                android:translationZ="3dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
 
                 <LinearLayout
                     android:id="@+id/linearLayout6"
@@ -160,6 +181,17 @@
                         android:hint="0.0" />
                 </LinearLayout>
             </android.support.constraint.ConstraintLayout>
-        </RelativeLayout>
+
+            <View
+                android:id="@+id/view"
+                android:layout_width="2dp"
+                android:layout_height="0dp"
+                android:layout_marginStart="8dp"
+                android:background="@drawable/moss_back"
+                app:layout_constraintBottom_toTopOf="@+id/et_search_product"
+                app:layout_constraintEnd_toEndOf="@+id/sp_product_category"
+                app:layout_constraintStart_toStartOf="@+id/sp_product_brand"
+                app:layout_constraintTop_toTopOf="parent" />
+        </android.support.constraint.ConstraintLayout>
     </LinearLayout>
 </layout>

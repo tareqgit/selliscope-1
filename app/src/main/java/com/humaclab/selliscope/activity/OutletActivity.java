@@ -102,7 +102,14 @@ public class OutletActivity extends AppCompatActivity {
                 getOutlets();
             }
         });
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         getOutlets();
+        getRoute(); // For getting route plan data
     }
 
     public void getOutlets() {

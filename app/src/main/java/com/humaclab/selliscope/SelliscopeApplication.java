@@ -61,6 +61,6 @@ public class SelliscopeApplication extends Application {
             Timber.plant(new Timber.DebugTree());
         }
         Stetho.initializeWithDefaults(this);
-        Fabric.with(this, new Crashlytics());
+      /*  Fabric.with(this, new Crashlytics());*/
     }
 }

@@ -173,7 +173,7 @@ public class ActivityCart extends AppCompatActivity implements SelectedProductRe
             newOrder.comment = binding.etComments.getText().toString();
             newOrder.transport=binding.etTransport.getText().toString();
             newOrder.paymentType=binding.spinnerPaymentType.getSelectedItemPosition();
-            newOrder.orderTimeStamp= CurrentTimeUtilityClass.getCurrentTimeStampDate();
+            newOrder.orderTimeStamp= CurrentTimeUtilityClass.getCurrentTimeStamp();
 
             if (binding.etDiscount.getText().toString().equals("")) {
                 newOrder.discount = 0;

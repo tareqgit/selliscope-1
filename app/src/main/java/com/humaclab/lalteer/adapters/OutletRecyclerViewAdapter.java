@@ -122,6 +122,8 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
         if (outlet.outlet_routeplan.equals("1")) {
             holder.lo_routeplan_background2.setImageResource(R.drawable.moss_gradient2);
 
+        }else{
+            holder.lo_routeplan_background2.setImageResource(R.color.white);
         }
         holder.checkInButton.setOnClickListener(new View.OnClickListener() {
 

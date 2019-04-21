@@ -63,9 +63,9 @@ public class OrderActivity extends AppCompatActivity implements OrderProductRecy
         outletType = getIntent().getStringExtra("outletType");
 
         Toolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle("");
+       /* toolbar.setTitle("");
         TextView toolbarTitle = findViewById(R.id.tv_toolbar_title);
-        toolbarTitle.setText(outletName + "-" + getResources().getString(R.string.order));
+        toolbarTitle.setText(outletName + "-" + getResources().getString(R.string.order));*/
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 

@@ -11,11 +11,10 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.humaclab.selliscope.R;
-import com.humaclab.selliscope.adapters.OrderProductRecyclerAdapter;
 import com.humaclab.selliscope.databinding.ItemOrderProductSelectionBinding;
 import com.humaclab.selliscope.dbmodel.PriceVariationStartEnd;
 import com.humaclab.selliscope.dbmodel.TradePromoionData;
-import com.humaclab.selliscope.model.VariantProduct.ProductsItem;
+import com.humaclab.selliscope.model.variant_product.ProductsItem;
 import com.humaclab.selliscope.utils.DatabaseHandler;
 
 import java.util.List;

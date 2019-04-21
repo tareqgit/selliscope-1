@@ -19,7 +19,7 @@ import com.humaclab.selliscope.activity.OrderActivity;
 import com.humaclab.selliscope.databinding.ItemOrderProductBinding;
 import com.humaclab.selliscope.helper.SelectedProductHelper;
 import com.humaclab.selliscope.helper.ShowProductSelectionDialog;
-import com.humaclab.selliscope.model.VariantProduct.ProductsItem;
+import com.humaclab.selliscope.model.variant_product.ProductsItem;
 
 
 import java.util.List;

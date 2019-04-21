@@ -10,8 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.humaclab.selliscope.R;
-import com.humaclab.selliscope.model.OutletType.OutletType;
-import com.humaclab.selliscope.model.Reason.ReasonResponse;
+import com.humaclab.selliscope.model.reason.ReasonResponse;
 
 import java.util.List;
 

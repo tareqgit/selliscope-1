@@ -12,8 +12,7 @@ import android.widget.Toast;
 import com.humaclab.selliscope.R;
 import com.humaclab.selliscope.adapters.SellsReturnDetailsRecyclerAdapter;
 import com.humaclab.selliscope.databinding.ActivitySalesReturnDetailsBinding;
-import com.humaclab.selliscope.model.DeliveryResponse;
-import com.humaclab.selliscope.model.SalesReturn.SalesReturnResponse;
+import com.humaclab.selliscope.model.sales_return.SalesReturnResponse;
 import com.humaclab.selliscope.utils.NetworkUtility;
 
 public class SalesReturnDetailsActivity extends AppCompatActivity {

@@ -12,19 +12,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.eralp.circleprogressview.CircleProgressView;
 import com.google.gson.Gson;
 import com.humaclab.selliscope.R;
 import com.humaclab.selliscope.SelliscopeApiEndpointInterface;
 import com.humaclab.selliscope.SelliscopeApplication;
 import com.humaclab.selliscope.databinding.ActivityOutletDetailsBinding;
 import com.humaclab.selliscope.model.Outlets;
-import com.humaclab.selliscope.model.Target.OutletTarget;
+import com.humaclab.selliscope.model.target.OutletTarget;
 import com.humaclab.selliscope.utils.SessionManager;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import retrofit2.Call;
 import retrofit2.Callback;

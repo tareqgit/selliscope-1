@@ -15,7 +15,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.humaclab.selliscope.R;
 import com.humaclab.selliscope.activity.OrderActivity;
-import com.humaclab.selliscope.model.VariantProduct.ProductsItem;
+import com.humaclab.selliscope.model.variant_product.ProductsItem;
 
 import java.util.List;
 

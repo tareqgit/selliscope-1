@@ -18,7 +18,7 @@ import android.view.ViewGroup;
 import com.humaclab.selliscope.BR;
 import com.humaclab.selliscope.R;
 import com.humaclab.selliscope.databinding.ActivityPerformenceOrdersModelBinding;
-import com.humaclab.selliscope.model.performance.OrdersModel.Order;
+import com.humaclab.selliscope.model.performance.orders_model.Order;
 
 import java.util.List;
 

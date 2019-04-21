@@ -16,7 +16,7 @@ import android.widget.TextView;
 
 import com.humaclab.selliscope.R;
 import com.humaclab.selliscope.databinding.ActivityPerformanceOrdersProductsBinding;
-import com.humaclab.selliscope.model.performance.OrdersModel.Product;
+import com.humaclab.selliscope.model.performance.orders_model.Product;
 
 import java.util.ArrayList;
 import java.util.List;

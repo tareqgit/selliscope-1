@@ -27,8 +27,8 @@ import com.humaclab.selliscope.R;
 import com.humaclab.selliscope.SelliscopeApiEndpointInterface;
 import com.humaclab.selliscope.SelliscopeApplication;
 import com.humaclab.selliscope.databinding.ActivityProfileBinding;
-import com.humaclab.selliscope.model.UpdateProfile.UpdateProfile;
-import com.humaclab.selliscope.model.UpdateProfile.UpdateProfileResponse;
+import com.humaclab.selliscope.model.update_profile.UpdateProfile;
+import com.humaclab.selliscope.model.update_profile.UpdateProfileResponse;
 import com.humaclab.selliscope.utils.SessionManager;
 
 import java.io.ByteArrayOutputStream;

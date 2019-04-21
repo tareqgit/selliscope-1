@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 import com.humaclab.selliscope.BR;
 import com.humaclab.selliscope.R;
 import com.humaclab.selliscope.databinding.ItemPurchaseHistoryProductListBinding;
-import com.humaclab.selliscope.model.PurchaseHistory.OrderDetailsItem;
+import com.humaclab.selliscope.model.purchase_history.OrderDetailsItem;
 
 import java.util.List;
 

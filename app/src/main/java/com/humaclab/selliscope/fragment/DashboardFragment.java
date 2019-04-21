@@ -17,7 +17,7 @@ import com.humaclab.selliscope.activity.DeliveryListActivity;
 import com.humaclab.selliscope.activity.InspectionActivity;
 import com.humaclab.selliscope.activity.OutletActivity;
 import com.humaclab.selliscope.activity.RouteActivity;
-import com.humaclab.selliscope.activity.ActivitySalesReturnOld.SalesReturnActivityOld;
+import com.humaclab.selliscope.activity.activity_salesReturnOld.SalesReturnActivityOld;
 import com.humaclab.selliscope.adapters.DashboardRecyclerViewAdapter;
 import com.humaclab.selliscope.model.DashboardItem;
 import com.humaclab.selliscope.utils.RecyclerItemClickListener;

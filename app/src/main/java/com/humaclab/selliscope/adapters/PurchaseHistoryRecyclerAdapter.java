@@ -13,7 +13,7 @@ import com.humaclab.selliscope.R;
 import com.humaclab.selliscope.activity.PurchasedProductListActivity;
 import com.humaclab.selliscope.databinding.ItemPurchaseHistoryBinding;
 import com.humaclab.selliscope.model.Outlets;
-import com.humaclab.selliscope.model.PurchaseHistory.PurchaseHistoryItem;
+import com.humaclab.selliscope.model.purchase_history.PurchaseHistoryItem;
 
 import java.util.List;
 

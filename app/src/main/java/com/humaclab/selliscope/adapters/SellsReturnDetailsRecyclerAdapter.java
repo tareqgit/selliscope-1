@@ -22,11 +22,9 @@ import com.humaclab.selliscope.BR;
 import com.humaclab.selliscope.R;
 import com.humaclab.selliscope.SelliscopeApiEndpointInterface;
 import com.humaclab.selliscope.SelliscopeApplication;
-import com.humaclab.selliscope.activity.EditOutletActivity;
-import com.humaclab.selliscope.model.OutletType.OutletType;
-import com.humaclab.selliscope.model.Reason.ReasonResponse;
-import com.humaclab.selliscope.model.SalesReturn.SalesReturnResponse;
-import com.humaclab.selliscope.model.SalesReturn.SellsReturnResponsePost;
+import com.humaclab.selliscope.model.reason.ReasonResponse;
+import com.humaclab.selliscope.model.sales_return.SalesReturnResponse;
+import com.humaclab.selliscope.model.sales_return.SellsReturnResponsePost;
 import com.humaclab.selliscope.utils.DatabaseHandler;
 import com.humaclab.selliscope.utils.SessionManager;
 

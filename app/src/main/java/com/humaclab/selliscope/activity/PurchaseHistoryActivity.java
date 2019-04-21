@@ -18,7 +18,7 @@ import com.humaclab.selliscope.SelliscopeApplication;
 import com.humaclab.selliscope.adapters.PurchaseHistoryRecyclerAdapter;
 import com.humaclab.selliscope.databinding.ActivityPurchaseHistoryBinding;
 import com.humaclab.selliscope.model.Outlets;
-import com.humaclab.selliscope.model.PurchaseHistory.PurchaseHistoryResponse;
+import com.humaclab.selliscope.model.purchase_history.PurchaseHistoryResponse;
 import com.humaclab.selliscope.utils.SessionManager;
 
 import retrofit2.Call;

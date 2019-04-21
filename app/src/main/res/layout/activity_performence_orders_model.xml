@@ -11,7 +11,7 @@
 
         <variable
             name="Order"
-            type="com.humaclab.selliscope.model.performance.OrdersModel.Order" />
+            type="com.humaclab.selliscope.model.performance.orders_model.Order" />
     </data>
     <android.support.v7.widget.CardView
         android:layout_width="match_parent"

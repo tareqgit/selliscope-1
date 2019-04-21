@@ -7,7 +7,7 @@
 
         <variable
             name="product"
-            type="com.humaclab.selliscope.model.SalesReturn.SalesReturnResponse.Product" />
+            type="com.humaclab.selliscope.model.sales_return.SalesReturnResponse.Product" />
     </data>
 
 

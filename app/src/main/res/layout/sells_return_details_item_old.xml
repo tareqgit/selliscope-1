@@ -5,7 +5,7 @@
 
         <variable
             name="product"
-            type="com.humaclab.selliscope.model.ModelSalesReturnOld.DeliveryResponseOld.Product"/>
+            type="com.humaclab.selliscope.model.model_sales_return_old.DeliveryResponseOld.Product"/>
     </data>
 
     <LinearLayout

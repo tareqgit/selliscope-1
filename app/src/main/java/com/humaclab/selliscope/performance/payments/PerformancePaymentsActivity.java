@@ -24,10 +24,7 @@ import com.humaclab.selliscope.R;
 import com.humaclab.selliscope.SelliscopeApiEndpointInterface;
 import com.humaclab.selliscope.SelliscopeApplication;
 import com.humaclab.selliscope.databinding.ActivityPerformancePaymentsBinding;
-import com.humaclab.selliscope.model.performance.OrdersModel.PerformanceOrderResponse;
-import com.humaclab.selliscope.model.performance.paymentsModel.PaymentsResponse;
-import com.humaclab.selliscope.performance.orders.PerformanceOrdersActivity;
-import com.humaclab.selliscope.performance.orders.PerformenceOrdersAdapter;
+import com.humaclab.selliscope.model.performance.payments_model.PaymentsResponse;
 import com.humaclab.selliscope.utils.CurrentTimeUtilityClass;
 import com.humaclab.selliscope.utils.SessionManager;
 

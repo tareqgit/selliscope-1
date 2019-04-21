@@ -12,8 +12,7 @@ import android.view.ViewGroup;
 import com.humaclab.selliscope.BR;
 import com.humaclab.selliscope.R;
 import com.humaclab.selliscope.activity.SalesReturnDetailsActivity;
-import com.humaclab.selliscope.model.DeliveryResponse;
-import com.humaclab.selliscope.model.SalesReturn.SalesReturnResponse;
+import com.humaclab.selliscope.model.sales_return.SalesReturnResponse;
 
 import java.util.List;
 

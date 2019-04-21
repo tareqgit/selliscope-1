@@ -7,7 +7,7 @@
 
         <variable
             name="product"
-            type="com.humaclab.selliscope.model.VariantProduct.ProductsItem" />
+            type="com.humaclab.selliscope.model.variant_product.ProductsItem" />
     </data>
 
     <android.support.v7.widget.CardView

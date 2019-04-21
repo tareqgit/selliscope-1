@@ -24,7 +24,6 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -51,7 +50,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.gson.Gson;
 import com.humaclab.selliscope.BuildConfig;
-import com.humaclab.selliscope.JobSheduler.MyJobScheduler;
+import com.humaclab.selliscope.job_sheduler.MyJobScheduler;
 import com.humaclab.selliscope.LocationMonitoringService;
 import com.humaclab.selliscope.R;
 import com.humaclab.selliscope.SelliscopeApiEndpointInterface;
@@ -59,8 +58,8 @@ import com.humaclab.selliscope.SelliscopeApplication;
 import com.humaclab.selliscope.fragment.DashboardFragment;
 import com.humaclab.selliscope.fragment.PerformanceFragment;
 import com.humaclab.selliscope.fragment.TargetFragment;
-import com.humaclab.selliscope.model.AppVersion.AppVersion;
-import com.humaclab.selliscope.model.Diameter.DiameterResponse;
+import com.humaclab.selliscope.model.app_version.AppVersion;
+import com.humaclab.selliscope.model.diameter.DiameterResponse;
 import com.humaclab.selliscope.receiver.InternetConnectivityChangeReceiver;
 import com.humaclab.selliscope.service.SendLocationDataService;
 import com.humaclab.selliscope.utils.Constants;
@@ -82,8 +81,6 @@ import retrofit2.Response;
 import timber.log.Timber;
 
 import static com.humaclab.selliscope.R.id.content_fragment;
-import static com.humaclab.selliscope.R.id.default_activity_button;
-import static com.humaclab.selliscope.R.id.sp_brand;
 
 public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     public enum FRAGMENT_TAGS {

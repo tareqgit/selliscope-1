@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 
 import com.humaclab.selliscope.BR;
 import com.humaclab.selliscope.R;
-import com.humaclab.selliscope.model.SalesReturn.SalesReturnHistory;
+import com.humaclab.selliscope.model.sales_return.SalesReturnHistory;
 
 import java.util.List;
 

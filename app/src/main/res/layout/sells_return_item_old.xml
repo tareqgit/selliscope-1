@@ -6,7 +6,7 @@
 
         <variable
             name="deliveryDetails"
-            type="com.humaclab.selliscope.model.ModelSalesReturnOld.DeliveryResponseOld.DeliveryList"/>
+            type="com.humaclab.selliscope.model.model_sales_return_old.DeliveryResponseOld.DeliveryList"/>
     </data>
 
     <android.support.v7.widget.CardView

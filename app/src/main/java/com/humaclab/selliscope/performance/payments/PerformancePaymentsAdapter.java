@@ -16,9 +16,8 @@ import android.view.ViewGroup;
 
 import com.humaclab.selliscope.BR;
 import com.humaclab.selliscope.R;
-import com.humaclab.selliscope.databinding.ActivityPerformancePaymentsBinding;
 import com.humaclab.selliscope.databinding.ActivityPerformancePaymentsModelBinding;
-import com.humaclab.selliscope.model.performance.paymentsModel.Datum;
+import com.humaclab.selliscope.model.performance.payments_model.Datum;
 
 import java.util.List;
 

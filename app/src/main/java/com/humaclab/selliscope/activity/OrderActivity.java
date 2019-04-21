@@ -18,7 +18,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -26,9 +25,9 @@ import com.humaclab.selliscope.R;
 import com.humaclab.selliscope.adapters.OrderProductRecyclerAdapter;
 import com.humaclab.selliscope.databinding.ActivityOrderBinding;
 import com.humaclab.selliscope.helper.SelectedProductHelper;
-import com.humaclab.selliscope.model.VariantProduct.Brand;
-import com.humaclab.selliscope.model.VariantProduct.Category;
-import com.humaclab.selliscope.model.VariantProduct.ProductsItem;
+import com.humaclab.selliscope.model.variant_product.Brand;
+import com.humaclab.selliscope.model.variant_product.Category;
+import com.humaclab.selliscope.model.variant_product.ProductsItem;
 import com.humaclab.selliscope.utils.DatabaseHandler;
 import com.humaclab.selliscope.utils.SessionManager;
 

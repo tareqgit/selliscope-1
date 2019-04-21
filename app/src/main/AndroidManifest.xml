@@ -129,9 +129,9 @@
         <activity android:name=".activity.SettingsActivity" />
         <activity android:name=".activity.ProfileActivity" /> <!-- for ols sellisreturn Model -->
         <activity
-            android:name=".activity.ActivitySalesReturnOld.SalesReturnDetailsActivityOld"
+            android:name=".activity.activity_salesReturnOld.SalesReturnDetailsActivityOld"
             android:screenOrientation="landscape" />
-        <activity android:name=".activity.ActivitySalesReturnOld.SalesReturnActivityOld" />
+        <activity android:name=".activity.activity_salesReturnOld.SalesReturnActivityOld" />
 
         <service
             android:name=".LocationMonitoringService"
@@ -140,7 +140,7 @@
         <activity android:name=".activity.SalesReturnHistoryActivity" />
 
         <service
-            android:name=".JobSheduler.MyJobScheduler"
+            android:name=".job_sheduler.MyJobScheduler"
             android:exported="true"
             android:permission="android.permission.BIND_JOB_SERVICE" />
 

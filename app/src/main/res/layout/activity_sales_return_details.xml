@@ -7,7 +7,7 @@
 
         <variable
             name="deliveryDetails"
-            type="com.humaclab.selliscope.model.SalesReturn.SalesReturnResponse.DeliveryList"/>
+            type="com.humaclab.selliscope.model.sales_return.SalesReturnResponse.DeliveryList"/>
     </data>
 
     <LinearLayout

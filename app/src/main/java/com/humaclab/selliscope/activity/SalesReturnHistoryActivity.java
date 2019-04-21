@@ -1,7 +1,6 @@
 package com.humaclab.selliscope.activity;
 
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -15,7 +14,7 @@ import com.humaclab.selliscope.R;
 import com.humaclab.selliscope.SelliscopeApiEndpointInterface;
 import com.humaclab.selliscope.SelliscopeApplication;
 import com.humaclab.selliscope.adapters.SalesReturnHistoryRecyclerAdapter;
-import com.humaclab.selliscope.model.SalesReturn.SalesReturnHistory;
+import com.humaclab.selliscope.model.sales_return.SalesReturnHistory;
 import com.humaclab.selliscope.utils.NetworkUtility;
 import com.humaclab.selliscope.utils.SessionManager;
 

@@ -19,7 +19,7 @@ import com.humaclab.selliscope.R;
 import com.humaclab.selliscope.SelliscopeApiEndpointInterface;
 import com.humaclab.selliscope.SelliscopeApplication;
 import com.humaclab.selliscope.adapters.SellsReturnRecyclerAdapter;
-import com.humaclab.selliscope.model.SalesReturn.SalesReturnResponse;
+import com.humaclab.selliscope.model.sales_return.SalesReturnResponse;
 import com.humaclab.selliscope.utils.NetworkUtility;
 import com.humaclab.selliscope.utils.SessionManager;
 

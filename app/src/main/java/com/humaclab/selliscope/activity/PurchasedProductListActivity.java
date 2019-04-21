@@ -1,20 +1,18 @@
 package com.humaclab.selliscope.activity;
 
-import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.TextView;
 
 import com.humaclab.selliscope.R;
 import com.humaclab.selliscope.adapters.PurchasedProductRecyclerAdapter;
 import com.humaclab.selliscope.databinding.ActivityPurchasedProductListBinding;
 import com.humaclab.selliscope.model.Outlets;
-import com.humaclab.selliscope.model.PurchaseHistory.PurchaseHistoryItem;
+import com.humaclab.selliscope.model.purchase_history.PurchaseHistoryItem;
 import com.humaclab.selliscope.utils.SessionManager;
 // Purches History specific All Data
 public class PurchasedProductListActivity extends AppCompatActivity {

@@ -2,37 +2,30 @@ package com.humaclab.selliscope.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.widget.CircularProgressDrawable;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.eralp.circleprogressview.CircleProgressView;
 import com.google.gson.Gson;
 import com.humaclab.selliscope.R;
 import com.humaclab.selliscope.SelliscopeApiEndpointInterface;
 import com.humaclab.selliscope.SelliscopeApplication;
-import com.humaclab.selliscope.activity.OutletDetailsActivity;
 import com.humaclab.selliscope.adapters.TargetRecyclerViewAdapter;
 import com.humaclab.selliscope.dbmodel.Target;
-import com.humaclab.selliscope.model.Target.OutletTarget;
+import com.humaclab.selliscope.model.target.OutletTarget;
 import com.humaclab.selliscope.model.TargetItem;
 import com.humaclab.selliscope.model.Targets;
 import com.humaclab.selliscope.utils.DatabaseHandler;
 import com.humaclab.selliscope.utils.NetworkUtility;
 import com.humaclab.selliscope.utils.SessionManager;
-import com.humaclab.selliscope.utils.VerticalSpaceItemDecoration;
 import com.liulishuo.magicprogresswidget.MagicProgressCircle;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.ResponseBody;

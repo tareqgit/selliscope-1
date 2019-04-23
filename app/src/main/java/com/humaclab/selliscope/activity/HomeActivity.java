@@ -28,6 +28,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -278,10 +279,10 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         //LoadappsVertion();
 
 
-        //startService(new Intent(this, SendLocationDataService.class));
+       /* //startService(new Intent(this, SendLocationDataService.class));
 
 
-/*        LocalBroadcastManager.getInstance(this).registerReceiver(
+        LocalBroadcastManager.getInstance(this).registerReceiver(
                 new BroadcastReceiver() {
                     @Override
                     public void onReceive(Context context, Intent intent) {
@@ -293,10 +294,10 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                         }
                     }
                 }, new IntentFilter(LocationMonitoringService.ACTION_LOCATION_BROADCAST)
-        );*/
+        );
+*/
 
-
-        ComponentName componentName = new ComponentName(this, MyJobScheduler.class);
+      /*  ComponentName componentName = new ComponentName(this, MyJobScheduler.class);
 
         JobInfo.Builder builder = new JobInfo.Builder(JOB_ID, componentName);
 
@@ -309,7 +310,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
         jobInfo = builder.build();
         jobScheduler = (JobScheduler) getSystemService(JOB_SCHEDULER_SERVICE);
-        jobScheduler.schedule(jobInfo);
+        jobScheduler.schedule(jobInfo);*/
     }
 
 
@@ -434,11 +435,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 pd.setMessage("Login out...");
                 pd.show();
 
-                jobScheduler.cancel(JOB_ID);
-                /*
+          //      jobScheduler.cancel(JOB_ID);
                 //Stop Android Service for sending location to service
                 stopService(new Intent(HomeActivity.this, LocationMonitoringService.class));
-                */
                 mAlreadyStartedService = false;
 
 //                if (databaseHandler.removeAll()) {
@@ -541,15 +540,14 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         if (sessionManager.isLoggedIn()) {
 
             //Stop For On Destroy to send server address
-/*
-            stopService(new Intent(this, LocationMonitoringService.class));
+        /*    stopService(new Intent(this, LocationMonitoringService.class));
             mAlreadyStartedService = false;
 */
-
-            /*stopService(new Intent(HomeActivity.this, SendLocationDataService.class));
+       //     stopService(new Intent(HomeActivity.this, SendLocationDataService.class));
             //unregisterReceiver(broadcastReceiver);
-            unregisterReceiver(receiver);
-*/
+        //    unregisterReceiver(receiver);
+
+
             Timber.d("Home Activity stopped.");
             startActivity(new Intent(getApplicationContext(), HomeActivity.class));
         }
@@ -672,10 +670,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             }
         }, 2000);*/
         LoadappsVertion();
-        /*
         //Start Android Service for sending location to service
         startStep1();
-        */
     }
 
     private void welcome(String message) {

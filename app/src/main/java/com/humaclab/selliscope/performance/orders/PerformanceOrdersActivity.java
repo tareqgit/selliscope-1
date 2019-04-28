@@ -59,7 +59,7 @@ public class PerformanceOrdersActivity extends AppCompatActivity implements Perf
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("");
         TextView toolbarTitle = findViewById(R.id.tv_toolbar_title);
-        toolbarTitle.setText("Orders");
+        toolbarTitle.setText(getString(R.string.order));
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -146,7 +146,7 @@ public class PerformanceOrdersActivity extends AppCompatActivity implements Perf
                         if(response.code()==200) {
                             Log.d("" + getClass().getName(), "" + response.code());
                             mActivityPerformanceOrdersBinding.ordersRecycler.setAdapter(new PerformenceOrdersAdapter(PerformanceOrdersActivity.this, response.body().getResult().getOrders(), PerformanceOrdersActivity.this));
-                            mActivityPerformanceOrdersBinding.totalAmountTextView.setText("Total: "+ response.body().getTotalAmount());
+                            mActivityPerformanceOrdersBinding.totalAmountTextView.setText(getString(R.string.toatal)+ response.body().getTotalAmount());
                             mActivityPerformanceOrdersBinding.recyclerLoader.setRefreshing(false);
                         }else{
                             mActivityPerformanceOrdersBinding.recyclerLoader.setRefreshing(false);

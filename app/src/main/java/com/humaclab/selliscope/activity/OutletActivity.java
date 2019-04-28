@@ -136,7 +136,7 @@ public class OutletActivity extends AppCompatActivity {
                     binding.tvToolbarTitle.setText(response.body().getResult().getRoute().get(0).getName());
                     getRouteDetails(response.body().getResult().getRoute().get(0).getId());
                 } else {
-                    binding.tvToolbarTitle.setText("Outlet");
+                    binding.tvToolbarTitle.setText(getString(R.string.outlet));
                 }
             }
 

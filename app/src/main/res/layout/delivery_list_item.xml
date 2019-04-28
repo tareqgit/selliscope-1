@@ -50,7 +50,7 @@
                         android:layout_gravity="end"
                         android:layout_weight="1"
                         android:padding="10dp"
-                        android:text='@{"Order id: " + deliveryDetails.deliveryId}'
+                        android:text="@{@string/order_id_t(deliveryDetails.deliveryId)}"
                         android:fontFamily="@font/latoregular"
                         android:textAlignment="textEnd"
                         android:textColor="#000"
@@ -62,7 +62,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="10dp"
-                    android:text='@{"Order Date: " + deliveryDetails.deliveryDate}'
+                    android:text="@{@string/order_date_t(deliveryDetails.deliveryDate)}"
                     android:fontFamily="@font/latoregular"
                     android:textSize="17sp"/>
             </LinearLayout>

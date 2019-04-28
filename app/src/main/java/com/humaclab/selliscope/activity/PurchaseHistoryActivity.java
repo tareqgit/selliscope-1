@@ -40,7 +40,7 @@ public class PurchaseHistoryActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("");
         TextView toolbarTitle = findViewById(R.id.tv_toolbar_title);
-        toolbarTitle.setText("Purchase History-" + outlet.outletName);
+        toolbarTitle.setText(getString(R.string.purchase_history) + outlet.outletName);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 

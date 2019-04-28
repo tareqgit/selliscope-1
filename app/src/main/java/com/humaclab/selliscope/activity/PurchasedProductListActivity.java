@@ -31,7 +31,7 @@ public class PurchasedProductListActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("");
         TextView toolbarTitle = findViewById(R.id.tv_toolbar_title);
-        toolbarTitle.setText("Order No: " + purchaseHistoryItem.getOrderId());
+        toolbarTitle.setText(getString(R.string.order_no) + purchaseHistoryItem.getOrderId());
         setSupportActionBar(toolbar);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

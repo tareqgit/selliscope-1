@@ -33,6 +33,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="70dp"
                     android:background="?attr/colorPrimary"
+                    app:title="@string/order"
                     app:layout_collapseMode="pin"
                     app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
                     app:titleTextColor="#FFFFFF" />
@@ -100,7 +101,7 @@
             android:elevation="2dp"
             android:fontFamily="@font/latoregular"
             android:gravity="center"
-            android:hint="Search Product"
+            android:hint="@string/search_product"
             android:imeOptions="actionSearch"
             android:inputType="text"
             android:padding="8dp"

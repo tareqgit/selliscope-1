@@ -53,7 +53,7 @@ public class PerformancePaymentsActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("");
         TextView toolbarTitle = findViewById(R.id.tv_toolbar_title);
-        toolbarTitle.setText("Payments");
+        toolbarTitle.setText(getString(R.string.payment));
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -139,7 +139,7 @@ public class PerformancePaymentsActivity extends AppCompatActivity {
                         if(response.code()==200) {
                             Log.d("" + getClass().getName(), "" + response.code());
                            mBinding.ordersRecycler.setAdapter(new PerformancePaymentsAdapter(PerformancePaymentsActivity.this, response.body().getResult().getData()));
-                            mBinding.totalAmountTextView.setText("Total: "+ response.body().getGrandAmount());
+                            mBinding.totalAmountTextView.setText(getString(R.string.total)+ response.body().getGrandAmount());
                             mBinding.recyclerLoader.setRefreshing(false);
                         }else{
                             mBinding.recyclerLoader.setRefreshing(false);

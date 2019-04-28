@@ -31,10 +31,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:hint="Order ID"
+                    android:hint="@string/order_id"
                     android:fontFamily="@font/latobold"
                     android:padding="10dp"
-                    android:text="Order ID:"
+                    android:text="@string/order_id"
                     android:textColor="#000" />
 
                 <TextView
@@ -42,7 +42,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:hint="Order ID"
+                    android:hint="@string/order_id"
                     android:padding="10dp"
                     android:text='@{purchaseHistory.orderId}'
                     android:fontFamily="@font/latoregular"
@@ -53,7 +53,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center|end"
-                    android:hint="Order Date"
+                    android:hint="@string/order_date"
                     android:padding="10dp"
                     android:text='@{purchaseHistory.orderDate}'
                     android:fontFamily="@font/latobold"
@@ -76,11 +76,11 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_weight="1"
-                        android:hint="Paid"
+                        android:hint="@string/paid"
                         android:fontFamily="@font/latobold"
                         android:padding="2dp"
-                        android:text="Paid"
-                        android:textColor="#000" />
+                        android:text="@string/paid"
+                   />
 
                     <TextView
                         android:id="@+id/tv_paid"
@@ -88,12 +88,12 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center|end"
                         android:layout_weight="3"
-                        android:hint="Paid"
+                        android:hint="@string/paid"
                         android:padding="2dp"
                         android:text='@{purchaseHistory.paid}'
                         android:fontFamily="@font/latoregular"
                         android:textAlignment="textEnd"
-                        android:textColor="#000" />
+                       />
                 </LinearLayout>
 
                 <LinearLayout
@@ -107,9 +107,9 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center|end"
                         android:layout_weight="1"
-                        android:hint="Due"
+                        android:hint="@string/due"
                         android:padding="2dp"
-                        android:text="Discount:"
+                        android:text="@string/discount"
                         android:fontFamily="@font/latobold"/>
 
                     <TextView
@@ -137,10 +137,10 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center|end"
                         android:layout_weight="1"
-                        android:hint="Due"
+                        android:hint="@string/due"
                         android:fontFamily="@font/latobold"
                         android:padding="2dp"
-                        android:text="Due:" />
+                        android:text="@string/due" />
 
                     <TextView
                         android:id="@+id/tv_due"
@@ -148,7 +148,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center|end"
                         android:layout_weight="3"
-                        android:hint="Due"
+                        android:hint="@string/due"
                         android:fontFamily="@font/latoregular"
                         android:padding="2dp"
                         android:text='@{purchaseHistory.due}'

@@ -1,6 +1,7 @@
 package com.humaclab.selliscope.activity;
 
 import android.Manifest;
+import android.app.ActivityManager;
 import android.app.ProgressDialog;
 import android.app.job.JobInfo;
 import android.app.job.JobScheduler;
@@ -186,16 +187,16 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.navigation_target:
-                        toolbar.setTitle("Target Plan");
+                        toolbar.setTitle(getString(R.string.target_plan));
                         getFragment(TargetFragment.class, FRAGMENT_TAGS.Target_Fragment);
 
                         return true;
                     case R.id.navigation_dashboard:
-                        toolbar.setTitle("Dashboard");
+                        toolbar.setTitle(getString(R.string.dashboard));
                         getFragment(DashboardFragment.class, FRAGMENT_TAGS.Dashboard_Fragment);
                         return true;
                     case R.id.navigation_performance:
-                        toolbar.setTitle("Performance");
+                        toolbar.setTitle(getString(R.string.performance));
                         getFragment(PerformanceFragment.class, FRAGMENT_TAGS.Performance_Fragment);
                         return true;
                 }
@@ -319,19 +320,19 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         int timeOfDay = c.get(Calendar.HOUR_OF_DAY);
 
         if (timeOfDay >= 6 && timeOfDay < 12) {
-            welcome("Good Morning");
+            welcome(getString(R.string.good_morning));
 
         } else if (timeOfDay >= 12 && timeOfDay < 16) {
-            welcome("Good Afternoon");
+            welcome(getString(R.string.good_afternoon));
 
         } else if (timeOfDay >= 16 && timeOfDay < 21) {
-            welcome("Good Evening");
+            welcome(getString(R.string.good_evening));
 
         } else if (timeOfDay >= 21 && timeOfDay < 24) {
-            welcome("Good Night");
+            welcome(getString(R.string.good_night));
 
         } else {
-            welcome("Good Night");
+            welcome(getString(R.string.good_night));
         }
     }
 
@@ -536,6 +537,10 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     protected void onDestroy() {
+        stopService(locationServiceIntent); /*The latter may seem rather peculiar:
+         why do we want to stop exactly the service that we want to keep alive?
+          Because if we do not stop it, the service will die with our app.
+          Instead, by stopping the service, we will force the service to call its own onDestroy which will force it to recreate itself after the app is dead.*/
         super.onDestroy();
         if (sessionManager.isLoggedIn()) {
 
@@ -549,7 +554,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
 
             Timber.d("Home Activity stopped.");
-            startActivity(new Intent(getApplicationContext(), HomeActivity.class));
+         //   startActivity(new Intent(getApplicationContext(), HomeActivity.class));
         }
     }
 
@@ -823,24 +828,27 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     /**
      * Step 3: Start the Location Monitor Service
      */
+
+    Intent locationServiceIntent;
+    private LocationMonitoringService mLocationMonitoringService;
     private void startStep3() {
 
         //And it will be keep running until you close the entire application from task manager.
         //This method will executed only once.
-
+        mLocationMonitoringService=new LocationMonitoringService(context);
+        locationServiceIntent = new Intent(this, mLocationMonitoringService.getClass());
         if (!mAlreadyStartedService) {
 
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                Intent intent2 = new Intent(this, LocationMonitoringService.class);
-                startForegroundService(intent2);
+
+                startForegroundService(locationServiceIntent);
             }
 
             //mMsgView.setText("msg_location_service_started");
 
             //Start location sharing service to app server.........
-            Intent intent = new Intent(this, LocationMonitoringService.class);
-            startService(intent);
+            startService(locationServiceIntent);
             mAlreadyStartedService = true;
             //Ends................................................
 
@@ -979,6 +987,17 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                         });
             }
         }
+    }
+    private boolean isMyServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                Log.i ("isMyServiceRunning?", true+"");
+                return true;
+            }
+        }
+        Log.i ("isMyServiceRunning?", false+"");
+        return false;
     }
 
     /*    @Override

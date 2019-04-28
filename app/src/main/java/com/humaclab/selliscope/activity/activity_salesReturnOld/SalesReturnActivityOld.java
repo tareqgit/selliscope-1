@@ -41,7 +41,7 @@ public class SalesReturnActivityOld extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("");
         TextView toolbarTitle = (TextView) findViewById(R.id.tv_toolbar_title);
-        toolbarTitle.setText("Sells Return List");
+        toolbarTitle.setText(getString(R.string.sells_return_list));
         setSupportActionBar(toolbar);
 
         sessionManager = new SessionManager(SalesReturnActivityOld.this);

@@ -37,15 +37,15 @@
     <string name="remaining">অবশিষ্ট</string>
     <string name="title_activity_route">Route</string>
     <!-- Page Titles -->
-    <string name="route">Route</string>
-    <string name="products">Products</string>
+  <string name="route">যাত্রাপথ</string>
+  <string name="products">পণ্য</string>
 
     <string name="home">হোম</string>
     <string name="title_activity_add_outlet">" "</string>
     <!-- Spinner title -->
     <string name="sp_thana_title">Thana</string>
     <string name="sp_outlet_type">Type</string>
-    <string name="stock">Stock: %1$s</string>
+    <string name="stock">মজুত</string>
     <string name="dashBoard_map">ম্যাপ</string>
     <string name="dashboard_Dealer">ডিলার</string>
     <string name="dashboard_delivery">ডেলিভারি</string>
@@ -53,7 +53,7 @@
     <string name="dashboard_productList">পণ্য তালিকা</string>
     <string name="dashboard_promotionAds">নতুন অফার</string>
     <string name="btn_update_profile">প্রোফাইল আপডেট</string>
-    <string name="search_outlet">ডিলার অনুসন্ধান করুন</string>
+    <string name="search_outlet">প্রতিষ্ঠান অনুসন্ধান করুন</string>
   <string name="permission_denied_explanation">permission denied</string>
     <string name="settings">সেটিংস</string>
     <string name="txtPromotionalAdsTitle">নতুন অফার</string>
@@ -95,17 +95,18 @@
     <string name="check_in">উপস্থিতি</string>
     <string name="map">ম্যাপ</string>
     <string name="history">বিবরণ</string>
-    <string name="payment">টাকা পরিশোধ করুন</string>
+    <string name="payment">টাকা পরিশোধ</string>
     <string name="total_paid">মোট পরিশোধিত:</string>
     <string name="total_due">মোট বাকি:</string>
     <string name="Purchase_History">ক্রয় বিবরণ-</string>
     <string name="order">অর্ডার </string>
     <string name="order_id">অর্ডার আইডি</string>
+     <string name="order_id_t">অর্ডার আইডি: %s</string>
     <string name="paid">পরিশোধ</string>
     <string name="discount">ডিসকাউন্ট:</string>
     <string name="due">বাকি:</string>
     <string name="product_name">পণ্যের নাম:</string>
-    <string name="quantity">পরিমাণ: </string>
+    <string name="quantity">সংখ্যা:</string>
     <string name="rate">হার:</string>
     <string name="price">দাম:</string>
     <string name="order_no">অর্ডার নং:</string>
@@ -134,7 +135,7 @@
     <string name="type">ধরণ :</string>
     <string name="is_damaged">নষ্ট :</string>
     <string name="condition">অবস্থা :</string>
-    <string name="qty">পরিমাণ</string>
+    <string name="qty">সংখ্যা</string>
     <string name="submit_inspection">পরিদর্শন জমা দিন</string>
     <string name="product_list">পণ্য তালিকা</string>
     <string name="contactAdmin">Please contact to your admin.</string>
@@ -145,8 +146,33 @@
     <string name="deposit_slip">জমা স্লিপ</string>
     <string name="cheque_date">চেক তারিখ</string>
     <string name="performance">অর্জন</string>
+    <string name="good_morning">সুপ্রভাত</string>
+  <string name="good_afternoon">শুভ অপরাহ্ন</string>
+  <string name="good_evening">শুভ সন্ধ্যা</string>
+  <string name="good_night">শুভ রাত্রি</string>
+  <string name="target_plan">লক্ষ্য পরিকল্পনা</string>
 
-    <string-array name="paymentType">
+  <string name="outlet">প্রতিষ্ঠান</string>
+  <string name="deliver">প্রদান</string>
+  <string name="inspection">পরিদর্শন</string>
+  <string name="sales_return">বিক্রয় ফেরত</string>
+  <string name="orders">অর্ডার</string>
+  <string name="payments">আদায়/পেমেন্ট </string>
+  <string name="purchase_history">ক্রয় বিবরণ-</string>
+  <string name="offer">অফার:</string>
+  <string name="order_date">অর্ডারের তারিখ</string>
+  <string name="order_date_t">অর্ডারের তারিখ: %s</string>
+  <string name="promotional_discount">প্রচারমূলক ডিসকাউন্ট</string>
+  <string name="outlet_information">আউটলেট তথ্য</string>
+  <string name="outlet_details">আউটলেট বিবরণ</string>
+  <string name="address">ঠিকানা</string>
+  <string name="outlet_type">আউটলেট প্রকার</string>
+  <string name="sells_return_list">বিক্রয় ফেরৎ তালিকা</string>
+  <string name="toatal">মোট:</string>
+  <string name="end_date">শেষ তারিখ</string>
+  <string name="start_date">শুরুর তারিখ</string>
+
+  <string-array name="paymentType">
         <item>পরিশোধ নগদ</item>
         <item>চেক </item>
 

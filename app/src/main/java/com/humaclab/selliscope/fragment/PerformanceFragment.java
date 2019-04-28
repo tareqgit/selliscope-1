@@ -41,15 +41,15 @@ public class PerformanceFragment extends Fragment {
         View dashboardView = inflater.inflate(R.layout.fragment_performance, container, false);
         RecyclerView recyclerView = dashboardView.findViewById(R.id.rv_performance);
         performanceItems = new ArrayList<>();
-        performanceItems.add(new DashboardItem("Target", R.drawable.ic_target_performance));
+     /*   performanceItems.add(new DashboardItem("Target", R.drawable.ic_target_performance));
         performanceItems.add(new DashboardItem("Visited Outlet", R.drawable.ic_visited_outlet));
-        performanceItems.add(new DashboardItem("Orders", R.drawable.ic_order_list));
-        performanceItems.add(new DashboardItem("Payment", R.drawable.ic_payments));
-        performanceItems.add(new DashboardItem("Sales Return Request", R.drawable.ic_return));
+     */   performanceItems.add(new DashboardItem(getString(R.string.orders), R.drawable.ic_order_list));
+        performanceItems.add(new DashboardItem(getString(R.string.payments), R.drawable.ic_payments));
+       /* performanceItems.add(new DashboardItem("Sales Return Request", R.drawable.ic_return));
         performanceItems.add(new DashboardItem("Commission", R.drawable.ic_commission));
         performanceItems.add(new DashboardItem("New Outlet", R.drawable.ic_outlet));
         performanceItems.add(new DashboardItem("Attendance", R.drawable.ic_attendence));
-
+*/
         gridLayoutManager = new GridLayoutManager(activity, itemNumber);
         int spacingInPixels = getResources().getDimensionPixelSize(R.dimen.grid_layout_margin);
 
@@ -65,16 +65,12 @@ public class PerformanceFragment extends Fragment {
                             @Override
                             public void onItemClick(View view, int position) {
                                 switch (position) {
+
                                     case 0: {
-                                        getActivity().startActivity(new Intent(getActivity(),
-                                                RouteActivity.class));
-                                        break;
-                                    }
-                                    case 2: {
                                         getActivity().startActivity(new Intent(getActivity(), PerformanceOrdersActivity.class));
                                         break;
                                     }
-                                    case 3: {
+                                    case 1: {
                                         getActivity().startActivity(new Intent(getActivity(), PerformancePaymentsActivity.class));
                                         break;
                                     }

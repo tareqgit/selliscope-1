@@ -96,7 +96,8 @@
     <string name="total_due">Total Due:</string>
     <string name="Purchase_History">Purchase History-</string>
     <string name="order">Order</string>
-    <string name="order_id">Order ID</string>
+    <string name="order_id">Order ID:</string>
+    <string name="order_id_t">Order ID: %s</string>
     <string name="paid">Paid</string>
     <string name="discount">Discount:</string>
     <string name="due">Due:</string>
@@ -142,6 +143,32 @@
     <string name="deposit_slip">Deposit Slip</string>
     <string name="cheque_date">Cheque Date</string>
     <string name="performance">performance</string>
+    <string name="good_morning">Good Morning</string>
+    <string name="good_afternoon">Good Afternoon</string>
+    <string name="good_evening">Good Evening</string>
+    <string name="good_night">Good Night</string>
+    <string name="target_plan">Target Plan</string>
+
+    <string name="outlet">Outlet</string>
+    <string name="deliver">Deliver</string>
+    <string name="inspection">Inspection</string>
+    <string name="sales_return">SalesReturn</string>
+    <string name="orders">Orders</string>
+    <string name="payments">Payment</string>
+    <string name="purchase_history">Purchase History-</string>
+    <string name="offer">Offer:</string>
+    <string name="order_date">Order Date</string>
+    <string name="order_date_t">Order Date: %s</string>
+    <string name="promotional_discount">Promotional Discount</string>
+    <string name="outlet_information">Outlet Information</string>
+    <string name="outlet_details">Outlet Details</string>
+    <string name="address">Address</string>
+    <string name="outlet_type">Outlet Type</string>
+    <string name="sells_return_list">Sells Return List</string>
+    <string name="toatal">Total:</string>
+    <string name="end_date">End Date</string>
+    <string name="start_date">Start Date</string>
+
 
     <string-array name="paymentType">
         <item>Cash</item>

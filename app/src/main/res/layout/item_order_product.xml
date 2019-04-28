@@ -111,15 +111,16 @@
             <ImageView
                 android:id="@+id/iv_product_image"
                 android:layout_width="0dp"
-                android:layout_height="140dp"
+                android:layout_height="0dp"
                 android:layout_gravity="center"
                 android:adjustViewBounds="true"
                 android:scaleType="centerCrop"
+                app:layout_constraintDimensionRatio="w,3:4"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/ic_promotion"
-                tools:srcCompat="@drawable/moss_gradient2" />
+                tools:srcCompat="@drawable/ic_inspection" />
 
             <ImageView
                 android:id="@+id/iv_remove_product"

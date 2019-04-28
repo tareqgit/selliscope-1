@@ -63,6 +63,7 @@ import com.humaclab.selliscope.utils.SessionManager;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Locale;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -145,8 +146,8 @@ public class OutletMapActivity extends AppCompatActivity implements OnMapReadyCa
                             if (locationResult.getStatus().isSuccess()) {
                                 Location location = locationResult.getLocation();
                                 if (mMap != null) {
-                                    LatLng currentLocation = new LatLng(Double.parseDouble(String.format("%.05f", location.getLatitude())),
-                                            Double.parseDouble(String.format("%.05f", location.getLongitude())));
+                                    LatLng currentLocation = new LatLng(Double.parseDouble(String.format(Locale.US,"%.05f", location.getLatitude())),
+                                            Double.parseDouble(String.format(Locale.US,"%.05f", location.getLongitude())));
 
 
                                     LatLng outletLocation = new LatLng(getIntent().getDoubleExtra("outletLat",0),

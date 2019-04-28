@@ -111,13 +111,17 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     private static final int JOB_ID = 101;
     private JobScheduler jobScheduler;
     private JobInfo jobInfo;
-
+   private String manufacturer;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
         //For Bangla
         LoadLocale();
         setContentView(R.layout.activity_home);
+
+        manufacturer = android.os.Build.MANUFACTURER;
         //registerReceiver();
         sendLocationDataService = new SendLocationDataService();
 
@@ -554,7 +558,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
 
             Timber.d("Home Activity stopped.");
-         //   startActivity(new Intent(getApplicationContext(), HomeActivity.class));
+        //as xiomi kills foreground service
+         if(manufacturer.equals("Xiaomi"))   startActivity(new Intent(getApplicationContext(), HomeActivity.class));
         }
     }
 
@@ -565,6 +570,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         //Phone Default Language is English
         Locale localeEN = new Locale("en");
         Locale.setDefault(localeEN);
+
         Configuration config = new Configuration();
         config.locale = locale;
         getBaseContext().getResources().updateConfiguration(config, getBaseContext().getResources().getDisplayMetrics());

@@ -47,6 +47,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -221,8 +222,8 @@ public class LocationMonitoringService extends Service implements
             //sendMessageToUI(String.valueOf(location.getLatitude()), String.valueOf(location.getLongitude()));
             //Toast.makeText(this, ""+String.valueOf(location.getLatitude())+" "+String.valueOf(location.getLongitude()), Toast.LENGTH_SHORT).show();
 
-            double latitude = Double.parseDouble(String.format("%.05f", location.getLatitude()));
-            double longitude = Double.parseDouble(String.format("%.05f", location.getLongitude()));
+            double latitude = Double.parseDouble(String.format(Locale.US,"%.05f", location.getLatitude()));
+            double longitude = Double.parseDouble(String.format(Locale.US,"%.05f", location.getLongitude()));
 
             Timber.d("Latitude: " + latitude + " Longitude: " + longitude);
             String lastTime = prefs.getString("lasttime", "");

@@ -51,6 +51,7 @@ import com.humaclab.selliscope.utils.SessionManager;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Locale;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -131,8 +132,12 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
                             if (locationResult.getStatus().isSuccess()) {
                                 Location location = locationResult.getLocation();
                                 if (mMap != null) {
-                                    LatLng currentLocation = new LatLng(Double.parseDouble(String.format("%.05f", location.getLatitude())),
-                                            Double.parseDouble(String.format("%.05f", location.getLongitude())));
+                                    Log.d("tareq_test" , ""+location.getLatitude());
+                                            Double lat=Double.parseDouble(String.format(Locale.US,"%.05f",  location.getLatitude()));
+                                            Double lon= Double.parseDouble(String.format(Locale.US,"%.05f", location.getLongitude()));
+                               Log.d("tareq_test" , ""+lat+" - "+lon);
+                                    LatLng currentLocation = new LatLng(lat,
+                                           lon);
                                     mMap.addMarker(new MarkerOptions().position(currentLocation)
                                             .title("You are here!")
                                             .icon(BitmapDescriptorFactory.fromResource(

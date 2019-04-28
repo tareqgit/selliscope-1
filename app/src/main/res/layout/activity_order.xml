@@ -54,6 +54,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:popupBackground="@color/colorPrimaryDark"
                         app:layout_constraintEnd_toStartOf="@+id/sp_product_brand"
                         app:layout_constraintHorizontal_bias="0.53"
                         app:layout_constraintStart_toStartOf="parent"
@@ -65,6 +66,8 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+
+                        android:popupBackground="@color/colorPrimaryDark"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.5"
                         app:layout_constraintStart_toEndOf="@+id/sp_product_category"
@@ -76,6 +79,8 @@
                         android:layout_width="2dp"
                         android:layout_height="0dp"
 
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="8dp"
                         android:background="@drawable/moss_back"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="@+id/sp_product_category"

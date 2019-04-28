@@ -125,13 +125,13 @@ public class OrderActivity extends AppCompatActivity implements OrderProductRecy
     private void getCategory() {
         List<Category> categories = databaseHandler.getCategory();
         categoryName.clear();
-        categoryName.add("Select Category");
+        categoryName.add("Category");
         categoryID.add(0);
         for (Category result : categories) {
             categoryName.add(result.getName());
             categoryID.add(Integer.valueOf(result.getId()));
         }
-        binding.spProductCategory.setAdapter(new ArrayAdapter<>(context, android.R.layout.simple_list_item_1, categoryName));
+        binding.spProductCategory.setAdapter(new ArrayAdapter<>(context, R.layout.color_spinner_layout, categoryName));
         binding.spProductCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -152,13 +152,15 @@ public class OrderActivity extends AppCompatActivity implements OrderProductRecy
     private void getBrand() {
         List<Brand> brands = databaseHandler.getBrand();
         brandName.clear();
-        brandName.add("Select Brand");
+        brandName.add("Brand");
         brandID.add(0);
         for (Brand result : brands) {
             brandName.add(result.getName());
             brandID.add(Integer.valueOf(result.getId()));
         }
-        binding.spProductBrand.setAdapter(new ArrayAdapter<>(context, android.R.layout.simple_list_item_1, brandName));
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(context, R.layout.color_spinner_layout, brandName);
+       // ArrayAdapter adapter= (ArrayAdapter) ArrayAdapter.createFromResource(this,brandName,R.layout.color_spinner_layout);
+        binding.spProductBrand.setAdapter(adapter);
         binding.spProductBrand.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {

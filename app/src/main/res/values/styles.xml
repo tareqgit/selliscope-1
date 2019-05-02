@@ -7,6 +7,7 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:fontFamily">@font/latobold</item>
+        <item name="colorControlNormal">@color/white</item>
 
     </style>
 
@@ -39,4 +40,11 @@
         <item name="android:textColor">@color/white</item>
         <item name="android:fontFamily">@font/latobold</item>
     </style>
+
+    <style name="TabTextAppearance" parent="TextAppearance.Design.Tab">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">#fff</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
 </resources>

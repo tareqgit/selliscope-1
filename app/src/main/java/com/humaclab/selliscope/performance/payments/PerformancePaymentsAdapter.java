@@ -37,7 +37,11 @@ public class PerformancePaymentsAdapter extends RecyclerView.Adapter<Performance
     @NonNull
     @Override
     public TViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view= LayoutInflater.from(mContext).inflate(R.layout.activity_performance_payments_model,parent,false);
+        View view;
+
+        view = LayoutInflater.from(mContext).inflate(R.layout.activity_performance_payments_model,parent,false);
+
+
         return new TViewHolder(view);
     }
 

@@ -35,6 +35,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
+
         <uses-library
             android:name="org.apache.http.legacy"
             android:required="false" /> <!-- For debug APK -->
@@ -88,15 +89,13 @@
                     tools:ignore="BatteryLife" />
             </intent-filter>
         </receiver> <!-- Services and Receivers -->
-
-
-
         <activity
             android:name=".activity.SplashScreenActivity"
             android:theme="@style/SplashScreenTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-                <action android:name="android.intent.action.VIEW"/>
+                <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -105,7 +104,7 @@
             android:name=".activity.HomeActivity"
             android:configChanges="orientation|screenSize" />
         <activity android:name=".activity.RouteActivity" />
-        <activity android:name=".activity.OutletMapActivity"/>
+        <activity android:name=".activity.OutletMapActivity" />
         <activity android:name=".activity.OutletActivity" />
         <activity android:name=".activity.AddOutletActivity" />
         <activity android:name=".activity.OutletDetailsActivity" />
@@ -133,6 +132,10 @@
         <activity android:name=".activity.PurchasedProductListActivity" />
         <activity android:name=".activity.SettingsActivity" />
         <activity android:name=".activity.ProfileActivity" /> <!-- for ols sellisreturn Model -->
+
+        <activity android:name=".performance.leaderboard.LeaderBoardActivity"/>
+
+
         <activity
             android:name=".activity.activity_salesReturnOld.SalesReturnDetailsActivityOld"
             android:screenOrientation="landscape" />
@@ -142,21 +145,22 @@
             android:name=".LocationMonitoringService"
             android:enabled="true" />
 
-        <receiver android:name=".service.LocationServiceRestarterBroadcastReceiver"
+        <receiver
+            android:name=".service.LocationServiceRestarterBroadcastReceiver"
             android:enabled="true"
-                android:exported="true"  android:label="RestartServiceWhenStopped">
-        </receiver>
-      <activity android:name=".activity.SalesReturnHistoryActivity" />
+            android:exported="true"
+            android:label="RestartServiceWhenStopped"></receiver>
+
+        <activity android:name=".activity.SalesReturnHistoryActivity" />
 
         <service
             android:name=".job_sheduler.MyJobScheduler"
             android:exported="true"
             android:permission="android.permission.BIND_JOB_SERVICE" />
 
-        <activity android:name=".performance.payments.PerformancePaymentsActivity"></activity>
+        <activity android:name=".performance.payments.PerformancePaymentsActivity" />
         <activity android:name=".performance.orders.PerformanceOrdersProductsActivity" />
         <activity android:name=".performance.orders.PerformanceOrdersActivity" />
-
     </application>
 
 </manifest>

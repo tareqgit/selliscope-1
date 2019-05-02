@@ -171,8 +171,9 @@
   <string name="toatal">মোট:</string>
   <string name="end_date">শেষ তারিখ</string>
   <string name="start_date">শুরুর তারিখ</string>
+    <string name="leaderboard">লিডারবোর্ড</string>
 
-  <string-array name="paymentType">
+    <string-array name="paymentType">
         <item>পরিশোধ নগদ</item>
         <item>চেক </item>
 

@@ -6,6 +6,7 @@
 
 package com.humaclab.selliscope.performance.leaderboard.fragments;
 
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -18,7 +19,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.humaclab.selliscope.R;
+import com.humaclab.selliscope.databinding.PerformenceLeaderboardTopCollecterFragmentBinding;
 import com.humaclab.selliscope.model.performance.leaderboard_model.TopCollectionerModel;
 import com.humaclab.selliscope.performance.leaderboard.adapters.TopCollectionerAdapter;
 
@@ -69,24 +73,43 @@ public class TopCollectionerFragment extends Fragment {
         setHasOptionsMenu(true);
     }
 
+    PerformenceLeaderboardTopCollecterFragmentBinding mBinding;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.performence_leaderboard_top_collecter_fragment, container, false);
+       mBinding = DataBindingUtil.inflate(inflater,R.layout.performence_leaderboard_top_collecter_fragment, container, false);
+        View view = mBinding.getRoot();
         onInit(view);
         return view;
     }
 
     private void onInit(View view) {
-        mSwipeRefreshLayout = view.findViewById(R.id.recycler_loader);
-        mRecyclerView = view.findViewById(R.id.recyclerView);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mRecyclerView.setHasFixedSize(true);
+
+         mBinding.recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mBinding.recyclerView.setHasFixedSize(true);
         Collections.sort(datum, (o1, o2) -> (int) (o1.getAmount()-o2.getAmount()));
 
-        mRecyclerView.setAdapter(new TopCollectionerAdapter(getActivity(), datum, sort_icon));
+        mBinding.recyclerView.setAdapter(new TopCollectionerAdapter(getActivity(), datum, sort_icon));
 
-        mSwipeRefreshLayout.setRefreshing(true);
+        Glide.with(mBinding.imageViewFirst)
+                .load(R.drawable.default_profile_pic)
+                .transform(new CircleCrop())
+
+                .into(mBinding.imageViewFirst);
+
+        Glide.with(mBinding.imageViewSecond)
+                .load(R.drawable.default_profile_pic)
+                .transform(new CircleCrop())
+
+                .into(mBinding.imageViewSecond);
+
+        Glide.with(mBinding.imageViewThird)
+                .load(R.drawable.default_profile_pic)
+                .transform(new CircleCrop())
+
+                .into(mBinding.imageViewThird);
+
+
     }
 
 

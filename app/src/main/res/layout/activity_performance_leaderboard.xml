@@ -43,7 +43,9 @@
         android:id="@+id/content_fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="65dp">
+        android:layout_marginTop="45dp"
+
+        android:background="@color/white_back">
 
     </FrameLayout>
 
@@ -56,6 +58,8 @@
         android:layout_marginTop="46dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
+
+        android:translationZ="3dp"
         android:background="@drawable/tab_layout_background"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

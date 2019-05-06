@@ -2,6 +2,7 @@ package com.humaclab.selliscope.performance.leaderboard.adapters;
 
 import android.content.Context;
 import android.databinding.DataBindingUtil;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -9,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.humaclab.selliscope.BR;
 import com.humaclab.selliscope.R;
 import com.humaclab.selliscope.databinding.PerformenceLeaderboardTopSellerFragmentModelBinding;
@@ -52,10 +54,18 @@ int pos;
             pos=mDummies.size()-i ;
         else
             pos=i+1;
-        tViewHolder.mBinding.textViewPos.setText(MessageFormat.format("Pos: {0}",  pos));
+        tViewHolder.mBinding.textViewPos.setText(MessageFormat.format("{0}.",  pos));
 
+        if(i==2){
+            tViewHolder.mBinding.body.setBackgroundColor(Color.parseColor("#E1F5FE"));
+        }else if(i%2==0){
+            tViewHolder.mBinding.body.setBackgroundColor(Color.parseColor("#F5F5F5"));
+        }
+        else{
+            tViewHolder.mBinding.body.setBackgroundColor(Color.parseColor("#FFFFFF"));
+        }
 
-        switch (pos){
+      /*  switch (pos){
             case 1:
                 tViewHolder.mBinding.imageView7.setImageResource(R.drawable.ic_gold_medal_1);
                 tViewHolder.mBinding.imageView7.setVisibility(View.VISIBLE);
@@ -75,10 +85,12 @@ int pos;
                 tViewHolder.mBinding.imageView7.setVisibility(View.GONE);
                 break;
 
-        }
+        }*/
         Glide.with(mContext)
-                .load(R.drawable.moss_gradient) //topSellerModel.getImage_url()
-                .placeholder(R.drawable.moss_gradient)
+                .load(R.drawable.default_profile_pic) //topSellerModel.getImage_url()
+                .placeholder(R.drawable.default_profile_pic)
+                .centerCrop()
+                .transform(new CircleCrop())
                 .into(tViewHolder.mBinding.imageView6);
 
     }

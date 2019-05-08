@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/splash_and_login_background">
 
     <EditText
@@ -100,7 +101,28 @@
         android:textColor="#ddd"
         android:textSize="16sp" />
 
-   <RadioGroup
+    <lib.kingja.switchbutton.SwitchMultiButton
+        android:id="@+id/swith_language"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/imageView"
+        android:layout_alignEnd="@+id/imageView"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="-13dp"
+
+        android:layout_marginTop="7dp"
+        android:layout_marginEnd="-14dp"
+
+        android:padding="8dp"
+        app:disableColor="@color/background_shimmer"
+        app:selectedColor="#03A9F4"
+        app:selectedTab="0"
+        app:strokeRadius="8dp"
+        app:strokeWidth="2dp"
+        app:switchTabs="@array/my_lang"
+        app:textSize="14sp" />
+
+  <!-- <RadioGroup
         android:id="@+id/rg_language"
         android:layout_width="250dp"
         android:layout_height="30dp"
@@ -141,5 +163,5 @@
             android:fontFamily="@font/latoregular"
             android:textColor="@drawable/button_text"
             android:textStyle="bold" />
-    </RadioGroup>
+    </RadioGroup>-->
 </RelativeLayout>

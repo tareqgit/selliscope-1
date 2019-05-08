@@ -66,15 +66,14 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center">
 
-                    <de.hdodenhof.circleimageview.CircleImageView
+                    <ImageView
                         android:id="@+id/iv_add_outlet_image"
                         android:layout_width="104dp"
                         android:layout_height="104dp"
                         android:layout_gravity="center"
                         android:layout_margin="10dp"
                         android:src="@drawable/app_logo"
-                        app:civ_border_color="#000"
-                        app:civ_border_width="1dp" />
+                        />
 
                 </android.support.design.widget.CoordinatorLayout>
 

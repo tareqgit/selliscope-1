@@ -94,9 +94,9 @@ dependencies {
     //added progourd exception
     //Shimmer effect
     implementation 'com.facebook.shimmer:shimmer:0.3.0'
-    implementation 'de.hdodenhof:circleimageview:2.2.0'
+
     implementation 'uk.co.chrisjenx:calligraphy:2.2.0'
-    implementation 'com.github.esafirm.android-image-picker:imagepicker:1.12.0'
+
     implementation('io.nlopez.smartlocation:library:3.3.2') {
         transitive = false
     }
@@ -111,5 +111,7 @@ dependencies {
     //for pojo
     implementation 'org.glassfish:javax.annotation:10.0-b28'
     implementation 'com.android.support:support-v4:28.0.0'
+
+    implementation 'lib.kingja.switchbutton:switchbutton:1.1.8'
 }
 apply plugin: 'com.google.gms.google-services'

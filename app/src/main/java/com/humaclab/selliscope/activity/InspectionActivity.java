@@ -70,50 +70,47 @@ public class InspectionActivity extends AppCompatActivity {
             }
         });
 
-        binding.btnSubmitInspection.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                pd.setMessage("Submitting your inspection......");
-                pd.setCancelable(false);
-                pd.show();
+        binding.btnSubmitInspection.setOnClickListener(v -> {
+            pd.setMessage("Submitting your inspection......");
+            pd.setCancelable(false);
+            pd.show();
 
-                InspectionResponse.Inspection inspection = new InspectionResponse.Inspection();
-                inspection.image = promotionImage;
-                inspection.condition = binding.spCondition.getSelectedItem().toString();
-                inspection.iDamaged = binding.spIsDamaged.getSelectedItem().toString().equals("Yes");
-                inspection.outletID = outletIDs.get(binding.spOutlets.getSelectedItemPosition());
-                try {
-                    inspection.quantity = Integer.parseInt(binding.etQty.getText().toString());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                inspection.promotionType = binding.spPromotionType.getSelectedItem().toString();
-
-                SessionManager sessionManager = new SessionManager(InspectionActivity.this);
-                SelliscopeApiEndpointInterface apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(),
-                        sessionManager.getUserPassword(), false).create(SelliscopeApiEndpointInterface.class);
-                Call<InspectionResponse> call = apiService.inspectOutlet(inspection);
-                call.enqueue(new Callback<InspectionResponse>() {
-                    @Override
-                    public void onResponse(Call<InspectionResponse> call, Response<InspectionResponse> response) {
-                        pd.dismiss();
-                        if (response.code() == 201) {
-                            Toast.makeText(InspectionActivity.this, "Inspection sent successfully", Toast.LENGTH_SHORT).show();
-                            finish();
-                        } else if (response.code() == 401) {
-                            Toast.makeText(InspectionActivity.this, "Invalid Response from server.", Toast.LENGTH_SHORT).show();
-                        } else {
-                            Toast.makeText(InspectionActivity.this, "Server Error! Try Again Later!", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<InspectionResponse> call, Throwable t) {
-                        pd.dismiss();
-                        t.printStackTrace();
-                    }
-                });
+            InspectionResponse.Inspection inspection = new InspectionResponse.Inspection();
+            inspection.image = promotionImage;
+            inspection.condition = binding.spCondition.getSelectedItem().toString();
+            inspection.iDamaged = binding.spIsDamaged.getSelectedItem().toString().equals("Yes");
+            inspection.outletID = outletIDs.get(binding.spOutlets.getSelectedItemPosition());
+            try {
+                inspection.quantity = Integer.parseInt(binding.etQty.getText().toString());
+            } catch (Exception e) {
+                e.printStackTrace();
             }
+            inspection.promotionType = binding.spPromotionType.getSelectedItem().toString();
+
+            SessionManager sessionManager = new SessionManager(InspectionActivity.this);
+            SelliscopeApiEndpointInterface apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(),
+                    sessionManager.getUserPassword(), false).create(SelliscopeApiEndpointInterface.class);
+            Call<InspectionResponse> call = apiService.inspectOutlet(inspection);
+            call.enqueue(new Callback<InspectionResponse>() {
+                @Override
+                public void onResponse(Call<InspectionResponse> call, Response<InspectionResponse> response) {
+                    pd.dismiss();
+                    if (response.code() == 201) {
+                        Toast.makeText(InspectionActivity.this, "Inspection sent successfully", Toast.LENGTH_SHORT).show();
+                        finish();
+                    } else if (response.code() == 401) {
+                        Toast.makeText(InspectionActivity.this, "Invalid Response from server.", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(InspectionActivity.this, "Server Error! Try Again Later!", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<InspectionResponse> call, Throwable t) {
+                    pd.dismiss();
+                    t.printStackTrace();
+                }
+            });
         });
     }
 

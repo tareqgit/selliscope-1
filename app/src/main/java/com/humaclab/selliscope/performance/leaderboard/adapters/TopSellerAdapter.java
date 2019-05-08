@@ -56,6 +56,7 @@ int pos;
             pos=i+1;
         tViewHolder.mBinding.textViewPos.setText(MessageFormat.format("{0}.",  pos));
 
+        //color every even card background and user background
         if(i==2){
             tViewHolder.mBinding.body.setBackgroundColor(Color.parseColor("#E1F5FE"));
         }else if(i%2==0){

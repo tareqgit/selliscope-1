@@ -179,7 +179,17 @@
 
     </string-array>
 
-    <string-array name="returnCause">
+  <string-array name="gender">
+    <item>Male</item>
+    <item>Female</item>
+  </string-array>
+
+  <string-array name="my_lang">
+    <item>Eng</item>
+    <item>বাংলা</item>
+  </string-array>
+
+  <string-array name="returnCause">
         <item>Select cause of return</item>
         <item>Damaged product</item>
         <item>Change of product (For example, returning 1 Litre coke bottle for ordering 2.25 liter coke bottle)</item>

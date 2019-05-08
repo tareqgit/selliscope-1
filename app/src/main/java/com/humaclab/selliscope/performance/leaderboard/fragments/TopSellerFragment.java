@@ -42,7 +42,7 @@ import java.util.List;
 public class TopSellerFragment extends Fragment {
 
 
-    public SwipeRefreshLayout mSwipeRefreshLayout;
+
     public RecyclerView mRecyclerView;
 
 
@@ -80,12 +80,12 @@ public class TopSellerFragment extends Fragment {
 
     private void onInit(View view) {
 
-
-      mBinding.recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mBinding.recyclerView.setHasFixedSize(true);
+    mRecyclerView=  mBinding.recyclerView;
+    mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mRecyclerView.setHasFixedSize(true);
         Collections.sort(datum, (o1, o2) -> (int) (o1.getAmount()-o2.getAmount())); //sorting array by amount
 
-        mBinding.recyclerView.setAdapter( new TopSellerAdapter(getActivity(), datum, sort_icon));
+        mRecyclerView.setAdapter( new TopSellerAdapter(getActivity(), datum, sort_icon));
 
 
 

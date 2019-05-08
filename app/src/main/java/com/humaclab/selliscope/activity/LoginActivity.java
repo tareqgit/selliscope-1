@@ -33,13 +33,14 @@ import com.humaclab.selliscope.utils.SessionManager;
 import java.io.IOException;
 import java.util.Locale;
 
+import lib.kingja.switchbutton.SwitchMultiButton;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import timber.log.Timber;
 
-public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
+public class LoginActivity extends AppCompatActivity  {
     private TextView forgotPassword;
     private EditText email, password;
     private Button signIn;
@@ -47,9 +48,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private SessionManager sessionManager;
     private ProgressBar loginProgresssBar;
     //For Bangla
+    private SwitchMultiButton mSwitchMultiButton;
     private RadioGroup rg_language;
     private RadioButton rbEnglish, rbBangla;
     final String KEY_SAVED_RADIO_BUTTON_INDEX = "SAVED_RADIO_BUTTON_INDEX";
+
+
 
     public final static boolean isValidEmail(CharSequence target) {
         if (target == null) {
@@ -66,14 +70,36 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         LoadLocale();
         setContentView(R.layout.activity_login);
         //For Bangla
-        rg_language = findViewById(R.id.rg_language);
-        rg_language.check(R.id.rbEnglish);
-        rbBangla = findViewById(R.id.rbBangle);
-        rbEnglish = findViewById(R.id.rbEnglish);
-        rbBangla.setOnClickListener(this);
-        rbEnglish.setOnClickListener(this);
+        //rg_language = findViewById(R.id.rg_language);
+        mSwitchMultiButton = findViewById(R.id.swith_language);
 
+        //rg_language.check(R.id.rbEnglish);
+
+        mSwitchMultiButton.setSelectedTab(0);
+      //  rbBangla = findViewById(R.id.rbBangle);
+      //  rbEnglish = findViewById(R.id.rbEnglish);
+       // rbBangla.setOnClickListener(this);
+       // rbEnglish.setOnClickListener(this);
         LoadPreferences();
+
+        mSwitchMultiButton.setOnSwitchListener(new SwitchMultiButton.OnSwitchListener() {
+            @Override
+            public void onSwitch(int position, String tabText) {
+                if (position==1) {
+                    //Do something
+                    SavePreferences(KEY_SAVED_RADIO_BUTTON_INDEX, 1);
+                    setLocale("bn");
+                    recreate();
+
+                } else if (position==0) {
+                    SavePreferences(KEY_SAVED_RADIO_BUTTON_INDEX, 0);
+                    setLocale("en");
+                    recreate();
+                }
+            }
+        });
+
+
         checkPermission();
 
 
@@ -216,7 +242,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         AccessPermission.accessPermission(LoginActivity.this);
     }
 
-    //For Bangla
+/*    //For Bangla
     @Override
     public void onClick(View v) {
         int id = v.getId();
@@ -234,7 +260,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
 
 
-    }
+    }*/
 
     private void SavePreferences(String key, int value) {
         SharedPreferences sharedPreferences = getSharedPreferences("MY_SHARED_PREF", MODE_PRIVATE);
@@ -245,9 +271,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private void LoadPreferences() {
         SharedPreferences sharedPreferences = getSharedPreferences("MY_SHARED_PREF", MODE_PRIVATE);
-        int savedRadioIndex = sharedPreferences.getInt(KEY_SAVED_RADIO_BUTTON_INDEX, 1);
-        RadioButton savedCheckedRadioButton = (RadioButton) rg_language.getChildAt(savedRadioIndex);
-        savedCheckedRadioButton.setChecked(true);
+        int savedRadioIndex = sharedPreferences.getInt(KEY_SAVED_RADIO_BUTTON_INDEX, 0);
+        Toast.makeText(this, "ind"+ savedRadioIndex, Toast.LENGTH_SHORT).show();
+      /*  RadioButton savedCheckedRadioButton = (RadioButton) rg_language.getChildAt(savedRadioIndex);
+        savedCheckedRadioButton.setChecked(true);*/
+        mSwitchMultiButton.setSelectedTab(savedRadioIndex);
+
     }
 
     //Set Language

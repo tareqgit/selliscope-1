@@ -36,7 +36,7 @@ import java.util.List;
  * Created by mtita on 30,April,2019.
  */
 public class TopCollectionerFragment extends Fragment {
-    public SwipeRefreshLayout mSwipeRefreshLayout;
+
     public RecyclerView mRecyclerView;
 
     public static List<TopCollectionerModel> datum = new ArrayList<>(Arrays.asList(
@@ -84,12 +84,12 @@ public class TopCollectionerFragment extends Fragment {
     }
 
     private void onInit(View view) {
-
-         mBinding.recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mBinding.recyclerView.setHasFixedSize(true);
+        mRecyclerView=mBinding.recyclerView;
+         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mRecyclerView.setHasFixedSize(true);
         Collections.sort(datum, (o1, o2) -> (int) (o1.getAmount()-o2.getAmount()));
 
-        mBinding.recyclerView.setAdapter(new TopCollectionerAdapter(getActivity(), datum, sort_icon));
+        mRecyclerView.setAdapter(new TopCollectionerAdapter(getActivity(), datum, sort_icon));
 
         Glide.with(mBinding.imageViewFirst)
                 .load(R.drawable.default_profile_pic)

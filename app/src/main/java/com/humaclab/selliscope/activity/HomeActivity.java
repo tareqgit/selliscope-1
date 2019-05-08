@@ -46,6 +46,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.CustomEvent;
 import com.google.android.gms.common.ConnectionResult;
@@ -225,13 +226,20 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         NavigationView navigationView = findViewById(R.id.nav_view);
         TextView userName = navigationView.getHeaderView(0)
                 .findViewById(R.id.tv_user_name);
+
+
+
         ImageView profilePicture = navigationView.getHeaderView(0)
                 .findViewById(R.id.iv_profile_pic);
+
         userName.setText(sessionManager.getUserDetails().get("userName"));
         Glide.with(this)
                 .load(sessionManager.getUserDetails().get("profilePictureUrl"))
                 .thumbnail(0.1f)
-                .placeholder(R.drawable.default_profile_pic)
+
+                .placeholder(R.drawable.ic_employee)
+                .centerCrop()
+                .transform(new CircleCrop())
                 .into(profilePicture);
         navigationView.setNavigationItemSelectedListener(this);
         TextView tv_selliscope_version = navigationView.getHeaderView(0).findViewById(R.id.tv_selliscope_version);
@@ -242,31 +250,27 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
         //loading Data into background
         schedulerForMinute = Executors.newSingleThreadScheduledExecutor();
-        schedulerForMinute.scheduleAtFixedRate(new Runnable() {
-            public void run() {
-               /* runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-               */
-                Log.v("Running threads", "Thread running in background for updating products and outlets");
-                loadLocalIntoBackground.loadOutlet(false);
-                /*    }
-                });*/
-            }
+        schedulerForMinute.scheduleAtFixedRate(() -> {
+           /* runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+           */
+            Log.v("Running threads", "Thread running in background for updating products and outlets");
+            loadLocalIntoBackground.loadOutlet(false);
+            /*    }
+            });*/
         }, 0, 1, TimeUnit.MINUTES);
         schedulerForHour = Executors.newSingleThreadScheduledExecutor();
-        schedulerForHour.scheduleAtFixedRate(new Runnable() {
-            public void run() {
-              /*  runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-              */
-                Log.v("Running threads", "Thread running in background for updating products and outlets after 30 Minutes interval");
-                loadLocalIntoBackground.loadProduct();
-                /*    }
-                });
+        schedulerForHour.scheduleAtFixedRate(() -> {
+          /*  runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+          */
+            Log.v("Running threads", "Thread running in background for updating products and outlets after 30 Minutes interval");
+            loadLocalIntoBackground.loadProduct();
+            /*    }
+            });
 */
-            }
         }, 30, 30, TimeUnit.MINUTES);
         //loading Data into background
 

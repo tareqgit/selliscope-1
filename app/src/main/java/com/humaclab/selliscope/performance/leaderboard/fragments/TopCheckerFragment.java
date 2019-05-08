@@ -6,6 +6,7 @@
 
 package com.humaclab.selliscope.performance.leaderboard.fragments;
 
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -18,7 +19,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.humaclab.selliscope.R;
+import com.humaclab.selliscope.databinding.PerformanceLeaderboardTopCheckerFragmentBinding;
 import com.humaclab.selliscope.model.performance.leaderboard_model.TopCheckerModel;
 import com.humaclab.selliscope.performance.leaderboard.adapters.TopCheckerAdapter;
 
@@ -32,8 +36,8 @@ import java.util.List;
  * Created by mtita on 30,April,2019.
  */
 public class TopCheckerFragment extends Fragment {
-    public SwipeRefreshLayout mSwipeRefreshLayout;
-    public RecyclerView mRecyclerView;
+
+    private RecyclerView mRecyclerView;
     public static List<TopCheckerModel> datum = new ArrayList<>(Arrays.asList(
             new TopCheckerModel("blah","Tareq" , 200000),
             new TopCheckerModel("blah","Rakib" , 200000),
@@ -67,23 +71,42 @@ public class TopCheckerFragment extends Fragment {
         setHasOptionsMenu(true);
     }
 
+    PerformanceLeaderboardTopCheckerFragmentBinding mBinding;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.performance_leaderboard_top_checker_fragment, container, false);
-        onInit(view);
+      mBinding= DataBindingUtil.inflate(inflater,R.layout.performance_leaderboard_top_checker_fragment, container, false);
+        View view = mBinding.getRoot();
+         onInit(view);
         return view;
     }
 
     private void onInit(View view) {
-        mSwipeRefreshLayout = view.findViewById(R.id.recycler_loader);
-        mRecyclerView = view.findViewById(R.id.recyclerView);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        mRecyclerView=mBinding.recyclerView;
+       mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setHasFixedSize(true);
         Collections.sort(datum, (o1, o2) -> (int) (o1.getNo_outlet()-o2.getNo_outlet()));
         mRecyclerView.setAdapter( new TopCheckerAdapter(getActivity(), datum, sort_icon));
 
-        mSwipeRefreshLayout.setRefreshing(true);
+        Glide.with(mBinding.imageViewFirst)
+                .load(R.drawable.default_profile_pic)
+                .transform(new CircleCrop())
+
+                .into(mBinding.imageViewFirst);
+
+        Glide.with(mBinding.imageViewSecond)
+                .load(R.drawable.default_profile_pic)
+                .transform(new CircleCrop())
+
+                .into(mBinding.imageViewSecond);
+
+        Glide.with(mBinding.imageViewThird)
+                .load(R.drawable.default_profile_pic)
+                .transform(new CircleCrop())
+
+                .into(mBinding.imageViewThird);
+
     }
 
     private   static boolean sort_icon = true;

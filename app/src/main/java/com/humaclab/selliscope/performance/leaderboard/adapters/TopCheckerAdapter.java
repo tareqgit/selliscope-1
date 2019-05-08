@@ -2,6 +2,7 @@ package com.humaclab.selliscope.performance.leaderboard.adapters;
 
 import android.content.Context;
 import android.databinding.DataBindingUtil;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -9,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.humaclab.selliscope.BR;
 import com.humaclab.selliscope.R;
 import com.humaclab.selliscope.databinding.PerformenceLeaderboardTopCheckerFragmentModelBinding;
@@ -54,8 +56,17 @@ public class TopCheckerAdapter extends RecyclerView.Adapter<TopCheckerAdapter.TV
             pos=i+1;
        tViewHolder.mBinding.textViewPos.setText(MessageFormat.format("Pos: {0}",  pos));
 
+        //color every even card background and user background
+        if(i==2){
+            tViewHolder.mBinding.body.setBackgroundColor(Color.parseColor("#E1F5FE"));
+        }else if(i%2==0){
+            tViewHolder.mBinding.body.setBackgroundColor(Color.parseColor("#F5F5F5"));
+        }
+        else{
+            tViewHolder.mBinding.body.setBackgroundColor(Color.parseColor("#FFFFFF"));
+        }
 
-            switch (pos){
+    /*        switch (pos){
                 case 1:
                     tViewHolder.mBinding.imageView7.setImageResource(R.drawable.ic_gold_medal_1);
                     tViewHolder.mBinding.imageView7.setVisibility(View.VISIBLE);
@@ -76,11 +87,13 @@ public class TopCheckerAdapter extends RecyclerView.Adapter<TopCheckerAdapter.TV
                         break;
 
             }
-
+*/
 
         Glide.with(mContext)
                 .load(R.drawable.moss_gradient) //topSellerModel.getImage_url()
                 .placeholder(R.drawable.moss_gradient)
+                .centerCrop()
+                .transform(new CircleCrop())
                 .into(tViewHolder.mBinding.imageView6);
     }
 

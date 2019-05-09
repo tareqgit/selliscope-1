@@ -52,10 +52,10 @@
                             android:layout_marginEnd="10dp"
                             android:layout_weight="1"
 
-                            android:foreground="@drawable/custom_background_selector"
+
                             android:gravity="right"
                             android:padding="2dp"
-                            android:text="14/3"
+                            android:text=""
                             android:textAlignment="center"
 
                             android:textColor="@color/white"

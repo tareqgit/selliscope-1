@@ -272,7 +272,7 @@ public class LoginActivity extends AppCompatActivity  {
     private void LoadPreferences() {
         SharedPreferences sharedPreferences = getSharedPreferences("MY_SHARED_PREF", MODE_PRIVATE);
         int savedRadioIndex = sharedPreferences.getInt(KEY_SAVED_RADIO_BUTTON_INDEX, 0);
-        Toast.makeText(this, "ind"+ savedRadioIndex, Toast.LENGTH_SHORT).show();
+
       /*  RadioButton savedCheckedRadioButton = (RadioButton) rg_language.getChildAt(savedRadioIndex);
         savedCheckedRadioButton.setChecked(true);*/
         mSwitchMultiButton.setSelectedTab(savedRadioIndex);

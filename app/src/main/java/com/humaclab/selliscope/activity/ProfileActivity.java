@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 
+import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.google.gson.Gson;
 import com.humaclab.selliscope.R;
 import com.humaclab.selliscope.SelliscopeApiEndpointInterface;
@@ -106,9 +107,10 @@ public class ProfileActivity extends AppCompatActivity {
                 .load( sessionManager.getUserDetails().get("profilePictureUrl"))
                 .placeholder(R.drawable.ic_employee)
                 .thumbnail(0.1f)
+                .transform(new CircleCrop())
                 .into(binding.ivProfileImage);
 
-        binding.btnChangeProfilePicture.setOnClickListener(v -> {
+        binding.ivProfileImage.setOnClickListener(v -> {
            /* ImagePicker.create(ProfileActivity.this)
                     .returnMode(ReturnMode.ALL) // set whether pick and / or camera action should return immediate result or not.
                     .folderMode(true) // folder mode (false by default)
@@ -231,6 +233,7 @@ public class ProfileActivity extends AppCompatActivity {
             byte[] decode = Base64.decode(profileImage, Base64.DEFAULT);
             Glide.with(getApplicationContext())
                     .load(decode)
+                    .transform(new CircleCrop())
                     .thumbnail(0.1f)
                     .into(binding.ivProfileImage);
 

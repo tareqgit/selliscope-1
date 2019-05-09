@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -131,7 +132,11 @@ public class DeliveryListActivity extends AppCompatActivity {
         final List<String> outletIDs = outlets.get("outletID");
         List<String> outletNames = outlets.get("outletName");
 
-        sp_outlet_list.setAdapter(new ArrayAdapter<>(DeliveryListActivity.this, R.layout.spinner_item, outletNames));
+        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<>(DeliveryListActivity.this, R.layout.color_spinner_layout_black, outletNames);
+        spinnerArrayAdapter.setDropDownViewResource(R.layout.color_spinner_layout_black);
+        sp_outlet_list.setAdapter(spinnerArrayAdapter);
+
+      //    sp_outlet_list.setAdapter(new ArrayAdapter<>(DeliveryListActivity.this, R.layout.spinner_item, outletNames));
         sp_outlet_list.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
             @Override

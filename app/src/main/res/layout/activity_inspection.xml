@@ -24,8 +24,16 @@
                 <Spinner
                     android:id="@+id/sp_outlets"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5dp"/>
+                    android:layout_height="40dp"
+
+                    android:layout_margin="8dp"
+
+                    android:backgroundTint="#6D6D6D"
+
+                    android:tooltipText="Outlet Name"
+
+                    android:foreground="@drawable/moss_stroke_corner_5"
+                    />
 
                 <ImageView
                     android:id="@+id/iv_take_image"
@@ -89,6 +97,7 @@
                             android:layout_height="wrap_content"
                             android:entries="@array/promotion_type"
                             android:fontFamily="@font/latoregular"
+                            android:backgroundTint="#6D6D6D"
                             android:padding="10dp"/>
 
                     </LinearLayout>
@@ -113,7 +122,12 @@
                             android:layout_weight="2"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:entries="@array/is_damaged"
+
+                            android:backgroundTint="#6D6D6D"
+
+                            android:tooltipText="Outlet Name"
+
+                        android:entries="@array/is_damaged"
                             android:fontFamily="@font/latoregular"
                             android:padding="10dp"/>
 
@@ -139,6 +153,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:entries="@array/condition"
+                            android:backgroundTint="#6D6D6D"
                             android:fontFamily="@font/latoregular"
                             android:padding="10dp"/>
                     </LinearLayout>

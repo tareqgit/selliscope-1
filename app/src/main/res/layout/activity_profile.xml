@@ -39,7 +39,7 @@
 
             android:layout_marginBottom="8dp"
 
-            android:tint="#B6B6B6"
+            android:tint="#8B8B8B"
             app:layout_constraintBottom_toBottomOf="@+id/iv_profile_image"
             app:layout_constraintEnd_toEndOf="@+id/iv_profile_image"
             app:srcCompat="@drawable/ic_if_edit" />

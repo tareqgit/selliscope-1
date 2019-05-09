@@ -40,24 +40,16 @@ public class TopCollectionerFragment extends Fragment {
     public RecyclerView mRecyclerView;
 
     public static List<TopCollectionerModel> datum = new ArrayList<>(Arrays.asList(
-            new TopCollectionerModel("blah", "Tareq", 200000),
-            new TopCollectionerModel("blah", "Rakib", 200000),
-            new TopCollectionerModel("blah", "Islam", 200000),
-            new TopCollectionerModel("blah", "Tareq", 200000),
-            new TopCollectionerModel("blah", "Rakib", 200000),
-            new TopCollectionerModel("blah", "Islam", 200000),
-            new TopCollectionerModel("blah", "Tareq", 200000),
-            new TopCollectionerModel("blah", "Rakib", 200000),
-            new TopCollectionerModel("blah", "Islam", 200000),
-            new TopCollectionerModel("blah", "Tareq", 200000),
-            new TopCollectionerModel("blah", "Rakib", 200000),
-            new TopCollectionerModel("blah", "Islam", 200000),
-            new TopCollectionerModel("blah", "Tareq", 200000),
-            new TopCollectionerModel("blah", "Rakib", 200000),
-            new TopCollectionerModel("blah", "Islam", 200000),
-            new TopCollectionerModel("blah", "Tareq", 200000),
-            new TopCollectionerModel("blah", "Rakib", 200000),
-            new TopCollectionerModel("blah", "Islam", 200000)
+            new TopCollectionerModel("blah", 13,"Tareq", 200000),
+            new TopCollectionerModel("blah", 15,"Rakib", 200000),
+            new TopCollectionerModel("blah", 16,"Islam", 200000),
+            new TopCollectionerModel("blah", 17,"Tareq", 200000),
+            new TopCollectionerModel("blah", 18,"Rakib", 200000),
+            new TopCollectionerModel("blah", 19,"Islam", 200000),
+            new TopCollectionerModel("blah", 20,"Tareq", 200000),
+            new TopCollectionerModel("blah", 21,"Rakib", 200000),
+            new TopCollectionerModel("blah", 22,"Islam", 200000)
+
     ));
 
     public TopCollectionerFragment() {

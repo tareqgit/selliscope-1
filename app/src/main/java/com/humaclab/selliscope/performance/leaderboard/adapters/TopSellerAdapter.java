@@ -54,7 +54,7 @@ int pos;
             pos=mDummies.size()-i ;
         else
             pos=i+1;
-        tViewHolder.mBinding.textViewPos.setText(MessageFormat.format("{0}.",  pos));
+        tViewHolder.mBinding.textViewPos.setText(MessageFormat.format("{0}.",  topSellerModel.getPos()));
 
         //color every even card background and user background
         if(i==2){

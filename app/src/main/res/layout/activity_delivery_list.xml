@@ -4,6 +4,7 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:orientation="vertical"
+
               tools:context="com.humaclab.selliscope.activity.DeliveryListActivity">
 
     <include layout="@layout/toolbar_layout"/>
@@ -11,11 +12,16 @@
     <Spinner
         android:id="@+id/sp_outlet_list"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp"
-        android:layout_marginTop="10dp"
-        android:fontFamily="@font/latobold"
-        android:padding="10dp"/>
+        android:layout_height="40dp"
+
+        android:layout_margin="8dp"
+
+        android:backgroundTint="#6D6D6D"
+
+        android:tooltipText="Outlet Name"
+
+        android:foreground="@drawable/moss_stroke_corner_5"
+        />
 
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/srl_delivery"

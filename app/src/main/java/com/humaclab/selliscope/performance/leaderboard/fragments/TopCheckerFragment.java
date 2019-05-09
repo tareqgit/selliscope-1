@@ -39,24 +39,12 @@ public class TopCheckerFragment extends Fragment {
 
     private RecyclerView mRecyclerView;
     public static List<TopCheckerModel> datum = new ArrayList<>(Arrays.asList(
-            new TopCheckerModel("blah","Tareq" , 200000),
-            new TopCheckerModel("blah","Rakib" , 200000),
-            new TopCheckerModel("blah","Islam" , 200000),
-            new TopCheckerModel("blah","Tareq" , 200000),
-            new TopCheckerModel("blah","Rakib" , 200000),
-            new TopCheckerModel("blah","Islam" , 200000),
-            new TopCheckerModel("blah","Tareq" , 200000),
-            new TopCheckerModel("blah","Rakib" , 200000),
-            new TopCheckerModel("blah","Islam" , 200000),
-            new TopCheckerModel("blah","Tareq" , 200000),
-            new TopCheckerModel("blah","Rakib" , 200000),
-            new TopCheckerModel("blah","Islam" , 200000),
-            new TopCheckerModel("blah","Tareq" , 200000),
-            new TopCheckerModel("blah","Rakib" , 200000),
-            new TopCheckerModel("blah","Islam" , 200000),
-            new TopCheckerModel("blah","Tareq" , 200000),
-            new TopCheckerModel("blah","Rakib" , 200000),
-            new TopCheckerModel("blah","Islam" , 200000)
+            new TopCheckerModel("blah", 2,"Tareq" , 200000),
+            new TopCheckerModel("blah",3,"Rakib" , 200000),
+            new TopCheckerModel("blah",4,"Islam" , 200000),
+            new TopCheckerModel("blah",5,"Tareq" , 200000),
+            new TopCheckerModel("blah",6,"Rakib" , 200000)
+
     ));
     public TopCheckerFragment() {
     }

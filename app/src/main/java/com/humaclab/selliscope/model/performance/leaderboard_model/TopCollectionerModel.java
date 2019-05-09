@@ -10,13 +10,16 @@ import java.io.Serializable;
 public class TopCollectionerModel implements Serializable {
     @SerializedName("image_url")
     private  String image_url;
+    @SerializedName("pos")
+    private  int pos;
     @SerializedName("name")
     private String name;
     @SerializedName("amount")
     private double amount;
 
-    public TopCollectionerModel(String image_url, String name, double amount) {
+    public TopCollectionerModel(String image_url, int pos, String name, double amount) {
         this.image_url = image_url;
+        this.pos = pos;
         this.name = name;
         this.amount = amount;
     }
@@ -27,6 +30,14 @@ public class TopCollectionerModel implements Serializable {
 
     public void setImage_url(String image_url) {
         this.image_url = image_url;
+    }
+
+    public int getPos() {
+        return pos;
+    }
+
+    public void setPos(int pos) {
+        this.pos = pos;
     }
 
     public String getName() {

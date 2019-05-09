@@ -12,12 +12,18 @@ public class TopCheckerModel implements Serializable {
     private  String image_url;
     @SerializedName("name")
     private String name;
+
+    @SerializedName("pos")
+    private  int pos;
+
+
     @SerializedName("no_outlet")
     private double no_outlet;
 
-    public TopCheckerModel(String image_url, String name, double no_outlet) {
+    public TopCheckerModel(String image_url, int pos, String name, double no_outlet) {
         this.image_url = image_url;
         this.name = name;
+        this.pos = pos;
         this.no_outlet = no_outlet;
     }
 
@@ -35,6 +41,14 @@ public class TopCheckerModel implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public int getPos() {
+        return pos;
+    }
+
+    public void setPos(int pos) {
+        this.pos = pos;
     }
 
     public double getNo_outlet() {

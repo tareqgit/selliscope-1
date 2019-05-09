@@ -16,6 +16,8 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.google.gson.Gson;
 import com.humaclab.selliscope.R;
 import com.humaclab.selliscope.SelliscopeApiEndpointInterface;
@@ -135,7 +137,7 @@ public class InspectionActivity extends AppCompatActivity {
                                 outletIDs.add(outlet.outletId);
                                 outletNames.add(outlet.outletName);
                             }
-                            binding.spOutlets.setAdapter(new ArrayAdapter<>(InspectionActivity.this, R.layout.spinner_item, outletNames));
+                            binding.spOutlets.setAdapter(new ArrayAdapter<>(InspectionActivity.this, R.layout.color_spinner_layout_black, outletNames));
                             if (getIntent().hasExtra("outletName")) {
                                 binding.spOutlets.setSelection(outletNames.indexOf(getIntent().getStringExtra("outletName")));
                             }
@@ -166,7 +168,13 @@ public class InspectionActivity extends AppCompatActivity {
             assert photo != null;
             photo.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
             promotionImage = Base64.encodeToString(outputStream.toByteArray(), Base64.DEFAULT);
-            binding.ivTakeImage.setImageBitmap(photo);
+
+
+            Glide.with(binding.ivTakeImage)
+                    .load(photo)
+                    .transform(new CircleCrop())
+                    .into(binding.ivTakeImage);
+
         }
     }
 

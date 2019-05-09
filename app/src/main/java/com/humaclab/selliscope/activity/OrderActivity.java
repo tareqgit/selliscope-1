@@ -131,7 +131,7 @@ public class OrderActivity extends AppCompatActivity implements OrderProductRecy
             categoryName.add(result.getName());
             categoryID.add(Integer.valueOf(result.getId()));
         }
-        binding.spProductCategory.setAdapter(new ArrayAdapter<>(context, R.layout.color_spinner_layout, categoryName));
+        binding.spProductCategory.setAdapter(new ArrayAdapter<>(context, R.layout.color_spinner_layout_white, categoryName));
         binding.spProductCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -158,8 +158,8 @@ public class OrderActivity extends AppCompatActivity implements OrderProductRecy
             brandName.add(result.getName());
             brandID.add(Integer.valueOf(result.getId()));
         }
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(context, R.layout.color_spinner_layout, brandName);
-       // ArrayAdapter adapter= (ArrayAdapter) ArrayAdapter.createFromResource(this,brandName,R.layout.color_spinner_layout);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(context, R.layout.color_spinner_layout_white, brandName);
+       // ArrayAdapter adapter= (ArrayAdapter) ArrayAdapter.createFromResource(this,brandName,R.layout.color_spinner_layout_white);
         binding.spProductBrand.setAdapter(adapter);
         binding.spProductBrand.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override

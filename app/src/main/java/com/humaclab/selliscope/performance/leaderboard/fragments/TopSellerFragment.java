@@ -47,11 +47,11 @@ public class TopSellerFragment extends Fragment {
 
 
     public static List<TopSellerModel> datum = new ArrayList<>(Arrays.asList(
-            new TopSellerModel("blah","Tareq" , 200000),
-            new TopSellerModel("blah","Rakib" , 190000),
-            new TopSellerModel("blah","Islam" , 180000),
-            new TopSellerModel("blah","Tareq" , 100000),
-            new TopSellerModel("blah","Rakib" , 110000)
+            new TopSellerModel( "blah", 13,"Tareq" , 200000),
+            new TopSellerModel("blah", 14,"Rakib" , 190000),
+            new TopSellerModel("blah",15,"Islam" , 180000),
+            new TopSellerModel("blah",16,"Tareq" , 100000),
+            new TopSellerModel("blah",17,"Rakib" , 110000)
 
     ));
     public TopSellerFragment() {

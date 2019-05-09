@@ -21,6 +21,8 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.google.android.gms.awareness.Awareness;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
@@ -353,6 +355,10 @@ public class AddOutletActivity extends AppCompatActivity {
             photo.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
             outletImage = Base64.encodeToString(outputStream.toByteArray(), Base64.DEFAULT);
             iv_outlet.setImageBitmap(photo);
+            Glide.with(iv_outlet)
+                    .load(photo)
+                    .transform(new CircleCrop())
+                    .into(iv_outlet);
         }
         if (requestCode == MAP_LOCATION) {
             try {

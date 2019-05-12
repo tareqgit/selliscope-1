@@ -113,5 +113,7 @@ dependencies {
     implementation 'com.android.support:support-v4:28.0.0'
 
     implementation 'lib.kingja.switchbutton:switchbutton:1.1.8'
+    implementation files('libs\\btsdk.jar')
+    implementation files('libs\\zixng.jar')
 }
 apply plugin: 'com.google.gms.google-services'

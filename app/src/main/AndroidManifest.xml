@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.humaclab.selliscope">
 
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -162,6 +164,18 @@
         <activity android:name=".performance.payments.PerformancePaymentsActivity" />
         <activity android:name=".performance.orders.PerformanceOrdersProductsActivity" />
         <activity android:name=".performance.orders.PerformanceOrdersActivity" />
+        <activity android:name=".pos_sdk.PosActivity">
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+            <action android:name="android.intent.action.VIEW"/>
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
+    </activity>
+
+        <activity android:name=".pos_sdk.DeviceListActivity"
+            android:label="Select the connected device"
+            android:theme="@android:style/Theme.Dialog"
+            android:configChanges="orientation|keyboardHidden"/>
     </application>
 
 </manifest>

@@ -5,6 +5,7 @@ import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
 import android.graphics.Bitmap;
@@ -15,6 +16,7 @@ import android.graphics.drawable.Drawable;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,6 +40,7 @@ import com.humaclab.lalteer.model.Payment;
 import com.humaclab.lalteer.model.PaymentResponse;
 import com.humaclab.lalteer.utils.SessionManager;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
@@ -57,7 +60,12 @@ public class PaymentRecyclerViewAdapter extends RecyclerView.Adapter<PaymentRecy
     private ProgressDialog pd;
     private OnPaymentListener mOnPaymentListener;
 
-private static int butClickedPos=0;
+    private static List<Integer> orderIDList = new ArrayList<>();
+
+   static PaymentResponse.Payment temo_Payment;
+    private int butClickedPos = 0;
+    private int butClickedPos_spinner = 0;
+
     /*public PaymentRecyclerViewAdapter(Context context, List<Payment.OrderList> orderLists) {
         this.context = context;
         this.orderLists = orderLists;
@@ -65,7 +73,9 @@ private static int butClickedPos=0;
     public PaymentRecyclerViewAdapter(Context context, List<Payment.OrderList> orderLists, OnPaymentListener onPaymentListener) {
         this.context = context;
         this.orderLists = orderLists;
-        this.mOnPaymentListener=onPaymentListener;
+        this.mOnPaymentListener = onPaymentListener;
+        temo_Payment = new PaymentResponse.Payment();
+
     }
 
 
@@ -80,23 +90,138 @@ private static int butClickedPos=0;
 
     @Override
     public void onBindViewHolder(final PaymentViewHolder holder, final int position) {
+        // holder.setIsRecyclable(false);
         final Payment.OrderList orderList = orderLists.get(position);
+
         holder.getBinding().setVariable(BR.payments, orderList);
         holder.getBinding().executePendingBindings();
+
+/*
+//If there is value in this field than get that value
+        if(temo_Payment!=null) {
+            if (temo_Payment.amount != 0)
+                temo_Payment.amount = Integer.parseInt(holder.et_payment.getText().toString().equals("") ? "0" : holder.et_payment.getText().toString().trim());
+            if (temo_Payment.deposit_to!=null && !temo_Payment.deposit_to.equals("") )
+                temo_Payment.deposit_to = holder.depositTo.getText().toString();
+            if (temo_Payment.deposit_slip!=null && !temo_Payment.deposit_slip.equals("") )
+                temo_Payment.deposit_slip = holder.depositSlip.getText().toString();
+            if (temo_Payment.bank_name!=null  && !temo_Payment.bank_name.equals("") )
+                temo_Payment.bank_name = holder.bankName.getText().toString();
+            if (temo_Payment.cheque_no!=null &&  !temo_Payment.cheque_no.equals("") )
+                temo_Payment.cheque_no = holder.chequeNumber.getText().toString();
+            if (temo_Payment.cheque_date!=null && !temo_Payment.cheque_date.equals("") )
+                temo_Payment.cheque_date = holder.date_view.getText().toString();
+        }
+        Log.d("tareq_test", butClickedPos + " - " + orderList.orderId);
+*/
+
+
+        if (orderList.orderId == butClickedPos) {
+            holder.sp_payment_type.setSelection(butClickedPos_spinner);
+            Log.d("tareq_test", "h_ " + temo_Payment.amount + " " + temo_Payment.deposit_to);
+
+            holder.et_payment.setText("" + temo_Payment.amount);
+            holder.bankName.setText(temo_Payment.bank_name);
+            holder.depositTo.setText(temo_Payment.deposit_to);
+
+            holder.chequeNumber.setText(temo_Payment.cheque_no);
+            holder.depositSlip.setText(temo_Payment.deposit_slip);
+            holder.date_view.setText(temo_Payment.cheque_date);
+        } else {
+
+            holder.sp_payment_type.setSelection(0);
+            holder.et_payment.setText("");
+            holder.bankName.setText("");
+            holder.depositTo.setText("");
+
+            holder.chequeNumber.setText("");
+            holder.depositSlip.setText("");
+            holder.date_view.setText("Cheque Date");
+        }
+
 
         holder.mImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
                 ((Activity) v.getContext()).startActivityForResult(cameraIntent, CAMERA_REQUEST);
-                butClickedPos=position;
+                butClickedPos = orderList.orderId;
+                butClickedPos_spinner = holder.sp_payment_type.getSelectedItemPosition();
+
+                temo_Payment.amount = Integer.parseInt(holder.et_payment.getText().toString().equals("") ? "0" : holder.et_payment.getText().toString().trim());
+                temo_Payment.deposit_to = holder.depositTo.getText().toString();
+                temo_Payment.deposit_slip = holder.depositSlip.getText().toString();
+                temo_Payment.bank_name = holder.bankName.getText().toString();
+                temo_Payment.cheque_no = holder.chequeNumber.getText().toString();
+                temo_Payment.cheque_date = holder.date_view.getText().toString();
+                Log.d("tareq_test", "id " + butClickedPos);
             }
         });
 
         ((PaymentActivity) context).setOnImageResultAchiveListener(this);
 
         //for setting image when user captured an image else no need to set
-        if(orderList.getPhoto()!=null) holder.mImageButton.setImageBitmap(orderList.getPhoto());
+        if (orderList.orderId == butClickedPos) {
+            if (orderList.getPhoto() != null)
+                holder.mImageButton.setImageBitmap(orderList.getPhoto());
+        } else {
+            holder.mImageButton.setImageResource(R.drawable.addimage);
+        }
+
+
+        holder.sp_payment_type.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+                switch (pos) {
+
+                    case 0: {
+                        holder.bankName.setVisibility(View.GONE);
+                        holder.chequeNumber.setVisibility(View.GONE);
+                        holder.depositTo.setVisibility(View.VISIBLE);
+                        holder.date_view.setVisibility(View.GONE);
+                        holder.depositSlip.setVisibility(View.VISIBLE);
+                        holder.mImageButton.setVisibility(View.GONE);
+
+                        break;
+                    }
+                    case 1: {
+                        holder.bankName.setVisibility(View.VISIBLE);
+                        holder.chequeNumber.setVisibility(View.VISIBLE);
+                        holder.depositTo.setVisibility(View.VISIBLE);
+                        holder.depositSlip.setVisibility(View.VISIBLE);
+                        holder.date_view.setVisibility(View.VISIBLE);
+                        holder.mImageButton.setVisibility(View.VISIBLE);
+                        butClickedPos = orderList.orderId;
+                        butClickedPos_spinner = holder.sp_payment_type.getSelectedItemPosition();
+                        Log.d("tareq_test", "id " + butClickedPos);
+                        break;
+                    }
+
+                    case 2: {
+                        holder.bankName.setVisibility(View.VISIBLE);
+                        holder.chequeNumber.setVisibility(View.GONE);
+                        holder.depositTo.setVisibility(View.VISIBLE);
+                        holder.depositSlip.setVisibility(View.VISIBLE);
+                        holder.date_view.setVisibility(View.VISIBLE);
+                        holder.mImageButton.setVisibility(View.VISIBLE);
+                        butClickedPos = orderList.orderId;
+                        butClickedPos_spinner = holder.sp_payment_type.getSelectedItemPosition();
+                        Log.d("tareq_test", "id " + butClickedPos);
+                        break;
+                    }
+                    default: {
+                        Toast.makeText(context, "default", Toast.LENGTH_SHORT).show();
+                    }
+
+                }
+
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
 
         holder.btn_pay.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -111,23 +236,23 @@ private static int butClickedPos=0;
                 payment.order_id = orderList.orderId;
                 payment.outlet_id = orderList.outletId;
 //                payment.type = (holder.sp_payment_type.getSelectedItemPosition() == 0) ? 1 : 2;
-                payment.type = holder.sp_payment_type.getSelectedItemPosition() +1;
+                payment.type = holder.sp_payment_type.getSelectedItemPosition() + 1;
 
-                if(holder.et_payment.getText().toString().equals("")){
+                if (holder.et_payment.getText().toString().equals("")) {
                     View view = holder.et_payment;
                     holder.et_payment.setError(context.getString(R.string.error_field_required));
                     view.requestFocus();
                     pd.dismiss();
                     return;
-                }else{
+                } else {
                     payment.amount = Integer.parseInt(holder.et_payment.getText().toString());
 
                 }
 
-                payment.bank_name=holder.bankName.getText().toString();
+                payment.bank_name = holder.bankName.getText().toString();
 
-                if(payment.type==2){ //for cheque
-                    if(holder.chequeNumber.getText().toString().equals("")) {
+                if (payment.type == 2) { //for cheque
+                    if (holder.chequeNumber.getText().toString().equals("")) {
                         View view = holder.chequeNumber;
                         holder.chequeNumber.setError(context.getString(R.string.error_field_required));
                         view.requestFocus();
@@ -136,9 +261,7 @@ private static int butClickedPos=0;
                     }
 
 
-
-
-                    if(holder.date_view.getText().toString().equals("")){
+                    if (holder.date_view.getText().toString().equals("")) {
                         View view = holder.date_view;
                         holder.date_view.setError(context.getString(R.string.error_field_required));
                         view.requestFocus();
@@ -148,14 +271,13 @@ private static int butClickedPos=0;
                     }
 
 
-
                 }
-                payment.cheque_no=holder.chequeNumber.getText().toString();
+                payment.cheque_no = holder.chequeNumber.getText().toString();
                 payment.cheque_date = holder.date_view.getText().toString();
-                payment.deposit_to=holder.depositTo.getText().toString();
-                payment.deposit_from=sessionManager.getUserEmail().toString();
-                if(payment.type==3) {
-                    if(holder.depositSlip.getText().toString().equals("")){
+                payment.deposit_to = holder.depositTo.getText().toString();
+                payment.deposit_from = sessionManager.getUserEmail().toString();
+                if (payment.type == 3) {
+                    if (holder.depositSlip.getText().toString().equals("")) {
                         View view = holder.depositSlip;
                         holder.depositSlip.setError(context.getString(R.string.error_field_required));
                         view.requestFocus();
@@ -167,10 +289,10 @@ private static int butClickedPos=0;
                 }
                 payment.deposit_slip = holder.depositSlip.getText().toString();
 
-                payment.img= orderLists.get(butClickedPos).getImg(); //as this is getting from activity using listener
+                payment.img = orderList.getImg(); //as this is getting from activity using listener
                 paymentResponse.payment = payment;
 
-                Log.d("tareq_test" , ""+new Gson().toJson(paymentResponse));
+                Log.d("tareq_test", "" + new Gson().toJson(paymentResponse));
                 Call<PaymentResponse.PaymentSucessfull> call = apiService.payNow(paymentResponse);
                 call.enqueue(new Callback<PaymentResponse.PaymentSucessfull>() {
                     @Override
@@ -204,6 +326,7 @@ private static int butClickedPos=0;
                 });
             }
         });
+
     }
 
     @Override
@@ -213,14 +336,21 @@ private static int butClickedPos=0;
 
     /**
      * callback for capturing image from onActivityResult
+     *
      * @param image
      */
     @Override
     public void onImageAchive(Bitmap image, String img) {
         //Update new data into holder; this is the only way
-         orderLists.get(butClickedPos).setPhoto(image);
-         orderLists.get(butClickedPos).setImg(img);
-          notifyDataSetChanged();
+        int pos = 0;
+        for (int i = 0; i < orderLists.size(); i++) {
+            if (orderLists.get(i).orderId == butClickedPos)
+                pos = i;
+        }
+
+        orderLists.get(pos).setPhoto(image);
+        orderLists.get(pos).setImg(img);
+        notifyDataSetChanged();
 
     }
 
@@ -228,9 +358,10 @@ private static int butClickedPos=0;
         public ViewDataBinding binding;
         private Button btn_pay;
         private Spinner sp_payment_type;
-        private EditText et_payment, bankName, chequeNumber, depositSlip,depositTo;
+        private EditText et_payment, bankName, chequeNumber, depositSlip, depositTo;
         private TextView date_view;
         private ImageView mImageButton;
+
         public PaymentViewHolder(View itemView) {
             super(itemView);
             binding = DataBindingUtil.bind(itemView);
@@ -240,56 +371,14 @@ private static int butClickedPos=0;
             bankName = (EditText) itemView.findViewById(R.id.et_bank_name);
             chequeNumber = (EditText) itemView.findViewById(R.id.et_cheque_no);
             depositSlip = (EditText) itemView.findViewById(R.id.et_deposit_slip);
-            mImageButton=itemView.findViewById(R.id.imageButton);
+            mImageButton = itemView.findViewById(R.id.imageButton);
             date_view = itemView.findViewById(R.id.textView_date);
-            depositTo=itemView.findViewById(R.id.et_deposit_to);
+            depositTo = itemView.findViewById(R.id.et_deposit_to);
 
 
             /**
              * on Bank Item selected show all else set visibility gone
              */
-            sp_payment_type.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    switch (position) {
-
-                        case 0:{
-                            bankName.setVisibility(View.GONE);
-                            chequeNumber.setVisibility(View.GONE);
-                            depositTo.setVisibility(View.VISIBLE);
-                            depositSlip.setVisibility(View.VISIBLE);
-                            date_view.setVisibility(View.GONE);
-                            mImageButton.setVisibility(View.GONE);
-                            break;
-                        }
-                        case 1:{
-                            bankName.setVisibility(View.VISIBLE);
-                            chequeNumber.setVisibility(View.VISIBLE);
-                            depositTo.setVisibility(View.VISIBLE);
-                            depositSlip.setVisibility(View.VISIBLE);
-                            date_view.setVisibility(View.VISIBLE);
-                            mImageButton.setVisibility(View.VISIBLE);
-                            break;
-                        }
-
-                        case 2: {
-                            bankName.setVisibility(View.VISIBLE);
-                            chequeNumber.setVisibility(View.GONE);
-                            depositTo.setVisibility(View.VISIBLE);
-                            depositSlip.setVisibility(View.VISIBLE);
-                            date_view.setVisibility(View.VISIBLE);
-                            mImageButton.setVisibility(View.VISIBLE);
-                            break;
-                        }
-
-                    }
-                }
-
-                @Override
-                public void onNothingSelected(AdapterView<?> parent) {
-
-                }
-            });
 
 
             /**
@@ -313,17 +402,16 @@ private static int butClickedPos=0;
                     int year = c.get(Calendar.YEAR);
                     int month = c.get(Calendar.MONTH);
                     final int day = c.get(Calendar.DAY_OF_MONTH);
-                    DatePickerDialog datePickerDialog= new DatePickerDialog(itemView.getContext(), new DatePickerDialog.OnDateSetListener() {
+                    DatePickerDialog datePickerDialog = new DatePickerDialog(itemView.getContext(), new DatePickerDialog.OnDateSetListener() {
                         @Override
                         public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                            ( (TextView) date_view).setText(year + "-"+ (month+1) + "-"+dayOfMonth);
+                            ((TextView) date_view).setText(year + "-" + (month + 1) + "-" + dayOfMonth);
                         }
-                    },year,month,day);
+                    }, year, month, day);
                     datePickerDialog.getDatePicker().setMaxDate(c.getTimeInMillis());
                     datePickerDialog.show();
                 }
             });
-
 
 
         }
@@ -333,7 +421,7 @@ private static int butClickedPos=0;
         }
     }
 
-public interface  OnPaymentListener{
+    public interface OnPaymentListener {
         void onPaymentComplete();
-}
+    }
 }

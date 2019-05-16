@@ -213,6 +213,7 @@
                     android:ems="10"
                     android:hint="@string/bank_name"
                     android:inputType="textPersonName"
+                    android:visibility="gone"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/et_deposit_to" />
 
@@ -225,6 +226,7 @@
                     android:ems="10"
                     android:hint="@string/cheque_no"
                     android:inputType="textPersonName"
+                    android:visibility="gone"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/et_bank_name" />
 
@@ -248,6 +250,7 @@
                     android:layout_marginTop="8dp"
                     android:adjustViewBounds="true"
                     android:scaleType="fitCenter"
+                    android:visibility="gone"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textView_date"
                     app:srcCompat="@drawable/addimage" />
@@ -262,6 +265,7 @@
                     android:drawableStart="@drawable/ic_date_range_black_24dp"
                     android:drawablePadding="4dp"
                     android:hint="@string/cheque_date"
+                    android:visibility="gone"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/et_deposit_slip" />
 

@@ -19,7 +19,7 @@ repositories {
 android {
     compileSdkVersion 28
     defaultConfig {
-        applicationId "com.humaclab.selliscope_rangs"
+        applicationId "com.humaclab.selliscope_myone"
         minSdkVersion 19
         targetSdkVersion 28
         versionCode 1

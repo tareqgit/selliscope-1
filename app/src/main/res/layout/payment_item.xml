@@ -7,7 +7,7 @@
 
         <variable
             name="payments"
-            type="com.humaclab.selliscope_rangs.model.Payment.OrderList" />
+            type="com.humaclab.selliscope_myone.model.Payment.OrderList" />
     </data>
 
     <android.support.v7.widget.CardView

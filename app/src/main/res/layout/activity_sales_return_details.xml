@@ -6,14 +6,14 @@
 
         <variable
             name="deliveryDetails"
-            type="com.humaclab.selliscope_rangs.model.DeliveryResponse.DeliveryList" />
+            type="com.humaclab.selliscope_myone.model.DeliveryResponse.DeliveryList" />
     </data>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        tools:context="com.humaclab.selliscope_rangs.activity.SalesReturnDetailsActivity">
+        tools:context="com.humaclab.selliscope_myone.activity.SalesReturnDetailsActivity">
 
         <include
             android:id="@+id/include"

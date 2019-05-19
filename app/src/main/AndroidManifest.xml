@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.humaclab.selliscope_rangs">
+    package="com.humaclab.selliscope_myone">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -10,7 +10,7 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <application
-        android:name="com.humaclab.selliscope_rangs.SelliscopeApplication"
+        android:name="com.humaclab.selliscope_myone.SelliscopeApplication"
         android:networkSecurityConfig="@xml/network_security_config"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -46,18 +46,18 @@
             android:value="c2bca7824e6a758388318ecf6635fd2e8e11979a" />
 
         <!--Services and Receivers-->
-        <service android:name="com.humaclab.selliscope_rangs.service.FcmInstanceIdServices">
+        <service android:name="com.humaclab.selliscope_myone.service.FcmInstanceIdServices">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
-        <service android:name="com.humaclab.selliscope_rangs.service.FcmGetNotificationService">
+        <service android:name="com.humaclab.selliscope_myone.service.FcmGetNotificationService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
         <service
-            android:name="com.humaclab.selliscope_rangs.service.SendLocationDataService"
+            android:name="com.humaclab.selliscope_myone.service.SendLocationDataService"
             android:exported="false"
             android:permission="android.permission.RECEIVE_BOOT_COMPLETED"
             android:process=":selliscope_process">
@@ -70,7 +70,7 @@
         <!--Services and Receivers-->
 
         <activity
-            android:name="com.humaclab.selliscope_rangs.activity.SplashScreenActivity"
+            android:name="com.humaclab.selliscope_myone.activity.SplashScreenActivity"
             android:theme="@style/SplashScreenTheme"
             android:noHistory="true">
             <intent-filter>
@@ -80,32 +80,32 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.humaclab.selliscope_rangs.activity.LoginActivity"
+        <activity android:name="com.humaclab.selliscope_myone.activity.LoginActivity"
             android:noHistory="true" />
         <activity
-            android:name="com.humaclab.selliscope_rangs.activity.HomeActivity"
+            android:name="com.humaclab.selliscope_myone.activity.HomeActivity"
             android:configChanges="orientation|screenSize" />
-        <activity android:name="com.humaclab.selliscope_rangs.activity.RouteActivity" />
-        <activity android:name="com.humaclab.selliscope_rangs.activity.OutletActivity" />
-        <activity android:name="com.humaclab.selliscope_rangs.activity.AddOutletActivity" />
-        <activity android:name="com.humaclab.selliscope_rangs.activity.OutletDetailsActivity" />
-        <activity android:name="com.humaclab.selliscope_rangs.activity.PrivacyPolicyActivity" />
-        <activity android:name="com.humaclab.selliscope_rangs.activity.ProductActivity" />
+        <activity android:name="com.humaclab.selliscope_myone.activity.RouteActivity" />
+        <activity android:name="com.humaclab.selliscope_myone.activity.OutletActivity" />
+        <activity android:name="com.humaclab.selliscope_myone.activity.AddOutletActivity" />
+        <activity android:name="com.humaclab.selliscope_myone.activity.OutletDetailsActivity" />
+        <activity android:name="com.humaclab.selliscope_myone.activity.PrivacyPolicyActivity" />
+        <activity android:name="com.humaclab.selliscope_myone.activity.ProductActivity" />
         <activity
-            android:name="com.humaclab.selliscope_rangs.activity.OrderActivity"
+            android:name="com.humaclab.selliscope_myone.activity.OrderActivity"
             android:screenOrientation="portrait"/>
-        <activity android:name="com.humaclab.selliscope_rangs.activity.DeliveryListActivity" />
+        <activity android:name="com.humaclab.selliscope_myone.activity.DeliveryListActivity" />
         <activity
-            android:name="com.humaclab.selliscope_rangs.activity.DeliveryDetailsActivity"
+            android:name="com.humaclab.selliscope_myone.activity.DeliveryDetailsActivity"
             android:screenOrientation="landscape" />
-        <activity android:name="com.humaclab.selliscope_rangs.activity.PaymentActivity" />
-        <activity android:name="com.humaclab.selliscope_rangs.activity.DueActivity" />
-        <activity android:name="com.humaclab.selliscope_rangs.activity.EditOutletActivity" />
-        <activity android:name="com.humaclab.selliscope_rangs.activity.CallCardActivity" />
-        <activity android:name="com.humaclab.selliscope_rangs.activity.InspectionActivity" />
-        <activity android:name="com.humaclab.selliscope_rangs.activity.SalesReturnActivity" />
+        <activity android:name="com.humaclab.selliscope_myone.activity.PaymentActivity" />
+        <activity android:name="com.humaclab.selliscope_myone.activity.DueActivity" />
+        <activity android:name="com.humaclab.selliscope_myone.activity.EditOutletActivity" />
+        <activity android:name="com.humaclab.selliscope_myone.activity.CallCardActivity" />
+        <activity android:name="com.humaclab.selliscope_myone.activity.InspectionActivity" />
+        <activity android:name="com.humaclab.selliscope_myone.activity.SalesReturnActivity" />
         <activity
-            android:name="com.humaclab.selliscope_rangs.activity.SalesReturnDetailsActivity"
+            android:name="com.humaclab.selliscope_myone.activity.SalesReturnDetailsActivity"
             android:screenOrientation="landscape" />
     </application>
 

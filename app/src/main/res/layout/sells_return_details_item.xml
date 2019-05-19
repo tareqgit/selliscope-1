@@ -5,7 +5,7 @@
 
         <variable
             name="product"
-            type="com.humaclab.selliscope_rangs.model.DeliveryResponse.Product" />
+            type="com.humaclab.selliscope_myone.model.DeliveryResponse.Product" />
     </data>
 
     <LinearLayout

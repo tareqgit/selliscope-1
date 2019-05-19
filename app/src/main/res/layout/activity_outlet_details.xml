@@ -7,14 +7,14 @@
 
         <variable
             name="outletDetails"
-            type="com.humaclab.selliscope_rangs.model.Outlets.Successful.Outlet" />
+            type="com.humaclab.selliscope_myone.model.Outlets.Successful.Outlet" />
     </data>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        tools:context="com.humaclab.selliscope_rangs.activity.OutletDetailsActivity">
+        tools:context="com.humaclab.selliscope_myone.activity.OutletDetailsActivity">
 
         <include layout="@layout/toolbar_layout" />
 

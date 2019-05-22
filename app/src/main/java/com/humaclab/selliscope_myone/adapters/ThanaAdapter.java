@@ -9,7 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.humaclab.selliscope_myone.R;
-import com.humaclab.selliscope_myone.model.Thana.Thana;
+import com.humaclab.selliscope_myone.model.thana.Thana;
 
 import java.util.List;
 

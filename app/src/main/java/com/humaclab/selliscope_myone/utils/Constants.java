@@ -8,4 +8,9 @@ public class Constants {
     public static final String BASE_URL = "http://myone.selliscope.com/api/v1/";
     public static final String userAgent = System.getProperty("http.agent");
     public static final String databaseName = "selliscope_myone_db";
+
+
+    public enum NETWORK_STATE{
+        LOADING, LOADED, ERROR
+    }
 }

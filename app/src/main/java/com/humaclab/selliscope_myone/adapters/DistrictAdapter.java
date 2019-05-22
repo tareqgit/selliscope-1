@@ -9,7 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.humaclab.selliscope_myone.R;
-import com.humaclab.selliscope_myone.model.District.District;
+import com.humaclab.selliscope_myone.model.district.District;
 
 import java.util.List;
 

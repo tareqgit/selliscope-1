@@ -26,7 +26,7 @@ import com.humaclab.selliscope_myone.R;
 import com.humaclab.selliscope_myone.SelliscopeApiEndpointInterface;
 import com.humaclab.selliscope_myone.SelliscopeApplication;
 import com.humaclab.selliscope_myone.fragment.DashboardFragment;
-import com.humaclab.selliscope_myone.model.Diameter.DiameterResponse;
+import com.humaclab.selliscope_myone.model.diameter.DiameterResponse;
 import com.humaclab.selliscope_myone.service.SendLocationDataService;
 import com.humaclab.selliscope_myone.utils.CheckAppUpdated;
 import com.humaclab.selliscope_myone.utils.Constants;
@@ -101,25 +101,19 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         schedulerForMinute = Executors.newSingleThreadScheduledExecutor();
         schedulerForMinute.scheduleAtFixedRate(new Runnable() {
             public void run() {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
+
                         Log.v("Running threads", "Thread running in background for updating products and outlets");
                         loadLocalIntoBackground.loadOutlet();
-                    }
-                });
+
             }
         }, 0, 1, TimeUnit.MINUTES);
         schedulerForHour = Executors.newSingleThreadScheduledExecutor();
         schedulerForHour.scheduleAtFixedRate(new Runnable() {
             public void run() {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
+
                         Log.v("Running threads", "Thread running in background for updating products and outlets after 30 Minutes interval");
                         loadLocalIntoBackground.loadProduct();
-                    }
-                });
+
             }
         }, 30, 30, TimeUnit.MINUTES);
         //loading Data into background

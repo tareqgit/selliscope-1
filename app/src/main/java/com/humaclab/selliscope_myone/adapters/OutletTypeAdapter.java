@@ -9,7 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.humaclab.selliscope_myone.R;
-import com.humaclab.selliscope_myone.model.OutletType.OutletType;
+import com.humaclab.selliscope_myone.model.outletType.OutletType;
 
 import java.util.List;
 

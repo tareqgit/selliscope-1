@@ -9,15 +9,13 @@ import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
-import com.google.firebase.messaging.FirebaseMessagingService;
-import com.google.firebase.messaging.RemoteMessage;
 import com.humaclab.selliscope_myone.R;
 import com.humaclab.selliscope_myone.activity.HomeActivity;
 
 /**
  * Created by leon on 8/28/17.
  */
-
+/*
 public class FcmGetNotificationService extends FirebaseMessagingService {
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
@@ -65,4 +63,4 @@ public class FcmGetNotificationService extends FirebaseMessagingService {
         notificationManager.notify(0, builder.build());
 
     }
-}
+}*/

@@ -7,7 +7,7 @@
 
         <variable
             name="outletDetails"
-            type="com.humaclab.selliscope_myone.model.Outlets.Successful.Outlet" />
+            type="com.humaclab.selliscope_myone.outlet_paging.api.OutletItem" />
     </data>
 
     <LinearLayout
@@ -41,7 +41,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:padding="10dp"
-                    android:text="@{outletDetails.outletName}"
+                    android:text="@{outletDetails.name}"
                     android:textAlignment="center"
                     android:textSize="16sp"
                     android:textStyle="bold" />
@@ -63,7 +63,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:padding="10dp"
-                        android:text="@{outletDetails.ownerName}" />
+                        android:text="@{outletDetails.owner}" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -103,7 +103,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:padding="10dp"
-                        android:text="@{outletDetails.outletAddress}" />
+                        android:text="@{outletDetails.address}" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -123,7 +123,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:padding="10dp"
-                        android:text="@{outletDetails.outletType}" />
+                        android:text="@{outletDetails.type}" />
                 </LinearLayout>
 
                 <TextView

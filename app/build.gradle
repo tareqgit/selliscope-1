@@ -1,18 +1,8 @@
-buildscript {
-    repositories {
-        maven { url 'https://maven.fabric.io/public' }
-    }
-        //need to resolve fabric as fabric is now replaced by firebase analytics
-    dependencies {
-        classpath 'io.fabric.tools:gradle:1.25.4'
-    }
-}
+
 apply plugin: 'com.android.application'
-apply plugin: 'io.fabric'
 
 repositories {
-    maven { url 'https://maven.fabric.io/public' }
-    maven { url "https://jitpack.io" }
+     maven { url "https://jitpack.io" }
 }
 
 
@@ -37,6 +27,10 @@ android {
     dataBinding {
         enabled true
     }
+    compileOptions {
+        sourceCompatibility = '1.8'
+        targetCompatibility = '1.8'
+    }
 }
 //set the same version for all android support dependencies
 configurations.all {
@@ -44,7 +38,7 @@ configurations.all {
         def requested = details.requested
         if (requested.group == 'com.android.support') {
             if (!requested.name.startsWith("multidex")) {
-                details.useVersion '26.1.0'
+                details.useVersion '28.0.0'
             }
         }
     }
@@ -54,28 +48,45 @@ dependencies {
     androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    //for fabric
-    implementation('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
-        transitive = true
-    }
 
-    implementation 'com.facebook.stetho:stetho-okhttp3:1.5.0'
+
     implementation 'com.android.support:appcompat-v7:28.0.0'
     implementation 'com.android.support:design:28.0.0'
     implementation 'com.android.support:recyclerview-v7:28.0.0'
     implementation 'com.android.support:cardview-v7:28.0.0'
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
+
+    // Room dependencies
+    implementation 'android.arch.persistence.room:runtime:1.1.1'
+    annotationProcessor 'android.arch.persistence.room:compiler:1.1.1'
+
+    // ViewModel and LiveData dependencies
+    implementation "android.arch.lifecycle:extensions:1.1.1"
+    annotationProcessor "android.arch.lifecycle:compiler:1.1.1"
+
+
+    // Paging Library
+    implementation "android.arch.paging:runtime:1.0.1"
+
+
     implementation 'com.squareup.retrofit2:retrofit:2.5.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.5.0'
+    implementation "com.squareup.retrofit2:retrofit-mock:2.5.0"
+    implementation "com.squareup.okhttp3:logging-interceptor:3.10.0"
+
+
     implementation 'com.github.eralpyucel:CircleProgressView:v1.1'
     implementation 'com.ogaclejapan.smarttablayout:library:1.6.1@aar'
     implementation 'com.toptoche.searchablespinner:searchablespinnerlibrary:1.3.1'
+
     implementation 'com.jakewharton.timber:timber:4.5.1'
+
     implementation 'com.google.android.gms:play-services-maps:16.1.0'
     implementation 'com.google.android.gms:play-services-location:16.0.0'
     implementation 'com.google.android.gms:play-services-awareness:16.0.0'
-    implementation 'com.google.firebase:firebase-messaging:17.4.0'
-   // implementation 'com.squareup.picasso:picasso:2.71828'
+
+  //  implementation 'com.google.firebase:firebase-messaging:17.4.0'
+
     implementation 'com.github.bumptech.glide:glide:4.7.1'
     implementation 'com.github.javiersantos:AppUpdater:2.6.3'
     implementation 'de.hdodenhof:circleimageview:2.2.0'

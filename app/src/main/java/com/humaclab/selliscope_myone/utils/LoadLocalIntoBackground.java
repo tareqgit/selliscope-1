@@ -6,11 +6,11 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.humaclab.selliscope_myone.SelliscopeApiEndpointInterface;
 import com.humaclab.selliscope_myone.SelliscopeApplication;
-import com.humaclab.selliscope_myone.model.District.DistrictResponse;
-import com.humaclab.selliscope_myone.model.OutletType.OutletTypeResponse;
+import com.humaclab.selliscope_myone.model.district.DistrictResponse;
+import com.humaclab.selliscope_myone.model.outletType.OutletTypeResponse;
 import com.humaclab.selliscope_myone.model.Outlets;
 import com.humaclab.selliscope_myone.model.ProductResponse;
-import com.humaclab.selliscope_myone.model.Thana.ThanaResponse;
+import com.humaclab.selliscope_myone.model.thana.ThanaResponse;
 import com.humaclab.selliscope_myone.model.promotion.PromotionQuantityResponse;
 import com.humaclab.selliscope_myone.model.promotion.PromotionValueResponse;
 

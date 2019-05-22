@@ -24,7 +24,7 @@ import android.widget.Toast;
 
 import com.humaclab.selliscope_myone.R;
 import com.humaclab.selliscope_myone.activity.OrderActivity;
-import com.humaclab.selliscope_myone.model.VariantProduct.ProductsItem;
+import com.humaclab.selliscope_myone.model.variantProduct.ProductsItem;
 import com.humaclab.selliscope_myone.utils.DatabaseHandler;
 
 import java.util.ArrayList;

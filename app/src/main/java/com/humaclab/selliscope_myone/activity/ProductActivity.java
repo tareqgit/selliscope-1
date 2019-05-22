@@ -18,9 +18,9 @@ import android.widget.TextView;
 import com.humaclab.selliscope_myone.R;
 import com.humaclab.selliscope_myone.SelliscopeApiEndpointInterface;
 import com.humaclab.selliscope_myone.adapters.ProductRecyclerViewAdapter;
-import com.humaclab.selliscope_myone.model.VariantProduct.Brand;
-import com.humaclab.selliscope_myone.model.VariantProduct.Category;
-import com.humaclab.selliscope_myone.model.VariantProduct.ProductsItem;
+import com.humaclab.selliscope_myone.model.variantProduct.Brand;
+import com.humaclab.selliscope_myone.model.variantProduct.Category;
+import com.humaclab.selliscope_myone.model.variantProduct.ProductsItem;
 import com.humaclab.selliscope_myone.utils.DatabaseHandler;
 
 import java.util.ArrayList;

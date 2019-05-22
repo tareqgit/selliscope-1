@@ -9,7 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.humaclab.selliscope_myone.BR;
+import com.android.databinding.library.baseAdapters.BR;
 import com.humaclab.selliscope_myone.R;
 import com.humaclab.selliscope_myone.activity.SalesReturnDetailsActivity;
 import com.humaclab.selliscope_myone.model.DeliveryResponse;

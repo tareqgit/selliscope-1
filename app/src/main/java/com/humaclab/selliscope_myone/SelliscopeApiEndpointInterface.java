@@ -6,20 +6,21 @@ import com.humaclab.selliscope_myone.model.CategoryResponse;
 import com.humaclab.selliscope_myone.model.CreateOutlet;
 import com.humaclab.selliscope_myone.model.DeliverProductResponse;
 import com.humaclab.selliscope_myone.model.DeliveryResponse;
-import com.humaclab.selliscope_myone.model.Diameter.DiameterResponse;
-import com.humaclab.selliscope_myone.model.District.DistrictResponse;
+import com.humaclab.selliscope_myone.model.diameter.DiameterResponse;
+import com.humaclab.selliscope_myone.model.district.DistrictResponse;
 import com.humaclab.selliscope_myone.model.GodownRespons;
 import com.humaclab.selliscope_myone.model.IMEIandVerison;
 import com.humaclab.selliscope_myone.model.InspectionResponse;
 import com.humaclab.selliscope_myone.model.LoginResponse;
 import com.humaclab.selliscope_myone.model.OrderResponse;
-import com.humaclab.selliscope_myone.model.OutletType.OutletTypeResponse;
+import com.humaclab.selliscope_myone.model.outletType.OutletTypeResponse;
 import com.humaclab.selliscope_myone.model.Payment;
 import com.humaclab.selliscope_myone.model.PaymentResponse;
 import com.humaclab.selliscope_myone.model.ProductResponse;
 import com.humaclab.selliscope_myone.model.SellsReturnResponse;
-import com.humaclab.selliscope_myone.model.Thana.ThanaResponse;
+import com.humaclab.selliscope_myone.model.thana.ThanaResponse;
 import com.humaclab.selliscope_myone.model.UserLocation;
+import com.humaclab.selliscope_myone.outlet_paging.api.OutletSearchResponse;
 import com.humaclab.selliscope_myone.model.promotion.PromotionQuantityResponse;
 import com.humaclab.selliscope_myone.model.promotion.PromotionValueResponse;
 import com.humaclab.selliscope_myone.utils.StockResponse;
@@ -134,4 +135,13 @@ public interface SelliscopeApiEndpointInterface {
 
     @PUT("outlet/{id}/update")
     Call<ResponseBody> updateOutlet(@Path("id") String outletID, @Body CreateOutlet createOutlet);
+
+
+    //new For paging
+    /**
+     * Get repos ordered by stars.
+     */
+    @GET("outlet")
+    Call<OutletSearchResponse> searchOutlets(@Query("query") String query,
+                                             @Query("page") int page)  ;
 }

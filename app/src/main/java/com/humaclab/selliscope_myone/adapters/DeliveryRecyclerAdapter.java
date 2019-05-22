@@ -15,8 +15,8 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.android.databinding.library.baseAdapters.BR;
 import com.google.gson.Gson;
-import com.humaclab.selliscope_myone.BR;
 import com.humaclab.selliscope_myone.R;
 import com.humaclab.selliscope_myone.SelliscopeApiEndpointInterface;
 import com.humaclab.selliscope_myone.SelliscopeApplication;

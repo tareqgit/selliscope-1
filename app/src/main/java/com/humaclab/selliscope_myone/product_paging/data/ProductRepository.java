@@ -1,10 +1,16 @@
 /*
+ * Created by Tareq Islam on 5/23/19 1:53 PM
+ *
+ *  Last modified 5/23/19 1:36 PM
+ */
+
+/*
  * Created by Tareq Islam on 5/22/19 2:47 PM
  *
  *  Last modified 5/22/19 2:47 PM
  */
 
-package com.humaclab.selliscope_myone.outlet_paging.data;
+package com.humaclab.selliscope_myone.product_paging.data;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.paging.DataSource;
@@ -13,21 +19,21 @@ import android.arch.paging.PagedList;
 import android.util.Log;
 
 import com.humaclab.selliscope_myone.SelliscopeApiEndpointInterface;
-import com.humaclab.selliscope_myone.outlet_paging.model.OutletItem;
-import com.humaclab.selliscope_myone.outlet_paging.db.OutletLocalCache;
-import com.humaclab.selliscope_myone.outlet_paging.model.OutletSearchResult;
+import com.humaclab.selliscope_myone.product_paging.db.ProductLocalCache;
+import com.humaclab.selliscope_myone.product_paging.model.ProductSearchResult;
+import com.humaclab.selliscope_myone.product_paging.model.ProductsItem;
 import com.humaclab.selliscope_myone.utils.Constants;
 
 /***
  * Created by mtita on 22,May,2019.
  */
-public class OutletRepository {
+public class ProductRepository {
     //Constant for the number of items to be loaded at once from the DataSource by the PagedList
     private static final int DATABASE_PAGE_SIZE = 20;
     SelliscopeApiEndpointInterface apiService;
-    private OutletLocalCache mLocalCache;
+    private ProductLocalCache mLocalCache;
 
-    public OutletRepository(SelliscopeApiEndpointInterface apiService, OutletLocalCache localCache) {
+    public ProductRepository(SelliscopeApiEndpointInterface apiService, ProductLocalCache localCache) {
         this.apiService = apiService;
         mLocalCache = localCache;
     }
@@ -35,14 +41,14 @@ public class OutletRepository {
     /**
      * Search repositories whose names match the query.
      */
-    public OutletSearchResult search(String query) {
+    public ProductSearchResult search(String query) {
         Log.d("tareq_test", "search: NewQuery");
 
         //Get Data source factory from the local cache
-        DataSource.Factory<Integer, OutletItem> reposByName = mLocalCache.reposByName(query);
+        DataSource.Factory<Integer, ProductsItem> reposByName = mLocalCache.productsByName(query);
 
         //Construct the boundary callback
-        OutletBoundaryCallback boundaryCallback = new OutletBoundaryCallback(query, apiService, mLocalCache);
+        ProductBoundaryCallback boundaryCallback = new ProductBoundaryCallback(query, apiService, mLocalCache);
 
         LiveData<String> networkErrors = boundaryCallback.getNetworkError();
 
@@ -54,11 +60,11 @@ public class OutletRepository {
                 .build();
 
         // Get the Live Paged list
-        LiveData<PagedList<OutletItem>> data = new LivePagedListBuilder<>(reposByName, pagedConfig)
+        LiveData<PagedList<ProductsItem>> data = new LivePagedListBuilder<>(reposByName, pagedConfig)
                 .setBoundaryCallback(boundaryCallback)
                 .build();
 
         // Get the Search result with the network errors exposed by the boundary callback
-        return new OutletSearchResult(data, networkErrors,network_stateLiveData);
+        return new ProductSearchResult(data, networkErrors,network_stateLiveData);
     }
 }

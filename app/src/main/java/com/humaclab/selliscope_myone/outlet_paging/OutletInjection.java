@@ -22,7 +22,7 @@ import java.util.concurrent.Executors;
 /***
  * Created by mtita on 22,May,2019.
  */
-public class Injection {
+public class OutletInjection {
     /**
      * Creates an instance of  based on the database DAO.
      */

@@ -3,18 +3,15 @@ package com.humaclab.selliscope_myone.activity;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.TextView;
 
 import com.android.databinding.library.baseAdapters.BR;
-import com.bumptech.glide.Glide;
 import com.humaclab.selliscope_myone.R;
 import com.humaclab.selliscope_myone.databinding.ActivityOutletDetailsBinding;
-import com.humaclab.selliscope_myone.model.Outlets;
-import com.humaclab.selliscope_myone.outlet_paging.api.OutletItem;
+import com.humaclab.selliscope_myone.outlet_paging.model.OutletItem;
 
 import java.io.Serializable;
 

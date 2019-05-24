@@ -21,6 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.gson.Gson;
 import com.humaclab.selliscope_myone.BuildConfig;
 import com.humaclab.selliscope_myone.R;
 import com.humaclab.selliscope_myone.SelliscopeApiEndpointInterface;
@@ -125,8 +126,10 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onResponse(Call<DiameterResponse> call, Response<DiameterResponse> response) {
                 if (response.code() == 200) {
+
+                    if(response.body().getDiameter().getDiameter()!=0)
                     sessionManager.setDiameter(response.body().getDiameter().getDiameter());
-                }
+    }
             }
 
             @Override

@@ -1,15 +1,14 @@
 /*
- * Created by Tareq Islam on 5/22/19 2:23 PM
+ * Created by Tareq Islam on 5/23/19 1:44 PM
  *
- *  Last modified 5/22/19 2:23 PM
+ *  Last modified 5/23/19 1:36 PM
  */
-
-package com.humaclab.selliscope_myone.outlet_paging.db;
+package com.humaclab.selliscope_myone.product_paging.db;
 
 import android.arch.paging.DataSource;
 import android.util.Log;
 
-import com.humaclab.selliscope_myone.outlet_paging.model.OutletItem;
+import com.humaclab.selliscope_myone.product_paging.model.ProductsItem;
 
 import java.util.List;
 import java.util.concurrent.Executor;
@@ -17,15 +16,15 @@ import java.util.concurrent.Executor;
 /***
  * Created by mtita on 22,May,2019.
  */
-public class OutletLocalCache {
+public class ProductLocalCache {
 
     //Dao for Repo Entity
-    private OutletDao outletDao;
+    private ProductDao mProductDao;
     //Single Thread Executor for database operations
     private Executor ioExecutor;
 
-    public OutletLocalCache(OutletDao outletDao, Executor ioExecutor) {
-        this.outletDao = outletDao;
+    public ProductLocalCache(ProductDao productDao, Executor ioExecutor) {
+        this.mProductDao = productDao;
         this.ioExecutor = ioExecutor;
     }
 
@@ -33,13 +32,13 @@ public class OutletLocalCache {
     /**
      * Insert a list of repos in the database, on a background thread.
      */
-    public void insert(final List<OutletItem> outlets, final InsertCallback insertCallback) {
+    public void insert(final List<ProductsItem> products, final InsertCallback insertCallback) {
         ioExecutor.execute(new Runnable() {
             @Override
             public void run() {
-                Log.d("tareq_test", "insert: inserting " + outlets.size());
+                Log.d("tareq_test", "insert: inserting " + products.size());
 
-                outletDao.insert(outlets);
+                mProductDao.insert(products);
 
                 insertCallback.insertFinished();
             }
@@ -54,9 +53,9 @@ public class OutletLocalCache {
      *
      * @param name repository name
      */
-    public DataSource.Factory<Integer, OutletItem> reposByName(String name) {
+    public DataSource.Factory<Integer, ProductsItem> productsByName(String name) {
         // appending '%' so we can allow other characters to be before and after the query string
-        return outletDao.outletsByName("%" + name.replace(' ', '%') + "%");
+        return mProductDao.productsByName("%" + name.replace(' ', '%') + "%");
     }
 
 

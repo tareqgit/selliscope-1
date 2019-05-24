@@ -1,4 +1,12 @@
-package com.humaclab.selliscope_myone.outlet_paging.api;
+/*
+ * Created by Tareq Islam on 5/23/19 1:35 PM
+ *
+ *  Last modified 5/22/19 2:01 PM
+ */
+
+package com.humaclab.selliscope_myone.outlet_paging.api.response_model;
+
+import com.humaclab.selliscope_myone.outlet_paging.model.OutletItem;
 
 import java.util.List;
 

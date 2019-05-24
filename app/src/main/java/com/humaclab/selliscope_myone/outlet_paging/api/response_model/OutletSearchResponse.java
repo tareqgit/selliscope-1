@@ -1,4 +1,10 @@
-package com.humaclab.selliscope_myone.outlet_paging.api;
+/*
+ * Created by Tareq Islam on 5/23/19 1:35 PM
+ *
+ *  Last modified 5/22/19 8:51 PM
+ */
+
+package com.humaclab.selliscope_myone.outlet_paging.api.response_model;
 
 public class  OutletSearchResponse{
 	private int nextPage;

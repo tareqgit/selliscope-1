@@ -1,5 +1,6 @@
 package com.humaclab.selliscope_myone.activity;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -8,12 +9,14 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.humaclab.selliscope_myone.R;
 import com.humaclab.selliscope_myone.SelliscopeApiEndpointInterface;
@@ -21,6 +24,13 @@ import com.humaclab.selliscope_myone.adapters.ProductRecyclerViewAdapter;
 import com.humaclab.selliscope_myone.model.variantProduct.Brand;
 import com.humaclab.selliscope_myone.model.variantProduct.Category;
 import com.humaclab.selliscope_myone.model.variantProduct.ProductsItem;
+import com.humaclab.selliscope_myone.outlet_paging.OutletInjection;
+import com.humaclab.selliscope_myone.outlet_paging.ui.OutletAdapter;
+import com.humaclab.selliscope_myone.outlet_paging.ui.OutletSearchViewModel;
+import com.humaclab.selliscope_myone.product_paging.ProductInjection;
+import com.humaclab.selliscope_myone.product_paging.ui.ProductAdapter;
+import com.humaclab.selliscope_myone.product_paging.ui.ProductSearchViewModel;
+import com.humaclab.selliscope_myone.utils.Constants;
 import com.humaclab.selliscope_myone.utils.DatabaseHandler;
 
 import java.util.ArrayList;
@@ -28,13 +38,22 @@ import java.util.List;
 
 public class ProductActivity extends AppCompatActivity {
     private SelliscopeApiEndpointInterface apiService;
-    private RecyclerView rv_product;
+    private RecyclerView mRecyclerView;
     private SwipeRefreshLayout srl_product;
     private Spinner sp_category, sp_brand;
     private EditText et_search_product;
     private List<String> categoryName = new ArrayList<>(), brandName = new ArrayList<>();
     private List<Integer> categoryID = new ArrayList<>(), brandID = new ArrayList<>();
     private DatabaseHandler databaseHandler;
+
+
+    //Bundle constant to save the last searched query
+    private static final String LAST_SEARCH_QUERY = "last_search_query";
+    //The default query to load
+    private static final String DEFAULT_QUERY = "";
+    private ProductSearchViewModel mViewModel;
+    private ProductAdapter mProductAdapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +66,10 @@ public class ProductActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         databaseHandler = new DatabaseHandler(this);
+
+        mViewModel = ViewModelProviders.of(this, ProductInjection.provideViewModelFactory(this)).get(ProductSearchViewModel.class);
+
+
         sp_category = findViewById(R.id.sp_category);
         sp_brand = findViewById(R.id.sp_brand);
         et_search_product = findViewById(R.id.et_search_product);
@@ -58,7 +81,7 @@ public class ProductActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                rv_product.setAdapter(new ProductRecyclerViewAdapter(getApplication(), databaseHandler.getSearchedProduct(s.toString())));
+                mRecyclerView.setAdapter(new ProductRecyclerViewAdapter(getApplication(), databaseHandler.getSearchedProduct(s.toString())));
             }
 
             @Override
@@ -67,8 +90,8 @@ public class ProductActivity extends AppCompatActivity {
             }
         });
 
-        rv_product = findViewById(R.id.rv_product);
-        rv_product.setLayoutManager(new LinearLayoutManager(this));
+        mRecyclerView = findViewById(R.id.rv_product);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         srl_product = findViewById(R.id.srl_product);
         srl_product.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -97,7 +120,7 @@ public class ProductActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 try {
-                    rv_product.setAdapter(new ProductRecyclerViewAdapter(getApplication(), databaseHandler.getProduct(categoryID.get(position), brandID.get(sp_brand.getSelectedItemPosition()))));
+                    mRecyclerView.setAdapter(new ProductRecyclerViewAdapter(getApplication(), databaseHandler.getProduct(categoryID.get(position), brandID.get(sp_brand.getSelectedItemPosition()))));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -112,7 +135,7 @@ public class ProductActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 try {
-                    rv_product.setAdapter(new ProductRecyclerViewAdapter(getApplication(), databaseHandler.getProduct(categoryID.get(sp_category.getSelectedItemPosition()), brandID.get(position))));
+                    mRecyclerView.setAdapter(new ProductRecyclerViewAdapter(getApplication(), databaseHandler.getProduct(categoryID.get(sp_category.getSelectedItemPosition()), brandID.get(position))));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -131,24 +154,24 @@ public class ProductActivity extends AppCompatActivity {
         apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(),
                 sessionManager.getUserPassword(), false)
                 .create(SelliscopeApiEndpointInterface.class);
-        Call<ProductResponse> call = apiService.getProducts();
-        call.enqueue(new Callback<ProductResponse>() {
+        Call<ProductSearchResponse> call = apiService.getProducts();
+        call.enqueue(new Callback<ProductSearchResponse>() {
             @Override
-            public void onResponse(Call<ProductResponse> call, Response<ProductResponse> response) {
+            public void onResponse(Call<ProductSearchResponse> call, Response<ProductSearchResponse> response) {
                 if (response.code() == 200) {
                     try {
                         if (srl_product.isRefreshing())
                             srl_product.setRefreshing(false);
 
                         getFromLocal();
-                        List<ProductResponse.ProductResult> products = response.body().result.productResults;
+                        List<ProductSearchResponse.ProductResult> products = response.body().result.productResults;
                         if (products.size() == databaseHandler.getSizeOfProduct()) {
                             //for removing previous data
                             databaseHandler.removeProductCategoryBrand();
-                            for (ProductResponse.ProductResult result : products) {
+                            for (ProductSearchResponse.ProductResult result : products) {
                                 databaseHandler.addProduct(result.id, result.name, result.price, result.img, result.brand.id, result.brand.name, result.category.id, result.category.name);
                             }
-                            rv_product.setAdapter(new ProductRecyclerViewAdapter(getApplication(), products));
+                            recyclerview.setAdapter(new ProductRecyclerViewAdapter(getApplication(), products));
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -163,7 +186,7 @@ public class ProductActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<ProductResponse> call, Throwable t) {
+            public void onFailure(Call<ProductSearchResponse> call, Throwable t) {
                 t.printStackTrace();
             }
         });
@@ -173,7 +196,7 @@ public class ProductActivity extends AppCompatActivity {
         if (srl_product.isRefreshing())
             srl_product.setRefreshing(false);
         List<ProductsItem> products = databaseHandler.getProduct(0, 0);
-        rv_product.setAdapter(new ProductRecyclerViewAdapter(getApplication(), products));
+        mRecyclerView.setAdapter(new ProductRecyclerViewAdapter(getApplication(), products));
 
         //For spinner
         List<Category> categories = databaseHandler.getCategory();
@@ -199,4 +222,35 @@ public class ProductActivity extends AppCompatActivity {
         sp_brand.setSelection(0);
         //For spinner
     }
+
+
+    private void initAdapter() {
+        mProductAdapter = new ProductAdapter(this, this);
+
+        mRecyclerView.setAdapter(mProductAdapter);
+
+        //Subscribing to receive the new PagedList Repos
+        mViewModel.getRepos().observe(this, repos -> {
+            if (repos != null) {
+                Log.d("tareq_test", "initAdapter: Repo List size: " + repos.size());
+                //showEmptyList(repos.size() == 0);
+                mProductAdapter.submitList(repos);
+            }
+        });
+
+        //Subscribing to receive the recent Network Errors if any
+        mViewModel.getNetworkErrors().observe(this, errorMsg -> {
+            Toast.makeText(this, "\uD83D\uDE28 Wooops " + errorMsg, Toast.LENGTH_LONG).show();
+        });
+
+        //Subscribing to receive the recent Network State if any
+        mViewModel.getNetworkStates().observe(this, network_state -> {
+            if(network_state.equals(Constants.NETWORK_STATE.LOADING)){
+             //   mProgressBar.setVisibility(View.VISIBLE);
+            }else{
+               // mProgressBar.setVisibility(View.GONE);
+            }
+        });
+    }
+
 }

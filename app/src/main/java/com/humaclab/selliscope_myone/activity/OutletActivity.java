@@ -1,18 +1,13 @@
 package com.humaclab.selliscope_myone.activity;
 
-import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.text.Editable;
 import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -25,13 +20,11 @@ import android.widget.Toast;
 import com.humaclab.selliscope_myone.R;
 import com.humaclab.selliscope_myone.adapters.OutletRecyclerViewAdapter;
 import com.humaclab.selliscope_myone.model.Outlets;
-import com.humaclab.selliscope_myone.outlet_paging.Injection;
-import com.humaclab.selliscope_myone.outlet_paging.data.OutletBoundaryCallback;
+import com.humaclab.selliscope_myone.outlet_paging.OutletInjection;
 import com.humaclab.selliscope_myone.outlet_paging.ui.OutletAdapter;
 import com.humaclab.selliscope_myone.outlet_paging.ui.OutletSearchViewModel;
 import com.humaclab.selliscope_myone.utils.Constants;
 import com.humaclab.selliscope_myone.utils.DatabaseHandler;
-import com.humaclab.selliscope_myone.utils.NetworkUtility;
 import com.humaclab.selliscope_myone.utils.VerticalSpaceItemDecoration;
 
 public class OutletActivity extends AppCompatActivity {
@@ -58,7 +51,7 @@ public class OutletActivity extends AppCompatActivity {
         mProgressBar = findViewById(R.id.ProgressBar);
         tv_search_outlet = (EditText) findViewById(R.id.tv_search_outlet);
 
-        mViewModel = ViewModelProviders.of(this, Injection.provideViewModelFactory(this)).get(OutletSearchViewModel.class);
+        mViewModel = ViewModelProviders.of(this, OutletInjection.provideViewModelFactory(this)).get(OutletSearchViewModel.class);
 
        //turned of swipe refresable as its conflict with search
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.srl_outlet);

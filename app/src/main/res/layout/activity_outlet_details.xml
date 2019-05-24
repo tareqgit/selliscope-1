@@ -7,7 +7,7 @@
 
         <variable
             name="outletDetails"
-            type="com.humaclab.selliscope_myone.outlet_paging.api.OutletItem" />
+            type="com.humaclab.selliscope_myone.outlet_paging.model.OutletItem" />
     </data>
 
     <LinearLayout

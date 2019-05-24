@@ -1,4 +1,16 @@
-package com.humaclab.selliscope_myone.outlet_paging.api;
+/*
+ * Created by Tareq Islam on 5/23/19 1:36 PM
+ *
+ *  Last modified 5/23/19 1:36 PM
+ */
+
+/*
+ * Created by Tareq Islam on 5/23/19 1:35 PM
+ *
+ *  Last modified 5/22/19 8:51 PM
+ */
+
+package com.humaclab.selliscope_myone.outlet_paging.model;
 
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;

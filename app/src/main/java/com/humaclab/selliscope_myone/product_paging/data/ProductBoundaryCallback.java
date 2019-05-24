@@ -1,10 +1,16 @@
 /*
+ * Created by Tareq Islam on 5/23/19 1:53 PM
+ *
+ *  Last modified 5/23/19 1:36 PM
+ */
+
+/*
  * Created by Tareq Islam on 5/22/19 2:28 PM
  *
  *  Last modified 5/22/19 2:28 PM
  */
 
-package com.humaclab.selliscope_myone.outlet_paging.data;
+package com.humaclab.selliscope_myone.product_paging.data;
 
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.paging.PagedList;
@@ -12,9 +18,10 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.humaclab.selliscope_myone.SelliscopeApiEndpointInterface;
-import com.humaclab.selliscope_myone.outlet_paging.model.OutletItem;
-import com.humaclab.selliscope_myone.outlet_paging.api.OutletServiceApi;
-import com.humaclab.selliscope_myone.outlet_paging.db.OutletLocalCache;
+
+import com.humaclab.selliscope_myone.product_paging.api.ProductServiceApi;
+import com.humaclab.selliscope_myone.product_paging.db.ProductLocalCache;
+import com.humaclab.selliscope_myone.product_paging.model.ProductsItem;
 import com.humaclab.selliscope_myone.utils.Constants;
 
 import java.util.List;
@@ -22,7 +29,7 @@ import java.util.List;
 /***
  * Created by mtita on 22,May,2019.
  */
-public class OutletBoundaryCallback extends PagedList.BoundaryCallback<OutletItem>  implements OutletServiceApi.ApiCallback {
+public class ProductBoundaryCallback extends PagedList.BoundaryCallback<ProductsItem>  implements ProductServiceApi.ApiCallback {
 
 
     // Constant for the Number of items in a page to be requested from the Github API
@@ -30,7 +37,7 @@ public class OutletBoundaryCallback extends PagedList.BoundaryCallback<OutletIte
     private String query;
 
     private SelliscopeApiEndpointInterface apiService;
-    private OutletLocalCache mOutletLocalCache;
+    private ProductLocalCache mProductLocalCache;
 
     // Keep the last requested page. When the request is successful, increment the page number.
     private int lastRequestedPage = 1;
@@ -44,10 +51,10 @@ public class OutletBoundaryCallback extends PagedList.BoundaryCallback<OutletIte
     private MutableLiveData<Constants.NETWORK_STATE> networkState= new MutableLiveData<>();
 
 
-    public OutletBoundaryCallback(String query, SelliscopeApiEndpointInterface apiService, OutletLocalCache outletLocalCache) {
+    public ProductBoundaryCallback(String query, SelliscopeApiEndpointInterface apiService, ProductLocalCache productLocalCache) {
         this.query = query;
         this.apiService = apiService;
-        mOutletLocalCache = outletLocalCache;
+        mProductLocalCache = productLocalCache;
     }
 
     public MutableLiveData<String> getNetworkError() {
@@ -73,7 +80,7 @@ public class OutletBoundaryCallback extends PagedList.BoundaryCallback<OutletIte
 
         networkState.postValue(Constants.NETWORK_STATE.LOADING);
         //CAlling the client API to retrieve the repos for the given query
-        OutletServiceApi.searchOutlets(apiService, query, lastRequestedPage, NETWORK_PAGE_SIZE, this);
+        ProductServiceApi.searchProducts(apiService, query, lastRequestedPage, NETWORK_PAGE_SIZE, this);
     }
 
     /**
@@ -96,7 +103,7 @@ public class OutletBoundaryCallback extends PagedList.BoundaryCallback<OutletIte
      * @param itemAtEnd The first item of PagedList
      */
     @Override
-    public void onItemAtEndLoaded(@NonNull OutletItem itemAtEnd) {
+    public void onItemAtEndLoaded(@NonNull ProductsItem itemAtEnd) {
         Log.d("tareq_test", "onItemEndLoaded: Started");
         requestAndSaveData(query);
 
@@ -105,11 +112,11 @@ public class OutletBoundaryCallback extends PagedList.BoundaryCallback<OutletIte
 
 
     @Override
-    public void onSuccess(List<OutletItem> items) {
+    public void onSuccess(List<ProductsItem> items) {
 
         networkState.postValue(Constants.NETWORK_STATE.LOADED);
         //Inserting records in the database thread
-        mOutletLocalCache.insert(items, () -> {
+        mProductLocalCache.insert(items, () -> {
             //Updating the last requested page number when the request was successful
             //and the results were inserted successfully
             lastRequestedPage++;

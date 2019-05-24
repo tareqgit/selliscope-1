@@ -20,9 +20,10 @@ import com.humaclab.selliscope_myone.model.ProductResponse;
 import com.humaclab.selliscope_myone.model.SellsReturnResponse;
 import com.humaclab.selliscope_myone.model.thana.ThanaResponse;
 import com.humaclab.selliscope_myone.model.UserLocation;
-import com.humaclab.selliscope_myone.outlet_paging.api.OutletSearchResponse;
+import com.humaclab.selliscope_myone.outlet_paging.api.response_model.OutletSearchResponse;
 import com.humaclab.selliscope_myone.model.promotion.PromotionQuantityResponse;
 import com.humaclab.selliscope_myone.model.promotion.PromotionValueResponse;
+import com.humaclab.selliscope_myone.product_paging.api.response_model.ProductSearchResponse;
 import com.humaclab.selliscope_myone.utils.StockResponse;
 
 import okhttp3.ResponseBody;
@@ -139,9 +140,16 @@ public interface SelliscopeApiEndpointInterface {
 
     //new For paging
     /**
-     * Get repos ordered by stars.
+     * Get outlet by search and paging
      */
     @GET("outlet")
     Call<OutletSearchResponse> searchOutlets(@Query("query") String query,
                                              @Query("page") int page)  ;
+
+    /*
+      Get outlet by search and paging
+    */
+    @GET("product")
+    Call<ProductSearchResponse> searchProducts(@Query("query") String query,
+                                                       @Query("page") int page)  ;
 }

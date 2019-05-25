@@ -39,7 +39,7 @@ public class ProductViewModelFactory implements ViewModelProvider.Factory {
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
         if (ProductSearchViewModel.class.isAssignableFrom(modelClass)) {
             try {
-                return modelClass.getConstructor(OutletRepository.class).newInstance(mProductRepository);
+                return modelClass.getConstructor(ProductRepository.class).newInstance(mProductRepository);
             } catch (IllegalAccessException e) {
                 throw new RuntimeException("Cannot create an instance of " + modelClass, e);
             } catch (InstantiationException e) {

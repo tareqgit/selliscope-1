@@ -36,6 +36,6 @@ public interface ProductDao {
     // Do a similar query as the search API:
     // Look for repos that contain the query string in the name or in the description
     // and order those results descending, by the number of stars and then by name ascending
-    @Query("SELECT * FROM products where (name LIKE :queryString)")
+    @Query("SELECT * FROM products where (id LIKE :queryString)") //as here name is id
     DataSource.Factory<Integer, ProductsItem> productsByName(String queryString);
 }

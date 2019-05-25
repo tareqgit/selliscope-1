@@ -152,4 +152,7 @@ public interface SelliscopeApiEndpointInterface {
     @GET("product")
     Call<ProductSearchResponse> searchProducts(@Query("query") String query,
                                                        @Query("page") int page)  ;
+
+
+
 }

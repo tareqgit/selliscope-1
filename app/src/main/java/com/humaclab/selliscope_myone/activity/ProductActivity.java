@@ -47,14 +47,6 @@ public class ProductActivity extends AppCompatActivity {
     private DatabaseHandler databaseHandler;
 
 
-    //Bundle constant to save the last searched query
-    private static final String LAST_SEARCH_QUERY = "last_search_query";
-    //The default query to load
-    private static final String DEFAULT_QUERY = "";
-    private ProductSearchViewModel mViewModel;
-    private ProductAdapter mProductAdapter;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,8 +58,6 @@ public class ProductActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         databaseHandler = new DatabaseHandler(this);
-
-        mViewModel = ViewModelProviders.of(this, ProductInjection.provideViewModelFactory(this)).get(ProductSearchViewModel.class);
 
 
         sp_category = findViewById(R.id.sp_category);
@@ -224,33 +214,5 @@ public class ProductActivity extends AppCompatActivity {
     }
 
 
-    private void initAdapter() {
-        mProductAdapter = new ProductAdapter(this, this);
-
-        mRecyclerView.setAdapter(mProductAdapter);
-
-        //Subscribing to receive the new PagedList Repos
-        mViewModel.getRepos().observe(this, repos -> {
-            if (repos != null) {
-                Log.d("tareq_test", "initAdapter: Repo List size: " + repos.size());
-                //showEmptyList(repos.size() == 0);
-                mProductAdapter.submitList(repos);
-            }
-        });
-
-        //Subscribing to receive the recent Network Errors if any
-        mViewModel.getNetworkErrors().observe(this, errorMsg -> {
-            Toast.makeText(this, "\uD83D\uDE28 Wooops " + errorMsg, Toast.LENGTH_LONG).show();
-        });
-
-        //Subscribing to receive the recent Network State if any
-        mViewModel.getNetworkStates().observe(this, network_state -> {
-            if(network_state.equals(Constants.NETWORK_STATE.LOADING)){
-             //   mProgressBar.setVisibility(View.VISIBLE);
-            }else{
-               // mProgressBar.setVisibility(View.GONE);
-            }
-        });
-    }
 
 }

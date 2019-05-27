@@ -61,8 +61,8 @@ import timber.log.Timber;
 public class OutletAdapter extends PagedListAdapter<OutletItem, OutletAdapter.OutletViewHolder> {
 
     /**
-     * DiffUtil to compare the Repo data (old and new)
-     * for issuing notify commands suitably to update the list
+     * DiffUtil to compare the Repo data (old and new) for issuing notify commands suitably to
+     * update the list
      */
     private static DiffUtil.ItemCallback<OutletItem> REPO_COMPARATOR
             = new DiffUtil.ItemCallback<OutletItem>() {
@@ -84,65 +84,67 @@ public class OutletAdapter extends PagedListAdapter<OutletItem, OutletAdapter.Ou
     public OutletAdapter(Context context, Activity activity) {
 
         super(REPO_COMPARATOR);
-        mContext=context;
+        mContext = context;
         mActivity = activity;
     }
 
     @Override
     public OutletViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View layoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.outlet_item, parent, false);
+        View layoutView = LayoutInflater.from(mContext).inflate(R.layout.outlet_item, parent, false);
         return new OutletViewHolder(layoutView);
     }
 
     @Override
     public void onBindViewHolder(OutletViewHolder holder, int position) {
         OutletItem outlet = getItem(position);
-
-        holder.tvOutletName.setText(outlet.name);
-        holder.tvOutletAddress.setText(outlet.address);
-        holder.tvOutletContactNumber.setText(outlet.phone);
-        holder.tvOutletOwnerName.setText(outlet.owner);
-   holder.checkInButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                holder.pbCheckIn.setVisibility(View.VISIBLE);
-              GoogleApiClient  googleApiClient = new GoogleApiClient.Builder(v.getContext())
-                        .addApi(Awareness.API)
-                        .addApi(LocationServices.API)
-                        .build();
-                googleApiClient.connect();
-                googleApiClient.registerConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
-                    @Override
-                    public void onConnected(@Nullable Bundle bundle) {
-                        if(outlet.latitude!=null && outlet.longitude!=null) {
-                            Location outletLocation = new Location("outlet_location");
-                            outletLocation.setLatitude(Double.parseDouble(outlet.latitude));
-                            outletLocation.setLongitude(Double.parseDouble(outlet.longitude));
-                            getLocation(outlet.id, outletLocation, holder.pbCheckIn);
-                        }else{
-                            holder.pbCheckIn.setVisibility(View.INVISIBLE);
-                            Toast.makeText(v.getContext(), "You have to create an order before Check-in", Toast.LENGTH_SHORT).show();
+        if (outlet != null) {
+            holder.tvOutletName.setText(outlet.name);
+            holder.tvOutletAddress.setText(outlet.address);
+            holder.tvOutletContactNumber.setText(outlet.phone);
+            holder.tvOutletOwnerName.setText(outlet.owner);
+            holder.checkInButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    holder.pbCheckIn.setVisibility(View.VISIBLE);
+                    GoogleApiClient googleApiClient = new GoogleApiClient.Builder(v.getContext())
+                            .addApi(Awareness.API)
+                            .addApi(LocationServices.API)
+                            .build();
+                    googleApiClient.connect();
+                    googleApiClient.registerConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
+                        @Override
+                        public void onConnected(@Nullable Bundle bundle) {
+                            if (outlet.latitude != null && outlet.longitude != null) {
+                                Location outletLocation = new Location("outlet_location");
+                                outletLocation.setLatitude(Double.parseDouble(outlet.latitude));
+                                outletLocation.setLongitude(Double.parseDouble(outlet.longitude));
+                                getLocation(outlet.id, outletLocation, holder.pbCheckIn);
+                            } else {
+                                holder.pbCheckIn.setVisibility(View.INVISIBLE);
+                                Toast.makeText(v.getContext(), "You have to create an order before Check-in", Toast.LENGTH_SHORT).show();
+                            }
                         }
-                    }
 
-                    @Override
-                    public void onConnectionSuspended(int i) {
-                        holder.pbCheckIn.setVisibility(View.INVISIBLE);
-                        Toast.makeText(v.getContext(), "Didn't able to get location " +
-                                "data. Please, try again later!", Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
-        });
-        holder.orderButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(v.getContext(), OrderActivity.class);
-                intent.putExtra("outletName", outlet.name);
-                intent.putExtra("outletID", outlet.id);
-                v.getContext().startActivity(intent);
-            }
-        });
+                        @Override
+                        public void onConnectionSuspended(int i) {
+                            holder.pbCheckIn.setVisibility(View.INVISIBLE);
+                            Toast.makeText(v.getContext(), "Didn't able to get location " +
+                                    "data. Please, try again later!", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+            });
+            holder.orderButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(v.getContext(), OrderActivity.class);
+                    intent.putExtra("outletName", outlet.name);
+                    intent.putExtra("outletID", outlet.id);
+                    v.getContext().startActivity(intent);
+                }
+            });
+
+        }
     }
 
     private void getLocation(final String outletId, final Location outletLocation,
@@ -176,7 +178,7 @@ public class OutletAdapter extends PagedListAdapter<OutletItem, OutletAdapter.Ou
 
     private void sendUserLocation(Location location, String outletId, final ProgressBar progressBar) {
         SessionManager sessionManager = new SessionManager(mContext);
-      SelliscopeApiEndpointInterface  apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(),
+        SelliscopeApiEndpointInterface apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(),
                 sessionManager.getUserPassword(), false)
                 .create(SelliscopeApiEndpointInterface.class);
         List<UserLocation.Visit> userLocationVisits = new ArrayList<>();
@@ -218,7 +220,6 @@ public class OutletAdapter extends PagedListAdapter<OutletItem, OutletAdapter.Ou
     }
 
 
-
     public class OutletViewHolder extends RecyclerView.ViewHolder {
         CardView cardView;
         ImageView iv_outlet;
@@ -244,7 +245,7 @@ public class OutletAdapter extends PagedListAdapter<OutletItem, OutletAdapter.Ou
                 public void onClick(View v) {
                     Intent intent = new Intent(v.getContext(), OutletDetailsActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                   // intent.putExtra("outletDetails", outletItems.outlets.get(getLayoutPosition()));
+                    // intent.putExtra("outletDetails", outletItems.outlets.get(getLayoutPosition()));
                     intent.putExtra("outletDetails", (Serializable) getItem(getAdapterPosition()));
 
                     v.getContext().startActivity(intent);

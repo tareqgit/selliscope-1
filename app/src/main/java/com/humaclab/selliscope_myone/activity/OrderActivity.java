@@ -235,9 +235,11 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                 }
                 break;*/
             case R.id.btn_order:
-                pd.setMessage("Creating order....");
-                pd.setCancelable(false);
-                pd.show();
+
+                if(mSelectedProducts.size()>0) {
+                    pd.setMessage("Creating order....");
+                    pd.setCancelable(false);
+                    pd.show();
 
 
                     AddNewOrder addNewOrder = new AddNewOrder();
@@ -245,7 +247,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                     List<AddNewOrder.NewOrder.Product> products = new ArrayList<>();
                     newOrder.outletId = sOutletID;
 
-                    Log.d("tareq_test" , ""+binding.tblOrders.getChildCount());
+                    Log.d("tareq_test", "" + binding.tblOrders.getChildCount());
                     for (int i = 0; i < binding.tblOrders.getChildCount(); i++) {
                         View view = binding.tblOrders.getChildAt(i);
                         if (view instanceof TableRow) {
@@ -263,7 +265,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                             }*/
                             product.qty = Integer.parseInt(etQty.getText().toString());
                             product.price = mSelectedProducts.get(i).price.toString();
-                         //   product.flag = productFlag.get(i - 1);
+                            //   product.flag = productFlag.get(i - 1);
                             products.add(product);
                         }
                     }
@@ -275,7 +277,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                             sessionManager.getUserPassword(), false)
                             .create(SelliscopeApiEndpointInterface.class);
 
-                    Log.d("tareq_test" , "tareq" +new Gson().toJson(addNewOrder));
+                    Log.d("tareq_test", "tareq" + new Gson().toJson(addNewOrder));
                     Call<AddNewOrder.OrderResponse> call = apiService.addOrder(addNewOrder);
                     call.enqueue(new Callback<AddNewOrder.OrderResponse>() {
                         @Override
@@ -302,7 +304,9 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                             t.printStackTrace();
                         }
                     });
-
+                }else{
+                    Toast.makeText(this, "Please Select A product first", Toast.LENGTH_SHORT).show();
+                }
                 break;
         }
     }

@@ -44,7 +44,7 @@ public class DashboardRecyclerViewAdapter extends RecyclerView.Adapter<Dashboard
 
     @Override
     public int getItemCount() {
-        return 4;
+        return (dashboardItems!=null)? dashboardItems.size() :0;
     }
 
     public static class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {

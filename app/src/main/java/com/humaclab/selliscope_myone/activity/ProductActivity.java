@@ -16,7 +16,6 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.humaclab.selliscope_myone.R;
 import com.humaclab.selliscope_myone.SelliscopeApiEndpointInterface;
@@ -24,13 +23,7 @@ import com.humaclab.selliscope_myone.adapters.ProductRecyclerViewAdapter;
 import com.humaclab.selliscope_myone.model.variantProduct.Brand;
 import com.humaclab.selliscope_myone.model.variantProduct.Category;
 import com.humaclab.selliscope_myone.model.variantProduct.ProductsItem;
-import com.humaclab.selliscope_myone.outlet_paging.OutletInjection;
-import com.humaclab.selliscope_myone.outlet_paging.ui.OutletAdapter;
-import com.humaclab.selliscope_myone.outlet_paging.ui.OutletSearchViewModel;
-import com.humaclab.selliscope_myone.product_paging.ProductInjection;
-import com.humaclab.selliscope_myone.product_paging.ui.ProductAdapter;
-import com.humaclab.selliscope_myone.product_paging.ui.ProductSearchViewModel;
-import com.humaclab.selliscope_myone.utils.Constants;
+
 import com.humaclab.selliscope_myone.utils.DatabaseHandler;
 
 import java.util.ArrayList;

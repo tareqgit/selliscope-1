@@ -10,6 +10,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
@@ -75,6 +76,8 @@ public class OutletActivity extends AppCompatActivity {
         TextView toolbarTitle = (TextView) findViewById(R.id.tv_toolbar_title);
         toolbarTitle.setText(getResources().getString(R.string.outle));
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
       /*  addOutlet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -84,6 +87,8 @@ public class OutletActivity extends AppCompatActivity {
         recyclerView = (RecyclerView) findViewById(R.id.rv_outlet);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
+
+
         recyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
         });
         recyclerView.addItemDecoration(new VerticalSpaceItemDecoration(20));
@@ -133,6 +138,13 @@ public class OutletActivity extends AppCompatActivity {
             }
         });*/
     }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(LAST_SEARCH_QUERY, mViewModel.lastQueryValue());
+    }
+
 
     private void initAdapter() {
         mOutletAdapter = new OutletAdapter(this, this);
@@ -219,4 +231,21 @@ public class OutletActivity extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "You don't have any outlet in your list.", Toast.LENGTH_LONG).show();
         }
     }
+
+
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+
+
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 }

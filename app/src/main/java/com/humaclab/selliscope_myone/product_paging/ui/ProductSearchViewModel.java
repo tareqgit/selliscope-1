@@ -86,7 +86,7 @@ public class ProductSearchViewModel extends ViewModel {
      * Get the last query value.
      */
     @Nullable
-    String lastQueryValue() {
+   public String lastQueryValue() {
         return queryLiveData.getValue();
     }
 }

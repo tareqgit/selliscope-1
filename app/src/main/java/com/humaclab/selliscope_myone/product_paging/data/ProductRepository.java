@@ -28,8 +28,9 @@ import com.humaclab.selliscope_myone.utils.Constants;
  * Created by mtita on 22,May,2019.
  */
 public class ProductRepository {
+
     //Constant for the number of items to be loaded at once from the DataSource by the PagedList
-    private static final int DATABASE_PAGE_SIZE = 20;
+    private static final int DATABASE_PAGE_SIZE = 50;
     SelliscopeApiEndpointInterface apiService;
     private ProductLocalCache mLocalCache;
 
@@ -60,7 +61,7 @@ public class ProductRepository {
                 .build();
 
         // Get the Live Paged list
-        LiveData<PagedList<ProductsItem>> data = new LivePagedListBuilder<>(reposByName, pagedConfig)
+        LiveData<PagedList<ProductsItem>> data = new LivePagedListBuilder<>(reposByName, 50)
                 .setBoundaryCallback(boundaryCallback)
                 .build();
 

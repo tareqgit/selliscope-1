@@ -77,7 +77,7 @@ public class OutletSearchViewModel extends ViewModel {
      * Get the last query value.
      */
     @Nullable
-    String lastQueryValue() {
+   public String lastQueryValue() {
         return queryLiveData.getValue();
     }
 }

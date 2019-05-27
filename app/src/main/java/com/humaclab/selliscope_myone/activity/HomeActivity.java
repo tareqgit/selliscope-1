@@ -51,9 +51,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     private FragmentManager fragmentManager;
     private SessionManager sessionManager;
     private SelliscopeApiEndpointInterface apiService;
-    private DatabaseHandler databaseHandler;
+  //  private DatabaseHandler databaseHandler;
     private ProgressDialog pd;
-    private LoadLocalIntoBackground loadLocalIntoBackground;
+  //  private LoadLocalIntoBackground loadLocalIntoBackground;
     private ScheduledExecutorService schedulerForMinute, schedulerForHour;
 
     @Override
@@ -61,9 +61,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         sessionManager = new SessionManager(this);
-        databaseHandler = new DatabaseHandler(this);
-        loadLocalIntoBackground = new LoadLocalIntoBackground(this);
-        loadLocalIntoBackground.loadAll();
+       // databaseHandler = new DatabaseHandler(this);
+     //   loadLocalIntoBackground = new LoadLocalIntoBackground(this);
+    //    loadLocalIntoBackground.loadAll();
 
         apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(), sessionManager.getUserPassword(), false).create(SelliscopeApiEndpointInterface.class);
         pd = new ProgressDialog(this);
@@ -98,7 +98,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         //For getting diameter
         setDiameter();
 
-        //loading Data into background
+     /*   //loading Data into background
         schedulerForMinute = Executors.newSingleThreadScheduledExecutor();
         schedulerForMinute.scheduleAtFixedRate(new Runnable() {
             public void run() {
@@ -117,7 +117,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
             }
         }, 30, 30, TimeUnit.MINUTES);
-        //loading Data into background
+        //loading Data into background*/
     }
 
     private void setDiameter() {

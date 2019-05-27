@@ -46,8 +46,8 @@ public class DashboardFragment extends Fragment {
         dashboadItems = new ArrayList<>();
         dashboadItems.add(new DashboardItem("Route", R.drawable.ic_route));
         dashboadItems.add(new DashboardItem("Outlet", R.drawable.ic_outlet));
-        dashboadItems.add(new DashboardItem("Product", R.drawable.ic_products));
-        dashboadItems.add(new DashboardItem("Order", R.drawable.ic_order));
+       /* dashboadItems.add(new DashboardItem("Product", R.drawable.ic_products));
+        dashboadItems.add(new DashboardItem("Order", R.drawable.ic_order));*/
         /*dashboadItems.add(new DashboardItem("Deliver", R.drawable.ic_view_orders));
         dashboadItems.add(new DashboardItem("Payment", R.drawable.ic_payments));
         dashboadItems.add(new DashboardItem("Inspection", R.drawable.ic_inspection));

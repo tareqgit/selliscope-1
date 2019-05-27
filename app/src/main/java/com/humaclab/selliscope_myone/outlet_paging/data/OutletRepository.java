@@ -23,7 +23,7 @@ import com.humaclab.selliscope_myone.utils.Constants;
  */
 public class OutletRepository {
     //Constant for the number of items to be loaded at once from the DataSource by the PagedList
-    private static final int DATABASE_PAGE_SIZE = 20;
+    private static final int DATABASE_PAGE_SIZE = 30;
     SelliscopeApiEndpointInterface apiService;
     private OutletLocalCache mLocalCache;
 
@@ -50,11 +50,14 @@ public class OutletRepository {
 
         // Set the Page size for the Paged list
         PagedList.Config pagedConfig = new PagedList.Config.Builder()
+                .setEnablePlaceholders(false)
+
                 .setPageSize(DATABASE_PAGE_SIZE)
                 .build();
 
         // Get the Live Paged list
         LiveData<PagedList<OutletItem>> data = new LivePagedListBuilder<>(reposByName, pagedConfig)
+
                 .setBoundaryCallback(boundaryCallback)
                 .build();
 

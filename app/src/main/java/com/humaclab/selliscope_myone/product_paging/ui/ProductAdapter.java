@@ -19,6 +19,7 @@ import android.arch.paging.PagedListAdapter;
 import android.content.Context;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -78,12 +79,17 @@ public class ProductAdapter extends PagedListAdapter<ProductsItem, ProductAdapte
     @Override
     public void onBindViewHolder(ProductsViewHolder holder, int position) {
         ProductsItem product = getItem(position);
-        holder.nameTxt.setText(product.id);
-        holder.priceTxt.setText("Price: "+ product.price);
-        holder.stockTxt.setText("Stock: "+ product.stockType);
-        Glide.with(holder.productPic)
-                .load(R.drawable.app_logo)
-                .into(holder.productPic);
+        try {
+            holder.nameTxt.setText(product.id.toString());
+            holder.priceTxt.setText("Price: "+ product.price);
+            holder.stockTxt.setText("Stock: "+ product.stockType);
+            Glide.with(holder.productPic)
+                    .load(R.drawable.app_logo)
+                    .into(holder.productPic);
+        } catch (Exception e) {
+            Log.d("tareq_test" , ""+e.getMessage());
+            e.printStackTrace();
+        }
     }
 
 

@@ -11,6 +11,7 @@ package com.humaclab.selliscope_myone.productDialog;
 import android.app.Dialog;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.widget.GridLayoutManager;
@@ -26,6 +27,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -70,11 +72,12 @@ public class ProductDialogFragment extends DialogFragment implements ProductAdap
     //Bundle constant to save the last searched query
     private static final String LAST_SEARCH_QUERY = "last_search_query";
     //The default query to load
-    private static final String DEFAULT_QUERY = "M";
+    private static final String DEFAULT_QUERY = "";
     private ProductSearchViewModel mViewModel;
     private ProductAdapter mAdapter;
     private ProgressBar mProgressBar;
     ViewDialog mViewDialog;
+    TextView mEmptyView;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -112,6 +115,10 @@ public class ProductDialogFragment extends DialogFragment implements ProductAdap
         toolbar.setNavigationOnClickListener(view1 -> cancelUpload());
         toolbar.setTitle("My Dialog");*/
         mViewModel = ViewModelProviders.of(this, ProductInjection.provideViewModelFactory(getContext())).get(ProductSearchViewModel.class);
+
+        //emptyView
+        mEmptyView= rootView.findViewById(R.id.emptyList);
+        mEmptyView.setText(getString(R.string.no_results, "\uD83D\uDE13"));
 
         //progressBar
         mProgressBar = rootView.findViewById(R.id.ProgressBar);
@@ -180,7 +187,11 @@ public class ProductDialogFragment extends DialogFragment implements ProductAdap
     }
 
 
-
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(LAST_SEARCH_QUERY, mViewModel.lastQueryValue());
+    }
 
     /**
      * Initializes the EditText for handling the Search actions
@@ -238,7 +249,7 @@ public class ProductDialogFragment extends DialogFragment implements ProductAdap
         mViewModel.getRepos().observe(this, repos -> {
             if (repos != null) {
                 Log.d("tareq_test", "initAdapter: Repo List size: " + repos.size());
-                //showEmptyList(repos.size() == 0);
+                showEmptyList(repos.size() == 0);
                 mAdapter.submitList(repos);
             }
         });
@@ -281,7 +292,7 @@ public class ProductDialogFragment extends DialogFragment implements ProductAdap
 
                 if(response.isSuccessful()) {
                     //for testing as data is not coming
-                    Toast.makeText(orderActivity, ""+Double.parseDouble(response.body().getStock().getStock().toString()), Toast.LENGTH_SHORT).show();
+                  //  Toast.makeText(orderActivity, ""+Double.parseDouble(response.body().getStock().getStock().toString()), Toast.LENGTH_SHORT).show();
                     if (Double.parseDouble(response.body().getStock().getStock().toString()) > 0) {
                         orderActivity.addProduct(productsItem, Double.parseDouble(response.body().getStock().getStock().toString()));
                         dismiss();
@@ -306,5 +317,19 @@ public class ProductDialogFragment extends DialogFragment implements ProductAdap
 
     }
 
+    /**
+     * Shows the Empty view when the list is empty
+     *
+     * @param show Displays the empty view and hides the list when the boolean is <b>True</b>
+     */
+    private void showEmptyList(boolean show) {
+        if (show) {
+          mRecyclerView.setVisibility(View.GONE);
+            mEmptyView.setVisibility(View.VISIBLE);
+        } else {
+            mRecyclerView.setVisibility(View.VISIBLE);
+            mEmptyView.setVisibility(View.GONE);
+        }
+    }
 
 }

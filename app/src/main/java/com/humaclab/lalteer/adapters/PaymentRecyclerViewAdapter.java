@@ -49,7 +49,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * Created by tonmoy on 5/22/17.
+ * Created by tareq on 5/3/19.
  */
 
 public class PaymentRecyclerViewAdapter extends RecyclerView.Adapter<PaymentRecyclerViewAdapter.PaymentViewHolder> implements PaymentActivity.OnImageResultAchiveListener {

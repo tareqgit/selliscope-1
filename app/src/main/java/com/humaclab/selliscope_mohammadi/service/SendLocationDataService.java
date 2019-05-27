@@ -1,10 +1,12 @@
 package com.humaclab.selliscope_mohammadi.service;
 
+import android.annotation.SuppressLint;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 import android.os.PowerManager;
+import android.widget.Toast;
 
 import com.humaclab.selliscope_mohammadi.utils.SendUserLocationData;
 import com.humaclab.selliscope_mohammadi.utils.SessionManager;
@@ -29,6 +31,7 @@ public class SendLocationDataService extends Service {
         super.onCreate();
     }
 
+    @SuppressLint("InvalidWakeLockTag")
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Timber.i("Send Location Data Service onStartCommand");
@@ -60,7 +63,11 @@ public class SendLocationDataService extends Service {
         SessionManager sessionManager = new SessionManager(getApplicationContext());
         Timber.d("SendLocation service is stopped.");
         if (sessionManager.isLoggedIn()) {
-            startService(new Intent(SendLocationDataService.this, SendLocationDataService.class));
+            try {
+                startService(new Intent(SendLocationDataService.this, SendLocationDataService.class));
+            } catch (Exception e) {
+                Toast.makeText(this, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
         }
     }
 }

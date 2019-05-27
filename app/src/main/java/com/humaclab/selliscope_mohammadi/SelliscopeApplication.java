@@ -3,7 +3,6 @@ package com.humaclab.selliscope_mohammadi;
 import android.app.Application;
 import android.support.v7.app.AppCompatDelegate;
 
-import com.crashlytics.android.Crashlytics;
 import com.facebook.stetho.Stetho;
 import com.facebook.stetho.okhttp3.StethoInterceptor;
 import com.humaclab.selliscope_mohammadi.utils.Constants;
@@ -11,7 +10,6 @@ import com.humaclab.selliscope_mohammadi.utils.HttpAuthInterceptor;
 
 import java.util.concurrent.TimeUnit;
 
-import io.fabric.sdk.android.Fabric;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -61,6 +59,6 @@ public class SelliscopeApplication extends Application {
             Timber.plant(new Timber.DebugTree());
         }
         Stetho.initializeWithDefaults(this);
-        Fabric.with(this, new Crashlytics());
+
     }
 }

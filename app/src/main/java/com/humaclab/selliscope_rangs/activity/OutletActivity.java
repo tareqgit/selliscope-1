@@ -35,7 +35,7 @@ public class OutletActivity extends AppCompatActivity {
         setContentView(R.layout.activity_outlet);
         databaseHandler = new DatabaseHandler(this);
 
-        FloatingActionButton addOutlet = (FloatingActionButton) findViewById(R.id.fab_add_outlet);
+        FloatingActionButton addOutlet = findViewById(R.id.fab_add_outlet);
         swipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.srl_outlet);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override

@@ -142,6 +142,9 @@ public class LocationMonitoringService extends Service implements
         mLocationRequest.setPriority(priority);
         mLocationClient.connect();
 
+
+        displayLocationSettingsRequest(getApplicationContext());
+
         //Declare the timer
         myTimer = new Timer();
 //Set the schedule function and rate
@@ -154,7 +157,7 @@ public class LocationMonitoringService extends Service implements
 
 
 
-                displayLocationSettingsRequest(getApplicationContext());
+         //      displayLocationSettingsRequest(getApplicationContext()); //commented causing problem for samsung
             }
             },
 //Set how long before to start calling the TimerTask (in milliseconds)

@@ -1,6 +1,4 @@
 package com.humaclab.selliscope.activity;
-
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
@@ -25,6 +23,9 @@ import com.humaclab.selliscope.adapters.SelectedProductRecyclerAdapter;
 import com.humaclab.selliscope.databinding.ActivityCartBinding;
 import com.humaclab.selliscope.helper.SelectedProductHelper;
 import com.humaclab.selliscope.model.AddNewOrder;
+import com.humaclab.selliscope.model.DeliveryResponse;
+import com.humaclab.selliscope.pos_sdk.PosActivity;
+import com.humaclab.selliscope.pos_sdk.model.PosModel;
 import com.humaclab.selliscope.utils.DatabaseHandler;
 import com.humaclab.selliscope.utils.NetworkUtility;
 import com.humaclab.selliscope.utils.SendUserLocationData;
@@ -87,7 +88,8 @@ public class ActivityCart extends AppCompatActivity implements  SelectedProductR
           //this Segment Used for calculation of total price without promotion discount
             //  total += Double.valueOf(selectedProduct.getTotalPrice());
             //this Segment Used for calculation of total price with promotion discount
-            total += Double.valueOf(selectedProduct.getTppromotionGrandPrice());
+            Double t= Double.valueOf(selectedProduct.getTppromotionGrandPrice().isEmpty()?"0":selectedProduct.getTppromotionGrandPrice());
+            total += t ;
         }
         binding.tvTotal.setText(String.valueOf(total));
         if (!binding.etDiscount.getText().toString().equals("")){
@@ -125,12 +127,78 @@ public class ActivityCart extends AppCompatActivity implements  SelectedProductR
         selectedProductRecyclerAdapter = new SelectedProductRecyclerAdapter(ActivityCart.this, ActivityCart.this,  ActivityCart.this);
         binding.rlSelectedProducts.setAdapter(selectedProductRecyclerAdapter);
 
-        binding.btnOrder.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                orderNow();
-            }
+        binding.btnOrder.setOnClickListener(v -> orderNow());
+        binding.printBtn.setOnClickListener(v->{
+            print();
+            startActivity(new Intent(ActivityCart.this, PosActivity.class));
         });
+    }
+public  static PosModel sPosModel;
+    public void print(){
+        PosModel.Builder posModelBuilder = new PosModel.Builder();
+        posModelBuilder.withOutletName(outletName);
+        posModelBuilder.withNumber("01234634763");
+        posModelBuilder.withReceipt("D12455");
+        posModelBuilder.withCashier("d23545");
+        posModelBuilder.withCustomerName("D_Tareq");
+        posModelBuilder.withCustomerAddr("D Uttara Dhaka 1230");
+
+        List<PosModel.Product> productList = new ArrayList<>();
+
+        for (SelectedProductHelper selectedProduct : selectedProductList) {
+
+            PosModel.Product product = new PosModel.Product();
+
+            product.p_Name = selectedProduct.getProductName();
+
+            product.p_Quantity = Double.parseDouble(selectedProduct.getProductQuantity());
+
+            product.p_Rate =Double.parseDouble(selectedProduct.getProductPrice());
+            product.p_C_Amount = Double.parseDouble(selectedProduct.getTpDiscount());
+            product.p_Net = Double.parseDouble(selectedProduct.getTotalPrice())- Double.parseDouble(selectedProduct.getTpDiscount());
+
+            productList.add(product);
+        }
+        posModelBuilder.withMProducts(productList);
+
+        //Total Quantity
+        double totalQty=0;
+        for (PosModel.Product product :productList ) {
+            totalQty += product.p_Quantity;
+        }
+
+        posModelBuilder.withTotal_quantity(totalQty);
+
+        //Total Invoice
+        double invoiceTotal = 0;
+        for (PosModel.Product product :productList ) {
+            invoiceTotal += product.p_Rate;
+        }
+        posModelBuilder.withInvTotal(invoiceTotal);
+
+        //Total Net Amount
+        double netAmount = 0;
+        for (PosModel.Product product :productList ) {
+            netAmount += product.p_Net;
+        }
+        posModelBuilder.withNetAmount(netAmount);
+
+        //Total Commission Amount
+        double totalCAmount = 0;
+        for(PosModel.Product product :productList){
+            totalCAmount += product.p_C_Amount;
+        }
+        totalCAmount+=Double.parseDouble(binding.etDiscount.getText().toString()); //extra discount
+        posModelBuilder.withTotal_C_Amount(totalCAmount);
+
+        posModelBuilder.withPaytype(PosModel.PAYTYPE.Cash);
+        posModelBuilder.withPayOrder("d24567");
+        posModelBuilder.withAmount(netAmount);
+
+        posModelBuilder.withTotalPaid(0);
+        posModelBuilder.withDue(0);
+        sPosModel= posModelBuilder.build();
+
     }
 
     private void orderNow() {

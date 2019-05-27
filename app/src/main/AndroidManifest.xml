@@ -35,8 +35,7 @@
         android:launchMode="singleTop"
         android:networkSecurityConfig="@xml/network_security_config"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"
-       >
+        android:theme="@style/AppTheme">
 
 
         <uses-library
@@ -58,9 +57,13 @@
         <meta-data
             android:name="com.google.android.awareness.API_KEY"
             android:value="AIzaSyAhsz4pX62D7yu8twGT4ydn-_DRVB3p6_Y" /> <!-- For signed APK -->
+
+
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="c2bca7824e6a758388318ecf6635fd2e8e11979a" /> <!-- Services and Receivers -->
+
+
         <service android:name=".service.FcmInstanceIdServices">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
@@ -136,7 +139,7 @@
         <activity android:name=".activity.SettingsActivity" />
         <activity android:name=".activity.ProfileActivity" /> <!-- for ols sellisreturn Model -->
 
-        <activity android:name=".performance.leaderboard.LeaderBoardActivity"/>
+        <activity android:name=".performance.leaderboard.LeaderBoardActivity" />
 
 
         <activity
@@ -152,7 +155,7 @@
             android:name=".service.LocationServiceRestarterBroadcastReceiver"
             android:enabled="true"
             android:exported="true"
-            android:label="RestartServiceWhenStopped"></receiver>
+            android:label="RestartServiceWhenStopped"/>
 
         <activity android:name=".activity.SalesReturnHistoryActivity" />
 
@@ -164,18 +167,19 @@
         <activity android:name=".performance.payments.PerformancePaymentsActivity" />
         <activity android:name=".performance.orders.PerformanceOrdersProductsActivity" />
         <activity android:name=".performance.orders.PerformanceOrdersActivity" />
-        <activity android:name=".pos_sdk.PosActivity">
-        <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
-            <action android:name="android.intent.action.VIEW"/>
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter>
-    </activity>
 
-        <activity android:name=".pos_sdk.DeviceListActivity"
+        <!--****************Pos Activities**************************-->
+        <activity android:name=".pos_sdk.PosActivity">
+
+        </activity>
+
+        <activity
+            android:name=".pos_sdk.DeviceListActivity"
+            android:configChanges="orientation|keyboardHidden"
             android:label="Select the connected device"
-            android:theme="@android:style/Theme.Dialog"
-            android:configChanges="orientation|keyboardHidden"/>
+            android:theme="@android:style/Theme.Dialog" />
     </application>
+
+    <!-- **************************************************** -->
 
 </manifest>

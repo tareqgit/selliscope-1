@@ -133,6 +133,7 @@ public class OutletActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<RouteResponse> call, Response<RouteResponse> response) {
                 if (!response.body().getResult().getRoute().isEmpty()) {
+                    Toast.makeText(OutletActivity.this, ""+response.body().getResult().getRoute().get(0).getName(), Toast.LENGTH_SHORT).show();
                     binding.tvToolbarTitle.setText(response.body().getResult().getRoute().get(0).getName());
                     getRouteDetails(response.body().getResult().getRoute().get(0).getId());
                 } else {

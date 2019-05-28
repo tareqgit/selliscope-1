@@ -38,6 +38,7 @@ import com.humaclab.selliscope_myone.SelliscopeApplication;
 import com.humaclab.selliscope_myone.activity.OrderActivity;
 import com.humaclab.selliscope_myone.activity.OutletDetailsActivity;
 import com.humaclab.selliscope_myone.model.UserLocation;
+import com.humaclab.selliscope_myone.order_history.OrderHistoryActivity;
 import com.humaclab.selliscope_myone.outlet_paging.model.OutletItem;
 import com.humaclab.selliscope_myone.utils.GetAddressFromLatLang;
 import com.humaclab.selliscope_myone.utils.NetworkUtility;
@@ -137,7 +138,7 @@ public class OutletAdapter extends PagedListAdapter<OutletItem, OutletAdapter.Ou
             holder.orderButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(v.getContext(), OrderActivity.class);
+                    Intent intent = new Intent(v.getContext(), OrderHistoryActivity.class);
                     intent.putExtra("outletName", outlet.name);
                     intent.putExtra("outletID", outlet.id);
                     v.getContext().startActivity(intent);

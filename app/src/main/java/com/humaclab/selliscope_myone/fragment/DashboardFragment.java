@@ -21,6 +21,7 @@ import com.humaclab.selliscope_myone.activity.ProductActivity;
 import com.humaclab.selliscope_myone.activity.RouteActivity;
 import com.humaclab.selliscope_myone.adapters.DashboardRecyclerViewAdapter;
 import com.humaclab.selliscope_myone.model.DashboardItem;
+import com.humaclab.selliscope_myone.order_history.OrderHistoryActivity;
 import com.humaclab.selliscope_myone.utils.RecyclerItemClickListener;
 
 import java.util.ArrayList;
@@ -46,6 +47,7 @@ public class DashboardFragment extends Fragment {
         dashboadItems = new ArrayList<>();
         dashboadItems.add(new DashboardItem("Route", R.drawable.ic_route));
         dashboadItems.add(new DashboardItem("Outlet", R.drawable.ic_outlet));
+
        /* dashboadItems.add(new DashboardItem("Product", R.drawable.ic_products));
         dashboadItems.add(new DashboardItem("Order", R.drawable.ic_order));*/
         /*dashboadItems.add(new DashboardItem("Deliver", R.drawable.ic_view_orders));
@@ -74,6 +76,7 @@ public class DashboardFragment extends Fragment {
                                         OutletActivity.class));
                                 break;
                             }
+
                             case 2: {
                                 getActivity().startActivity(new Intent(getActivity(),
                                         ProductActivity.class));

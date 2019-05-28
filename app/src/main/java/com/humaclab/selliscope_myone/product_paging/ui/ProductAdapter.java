@@ -28,7 +28,6 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.humaclab.selliscope_myone.R;
-import com.humaclab.selliscope_myone.productDialog.ProductDialogAdapter;
 import com.humaclab.selliscope_myone.product_paging.model.ProductsItem;
 
 /***
@@ -82,7 +81,7 @@ public class ProductAdapter extends PagedListAdapter<ProductsItem, ProductAdapte
         try {
             holder.nameTxt.setText(product.id.toString());
             holder.priceTxt.setText("Price: "+ product.price);
-            holder.stockTxt.setText("Stock: "+ product.stockType);
+            holder.stockType.setText( product.stockType);
             Glide.with(holder.productPic)
                     .load(R.drawable.app_logo)
                     .into(holder.productPic);
@@ -97,13 +96,13 @@ public class ProductAdapter extends PagedListAdapter<ProductsItem, ProductAdapte
 
     public class ProductsViewHolder extends RecyclerView.ViewHolder {
         ImageView productPic;
-        TextView nameTxt, stockTxt, priceTxt;
+        TextView nameTxt, stockType, priceTxt;
 
         public ProductsViewHolder(View itemView) {
             super(itemView);
             nameTxt= (TextView) itemView.findViewById(R.id.nameTxt);
             priceTxt =itemView.findViewById(R.id.priceText);
-            stockTxt=itemView.findViewById(R.id.stockText);
+            stockType=itemView.findViewById(R.id.stockType);
 
             productPic=itemView.findViewById(R.id.productimageView);
             itemView.setOnClickListener(new View.OnClickListener() {

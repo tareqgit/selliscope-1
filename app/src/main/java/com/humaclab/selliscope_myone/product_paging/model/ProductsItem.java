@@ -16,8 +16,10 @@ import java.io.Serializable;
 
 @Entity(tableName = "products")
 public class ProductsItem implements Serializable {
-	@SerializedName("stockType")
+
+	@SerializedName("stock_type")
 	public String stockType;
+
 	@SerializedName("img")
 	public String img;
 	@SerializedName("price")

@@ -41,6 +41,7 @@ import com.humaclab.selliscope_myone.model.variantProduct.ProductsItem;
 import com.humaclab.selliscope_myone.model.promotion.PromotionQuantityResponse;
 import com.humaclab.selliscope_myone.model.promotion.PromotionValueResponse;
 import com.humaclab.selliscope_myone.productDialog.ProductDialogFragment;
+import com.humaclab.selliscope_myone.utils.CurrentTimeUtilityClass;
 import com.humaclab.selliscope_myone.utils.DatabaseHandler;
 import com.humaclab.selliscope_myone.utils.SessionManager;
 import com.toptoche.searchablespinnerlibrary.SearchableSpinner;
@@ -246,6 +247,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                     AddNewOrder.NewOrder newOrder = new AddNewOrder.NewOrder();
                     List<AddNewOrder.NewOrder.Product> products = new ArrayList<>();
                     newOrder.outletId = sOutletID;
+                    newOrder.date= CurrentTimeUtilityClass.getCurrentTimeStamp();
 
                     Log.d("tareq_test", "" + binding.tblOrders.getChildCount());
                     for (int i = 0; i < binding.tblOrders.getChildCount(); i++) {
@@ -265,6 +267,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                             }*/
                             product.qty = Integer.parseInt(etQty.getText().toString());
                             product.price = mSelectedProducts.get(i).price.toString();
+                            product.stockType = mSelectedProducts.get(i).stockType.toString();
                             //   product.flag = productFlag.get(i - 1);
                             products.add(product);
                         }
@@ -451,7 +454,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
 */
         // builder.show(); //by tarerq
         // *tareq*//*
-        List<ProductsItem> productsItemList = new ArrayList<>();
+       /* List<ProductsItem> productsItemList = new ArrayList<>();
         try {
             productsItemList = databaseHandler.getProduct(0, 0);
             productName.clear();
@@ -465,7 +468,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
             //    sp_product_name.setAdapter(new ArrayAdapter<>(getApplicationContext(), R.layout.spinner_item, productName));
         } catch (Exception e) {
             e.printStackTrace();
-        }
+        }*/
 
         final FragmentManager fm = getSupportFragmentManager();
         //  Toast.makeText(this, ""+ productsItemList.size(), Toast.LENGTH_SHORT).show();
@@ -828,7 +831,9 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
             }
             binding.tblOrders.addView(newOrder.getRoot());
 
-            mSelectedProducts.add(new SelectedProduct(product.id,  Double.parseDouble(product.price.toString().replace(",", "").trim()),  Double.parseDouble(newOrder.etQty.getText().toString().replace(",", "").trim())));
+
+
+                 mSelectedProducts.add(new SelectedProduct(product.id,  Double.parseDouble(product.price.toString().replace(",", "").trim()),  Double.parseDouble(newOrder.etQty.getText().toString().replace(",", "").trim()), product.stockType.toString()));
             tableRowCount++;
         }
     }
@@ -855,11 +860,13 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
         public String id;
         public Double price;
         public Double quantity;
+        public String stockType;
 
-        public SelectedProduct(String id, Double price, Double quantity) {
+        public SelectedProduct(String id, Double price, Double quantity, String stockType) {
             this.id = id;
             this.price = price;
             this.quantity = quantity;
+            this.stockType = stockType;
         }
     }
 

@@ -1,8 +1,7 @@
-
 apply plugin: 'com.android.application'
 
 repositories {
-     maven { url "https://jitpack.io" }
+    maven { url "https://jitpack.io" }
 }
 
 
@@ -34,7 +33,7 @@ android {
 }
 //set the same version for all android support dependencies
 configurations.all {
-    resolutionStrategy.eachDependency {  details ->
+    resolutionStrategy.eachDependency { details ->
         def requested = details.requested
         if (requested.group == 'com.android.support') {
             if (!requested.name.startsWith("multidex")) {
@@ -85,7 +84,7 @@ dependencies {
     implementation 'com.google.android.gms:play-services-location:16.0.0'
     implementation 'com.google.android.gms:play-services-awareness:16.0.0'
 
-  //  implementation 'com.google.firebase:firebase-messaging:17.4.0'
+    //  implementation 'com.google.firebase:firebase-messaging:17.4.0'
 
     implementation 'com.github.bumptech.glide:glide:4.9.0'
     implementation 'com.github.javiersantos:AppUpdater:2.6.3'

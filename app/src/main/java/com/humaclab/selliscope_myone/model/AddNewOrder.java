@@ -18,6 +18,8 @@ public class AddNewOrder implements Serializable {
         public String outletId;
         @SerializedName("discount")
         public int discount;
+        @SerializedName("order_date")
+        public String date;
         @SerializedName("products")
         public List<Product> products;
 
@@ -27,7 +29,7 @@ public class AddNewOrder implements Serializable {
             @SerializedName("qty")
             public int qty;
             @SerializedName("stocktype")
-            public int row;
+            public String stockType;
             @SerializedName("price")
             public String price;
             @SerializedName("discount")

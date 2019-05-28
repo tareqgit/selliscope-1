@@ -80,7 +80,7 @@ public class ProductDialogAdapter extends RecyclerView.Adapter<ProductDialogAdap
             super(itemView);
             nameTxt= (TextView) itemView.findViewById(R.id.nameTxt);
             priceTxt =itemView.findViewById(R.id.priceText);
-            stockTxt=itemView.findViewById(R.id.stockText);
+            stockTxt=itemView.findViewById(R.id.stockType);
 
             productPic=itemView.findViewById(R.id.productimageView);
             itemView.setOnClickListener(new View.OnClickListener() {

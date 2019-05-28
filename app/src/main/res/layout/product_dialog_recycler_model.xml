@@ -49,7 +49,7 @@
             card_view:layout_constraintTop_toBottomOf="@+id/productimageView" />
 
         <TextView
-            android:id="@+id/stockText"
+            android:id="@+id/stockType"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"

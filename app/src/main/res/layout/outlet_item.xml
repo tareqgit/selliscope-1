@@ -104,7 +104,7 @@
                 android:layout_alignParentTop="true"
                 android:layout_gravity="right"
                 android:background="@drawable/button_shape"
-                android:text="Order"
+                android:text="History"
                 android:textColor="@color/white" />
         </RelativeLayout>
     </LinearLayout>

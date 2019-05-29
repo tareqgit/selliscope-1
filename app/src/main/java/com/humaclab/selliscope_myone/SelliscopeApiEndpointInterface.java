@@ -20,6 +20,7 @@ import com.humaclab.selliscope_myone.model.ProductResponse;
 import com.humaclab.selliscope_myone.model.SellsReturnResponse;
 import com.humaclab.selliscope_myone.model.thana.ThanaResponse;
 import com.humaclab.selliscope_myone.model.UserLocation;
+import com.humaclab.selliscope_myone.order_history.api.response_model.OrderHistoryResponse;
 import com.humaclab.selliscope_myone.outlet_paging.api.response_model.OutletSearchResponse;
 import com.humaclab.selliscope_myone.model.promotion.PromotionQuantityResponse;
 import com.humaclab.selliscope_myone.model.promotion.PromotionValueResponse;
@@ -154,5 +155,8 @@ public interface SelliscopeApiEndpointInterface {
                                                        @Query("page") int page)  ;
 
 
+
+    @GET("outlet/{outletID}/purchase-history")
+            Call<OrderHistoryResponse> getOrderHistory(@Path("outletID") String outletID, @Query("date_from") String date_from, @Query("date_to") String date_to, @Query("query") String query);
 
 }

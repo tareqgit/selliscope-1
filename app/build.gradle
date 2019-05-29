@@ -93,4 +93,5 @@ dependencies {
         transitive = false
     }
     testImplementation 'junit:junit:4.12'
+    implementation 'org.glassfish:javax.annotation:10.0-b28'
 }

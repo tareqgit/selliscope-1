@@ -1,11 +1,29 @@
 package com.humaclab.selliscope_myone.order_history.api.response_model;
 
-public class ProductsItem{
+import javax.annotation.Generated;
+import com.google.gson.annotations.SerializedName;
+
+import java.io.Serializable;
+
+@Generated("com.robohorse.robopojogenerator")
+public class ProductsItem implements Serializable {
+
+	@SerializedName("total")
 	private int total;
+
+	@SerializedName("price")
 	private String price;
+
+	@SerializedName("product_id")
 	private String productId;
+
+	@SerializedName("qty")
 	private int qty;
+
+	@SerializedName("id")
 	private int id;
+
+	@SerializedName("order_id")
 	private int orderId;
 
 	public void setTotal(int total){
@@ -55,17 +73,4 @@ public class ProductsItem{
 	public int getOrderId(){
 		return orderId;
 	}
-
-	@Override
- 	public String toString(){
-		return 
-			"ProductsItem{" + 
-			"total = '" + total + '\'' + 
-			",price = '" + price + '\'' + 
-			",product_id = '" + productId + '\'' + 
-			",qty = '" + qty + '\'' + 
-			",id = '" + id + '\'' + 
-			",order_id = '" + orderId + '\'' + 
-			"}";
-		}
 }

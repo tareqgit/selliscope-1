@@ -1,14 +1,31 @@
 package com.humaclab.selliscope_myone.order_history.api.response_model;
 
 import java.util.List;
+import javax.annotation.Generated;
+import com.google.gson.annotations.SerializedName;
 
+@Generated("com.robohorse.robopojogenerator")
 public class OrdersItem{
+
+	@SerializedName("order_date")
 	private String orderDate;
+
+	@SerializedName("outlet_id")
 	private String outletId;
+
+	@SerializedName("sub_total")
 	private int subTotal;
+
+	@SerializedName("discount")
 	private String discount;
+
+	@SerializedName("id")
 	private int id;
+
+	@SerializedName("grand_total")
 	private String grandTotal;
+
+	@SerializedName("products")
 	private List<ProductsItem> products;
 
 	public void setOrderDate(String orderDate){
@@ -66,18 +83,4 @@ public class OrdersItem{
 	public List<ProductsItem> getProducts(){
 		return products;
 	}
-
-	@Override
- 	public String toString(){
-		return 
-			"OrdersItem{" + 
-			"order_date = '" + orderDate + '\'' + 
-			",outlet_id = '" + outletId + '\'' + 
-			",sub_total = '" + subTotal + '\'' + 
-			",discount = '" + discount + '\'' + 
-			",id = '" + id + '\'' + 
-			",grand_total = '" + grandTotal + '\'' + 
-			",products = '" + products + '\'' + 
-			"}";
-		}
 }

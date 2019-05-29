@@ -15,6 +15,7 @@
             layout="@layout/toolbar_layout" />
 
         <ScrollView
+            android:id="@+id/scrollView2"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_marginTop="8dp"
@@ -30,8 +31,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:padding="@dimen/margin_10"
-                android:visibility="visible"
-                >
+                android:visibility="visible">
 
                 <TextView
                     android:layout_width="match_parent"
@@ -259,7 +259,7 @@
                             </android.support.constraint.ConstraintLayout>
 
                         </TableRow>-->
-                   <!--     <TableRow
+                        <!--     <TableRow
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content">
 
@@ -689,8 +689,6 @@
             </LinearLayout>
         </ScrollView>
 
-
-
         <android.support.constraint.ConstraintLayout
             android:id="@+id/linearLayout5"
             android:layout_width="0dp"
@@ -762,5 +760,45 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
         </android.support.constraint.ConstraintLayout>
+
+
+        <TextView
+            android:id="@+id/textview_total"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="8dp"
+            android:text="Total: "
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/editText_discount"
+            app:layout_constraintEnd_toStartOf="@+id/textView7"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/editText_discount" />
+
+        <EditText
+            android:id="@+id/editText_discount"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:ems="10"
+            android:hint="discount"
+            android:inputType="number"
+            app:layout_constraintBottom_toBottomOf="@+id/scrollView2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/textView7" />
+
+        <TextView
+            android:id="@+id/textView7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:text=" - "
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/editText_discount"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/editText_discount" />
     </android.support.constraint.ConstraintLayout>
 </layout>

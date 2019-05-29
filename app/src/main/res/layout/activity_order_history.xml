@@ -23,15 +23,93 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/recyclerview"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            app:layout_constraintBottom_toTopOf="@+id/linearLayout5"
-            app:layout_constraintEnd_toEndOf="parent"
+        <TextView
+            android:id="@+id/start_date_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="8dp"
+
+            android:background="@drawable/custom_background_selector"
+            android:drawableStart="@drawable/ic_date_range_black_24dp"
+            android:drawablePadding="4dp"
+            android:gravity="center"
+            android:hint="Start Date"
+            android:padding="10dp"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toStartOf="@+id/end_date_text"
+            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/include5" />
 
+        <TextView
+            android:id="@+id/end_date_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+
+            android:gravity="center"
+            android:hint="End Date"
+            android:background="@drawable/custom_background_selector"
+            android:drawableStart="@drawable/ic_date_range_black_24dp"
+            android:drawablePadding="4dp"
+            android:padding="10dp"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toStartOf="@+id/search_Button"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/start_date_text"
+            app:layout_constraintTop_toTopOf="@+id/start_date_text" />
+
+        <ImageButton
+            android:id="@+id/search_Button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/end_date_text"
+            app:layout_constraintTop_toTopOf="@+id/start_date_text"
+            app:srcCompat="@drawable/ic_search_black_24dp" />
+
+        <EditText
+            android:id="@+id/tv_search_outlet"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:drawableRight="@drawable/places_ic_search"
+            android:hint="Seach outlet"
+            android:imeOptions="actionSearch"
+            android:inputType="number"
+            android:textSize="17sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/start_date_text" />
+
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/recycler_loader"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toTopOf="@+id/linearLayout5"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_search_outlet">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerview"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginTop="8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/start_date_text" />
+        </android.support.v4.widget.SwipeRefreshLayout>
 
         <android.support.constraint.ConstraintLayout
             android:id="@+id/linearLayout5"

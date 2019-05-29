@@ -1,17 +1,16 @@
 package com.humaclab.selliscope_myone.order_history.api.response_model;
 
+import javax.annotation.Generated;
+import com.google.gson.annotations.SerializedName;
+
+@Generated("com.robohorse.robopojogenerator")
 public class OrderHistoryResponse{
-	private int nextPage;
+
+	@SerializedName("result")
 	private Result result;
+
+	@SerializedName("error")
 	private boolean error;
-
-	public void setNextPage(int nextPage){
-		this.nextPage = nextPage;
-	}
-
-	public int getNextPage(){
-		return nextPage;
-	}
 
 	public void setResult(Result result){
 		this.result = result;
@@ -28,14 +27,4 @@ public class OrderHistoryResponse{
 	public boolean isError(){
 		return error;
 	}
-
-	@Override
- 	public String toString(){
-		return 
-			"OrderHistoryResponse{" + 
-			"next_page = '" + nextPage + '\'' + 
-			",result = '" + result + '\'' + 
-			",error = '" + error + '\'' + 
-			"}";
-		}
 }

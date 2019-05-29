@@ -138,15 +138,22 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                         totalAmt = totalAmount;
                         totalDiscnt = totalDiscount;
                         grandTotal = totalAmount - totalDiscount;
+                        binding.textviewTotal.setText("Total: " + String.valueOf(totalAmount));
                         binding.tvTotalAmt.setText(String.valueOf(totalAmt));
                         binding.tvTotalDiscnt.setText(String.valueOf(totalDiscnt));
-                        binding.tvTotalGr.setText(String.valueOf(grandTotal));
+                        Double dis=binding.editTextDiscount.getText().toString().isEmpty()?0: Double.parseDouble(binding.editTextDiscount.getText().toString());
+
+                        binding.tvTotalGr.setText(String.valueOf(grandTotal - dis ) );
                     }
                 });
             }
         }, 0, 1, TimeUnit.SECONDS);
         //For calculate total discount, amount and grand total in 1 second interval
+
+
     }
+
+
 
     /*
 
@@ -248,6 +255,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                     List<AddNewOrder.NewOrder.Product> products = new ArrayList<>();
                     newOrder.outletId = sOutletID;
                     newOrder.date= CurrentTimeUtilityClass.getCurrentTimeStamp();
+                    newOrder.discount=Double.parseDouble(binding.editTextDiscount.getText().toString());
 
                     Log.d("tareq_test", "" + binding.tblOrders.getChildCount());
                     for (int i = 0; i < binding.tblOrders.getChildCount(); i++) {

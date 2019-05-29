@@ -16,11 +16,16 @@ import android.widget.TextView;
 
 import com.humaclab.selliscope_myone.R;
 import com.humaclab.selliscope_myone.databinding.ActivityOrderHistoryProductBinding;
+import com.humaclab.selliscope_myone.order_history.api.response_model.ProductsItem;
+
+import java.util.List;
 
 public class OrderHistoryProductActivity extends AppCompatActivity {
 
 
    private ActivityOrderHistoryProductBinding mBinding;
+
+    private OrderHistoryProductAdapter mOrderHistoryProductAdapter;
 
 
     @Override
@@ -38,6 +43,9 @@ public class OrderHistoryProductActivity extends AppCompatActivity {
 
         mBinding.recyclerview.setLayoutManager(new LinearLayoutManager(this));
 
+        mOrderHistoryProductAdapter=new OrderHistoryProductAdapter(this, (List< ProductsItem >) getIntent().getSerializableExtra("products"));
+
+        mBinding.recyclerview.setAdapter(mOrderHistoryProductAdapter);
     }
 
     @Override

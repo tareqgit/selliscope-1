@@ -175,10 +175,10 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 pd.show();
 //                if (databaseHandler.removeAll()) {
                 sessionManager.logoutUser();
-                schedulerForMinute.shutdownNow();
-                schedulerForHour.shutdownNow();
+              /*  schedulerForMinute.shutdownNow();
+                schedulerForHour.shutdownNow();*/
                 stopService(new Intent(getApplicationContext(), SendLocationDataService.class));
-                getApplicationContext().deleteDatabase(Constants.databaseName);
+               // getApplicationContext().deleteDatabase(Constants.databaseName);
                 pd.dismiss();
                 finish();
 //                }

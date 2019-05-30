@@ -282,6 +282,13 @@ public class ProductDialogFragment extends DialogFragment implements ProductAdap
       // Toast.makeText(getActivity().getApplicationContext(), ""+ productsItem.getId(), Toast.LENGTH_SHORT).show();
         OrderActivity orderActivity=(OrderActivity) getActivity();
      //   orderActivity.addProduct(productID.get(sp_product_name.getSelectedItemPosition()), isVariant[0], false, null);
+        for ( OrderActivity.SelectedProduct selectedProduct:  orderActivity.mSelectedProducts   ) {
+            if(selectedProduct.id.equals(productsItem.id)) {
+                Toast.makeText(orderActivity, "Product already selected", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+        }
 
         mViewDialog.showDialog();
         Call<StockResponse> call1 = apiService.getProductStock(productsItem.id);
@@ -294,8 +301,11 @@ public class ProductDialogFragment extends DialogFragment implements ProductAdap
                     //for testing as data is not coming
                   //  Toast.makeText(orderActivity, ""+Double.parseDouble(response.body().getStock().getStock().toString()), Toast.LENGTH_SHORT).show();
                     if (Double.parseDouble(response.body().getStock().getStock().toString()) > 0) {
-                        orderActivity.addProduct(productsItem, Double.parseDouble(response.body().getStock().getStock().toString()));
-                        dismiss();
+
+
+                            orderActivity.addProduct(productsItem, Double.parseDouble(response.body().getStock().getStock().toString()));
+                            dismiss();
+
                     } else {
                         Toast.makeText(orderActivity, "Not enough product in stock", Toast.LENGTH_SHORT).show();
                     }

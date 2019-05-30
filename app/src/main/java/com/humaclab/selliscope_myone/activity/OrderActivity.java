@@ -141,7 +141,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                         binding.textviewTotal.setText("Total: " + String.valueOf(totalAmount));
                         binding.tvTotalAmt.setText(String.valueOf(totalAmt));
                         binding.tvTotalDiscnt.setText(String.valueOf(totalDiscnt));
-                        Double dis=binding.editTextDiscount.getText().toString().isEmpty()?0: Double.parseDouble(binding.editTextDiscount.getText().toString());
+                        Double dis=binding.editTextDiscount.getText().toString().isEmpty()?0: Double.parseDouble(binding.editTextDiscount.getText().toString().trim());
 
                         binding.tvTotalGr.setText(String.valueOf(grandTotal - dis ) );
                     }
@@ -255,7 +255,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                     List<AddNewOrder.NewOrder.Product> products = new ArrayList<>();
                     newOrder.outletId = sOutletID;
                     newOrder.date= CurrentTimeUtilityClass.getCurrentTimeStamp();
-                    newOrder.discount=Double.parseDouble(binding.editTextDiscount.getText().toString());
+                    newOrder.discount=binding.editTextDiscount.getText().toString().isEmpty()?0: Double.parseDouble(binding.editTextDiscount.getText().toString().trim());
 
                     Log.d("tareq_test", "" + binding.tblOrders.getChildCount());
                     for (int i = 0; i < binding.tblOrders.getChildCount(); i++) {
@@ -694,6 +694,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
   */
     public void addProduct(final com.humaclab.selliscope_myone.product_paging.model.ProductsItem product, Double stockTotal) {
 
+
         /*if (tableRowCount == 1) {
             addFirstProduct(product.id, fromVariant);
             tableRowCount++;
@@ -864,7 +865,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
     }
 
 
-    class SelectedProduct{
+   public class SelectedProduct{
         public String id;
         public Double price;
         public Double quantity;

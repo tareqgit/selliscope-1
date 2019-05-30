@@ -1,4 +1,10 @@
-package com.humaclab.selliscope_myone.utils;
+/*
+ * Created by Tareq Islam on 5/30/19 12:50 PM
+ *
+ *  Last modified 5/19/19 1:08 PM
+ */
+
+package com.humaclab.selliscope_myone.model;
 
 import com.google.gson.annotations.SerializedName;
 

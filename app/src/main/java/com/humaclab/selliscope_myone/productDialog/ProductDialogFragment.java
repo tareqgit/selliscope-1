@@ -16,9 +16,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
 import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -30,26 +28,17 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
 import com.humaclab.selliscope_myone.R;
 import com.humaclab.selliscope_myone.SelliscopeApiEndpointInterface;
 import com.humaclab.selliscope_myone.SelliscopeApplication;
 import com.humaclab.selliscope_myone.activity.OrderActivity;
-import com.humaclab.selliscope_myone.model.variantProduct.ProductsItem;
-import com.humaclab.selliscope_myone.outlet_paging.OutletInjection;
-import com.humaclab.selliscope_myone.outlet_paging.ui.OutletAdapter;
-import com.humaclab.selliscope_myone.outlet_paging.ui.OutletSearchViewModel;
 import com.humaclab.selliscope_myone.product_paging.ProductInjection;
 import com.humaclab.selliscope_myone.product_paging.ui.ProductAdapter;
 import com.humaclab.selliscope_myone.product_paging.ui.ProductSearchViewModel;
 import com.humaclab.selliscope_myone.utils.Constants;
-import com.humaclab.selliscope_myone.utils.DatabaseHandler;
 import com.humaclab.selliscope_myone.utils.SessionManager;
-import com.humaclab.selliscope_myone.utils.StockResponse;
+import com.humaclab.selliscope_myone.model.StockResponse;
 import com.humaclab.selliscope_myone.utils.ViewDialog;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -59,12 +48,11 @@ import retrofit2.Response;
  * Created by mtita on 19,March,2019.
  */
 public class ProductDialogFragment extends DialogFragment implements ProductAdapter.OnItemClickListener {
-  public   List<ProductsItem> products = new ArrayList<>();
 
   EditText mEditText;
     RecyclerView mRecyclerView;
-    ProductDialogAdapter mProductDialogAdapter;
-    private DatabaseHandler databaseHandler;
+
+
     private SessionManager sessionManager;
 
     private SelliscopeApiEndpointInterface apiService;
@@ -82,16 +70,16 @@ public class ProductDialogFragment extends DialogFragment implements ProductAdap
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        databaseHandler = new DatabaseHandler(getActivity());
+
         this.sessionManager = new SessionManager(getContext());
 
         this.apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(), sessionManager.getUserPassword(), false).create(SelliscopeApiEndpointInterface.class);
 
-        products=databaseHandler.getProduct(0,0);
+
 
         mViewDialog = new ViewDialog(getActivity());
 
-      //  setStyle(DialogFragment.STYLE_NORMAL, R.style.FullScreenDialogStyle);
+
     }
     @Override
     public void onStart() {
@@ -110,10 +98,6 @@ public class ProductDialogFragment extends DialogFragment implements ProductAdap
 
         View rootView=inflater.inflate(R.layout.product_dialog_fragment,container);
 
-        /*Toolbar toolbar = view.findViewById(R.id.toolbar);
-        toolbar.setNavigationIcon(R.drawable.ic_close_white_24dp);
-        toolbar.setNavigationOnClickListener(view1 -> cancelUpload());
-        toolbar.setTitle("My Dialog");*/
         mViewModel = ViewModelProviders.of(this, ProductInjection.provideViewModelFactory(getContext())).get(ProductSearchViewModel.class);
 
         //emptyView
@@ -129,9 +113,6 @@ public class ProductDialogFragment extends DialogFragment implements ProductAdap
         mRecyclerView= (RecyclerView) rootView.findViewById(R.id.mRecyerID);
         mRecyclerView.setLayoutManager(new GridLayoutManager(this.getActivity(),2));
 
-        /*//ADAPTER
-        mProductDialogAdapter=new ProductDialogAdapter(this.getActivity(),products,this);
-        mRecyclerView.setAdapter(mProductDialogAdapter);*/
 
         //for pagination
         initAdapter();
@@ -158,31 +139,6 @@ public class ProductDialogFragment extends DialogFragment implements ProductAdap
         });
 
 
-     /*   ( (EditText) rootView.findViewById(R.id.searchProduct_EditText)).addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (!s.toString().equals("")) {
-                    products = databaseHandler.getSearchedProduct(s.toString());
-                     mProductDialogAdapter.updateData(products);
-                     mProductDialogAdapter.notifyDataSetChanged();
-                } else {
-                        products=databaseHandler.getProduct(0,0);
-                    mProductDialogAdapter.updateData(products);
-                    mProductDialogAdapter.notifyDataSetChanged();
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
-*/
         return rootView;
     }
 

@@ -25,7 +25,7 @@ import com.humaclab.selliscope_myone.product_paging.model.ProductsItem;
 @Database(entities = {ProductsItem.class}, version = 1, exportSchema = false)
 public abstract class ProductDatabase extends RoomDatabase {
 
-    private static volatile RoomDatabase INSTANCE;
+      private static volatile RoomDatabase INSTANCE;
 
     public static RoomDatabase getInstance(Context context) {
         if (INSTANCE == null) {

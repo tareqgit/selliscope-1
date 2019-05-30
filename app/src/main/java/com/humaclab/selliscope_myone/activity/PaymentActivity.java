@@ -16,7 +16,6 @@ import com.humaclab.selliscope_myone.SelliscopeApiEndpointInterface;
 import com.humaclab.selliscope_myone.SelliscopeApplication;
 import com.humaclab.selliscope_myone.adapters.PaymentRecyclerViewAdapter;
 import com.humaclab.selliscope_myone.model.Payment;
-import com.humaclab.selliscope_myone.utils.DatabaseHandler;
 import com.humaclab.selliscope_myone.utils.NetworkUtility;
 import com.humaclab.selliscope_myone.utils.SessionManager;
 
@@ -28,7 +27,7 @@ import retrofit2.Response;
 
 public class PaymentActivity extends AppCompatActivity {
     private SelliscopeApiEndpointInterface apiService;
-    private DatabaseHandler databaseHandler;
+  //  private DatabaseHandler databaseHandler;
     private RecyclerView rv_payment;
     private SwipeRefreshLayout srl_payment;
     private ProgressDialog pd;
@@ -44,7 +43,7 @@ public class PaymentActivity extends AppCompatActivity {
         toolbarTitle.setText("Payment");
         setSupportActionBar(toolbar);
 
-        databaseHandler = new DatabaseHandler(this);
+//        databaseHandler = new DatabaseHandler(this);
         pd = new ProgressDialog(this);
 
         rv_payment = (RecyclerView) findViewById(R.id.rv_payment);

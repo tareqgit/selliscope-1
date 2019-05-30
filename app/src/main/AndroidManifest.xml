@@ -73,26 +73,13 @@
             android:configChanges="orientation|screenSize" />
         <activity android:name=".activity.RouteActivity" />
         <activity android:name=".activity.OutletActivity" />
-        <activity android:name=".activity.AddOutletActivity" />
+
         <activity android:name=".activity.OutletDetailsActivity" />
         <activity android:name=".activity.PrivacyPolicyActivity" />
-        <activity android:name=".activity.ProductActivity" />
         <activity
             android:name=".activity.OrderActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".activity.DeliveryListActivity" />
-        <activity
-            android:name=".activity.DeliveryDetailsActivity"
-            android:screenOrientation="landscape" />
         <activity android:name=".activity.PaymentActivity" />
-        <activity android:name=".activity.DueActivity" />
-        <activity android:name=".activity.EditOutletActivity" />
-        <activity android:name=".activity.CallCardActivity" />
-        <activity android:name=".activity.InspectionActivity" />
-        <activity android:name=".activity.SalesReturnActivity" />
-        <activity
-            android:name=".activity.SalesReturnDetailsActivity"
-            android:screenOrientation="landscape" />
     </application>
 
 </manifest>

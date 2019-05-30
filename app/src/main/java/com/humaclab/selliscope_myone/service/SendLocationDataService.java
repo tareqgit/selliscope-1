@@ -1,12 +1,13 @@
 package com.humaclab.selliscope_myone.service;
 
+import android.annotation.SuppressLint;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 import android.os.PowerManager;
 
-import com.humaclab.selliscope_myone.utils.SendUserLocationData;
+import com.humaclab.selliscope_myone.sen_user_location_data.SendUserLocationData;
 import com.humaclab.selliscope_myone.utils.SessionManager;
 
 import java.util.concurrent.Executors;
@@ -28,6 +29,7 @@ public class SendLocationDataService extends Service {
         super.onCreate();
     }
 
+    @SuppressLint("InvalidWakeLockTag")
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         /* Wake up */

@@ -47,6 +47,8 @@ import com.humaclab.selliscope_myone.R;
 import com.humaclab.selliscope_myone.SelliscopeApiEndpointInterface;
 import com.humaclab.selliscope_myone.SelliscopeApplication;
 import com.humaclab.selliscope_myone.model.Outlets;
+import com.humaclab.selliscope_myone.outlet_paging.api.response_model.OutletSearchResponse;
+import com.humaclab.selliscope_myone.outlet_paging.model.OutletItem;
 import com.humaclab.selliscope_myone.utils.SessionManager;
 
 import java.io.IOException;
@@ -159,31 +161,24 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
         SelliscopeApiEndpointInterface apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(),
                 sessionManager.getUserPassword(), false)
                 .create(SelliscopeApiEndpointInterface.class);
-        Call<ResponseBody> call = apiService.getOutlets();
-        call.enqueue(new Callback<ResponseBody>() {
+        Call<OutletSearchResponse> call = apiService.searchOutlets("",1);
+        call.enqueue(new Callback<OutletSearchResponse>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                Gson gson = new Gson();
+            public void onResponse(Call<OutletSearchResponse> call, Response<OutletSearchResponse> response) {
                 if (response.code() == 200) {
-                    try {
-                        Outlets.Successful getOutletListSuccessful = gson.fromJson(response.body()
-                                .string(), Outlets.Successful.class);
-                        List<Outlets.Successful.Outlet> outlets = getOutletListSuccessful
-                                .outletsResult.outlets;
-                        for (int i = 0; i < outlets.size(); i++) {
-                            try {
-                                mMap.addMarker(new MarkerOptions().position(
-                                        new LatLng(Double.parseDouble(outlets.get(i).outletLatitude),
-                                                Double.parseDouble(outlets.get(i).outletLongitude)))
-                                        .icon(vectorToBitmap(
-                                                R.drawable.store_location_marker, 0))
-                                        .title(outlets.get(i).outletName));
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
+                    List<OutletItem> outlets =response.body().getResult().getOutlet();
+
+                    for (int i = 0; i < outlets.size(); i++) {
+                        try {
+                            mMap.addMarker(new MarkerOptions().position(
+                                    new LatLng(Double.parseDouble(outlets.get(i).latitude),
+                                            Double.parseDouble(outlets.get(i).longitude)))
+                                    .icon(vectorToBitmap(
+                                            R.drawable.store_location_marker, 0))
+                                    .title(outlets.get(i).id));
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
-                    } catch (IOException e) {
-                        e.printStackTrace();
                     }
                 } else if (response.code() == 401) {
                     Toast.makeText(RouteActivity.this,
@@ -195,7 +190,7 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            public void onFailure(Call<OutletSearchResponse> call, Throwable t) {
                 //Toast.makeText(LoginActivity.this, t.toString(), Toast.LENGTH_SHORT).show();
                 Log.d("Response", t.toString());
             }

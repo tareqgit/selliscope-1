@@ -30,15 +30,11 @@ import com.humaclab.selliscope_myone.fragment.DashboardFragment;
 import com.humaclab.selliscope_myone.model.diameter.DiameterResponse;
 import com.humaclab.selliscope_myone.service.SendLocationDataService;
 import com.humaclab.selliscope_myone.utils.CheckAppUpdated;
-import com.humaclab.selliscope_myone.utils.Constants;
-import com.humaclab.selliscope_myone.utils.DatabaseHandler;
-import com.humaclab.selliscope_myone.utils.LoadLocalIntoBackground;
+
 import com.humaclab.selliscope_myone.utils.SessionManager;
 
 
-import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -61,9 +57,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         sessionManager = new SessionManager(this);
-       // databaseHandler = new DatabaseHandler(this);
-     //   loadLocalIntoBackground = new LoadLocalIntoBackground(this);
-    //    loadLocalIntoBackground.loadAll();
+
 
         apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(), sessionManager.getUserPassword(), false).create(SelliscopeApiEndpointInterface.class);
         pd = new ProgressDialog(this);
@@ -98,26 +92,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         //For getting diameter
         setDiameter();
 
-     /*   //loading Data into background
-        schedulerForMinute = Executors.newSingleThreadScheduledExecutor();
-        schedulerForMinute.scheduleAtFixedRate(new Runnable() {
-            public void run() {
 
-                        Log.v("Running threads", "Thread running in background for updating products and outlets");
-                        loadLocalIntoBackground.loadOutlet();
-
-            }
-        }, 0, 1, TimeUnit.MINUTES);
-        schedulerForHour = Executors.newSingleThreadScheduledExecutor();
-        schedulerForHour.scheduleAtFixedRate(new Runnable() {
-            public void run() {
-
-                        Log.v("Running threads", "Thread running in background for updating products and outlets after 30 Minutes interval");
-                        loadLocalIntoBackground.loadProduct();
-
-            }
-        }, 30, 30, TimeUnit.MINUTES);
-        //loading Data into background*/
     }
 
     private void setDiameter() {
@@ -173,15 +148,14 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             case R.id.nav_logout: {
                 pd.setMessage("Login out...");
                 pd.show();
-//                if (databaseHandler.removeAll()) {
+
                 sessionManager.logoutUser();
-              /*  schedulerForMinute.shutdownNow();
-                schedulerForHour.shutdownNow();*/
+
                 stopService(new Intent(getApplicationContext(), SendLocationDataService.class));
-               // getApplicationContext().deleteDatabase(Constants.databaseName);
+
                 pd.dismiss();
                 finish();
-//                }
+
                 break;
             }
             case R.id.nav_privacy_policy: {

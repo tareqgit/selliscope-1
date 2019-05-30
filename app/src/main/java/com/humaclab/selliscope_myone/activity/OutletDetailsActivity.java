@@ -46,22 +46,8 @@ public class OutletDetailsActivity extends AppCompatActivity {
                 .thumbnail(0.5f)
                 .into(binding.ivAddOutletImage);*/
 
-        binding.btnEditOutlet.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), EditOutletActivity.class);
-                intent.putExtra("outletDetails", (Serializable) outlet);
-                startActivity(intent);
-            }
-        });
-        binding.btnCallCard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), CallCardActivity.class);
-                intent.putExtra("outletDetails", (Serializable) outlet);
-                startActivity(intent);
-            }
-        });
+
+      
     }
 
 

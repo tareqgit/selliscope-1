@@ -1,7 +1,14 @@
-package com.humaclab.selliscope_myone.utils;
+/*
+ * Created by Tareq Islam on 5/30/19 2:05 PM
+ *
+ *  Last modified 5/30/19 1:31 PM
+ */
+
+package com.humaclab.selliscope_myone.sen_user_location_data;
 
 import android.Manifest;
 import android.app.Activity;
+import android.arch.persistence.room.Room;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -16,8 +23,13 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.humaclab.selliscope_myone.SelliscopeApiEndpointInterface;
 import com.humaclab.selliscope_myone.SelliscopeApplication;
-import com.humaclab.selliscope_myone.dbmodel.UserVisit;
 import com.humaclab.selliscope_myone.model.UserLocation;
+import com.humaclab.selliscope_myone.sen_user_location_data.db.VisitedLoactionDatabase;
+import com.humaclab.selliscope_myone.sen_user_location_data.model.UserVisit;
+import com.humaclab.selliscope_myone.utils.CurrentTimeUtilityClass;
+import com.humaclab.selliscope_myone.utils.GetAddressFromLatLang;
+import com.humaclab.selliscope_myone.utils.NetworkUtility;
+import com.humaclab.selliscope_myone.utils.SessionManager;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -27,6 +39,11 @@ import io.nlopez.smartlocation.OnLocationUpdatedListener;
 import io.nlopez.smartlocation.SmartLocation;
 import io.nlopez.smartlocation.location.config.LocationAccuracy;
 import io.nlopez.smartlocation.location.config.LocationParams;
+import io.reactivex.Completable;
+import io.reactivex.Scheduler;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.schedulers.Schedulers;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -40,13 +57,16 @@ import timber.log.Timber;
 public class SendUserLocationData {
     private Context context;
     private SessionManager sessionManager;
-    private DatabaseHandler dbHandler;
+    private VisitedLoactionDatabase dbHandler;
+    private List<UserVisit> mUserVisits=new ArrayList<>();
+
+   public CompositeDisposable mDisposable;
 
     public SendUserLocationData(Context context) {
         this.context = context;
         this.sessionManager = new SessionManager(this.context);
-        this.dbHandler = new DatabaseHandler(this.context);
-
+        this.dbHandler = (VisitedLoactionDatabase) VisitedLoactionDatabase.getInstance(context);
+        mDisposable = new CompositeDisposable();
         final LocationManager manager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
 
         if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
@@ -99,21 +119,35 @@ public class SendUserLocationData {
                                     longitude,
                                     CurrentTimeUtilityClass.getCurrentTimeStamp(),
                                     false,
-                                    -1);
-                            List<UserVisit> userVisits = dbHandler.getUSerVisits();
-                            if (!userVisits.isEmpty())
-                                for (UserVisit userVisit : userVisits) {
+                                    null);
+
+
+                            mDisposable.add(
+                                   dbHandler.mUserVisitLocationDao().getUserVisitedLocations().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(mList->{
+                                   mUserVisits = mList;
+                                   })
+                            );
+
+                            if (!mUserVisits.isEmpty())
+                                for (UserVisit userVisit : mUserVisits) {
                                     sendUserLocation(
-                                            userVisit.getLatitude(),
-                                            userVisit.getLongitude(),
-                                            userVisit.getTimeStamp(),
+                                            userVisit.latitude,
+                                            userVisit.longitude,
+                                            userVisit.timeStamp,
                                             true,
-                                            userVisit.getVisitId()
+                                            userVisit.id
                                     );
                                 }
                         } else {
-                            dbHandler.addUserVisits(new UserVisit(latitude, longitude, CurrentTimeUtilityClass.getCurrentTimeStamp()));
-                            Timber.d("User Location Saved in Database");
+                            mDisposable.add(
+                                    Completable.fromAction(() ->
+                                            dbHandler.mUserVisitLocationDao().insert(new UserVisit(latitude, longitude, CurrentTimeUtilityClass.getCurrentTimeStamp())))
+                                            .subscribeOn(Schedulers.io())
+                                            .observeOn(AndroidSchedulers.mainThread())
+                                            .subscribe(
+                                                    () -> Log.d("tareq_test", "User location saved in database"))
+                            );
+
                         }
 
                     }
@@ -121,7 +155,7 @@ public class SendUserLocationData {
         return true;
     }
 
-    private void sendUserLocation(double latitude, double longitude, String timeStamp, final boolean fromDB, final int visitId) {
+    private void sendUserLocation(double latitude, double longitude, String timeStamp, final boolean fromDB, final String id) {
         SelliscopeApiEndpointInterface apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(),
                 sessionManager.getUserPassword(), false)
                 .create(SelliscopeApiEndpointInterface.class);
@@ -137,8 +171,16 @@ public class SendUserLocationData {
                     try {
                         UserLocation.Successful userLocationSuccess = gson.fromJson(response.body().string(), UserLocation.Successful.class);
                         Timber.d("Result:" + userLocationSuccess.result);
-                        if (fromDB)
-                            dbHandler.deleteUserVisit(visitId);
+                        if (fromDB && id!=null) {
+
+                            mDisposable.add(
+                                    Completable.fromAction(()->dbHandler.mUserVisitLocationDao().deleteUserVisitedLoactions(id)).subscribeOn(Schedulers.io())
+                                    .observeOn(AndroidSchedulers.mainThread())
+                                    .subscribe(()->{
+                                        Log.d("tareq_test" , "All data deleted successfully");
+                                    }));
+                        }
+
                     } catch (IOException e) {
                         Timber.d("Error:" + e.toString());
                         e.printStackTrace();
@@ -199,4 +241,5 @@ public class SendUserLocationData {
     public interface OnGetLocation {
         void getLocation(Double latitude, Double longitude);
     }
+
 }

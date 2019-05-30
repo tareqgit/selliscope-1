@@ -12,16 +12,12 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.humaclab.selliscope_myone.R;
-import com.humaclab.selliscope_myone.activity.DeliveryListActivity;
-import com.humaclab.selliscope_myone.activity.InspectionActivity;
 import com.humaclab.selliscope_myone.activity.OrderActivity;
 import com.humaclab.selliscope_myone.activity.OutletActivity;
 import com.humaclab.selliscope_myone.activity.PaymentActivity;
-import com.humaclab.selliscope_myone.activity.ProductActivity;
 import com.humaclab.selliscope_myone.activity.RouteActivity;
 import com.humaclab.selliscope_myone.adapters.DashboardRecyclerViewAdapter;
 import com.humaclab.selliscope_myone.model.DashboardItem;
-import com.humaclab.selliscope_myone.order_history.OrderHistoryActivity;
 import com.humaclab.selliscope_myone.utils.RecyclerItemClickListener;
 
 import java.util.ArrayList;
@@ -78,8 +74,7 @@ public class DashboardFragment extends Fragment {
                             }
 
                             case 2: {
-                                getActivity().startActivity(new Intent(getActivity(),
-                                        ProductActivity.class));
+
                                 break;
                             }
                             case 3: {
@@ -88,8 +83,7 @@ public class DashboardFragment extends Fragment {
                                 break;
                             }
                             case 4: {
-                                getActivity().startActivity(new Intent(getActivity(),
-                                        DeliveryListActivity.class));
+
                                 break;
                             }
                             case 5: {
@@ -98,8 +92,7 @@ public class DashboardFragment extends Fragment {
                                 break;
                             }
                             case 6: {
-                                getActivity().startActivity(new Intent(getActivity(),
-                                        InspectionActivity.class));
+
                                 break;
                             }
                             case 7: {

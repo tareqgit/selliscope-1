@@ -35,14 +35,13 @@ import com.google.gson.Gson;
 import com.humaclab.selliscope_myone.R;
 import com.humaclab.selliscope_myone.SelliscopeApiEndpointInterface;
 import com.humaclab.selliscope_myone.SelliscopeApplication;
-import com.humaclab.selliscope_myone.activity.OrderActivity;
 import com.humaclab.selliscope_myone.activity.OutletDetailsActivity;
 import com.humaclab.selliscope_myone.model.UserLocation;
 import com.humaclab.selliscope_myone.order_history.OrderHistoryActivity;
 import com.humaclab.selliscope_myone.outlet_paging.model.OutletItem;
 import com.humaclab.selliscope_myone.utils.GetAddressFromLatLang;
 import com.humaclab.selliscope_myone.utils.NetworkUtility;
-import com.humaclab.selliscope_myone.utils.SendUserLocationData;
+import com.humaclab.selliscope_myone.sen_user_location_data.SendUserLocationData;
 import com.humaclab.selliscope_myone.utils.SessionManager;
 
 import java.io.IOException;

@@ -46,7 +46,8 @@
                 android:id="@+id/rv_outlet"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-
+                android:paddingBottom="50dp"
+                android:clipToPadding="false"
                 />
         </android.support.v4.widget.SwipeRefreshLayout>
 

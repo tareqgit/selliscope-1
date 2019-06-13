@@ -49,13 +49,13 @@ public class ProductAdapter extends PagedListAdapter<ProductsItem, ProductAdapte
             = new DiffUtil.ItemCallback<ProductsItem>() {
         @Override
         public boolean areItemsTheSame(ProductsItem oldItem, ProductsItem newItem) {
-            return oldItem.name.equals(newItem.name);
+            return oldItem.id.equals(newItem.id);
         }
 
         @SuppressLint("DiffUtilEquals")
         @Override
         public boolean areContentsTheSame(ProductsItem oldItem, ProductsItem newItem) {
-            return oldItem.equals(newItem);
+            return oldItem.price.equals(newItem.price) && oldItem.brand.equals(newItem.brand)&&oldItem.id.equals(newItem.id);
         }
     };
 
@@ -71,23 +71,25 @@ public class ProductAdapter extends PagedListAdapter<ProductsItem, ProductAdapte
 
     @Override
     public ProductsViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View layoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.product_dialog_recycler_model, parent, false);
+        View layoutView = LayoutInflater.from(mContext).inflate(R.layout.product_dialog_recycler_model, parent, false);
         return new ProductsViewHolder(layoutView);
     }
 
     @Override
     public void onBindViewHolder(ProductsViewHolder holder, int position) {
         ProductsItem product = getItem(position);
-        try {
-            holder.nameTxt.setText(product.id.toString());
-            holder.priceTxt.setText("Price: "+ product.price);
-            holder.stockType.setText( product.stockType);
-            Glide.with(holder.productPic)
-                    .load(R.drawable.app_logo)
-                    .into(holder.productPic);
-        } catch (Exception e) {
-            Log.d("tareq_test" , ""+e.getMessage());
-            e.printStackTrace();
+        if(product!=null) {
+            try {
+                holder.nameTxt.setText(product.id.toString());
+                holder.priceTxt.setText("Price: " + product.price);
+                holder.stockType.setText(product.stockType);
+                Glide.with(holder.productPic)
+                        .load(R.drawable.app_logo)
+                        .into(holder.productPic);
+            } catch (Exception e) {
+                Log.d("tareq_test", "" + e.getMessage());
+                e.printStackTrace();
+            }
         }
     }
 
@@ -105,12 +107,9 @@ public class ProductAdapter extends PagedListAdapter<ProductsItem, ProductAdapte
             stockType=itemView.findViewById(R.id.stockType);
 
             productPic=itemView.findViewById(R.id.productimageView);
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                 //   mOnItemClickListener.onClick(products.get(getAdapterPosition()));
-                    mOnItemClickListener.onClick( getItem(getAdapterPosition()));
-                }
+            itemView.setOnClickListener(v -> {
+             //   mOnItemClickListener.onClick(products.get(getAdapterPosition()));
+                mOnItemClickListener.onClick( getItem(getAdapterPosition()));
             });
         }
 

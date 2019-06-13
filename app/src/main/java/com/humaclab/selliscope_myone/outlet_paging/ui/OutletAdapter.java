@@ -74,7 +74,7 @@ public class OutletAdapter extends PagedListAdapter<OutletItem, OutletAdapter.Ou
         @SuppressLint("DiffUtilEquals")
         @Override
         public boolean areContentsTheSame(OutletItem oldItem, OutletItem newItem) {
-            return oldItem.equals(newItem);
+            return oldItem.address.equals(newItem.address) && oldItem.id.equals(newItem.id);
         }
     };
 

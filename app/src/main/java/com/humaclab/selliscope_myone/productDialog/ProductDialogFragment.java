@@ -7,9 +7,9 @@
 package com.humaclab.selliscope_myone.productDialog;
 
 
-
 import android.app.Dialog;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -22,6 +22,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -33,12 +34,15 @@ import com.humaclab.selliscope_myone.SelliscopeApiEndpointInterface;
 import com.humaclab.selliscope_myone.SelliscopeApplication;
 import com.humaclab.selliscope_myone.activity.OrderActivity;
 import com.humaclab.selliscope_myone.product_paging.ProductInjection;
+import com.humaclab.selliscope_myone.product_paging.model.ProductsItem;
 import com.humaclab.selliscope_myone.product_paging.ui.ProductAdapter;
 import com.humaclab.selliscope_myone.product_paging.ui.ProductSearchViewModel;
 import com.humaclab.selliscope_myone.utils.Constants;
 import com.humaclab.selliscope_myone.utils.SessionManager;
 import com.humaclab.selliscope_myone.model.StockResponse;
 import com.humaclab.selliscope_myone.utils.ViewDialog;
+
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -49,7 +53,7 @@ import retrofit2.Response;
  */
 public class ProductDialogFragment extends DialogFragment implements ProductAdapter.OnItemClickListener {
 
-  EditText mEditText;
+    EditText mEditText;
     RecyclerView mRecyclerView;
 
 
@@ -67,6 +71,7 @@ public class ProductDialogFragment extends DialogFragment implements ProductAdap
     ViewDialog mViewDialog;
     TextView mEmptyView;
 
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,11 +81,11 @@ public class ProductDialogFragment extends DialogFragment implements ProductAdap
         this.apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(), sessionManager.getUserPassword(), false).create(SelliscopeApiEndpointInterface.class);
 
 
-
         mViewDialog = new ViewDialog(getActivity());
 
 
     }
+
     @Override
     public void onStart() {
         super.onStart();
@@ -91,18 +96,20 @@ public class ProductDialogFragment extends DialogFragment implements ProductAdap
             dialog.getWindow().setLayout(width, height);
         }
     }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
 
-        View rootView=inflater.inflate(R.layout.product_dialog_fragment,container);
+        View rootView = inflater.inflate(R.layout.product_dialog_fragment, container);
 
         mViewModel = ViewModelProviders.of(this, ProductInjection.provideViewModelFactory(getContext())).get(ProductSearchViewModel.class);
 
         //emptyView
-        mEmptyView= rootView.findViewById(R.id.emptyList);
+        mEmptyView = rootView.findViewById(R.id.emptyList);
         mEmptyView.setText(getString(R.string.no_results, "\uD83D\uDE13"));
+        mEmptyView.setVisibility(View.GONE);
 
         //progressBar
         mProgressBar = rootView.findViewById(R.id.ProgressBar);
@@ -110,8 +117,10 @@ public class ProductDialogFragment extends DialogFragment implements ProductAdap
         //searchView
         mEditText = rootView.findViewById(R.id.searchProduct_EditText);
         //RECYCER
-        mRecyclerView= (RecyclerView) rootView.findViewById(R.id.mRecyerID);
-        mRecyclerView.setLayoutManager(new GridLayoutManager(this.getActivity(),2));
+        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.mRecyerID);
+        mRecyclerView.setHasFixedSize(true);
+
+        mRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2, GridLayoutManager.VERTICAL, false));
 
 
         //for pagination
@@ -131,12 +140,7 @@ public class ProductDialogFragment extends DialogFragment implements ProductAdap
 
         this.getDialog().setTitle("Products");
 
-        rootView.findViewById(R.id.caneclImageView).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dismiss();
-            }
-        });
+        rootView.findViewById(R.id.caneclImageView).setOnClickListener(v -> dismiss());
 
 
         return rootView;
@@ -156,7 +160,6 @@ public class ProductDialogFragment extends DialogFragment implements ProductAdap
      */
     private void initSearch(String query) {
         mEditText.setText(query);
-
 
 
         mEditText.setOnEditorActionListener((view, actionId, event) -> {
@@ -179,33 +182,34 @@ public class ProductDialogFragment extends DialogFragment implements ProductAdap
     }
 
     /**
-     * Updates the list with the new data when the User entered the query and hit 'enter'
-     * or corresponding action to trigger the Search.
+     * Updates the list with the new data when the User entered the query and hit 'enter' or
+     * corresponding action to trigger the Search.
      */
     private void updateRepoListFromInput() {
+        showEmptyList(false);
         String queryEntered = mEditText.getText().toString().trim();
-         if (!TextUtils.isEmpty(queryEntered)) {
-            mRecyclerView.scrollToPosition(0);
-            //Posts the query to be searched
-            mViewModel.searchProducts(queryEntered);
-            //Resets the old list
-            mAdapter.submitList(null);
-        }
+        //if (!TextUtils.isEmpty(queryEntered)) {
+        mRecyclerView.scrollToPosition(0);
+        //Posts the query to be searched
+        mViewModel.searchProducts(queryEntered);
+        //Resets the old list
+        mAdapter.submitList(null);
+        //}
     }
 
-
+    int repoSize;
 
     private void initAdapter() {
         mAdapter = new ProductAdapter(getContext(), getActivity());
         mAdapter.setOnItemClickListener(this);
 
-        mRecyclerView.setAdapter(mAdapter);
 
+        mRecyclerView.setAdapter(mAdapter);
         //Subscribing to receive the new PagedList Repos
         mViewModel.getRepos().observe(this, repos -> {
             if (repos != null) {
                 Log.d("tareq_test", "initAdapter: Repo List size: " + repos.size());
-                showEmptyList(repos.size() == 0);
+                repoSize=repos.size();
                 mAdapter.submitList(repos);
             }
         });
@@ -217,29 +221,28 @@ public class ProductDialogFragment extends DialogFragment implements ProductAdap
 
         //Subscribing to receive the recent Network State if any
         mViewModel.getNetworkStates().observe(this, network_state -> {
-            if(network_state.equals(Constants.NETWORK_STATE.LOADING)){
+            if (network_state.equals(Constants.NETWORK_STATE.LOADING)) {
                 mProgressBar.setVisibility(View.VISIBLE);
+                showEmptyList(false);
+
+            } else if(network_state.equals(Constants.NETWORK_STATE.LOADED)){
+                mProgressBar.setVisibility(View.GONE);
+                showEmptyList(false);
             }else{
+                showEmptyList(repoSize<=0);
                 mProgressBar.setVisibility(View.GONE);
             }
         });
     }
 
 
-
-
-
-
-
-
-
     @Override
     public void onClick(com.humaclab.selliscope_myone.product_paging.model.ProductsItem productsItem) {
-      // Toast.makeText(getActivity().getApplicationContext(), ""+ productsItem.getId(), Toast.LENGTH_SHORT).show();
-        OrderActivity orderActivity=(OrderActivity) getActivity();
-     //   orderActivity.addProduct(productID.get(sp_product_name.getSelectedItemPosition()), isVariant[0], false, null);
-        for ( OrderActivity.SelectedProduct selectedProduct:  orderActivity.mSelectedProducts   ) {
-            if(selectedProduct.id.equals(productsItem.id)) {
+        // Toast.makeText(getActivity().getApplicationContext(), ""+ productsItem.getId(), Toast.LENGTH_SHORT).show();
+        OrderActivity orderActivity = (OrderActivity) getActivity();
+        //   orderActivity.addProduct(productID.get(sp_product_name.getSelectedItemPosition()), isVariant[0], false, null);
+        for (OrderActivity.SelectedProduct selectedProduct : orderActivity.mSelectedProducts) {
+            if (selectedProduct.id.equals(productsItem.id)) {
                 Toast.makeText(orderActivity, "Product already selected", Toast.LENGTH_SHORT).show();
                 return;
             }
@@ -253,20 +256,20 @@ public class ProductDialogFragment extends DialogFragment implements ProductAdap
             public void onResponse(Call<StockResponse> call, Response<StockResponse> response) {
 
 
-                if(response.isSuccessful()) {
+                if (response.isSuccessful()) {
                     //for testing as data is not coming
-                  //  Toast.makeText(orderActivity, ""+Double.parseDouble(response.body().getStock().getStock().toString()), Toast.LENGTH_SHORT).show();
+                    //  Toast.makeText(orderActivity, ""+Double.parseDouble(response.body().getStock().getStock().toString()), Toast.LENGTH_SHORT).show();
                     if (Double.parseDouble(response.body().getStock().getStock().toString()) > 0) {
 
 
-                            orderActivity.addProduct(productsItem, Double.parseDouble(response.body().getStock().getStock().toString()));
-                            dismiss();
+                        orderActivity.addProduct(productsItem, Double.parseDouble(response.body().getStock().getStock().toString()));
+                        dismiss();
 
                     } else {
                         Toast.makeText(orderActivity, "Not enough product in stock", Toast.LENGTH_SHORT).show();
                     }
-                }else{
-                    Toast.makeText(orderActivity, "Internal Server Error: "+ response.code(), Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(orderActivity, "Internal Server Error: " + response.code(), Toast.LENGTH_SHORT).show();
                 }
 
                 mViewDialog.hideDialog();
@@ -280,7 +283,6 @@ public class ProductDialogFragment extends DialogFragment implements ProductAdap
         });
 
 
-
     }
 
     /**
@@ -290,8 +292,10 @@ public class ProductDialogFragment extends DialogFragment implements ProductAdap
      */
     private void showEmptyList(boolean show) {
         if (show) {
-          mRecyclerView.setVisibility(View.GONE);
-            mEmptyView.setVisibility(View.VISIBLE);
+
+                mRecyclerView.setVisibility(View.GONE);
+                mEmptyView.setVisibility(View.VISIBLE);
+
         } else {
             mRecyclerView.setVisibility(View.VISIBLE);
             mEmptyView.setVisibility(View.GONE);

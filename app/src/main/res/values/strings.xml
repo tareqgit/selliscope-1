@@ -43,7 +43,7 @@
     <string name="sp_thana_title">Thana</string>
     <string name="sp_outlet_type">Type</string>
     <string name="stock">Stock: %1$s</string>
-    <string name="no_results">No Result %s</string>
+    <string name="no_results">No Result found Yet. \n Please wait %s</string>
 
     <string-array name="paymentType">
         <item>Cash</item>

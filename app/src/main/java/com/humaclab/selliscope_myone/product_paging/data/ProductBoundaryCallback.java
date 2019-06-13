@@ -114,7 +114,8 @@ public class ProductBoundaryCallback extends PagedList.BoundaryCallback<Products
     @Override
     public void onSuccess(List<ProductsItem> items) {
 
-        networkState.postValue(Constants.NETWORK_STATE.LOADED);
+       if (items.size()>0) networkState.postValue(Constants.NETWORK_STATE.LOADED);
+       else networkState.postValue(Constants.NETWORK_STATE.ERROR);
         //Inserting records in the database thread
         mProductLocalCache.insert(items, () -> {
             //Updating the last requested page number when the request was successful
@@ -123,10 +124,13 @@ public class ProductBoundaryCallback extends PagedList.BoundaryCallback<Products
             //Marking the request progress as completed
             isRequestInProgress = false;
         });
+
+
     }
 
     @Override
     public void onError(String errorMessage) {
+        networkState.postValue(Constants.NETWORK_STATE.ERROR);
         //Update the Network error to be shown
         networkError.postValue(errorMessage);
         //Mark the request progress as completed

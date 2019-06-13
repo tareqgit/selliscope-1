@@ -32,16 +32,13 @@ public class ProductLocalCache {
     /**
      * Insert a list of repos in the database, on a background thread.
      */
-    public void insert(final List<ProductsItem> products, final InsertCallback insertCallback) {
-        ioExecutor.execute(new Runnable() {
-            @Override
-            public void run() {
-                Log.d("tareq_test", "insert: inserting " + products.size());
+    public void insert( List<ProductsItem> products, InsertCallback insertCallback) {
+        ioExecutor.execute(() -> {
+            Log.d("tareq_test", "insert: inserting " + products.size());
 
-                mProductDao.insert(products);
+            mProductDao.insert(products);
 
-                insertCallback.insertFinished();
-            }
+            insertCallback.insertFinished();
         });
     }
 

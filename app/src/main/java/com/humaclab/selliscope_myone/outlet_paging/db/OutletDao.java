@@ -22,7 +22,7 @@ import java.util.List;
 @Dao
 public interface OutletDao {
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insert(List<OutletItem> posts);
 
 

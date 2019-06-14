@@ -205,6 +205,7 @@ public class ProductDialogFragment extends DialogFragment implements ProductAdap
 
 
         mRecyclerView.setAdapter(mAdapter);
+        mAdapter.submitList(null);
         //Subscribing to receive the new PagedList Repos
         mViewModel.getRepos().observe(this, repos -> {
             if (repos != null) {

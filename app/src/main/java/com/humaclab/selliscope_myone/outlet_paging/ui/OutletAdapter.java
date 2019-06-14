@@ -98,7 +98,7 @@ public class OutletAdapter extends PagedListAdapter<OutletItem, OutletAdapter.Ou
     public void onBindViewHolder(OutletViewHolder holder, int position) {
         OutletItem outlet = getItem(position);
         if (outlet != null) {
-            holder.tvOutletName.setText(outlet.name);
+            holder.tvOutletName.setText(position+" : " + outlet.name);
             holder.tvOutletAddress.setText(outlet.address);
             holder.tvOutletContactNumber.setText(outlet.phone);
             holder.tvOutletOwnerName.setText(outlet.owner);

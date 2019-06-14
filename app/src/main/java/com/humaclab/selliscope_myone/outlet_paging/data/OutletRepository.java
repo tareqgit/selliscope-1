@@ -23,7 +23,7 @@ import com.humaclab.selliscope_myone.utils.Constants;
  */
 public class OutletRepository {
     //Constant for the number of items to be loaded at once from the DataSource by the PagedList
-    private static final int DATABASE_PAGE_SIZE = 30;
+    private static final int DATABASE_PAGE_SIZE = 50;
     SelliscopeApiEndpointInterface apiService;
     private OutletLocalCache mLocalCache;
 

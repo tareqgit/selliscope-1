@@ -52,10 +52,12 @@ public class ProductAdapter extends PagedListAdapter<ProductsItem, ProductAdapte
             return oldItem.id.equals(newItem.id);
         }
 
-        @SuppressLint("DiffUtilEquals")
+
         @Override
         public boolean areContentsTheSame(ProductsItem oldItem, ProductsItem newItem) {
-            return oldItem.price.equals(newItem.price) && oldItem.brand.equals(newItem.brand)&&oldItem.id.equals(newItem.id);
+            return oldItem.price.equals(newItem.price)
+                    && oldItem.brand.equals(newItem.brand)
+                    && oldItem.stockType.equals(newItem.stockType);
         }
     };
 
@@ -80,7 +82,7 @@ public class ProductAdapter extends PagedListAdapter<ProductsItem, ProductAdapte
         ProductsItem product = getItem(position);
         if(product!=null) {
             try {
-                holder.nameTxt.setText(product.id.toString());
+                holder.nameTxt.setText(position+" : "+product.id.toString());
                 holder.priceTxt.setText("Price: " + product.price);
                 holder.stockType.setText(product.stockType);
                 Glide.with(holder.productPic)

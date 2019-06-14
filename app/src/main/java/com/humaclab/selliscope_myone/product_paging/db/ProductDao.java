@@ -29,7 +29,7 @@ import java.util.List;
 @Dao
 public interface ProductDao {
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insert(List<ProductsItem> posts);
 
 

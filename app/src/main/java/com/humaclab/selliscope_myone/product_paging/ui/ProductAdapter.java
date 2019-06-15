@@ -18,11 +18,14 @@ import android.app.Activity;
 import android.arch.paging.PagedListAdapter;
 import android.content.Context;
 import android.support.v7.util.DiffUtil;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -82,7 +85,7 @@ public class ProductAdapter extends PagedListAdapter<ProductsItem, ProductAdapte
         ProductsItem product = getItem(position);
         if(product!=null) {
             try {
-                holder.nameTxt.setText(position+" : "+product.id.toString());
+                holder.nameTxt.setText(product.id.toString());
                 holder.priceTxt.setText("Price: " + product.price);
                 holder.stockType.setText(product.stockType);
                 Glide.with(holder.productPic)
@@ -93,17 +96,31 @@ public class ProductAdapter extends PagedListAdapter<ProductsItem, ProductAdapte
                 e.printStackTrace();
             }
         }
+        setAnimation(holder.mCardView, position);
     }
 
 
-
+    private int lastPosition = -1;
+    private void setAnimation(View viewToAnimate, int position)
+    {
+        // If the bound view wasn't previously displayed on screen, it's animated
+        if (position > lastPosition)
+        {
+            Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.up_from_bottom);
+            viewToAnimate.startAnimation(animation);
+            lastPosition = position;
+        }
+    }
 
     public class ProductsViewHolder extends RecyclerView.ViewHolder {
         ImageView productPic;
         TextView nameTxt, stockType, priceTxt;
+        CardView mCardView;
 
         public ProductsViewHolder(View itemView) {
             super(itemView);
+            mCardView = itemView.findViewById(R.id.mCard);
+
             nameTxt= (TextView) itemView.findViewById(R.id.nameTxt);
             priceTxt =itemView.findViewById(R.id.priceText);
             stockType=itemView.findViewById(R.id.stockType);

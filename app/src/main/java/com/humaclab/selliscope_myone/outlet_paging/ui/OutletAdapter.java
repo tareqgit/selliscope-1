@@ -22,6 +22,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -98,7 +100,7 @@ public class OutletAdapter extends PagedListAdapter<OutletItem, OutletAdapter.Ou
     public void onBindViewHolder(OutletViewHolder holder, int position) {
         OutletItem outlet = getItem(position);
         if (outlet != null) {
-            holder.tvOutletName.setText(position+" : " + outlet.name);
+            holder.tvOutletName.setText( outlet.name);
             holder.tvOutletAddress.setText(outlet.address);
             holder.tvOutletContactNumber.setText(outlet.phone);
             holder.tvOutletOwnerName.setText(outlet.owner);
@@ -144,6 +146,19 @@ public class OutletAdapter extends PagedListAdapter<OutletItem, OutletAdapter.Ou
                 }
             });
 
+        }
+        setAnimation(holder.cardView, position);
+    }
+
+    private int lastPosition = -1;
+    private void setAnimation(View viewToAnimate, int position)
+    {
+        // If the bound view wasn't previously displayed on screen, it's animated
+        if (position > lastPosition)
+        {
+            Animation animation = AnimationUtils.loadAnimation(mContext, R.anim.up_from_bottom);
+            viewToAnimate.startAnimation(animation);
+            lastPosition = position;
         }
     }
 

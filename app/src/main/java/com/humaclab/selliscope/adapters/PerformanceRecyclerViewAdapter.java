@@ -2,17 +2,14 @@ package com.humaclab.selliscope.adapters;
 
 import android.content.Context;
 import android.graphics.Rect;
-import android.support.constraint.ConstraintLayout;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.RecyclerView;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 import com.humaclab.selliscope.R;
 import com.humaclab.selliscope.model.DashboardItem;
 

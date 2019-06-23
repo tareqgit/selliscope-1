@@ -1,15 +1,15 @@
 package com.humaclab.selliscope.activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.databinding.DataBindingUtil;
+import androidx.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.Toolbar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.ViewDataBinding;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.appcompat.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 import static com.humaclab.selliscope.activity.OrderActivity.selectedProductList;
@@ -23,7 +23,6 @@ import com.humaclab.selliscope.adapters.SelectedProductRecyclerAdapter;
 import com.humaclab.selliscope.databinding.ActivityCartBinding;
 import com.humaclab.selliscope.helper.SelectedProductHelper;
 import com.humaclab.selliscope.model.AddNewOrder;
-import com.humaclab.selliscope.model.DeliveryResponse;
 import com.humaclab.selliscope.pos_sdk.PosActivity;
 import com.humaclab.selliscope.pos_sdk.model.PosModel;
 import com.humaclab.selliscope.utils.DatabaseHandler;
@@ -256,7 +255,7 @@ public  static PosModel sPosModel;
                 call.enqueue(new Callback<AddNewOrder.OrderResponse>() {
                     @Override
                     public void onResponse(Call<AddNewOrder.OrderResponse> call, Response<AddNewOrder.OrderResponse> response) {
-                        pd.dismiss();
+                       pd.dismiss();
                         if (response.code() == 201) {
                             System.out.println(new Gson().toJson(response.body()));
                             Toast.makeText(ActivityCart.this, "Order created successfully", Toast.LENGTH_LONG).show();

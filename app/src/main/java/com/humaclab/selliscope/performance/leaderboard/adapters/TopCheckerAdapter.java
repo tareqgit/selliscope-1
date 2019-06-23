@@ -1,10 +1,10 @@
 package com.humaclab.selliscope.performance.leaderboard.adapters;
 
 import android.content.Context;
-import android.databinding.DataBindingUtil;
+import androidx.databinding.DataBindingUtil;
 import android.graphics.Color;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,9 +14,7 @@ import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.humaclab.selliscope.BR;
 import com.humaclab.selliscope.R;
 import com.humaclab.selliscope.databinding.PerformenceLeaderboardTopCheckerFragmentModelBinding;
-import com.humaclab.selliscope.databinding.PerformenceLeaderboardTopCollecterFragmentModelBinding;
 import com.humaclab.selliscope.model.performance.leaderboard_model.TopCheckerModel;
-import com.humaclab.selliscope.model.performance.leaderboard_model.TopSellerModel;
 
 import java.text.MessageFormat;
 import java.util.List;

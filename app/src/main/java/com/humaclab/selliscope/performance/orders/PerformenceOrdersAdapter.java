@@ -7,9 +7,9 @@
 package com.humaclab.selliscope.performance.orders;
 
 import android.content.Context;
-import android.databinding.DataBindingUtil;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
+import androidx.databinding.DataBindingUtil;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,7 +45,7 @@ public class PerformenceOrdersAdapter extends RecyclerView.Adapter<PerformenceOr
     @Override
     public PerformanceHistoryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view= LayoutInflater.from(mContext).inflate(R.layout.activity_performence_orders_model,parent,false);
-            return new PerformanceHistoryViewHolder(view);
+        return new PerformanceHistoryViewHolder(view);
     }
 
     @Override

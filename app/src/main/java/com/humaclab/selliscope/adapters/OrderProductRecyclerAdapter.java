@@ -1,16 +1,15 @@
 package com.humaclab.selliscope.adapters;
 
 import android.content.Context;
-import android.databinding.DataBindingUtil;
+import androidx.databinding.DataBindingUtil;
 import android.graphics.Color;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.RecyclerView;
+import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.android.databinding.library.baseAdapters.BR;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
@@ -145,7 +144,7 @@ public class OrderProductRecyclerAdapter extends RecyclerView.Adapter<OrderProdu
                 .thumbnail(0.1f)
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
                 .into(holder.imageView);
-        holder.getBinding().setVariable(BR.product, products);
+        holder.getBinding().setProduct(products);
         holder.getBinding().executePendingBindings();
     }
 

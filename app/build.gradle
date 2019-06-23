@@ -86,7 +86,7 @@ dependencies {
 
     implementation 'com.google.android.gms:play-services-location:16.0.0'
     implementation 'com.google.android.gms:play-services-awareness:16.0.0'
-    implementation 'com.google.firebase:firebase-messaging:15.0.2'
+    implementation 'com.google.firebase:firebase-messaging:18.0.0'
 
     /*implementation 'com.squareup.picasso:picasso:2.5.2'
 */
@@ -97,7 +97,7 @@ dependencies {
     implementation 'com.caverock:androidsvg:1.2.1' //added progourd exception
 
     //Shimmer effect
-    implementation 'com.facebook.shimmer:shimmer:0.3.0'
+    implementation 'com.facebook.shimmer:shimmer:0.4.0'
 
 
     implementation 'io.realm:android-adapters:2.1.1'
@@ -113,4 +113,6 @@ dependencies {
     }
     //for pojo
     implementation 'org.glassfish:javax.annotation:10.0-b28'
+
+
 }

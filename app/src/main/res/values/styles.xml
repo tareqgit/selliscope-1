@@ -26,4 +26,10 @@
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
+
+
+    <style name="DialogAnimation">
+    <item name="android:windowEnterAnimation">@anim/alert_present</item>
+    <item name="android:windowExitAnimation">@anim/alert_dismiss</item>
+    </style>
 </resources>

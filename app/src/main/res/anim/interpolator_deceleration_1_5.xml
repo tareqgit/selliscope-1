@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Created by Tareq Islam on 6/9/19 3:44 PM
+  ~
+  ~  Last modified 6/9/19 3:43 PM
+  -->
+
+<!--
+  ~ Created by Tareq Islam on 6/9/19 3:43 PM
+  ~
+  ~  Last modified 6/9/19 3:43 PM
+  -->
+
+<decelerateInterpolator
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:factor="1.5"/>

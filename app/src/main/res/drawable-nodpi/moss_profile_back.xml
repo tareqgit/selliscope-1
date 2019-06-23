@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Created by Tareq Islam on 4/20/19 2:19 AM
+  ~
+  ~  Last modified 4/20/19 1:29 AM
+  -->
+
+<!--
+  ~ Created by Tareq Islam on 4/20/19 1:28 AM
+  ~
+  ~  Last modified 4/20/19 1:20 AM
+  -->
+
+<!--
+  ~ Created by Tareq Islam on 4/20/19 1:03 AM
+  ~
+  ~  Last modified 4/9/19 6:12 PM
+  -->
+
+<!--
+  ~ Created by Tareq Islam on 4/9/19 6:07 PM
+  ~
+  ~  Last modified 4/9/19 5:53 PM
+  -->
+
+<!--
+  ~ Created by Tareq Islam on 4/9/19 5:44 PM
+  ~
+  ~  Last modified 2/20/19 7:04 PM
+  -->
+
+<!--
+  ~ Created by Tareq Islam on 2/19/19 12:04 AM
+  ~
+  ~  Last modified 2/18/19 11:51 PM
+  -->
+
+<!--
+  ~ Created by Tareq Islam on 2/18/19 11:46 PM
+  ~
+  ~  Last modified 2/18/19 11:46 PM
+  -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+       >
+<shape android:shape="rectangle"
+
+    >
+    <solid android:color="#FFFFFFFF"
+        />
+    <stroke android:width="1dp"
+        android:color="#D3D3D3"
+        />
+
+    <corners android:radius="90dp"/>
+
+
+</shape>
+    </item>
+</layer-list>

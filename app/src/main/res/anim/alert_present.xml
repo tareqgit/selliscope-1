@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Created by Tareq Islam on 6/9/19 3:41 PM
+  ~
+  ~  Last modified 6/9/19 3:41 PM
+  -->
+
+<set xmlns:android="http://schemas.android.com/apk/res/android"
+    android:fillAfter="true"
+    android:interpolator="@android:anim/linear_interpolator"
+    android:duration="150">
+
+    <scale
+        android:duration="150"
+        android:fromXScale=".8"
+        android:fromYScale=".8"
+        android:pivotX="50%"
+        android:pivotY="50%"
+        android:toXScale="1.0"
+        android:toYScale="1.0"
+        />
+
+    <alpha
+        android:duration="150"
+        android:fromAlpha="0"
+
+        android:toAlpha="1"/>
+
+</set>

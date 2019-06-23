@@ -3,8 +3,13 @@ package com.humaclab.lalteer.activity;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.HapticFeedbackConstants;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
@@ -12,6 +17,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CircleCrop;
+
 import com.google.gson.Gson;
 import com.humaclab.lalteer.R;
 import com.humaclab.lalteer.SelliscopeApiEndpointInterface;
@@ -20,6 +27,7 @@ import com.humaclab.lalteer.databinding.ActivityOutletDetailsBinding;
 import com.humaclab.lalteer.model.Outlets;
 import com.humaclab.lalteer.model.Target.OutletTarget;
 import com.humaclab.lalteer.utils.Constants;
+import com.humaclab.lalteer.utils.MyDialog;
 import com.humaclab.lalteer.utils.SessionManager;
 
 
@@ -50,8 +58,12 @@ public class OutletDetailsActivity extends AppCompatActivity {
             binding.tvDueAmount.setVisibility(View.GONE);
         }
 
-        Glide.with(getApplicationContext()).load(outlet.outletImgUrl)
+        Glide.with(getApplicationContext())
+                .load(outlet.outletImgUrl)
                 .thumbnail(0.5f)
+                .placeholder(R.drawable.ic_map)
+                .centerCrop()
+                .transform(new CircleCrop())
                 .into(binding.ivAddOutletImage);
 
         binding.btnEditOutlet.setOnClickListener(new View.OnClickListener() {
@@ -70,8 +82,33 @@ public class OutletDetailsActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-    }
 
+        binding.addAdvanceMoney.setOnClickListener(v -> {
+            v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY); //for onclick vibration
+           /*AlertDialog.Builder  builder=new AlertDialog.Builder(OutletDetailsActivity.this);
+           View layout=getLayoutInflater().inflate(R.layout.cus_dialog_header,null);
+           builder.setView(layout);
+           AlertDialog dialog = builder.create();
+           dialog.getWindow().getAttributes().windowAnimations=R.style.DialogAnimation;
+           dialog.show();*/
+           loadDialog();
+
+
+
+        });
+    }
+    private void loadDialog(){
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.setCustomAnimations(R.anim.alert_present,R.anim.alert_dismiss);
+        Fragment prev = getSupportFragmentManager().findFragmentByTag("dialog");
+        if (prev != null) {
+            ft.remove(prev);
+        }
+        ft.addToBackStack(null);
+        DialogFragment dialogFragment = new MyDialog();
+        dialogFragment.show(ft, "dialog");
+
+    }
     private void loadTargetOutlet(){
         SessionManager sessionManager = new SessionManager(OutletDetailsActivity.this);
         apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(),sessionManager.getUserPassword(),false).create(SelliscopeApiEndpointInterface.class);

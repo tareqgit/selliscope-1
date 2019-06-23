@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Created by Tareq Islam on 6/9/19 3:45 PM
+  ~
+  ~  Last modified 6/9/19 3:42 PM
+  -->
+
+<!--
+  ~ Created by Tareq Islam on 6/9/19 3:41 PM
+  ~
+  ~  Last modified 6/9/19 3:41 PM
+  -->
+
+<set xmlns:android="http://schemas.android.com/apk/res/android"
+    android:fillAfter="true"
+    android:interpolator="@android:anim/linear_interpolator"
+   >
+    <alpha
+        android:duration="0"
+        android:fromAlpha="1"
+
+        android:toAlpha="0"/>
+
+    <!--<scale
+        android:duration="50"
+        android:fromXScale="1"
+        android:fromYScale="1"
+        android:pivotX="50%"
+        android:pivotY="50%"
+        android:toXScale=".8"
+        android:toYScale=".8"
+        />-->
+</set>

@@ -31,10 +31,12 @@ import com.humaclab.selliscope_mohammadi.activity.OrderActivity;
 import com.humaclab.selliscope_mohammadi.activity.OutletDetailsActivity;
 import com.humaclab.selliscope_mohammadi.model.Outlets;
 import com.humaclab.selliscope_mohammadi.model.UserLocation;
+import com.humaclab.selliscope_mohammadi.order.OrderNewActivity;
 import com.humaclab.selliscope_mohammadi.utils.GetAddressFromLatLang;
 import com.humaclab.selliscope_mohammadi.utils.NetworkUtility;
 import com.humaclab.selliscope_mohammadi.utils.SendUserLocationData;
 import com.humaclab.selliscope_mohammadi.utils.SessionManager;
+import com.mti.pushdown_ext_onclick_single.PushDownAnim;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -109,12 +111,16 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
                 });
             }
         });
-        holder.orderButton.setOnClickListener(new View.OnClickListener() {
+     PushDownAnim.setPushDownAnimTo(holder.orderButton).setOnSingleClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, OrderActivity.class);
+              //  Intent intent = new Intent(context, OrderActivity.class);
+                Intent intent = new Intent(context, OrderNewActivity.class);
+
                 intent.putExtra("outletName", outlet.outletName);
                 intent.putExtra("outletID", outlet.outletId);
+
+                intent.putExtra("outletCreditBalance", outlet.outletCreditBalance);
                 context.startActivity(intent);
             }
         });

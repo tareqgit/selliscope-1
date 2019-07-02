@@ -950,6 +950,23 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return variantNames;
     }
 
+    public List<String>  getVariantRowFromDetails(String detail){
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "SELECT DISTINCT " + KEY_VARIANT_ROW + " FROM " + TABLE_VARIANT_DETAILS
+                + " WHERE " + KEY_VARIANT_DETAILS_NAME + "='" + detail+   "'";
+//        System.out.println("variant query" + query);
+        Cursor cursor = db.rawQuery(query, null);
+        List<String> rowList = new ArrayList<>();
+        if (cursor.moveToFirst()) {
+            do {
+                cursor.getColumnNames();
+                rowList.add(cursor.getString(cursor.getColumnIndex(KEY_VARIANT_ROW)));
+            } while (cursor.moveToNext());
+        }
+        db.close();
+        return rowList;
+    }
+
     public List<String> getVariantRows(int productId, int variantCatId, String variantName) {
         SQLiteDatabase db = this.getWritableDatabase();
         String query = "SELECT DISTINCT " + KEY_VARIANT_ROW + " FROM " + TABLE_VARIANT_DETAILS

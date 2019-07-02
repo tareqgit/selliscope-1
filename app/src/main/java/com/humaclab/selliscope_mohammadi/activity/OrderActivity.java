@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -55,7 +56,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
     private ScheduledExecutorService scheduler;
 
     private ActivityOrderBinding binding;
-    private SelliscopeApiEndpointInterface apiService;
+      private SelliscopeApiEndpointInterface apiService;
 
     private ProgressDialog pd;
 
@@ -203,6 +204,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                             product.discount = 0.00;
                             product.qty = Double.parseDouble(etQty.getText().toString());
                             product.row = (variantRows.size() != 0) ? Integer.parseInt(variantRows.get(i).get(0)) : 0;
+                            Log.d("tareq_test" , "variant"+ product.row);
                             product.price = tv_rate.getText().toString();
                             products.add(product);
                         }
@@ -360,9 +362,9 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
 
             private void addVariantSpinner(final Context context) {
                 final List<VariantItem> variantsItems = databaseHandler.getVariantCategories();
-                final List<Integer> price_id = new ArrayList<>();
+               final List<Integer> price_id = new ArrayList<>();
                 for (int i = 0; i < variantsItems.size(); i++) {
-                    if (!variantsItems.get(i).getType().toLowerCase().equals("input")) {
+                    if (!variantsItems.get(i).getType().toLowerCase().equals("input")) { //if not input that means for dropdown
                         Spinner spinner = new Spinner(context);
                         final ArrayAdapter<String> arrayAdapter;
                         spinner.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
@@ -375,8 +377,12 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                         variantNameIDs.add(variantID);
 
                         for (String s : databaseHandler.getVariants(variantsItems.get(i).getId(), productID.get(sp_product_name.getSelectedItemPosition()))) {
+                           Log.d("tareq_test" , "ID: "+ productID.get(sp_product_name.getSelectedItemPosition()));
                             variantNames.add(s);
                         }
+
+                        Log.d("tareq_test" , "dias"+ new Gson().toJson(variantNames));
+
                         arrayAdapter = new ArrayAdapter<>(context, R.layout.spinner_item, variantNames);
                         spinner.setAdapter(arrayAdapter);
                         final int finalI; //This variable is uses to track the positions of variantID and variantName list items.

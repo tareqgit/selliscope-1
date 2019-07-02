@@ -14,24 +14,20 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
 
-
     <application
-        android:name="com.humaclab.selliscope_mohammadi.SelliscopeApplication"
+        android:name=".SelliscopeApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
-       <!-- For debug APK-->
+        <activity android:name=".order.OrderNewActivity" /> <!-- For debug APK -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBXkKu_nToPi7wW1oyHEnkrG4MpjuJBTxw" />
         <meta-data
             android:name="com.google.android.awareness.API_KEY"
             android:value="AIzaSyBXkKu_nToPi7wW1oyHEnkrG4MpjuJBTxw" />
-
-
         <!--
      &lt;!&ndash;   For signed APK&ndash;&gt;
         <meta-data
@@ -40,12 +36,9 @@
         <meta-data
             android:name="com.google.android.awareness.API_KEY"
             android:value="AIzaSyAhsz4pX62D7yu8twGT4ydn-_DRVB3p6_Y" />
-
--->
-
-
+        -->
         <service
-            android:name="com.humaclab.selliscope_mohammadi.service.SendLocationDataService"
+            android:name=".service.SendLocationDataService"
             android:exported="false"
             android:permission="android.permission.RECEIVE_BOOT_COMPLETED"
             android:process=":selliscope_process">
@@ -57,51 +50,50 @@
         </service>
 
         <receiver
-            android:name="com.humaclab.selliscope_mohammadi.receiver.InternetConnectivityChangeReceiver"
+            android:name=".receiver.InternetConnectivityChangeReceiver"
             android:enabled="true">
             <intent-filter>
                 <action
                     android:name="android.net.conn.CONNECTIVITY_CHANGE"
                     tools:ignore="BatteryLife" />
             </intent-filter>
-        </receiver>
-        <!--Services and Receivers-->
-
+        </receiver> <!-- Services and Receivers -->
         <activity
-            android:name="com.humaclab.selliscope_mohammadi.activity.SplashScreenActivity"
+            android:name=".activity.SplashScreenActivity"
             android:theme="@style/SplashScreenTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-                <action android:name="android.intent.action.VIEW"/>
+                <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.humaclab.selliscope_mohammadi.activity.LoginActivity" />
+        <activity android:name=".activity.LoginActivity" />
         <activity
-            android:name="com.humaclab.selliscope_mohammadi.activity.HomeActivity"
+            android:name=".activity.HomeActivity"
             android:configChanges="orientation|screenSize" />
-        <activity android:name="com.humaclab.selliscope_mohammadi.activity.RouteActivity" />
-        <activity android:name="com.humaclab.selliscope_mohammadi.activity.OutletActivity" />
-        <activity android:name="com.humaclab.selliscope_mohammadi.activity.AddOutletActivity" />
-        <activity android:name="com.humaclab.selliscope_mohammadi.activity.OutletDetailsActivity" />
-        <activity android:name="com.humaclab.selliscope_mohammadi.activity.PrivacyPolicyActivity" />
-        <activity android:name="com.humaclab.selliscope_mohammadi.activity.ProductActivity" />
+        <activity android:name=".activity.RouteActivity" />
+        <activity android:name=".activity.OutletActivity" />
+        <activity android:name=".activity.AddOutletActivity" />
+        <activity android:name=".activity.OutletDetailsActivity" />
+        <activity android:name=".activity.PrivacyPolicyActivity" />
+        <activity android:name=".activity.ProductActivity" />
+        <activity android:name=".cart.CartActivity" />
         <activity
-            android:name="com.humaclab.selliscope_mohammadi.activity.OrderActivity"
+            android:name=".activity.OrderActivity"
             android:screenOrientation="landscape" />
-        <activity android:name="com.humaclab.selliscope_mohammadi.activity.DeliveryListActivity" />
+        <activity android:name=".activity.DeliveryListActivity" />
         <activity
-            android:name="com.humaclab.selliscope_mohammadi.activity.DeliveryDetailsActivity"
+            android:name=".activity.DeliveryDetailsActivity"
             android:screenOrientation="landscape" />
-        <activity android:name="com.humaclab.selliscope_mohammadi.activity.PaymentActivity" />
-        <activity android:name="com.humaclab.selliscope_mohammadi.activity.DueActivity" />
-        <activity android:name="com.humaclab.selliscope_mohammadi.activity.EditOutletActivity" />
-        <activity android:name="com.humaclab.selliscope_mohammadi.activity.CallCardActivity" />
-        <activity android:name="com.humaclab.selliscope_mohammadi.activity.InspectionActivity" />
-        <activity android:name="com.humaclab.selliscope_mohammadi.activity.SalesReturnActivity" />
+        <activity android:name=".activity.PaymentActivity" />
+        <activity android:name=".activity.DueActivity" />
+        <activity android:name=".activity.EditOutletActivity" />
+        <activity android:name=".activity.CallCardActivity" />
+        <activity android:name=".activity.InspectionActivity" />
+        <activity android:name=".activity.SalesReturnActivity" />
         <activity
-            android:name="com.humaclab.selliscope_mohammadi.activity.SalesReturnDetailsActivity"
+            android:name=".activity.SalesReturnDetailsActivity"
             android:screenOrientation="landscape" />
         <activity android:name=".activity.LocationFromMapActivity" />
     </application>

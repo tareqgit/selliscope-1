@@ -40,7 +40,7 @@ import java.util.Map;
  */
 
 public class DatabaseHandler extends SQLiteOpenHelper {
-    private static final int DATABASE_VERSION = 15;
+    private static final int DATABASE_VERSION = 16;
 
     // Database Tables
     private static final String TABLE_TARGET = "targets";
@@ -135,11 +135,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     //Order table column name
     private static final String KEY_ORDER_OUTLET_ID = "outlet_id";
+    private static final String KEY_ORDER_DISCOUNT = "order_discount";
     private static final String KEY_ORDER_PRODUCT_ID = "product_id";
     private static final String KEY_ORDER_PRODUCT_QUANTITY = "product_quantity";
     private static final String KEY_ORDER_PRODUCT_ROW = "product_row";
     private static final String KEY_ORDER_PRODUCT_PRICE = "product_price";
     private static final String KEY_ORDER_PRODUCT_DISCOUNT = "product_discount";
+    private static final String KEY_ORDER_PRODUCT_TP_DISCOUNT = "product_tp_discount";
 
     //price variation table column name
     private static final String KEY_PV_ID = "pv_id";
@@ -265,11 +267,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         String CREATE_ORDER_TABLE = "CREATE TABLE " + TABLE_ORDER + "("
                 + KEY_ORDER_ID + " INTEGER  PRIMARY KEY AUTOINCREMENT,"
                 + KEY_ORDER_OUTLET_ID + " INTEGER,"
+                + KEY_ORDER_DISCOUNT + " TEXT,"
                 + KEY_ORDER_PRODUCT_ID + " INTEGER,"
                 + KEY_ORDER_PRODUCT_QUANTITY + " INTEGER,"
                 + KEY_ORDER_PRODUCT_ROW + " INTEGER,"
                 + KEY_ORDER_PRODUCT_PRICE + " TEXT,"
-                + KEY_ORDER_PRODUCT_DISCOUNT + " TEXT"
+                + KEY_ORDER_PRODUCT_DISCOUNT + " TEXT,"
+                + KEY_ORDER_PRODUCT_TP_DISCOUNT+ " TEXT"
                 + ")";
 
         String CREATE_PRICE_VARIATION_TABLE = "CREATE TABLE " + TABLE_PRICE_VARIATION + "("
@@ -1169,7 +1173,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     //Offline order taking
     public List<AddNewOrder> getOrder() {
         SQLiteDatabase db = this.getWritableDatabase();
-        String outletIds = "SELECT distinct " + KEY_ORDER_OUTLET_ID + " FROM " + TABLE_ORDER;
+        String outletIds = "SELECT distinct " + KEY_ORDER_OUTLET_ID +"," +KEY_ORDER_DISCOUNT   + " FROM " + TABLE_ORDER;
 
         List<AddNewOrder> addNewOrderList = new ArrayList<>();
 
@@ -1183,6 +1187,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 List<AddNewOrder.NewOrder.Product> productList = new ArrayList<>();
                 cursorOutletID.getColumnNames();
                 newOrder.outletId = cursorOutletID.getInt(cursorOutletID.getColumnIndex(KEY_ORDER_OUTLET_ID));
+                newOrder.discount =Double.valueOf(cursorOutletID.getString(cursorOutletID.getColumnIndex(KEY_ORDER_DISCOUNT)));
+
                 String orders = "SELECT * FROM " + TABLE_ORDER + " WHERE " + KEY_ORDER_OUTLET_ID + "=" + newOrder.outletId;
                 Cursor cursorOrders = db.rawQuery(orders, null);
                 if (cursorOrders.moveToFirst()) {
@@ -1193,6 +1199,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                         product.row = cursorOrders.getInt(cursorOrders.getColumnIndex(KEY_ORDER_PRODUCT_ROW));
                         product.price = cursorOrders.getString(cursorOrders.getColumnIndex(KEY_ORDER_PRODUCT_PRICE));
                         product.discount = Double.valueOf(cursorOrders.getString(cursorOrders.getColumnIndex(KEY_ORDER_PRODUCT_DISCOUNT)));
+                        product.tpDiscount= Double.valueOf(cursorOrders.getString(cursorOrders.getColumnIndex(KEY_ORDER_PRODUCT_TP_DISCOUNT)));
                         productList.add(product);
                     } while (cursorOrders.moveToNext());
                     newOrder.products = productList;
@@ -1209,6 +1216,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(KEY_ORDER_OUTLET_ID, addNewOrder.newOrder.outletId);
+        values.put(KEY_ORDER_DISCOUNT, addNewOrder.newOrder.discount);
         try {
             for (AddNewOrder.NewOrder.Product product : addNewOrder.newOrder.products) {
                 values.put(KEY_ORDER_PRODUCT_ID, product.id);
@@ -1216,6 +1224,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 values.put(KEY_ORDER_PRODUCT_ROW, product.row);
                 values.put(KEY_ORDER_PRODUCT_PRICE, product.price);
                 values.put(KEY_ORDER_PRODUCT_DISCOUNT, product.discount);
+                values.put(KEY_ORDER_PRODUCT_TP_DISCOUNT, product.tpDiscount);
+
                 try {
                     db.insert(TABLE_ORDER, null, values);
                 } catch (Exception e) {

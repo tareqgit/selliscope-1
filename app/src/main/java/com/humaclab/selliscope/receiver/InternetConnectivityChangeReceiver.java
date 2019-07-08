@@ -5,7 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.util.Log;
 
+import com.google.gson.Gson;
 import com.humaclab.selliscope.SelliscopeApiEndpointInterface;
 import com.humaclab.selliscope.SelliscopeApplication;
 import com.humaclab.selliscope.model.AddNewOrder;
@@ -47,14 +49,16 @@ public class InternetConnectivityChangeReceiver extends BroadcastReceiver {
         final NetworkInfo mobile = connMgr.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
 
         if (wifi.isConnected() || mobile.isConnected()) {
-            if (databaseHandler.getOrder().size() != 0)
+            if (databaseHandler.getOrder().size() != 0) {
+                Log.d("tareq_test", "Uploading order to server");
                 uploadOrderToServer();
-            else
-                Timber.e("No offline order is available.");
-            Timber.e("Network: Network available.");
+            } else {
+                Log.d("tareq_test", "No offline order is available.");
+            }
+            Log.d("tareq_test", "Network: Network available.");
 //            Toast.makeText(context, "Network available", Toast.LENGTH_SHORT).show();
         } else {
-            Timber.e("Network: Network disabled.");
+            Log.d("tareq_test", "Network: Network disabled.");
 //            Toast.makeText(context, "Network disabled", Toast.LENGTH_SHORT).show();
         }
     }
@@ -62,21 +66,25 @@ public class InternetConnectivityChangeReceiver extends BroadcastReceiver {
 
     private void uploadOrderToServer() {
         List<AddNewOrder> addNewOrderList = databaseHandler.getOrder();
+
         for (final AddNewOrder addNewOrder : addNewOrderList) {
+            Log.d("tareq_test", "offline" + new Gson().toJson(addNewOrder));
+
             Call<AddNewOrder.OrderResponse> call = apiService.addOrder(addNewOrder);
             call.enqueue(new Callback<AddNewOrder.OrderResponse>() {
                 @Override
                 public void onResponse(Call<AddNewOrder.OrderResponse> call, Response<AddNewOrder.OrderResponse> response) {
-                    Timber.e("Offline order: Order completed.");
+                    Log.d("tareq_test", "Offline order: Order completed."+response.code());
                     if (response.code() == 201) {
                         databaseHandler.removeOrder(addNewOrder.newOrder.outletId);
-                        Timber.e("Offline order: Order removed.");
+                        Log.d("tareq_test", "Offline order: Order removed.");
                     }
                 }
 
                 @Override
                 public void onFailure(Call<AddNewOrder.OrderResponse> call, Throwable t) {
                     t.printStackTrace();
+                    Log.d("tareq_test" , "failed to send order update call");
                 }
             });
         }

@@ -64,11 +64,6 @@
             android:value="c2bca7824e6a758388318ecf6635fd2e8e11979a" /> <!-- Services and Receivers -->
 
 
-        <service android:name=".service.FcmInstanceIdServices">
-            <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
-            </intent-filter>
-        </service>
         <service android:name=".service.FcmGetNotificationService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
@@ -86,15 +81,7 @@
             </intent-filter>
         </service>
 
-        <receiver
-            android:name=".receiver.InternetConnectivityChangeReceiver"
-            android:enabled="true">
-            <intent-filter>
-                <action
-                    android:name="android.net.conn.CONNECTIVITY_CHANGE"
-                    tools:ignore="BatteryLife" />
-            </intent-filter>
-        </receiver> <!-- Services and Receivers -->
+
         <activity
             android:name=".activity.SplashScreenActivity"
             android:theme="@style/SplashScreenTheme">

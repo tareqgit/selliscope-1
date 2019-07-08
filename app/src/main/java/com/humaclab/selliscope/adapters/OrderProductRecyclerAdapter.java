@@ -76,8 +76,8 @@ public class OrderProductRecyclerAdapter extends RecyclerView.Adapter<OrderProdu
                 //as we don't have any unique key we need to check two condition for make this thing unique
                 if (selectedProductHelper.getProductID().equals(String.valueOf(products.getId())) &&
                         (selectedProductHelper.getProductRow().equals(products.getVariantRow()))) {
-                    // Log.d("tareq_test", "colored" + position);
-                         holder.cv_product_background.setCardBackgroundColor(Color.GREEN);
+                         // Log.d("tareq_test", "colored" + position);
+                        holder.cv_product_background.setCardBackgroundColor(Color.GREEN);
                         holder.getBinding().llQuantity.setVisibility(View.VISIBLE);
                         holder.getBinding().tvProductQuantity.setText(selectedProductHelper.getProductQuantity());
                         holder.getBinding().ivRemoveProduct.setVisibility(View.VISIBLE);

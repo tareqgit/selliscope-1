@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.appcompat.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -248,7 +249,7 @@ public  static PosModel sPosModel;
                     sessionManager.getUserPassword(), false)
                     .create(SelliscopeApiEndpointInterface.class);
 
-            System.out.println("Order: " + new Gson().toJson(addNewOrder));
+            Log.d("tareq_test" , "Order: " + new Gson().toJson(addNewOrder));
 
             if (NetworkUtility.isNetworkAvailable(ActivityCart.this)) {
                 Call<AddNewOrder.OrderResponse> call = apiService.addOrder(addNewOrder);

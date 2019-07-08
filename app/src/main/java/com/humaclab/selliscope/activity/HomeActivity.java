@@ -1,7 +1,9 @@
 package com.humaclab.selliscope.activity;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.ActivityManager;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.app.job.JobInfo;
 import android.app.job.JobScheduler;
@@ -10,6 +12,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
@@ -20,20 +23,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
-import androidx.annotation.NonNull;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.snackbar.Snackbar;
-import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -43,10 +32,37 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.common.api.ResolvableApiException;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResponse;
+import com.google.android.gms.location.LocationSettingsStates;
+import com.google.android.gms.location.SettingsClient;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationView;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.gson.Gson;
 import com.humaclab.selliscope.BuildConfig;
 import com.humaclab.selliscope.LocationMonitoringService;
@@ -58,13 +74,13 @@ import com.humaclab.selliscope.fragment.PerformanceFragment;
 import com.humaclab.selliscope.fragment.TargetFragment;
 import com.humaclab.selliscope.model.app_version.AppVersion;
 import com.humaclab.selliscope.model.diameter.DiameterResponse;
+import com.humaclab.selliscope.receiver.GpsLocationBroadcastReceiver;
 import com.humaclab.selliscope.receiver.InternetConnectivityChangeReceiver;
 import com.humaclab.selliscope.service.SendLocationDataService;
 import com.humaclab.selliscope.utils.Constants;
 import com.humaclab.selliscope.utils.DatabaseHandler;
 import com.humaclab.selliscope.utils.LoadLocalIntoBackground;
 import com.humaclab.selliscope.utils.SessionManager;
-
 
 import java.util.Calendar;
 import java.util.List;
@@ -78,7 +94,9 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import timber.log.Timber;
 
+import static android.provider.Settings.Secure.LOCATION_MODE_HIGH_ACCURACY;
 import static com.humaclab.selliscope.R.id.content_fragment;
+import static io.nlopez.smartlocation.location.providers.LocationGooglePlayServicesProvider.REQUEST_CHECK_SETTINGS;
 
 public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     public enum FRAGMENT_TAGS {
@@ -86,7 +104,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public static ScheduledExecutorService schedulerForMinute, schedulerForHour;
-    public static BroadcastReceiver receiver = new InternetConnectivityChangeReceiver();
+    public static BroadcastReceiver internetBroadcastReciever = new InternetConnectivityChangeReceiver();
     private FragmentManager fragmentManager;
     private SessionManager sessionManager;
     private SelliscopeApiEndpointInterface apiService;
@@ -96,7 +114,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     private Context context;
     private SendLocationDataService sendLocationDataService;
     private BroadcastReceiver broadcastReceiver;
-    boolean gpsStatus;
+
     private static final String TAG = HomeActivity.class.getSimpleName();
     /**
      * Code used in requesting runtime permissions.
@@ -107,15 +125,46 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     private static final int JOB_ID = 101;
     private JobScheduler jobScheduler;
     private JobInfo jobInfo;
-   private String manufacturer;
+    private String manufacturer;
+
+    private BroadcastReceiver gpsBroadcastReciever = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            float accuracy = intent.getFloatExtra("accuracy", 0);
+
+            if (accuracy <= 17) {
+                ((ImageView) findViewById(R.id.gps_signal_image)).setImageResource(R.drawable.ic_high_signal);
+            } else if (accuracy <= 60) {
+                ((ImageView) findViewById(R.id.gps_signal_image)).setImageResource(R.drawable.ic_mid_signal);
+            } else if (accuracy <= 200) {
+                ((ImageView) findViewById(R.id.gps_signal_image)).setImageResource(R.drawable.ic_low_signal);
+            } else {
+                ((ImageView) findViewById(R.id.gps_signal_image)).setImageResource(R.drawable.ic_no_signal);
+            }
+
+
+        }
+    };
+
+    private LocalBroadcastManager mLocalBroadcastManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
         //For Bangla
         LoadLocale();
         setContentView(R.layout.activity_home);
+
+        displayGpsSignalRequest(); //for showing gps request
+
+        //Location Receiver from LocationMonitoringService
+        mLocalBroadcastManager = LocalBroadcastManager.getInstance(getApplicationContext());
+        mLocalBroadcastManager.registerReceiver(
+                gpsBroadcastReciever, new IntentFilter("GPS")
+        );
+
+
 
         manufacturer = android.os.Build.MANUFACTURER;
         //registerReceiver();
@@ -137,7 +186,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
        gpsControl();
        */
         Toolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle("Target Plan");
+        //    toolbar.setTitle("Target Plan");
         //  TextView toolbarTitle = findViewById(R.id.tv_toolbar_title);
         //   toolbarTitle.setVisibility(View.VISIBLE);
 
@@ -223,7 +272,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 .findViewById(R.id.tv_user_name);
 
 
-
         ImageView profilePicture = navigationView.getHeaderView(0)
                 .findViewById(R.id.iv_profile_pic);
 
@@ -271,10 +319,11 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
         try {
 
-            //Register receiver for Internet Connectivity change
+            //Register internetBroadcastReciever for Internet Connectivity change
             IntentFilter filter = new IntentFilter();
             filter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
-            registerReceiver(receiver, filter);
+
+            registerReceiver(internetBroadcastReciever, filter);
         } catch (Exception e) {
             Log.d("tareq_test", "" + e.getMessage());
         }
@@ -317,6 +366,87 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         jobScheduler.schedule(jobInfo);*/
     }
 
+
+
+    private void displayGpsSignalRequest() {
+
+        LocationRequest locationRequest = LocationRequest.create();
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        locationRequest.setInterval(10000);
+        locationRequest.setFastestInterval(5000);
+
+        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
+                .addLocationRequest(locationRequest);
+
+
+        SettingsClient client = LocationServices.getSettingsClient(this);
+        Task<LocationSettingsResponse> task = client.checkLocationSettings(builder.build());
+
+        task.addOnSuccessListener(this, new OnSuccessListener<LocationSettingsResponse>() {
+            @Override
+            public void onSuccess(LocationSettingsResponse locationSettingsResponse) {
+                // All location settings are satisfied. The client can initialize
+                // location requests here.
+                // ...
+                Log.d("tareq_test", "on Success");
+            }
+        });
+
+        task.addOnFailureListener(this, new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.d("tareq_test", "OnFailed");
+                if (e instanceof ResolvableApiException) {
+                    // Location settings are not satisfied, but this can be fixed
+                    // by showing the user a dialog.
+                    // Show the dialog by calling startResolutionForResult(),
+                    // and check the result in onActivityResult().
+                    ResolvableApiException resolvable = (ResolvableApiException) e;
+                    try {
+                        resolvable.startResolutionForResult(HomeActivity.this, REQUEST_CHECK_SETTINGS); //976 is just the reference number
+                    } catch (IntentSender.SendIntentException e1) {
+                        e1.printStackTrace();
+                    }
+                }
+            }
+        });
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        final LocationSettingsStates states = LocationSettingsStates.fromIntent(intent);
+        switch (requestCode) {
+            case REQUEST_CHECK_SETTINGS:
+                switch (resultCode) {
+                    case Activity.RESULT_OK:
+                        // All required changes were successfully made
+               //         Toast.makeText(context, "Must turn on GPs", Toast.LENGTH_SHORT).show();
+                        try {
+                            int locationMode = Settings.Secure.getInt(this.getContentResolver(), Settings.Secure.LOCATION_MODE);
+
+                            if(locationMode == LOCATION_MODE_HIGH_ACCURACY) {
+                                //request location updates
+                                Log.d("tareq_test" , "High Accuracy found");
+                            } else { //redirect user to settings page
+                                //need high accuracy
+                                Log.d("tareq_test" , "need high accuracy");
+                                startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                            }
+                        } catch (Settings.SettingNotFoundException e) {
+                            e.printStackTrace();
+                        }
+                        break;
+                    case Activity.RESULT_CANCELED:
+                        // The user was asked to change settings, but chose not to
+                        displayGpsSignalRequest();
+                        break;
+                    default:
+                        break;
+                }
+                break;
+        }
+    }
 
     private void welcome() {
         Calendar c = Calendar.getInstance();
@@ -369,6 +499,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         }
         return null;
     }
+
 
     private void getFragment(Class createFragment, FRAGMENT_TAGS fragTag) {
 
@@ -439,7 +570,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 pd.setMessage("Login out...");
                 pd.show();
 
-          //      jobScheduler.cancel(JOB_ID);
+                //      jobScheduler.cancel(JOB_ID);
                 //Stop Android Service for sending location to service
                 stopService(new Intent(HomeActivity.this, LocationMonitoringService.class));
                 mAlreadyStartedService = false;
@@ -454,7 +585,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 /*stopService(new Intent(HomeActivity.this, SendLocationDataService.class));*/
                 HomeActivity.this.deleteDatabase(Constants.databaseName);
                 pd.dismiss();
-                unregisterReceiver(receiver);
+                unregisterReceiver(internetBroadcastReciever);
                 finish();
 //                }
                 break;
@@ -540,6 +671,13 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     protected void onDestroy() {
+        try {
+            mLocalBroadcastManager.unregisterReceiver(gpsBroadcastReciever);
+            unregisterReceiver(internetBroadcastReciever); //for internet
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         stopService(locationServiceIntent); /*The latter may seem rather peculiar:
          why do we want to stop exactly the service that we want to keep alive?
           Because if we do not stop it, the service will die with our app.
@@ -551,14 +689,13 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         /*    stopService(new Intent(this, LocationMonitoringService.class));
             mAlreadyStartedService = false;
 */
-       //     stopService(new Intent(HomeActivity.this, SendLocationDataService.class));
+            //     stopService(new Intent(HomeActivity.this, SendLocationDataService.class));
             //unregisterReceiver(broadcastReceiver);
-        //    unregisterReceiver(receiver);
 
 
-            Timber.d("Home Activity stopped.");
-        //as xiomi kills foreground service
-         if(manufacturer.equals("Xiaomi"))   startActivity(new Intent(getApplicationContext(), HomeActivity.class));
+            //as xiomi kills foreground service
+            if (manufacturer.equals("Xiaomi"))
+                startActivity(new Intent(getApplicationContext(), HomeActivity.class));
         }
     }
 
@@ -651,7 +788,12 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 schedulerForHour.shutdownNow();
                 //stopService(new Intent(HomeActivity.this, SendLocationDataService.class));
                 HomeActivity.this.deleteDatabase(Constants.databaseName);
-                unregisterReceiver(receiver);
+                try {
+                    mLocalBroadcastManager.unregisterReceiver(gpsBroadcastReciever);
+                    unregisterReceiver(internetBroadcastReciever);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 finish();
 
                 final String appPackageName = getPackageName(); // getPackageName() from Context or Activity object
@@ -666,10 +808,20 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         builder.show();
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        SelliscopeApplication.activityResumed();
 
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onResume() {
         super.onResume();
+        SelliscopeApplication.activityResumed();
+
+
         welcome();
 /*        final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
@@ -836,11 +988,12 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
     Intent locationServiceIntent;
     private LocationMonitoringService mLocationMonitoringService;
+
     private void startStep3() {
 
         //And it will be keep running until you close the entire application from task manager.
         //This method will executed only once.
-        mLocationMonitoringService=new LocationMonitoringService(context);
+        mLocationMonitoringService = new LocationMonitoringService();
         locationServiceIntent = new Intent(this, mLocationMonitoringService.getClass());
         if (!mAlreadyStartedService) {
 
@@ -993,15 +1146,16 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             }
         }
     }
+
     private boolean isMyServiceRunning(Class<?> serviceClass) {
         ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
         for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
             if (serviceClass.getName().equals(service.service.getClassName())) {
-                Log.i ("isMyServiceRunning?", true+"");
+                Log.i("isMyServiceRunning?", true + "");
                 return true;
             }
         }
-        Log.i ("isMyServiceRunning?", false+"");
+        Log.i("isMyServiceRunning?", false + "");
         return false;
     }
 
@@ -1016,5 +1170,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             }
             super.onStop();
         }*/
+
 
 }

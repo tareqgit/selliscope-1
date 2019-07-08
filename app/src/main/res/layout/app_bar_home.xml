@@ -5,7 +5,12 @@
                                                  android:layout_height="match_parent"
                                                  android:fitsSystemWindows="true">
 
-    <include layout="@layout/toolbar_layout"/>
+    <include
+        android:id="@+id/include5"
+        layout="@layout/toolbar_layout"
+
+        app:layout_anchor="@+id/include4"
+        app:layout_anchorGravity="end|top" />
 
     <include
         android:id="@+id/include4"
@@ -24,4 +29,14 @@
         android:paddingBottom="2dp"
         app:layout_anchor="@+id/include4"
         app:layout_anchorGravity="top|center" />
+
+    <ImageView
+        android:id="@+id/gps_signal_image"
+        android:layout_width="47dp"
+        android:layout_height="31dp"
+        android:adjustViewBounds="true"
+        android:elevation="4dp"
+        app:layout_anchor="@+id/include5"
+        app:layout_anchorGravity="end|center"
+        app:srcCompat="@drawable/ic_mid_signal" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

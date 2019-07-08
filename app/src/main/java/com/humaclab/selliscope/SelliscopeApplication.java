@@ -3,11 +3,14 @@ package com.humaclab.selliscope;
 import android.app.Application;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.content.IntentFilter;
+import android.location.LocationManager;
 import android.os.Build;
 import androidx.appcompat.app.AppCompatDelegate;
 
 import com.facebook.stetho.Stetho;
 import com.facebook.stetho.okhttp3.StethoInterceptor;
+import com.humaclab.selliscope.receiver.GpsLocationBroadcastReceiver;
 import com.humaclab.selliscope.utils.Constants;
 import com.humaclab.selliscope.utils.HttpAuthInterceptor;
 
@@ -24,6 +27,20 @@ import timber.log.Timber;
 
 public class SelliscopeApplication extends Application {
     private static Retrofit retrofitInstance;
+
+    public static boolean isActivityVisible() {
+        return activityVisible;
+    }
+
+    public static void activityResumed() {
+        activityVisible = true;
+    }
+
+    public static void activityPaused() {
+        activityVisible = false;
+    }
+    private static boolean activityVisible;
+
 
     static {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
@@ -61,10 +78,16 @@ public class SelliscopeApplication extends Application {
         if (BuildConfig.DEBUG) {
             Timber.plant(new Timber.DebugTree());
         }
+
         createNotificationChannel();
         Stetho.initializeWithDefaults(this);
       /*  Fabric.with(this, new Crashlytics());*/
+
+        //receiver for having gps
+        registerReceiver(GpsLocationBroadcastReceiver.getInstance(), new IntentFilter(LocationManager.PROVIDERS_CHANGED_ACTION));
+
     }
+
 
     public static final String CHANNEL_ID="testServiceChannel";
 

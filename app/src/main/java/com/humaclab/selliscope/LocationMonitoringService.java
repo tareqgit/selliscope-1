@@ -10,22 +10,26 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.provider.Settings;
+import android.util.Log;
+import android.widget.Toast;
+
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
-import android.util.Log;
-import android.widget.Toast;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResolvableApiException;
-import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResponse;
@@ -58,14 +62,12 @@ import timber.log.Timber;
 
 import static com.humaclab.selliscope.SelliscopeApplication.CHANNEL_ID;
 
-
 /**
  * Created by anam on 27-09-2018.
  */
 
 public class LocationMonitoringService extends Service implements
-        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,
-        LocationListener {
+        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     private static final String TAG = LocationMonitoringService.class.getSimpleName();
     GoogleApiClient mLocationClient;
@@ -77,19 +79,23 @@ public class LocationMonitoringService extends Service implements
     public static final String EXTRA_LONGITUDE = "extra_longitude";
     SharedPreferences prefs;
 
+    public static MediaPlayer sMediaPlayerService;
+    public static String lastTimeMediaPlayed = "";
 
-    public LocationMonitoringService(Context c) {
-        super();
-    }
+    LocationCallback mLocationCallback;
+
 
     public LocationMonitoringService() {
     }
-    public    Timer myTimer;
+
+    public Timer myTimer;
+
+
     @Override
     public void onCreate() {
         super.onCreate();
         sessionManager = new SessionManager(this);
-
+        lastTimeMediaPlayed = Calendar.getInstance().getTime().toString(); //for Media player concurrency playing prblme resolve
         Intent notificationIntent = new Intent(this, HomeActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this,
                 0, notificationIntent, 0);
@@ -98,17 +104,17 @@ public class LocationMonitoringService extends Service implements
 
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             notification = new Notification.Builder(this, CHANNEL_ID)
-                    .setContentTitle("Hello "+sessionManager.getUserDetails().get("userName"))
+                    .setContentTitle("Hello " + sessionManager.getUserDetails().get("userName"))
 
                     .setSmallIcon(R.drawable.ic_untitled)
-                    .setColor(ContextCompat.getColor(this,R.color.colorDefault))
+                    .setColor(ContextCompat.getColor(this, R.color.colorDefault))
                     .setContentIntent(pendingIntent)
                     .build();
         } else {
             NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
                     .setSmallIcon(R.drawable.ic_untitled)
-                    .setContentTitle("Hello "+ sessionManager.getUserDetails().get("userName"))
-                    .setColor(ContextCompat.getColor(this,R.color.colorDefault))
+                    .setContentTitle("Hello " + sessionManager.getUserDetails().get("userName"))
+                    .setColor(ContextCompat.getColor(this, R.color.colorDefault))
                     .setTicker("TICKER")
                     .setContentIntent(pendingIntent);
             notification = builder.build();
@@ -120,10 +126,59 @@ public class LocationMonitoringService extends Service implements
                 .addApi(LocationServices.API)
                 .build();
 
+        mLocationCallback = new LocationCallback() {
+            @Override
+            public void onLocationResult(LocationResult locationResult) {
+                if (locationResult == null) {
+                    return;
+                }
+
+                for (Location location : locationResult.getLocations()) {
+                    // Update UI with location data
+                    // ...\
+                    Log.d("tareq_test", "location accuracy: " + location.getAccuracy());
+
+                    //LocalBroadCastManager for sharing data from service to activity
+                    Intent intent = new Intent("GPS");
+                    intent.putExtra("accuracy", location.getAccuracy());
+                    intent.putExtra("obj", mLocationRequest);
+                    LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
+
+                    if (CurrentTimeUtilityClass.getDiffBetween(lastTimeMediaPlayed) >= 1) {
+                        if (location.getAccuracy() > 60) {
+                            if (lastAccuracy <= 60) { //that means last time its
+                                if (sMediaPlayerService != null && sMediaPlayerService.isPlaying())
+                                    sMediaPlayerService.stop();
+                                sMediaPlayerService = MediaPlayer.create(getApplicationContext(), R.raw.selliscope_gps_signal_lost);
+
+                                sMediaPlayerService.start();
+
+                            }
+                        } else {
+                            if (lastAccuracy > 60) {
+                                if (sMediaPlayerService != null && sMediaPlayerService.isPlaying())
+                                    sMediaPlayerService.stop();
+                                sMediaPlayerService = MediaPlayer.create(getApplicationContext(), R.raw.selliscope_gps_signal_restored);
+
+                                sMediaPlayerService.start();
+
+                            }
+                        }
+                        lastTimeMediaPlayed = Calendar.getInstance().getTime().toString();
+                        lastAccuracy = location.getAccuracy();
+                    }
+
+                    onLocationChanged(location);
+
+                }
+            }
+        };
+
         prefs = getSharedPreferences("ServiceRunning", MODE_PRIVATE);
         startForeground(1, notification);
     }
 
+    private static float lastAccuracy = 0; //this the trigger for not playing restored again and again
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -131,8 +186,8 @@ public class LocationMonitoringService extends Service implements
         super.onStartCommand(intent, flags, startId);
 
 
-        mLocationRequest.setInterval(60 * 5 * 1000);
-        mLocationRequest.setFastestInterval(60 * 5 * 1000);
+        mLocationRequest.setInterval(10 * 1000);
+        mLocationRequest.setFastestInterval(5 * 1000);
 
         int priority = LocationRequest.PRIORITY_HIGH_ACCURACY; //by default
         //PRIORITY_BALANCED_POWER_ACCURACY, PRIORITY_LOW_POWER, PRIORITY_NO_POWER are the other priority modes
@@ -140,10 +195,9 @@ public class LocationMonitoringService extends Service implements
 
         mLocationRequest.setPriority(priority);
         mLocationClient.connect();
-
         //Declare the timer
         myTimer = new Timer();
-//Set the schedule function and rate
+        //Set the schedule function and rate
         myTimer.schedule(new TimerTask() {
 
             @SuppressLint("MissingPermission")
@@ -151,18 +205,15 @@ public class LocationMonitoringService extends Service implements
             public void run() {
                 //Called each time when 1000 milliseconds (1 second) (the period parameter)
 
-
-
                 displayLocationSettingsRequest(getApplicationContext());
             }
             },
 //Set how long before to start calling the TimerTask (in milliseconds)
-                    0,
+                    3*60*1000,
 //Set the amount of time between each execution (in milliseconds)
                     60  * 1000);
 
-
-                //Make it stick to the notification panel so it is less prone to get cancelled by the Operating System.
+        //Make it stick to the notification panel so it is less prone to get cancelled by the Operating System.
         return START_STICKY;
     }
 
@@ -191,8 +242,8 @@ public class LocationMonitoringService extends Service implements
 
             return;
         }
-        LocationServices.FusedLocationApi.requestLocationUpdates(mLocationClient, mLocationRequest, this);
-
+        // LocationServices.FusedLocationApi.requestLocationUpdates(mLocationClient, mLocationRequest, this);
+        LocationServices.getFusedLocationProviderClient(this).requestLocationUpdates(mLocationRequest, mLocationCallback, null);
 
         Log.d(TAG, "Connected to Google API");
     }
@@ -203,16 +254,13 @@ public class LocationMonitoringService extends Service implements
      */
     @Override
     public void onConnectionSuspended(int i) {
-        Log.d(TAG, "Connection suspended");
+        Log.d("tareq_test", "Connection suspended");
     }
 
 
-
     //to get the location change
-    @Override
-    public void onLocationChanged(Location location) {
-        Log.d(TAG, "Location changed");
 
+    public void onLocationChanged(Location location) {
 
         if (location != null) {
             Log.d(TAG, "== location != null");
@@ -221,10 +269,9 @@ public class LocationMonitoringService extends Service implements
             //sendMessageToUI(String.valueOf(location.getLatitude()), String.valueOf(location.getLongitude()));
             //Toast.makeText(this, ""+String.valueOf(location.getLatitude())+" "+String.valueOf(location.getLongitude()), Toast.LENGTH_SHORT).show();
 
-            double latitude = Double.parseDouble(String.format(Locale.US,"%.05f", location.getLatitude()));
-            double longitude = Double.parseDouble(String.format(Locale.US,"%.05f", location.getLongitude()));
+            double latitude = Double.parseDouble(String.format(Locale.US, "%.05f", location.getLatitude()));
+            double longitude = Double.parseDouble(String.format(Locale.US, "%.05f", location.getLongitude()));
 
-            Timber.d("Latitude: " + latitude + " Longitude: " + longitude);
             String lastTime = prefs.getString("lasttime", "");
             Log.d("tareq_test", "last Time:" + lastTime);
             if (!lastTime.equals("")) {
@@ -295,7 +342,7 @@ public class LocationMonitoringService extends Service implements
 
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
-        Log.d(TAG, "Failed to connect to Google API");
+        Log.d("tareq_test", "Failed to connect to Google API");
 
     }
 
@@ -345,6 +392,8 @@ public class LocationMonitoringService extends Service implements
             }
         });
     }
+
+
     private void displayLocationSettingsRequest(Context context) {
       /*  GoogleApiClient googleApiClient = new GoogleApiClient.Builder(context)
                 .addApi(LocationServices.API).build();
@@ -353,11 +402,14 @@ public class LocationMonitoringService extends Service implements
         LocationRequest locationRequest = LocationRequest.create();
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         locationRequest.setInterval(10000);
-        locationRequest.setFastestInterval(10000 / 2);
+        locationRequest.setFastestInterval(5000);
 
-        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder().addLocationRequest(locationRequest);
+        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder();
+        builder.addLocationRequest(locationRequest);
 
-        builder.setAlwaysShow(true);
+        //**************************
+        builder.setAlwaysShow(true); //this is the key ingredient
+        //**************************
         Task<LocationSettingsResponse> result = LocationServices.getSettingsClient(this)
                 .checkLocationSettings(builder.build());
 
@@ -402,7 +454,7 @@ public class LocationMonitoringService extends Service implements
             Log.d("tareq_test", "OnDestroy Service");
             Intent bintent = new Intent(this, LocationServiceRestarterBroadcastReceiver.class);
             sendBroadcast(bintent);
-            myTimer.cancel();
+            //     myTimer.cancel();
         }
     }
 }

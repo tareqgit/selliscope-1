@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
                                                  android:layout_height="match_parent"
                                                  android:fitsSystemWindows="true">
@@ -38,5 +39,6 @@
         android:elevation="4dp"
         app:layout_anchor="@+id/include5"
         app:layout_anchorGravity="end|center"
-        app:srcCompat="@drawable/ic_mid_signal" />
+        app:srcCompat="@drawable/ic_high_signal"
+        tools:srcCompat="@drawable/ic_high_signal" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

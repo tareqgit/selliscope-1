@@ -3,7 +3,6 @@ package com.humaclab.selliscope.activity;
 import android.Manifest;
 import android.app.Activity;
 import android.app.ActivityManager;
-import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.app.job.JobInfo;
 import android.app.job.JobScheduler;
@@ -85,6 +84,8 @@ import com.humaclab.selliscope.utils.SessionManager;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
+import java.util.Observable;
+import java.util.Observer;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -99,6 +100,7 @@ import static com.humaclab.selliscope.R.id.content_fragment;
 import static io.nlopez.smartlocation.location.providers.LocationGooglePlayServicesProvider.REQUEST_CHECK_SETTINGS;
 
 public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+
     public enum FRAGMENT_TAGS {
         Target_Fragment, Dashboard_Fragment, Performance_Fragment
     }
@@ -127,11 +129,13 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     private JobInfo jobInfo;
     private String manufacturer;
 
-    private BroadcastReceiver gpsBroadcastReciever = new BroadcastReceiver() {
+    //This receiver working as a medium for two , First from LocationMonitoringService and Second from GpsLocationBroadcastReceiver
+    private BroadcastReceiver gpsBroadcastStateListener = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            float accuracy = intent.getFloatExtra("accuracy", 0);
 
+            //this accuracy is from LocationMonitoringService
+            float accuracy = intent.getFloatExtra("accuracy", 0);
             if (accuracy <= 17) {
                 ((ImageView) findViewById(R.id.gps_signal_image)).setImageResource(R.drawable.ic_high_signal);
             } else if (accuracy <= 60) {
@@ -142,7 +146,13 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 ((ImageView) findViewById(R.id.gps_signal_image)).setImageResource(R.drawable.ic_no_signal);
             }
 
-
+            //this state from GpsLocationBroadcastReceiver
+            boolean state = intent.getBooleanExtra("state", true);
+            if (state) {
+                ((ImageView) findViewById(R.id.gps_signal_image)).setImageResource(R.drawable.ic_high_signal);
+            }else{
+                ((ImageView) findViewById(R.id.gps_signal_image)).setImageResource(R.drawable.ic_no_signal);
+            }
         }
     };
 
@@ -160,9 +170,13 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
         //Location Receiver from LocationMonitoringService
         mLocalBroadcastManager = LocalBroadcastManager.getInstance(getApplicationContext());
+
+       // From  LocationMonitoringService to this activity
         mLocalBroadcastManager.registerReceiver(
-                gpsBroadcastReciever, new IntentFilter("GPS")
+                gpsBroadcastStateListener, new IntentFilter("GPS")
         );
+        // From GpsLocationBroadcaster to this activity
+        mLocalBroadcastManager.registerReceiver(gpsBroadcastStateListener, new IntentFilter("GpsState"));
 
 
 
@@ -672,7 +686,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onDestroy() {
         try {
-            mLocalBroadcastManager.unregisterReceiver(gpsBroadcastReciever);
+            mLocalBroadcastManager.unregisterReceiver(gpsBroadcastStateListener);
             unregisterReceiver(internetBroadcastReciever); //for internet
         } catch (Exception e) {
             e.printStackTrace();
@@ -789,7 +803,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 //stopService(new Intent(HomeActivity.this, SendLocationDataService.class));
                 HomeActivity.this.deleteDatabase(Constants.databaseName);
                 try {
-                    mLocalBroadcastManager.unregisterReceiver(gpsBroadcastReciever);
+                    mLocalBroadcastManager.unregisterReceiver(gpsBroadcastStateListener);
                     unregisterReceiver(internetBroadcastReciever);
                 } catch (Exception e) {
                     e.printStackTrace();

@@ -90,6 +90,49 @@ public class LocationMonitoringService extends Service implements
 
     public Timer myTimer;
 
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+
+        super.onStartCommand(intent, flags, startId);
+
+
+        mLocationRequest.setInterval(10 * 1000);
+        mLocationRequest.setFastestInterval(5 * 1000);
+
+        int priority = LocationRequest.PRIORITY_HIGH_ACCURACY; //by default
+        //PRIORITY_BALANCED_POWER_ACCURACY, PRIORITY_LOW_POWER, PRIORITY_NO_POWER are the other priority modes
+
+
+        mLocationRequest.setPriority(priority);
+        mLocationClient.connect();
+        //Declare the timer
+        myTimer = new Timer();
+        //Set the schedule function and rate
+        myTimer.schedule(new TimerTask() {
+
+                             @SuppressLint("MissingPermission")
+                             @Override
+                             public void run() {
+                                 //Called each time when 1000 milliseconds (1 second) (the period parameter)
+
+                                 displayLocationSettingsRequest(getApplicationContext());
+                             }
+                         },
+//Set how long before to start calling the TimerTask (in milliseconds)
+                3 * 60 * 1000,
+//Set the amount of time between each execution (in milliseconds)
+                60 * 1000);
+
+        //Make it stick to the notification panel so it is less prone to get cancelled by the Operating System.
+        return START_STICKY;
+    }
+
+    @Nullable
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
+    }
+
 
     @Override
     public void onCreate() {
@@ -134,39 +177,8 @@ public class LocationMonitoringService extends Service implements
                 }
 
                 for (Location location : locationResult.getLocations()) {
-                    // Update UI with location data
-                    // ...\
-                    Log.d("tareq_test", "location accuracy: " + location.getAccuracy());
-
-                    //LocalBroadCastManager for sharing data from service to activity
-                    Intent intent = new Intent("GPS");
-                    intent.putExtra("accuracy", location.getAccuracy());
-                    intent.putExtra("obj", mLocationRequest);
-                    LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
-
-                    if (CurrentTimeUtilityClass.getDiffBetween(lastTimeMediaPlayed) >= 1) {
-                        if (location.getAccuracy() > 60) {
-                            if (lastAccuracy <= 60) { //that means last time its
-                                if (sMediaPlayerService != null && sMediaPlayerService.isPlaying())
-                                    sMediaPlayerService.stop();
-                                sMediaPlayerService = MediaPlayer.create(getApplicationContext(), R.raw.selliscope_gps_signal_lost);
-
-                                sMediaPlayerService.start();
-
-                            }
-                        } else {
-                            if (lastAccuracy > 60) {
-                                if (sMediaPlayerService != null && sMediaPlayerService.isPlaying())
-                                    sMediaPlayerService.stop();
-                                sMediaPlayerService = MediaPlayer.create(getApplicationContext(), R.raw.selliscope_gps_signal_restored);
-
-                                sMediaPlayerService.start();
-
-                            }
-                        }
-                        lastTimeMediaPlayed = Calendar.getInstance().getTime().toString();
-                        lastAccuracy = location.getAccuracy();
-                    }
+                    // Update UI  and sound with location data
+                 //   updateUIandSoundonAccuracyChanges(location); //turn on if you need location accuracy update
 
                     onLocationChanged(location);
 
@@ -178,50 +190,43 @@ public class LocationMonitoringService extends Service implements
         startForeground(1, notification);
     }
 
-    private static float lastAccuracy = 0; //this the trigger for not playing restored again and again
+    private void updateUIandSoundonAccuracyChanges(Location location) {
+        // Update UI  and sound with location data
 
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
+        Log.d("tareq_test", "location accuracy: " + location.getAccuracy());
 
-        super.onStartCommand(intent, flags, startId);
+        //LocalBroadCastManager for sharing data from service to activity
+        Intent intent = new Intent("GPS");
+        intent.putExtra("accuracy", location.getAccuracy());
+        intent.putExtra("obj", mLocationRequest);
+        LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
 
+        if (CurrentTimeUtilityClass.getDiffBetween(lastTimeMediaPlayed) >= 1) {
+            if (location.getAccuracy() > 60) {
+                if (lastAccuracy <= 60) { //that means last time its
+                    if (sMediaPlayerService != null && sMediaPlayerService.isPlaying())
+                        sMediaPlayerService.stop();
+                    sMediaPlayerService = MediaPlayer.create(getApplicationContext(), R.raw.selliscope_gps_signal_lost);
 
-        mLocationRequest.setInterval(10 * 1000);
-        mLocationRequest.setFastestInterval(5 * 1000);
+                    sMediaPlayerService.start();
 
-        int priority = LocationRequest.PRIORITY_HIGH_ACCURACY; //by default
-        //PRIORITY_BALANCED_POWER_ACCURACY, PRIORITY_LOW_POWER, PRIORITY_NO_POWER are the other priority modes
+                }
+            } else {
+                if (lastAccuracy > 60) {
+                    if (sMediaPlayerService != null && sMediaPlayerService.isPlaying())
+                        sMediaPlayerService.stop();
+                    sMediaPlayerService = MediaPlayer.create(getApplicationContext(), R.raw.selliscope_gps_signal_restored);
 
+                    sMediaPlayerService.start();
 
-        mLocationRequest.setPriority(priority);
-        mLocationClient.connect();
-        //Declare the timer
-        myTimer = new Timer();
-        //Set the schedule function and rate
-        myTimer.schedule(new TimerTask() {
-
-            @SuppressLint("MissingPermission")
-            @Override
-            public void run() {
-                //Called each time when 1000 milliseconds (1 second) (the period parameter)
-
-                displayLocationSettingsRequest(getApplicationContext());
+                }
             }
-            },
-//Set how long before to start calling the TimerTask (in milliseconds)
-                    3*60*1000,
-//Set the amount of time between each execution (in milliseconds)
-                    60  * 1000);
-
-        //Make it stick to the notification panel so it is less prone to get cancelled by the Operating System.
-        return START_STICKY;
+            lastTimeMediaPlayed = Calendar.getInstance().getTime().toString();
+            lastAccuracy = location.getAccuracy();
+        }
     }
 
-    @Nullable
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
-    }
+    private static float lastAccuracy = 0; //this the trigger for not playing restored again and again
 
     /*
      * LOCATION CALLBACKS
@@ -446,6 +451,7 @@ public class LocationMonitoringService extends Service implements
             }
         });
     }
+
     @Override
     public void onDestroy() {
         super.onDestroy();

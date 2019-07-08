@@ -128,6 +128,7 @@ public class ActivityCart extends AppCompatActivity implements  SelectedProductR
         binding.rlSelectedProducts.setAdapter(selectedProductRecyclerAdapter);
 
         binding.btnOrder.setOnClickListener(v -> orderNow());
+
         binding.printBtn.setOnClickListener(v->{
             print();
             startActivity(new Intent(ActivityCart.this, PosActivity.class));

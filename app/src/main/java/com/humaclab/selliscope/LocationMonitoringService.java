@@ -96,8 +96,8 @@ public class LocationMonitoringService extends Service implements
         super.onStartCommand(intent, flags, startId);
 
 
-        mLocationRequest.setInterval(10 * 1000);
-        mLocationRequest.setFastestInterval(5 * 1000);
+        mLocationRequest.setInterval(60 * 1000);
+        mLocationRequest.setFastestInterval(30 * 1000);
 
         int priority = LocationRequest.PRIORITY_HIGH_ACCURACY; //by default
         //PRIORITY_BALANCED_POWER_ACCURACY, PRIORITY_LOW_POWER, PRIORITY_NO_POWER are the other priority modes

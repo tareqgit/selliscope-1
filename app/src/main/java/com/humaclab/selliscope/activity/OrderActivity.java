@@ -3,6 +3,8 @@ package com.humaclab.selliscope.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+
+import androidx.core.view.MenuItemCompat;
 import androidx.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -18,6 +20,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -35,6 +38,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import static androidx.core.view.MenuItemCompat.getActionView;
+import static com.humaclab.selliscope.sales_return.SalesReturn_2019_Activity.sSalesReturn2019SelectedProducts;
 
 public class OrderActivity extends AppCompatActivity implements OrderProductRecyclerAdapter.OnSelectProductListener {
     private ActivityOrderBinding binding;
@@ -198,7 +204,7 @@ public class OrderActivity extends AppCompatActivity implements OrderProductRecy
         binding.tvTotalAmt.setText(String.format("%.2f", totalAmt));
         binding.tvTotalDiscnt.setText(String.format("%.2f", totalDiscount));
         binding.tvTotalGr.setText(String.format("%.2f", (totalAmt - totalDiscount)));
-
+        updateBadge();
     }
 
     @Override
@@ -241,6 +247,8 @@ public class OrderActivity extends AppCompatActivity implements OrderProductRecy
         Log.d("tareq_test", "" + totalAmt + " " + totalDiscount + " ");
 
        // getProducts();//for refreshing
+
+        updateBadge();
     }
 
     @Override
@@ -250,6 +258,7 @@ public class OrderActivity extends AppCompatActivity implements OrderProductRecy
         }
 
         System.out.println("Product list:" + new Gson().toJson(selectedProductList) + "\nIndex: " + selectedProductList.indexOf(selectedProduct));
+
 
         Double totalAmt = 0.00;
         Double totalDiscount = 0.00;
@@ -262,6 +271,8 @@ public class OrderActivity extends AppCompatActivity implements OrderProductRecy
 
         binding.tvTotalGr.setText(String.format("%.2f", (totalAmt - totalDiscount)));
         Log.d("tareq_test", "" + totalAmt + " " + totalDiscount + " ");
+
+        updateBadge();
     }
 
     @Override
@@ -275,15 +286,47 @@ public class OrderActivity extends AppCompatActivity implements OrderProductRecy
         }
     }
 
+    TextView textCartItemCount;
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_order, menu);
-        return super.onCreateOptionsMenu(menu);
+        final MenuItem menuItem = menu.findItem(R.id.action_cart);
+
+        View actionView = menuItem.getActionView();
+        textCartItemCount = (TextView) actionView.findViewById(R.id.cart_badge);
+
+        updateBadge();
+
+        actionView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onOptionsItemSelected(menuItem);
+            }
+        });
+
+        return true;
+    }
+
+    public void updateBadge() {
+
+        if (textCartItemCount != null) {
+            if (selectedProductList.size() == 0) {
+                if (textCartItemCount.getVisibility() != View.GONE) {
+                    textCartItemCount.setVisibility(View.GONE);
+                }
+            } else {
+                textCartItemCount.setText(String.valueOf(Math.min(selectedProductList.size(), 99)));
+                if (textCartItemCount.getVisibility() != View.VISIBLE) {
+                    textCartItemCount.setVisibility(View.VISIBLE);
+                }
+            }
+        }
     }
 
     @Override
     protected void onDestroy() {
         //clear selected Item list
+        sSalesReturn2019SelectedProducts.clear();
         selectedProductList.clear();
         super.onDestroy();
     }
@@ -292,6 +335,7 @@ public class OrderActivity extends AppCompatActivity implements OrderProductRecy
     public void onBackPressed() {
         super.onBackPressed();
         //clear selected Item list
+        sSalesReturn2019SelectedProducts.clear();
         selectedProductList.clear();
         finish();
     }
@@ -301,6 +345,8 @@ public class OrderActivity extends AppCompatActivity implements OrderProductRecy
         switch (item.getItemId()) {
             case android.R.id.home:
                 onBackPressed();
+                Intent intent1 = new Intent(OrderActivity.this, OutletActivity.class);
+                startActivity(intent1);
                 return true;
             case R.id.action_cart:
                 if (!selectedProductList.isEmpty()) {

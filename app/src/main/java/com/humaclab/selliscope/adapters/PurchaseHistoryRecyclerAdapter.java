@@ -3,12 +3,12 @@ package com.humaclab.selliscope.adapters;
 import android.content.Context;
 import android.content.Intent;
 import androidx.databinding.DataBindingUtil;
+import androidx.databinding.library.baseAdapters.BR;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.humaclab.selliscope.BR;
 import com.humaclab.selliscope.R;
 import com.humaclab.selliscope.activity.PurchasedProductListActivity;
 import com.humaclab.selliscope.databinding.ItemPurchaseHistoryBinding;

@@ -102,7 +102,7 @@
     <string name="discount">Discount:</string>
     <string name="due">Due:</string>
     <string name="product_name">Product Name:</string>
-    <string name="quantity">Qty: </string>
+    <string name="quantity">Quantity: </string>
     <string name="rate">Rate:</string>
     <string name="price">Prc: </string>
     <string name="order_no">Order No:</string>
@@ -169,6 +169,9 @@
     <string name="end_date">End Date</string>
     <string name="start_date">Start Date</string>
     <string name="leaderboard">Leaderboard</string>
+    <string name="selesReturn">Sales Return</string>
+    <string name="reason">Reason:</string>
+    <string name="sku_no">SKU No:</string>
 
 
     <string-array name="paymentType">
@@ -184,6 +187,13 @@
     <string-array name="my_lang">
         <item>Eng</item>
         <item>বাংলা</item>
+    </string-array>
+
+    <string-array name="salesReturnReason">
+        <item>Damage</item>
+        <item>Expired</item>
+        <item>Short Money</item>
+        <item>Replace</item>
     </string-array>
 
     <string-array name="returnCause">

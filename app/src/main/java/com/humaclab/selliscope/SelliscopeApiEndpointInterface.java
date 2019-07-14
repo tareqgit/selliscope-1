@@ -37,6 +37,8 @@ import com.humaclab.selliscope.model.UserLocation;
 import com.humaclab.selliscope.model.price_variation.PriceVariationResponse;
 import com.humaclab.selliscope.model.variant_product.VariantProductResponse;
 import com.humaclab.selliscope.model.performance.payments_model.PaymentsResponse;
+import com.humaclab.selliscope.sales_return.model.SalesReturn2019Response;
+import com.humaclab.selliscope.sales_return.model.SalesReturnPostBody;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -54,141 +56,144 @@ import retrofit2.http.Query;
 public interface SelliscopeApiEndpointInterface {
     //GET methods
 
-    @GET("delivery/order")
+    @GET("v1/delivery/order")
     Call<SalesReturnResponse> getSalesReturnDAta();
 
-    @GET("sales-return/reason")
+    @GET("v1/sales-return/reason")
     Call<ReasonResponse> getSalesReturnReasony();
 
-    @GET("sales-return")
+    @GET("v1/sales-return")
     Call<SalesReturnHistory> getSalesReturnHistory();
 
-    @GET("product/price-variation")
+    @GET("v1/product/price-variation")
     Call<PriceVariationResponse> getPriceVariation();
 
-    @GET("product/trade-promotion")
+    @GET("v1/product/trade-promotion")
     Call<TradePromotion> getTradePromotion();
 
-    @GET("outlet")
+    @GET("v1/outlet")
     Call<ResponseBody> getOutlets();
 
-    @GET("product/category")
+    @GET("v1/product/category")
     Call<CategoryResponse> getCategories();
 
-    @GET("product/brand")
+    @GET("v1/product/brand")
     Call<BrandResponse> getBrands();
 
     /*@GET("product")
     Call<ProductResponse> getProducts();*/
-    @GET("variant-product")
+    @GET("v1/variant-product")
     Call<VariantProductResponse> getProducts();
 
-    @GET("order")
+    @GET("v1/order")
     Call<OrderResponse> getOrders();
 
-    @GET("payment/{outlet_id}")
+    @GET("v1/payment/{outlet_id}")
     Call<Payment> getPayment(@Path("outlet_id") int outletId);
 
 
     //Outlet Wise Target
-    @GET("target/outlet/{outlet_id}")
+    @GET("v1/target/outlet/{outlet_id}")
     Call<OutletTarget> getPutletTarget(@Path("outlet_id") int outletId);
 
-    @GET("payment")
+    @GET("v1/payment")
     Call<Payment> getPayment();
 
-    @GET("delivery")
+    @GET("v1/delivery")
     Call<DeliveryResponse> getDelivery();
     //for old sellisreturn Mode
-    @GET("return-products")
+    @GET("v1/return-products")
     Call<DeliveryResponseOld> getSalesReturnOld(@Query("outlet_id") int outletID);
 
-    @GET("return-products")
+    @GET("v1/return-products")
     Call<DeliveryResponse> getSalesReturn();
 
-    @GET("godown")
+    @GET("v1/godown")
     Call<GodownRespons> getGodown();
 
-    @GET("district")
+    @GET("v1/district")
     Call<DistrictResponse> getDistricts();
 
-    @GET("thana")
+    @GET("v1/thana")
     Call<ThanaResponse> getThanas();
 
-    @GET("outlet/type")
+    @GET("v1/outlet/type")
     Call<OutletTypeResponse> getOutletTypes();
 
-    @GET("visit")
+    @GET("v1/visit")
     Call<ResponseBody> getVisits();
 
-    @GET("target")
+    @GET("v1/target")
     Call<ResponseBody> getTargets();
 
-    @GET("target/user")
+    @GET("v1/target/user")
     Call<OutletTarget> getTarget();
 
-    @GET("diameter")
+    @GET("v1/diameter")
     Call<DiameterResponse> getDiameter();
 
-    @GET("outlet/{outlet_id}/purchase-history")
+    @GET("v1/outlet/{outlet_id}/purchase-history")
     Call<PurchaseHistoryResponse> getPurchaseHistory(@Path("outlet_id") int outletID);
 
-    @GET("route-plan")
+    @GET("v1/route-plan")
     Call<RouteResponse> getRoutes();
 
-    @GET("route-plan/{route_id}")
+    @GET("v1/route-plan/{route_id}")
     Call<RouteDetailsResponse> getRouteDetails(@Path("route_id") int routeId);
 
-    @GET("app-version")
+    @GET("v1/app-version")
     Call<AppVersion> getAppsversion();
     //POST methods
 
-    @POST("login")
+    @POST("v1/login")
     Call<ResponseBody> getUser();
 
-    @POST("outlet/store")
+    @POST("v1/outlet/store")
     Call<ResponseBody> createOutlet(@Body CreateOutlet createOutlet);
 
-    @POST("visit/store")
+    @POST("v1/visit/store")
     Call<ResponseBody> sendUserLocation(@Body UserLocation userLocation);
 
-    @POST("order/variant/store")
+    @POST("v1/order/variant/store")
     Call<AddNewOrder.OrderResponse> addOrder(@Body AddNewOrder order);
     /*@POST("order/store")
     Call<AddNewOrder.OrderResponse> addOrder(@Body AddNewOrder order);*/
 
-    @POST("payment/collect")
+    @POST("v1/payment/collect")
     Call<PaymentResponse.PaymentSucessfull> payNow(@Body PaymentResponse payment);
 
-    @POST("delivery/store")
+    @POST("v1/delivery/store")
     Call<DeliverProductResponse> deliverProduct(@Body DeliverProductResponse deliverProduct);
 
 /*    @POST("return-product")
     Call<SellsReturnResponsePost> returnProduct(@Body SellsReturnResponsePost.SellsReturn returnProduct);*/
-    @POST("sales-return/store ")
+    @POST("v1/sales-return/store ")
     Call<SellsReturnResponsePost> returnProduct(@Body SellsReturnResponsePost.SellsReturn returnProduct);
     //for ols sellisreturn Model
-    @POST("return-product")
+    @POST("v1/return-product")
     Call<SellsReturnResponseOld> returnProductOld(@Body SellsReturnResponseOld.SellsReturn returnProduct);
-    @POST("inspection/store")
+    @POST("v1/inspection/store")
     Call<InspectionResponse> inspectOutlet(@Body InspectionResponse.Inspection inspection);
 
-    @POST("version-imei")
+    @POST("v1/version-imei")
     Call<ResponseBody> sendIMEIAndVersion(@Body IMEIandVerison imeIandVerison);
 
-    @POST("change-password")
+    @POST("v1/change-password")
     Call<ChangePasswordResponse> changePassword(@Body ChangePassword changePassword);
 
-    @PUT("outlet/{id}/update")
+    @PUT("v1/outlet/{id}/update")
     Call<ResponseBody> updateOutlet(@Path("id") int outletID, @Body CreateOutlet createOutlet);
 
-    @POST("profile/update")
+    @POST("v1/profile/update")
     Call<UpdateProfileResponse> updateProfile(@Body UpdateProfile updateProfile);
 
-    @GET("performance/order")
+    @GET("v1/performance/order")
     Call<PerformanceOrderResponse> performanceOrder(@Query("date_from") String date_from, @Query("date_to") String date_to);
 
-    @GET("performance/payment")
+    @GET("v1/performance/payment")
     Call<PaymentsResponse> performancePayments(@Query("date_from") String date_from, @Query("date_to") String date_to);
 
+
+    @POST("v2/sales-return/store")
+    Call<SalesReturn2019Response> postSalesReturn(@Body SalesReturnPostBody salesReturn);
 }

@@ -4,9 +4,9 @@
 
     <data>
 
-        <variable
+     <!--   <variable
             name="selectedProduct"
-            type="com.humaclab.selliscope.helper.SelectedProductHelper" />
+            type="com.humaclab.selliscope.helper.SelectedProductHelper" />-->
     </data>
   <!--  <android.support.v7.widget.CardView
         android:layout_width="match_parent"
@@ -20,12 +20,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
 
+        android:layout_marginBottom="@dimen/margin_10"
         android:background="@drawable/cart_button_shape"
-        android:orientation="vertical"
-        android:padding="2dp"
-        android:elevation="3dp"
-        android:layout_marginBottom="@dimen/margin_10">
 
+        android:elevation="3dp"
+        android:orientation="vertical">
+        <!--  android:text='@{selectedProduct.productName}'-->
         <TextView
             android:id="@+id/tv_product_name"
             android:layout_width="0dp"
@@ -37,33 +37,16 @@
             android:layout_weight="9"
             android:fontFamily="@font/latobold"
             android:hint="@string/product_name"
+
             android:padding="5dp"
-            android:text='@{selectedProduct.productName}'
             android:textAlignment="center"
             android:textColor="#000"
             android:textStyle="bold"
             app:layout_constraintEnd_toStartOf="@+id/btn_remove"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/textViewReturn"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageView
-            android:id="@+id/btn_remove"
-            android:layout_width="0dp"
-            android:layout_height="30dp"
-            android:layout_gravity="center"
-            android:layout_margin="1dp"
-            android:layout_marginTop="8dp"
-
-            android:layout_marginEnd="8dp"
-            android:layout_weight="1"
-            android:adjustViewBounds="true"
-            android:gravity="center"
-            android:textAlignment="center"
-            android:tint="#d50000"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/remove" />
-
+        <!--   android:text='@{selectedProduct.productPrice}'-->
         <TextView
             android:id="@+id/tv_price"
             android:layout_width="wrap_content"
@@ -75,7 +58,7 @@
             android:fontFamily="@font/latoregular"
             android:hint="Price"
             android:padding="5dp"
-            android:text='@{selectedProduct.productPrice}'
+
             android:textAlignment="center"
             android:textColor="#000"
             app:layout_constraintEnd_toStartOf="@+id/textView3"
@@ -100,7 +83,7 @@
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/tv_price"
             app:layout_constraintTop_toTopOf="@+id/tv_price" />
-
+        <!-- android:text='@{selectedProduct.productQuantity}'-->
         <TextView
             android:id="@+id/et_qty"
             android:layout_width="wrap_content"
@@ -111,7 +94,7 @@
             android:fontFamily="@font/latoregular"
             android:hint="Qty."
             android:padding="5dp"
-            android:text='@{selectedProduct.productQuantity}'
+
             android:textAlignment="center"
             android:textColor="#000"
             app:layout_constraintBottom_toBottomOf="@+id/textView3"
@@ -130,9 +113,11 @@
             android:text="="
             android:textColor="#000"
             app:layout_constraintBottom_toBottomOf="@+id/et_qty"
+            app:layout_constraintEnd_toStartOf="@+id/tv_amount"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@+id/et_qty"
             app:layout_constraintTop_toTopOf="@+id/et_qty" />
-
+        <!--   android:text='@{selectedProduct.totalPrice}'-->
         <TextView
             android:id="@+id/tv_amount"
             android:layout_width="wrap_content"
@@ -142,7 +127,7 @@
             android:fontFamily="@font/latobold"
             android:hint="Amount"
             android:padding="5dp"
-            android:text='@{selectedProduct.totalPrice}'
+
             android:textAlignment="center"
             android:textColor="#000"
             android:textStyle="bold"
@@ -179,7 +164,7 @@
             app:layout_constraintBottom_toBottomOf="@+id/textView5"
             app:layout_constraintStart_toEndOf="@+id/textView5"
             app:layout_constraintTop_toTopOf="@+id/textView5" />
-
+        <!--   android:text='@{selectedProduct.tpDiscount}'-->
         <TextView
             android:id="@+id/tv_promotiondiscount"
             android:layout_width="wrap_content"
@@ -189,7 +174,7 @@
             android:fontFamily="@font/latobold"
             android:hint="Amount"
             android:padding="5dp"
-            android:text='@{selectedProduct.tpDiscount}'
+
             android:textAlignment="center"
             android:textColor="#000"
             android:textStyle="bold"
@@ -229,6 +214,7 @@
             app:layout_constraintStart_toEndOf="@+id/textView7"
             app:layout_constraintTop_toTopOf="@+id/textView7" />
 
+        <!--  android:text='@{Double.toString(Double.parseDouble(selectedProduct.totalPrice) - Double.parseDouble(selectedProduct.tpDiscount))}'-->
         <TextView
             android:id="@+id/tv_finaltotal"
             android:layout_width="0dp"
@@ -238,7 +224,7 @@
             android:fontFamily="@font/latobold"
             android:hint="Amount"
             android:padding="5dp"
-            android:text='@{Double.toString(Double.parseDouble(selectedProduct.totalPrice) - Double.parseDouble(selectedProduct.tpDiscount))}'
+
             android:textAlignment="center"
             android:textColor="#000"
             android:textStyle="bold"
@@ -255,6 +241,44 @@
             tools:layout_editor_absoluteX="2dp">
 
         </TableRow>
+
+        <TextView
+            android:id="@+id/textViewReturn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:background="@drawable/moss_gradient3"
+            android:padding="6dp"
+            android:paddingEnd="24dp"
+            android:shadowColor="@color/text_shadow"
+            android:shadowDx="1"
+            android:shadowDy="1"
+            android:shadowRadius="2"
+            android:text="Return"
+            android:textColor="@color/light_font"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/btn_remove"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:layout_margin="1dp"
+            android:layout_marginTop="8dp"
+
+            android:layout_marginEnd="8dp"
+            android:layout_weight="1"
+            android:adjustViewBounds="true"
+            android:gravity="center"
+            android:textAlignment="center"
+            android:tint="#d50000"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/remove" />
+
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
    <!-- </android.support.v7.widget.CardView>-->

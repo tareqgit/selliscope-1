@@ -4,6 +4,7 @@ import android.content.Context;
 import androidx.databinding.DataBindingUtil;
 import android.graphics.Color;
 import androidx.annotation.NonNull;
+import androidx.databinding.library.baseAdapters.BR;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,7 +12,7 @@ import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
-import com.humaclab.selliscope.BR;
+
 import com.humaclab.selliscope.R;
 import com.humaclab.selliscope.databinding.PerformenceLeaderboardTopSellerFragmentModelBinding;
 import com.humaclab.selliscope.model.performance.leaderboard_model.TopSellerModel;

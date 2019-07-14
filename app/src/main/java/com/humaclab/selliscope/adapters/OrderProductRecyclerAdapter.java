@@ -21,6 +21,7 @@ import com.humaclab.selliscope.helper.ShowProductSelectionDialog;
 import com.humaclab.selliscope.model.variant_product.ProductsItem;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -123,7 +124,8 @@ public class OrderProductRecyclerAdapter extends RecyclerView.Adapter<OrderProdu
         /*On remove button click */
         holder.getBinding().ivRemoveProduct.setOnClickListener(v -> {
             if (!selectedProductList.isEmpty()) {
-                for (final SelectedProductHelper selectedProductHelper : selectedProductList) {
+                List<SelectedProductHelper> selectedProductHelperList = new ArrayList<>(selectedProductList);
+                for (final SelectedProductHelper selectedProductHelper : selectedProductHelperList) {
                     if (selectedProductHelper.getProductID().equals(String.valueOf(products.getId()))
                             && selectedProductHelper.getProductRow().equals(products.getVariantRow())) {
 

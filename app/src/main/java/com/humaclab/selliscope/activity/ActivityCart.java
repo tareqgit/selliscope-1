@@ -10,10 +10,12 @@ import androidx.appcompat.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 import static com.humaclab.selliscope.activity.OrderActivity.selectedProductList;
+import static com.humaclab.selliscope.sales_return.SalesReturn_2019_Activity.sSalesReturn2019SelectedProducts;
 
 
 import com.google.gson.Gson;
@@ -26,10 +28,19 @@ import com.humaclab.selliscope.helper.SelectedProductHelper;
 import com.humaclab.selliscope.model.AddNewOrder;
 import com.humaclab.selliscope.pos_sdk.PosActivity;
 import com.humaclab.selliscope.pos_sdk.model.PosModel;
+import com.humaclab.selliscope.sales_return.SalesReturn_2019_Activity;
+import com.humaclab.selliscope.sales_return.db.ReturnProductDatabase;
+import com.humaclab.selliscope.sales_return.db.ReturnProductEntity;
+import com.humaclab.selliscope.sales_return.model.JsonMemberReturn;
+import com.humaclab.selliscope.sales_return.model.SalesReturn2019Response;
+import com.humaclab.selliscope.sales_return.model.SalesReturn2019SelectedProduct;
+import com.humaclab.selliscope.sales_return.model.SalesReturnPostBody;
+import com.humaclab.selliscope.utils.CurrentTimeUtilityClass;
 import com.humaclab.selliscope.utils.DatabaseHandler;
 import com.humaclab.selliscope.utils.NetworkUtility;
 import com.humaclab.selliscope.utils.SendUserLocationData;
 import com.humaclab.selliscope.utils.SessionManager;
+import com.mti.pushdown_ext_onclick_single.PushDownAnim;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +51,7 @@ import retrofit2.Response;
 
 public class ActivityCart extends AppCompatActivity implements  SelectedProductRecyclerAdapter.OnRemoveFromCartListener{
     Double total = 0.0;
+    Double salesReturnTotal = 0.0;
     private ActivityCartBinding binding;
     private SelliscopeApiEndpointInterface apiService;
     private SessionManager sessionManager;
@@ -50,6 +62,8 @@ public class ActivityCart extends AppCompatActivity implements  SelectedProductR
     private String outletName, outletID;
     SelectedProductRecyclerAdapter selectedProductRecyclerAdapter;
     // private List<SelectedProductHelper> selectedProductList;
+
+    ReturnProductDatabase returnProductDatabase ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,22 +95,8 @@ public class ActivityCart extends AppCompatActivity implements  SelectedProductR
                 lon = longitude;
             }
         });
-        //For getting location
 
-        //For showing total amount
-        for (SelectedProductHelper selectedProduct : selectedProductList) {
-          //this Segment Used for calculation of total price without promotion discount
-            //  total += Double.valueOf(selectedProduct.getTotalPrice());
-            //this Segment Used for calculation of total price with promotion discount
-            Double t= Double.valueOf(selectedProduct.getTppromotionGrandPrice().isEmpty()?"0":selectedProduct.getTppromotionGrandPrice());
-            total += t ;
-        }
-        binding.tvTotal.setText(String.valueOf(total));
-        if (!binding.etDiscount.getText().toString().equals("")){
-            binding.tvGrandTotal.setText(String.valueOf(
-                    total - Double.parseDouble(binding.etDiscount.getText().toString())
-            ));
-        }
+
 
         binding.etDiscount.addTextChangedListener(new TextWatcher() {
             @Override
@@ -108,7 +108,7 @@ public class ActivityCart extends AppCompatActivity implements  SelectedProductR
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 try {
                     binding.tvGrandTotal.setText(String.valueOf(
-                            total - Double.parseDouble(s.toString())
+                            total -salesReturnTotal - Double.parseDouble(s.toString())
                     ));
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -129,12 +129,45 @@ public class ActivityCart extends AppCompatActivity implements  SelectedProductR
 
         binding.btnOrder.setOnClickListener(v -> orderNow());
 
-        binding.printBtn.setOnClickListener(v->{
+        // for pos printer
+       /* binding.printBtn.setOnClickListener(v->{
             print();
             startActivity(new Intent(ActivityCart.this, PosActivity.class));
-        });
+        });*/
+
+
+        returnProductDatabase = (ReturnProductDatabase) ReturnProductDatabase.getInstance(getApplicationContext());
+
+
     }
-public  static PosModel sPosModel;
+
+    private void updateTotal() {
+        //For showing total amount
+        for (SelectedProductHelper selectedProduct : selectedProductList) {
+          //this Segment Used for calculation of total price without promotion discount
+            //  total += Double.valueOf(selectedProduct.getTotalPrice());
+            //this Segment Used for calculation of total price with promotion discount
+            Double t= Double.valueOf(selectedProduct.getTppromotionGrandPrice().isEmpty()?"0":selectedProduct.getTppromotionGrandPrice());
+            total += t ;
+        }
+
+        for(SalesReturn2019SelectedProduct salesReturn2019SelectedProduct: sSalesReturn2019SelectedProducts){
+            salesReturnTotal+=salesReturn2019SelectedProduct.getProductTotal();
+        }
+
+        binding.tvTotal.setText(String.format("%s - %s", String.valueOf(total), String.valueOf(salesReturnTotal)));
+
+        if (!binding.etDiscount.getText().toString().equals("")){
+            binding.tvGrandTotal.setText(String.valueOf(
+                    total - salesReturnTotal- Double.parseDouble(binding.etDiscount.getText().toString())
+            ));
+        }else{
+            binding.tvGrandTotal.setText(String.valueOf(
+                    total - salesReturnTotal));
+        }
+    }
+
+    public  static PosModel sPosModel;
     public void print(){
         PosModel.Builder posModelBuilder = new PosModel.Builder();
         posModelBuilder.withOutletName(outletName);
@@ -263,11 +296,19 @@ public  static PosModel sPosModel;
                             Toast.makeText(ActivityCart.this, "Order created successfully", Toast.LENGTH_LONG).show();
                            //clear selected Item list
                             selectedProductList.clear();
-                            Intent intent = new Intent(getApplicationContext(), OutletActivity.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                            startActivity(intent);
 
-                            finish();
+                            if(sSalesReturn2019SelectedProducts.size()!=0){
+                                pd.show();
+                                assert response.body() != null;
+                                postSalesReturn(apiService,response.body().result.order.id,Integer.parseInt(outletID));
+                            }else {
+
+                                Intent intent = new Intent(getApplicationContext(), OutletActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                startActivity(intent);
+
+                                finish();
+                            }
                             //startActivity(new Intent(ActivityCart.this, OutletActivity.class));
                         } else if (response.code() == 401) {
                             System.out.println(new Gson().toJson(response.body()));
@@ -285,11 +326,40 @@ public  static PosModel sPosModel;
                     }
                 });
             } else {
-                databaseHandler.setOrder(addNewOrder);
+
+                int order_return_id = (int) (Math.random() * 10000 + 1);
+                databaseHandler.setOrder(addNewOrder, order_return_id); //for random number between 1 to 100
+
+                if(sSalesReturn2019SelectedProducts.size()>0) {
+
+                    new Thread(() -> {
+                        for (SalesReturn2019SelectedProduct selectedProduct : sSalesReturn2019SelectedProducts) {
+                            returnProductDatabase.returnProductDao().insertReturnProduct(new ReturnProductEntity.Builder()
+                                    .withOrder_return_id(order_return_id)
+                                    .withProduct_id(selectedProduct.getProductId())
+                                    .withCause(selectedProduct.getReason())
+                                    .withGodown_id(1)
+                                    .withOutlet_id(Integer.parseInt(outletID))
+                                    .withQuantity((int) Math.round(selectedProduct.getProductQty()))
+                                    .withRate(selectedProduct.getProductRate())
+                                    .withSku(selectedProduct.getProductSKU())
+                                    .withVariant_row(selectedProduct.getProductVariantRow())
+                                    .withReturn_date(CurrentTimeUtilityClass.getCurrentTimeStamp())
+                                    .build());
+
+
+                        }
+                        Log.d("tareq_test" , "Sales return added to database");
+                        pd.dismiss();
+                        sSalesReturn2019SelectedProducts.clear();
+                    }).start();
+                }
+
                 Toast.makeText(ActivityCart.this, "Order created successfully", Toast.LENGTH_LONG).show();
                 pd.dismiss();
                 //clear selected Item list
                 selectedProductList.clear();
+
                 //if net is not available que the task and get back to Outlet
                 Intent intent = new Intent(getApplicationContext(), OutletActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -301,6 +371,55 @@ public  static PosModel sPosModel;
         }
     }
 
+
+    void postSalesReturn(SelliscopeApiEndpointInterface apiService, int orderId, int outletId){
+
+        for (SalesReturn2019SelectedProduct salesreturnProduct:sSalesReturn2019SelectedProducts) {
+            salesreturnProduct.setGodown_id(1); //fixed for sometime
+            salesreturnProduct.setReturn_date(CurrentTimeUtilityClass.getCurrentTimeStamp());
+        }
+
+        JsonMemberReturn jsonMemberReturn=new JsonMemberReturn();
+            jsonMemberReturn.setOrderId(orderId);
+            jsonMemberReturn.setOutletId(outletId);
+            jsonMemberReturn.setProducts(sSalesReturn2019SelectedProducts);
+
+        SalesReturnPostBody salesReturnPostBody = new SalesReturnPostBody();
+        salesReturnPostBody.setJsonMemberReturn(jsonMemberReturn);
+
+        Log.d("tareq_test" , "Sales Return body: "+ new Gson().toJson(salesReturnPostBody));
+            apiService.postSalesReturn(salesReturnPostBody).enqueue(new Callback<SalesReturn2019Response>() {
+                @Override
+                public void onResponse(Call<SalesReturn2019Response> call, Response<SalesReturn2019Response> response) {
+                   pd.dismiss();
+                    if(response.isSuccessful()){
+                        Log.d("tareq_test" , "Salesreturn successfull");
+                        Toast.makeText(ActivityCart.this, "Sales return successfully", Toast.LENGTH_LONG).show();
+                        sSalesReturn2019SelectedProducts.clear();
+                        Intent intent = new Intent(getApplicationContext(), OutletActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
+
+                        finish();
+                    }else{
+                        Log.d("tareq_test" , "Salesreturn failed"+ response.code());
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<SalesReturn2019Response> call, Throwable t) {
+                pd.dismiss();
+                }
+            });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateTotal();
+        selectedProductRecyclerAdapter.updateCart();
+    }
+
     @Override
     public void onBackPressed() {
         super.onBackPressed();
@@ -308,10 +427,24 @@ public  static PosModel sPosModel;
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_cart, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
                 onBackPressed();
+               // startActivity(new Intent(ActivityCart.this, OrderActivity.class));
+                return true;
+
+            case R.id.action_return:
+                Intent intent = new Intent(ActivityCart.this, SalesReturn_2019_Activity.class);
+                intent.putExtra("outletID", outletID);
+                intent.putExtra("outletName", outletName);
+                startActivity(intent);
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -319,27 +452,33 @@ public  static PosModel sPosModel;
 
 
     @Override
-    public void onRemoveSelectedProduct(SelectedProductHelper selectedProduct) {
-        if (selectedProductList.contains(selectedProduct)) {
-            selectedProductList.remove(selectedProductList.indexOf(selectedProduct));
+    public void onRemoveSelectedProduct(Object selectedProduct) {
+        Log.d("tareq_test" , "Sales Return Itme removed");
+        try {
+
+            total=0d;
+            salesReturnTotal=0d;
+
+            for (SelectedProductHelper selectedProductHelper_ : selectedProductList) {
+                total += Double.valueOf(selectedProductHelper_.getTotalPrice());
+            }
+
+            for(SalesReturn2019SelectedProduct salesReturn2019SelectedProduct: sSalesReturn2019SelectedProducts){
+                salesReturnTotal += salesReturn2019SelectedProduct.getProductTotal();
+            }
+
+            binding.tvTotal.setText(String.format("%s - %s", String.valueOf(total), String.valueOf(salesReturnTotal)));
+
+            if (!binding.etDiscount.getText().toString().equals("")) {
+                binding.tvGrandTotal.setText(String.valueOf(
+                        total - salesReturnTotal- Double.parseDouble(binding.etDiscount.getText().toString())
+                ));
+            } else {
+                binding.tvGrandTotal.setText(String.valueOf(total));
+            }
+            selectedProductRecyclerAdapter.notifyDataSetChanged();
+        }catch (Exception ex){
+
         }
-
-        System.out.println("Product list:" + new Gson().toJson(selectedProductList) + "\nIndex: " + selectedProductList.indexOf(selectedProduct));
-
-        Double totalAmt = 0.00;
-        for (SelectedProductHelper selectedProductHelper : selectedProductList) {
-            totalAmt += Double.valueOf(selectedProductHelper.getTotalPrice());
-        }
-        binding.tvTotal.setText(String.valueOf(totalAmt));
-
-        if (!binding.etDiscount.getText().toString().equals("")) {
-            binding.tvGrandTotal.setText(String.valueOf(
-                    totalAmt - Double.parseDouble(binding.etDiscount.getText().toString())
-            ));
-        }else{
-            binding.tvGrandTotal.setText(String.valueOf(totalAmt));
-        }
-        selectedProductRecyclerAdapter.notifyDataSetChanged();
-
     }
 }

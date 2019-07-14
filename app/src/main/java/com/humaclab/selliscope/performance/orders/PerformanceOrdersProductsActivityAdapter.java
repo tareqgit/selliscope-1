@@ -9,12 +9,12 @@ package com.humaclab.selliscope.performance.orders;
 import android.content.Context;
 import androidx.databinding.DataBindingUtil;
 import androidx.annotation.NonNull;
+import androidx.databinding.library.baseAdapters.BR;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.humaclab.selliscope.BR;
 import com.humaclab.selliscope.R;
 import com.humaclab.selliscope.databinding.ActivityPerformanceOrdersProductsModelBinding;
 import com.humaclab.selliscope.model.performance.orders_model.Product;

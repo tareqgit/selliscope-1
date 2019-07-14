@@ -24,6 +24,7 @@
             android:layout_marginTop="8dp"
             android:gravity="center"
             android:orientation="horizontal"
+            android:visibility="gone"
             app:layout_constraintTop_toBottomOf="@+id/tl">
 
             <TextView
@@ -45,7 +46,7 @@
                 android:textColor="#000" />
         </LinearLayout>
 
-        <LinearLayout
+      <!--  <LinearLayout
             android:id="@+id/ll_header"
             android:layout_width="match_parent"
             android:layout_height="2dp"
@@ -55,7 +56,7 @@
             android:orientation="horizontal"
             app:layout_constraintTop_toBottomOf="@+id/ll_outlet">
 
-            <!--<TextView
+            &lt;!&ndash;<TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="1dp"
@@ -110,22 +111,23 @@
                 android:padding="5dp"
                 android:text="Remove"
                 android:textAlignment="center"
-                android:textColor="#000" />-->
-        </LinearLayout>
+                android:textColor="#000" />&ndash;&gt;
+        </LinearLayout>-->
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rl_selected_products"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_above="@id/ll_bottom"
-            android:layout_below="@+id/ll_header"
 
-
-            android:layout_marginTop="8dp"
+            android:padding="8dp"
+            android:clipToPadding="false"
             android:layout_marginBottom="8dp"
             android:background="#fff"
             app:layout_constraintBottom_toTopOf="@+id/ll_bottom"
-            app:layout_constraintTop_toBottomOf="@+id/ll_header" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ll_outlet" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/ll_bottom"
@@ -279,15 +281,15 @@
                 app:layout_constraintEnd_toEndOf="parent" />
 
             <Button
-                android:id="@+id/print_btn"
+                android:id="@+id/return_btn"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginBottom="8dp"
-                android:text="Print"
+                android:text="Return"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                android:visibility="gone" />
+                app:layout_constraintStart_toStartOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -4,12 +4,12 @@ import android.content.Context;
 import android.content.Intent;
 import androidx.databinding.DataBindingUtil;
 import androidx.databinding.ViewDataBinding;
+import androidx.databinding.library.baseAdapters.BR;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.humaclab.selliscope.BR;
 import com.humaclab.selliscope.R;
 import com.humaclab.selliscope.activity.activity_salesReturnOld.SalesReturnDetailsActivityOld;
 import com.humaclab.selliscope.model.model_sales_return_old.DeliveryResponseOld;

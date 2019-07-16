@@ -27,6 +27,8 @@
     <color name="text_shadow">#7F000000</color>
     <color name="text_shadow_white">#FFFFFF</color>
 
+    <color name="text_black"> #212121</color>
+    <color name="text_blue">#448AFF</color>
 
     <color name="white_back">#ECEFF1</color>
     <color name="white_mid">#FAFAFA</color>

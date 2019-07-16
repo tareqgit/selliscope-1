@@ -11,16 +11,13 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.humaclab.selliscope.SelliscopeApiEndpointInterface;
 import com.humaclab.selliscope.SelliscopeApplication;
-import com.humaclab.selliscope.activity.ActivityCart;
-import com.humaclab.selliscope.activity.OutletActivity;
 import com.humaclab.selliscope.model.AddNewOrder;
 import com.humaclab.selliscope.sales_return.db.ReturnProductDatabase;
 import com.humaclab.selliscope.sales_return.db.ReturnProductEntity;
-import com.humaclab.selliscope.sales_return.model.JsonMemberReturn;
-import com.humaclab.selliscope.sales_return.model.SalesReturn2019Response;
-import com.humaclab.selliscope.sales_return.model.SalesReturn2019SelectedProduct;
-import com.humaclab.selliscope.sales_return.model.SalesReturnPostBody;
-import com.humaclab.selliscope.utils.CurrentTimeUtilityClass;
+import com.humaclab.selliscope.sales_return.model.post.JsonMemberReturn;
+import com.humaclab.selliscope.sales_return.model.post.SalesReturn2019Response;
+import com.humaclab.selliscope.sales_return.model.post.SalesReturn2019SelectedProduct;
+import com.humaclab.selliscope.sales_return.model.post.SalesReturnPostBody;
 import com.humaclab.selliscope.utils.DatabaseHandler;
 import com.humaclab.selliscope.utils.SessionManager;
 
@@ -30,9 +27,6 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import timber.log.Timber;
-
-import static com.humaclab.selliscope.sales_return.SalesReturn_2019_Activity.sSalesReturn2019SelectedProducts;
 
 /**
  * Created by leon on 20/12/17.

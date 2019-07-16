@@ -166,6 +166,12 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         LoadLocale();
         setContentView(R.layout.activity_home);
 
+        //
+        SharedPreferences sharedPreferences = getSharedPreferences("Settings", MODE_PRIVATE);
+        Constants.BASE_URL = sharedPreferences.getString("BASE_URL", Constants.BASE_URL);
+
+
+
         displayGpsSignalRequest(); //for showing gps request
 
         //Location Receiver from LocationMonitoringService
@@ -692,10 +698,14 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             e.printStackTrace();
         }
 
-        stopService(locationServiceIntent); /*The latter may seem rather peculiar:
-         why do we want to stop exactly the service that we want to keep alive?
-          Because if we do not stop it, the service will die with our app.
-          Instead, by stopping the service, we will force the service to call its own onDestroy which will force it to recreate itself after the app is dead.*/
+        try {
+            stopService(locationServiceIntent); /*The latter may seem rather peculiar:
+             why do we want to stop exactly the service that we want to keep alive?
+              Because if we do not stop it, the service will die with our app.
+              Instead, by stopping the service, we will force the service to call its own onDestroy which will force it to recreate itself after the app is dead.*/
+        } catch (Exception e) {
+            Log.e("tareq_test" , "Stop location Service intent: "+ e.getMessage());
+        }
         super.onDestroy();
         if (sessionManager.isLoggedIn()) {
 
@@ -741,33 +751,37 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
 
     private void LoadappsVertion() {
-        apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(), sessionManager.getUserPassword(), false).create(SelliscopeApiEndpointInterface.class);
-        Call<AppVersion> call = apiService.getAppsversion();
-        call.enqueue(new Callback<AppVersion>() {
-            @Override
-            public void onResponse(Call<AppVersion> call, Response<AppVersion> response) {
-                if (response.code() == 200) {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        if (activeNetworkInfo != null && activeNetworkInfo.isConnected()) {
+            apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(), sessionManager.getUserPassword(), false).create(SelliscopeApiEndpointInterface.class);
+            Call<AppVersion> call = apiService.getAppsversion();
+            call.enqueue(new Callback<AppVersion>() {
+                @Override
+                public void onResponse(Call<AppVersion> call, Response<AppVersion> response) {
+                    if (response.code() == 200) {
 
-                    System.out.println("APPS VERTION " + new Gson().toJson(response.body()));
+                        System.out.println("APPS VERTION " + new Gson().toJson(response.body()));
 
-                    int serverVersion = Integer.parseInt(response.body().getResult().getVersionCode());
-                    int appVersion = BuildConfig.VERSION_CODE;
-                    if (serverVersion > appVersion) {
-                        updateDialog(response.body().getResult().getVersionName(), response.body().getResult().getUrl());
+                        int serverVersion = Integer.parseInt(response.body().getResult().getVersionCode());
+                        int appVersion = BuildConfig.VERSION_CODE;
+                        if (serverVersion > appVersion) {
+                            updateDialog(response.body().getResult().getVersionName(), response.body().getResult().getUrl());
+                        }
+
+
                     }
-
 
                 }
 
-            }
+                @Override
+                public void onFailure(Call<AppVersion> call, Throwable t) {
+                    Toast.makeText(HomeActivity.this, "Loading App Version  Error", Toast.LENGTH_SHORT).show();
+                }
 
-            @Override
-            public void onFailure(Call<AppVersion> call, Throwable t) {
-                Toast.makeText(HomeActivity.this, "Loading Error", Toast.LENGTH_SHORT).show();
-            }
-
-        });
-
+            });
+        }
     }
 
     private void updateDialog(String version, final String link) {
@@ -940,6 +954,18 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
 
+        alartDialogBuilder(); //create Internet Connection Error Alert Dialog
+
+        //region StartZoombie LocationService
+        if (checkPermissions()) { //Yes permissions are granted by the user. Go to the next step.
+            startStep3();
+        } else {  //No user has not granted the permissions yet. Request now.
+            requestPermissions();
+        }
+        //endregion
+
+
+
         if (activeNetworkInfo == null || !activeNetworkInfo.isConnected()) {
             promptInternetConnect();
             return false;
@@ -952,11 +978,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
         //Yes there is active internet connection. Next check Location is granted by user or not.
 
-        if (checkPermissions()) { //Yes permissions are granted by the user. Go to the next step.
-            startStep3();
-        } else {  //No user has not granted the permissions yet. Request now.
-            requestPermissions();
-        }
+
         return true;
     }
 
@@ -964,36 +986,36 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
      * Show A Dialog with button to refresh the internet state.
      */
     private void promptInternetConnect() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this);
-        builder.setTitle("ERror");
-        builder.setMessage("No Internet ");
 
+        if(!dialogInternetConnectionError.isShowing())
+        dialogInternetConnectionError.show();
+    }
+    AlertDialog dialogInternetConnectionError;
+    private void alartDialogBuilder() {
+        AlertDialog.Builder    internetConnectionErrorDialogBuilder= new AlertDialog.Builder(HomeActivity.this);
+        internetConnectionErrorDialogBuilder.setTitle("Error");
+        internetConnectionErrorDialogBuilder.setMessage("No Internet ");
         String positiveText = "Refresh";
-        builder.setPositiveButton(positiveText,
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
+        internetConnectionErrorDialogBuilder.setPositiveButton(positiveText,
+                (dialog, which) -> {
 
 
-                        //Block the Application Execution until user grants the permissions
-                        if (startStep2(dialog)) {
+                    //Block the Application Execution until user grants the permissions
+                    if (startStep2(dialog)) {
 
-                            //Now make sure about location permission.
-                            if (checkPermissions()) {
+                        //Now make sure about location permission.
+                        if (checkPermissions()) {
 
-                                //Step 2: Start the Location Monitor Service
-                                //Everything is there to start the service.
-                                startStep3();
-                            } else if (!checkPermissions()) {
-                                requestPermissions();
-                            }
-
+                            //Step 2: Start the Location Monitor Service
+                            //Everything is there to start the service.
+                            startStep3();
+                        } else if (!checkPermissions()) {
+                            requestPermissions();
                         }
+
                     }
                 });
-
-        AlertDialog dialog = builder.create();
-        dialog.show();
+        dialogInternetConnectionError = internetConnectionErrorDialogBuilder.create();
     }
 
     /**

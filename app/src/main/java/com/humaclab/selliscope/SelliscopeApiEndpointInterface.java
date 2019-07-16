@@ -37,8 +37,9 @@ import com.humaclab.selliscope.model.UserLocation;
 import com.humaclab.selliscope.model.price_variation.PriceVariationResponse;
 import com.humaclab.selliscope.model.variant_product.VariantProductResponse;
 import com.humaclab.selliscope.model.performance.payments_model.PaymentsResponse;
-import com.humaclab.selliscope.sales_return.model.SalesReturn2019Response;
-import com.humaclab.selliscope.sales_return.model.SalesReturnPostBody;
+import com.humaclab.selliscope.sales_return.model.get.SalesReturnGetResponse;
+import com.humaclab.selliscope.sales_return.model.post.SalesReturn2019Response;
+import com.humaclab.selliscope.sales_return.model.post.SalesReturnPostBody;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -196,4 +197,7 @@ public interface SelliscopeApiEndpointInterface {
 
     @POST("v2/sales-return/store")
     Call<SalesReturn2019Response> postSalesReturn(@Body SalesReturnPostBody salesReturn);
+
+    @GET("v2/sales-return/{outlet_id}")
+    Call<SalesReturnGetResponse> getSalesReturn(@Path("outlet_id") int outletId);
 }

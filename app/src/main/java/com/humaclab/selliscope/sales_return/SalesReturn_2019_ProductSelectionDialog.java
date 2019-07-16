@@ -9,9 +9,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -21,7 +18,7 @@ import androidx.fragment.app.DialogFragment;
 import com.google.gson.Gson;
 import com.humaclab.selliscope.R;
 import com.humaclab.selliscope.databinding.ActivitySalesReturn2019ProductSelectionDiologBinding;
-import com.humaclab.selliscope.sales_return.model.SalesReturn2019SelectedProduct;
+import com.humaclab.selliscope.sales_return.model.post.SalesReturn2019SelectedProduct;
 import com.mti.pushdown_ext_onclick_single.PushDownAnim;
 
 import java.util.Objects;

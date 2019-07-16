@@ -5,6 +5,8 @@ import android.content.Intent;
 import androidx.databinding.DataBindingUtil;
 import androidx.databinding.library.baseAdapters.BR;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +16,9 @@ import com.humaclab.selliscope.activity.PurchasedProductListActivity;
 import com.humaclab.selliscope.databinding.ItemPurchaseHistoryBinding;
 import com.humaclab.selliscope.model.Outlets;
 import com.humaclab.selliscope.model.purchase_history.PurchaseHistoryItem;
+import com.humaclab.selliscope.sales_return.model.get.DataItem;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -25,10 +29,12 @@ public class PurchaseHistoryRecyclerAdapter extends RecyclerView.Adapter<Purchas
     private Context context;
     private List<PurchaseHistoryItem> purchaseHistoryItemList;
     private Outlets.Outlet outlet;
+    private List<DataItem> mSalesReturnItems;
 
-    public PurchaseHistoryRecyclerAdapter(Context context, List<PurchaseHistoryItem> purchaseHistoryItems, Outlets.Outlet outlet) {
+    public PurchaseHistoryRecyclerAdapter(Context context, List<PurchaseHistoryItem> purchaseHistoryItems, List<DataItem> salesReturnItems, Outlets.Outlet outlet) {
         this.context = context;
         this.purchaseHistoryItemList = purchaseHistoryItems;
+        mSalesReturnItems = salesReturnItems;
         this.outlet = outlet;
     }
 
@@ -59,8 +65,10 @@ public class PurchaseHistoryRecyclerAdapter extends RecyclerView.Adapter<Purchas
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(context, PurchasedProductListActivity.class);
+
                     intent.putExtra("product_list", purchaseHistoryItemList.get(getAdapterPosition()));
                     intent.putExtra("outletDetails", outlet);
+                    intent.putExtra("salesReturnItems",(Serializable) mSalesReturnItems);
                     context.startActivity(intent);
                 }
             });

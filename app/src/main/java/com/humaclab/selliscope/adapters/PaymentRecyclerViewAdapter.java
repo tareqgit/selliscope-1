@@ -2,10 +2,12 @@ package com.humaclab.selliscope.adapters;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+
 import androidx.databinding.DataBindingUtil;
 import androidx.databinding.ViewDataBinding;
 import androidx.databinding.library.baseAdapters.BR;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +21,7 @@ import com.google.gson.Gson;
 import com.humaclab.selliscope.R;
 import com.humaclab.selliscope.SelliscopeApiEndpointInterface;
 import com.humaclab.selliscope.SelliscopeApplication;
+import com.humaclab.selliscope.databinding.PaymentItemBinding;
 import com.humaclab.selliscope.model.Payment;
 import com.humaclab.selliscope.model.PaymentResponse;
 import com.humaclab.selliscope.utils.SessionManager;
@@ -58,9 +61,10 @@ public class PaymentRecyclerViewAdapter extends RecyclerView.Adapter<PaymentRecy
         final Payment.OrderList orderList = orderLists.get(position);
         holder.getBinding().setVariable(BR.payments, orderList);
         holder.getBinding().executePendingBindings();
-        holder.btn_pay.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        holder.getBinding().btnPay.setOnClickListener(v -> {
+            if (holder.getBinding().etPayment.getText().toString().isEmpty() || Double.parseDouble(holder.et_payment.getText().toString()) <= 0) {
+                holder.getBinding().etPayment.setError("Payment amount can't be less than 1 or empty");
+            } else {
                 pd.show();
                 SessionManager sessionManager = new SessionManager(context);
                 apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(),
@@ -71,7 +75,9 @@ public class PaymentRecyclerViewAdapter extends RecyclerView.Adapter<PaymentRecy
                 payment.order_id = orderList.orderId;
                 payment.outlet_id = orderList.outletId;
                 payment.type = (holder.sp_payment_type.getSelectedItemPosition() == 0) ? 1 : 2;
+
                 payment.amount = Double.parseDouble(holder.et_payment.getText().toString());
+
                 paymentResponse.payment = payment;
                 Call<PaymentResponse.PaymentSucessfull> call = apiService.payNow(paymentResponse);
                 call.enqueue(new Callback<PaymentResponse.PaymentSucessfull>() {
@@ -113,20 +119,20 @@ public class PaymentRecyclerViewAdapter extends RecyclerView.Adapter<PaymentRecy
     }
 
     public class PaymentViewHolder extends RecyclerView.ViewHolder {
-        private ViewDataBinding binding;
-        private Button btn_pay;
+        private PaymentItemBinding binding;
+
         private Spinner sp_payment_type;
         private EditText et_payment;
 
         public PaymentViewHolder(View itemView) {
             super(itemView);
             binding = DataBindingUtil.bind(itemView);
-            btn_pay = (Button) itemView.findViewById(R.id.btn_pay);
+
             sp_payment_type = (Spinner) itemView.findViewById(R.id.sp_payment_type);
             et_payment = (EditText) itemView.findViewById(R.id.et_payment);
         }
 
-        public ViewDataBinding getBinding() {
+        public PaymentItemBinding getBinding() {
             return binding;
         }
     }

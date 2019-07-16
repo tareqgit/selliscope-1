@@ -13,7 +13,7 @@ import com.humaclab.selliscope.R;
 import com.humaclab.selliscope.activity.ActivityCart;
 import com.humaclab.selliscope.databinding.ItemSelectedProductBinding;
 import com.humaclab.selliscope.helper.SelectedProductHelper;
-import com.humaclab.selliscope.sales_return.model.SalesReturn2019SelectedProduct;
+import com.humaclab.selliscope.sales_return.model.post.SalesReturn2019SelectedProduct;
 
 import java.util.ArrayList;
 import java.util.List;

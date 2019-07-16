@@ -4,7 +4,6 @@ import android.content.Intent;
 import androidx.databinding.DataBindingUtil;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.databinding.ViewDataBinding;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.appcompat.widget.Toolbar;
 import android.text.Editable;
@@ -26,21 +25,19 @@ import com.humaclab.selliscope.adapters.SelectedProductRecyclerAdapter;
 import com.humaclab.selliscope.databinding.ActivityCartBinding;
 import com.humaclab.selliscope.helper.SelectedProductHelper;
 import com.humaclab.selliscope.model.AddNewOrder;
-import com.humaclab.selliscope.pos_sdk.PosActivity;
 import com.humaclab.selliscope.pos_sdk.model.PosModel;
 import com.humaclab.selliscope.sales_return.SalesReturn_2019_Activity;
 import com.humaclab.selliscope.sales_return.db.ReturnProductDatabase;
 import com.humaclab.selliscope.sales_return.db.ReturnProductEntity;
-import com.humaclab.selliscope.sales_return.model.JsonMemberReturn;
-import com.humaclab.selliscope.sales_return.model.SalesReturn2019Response;
-import com.humaclab.selliscope.sales_return.model.SalesReturn2019SelectedProduct;
-import com.humaclab.selliscope.sales_return.model.SalesReturnPostBody;
+import com.humaclab.selliscope.sales_return.model.post.JsonMemberReturn;
+import com.humaclab.selliscope.sales_return.model.post.SalesReturn2019Response;
+import com.humaclab.selliscope.sales_return.model.post.SalesReturn2019SelectedProduct;
+import com.humaclab.selliscope.sales_return.model.post.SalesReturnPostBody;
 import com.humaclab.selliscope.utils.CurrentTimeUtilityClass;
 import com.humaclab.selliscope.utils.DatabaseHandler;
 import com.humaclab.selliscope.utils.NetworkUtility;
 import com.humaclab.selliscope.utils.SendUserLocationData;
 import com.humaclab.selliscope.utils.SessionManager;
-import com.mti.pushdown_ext_onclick_single.PushDownAnim;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -142,6 +139,8 @@ public class ActivityCart extends AppCompatActivity implements  SelectedProductR
     }
 
     private void updateTotal() {
+        total=0d;
+        salesReturnTotal=0d;
         //For showing total amount
         for (SelectedProductHelper selectedProduct : selectedProductList) {
           //this Segment Used for calculation of total price without promotion discount
@@ -249,12 +248,13 @@ public class ActivityCart extends AppCompatActivity implements  SelectedProductR
             newOrder.latitude = String.valueOf(lat);
             newOrder.longitude = String.valueOf(lon);
             newOrder.comment = binding.etComments.getText().toString();
-            newOrder.orderTotal = Double.parseDouble(binding.tvTotal.getText().toString());
-            newOrder.orderGrandTotal = Double.parseDouble(binding.tvGrandTotal.getText().toString());
+            newOrder.orderTotal = Double.parseDouble(String.valueOf(total));
+
             if (binding.etDiscount.getText().toString().equals("")) {
                 newOrder.discount = 0.0;
             } else {
                 newOrder.discount =  Double.parseDouble(binding.etDiscount.getText().toString());
+                newOrder.orderGrandTotal = total- Double.parseDouble(binding.etDiscount.getText().toString());
                // newOrder.discount = Double.parseDouble(binding.etDiscount.getText().toString());
             }
 
@@ -367,6 +367,7 @@ public class ActivityCart extends AppCompatActivity implements  SelectedProductR
                 finish();
             }
         } catch (Exception e) {
+            Log.d("tareq_test" , "exceptin in order "+ e.getMessage());
             e.printStackTrace();
         }
     }

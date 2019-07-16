@@ -6,8 +6,10 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.os.Bundle;
+
 import androidx.core.app.ActivityCompat;
 import androidx.appcompat.app.AppCompatActivity;
+
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
@@ -27,6 +29,7 @@ import com.humaclab.selliscope.SelliscopeApplication;
 import com.humaclab.selliscope.model.IMEIandVerison;
 import com.humaclab.selliscope.model.Login;
 import com.humaclab.selliscope.utils.AccessPermission;
+import com.humaclab.selliscope.utils.Constants;
 import com.humaclab.selliscope.utils.NetworkUtility;
 import com.humaclab.selliscope.utils.SessionManager;
 
@@ -40,7 +43,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import timber.log.Timber;
 
-public class LoginActivity extends AppCompatActivity  {
+public class LoginActivity extends AppCompatActivity {
     private TextView forgotPassword;
     private EditText email, password;
     private Button signIn;
@@ -52,7 +55,6 @@ public class LoginActivity extends AppCompatActivity  {
     private RadioGroup rg_language;
     private RadioButton rbEnglish, rbBangla;
     final String KEY_SAVED_RADIO_BUTTON_INDEX = "SAVED_RADIO_BUTTON_INDEX";
-
 
 
     public final static boolean isValidEmail(CharSequence target) {
@@ -76,22 +78,22 @@ public class LoginActivity extends AppCompatActivity  {
         //rg_language.check(R.id.rbEnglish);
 
         mSwitchMultiButton.setSelectedTab(0);
-      //  rbBangla = findViewById(R.id.rbBangle);
-      //  rbEnglish = findViewById(R.id.rbEnglish);
-       // rbBangla.setOnClickListener(this);
-       // rbEnglish.setOnClickListener(this);
+        //  rbBangla = findViewById(R.id.rbBangle);
+        //  rbEnglish = findViewById(R.id.rbEnglish);
+        // rbBangla.setOnClickListener(this);
+        // rbEnglish.setOnClickListener(this);
         LoadPreferences();
 
         mSwitchMultiButton.setOnSwitchListener(new SwitchMultiButton.OnSwitchListener() {
             @Override
             public void onSwitch(int position, String tabText) {
-                if (position==1) {
+                if (position == 1) {
                     //Do something
                     SavePreferences(KEY_SAVED_RADIO_BUTTON_INDEX, 1);
                     setLocale("bn");
                     recreate();
 
-                } else if (position==0) {
+                } else if (position == 0) {
                     SavePreferences(KEY_SAVED_RADIO_BUTTON_INDEX, 0);
                     setLocale("en");
                     recreate();
@@ -160,6 +162,7 @@ public class LoginActivity extends AppCompatActivity  {
         sessionManager = new SessionManager(this);
         apiService = SelliscopeApplication.getRetrofitInstance(email, password, true)
                 .create(SelliscopeApiEndpointInterface.class);
+
         Call<ResponseBody> call = apiService.getUser();
         call.enqueue(new Callback<ResponseBody>() {
             @Override
@@ -182,6 +185,11 @@ public class LoginActivity extends AppCompatActivity  {
                         );
                         loginProgresssBar.setVisibility(View.INVISIBLE);
 
+                        SharedPreferences sharedPreferencesLanguage = getSharedPreferences("Settings", MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPreferencesLanguage.edit();
+                        editor.putString("BASE_URL", Constants.BASE_URL);
+                        editor.apply();
+
                         sendIMEIAndVersion();
                         startActivity(new Intent(LoginActivity.this, HomeActivity.class));
                         finish();
@@ -193,14 +201,14 @@ public class LoginActivity extends AppCompatActivity  {
                     try {
                         loginProgresssBar.setVisibility(View.INVISIBLE);
                         Toast.makeText(LoginActivity.this,
-                                response.errorBody().string(), Toast.LENGTH_SHORT).show();
+                                response.errorBody().string() + "code: " + response.code(), Toast.LENGTH_SHORT).show();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                 } else {
                     loginProgresssBar.setVisibility(View.INVISIBLE);
                     Toast.makeText(LoginActivity.this,
-                            "Server Error! Try Again Later!", Toast.LENGTH_SHORT).show();
+                            "Server Error! Try Again Later! +\"code: \"+ response.code()", Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -218,7 +226,7 @@ public class LoginActivity extends AppCompatActivity  {
                     call.enqueue(new Callback<ResponseBody>() {
                         @Override
                         public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                            Timber.d("Status code: " + String.valueOf(response.code()));
+                            Timber.d("Status code: " + response.code());
                         }
 
                         @Override
@@ -232,10 +240,13 @@ public class LoginActivity extends AppCompatActivity  {
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 loginProgresssBar.setVisibility(View.INVISIBLE);
-                Toast.makeText(LoginActivity.this, t.toString(), Toast.LENGTH_SHORT).show();
-                Log.d("Response", t.toString());
+
+                Log.e("tareq_test", "Error on Login: " + t.getMessage());
+                Constants.BASE_URL = Constants.BASE_URL_HTTP;
+                getUser(email.trim(), password.trim());
             }
         });
+
     }
 
     private void checkPermission() {

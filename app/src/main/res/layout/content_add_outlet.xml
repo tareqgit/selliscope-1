@@ -198,6 +198,7 @@
                 android:id="@+id/sp_outlet_type"
                 android:layout_weight="1"
                 android:layout_width="0dp"
+                android:backgroundTint="@android:color/darker_gray"
                 android:layout_height="wrap_content"
                 android:spinnerMode="dropdown"/>
 
@@ -226,6 +227,7 @@
                 android:layout_weight="1"
                 android:id="@+id/sp_district"
                 android:layout_width="0dp"
+                android:backgroundTint="@android:color/darker_gray"
                 android:layout_height="wrap_content"
                 android:spinnerMode="dropdown"/>
 
@@ -253,6 +255,7 @@
                 android:id="@+id/sp_thana"
                 android:layout_weight="1"
                 android:layout_width="0dp"
+                android:backgroundTint="@android:color/darker_gray"
                 android:layout_height="wrap_content"
                 android:spinnerMode="dropdown"/>
 

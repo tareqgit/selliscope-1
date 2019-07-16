@@ -385,9 +385,9 @@ public class LocationMonitoringService extends Service implements
                         e.printStackTrace();
                     }
                 } else if (response.code() == 400) {
-
+                    Toast.makeText(getApplicationContext(), response.code() + " Can't Send user location request invalid", Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(getApplicationContext(), response.code() + " Server Error! Try Again Later!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), response.code() + " Can't Send user location", Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -405,7 +405,6 @@ public class LocationMonitoringService extends Service implements
         googleApiClient.connect();
 */
         LocationRequest locationRequest = LocationRequest.create();
-        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         locationRequest.setInterval(10000);
         locationRequest.setFastestInterval(5000);
 

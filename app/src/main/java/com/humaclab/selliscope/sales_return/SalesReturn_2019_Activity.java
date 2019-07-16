@@ -3,15 +3,12 @@ package com.humaclab.selliscope.sales_return;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.databinding.DataBindingUtil;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -19,7 +16,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,17 +23,12 @@ import com.google.gson.Gson;
 import com.humaclab.selliscope.R;
 import com.humaclab.selliscope.SelliscopeApiEndpointInterface;
 import com.humaclab.selliscope.SelliscopeApplication;
-import com.humaclab.selliscope.activity.ActivityCart;
-import com.humaclab.selliscope.activity.OrderActivity;
-import com.humaclab.selliscope.adapters.OrderProductRecyclerAdapter;
 import com.humaclab.selliscope.databinding.ActivitySalesReturn2019Binding;
-import com.humaclab.selliscope.helper.SelectedProductHelper;
 import com.humaclab.selliscope.model.variant_product.ProductsItem;
-import com.humaclab.selliscope.sales_return.model.SalesReturn2019SelectedProduct;
+import com.humaclab.selliscope.sales_return.model.post.SalesReturn2019SelectedProduct;
 import com.humaclab.selliscope.utils.DatabaseHandler;
 import com.humaclab.selliscope.utils.SessionManager;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -65,10 +56,9 @@ public class SalesReturn_2019_Activity extends AppCompatActivity implements Sale
         outletID = getIntent().getStringExtra("outletID");
 
         Toolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle("");
+        toolbar.setTitle(R.string.sales_return);
         TextView toolbarTitle = findViewById(R.id.tv_toolbar_title);
-       // toolbarTitle.setText(outletName + "-" + getResources().getString(R.string.order));
-        setSupportActionBar(toolbar);
+         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 

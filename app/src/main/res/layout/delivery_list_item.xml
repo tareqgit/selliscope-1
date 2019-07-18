@@ -9,7 +9,7 @@
             type="com.humaclab.selliscope_nepal.model.DeliveryResponse.DeliveryList"/>
     </data>
 
-    <android.support.v7.widget.CardView
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
@@ -70,5 +70,5 @@
                 android:layout_gravity="center"
                 app:srcCompat="@drawable/next"/>
         </LinearLayout>
-    </android.support.v7.widget.CardView>
+    </androidx.cardview.widget.CardView>
 </layout>

@@ -1,7 +1,7 @@
 package com.humaclab.selliscope_nepal;
 
 import android.app.Application;
-import android.support.v7.app.AppCompatDelegate;
+import androidx.appcompat.app.AppCompatDelegate;
 
 import com.crashlytics.android.Crashlytics;
 import com.facebook.stetho.Stetho;
@@ -62,6 +62,6 @@ public class SelliscopeApplication extends Application {
             Timber.plant(new Timber.DebugTree());
         }
         Stetho.initializeWithDefaults(this);
-        Fabric.with(this, new Crashlytics());
+
     }
 }

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
                                                  android:layout_width="match_parent"
                                                  android:layout_height="match_parent"
                                                  android:fitsSystemWindows="true">
@@ -20,22 +20,22 @@
             android:hint="Seach outlet"
             android:textSize="17sp"/>
 
-        <android.support.v4.widget.SwipeRefreshLayout
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             android:id="@+id/srl_outlet"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <android.support.v7.widget.RecyclerView
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_outlet"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/background"
                 android:padding="@dimen/padding_10"/>
-        </android.support.v4.widget.SwipeRefreshLayout>
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     </LinearLayout>
 
-    <android.support.design.widget.FloatingActionButton
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_add_outlet"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -43,4 +43,4 @@
         android:layout_margin="@dimen/fab_margin"
         android:elevation="@dimen/elevation_5"
         android:src="@drawable/ic_add_white_24dp"/>
-</android.support.design.widget.CoordinatorLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

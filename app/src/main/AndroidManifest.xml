@@ -54,14 +54,7 @@
             </intent-filter>
         </receiver>-->
 
-        <service
-            android:name="com.humaclab.selliscope_nepal.Service.FcmInstanceIdServices"
-            android:exported="false"
-            android:permission="android.permission.RECEIVE_BOOT_COMPLETED">
-            <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
-            </intent-filter>
-        </service>
+
         <service
             android:name="com.humaclab.selliscope_nepal.Service.FcmGetLocationService"
             android:exported="false"

@@ -1,6 +1,6 @@
 package com.humaclab.selliscope_nepal.model;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import com.google.gson.annotations.SerializedName;
 

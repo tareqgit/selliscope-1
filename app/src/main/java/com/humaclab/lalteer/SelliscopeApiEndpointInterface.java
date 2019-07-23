@@ -18,6 +18,10 @@ import com.humaclab.lalteer.model.Payment;
 import com.humaclab.lalteer.model.PaymentResponse;
 import com.humaclab.lalteer.model.Products.ProductResponse;
 import com.humaclab.lalteer.model.PromotionalAds.PromotionalAds;
+import com.humaclab.lalteer.model.advance_payment.AdvancePaymentPostResponse;
+import com.humaclab.lalteer.model.advance_payment.AdvancePaymentsItem;
+import com.humaclab.lalteer.model.advance_payment.AdvancePaymentsSendItem;
+import com.humaclab.lalteer.model.advance_payment.AdvancedPaymentResponse;
 import com.humaclab.lalteer.model.purchase_history.PurchaseHistoryResponse;
 import com.humaclab.lalteer.model.RoutePlan.RouteDetailsResponse;
 import com.humaclab.lalteer.model.RoutePlan.RouteResponse;
@@ -167,4 +171,9 @@ public interface SelliscopeApiEndpointInterface {
     @GET("performance/payment")
     Call<PaymentsResponse> performancePayments(@Query("date_from") String date_from, @Query("date_to") String date_to);
 
+    @GET("getAdvance/{outlet_id}")
+    Call<AdvancedPaymentResponse> getAdvancePayments(@Path("outlet_id") int outletId);
+
+    @POST("getAdvance/{outlet_id}")
+    Call<AdvancePaymentPostResponse> postAdvancePayment(@Path("outlet_id") int outletId,@Body AdvancePaymentsSendItem updateProfile);
 }

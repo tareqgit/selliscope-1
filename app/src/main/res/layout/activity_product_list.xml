@@ -50,7 +50,7 @@
                 android:inputType="text"
                 android:padding="10dp" />
 
-            <android.support.v4.widget.SwipeRefreshLayout
+            <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
                 android:id="@+id/srl_product"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -58,11 +58,11 @@
                 android:layout_below="@id/et_search_product"
                 android:orientation="horizontal">
 
-                <android.support.v7.widget.RecyclerView
+                <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_product"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" />
-            </android.support.v4.widget.SwipeRefreshLayout>
+            </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 
         </RelativeLayout>

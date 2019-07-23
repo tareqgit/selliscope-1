@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
 
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -17,7 +17,7 @@
     app:cardElevation="3dp"
     >
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/routeplan_background"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -57,7 +57,7 @@
                     app:civ_border_color="#000"
                     app:civ_border_width="1dp" />-->
 
-        <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+        <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:card_view="http://schemas.android.com/apk/res-auto"
             xmlns:tools="http://schemas.android.com/tools"
 
@@ -93,7 +93,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/ic_oulet" />
-        </android.support.v7.widget.CardView>
+        </androidx.cardview.widget.CardView>
 
         <!--<RelativeLayout
                     android:layout_width="match_parent"
@@ -119,8 +119,7 @@
                 android:id="@+id/tv_outlet_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
+
                 android:fontFamily="@font/latobold"
                 android:text="Outlet Name"
                 android:textColor="#000000"
@@ -128,11 +127,22 @@
                 android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/tv_outlet_type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:text="OutletType"
+                android:padding="4dp"
+                android:textStyle="bold|italic"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:textColor="@color/design_default_color_primary" />
+
+            <TextView
                 android:id="@+id/tv_outlet_address"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
+
+                android:padding="4dp"
                 android:fontFamily="@font/latoregular"
                 android:text="Address" />
 
@@ -140,8 +150,8 @@
                 android:id="@+id/tv_owner_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
+
+                android:padding="4dp"
                 android:fontFamily="@font/latoregular"
                 android:text="Owner: " />
 
@@ -149,8 +159,8 @@
                 android:id="@+id/tv_outlet_contact_number"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
+
+                android:padding="4dp"
                 android:fontFamily="@font/latoregular"
                 android:text="Mobile: " />
         </LinearLayout>
@@ -260,7 +270,7 @@
             app:layout_constraintTop_toTopOf="parent"
             card_view:layout_constraintBottom_toBottomOf="@+id/linearLayout11" />
 
-        <android.support.constraint.Barrier
+        <androidx.constraintlayout.widget.Barrier
             android:id="@+id/barrier2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -268,6 +278,6 @@
             card_view:constraint_referenced_ids="linearLayout11,iv_outlet"
             tools:layout_editor_absoluteY="300dp" />
 
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-</android.support.v7.widget.CardView>
+</androidx.cardview.widget.CardView>

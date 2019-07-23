@@ -1,15 +1,16 @@
 package com.humaclab.lalteer.activity;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.databinding.DataBindingUtil;
+import androidx.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import android.util.Base64;
 import android.util.Log;
 import android.view.MenuItem;
@@ -19,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.esafirm.imagepicker.features.ImagePicker;
 import com.esafirm.imagepicker.features.ReturnMode;
 import com.esafirm.imagepicker.model.Image;
@@ -41,6 +43,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class ProfileActivity extends AppCompatActivity {
+    private final int CAMERA_REQUEST = 3214;
     private ActivityProfileBinding binding;
     private SessionManager sessionManager;
     private String profileImage = "";
@@ -93,27 +96,28 @@ public class ProfileActivity extends AppCompatActivity {
                 .placeholder(R.drawable.default_profile_pic)
                 .into(binding.ivProfileImage);
 
-        binding.btnChangeProfilePicture.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ImagePicker.create(ProfileActivity.this)
-                        .returnMode(ReturnMode.ALL) // set whether pick and / or camera action should return immediate result or not.
-                        .folderMode(true) // folder mode (false by default)
-                        .toolbarFolderTitle("Folder") // folder selection title
-                        .toolbarImageTitle("Tap to select") // image selection title
-                        .toolbarArrowColor(Color.BLACK) // Toolbar 'up' arrow color
-                        .single() // single mode
+        binding.btnChangeProfilePicture.setOnClickListener(v -> {
+          /*  ImagePicker.create(ProfileActivity.this)
+                    .returnMode(ReturnMode.ALL) // set whether pick and / or camera action should return immediate result or not.
+                    .folderMode(true) // folder mode (false by default)
+                    .toolbarFolderTitle("Folder") // folder selection title
+                    .toolbarImageTitle("Tap to select") // image selection title
+                    .toolbarArrowColor(Color.BLACK) // Toolbar 'up' arrow color
+                    .single() // single mode
 //                .multi() // multi mode (default mode)
 //                        .limit(10) // max images can be selected (99 by default)
-                        .showCamera(true) // show camera or not (true by default)
-                        .imageDirectory("Camera") // directory name for captured image  ("Camera" folder by default)
+                    .showCamera(true) // show camera or not (true by default)
+                    .imageDirectory("Camera") // directory name for captured image  ("Camera" folder by default)
 //                .origin(images) // original selected images, used in multi mode
 //                .exclude(images) // exclude anything that in image.getPath()
 //                .excludeFiles(files) // same as exclude but using ArrayList<File>
 //                .theme(R.style.CustomImagePickerTheme) // must inherit ef_BaseTheme. please refer to sample
 //                .enableLog(false) // disabling log
 //                .imageLoader(new GrayscaleImageLoder()) // custom image loader, must be serializeable
-                        .start(); // start image picker activity with request code
+                    .start(); // start image picker activity with request code*/
+            Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+            if (cameraIntent.resolveActivity(getPackageManager()) != null) {
+                startActivityForResult(cameraIntent, CAMERA_REQUEST);
             }
         });
         binding.btnChangeDateOfBirth.setOnClickListener(new View.OnClickListener() {
@@ -156,7 +160,7 @@ public class ProfileActivity extends AppCompatActivity {
                             @Override
                             public void onResponse(Call<UpdateProfileResponse> call, Response<UpdateProfileResponse> response) {
                                 pd.dismiss();
-                                    if (!response.body().getError() == true) {
+                                    if (response.isSuccessful()) {
                                         sessionManager.updateProfile(response.body().getResult().getUser().getDob(),
                                                 response.body().getResult().getUser().getGender(),
                                                 response.body().getResult().getUser().getImage(),
@@ -184,7 +188,7 @@ public class ProfileActivity extends AppCompatActivity {
         });
     }
 
-    @Override
+   /* @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (ImagePicker.shouldHandle(requestCode, resultCode, data)) {
             Image image = ImagePicker.getFirstImageOrNull(data);
@@ -201,6 +205,27 @@ public class ProfileActivity extends AppCompatActivity {
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }*/
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            Bitmap photo = (Bitmap) data.getExtras().get("data");
+            assert photo != null;
+            photo.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+
+            profileImage = Base64.encodeToString(outputStream.toByteArray(), Base64.DEFAULT);
+
+            byte[] decode = Base64.decode(profileImage, Base64.DEFAULT);
+            Glide.with(getApplicationContext())
+                    .load(decode)
+                    .transform(new CircleCrop())
+                    .thumbnail(0.1f)
+                    .into(binding.ivProfileImage);
+
+
+        }
     }
 
     @Override

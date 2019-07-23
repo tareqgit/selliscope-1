@@ -1,19 +1,18 @@
 package com.humaclab.lalteer.activity;
 
 import android.content.Intent;
-import android.databinding.DataBindingUtil;
+import androidx.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.humaclab.lalteer.R;
 import com.humaclab.lalteer.SelliscopeApiEndpointInterface;
 import com.humaclab.lalteer.SelliscopeApplication;
@@ -101,10 +100,16 @@ public class OutletActivity extends AppCompatActivity {
                 if (!NetworkUtility.isNetworkAvailable(OutletActivity.this)) {
                     Toast.makeText(getApplicationContext(), "Connect to Wifi or Mobile Data for better performance.", Toast.LENGTH_SHORT).show();
                 }
-                getOutlets();
+                loadLocalIntoBackground.setOnOutletUpdateComplete(() -> {
+                    Toast.makeText(OutletActivity.this, "Data load complete", Toast.LENGTH_SHORT).show();
+                    getOutlets();
+                });
+                loadLocalIntoBackground.loadOutlet(false);
+
             }
         });
         getOutlets();
+
     }
 
     public void getOutlets() {

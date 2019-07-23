@@ -34,6 +34,11 @@ public class LoadLocalIntoBackground {
     private SessionManager sessionManager;
     private DatabaseHandler databaseHandler;
     private SelliscopeApiEndpointInterface apiService;
+    private OnOutletUpdateComplete mOnOutletUpdateComplete;
+
+    public void setOnOutletUpdateComplete(OnOutletUpdateComplete onOutletUpdateComplete) {
+        mOnOutletUpdateComplete = onOutletUpdateComplete;
+    }
 
     public LoadLocalIntoBackground(Context context) {
         this.context = context;
@@ -148,14 +153,16 @@ public class LoadLocalIntoBackground {
                     try {
                         Outlets getOutletListSuccessful = gson.fromJson(response.body().string(), Outlets.class);
                         if (!fullUpdate) {
-                            if (getOutletListSuccessful.outletsResult.outlets.size() != databaseHandler.getSizeOfOutlet()) {
+                           // if (getOutletListSuccessful.outletsResult.outlets.size() != databaseHandler.getSizeOfOutlet()) {
                                 databaseHandler.removeOutlet();
                                 databaseHandler.addOutlet(getOutletListSuccessful.outletsResult.outlets);
-                            }
+                                if(mOnOutletUpdateComplete!=null) mOnOutletUpdateComplete.onUpdateComplete();
+                           //  }
                         } else {
                             databaseHandler.removeOutlet();
                             databaseHandler.addOutlet(getOutletListSuccessful.outletsResult.outlets);
-                        }
+                            if(mOnOutletUpdateComplete!=null) mOnOutletUpdateComplete.onUpdateComplete();
+                         }
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -165,7 +172,7 @@ public class LoadLocalIntoBackground {
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 t.printStackTrace();
-            }
+              }
         });
     }
 
@@ -243,5 +250,8 @@ public class LoadLocalIntoBackground {
                 Log.d("Response", t.toString());
             }
         });
+    }
+    public interface OnOutletUpdateComplete{
+            void onUpdateComplete();
     }
 }

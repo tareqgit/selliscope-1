@@ -1,11 +1,9 @@
 package com.humaclab.lalteer.fragment;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.widget.CircularProgressDrawable;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.fragment.app.Fragment;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,7 +17,6 @@ import com.google.gson.Gson;
 import com.humaclab.lalteer.R;
 import com.humaclab.lalteer.SelliscopeApiEndpointInterface;
 import com.humaclab.lalteer.SelliscopeApplication;
-import com.humaclab.lalteer.activity.OutletDetailsActivity;
 import com.humaclab.lalteer.adapters.TargetRecyclerViewAdapter;
 import com.humaclab.lalteer.dbmodel.Target;
 import com.humaclab.lalteer.model.Target.OutletTarget;
@@ -28,10 +25,8 @@ import com.humaclab.lalteer.model.Targets;
 import com.humaclab.lalteer.utils.DatabaseHandler;
 import com.humaclab.lalteer.utils.NetworkUtility;
 import com.humaclab.lalteer.utils.SessionManager;
-import com.humaclab.lalteer.utils.VerticalSpaceItemDecoration;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.ResponseBody;

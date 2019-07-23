@@ -1,10 +1,12 @@
 package com.humaclab.lalteer.activity;
 
 import android.app.ProgressDialog;
-import android.databinding.DataBindingUtil;
+import androidx.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -70,27 +72,33 @@ public class ChangePasswordActivity extends AppCompatActivity {
         final ChangePassword changePassword = new ChangePassword();
         changePassword.setCurrentPassword(binding.etCurrentPassword.getText().toString());
         changePassword.setNewPassword(binding.etNewPassword.getText().toString());
-
+        Log.d("tareq_test" , "pass-body "+ new Gson().toJson(changePassword));
         Call<ChangePasswordResponse> call = apiService.changePassword(changePassword);
         call.enqueue(new Callback<ChangePasswordResponse>() {
             @Override
             public void onResponse(Call<ChangePasswordResponse> call, Response<ChangePasswordResponse> response) {
                 pd.dismiss();
-                ChangePasswordResponse changePasswordResponse = response.body();
-                if (!changePasswordResponse.isError()) {
-                    sessionManager.setNewPassword(changePassword.getNewPassword());
-                    Toast.makeText(getApplicationContext(), changePasswordResponse.getMessage(), Toast.LENGTH_SHORT).show();
-                    finish();
-                } else {
-                    Toast.makeText(getApplicationContext(), changePasswordResponse.getMessage(), Toast.LENGTH_SHORT).show();
-                    sessionManager.logoutUser(true);
+                 try {
+                     Log.d("tareq_test" , "change pass "+new Gson().toJson(response));
+
+                     ChangePasswordResponse changePasswordResponse = response.body();
+                    if (!changePasswordResponse.isError()) {
+                        sessionManager.setNewPassword(changePassword.getNewPassword());
+                        Toast.makeText(getApplicationContext(), changePasswordResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                        finish();
+                    } else {
+                        Toast.makeText(getApplicationContext(), changePasswordResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                        sessionManager.logoutUser(true);
+                    }
+                } catch (Exception e) {
+                   Log.d("tareq_test" , "Change Pass error: "+ e.getMessage());
                 }
             }
 
             @Override
             public void onFailure(Call<ChangePasswordResponse> call, Throwable t) {
                 pd.dismiss();
-                t.printStackTrace();
+                Log.d("tareq_test" , "Change Pass failed: ");
             }
         });
     }

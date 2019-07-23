@@ -106,7 +106,7 @@
                 android:textColor="#000" />-->
         </LinearLayout>
 
-        <android.support.v7.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rl_selected_products"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -115,7 +115,7 @@
             android:layout_marginTop="8dp"
             android:background="#fff" />
 
-        <android.support.constraint.ConstraintLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/ll_bottom"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -161,6 +161,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
                 android:orientation="horizontal"
+                android:visibility="gone"
                 app:layout_constraintBottom_toTopOf="@+id/linearLayout7">
 
                 <TextView
@@ -218,6 +219,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
                 android:orientation="horizontal"
+
                 app:layout_constraintBottom_toTopOf="@+id/linearLayout"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent">
@@ -237,6 +239,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/latoregular"
                     android:gravity="end"
+
                     android:hint="@string/comment" />
             </LinearLayout>
 
@@ -297,6 +300,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/btn_order" />
 
-        </android.support.constraint.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </RelativeLayout>
 </layout>

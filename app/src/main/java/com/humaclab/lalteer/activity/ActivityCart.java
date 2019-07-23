@@ -1,14 +1,13 @@
 package com.humaclab.lalteer.activity;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.databinding.DataBindingUtil;
+import androidx.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.Toolbar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.appcompat.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -45,7 +44,7 @@ import static com.humaclab.lalteer.activity.OrderActivity.selectedProductList;
 
 public class ActivityCart extends AppCompatActivity implements SelectedProductRecyclerAdapter.OnRemoveFromCartListener {
     Double total = 0.0;
-    private ActivityCartBinding binding;
+    private ActivityCartBinding mCartBinding;
     private SelliscopeApiEndpointInterface apiService;
     private SessionManager sessionManager;
     private DatabaseHandler databaseHandler;
@@ -62,7 +61,7 @@ public class ActivityCart extends AppCompatActivity implements SelectedProductRe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_cart);
+        mCartBinding= DataBindingUtil.setContentView(this, R.layout.activity_cart,null);
         mContext=this;
         outletName = getIntent().getStringExtra("outletName");
         outletID = getIntent().getStringExtra("outletID");
@@ -71,7 +70,7 @@ public class ActivityCart extends AppCompatActivity implements SelectedProductRe
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("");
         TextView toolbarTitle = findViewById(R.id.tv_toolbar_title);
-        toolbarTitle.setText(outletName + "-" + getResources().getString(R.string.order));
+        toolbarTitle.setText(String.format("%s-%s", outletName, getResources().getString(R.string.order)));
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -92,12 +91,12 @@ public class ActivityCart extends AppCompatActivity implements SelectedProductRe
         for (SelectedProductHelper selectedProduct : selectedProductList) {
             total += Double.valueOf(selectedProduct.getTotalPrice());
         }
-        binding.tvTotal.setText(String.valueOf(total));
-        if (!binding.etDiscount.getText().toString().equals(""))
-            binding.tvGrandTotal.setText(String.valueOf(
-                    total - Double.parseDouble(binding.etDiscount.getText().toString())
+        mCartBinding.tvTotal.setText(String.valueOf(total));
+        if (!mCartBinding.etDiscount.getText().toString().equals(""))
+            mCartBinding.tvGrandTotal.setText(String.valueOf(
+                    total - Double.parseDouble(mCartBinding.etDiscount.getText().toString())
             ));
-        binding.etDiscount.addTextChangedListener(new TextWatcher() {
+        mCartBinding.etDiscount.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -106,7 +105,7 @@ public class ActivityCart extends AppCompatActivity implements SelectedProductRe
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 try {
-                    binding.tvGrandTotal.setText(String.valueOf(
+                    mCartBinding.tvGrandTotal.setText(String.valueOf(
                             total - Double.parseDouble(s.toString())
                     ));
                 } catch (Exception e) {
@@ -121,12 +120,12 @@ public class ActivityCart extends AppCompatActivity implements SelectedProductRe
         });
         //For showing total amount
 
-        binding.tvOutletName.setText(outletName);
-        binding.rlSelectedProducts.setLayoutManager(new LinearLayoutManager(ActivityCart.this));
+        mCartBinding.tvOutletName.setText(outletName);
+        mCartBinding.rlSelectedProducts.setLayoutManager(new LinearLayoutManager(ActivityCart.this));
         selectedProductRecyclerAdapter=new SelectedProductRecyclerAdapter(ActivityCart.this, ActivityCart.this, selectedProductList, ActivityCart.this);
-        binding.rlSelectedProducts.setAdapter(selectedProductRecyclerAdapter);
+        mCartBinding.rlSelectedProducts.setAdapter(selectedProductRecyclerAdapter);
 
-        binding.btnOrder.setOnClickListener(v -> orderNow());
+        mCartBinding.btnOrder.setOnClickListener(v -> orderNow());
 
         setPaymentTypeSprinner();
     }
@@ -140,11 +139,11 @@ public class ActivityCart extends AppCompatActivity implements SelectedProductRe
         paymentTypes.add(getString(R.string.select_payment_advance));
 
 
-        binding.spinnerPaymentType.setAdapter(new ArrayAdapter<String>(mContext, android.R.layout.simple_list_item_1, paymentTypes));
-        binding.spinnerPaymentType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        mCartBinding.spinnerPaymentType.setAdapter(new ArrayAdapter<String>(mContext, android.R.layout.simple_list_item_1, paymentTypes));
+        mCartBinding.spinnerPaymentType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(mContext, ""+binding.spinnerPaymentType.getSelectedItemPosition(), Toast.LENGTH_SHORT).show();
+       //         Toast.makeText(mContext, ""+mCartBinding.spinnerPaymentType.getSelectedItemPosition(), Toast.LENGTH_SHORT).show();
 
             }
 
@@ -170,23 +169,23 @@ public class ActivityCart extends AppCompatActivity implements SelectedProductRe
             newOrder.outletId = Integer.parseInt(outletID);
             newOrder.latitude = String.valueOf(lat);
             newOrder.longitude = String.valueOf(lon);
-            newOrder.comment = binding.etComments.getText().toString();
-            newOrder.transport=binding.etTransport.getText().toString();
-            newOrder.paymentType=binding.spinnerPaymentType.getSelectedItemPosition();
+            newOrder.comment = mCartBinding.etComments.getText().toString();
+            newOrder.transport=mCartBinding.etTransport.getText().toString();
+            newOrder.paymentType=mCartBinding.spinnerPaymentType.getSelectedItemPosition();
             newOrder.orderTimeStamp= CurrentTimeUtilityClass.getCurrentTimeStamp();
 
-            if (binding.etDiscount.getText().toString().equals("")) {
+            if (mCartBinding.etDiscount.getText().toString().equals("")) {
                 newOrder.discount = 0;
             } else {
-                newOrder.discount =  Integer.parseInt(binding.etDiscount.getText().toString());
-               // newOrder.discount = Double.parseDouble(binding.etDiscount.getText().toString());
+                newOrder.discount =  Integer.parseInt(mCartBinding.etDiscount.getText().toString());
+               // newOrder.discount = Double.parseDouble(mCartBinding.etDiscount.getText().toString());
             }
 
             for (SelectedProductHelper selectedProduct : selectedProductList) {
                 AddNewOrder.NewOrder.Product product = new AddNewOrder.NewOrder.Product();
 
                 product.id = Integer.parseInt(selectedProduct.getProductID());
-                if (binding.etDiscount.getText().toString().equals("")) {
+                if (mCartBinding.etDiscount.getText().toString().equals("")) {
                     product.discount = 0.00;
                 } else {
                     product.discount = 0.00;
@@ -291,14 +290,14 @@ public class ActivityCart extends AppCompatActivity implements SelectedProductRe
         for (SelectedProductHelper selectedProductHelper : selectedProductList) {
             totalAmt += Double.valueOf(selectedProductHelper.getTotalPrice());
         }
-        binding.tvTotal.setText(String.valueOf(totalAmt));
+        mCartBinding.tvTotal.setText(String.valueOf(totalAmt));
 
-        if (!binding.etDiscount.getText().toString().equals("")) {
-            binding.tvGrandTotal.setText(String.valueOf(
-                    totalAmt - Double.parseDouble(binding.etDiscount.getText().toString())
+        if (!mCartBinding.etDiscount.getText().toString().equals("")) {
+            mCartBinding.tvGrandTotal.setText(String.valueOf(
+                    totalAmt - Double.parseDouble(mCartBinding.etDiscount.getText().toString())
             ));
         }else{
-            binding.tvGrandTotal.setText(String.valueOf(totalAmt));
+            mCartBinding.tvGrandTotal.setText(String.valueOf(totalAmt));
         }
 
         selectedProductRecyclerAdapter.notifyDataSetChanged();

@@ -28,7 +28,7 @@
                 android:background="#4ab6d1"
                 android:layout_width="match_parent"
                 android:layout_height="0dp">
-                <android.support.design.widget.CoordinatorLayout
+                <androidx.coordinatorlayout.widget.CoordinatorLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center">
@@ -53,7 +53,7 @@
                         app:layout_anchor="@+id/iv_profile_image"
                         app:layout_anchorGravity="right|bottom"
                         app:srcCompat="@android:drawable/ic_menu_camera" />
-                </android.support.design.widget.CoordinatorLayout>
+                </androidx.coordinatorlayout.widget.CoordinatorLayout>
                 <TextView
                     android:id="@+id/tv_user_name"
                     android:layout_width="wrap_content"

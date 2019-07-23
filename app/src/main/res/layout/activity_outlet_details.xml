@@ -6,11 +6,11 @@
     <data>
 
         <variable
-            name="outletDetails"
+            name="outletDetails_var"
             type="com.humaclab.lalteer.model.Outlets.Outlet" />
     </data>
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -23,65 +23,80 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <LinearLayout
-            android:id="@+id/linearLayout14"
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="@android:style/Widget.Material.ProgressBar.Horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:background="@drawable/edit_text_shape_2"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_marginTop="4dp"
+            android:indeterminate="true"
+            android:translationZ="4dp"
+            app:layout_constraintBottom_toTopOf="@+id/scrollView2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            android:weightSum="10"
-            app:layout_constraintTop_toBottomOf="@+id/include4">
+            app:layout_constraintTop_toBottomOf="@+id/include4" />
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_weight="9"
-                android:fontFamily="@font/latobold"
-                android:hint="Dealer Name"
-                android:padding="8dp"
-
-                android:text="@{outletDetails.outletName}"
-                android:textAlignment="center"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-            <Button
-                android:id="@+id/btn_edit_outlet"
-                android:layout_width="40dp"
-                android:layout_height="45dp"
-                android:layout_gravity="end"
-                android:layout_weight="1"
-                android:background="@drawable/button_shape"
-                android:drawableStart="@drawable/ic_if_edit"
-
-                android:paddingStart="8dp"
-                android:paddingEnd="8dp"
-                android:text="@string/edit"
-
-                android:textColor="#fff" />
-
-
-        </LinearLayout>
-
-        <ScrollView
+        <androidx.core.widget.NestedScrollView
             android:id="@+id/scrollView2"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
 
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout14"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/include4"
             tools:visibility="visible">
 
-            <android.support.constraint.ConstraintLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:id="@+id/linearLayout14"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="@drawable/edit_text_shape_2"
+                    android:weightSum="10"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_weight="9"
+                        android:fontFamily="@font/latobold"
+                        android:hint="Dealer Name"
+                        android:padding="8dp"
+
+                        android:text="@{outletDetails_var.outletName}"
+                        android:textAlignment="center"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <Button
+                        android:id="@+id/btn_edit_outlet"
+                        android:layout_width="40dp"
+                        android:layout_height="45dp"
+                        android:layout_gravity="end"
+                        android:layout_weight="1"
+                        android:background="@drawable/button_shape"
+                        android:drawableStart="@drawable/ic_if_edit"
+
+                        android:paddingStart="8dp"
+                        android:paddingEnd="8dp"
+                        android:text="@string/edit"
+
+                        android:textColor="#fff" />
+
+
+                </LinearLayout>
 
                 <ImageView
                     android:id="@+id/iv_add_outlet_image"
@@ -97,11 +112,12 @@
                     app:civ_border_color="#000"
                     app:civ_border_width="1dp"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.498"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/linearLayout14"
                     tools:visibility="visible" />
 
-                <android.support.v7.widget.CardView
+                <androidx.cardview.widget.CardView
                     android:id="@+id/cardView2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -115,72 +131,127 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/iv_add_outlet_image">
 
-                    <android.support.constraint.ConstraintLayout
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent">
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
 
-                        <TextView
-                            android:id="@+id/textView3"
-                            android:layout_width="0dp"
+                        <com.github.florent37.expansionpanel.ExpansionHeader
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:elevation="5dp"
+                            android:translationZ="5dp"
+                            app:expansion_headerIndicator="@id/headerIndicator"
+                            app:expansion_layout="@id/expansionLayout"
+                            app:expansion_toggleOnClick="true">
 
-                            android:layout_marginTop="0dp"
-
-                            android:background="#00BCD4"
-                            android:gravity="center"
-                            android:padding="8dp"
-                            android:text="Advance Money"
-                            android:textColor="@color/white"
-                            android:textSize="18sp"
-                            android:textStyle="bold"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
-
-                        <android.support.design.widget.TextInputLayout
-                            android:id="@+id/textInputLayout"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="8dp"
-                            android:layout_marginStart="8dp"
-                            android:layout_marginTop="8dp"
-                            android:layout_marginEnd="8dp"
-                            android:layout_marginBottom="8dp"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toStartOf="@+id/add_advanceMoney"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/textView3">
-
-                            <android.support.design.widget.TextInputEditText
+                            <androidx.constraintlayout.widget.ConstraintLayout
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:editable="false"
-                                android:focusable="false"
-                                android:focusableInTouchMode="false"
-                                android:hint="Amount:"
-                                android:text="100000"
-                                android:textColor="#00BCD4"
+                                android:layout_height="match_parent">
 
-                                android:textColorHint="#00BCD4" />
-                        </android.support.design.widget.TextInputLayout>
 
-                        <ImageView
-                            android:id="@+id/add_advanceMoney"
-                            android:layout_width="40dp"
-                            android:layout_height="0dp"
-                            android:layout_marginEnd="8dp"
-                            android:layout_marginBottom="8dp"
-                            app:layout_constraintBottom_toBottomOf="@+id/textInputLayout"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintTop_toTopOf="@+id/textInputLayout"
-                            app:layout_constraintVertical_bias="0.78"
-                            app:srcCompat="@drawable/add" />
+                                <TextView
+                                    android:id="@+id/textView3"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
 
-                    </android.support.constraint.ConstraintLayout>
+                                    android:layout_marginTop="0dp"
 
-                </android.support.v7.widget.CardView>
+                                    android:background="#00BCD4"
+                                    android:gravity="center"
+                                    android:padding="8dp"
+                                    android:text="Advance Money"
+                                    android:textColor="@color/white"
+                                    android:textSize="18sp"
+                                    android:textStyle="bold"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent" />
 
-                <android.support.v7.widget.CardView
+                                <com.google.android.material.textfield.TextInputLayout
+                                    android:id="@+id/textInputLayou_total_amount"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_margin="8dp"
+                                    android:layout_marginStart="8dp"
+                                    android:layout_marginTop="8dp"
+                                    android:layout_marginEnd="8dp"
+                                    android:layout_marginBottom="8dp"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintEnd_toStartOf="@+id/add_advanceMoney"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    android:textColorHint="#00BCD4"
+                                    app:layout_constraintTop_toBottomOf="@+id/textView3">
+
+                                    <com.google.android.material.textfield.TextInputEditText
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:editable="false"
+                                        android:focusable="false"
+                                        android:focusableInTouchMode="false"
+                                        android:hint="Amount:"
+
+
+
+                                       />
+                                </com.google.android.material.textfield.TextInputLayout>
+
+
+                                <ImageView
+                                    android:id="@+id/headerIndicator"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center_vertical|right"
+                                    android:layout_marginTop="8dp"
+                                    android:layout_marginEnd="8dp"
+                                    android:adjustViewBounds="true"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent"
+                                    app:srcCompat="@drawable/ic_keyboard_arrow_right_white_24dp" />
+
+                                <ImageView
+                                    android:id="@+id/add_advanceMoney"
+                                    android:layout_width="40dp"
+                                    android:layout_height="0dp"
+                                    android:layout_marginEnd="8dp"
+                                    app:layout_constraintBottom_toTopOf="@+id/divider2"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintTop_toTopOf="@+id/textInputLayou_total_amount"
+                                    app:layout_constraintVertical_bias="0.78"
+                                    app:srcCompat="@drawable/add" />
+
+                                <View
+                                    android:id="@+id/divider2"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="1dp"
+                                    android:background="?android:attr/listDivider"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintStart_toStartOf="parent" />
+
+                            </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        </com.github.florent37.expansionpanel.ExpansionHeader>
+
+                        <com.github.florent37.expansionpanel.ExpansionLayout
+                            android:id="@+id/expansionLayout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/recycler_payments"
+                                android:layout_width="match_parent"
+                                android:layout_height="200dp">
+
+                            </androidx.recyclerview.widget.RecyclerView>
+
+                        </com.github.florent37.expansionpanel.ExpansionLayout>
+                    </LinearLayout>
+
+
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
                     android:id="@+id/cardView"
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
@@ -195,7 +266,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/cardView2">
 
-                    <android.support.constraint.ConstraintLayout
+                    <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
 
@@ -342,19 +413,12 @@
                                 android:layout_toStartOf="@+id/tv_visited"
                                 app:srcCompat="@drawable/ic_visited" />
 
-                            <ProgressBar
-                                android:id="@+id/progressBar"
-                                style="?android:attr/progressBarStyle"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_centerInParent="true" />
-
                         </RelativeLayout>
 
-                    </android.support.constraint.ConstraintLayout>
-                </android.support.v7.widget.CardView>
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+                </androidx.cardview.widget.CardView>
 
-                <android.support.v7.widget.CardView
+                <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
@@ -369,7 +433,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/cardView">
 
-                    <android.support.constraint.ConstraintLayout
+                    <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content">
 
@@ -428,8 +492,8 @@
                                     android:layout_height="wrap_content"
                                     android:layout_weight="1"
                                     android:padding="2dp"
-                                    android:textStyle="bold"
-                                    android:text="@string/owner_name" />
+                                    android:text="@string/owner_name"
+                                    android:textStyle="bold" />
 
                                 <TextView
                                     android:layout_width="match_parent"
@@ -437,7 +501,7 @@
                                     android:layout_weight="1"
                                     android:fontFamily="@font/latoregular"
                                     android:padding="2dp"
-                                    android:text="@{outletDetails.ownerName}" />
+                                    android:text="@{outletDetails_var.ownerName}" />
                             </LinearLayout>
 
                             <LinearLayout
@@ -451,8 +515,8 @@
                                     android:layout_weight="1"
                                     android:fontFamily="@font/latoregular"
                                     android:padding="2dp"
-                                    android:textStyle="bold"
-                                    android:text="@string/contact_number" />
+                                    android:text="@string/contact_number"
+                                    android:textStyle="bold" />
 
                                 <TextView
                                     android:layout_width="match_parent"
@@ -460,7 +524,7 @@
                                     android:layout_weight="1"
                                     android:fontFamily="@font/latoregular"
                                     android:padding="2dp"
-                                    android:text="@{outletDetails.phone}" />
+                                    android:text="@{outletDetails_var.phone}" />
                             </LinearLayout>
 
                             <LinearLayout
@@ -474,8 +538,8 @@
                                     android:layout_weight="1"
                                     android:fontFamily="@font/latoregular"
                                     android:padding="2dp"
-                                    android:textStyle="bold"
-                                    android:text="@string/dealer_address" />
+                                    android:text="@string/dealer_address"
+                                    android:textStyle="bold" />
 
                                 <TextView
                                     android:layout_width="match_parent"
@@ -483,7 +547,7 @@
                                     android:layout_weight="1"
                                     android:fontFamily="@font/latoregular"
                                     android:padding="2dp"
-                                    android:text="@{outletDetails.outletAddress}" />
+                                    android:text="@{outletDetails_var.outletAddress}" />
                             </LinearLayout>
 
                             <LinearLayout
@@ -497,8 +561,8 @@
                                     android:layout_weight="1"
                                     android:fontFamily="@font/latoregular"
                                     android:padding="2dp"
-                                    android:textStyle="bold"
-                                    android:text="@string/dealer_type" />
+                                    android:text="@string/dealer_type"
+                                    android:textStyle="bold" />
 
                                 <TextView
                                     android:layout_width="match_parent"
@@ -506,7 +570,7 @@
                                     android:layout_weight="1"
                                     android:fontFamily="@font/latoregular"
                                     android:padding="2dp"
-                                    android:text="@{outletDetails.outletType}" />
+                                    android:text="@{outletDetails_var.outletType}" />
                             </LinearLayout>
 
                             <TextView
@@ -517,9 +581,10 @@
                                 android:background="@drawable/red_background_border"
                                 android:fontFamily="@font/latoregular"
                                 android:padding="4dp"
-                                android:text='@{"Due in BDT " + outletDetails.outletDue}'
+                                android:text='@{"Due in BDT " + outletDetails_var.outletDue}'
                                 android:textAlignment="center"
-                                android:textStyle="bold" />
+                                android:textStyle="bold"
+                                android:visibility="gone" />
 
                             <LinearLayout
                                 android:layout_width="match_parent"
@@ -542,12 +607,12 @@
                                     android:visibility="gone" />
                             </LinearLayout>
                         </LinearLayout>
-                    </android.support.constraint.ConstraintLayout>
+                    </androidx.constraintlayout.widget.ConstraintLayout>
 
-                </android.support.v7.widget.CardView>
+                </androidx.cardview.widget.CardView>
 
-            </android.support.constraint.ConstraintLayout>
-        </ScrollView>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.core.widget.NestedScrollView>
 
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

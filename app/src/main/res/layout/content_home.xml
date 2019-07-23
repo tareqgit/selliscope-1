@@ -9,7 +9,7 @@
     tools:context="com.humaclab.lalteer.activity.HomeActivity"
     tools:showIn="@layout/app_bar_home">
 
-    <android.support.design.widget.TabLayout
+    <com.google.android.material.tabs.TabLayout
         android:id="@+id/sliding_tabs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -21,26 +21,26 @@
         app:tabSelectedTextColor="@color/white"
         app:tabTextColor="#b3ffffff">
 
-        <android.support.design.widget.TabItem
+        <com.google.android.material.tabs.TabItem
             android:id="@+id/tab_item_target"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/target"
             android:fontFamily="@font/latobold"/>
 
-        <android.support.design.widget.TabItem
+        <com.google.android.material.tabs.TabItem
             android:id="@+id/tab_item_dashboard"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/latobold"
             android:text="@string/dashboard"/>
-        <android.support.design.widget.TabItem
+        <com.google.android.material.tabs.TabItem
             android:id="@+id/tab_item_performance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/latobold"
             android:text="@string/performance"/>
-    </android.support.design.widget.TabLayout>
+    </com.google.android.material.tabs.TabLayout>
 
     <RelativeLayout
         android:id="@+id/content_fragment"

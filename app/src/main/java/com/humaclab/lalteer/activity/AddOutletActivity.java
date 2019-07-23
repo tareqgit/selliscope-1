@@ -7,9 +7,9 @@ import android.graphics.Bitmap;
 import android.location.Location;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import android.util.Base64;
 import android.util.Log;
 import android.view.MenuItem;
@@ -212,16 +212,27 @@ public class AddOutletActivity extends AppCompatActivity {
 
                             if (mapLocation.distanceTo(currentLocation) <= 100) {
                                 if (thanaId != 0) {
-                                    addOutlet(
-                                            outletTypeId, outletName.getText().toString().trim(),
-                                            outletOwner.getText().toString().trim(),
-                                            outletAddress.getText().toString().trim(),
-                                            thanaId,
-                                            outletContactNumber.getText().toString().trim(),
-                                            mLatitude,
-                                            mLongitude,
-                                            Integer.parseInt(creditLimit.getText().toString().trim())
-                                    );
+                                    if(outletContactNumber.getText().toString().length()<11) {
+                                        outletContactNumber.setError("Number should be valid mobile number");
+                                    }else {
+                                        int credit_limit=0;
+                                        try {
+                                            credit_limit=Integer.parseInt(creditLimit.getText().toString().trim());
+                                        } catch (NumberFormatException e) {
+                                            credit_limit=0;
+                                        }
+                                        addOutlet(
+                                                outletTypeId, outletName.getText().toString().trim(),
+                                                outletOwner.getText().toString().trim(),
+                                                outletAddress.getText().toString().trim(),
+                                                thanaId,
+                                                outletContactNumber.getText().toString().trim(),
+                                                mLatitude,
+                                                mLongitude,
+                                                credit_limit
+
+                                        );
+                                    }
                                 } else {
                                     Toast.makeText(AddOutletActivity.this, getString(R.string.Please_select_a_thana), Toast.LENGTH_SHORT).show();
                                 }

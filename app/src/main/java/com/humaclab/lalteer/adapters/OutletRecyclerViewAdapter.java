@@ -3,19 +3,17 @@ package com.humaclab.lalteer.adapters;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.Nullable;
+import androidx.cardview.widget.CardView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -36,7 +34,6 @@ import com.humaclab.lalteer.activity.OutletActivity;
 import com.humaclab.lalteer.activity.OutletDetailsActivity;
 import com.humaclab.lalteer.activity.OutletMapActivity;
 import com.humaclab.lalteer.activity.PurchaseHistoryActivity;
-import com.humaclab.lalteer.activity.RouteActivity;
 import com.humaclab.lalteer.model.Outlets;
 import com.humaclab.lalteer.model.UserLocation;
 import com.humaclab.lalteer.utils.Constants;
@@ -116,6 +113,7 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
         }
         holder.tv_outletCode.setText(outlet.outlet_code == null ? "Pending" : outlet.outlet_code);
         holder.tvOutletName.setText(outlet.outletName);
+        holder.tvOutletType.setText(outlet.outletType);
         holder.tvOutletAddress.setText(outlet.outletAddress);
         holder.tvOutletContactNumber.setText(outlet.phone);
         holder.tvOutletOwnerName.setText(outlet.ownerName);
@@ -264,7 +262,7 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
     public class OutletViewHolder extends RecyclerView.ViewHolder {
         CardView cardView;
         ImageView iv_outlet_image;
-        TextView tvOutletName, tvOutletAddress, tvOutletOwnerName, tvOutletContactNumber,tv_outletCode;
+        TextView tvOutletName, tvOutletAddress, tvOutletOwnerName, tvOutletContactNumber,tv_outletCode, tvOutletType;
         Button checkInButton, mapButton, historyButton;
         ProgressBar pbCheckIn;
         TextView tv_checkroute;
@@ -276,6 +274,7 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
             iv_outlet_image = itemView.findViewById(R.id.iv_outlet_image);
             cardView = itemView.findViewById(R.id.cv_outlet_item);
             tvOutletName = itemView.findViewById(R.id.tv_outlet_name);
+            tvOutletType = itemView.findViewById(R.id.tv_outlet_type);
             tvOutletAddress = itemView.findViewById(R.id.tv_outlet_address);
             tvOutletContactNumber = itemView.findViewById(R.id.tv_outlet_contact_number);
             tvOutletOwnerName = itemView.findViewById(R.id.tv_owner_name);
@@ -285,14 +284,11 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
             pbCheckIn = itemView.findViewById(R.id.pb_check_in);
             lo_routeplan_background2 = itemView.findViewById(R.id.routeplan_background2);
 
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(context, OutletDetailsActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    intent.putExtra("outletDetails", outletItems.outlets.get(getLayoutPosition()));
-                    context.startActivity(intent);
-                }
+            itemView.setOnClickListener(v -> {
+                Intent intent = new Intent(context, OutletDetailsActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.putExtra("outletDetails", outletItems.outlets.get(getLayoutPosition()));
+                context.startActivity(intent);
             });
         }
     }

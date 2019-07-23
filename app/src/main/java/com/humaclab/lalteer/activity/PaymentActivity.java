@@ -5,11 +5,11 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.widget.Toolbar;
 import android.util.Base64;
 import android.util.Log;
 import android.view.MenuItem;
@@ -161,7 +161,7 @@ public class PaymentActivity extends AppCompatActivity {
             String promotionImage = Base64.encodeToString(outputStream.toByteArray(), Base64.DEFAULT);
             // binding.ivTakeImage.setImageBitmap(photo);
             Log.d("tareq_test" , ""+promotionImage);
-            Toast.makeText(this, ""+promotionImage, Toast.LENGTH_SHORT).show();
+         //   Toast.makeText(this, ""+promotionImage, Toast.LENGTH_SHORT).show();
             mOnImageResultAchiveListener.onImageAchive(photo, promotionImage);
 
         }

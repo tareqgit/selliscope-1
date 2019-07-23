@@ -9,7 +9,7 @@
             type="com.humaclab.lalteer.model.variant_product.ProductsItem" />
     </data>
 
-    <android.support.v7.widget.CardView
+    <androidx.cardview.widget.CardView
         android:id="@+id/cv_product_background"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -101,5 +101,5 @@
                     android:fontFamily="@font/latoregular"/>
             </LinearLayout>
         </LinearLayout>
-    </android.support.v7.widget.CardView>
+    </androidx.cardview.widget.CardView>
 </layout>

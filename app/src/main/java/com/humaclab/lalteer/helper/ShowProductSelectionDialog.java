@@ -1,8 +1,8 @@
 package com.humaclab.lalteer.helper;
 
 import android.content.Context;
-import android.databinding.DataBindingUtil;
-import android.support.v7.app.AlertDialog;
+import androidx.databinding.DataBindingUtil;
+import androidx.appcompat.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -10,7 +10,6 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.humaclab.lalteer.R;
-import com.humaclab.lalteer.adapters.OrderProductRecyclerAdapter;
 import com.humaclab.lalteer.databinding.ItemOrderProductSelectionBinding;
 import com.humaclab.lalteer.model.variant_product.ProductsItem;
 

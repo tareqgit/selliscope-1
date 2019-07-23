@@ -1,8 +1,8 @@
 package com.humaclab.lalteer.adapters;
 
 import android.content.Context;
-import android.databinding.DataBindingUtil;
-import android.support.v7.widget.RecyclerView;
+import androidx.databinding.DataBindingUtil;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +14,7 @@ import com.humaclab.lalteer.databinding.ItemSelectedProductBinding;
 import com.humaclab.lalteer.helper.SelectedProductHelper;
 
 import java.util.List;
-import com.humaclab.lalteer.helper.SelectedProductHelper;
+
 import static com.humaclab.lalteer.activity.OrderActivity.selectedProductList;
 
 

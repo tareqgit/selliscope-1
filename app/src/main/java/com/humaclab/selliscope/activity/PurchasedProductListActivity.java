@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.appcompat.widget.Toolbar;
 
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -51,6 +52,9 @@ public class PurchasedProductListActivity extends AppCompatActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_purchased_product_list);
         outlet = (Outlets.Outlet) getIntent().getSerializableExtra("outletDetails");
         purchaseHistoryItem = (PurchaseHistoryItem) getIntent().getSerializableExtra("product_list");
+
+        Log.d("tareq_test", "productList: " + new Gson().toJson(purchaseHistoryItem));
+
         List<DataItem> salesReturnItems = (List<DataItem>) getIntent().getSerializableExtra("salesReturnItems");
 
         for(DataItem dataItem : salesReturnItems){

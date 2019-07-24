@@ -50,7 +50,8 @@ public class DashboardFragment extends Fragment {
         dashboadItems.add(new DashboardItem(getString(R.string.deliver), R.drawable.ic_view_orders));
 //        dashboadItems.add(new DashboardItem("Payment", R.drawable.ic_payments));
         dashboadItems.add(new DashboardItem(getString(R.string.inspection), R.drawable.ic_inspection));
-        dashboadItems.add(new DashboardItem(getString(R.string.sales_return), R.drawable.ic_sales_return));
+        dashboadItems.add(new DashboardItem("Promotional Products", R.drawable.ic_insights));
+ //       dashboadItems.add(new DashboardItem(getString(R.string.sales_return), R.drawable.ic_sales_return));
 //        dashboadItems.add(new DashboardItem("Insights", R.drawable.ic_insights));
         gridLayoutManager = new GridLayoutManager(activity, itemNumber);
         recyclerView.setLayoutManager(gridLayoutManager);
@@ -111,8 +112,8 @@ public class DashboardFragment extends Fragment {
 
                                     //old Sales Return
                                     case 4: {
-                                        getActivity().startActivity(new Intent(getActivity(),
-                                                SalesReturnActivityOld.class));
+                                        Toast.makeText(getActivity(), "Coming soon",
+                                                Toast.LENGTH_SHORT).show();
                                         break;
                                     }
 /*                                    case 5: {

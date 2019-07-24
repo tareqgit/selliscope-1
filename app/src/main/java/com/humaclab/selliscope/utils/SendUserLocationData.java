@@ -24,6 +24,7 @@ import com.humaclab.selliscope.model.UserLocation;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import io.nlopez.smartlocation.OnLocationUpdatedListener;
 import io.nlopez.smartlocation.SmartLocation;
@@ -203,8 +204,8 @@ public class SendUserLocationData {
                     .start(new OnLocationUpdatedListener() {
                         @Override
                         public void onLocationUpdated(Location location) {
-                            double latitude = Double.parseDouble(String.format("%.05f", location.getLatitude()));
-                            double longitude = Double.parseDouble(String.format("%.05f", location.getLongitude()));
+                            double latitude = Double.parseDouble(String.format(Locale.ENGLISH,"%.05f", location.getLatitude()));
+                            double longitude = Double.parseDouble(String.format(Locale.ENGLISH,"%.05f", location.getLongitude()));
 
                             Timber.d("Latitude: " + latitude + " Longitude: " + longitude);
                             onGetLocation.getLocation(latitude, longitude);

@@ -56,10 +56,12 @@ public class PurchasedProductRecyclerAdapter extends RecyclerView.Adapter<Purcha
             holder.getBinding().tvSkuHolder.setVisibility(View.GONE);
             holder.getBinding().tvSkuNo.setVisibility(View.GONE);
            holder.getBinding().textViewDate.setVisibility(View.GONE);
+
             holder.getBinding().tvProductDiscount.setText("Discount: ");
 
             OrderDetailsItem orderDetailsItem = (OrderDetailsItem) productsList.get(position);
             try {
+                if(orderDetailsItem.getIs_free()==1)      holder.getBinding().textViewFree.setVisibility(View.VISIBLE);
                 holder.getBinding().tvProductName.setText(orderDetailsItem.getProductName());
                 holder.getBinding().tvProductDiscount.setText(orderDetailsItem.getProductDiscount());
 
@@ -77,6 +79,7 @@ public class PurchasedProductRecyclerAdapter extends RecyclerView.Adapter<Purcha
             holder.getBinding().tvSkuHolder.setVisibility(View.VISIBLE);
             holder.getBinding().tvSkuNo.setVisibility(View.VISIBLE);
             holder.getBinding().textViewDate.setVisibility(View.VISIBLE);
+            holder.getBinding().textViewFree.setVisibility(View.GONE);
             holder.getBinding().tvProductDiscount.setText("Return Cause: ");
 
             DataItem salesReturnDataItem = (DataItem) productsList.get(position);

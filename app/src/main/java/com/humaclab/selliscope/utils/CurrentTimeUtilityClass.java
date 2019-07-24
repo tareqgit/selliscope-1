@@ -4,6 +4,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * Created by dipu_ on 4/22/2017.
@@ -11,10 +12,10 @@ import java.util.Date;
 
 public class CurrentTimeUtilityClass {
     public static String getCurrentTimeStamp() {
-        return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime());
+        return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",Locale.ENGLISH).format(Calendar.getInstance().getTime());
     }
     public static String getCurrentTimeStampDate() {
-        return new SimpleDateFormat("yyyy-M-d").format(Calendar.getInstance().getTime());
+        return new SimpleDateFormat("yyyy-M-d",Locale.ENGLISH).format(Calendar.getInstance().getTime());
     }
 
     public static long getDiffBetween(String preTime1){

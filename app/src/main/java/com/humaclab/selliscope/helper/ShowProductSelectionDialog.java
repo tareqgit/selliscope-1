@@ -18,6 +18,7 @@ import com.humaclab.selliscope.model.variant_product.ProductsItem;
 import com.humaclab.selliscope.utils.DatabaseHandler;
 
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by leon on 14/3/18.
@@ -69,7 +70,7 @@ public class ShowProductSelectionDialog {
 
         if (selectedProductHelper != null) {
             binding.etProductQty.setText(selectedProductHelper.getProductQuantity());
-            binding.tvTotalPrice.setText(String.format("%.2f", Double.valueOf(binding.tvProductPrice.getText().toString().replace(",", "")) * Double.valueOf(binding.etProductQty.getText().toString())));
+            binding.tvTotalPrice.setText(String.format(Locale.ENGLISH, "%.2f", Double.valueOf(binding.tvProductPrice.getText().toString().replace(",", "")) * Double.valueOf(binding.etProductQty.getText().toString())));
         }
 
         binding.etProductQty.addTextChangedListener(new TextWatcher() {
@@ -110,7 +111,7 @@ public class ShowProductSelectionDialog {
                         }
                         binding.tvProductPrice.setText(String.valueOf(priceOfRate));
                         //binding.tvTotalPrice.setText(String.format("%.2f", Double.valueOf(binding.tvProductPrice.getText().toString().replace(",", "")) * Double.valueOf(binding.etProductQty.getText().toString())));
-                        binding.tvTotalPrice.setText(String.format("%.2f", Double.valueOf(binding.tvProductPrice.getText().toString().replace(",", "")) * Double.valueOf(binding.etProductQty.getText().toString())));
+                        binding.tvTotalPrice.setText(String.format(Locale.ENGLISH,"%.2f", Double.valueOf(binding.tvProductPrice.getText().toString().replace(",", "")) * Double.valueOf(binding.etProductQty.getText().toString())));
 
                         totalPrice = Double.valueOf(String.valueOf(binding.tvTotalPrice.getText()));
                     if ( Double.valueOf(tradePromoionData.get(0).getPromoionValue())<= inputFinalPrice && !inputPrice.equals("")) {
@@ -134,8 +135,8 @@ public class ShowProductSelectionDialog {
                                 break;
                             case "Qty":
                                 discount = 0.0;
-                                binding.tvDiscountName.setText(tradePromoionData.get(0).getProduct_qty());
-                                binding.tvOffer.setText("Free: "+tradePromoionData.get(0).getProduct_name());
+                                binding.tvDiscountName.setText(tradePromoionData.get(0).getFreeProductQty());
+                                binding.tvOffer.setText("Free: "+tradePromoionData.get(0).getFreeProductName());
                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                                     binding.layoutSelect.setBackground(context.getDrawable(R.color.background));
                                 }
@@ -218,12 +219,7 @@ public class ShowProductSelectionDialog {
             }
         });
 
-        binding.btnCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                alertDialog.dismiss();
-            }
-        });
+        binding.btnCancel.setOnClickListener(v -> alertDialog.dismiss());
 
         alertDialog.setView(binding.getRoot());
         alertDialog.show();

@@ -40,7 +40,7 @@ import java.util.Map;
  */
 
 public class DatabaseHandler extends SQLiteOpenHelper {
-    private static final int DATABASE_VERSION = 19;
+    private static final int DATABASE_VERSION = 20;
 
     // Database Tables
     private static final String TABLE_TARGET = "targets";
@@ -163,8 +163,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String KEY_TP_OFFER_TYPE = "offer_type";
     private static final String KEY_TP_OFFER_VALUE = "offer_value";
 
-    private static final String KEY_TP_OFFER_PRODUCT_NAME = "product_name";
-    private static final String KEY_TP_OFFER_PRODUCT_QTY = "product_qty";
+    private static final String KEY_TP_OFFER_PRODUCT_NAME = "free_product_name";
+    private static final String KEY_TP_OFFER_PRODUCT_QTY = "free_product_qty";
+    private static final String KEY_TP_OFFER_PRODUCT_ID = "free_product_id";
 
     public DatabaseHandler(Context context) {
         super(context, Constants.databaseName, null, DATABASE_VERSION);
@@ -298,7 +299,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + KEY_TP_PROMOTION_TYPE + " TEXT,"
                 + KEY_TP_OFFER_VALUE + " INTEGER,"
                 + KEY_TP_OFFER_PRODUCT_NAME + " TEXT,"
-                + KEY_TP_OFFER_PRODUCT_QTY + " INTEGER"
+                + KEY_TP_OFFER_PRODUCT_QTY + " INTEGER,"
+                + KEY_TP_OFFER_PRODUCT_ID + " INTEGER"
                 + ")";
         String CREATE_TABLE_REASON = "CREATE TABLE " + TABLE_SELLS_REASON + "("
                 + KEY_SREASONID + " INTEGER  PRIMARY KEY AUTOINCREMENT,"
@@ -1315,6 +1317,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 if(!(promotion.getOfferProduct() == null)) {
                     values.put(KEY_TP_OFFER_PRODUCT_NAME, promotion.getOfferProduct().get(0).getProductName());
                     values.put(KEY_TP_OFFER_PRODUCT_QTY, promotion.getOfferProduct().get(0).getProductQty());
+                    values.put(KEY_TP_OFFER_PRODUCT_ID, promotion.getOfferProduct().get(0).getProductId());
                 }
                 try {
                     db.insert(TABLE_TRADE_PROMTOIN, null, values);
@@ -1344,7 +1347,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                         cursor.getString(cursor.getColumnIndex(KEY_TP_OFFER_TYPE)),
                         cursor.getString(cursor.getColumnIndex(KEY_TP_OFFER_VALUE)),
                         cursor.getString(cursor.getColumnIndex(KEY_TP_OFFER_PRODUCT_NAME)),
-                        cursor.getString(cursor.getColumnIndex(KEY_TP_OFFER_PRODUCT_QTY))
+                        cursor.getString(cursor.getColumnIndex(KEY_TP_OFFER_PRODUCT_QTY)),
+                        cursor.getString(cursor.getColumnIndex(KEY_TP_OFFER_PRODUCT_ID))
                 );
                 tradePromoionData.add(tradePromoionData1);
             } while (cursor.moveToNext());

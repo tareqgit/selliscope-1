@@ -377,7 +377,7 @@ public class ActivityCart extends AppCompatActivity implements  SelectedProductR
 
         for (SalesReturn2019SelectedProduct salesreturnProduct:sSalesReturn2019SelectedProducts) {
             salesreturnProduct.setGodown_id(1); //fixed for sometime
-            salesreturnProduct.setReturn_date(CurrentTimeUtilityClass.getCurrentTimeStamp());
+            salesreturnProduct.setReturn_date( CurrentTimeUtilityClass.getCurrentTimeStamp());
         }
 
         JsonMemberReturn jsonMemberReturn=new JsonMemberReturn();

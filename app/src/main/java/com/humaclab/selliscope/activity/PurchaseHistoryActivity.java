@@ -89,6 +89,9 @@ public class PurchaseHistoryActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<PurchaseHistoryResponse> call, Response<PurchaseHistoryResponse> response) {
                 if (response.code() == 200) {
+
+
+
                     binding.tvTotalPaid.setText(response.body().getResult().getTotalPaid());
                     binding.tvTotalDue.setText(response.body().getResult().getTotalDue());
                     binding.srlPurchaseHistory.setRefreshing(false);

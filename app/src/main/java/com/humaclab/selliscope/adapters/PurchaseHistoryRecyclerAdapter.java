@@ -61,16 +61,13 @@ public class PurchaseHistoryRecyclerAdapter extends RecyclerView.Adapter<Purchas
         public PurchaseHistoryViewHolder(View itemView) {
             super(itemView);
             binding = DataBindingUtil.bind(itemView);
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(context, PurchasedProductListActivity.class);
+            itemView.setOnClickListener(v -> {
+                Intent intent = new Intent(context, PurchasedProductListActivity.class);
 
-                    intent.putExtra("product_list", purchaseHistoryItemList.get(getAdapterPosition()));
-                    intent.putExtra("outletDetails", outlet);
-                    intent.putExtra("salesReturnItems",(Serializable) mSalesReturnItems);
-                    context.startActivity(intent);
-                }
+                intent.putExtra("product_list", purchaseHistoryItemList.get(getAdapterPosition()));
+                intent.putExtra("outletDetails", outlet);
+                intent.putExtra("salesReturnItems",(Serializable) mSalesReturnItems);
+                context.startActivity(intent);
             });
         }
 

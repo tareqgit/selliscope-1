@@ -13,6 +13,11 @@ public class OrderDetailsItem implements Serializable {
     @SerializedName("product_discount")
     private String productDiscount;
 
+    @SerializedName("variant_row")
+    private int variant_row;
+
+    @SerializedName("is_free")
+    private int is_free;
     @SerializedName("product_id")
     private int productId;
 
@@ -74,5 +79,21 @@ public class OrderDetailsItem implements Serializable {
 
     public void setProductName(String productName) {
         this.productName = productName;
+    }
+
+    public int getVariant_row() {
+        return variant_row;
+    }
+
+    public void setVariant_row(int variant_row) {
+        this.variant_row = variant_row;
+    }
+
+    public int getIs_free() {
+        return is_free;
+    }
+
+    public void setIs_free(int is_free) {
+        this.is_free = is_free;
     }
 }

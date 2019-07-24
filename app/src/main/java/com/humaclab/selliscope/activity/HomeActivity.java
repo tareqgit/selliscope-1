@@ -150,8 +150,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             boolean state = intent.getBooleanExtra("state", true);
             if (state) {
                 ((ImageView) findViewById(R.id.gps_signal_image)).setImageResource(R.drawable.ic_high_signal);
-            }else{
-                ((ImageView) findViewById(R.id.gps_signal_image)).setImageResource(R.drawable.ic_no_signal);
+            } else {
+                ((ImageView) findViewById(R.id.gps_signal_image)).setImageResource(R.drawable.ic_low_signal);
             }
         }
     };
@@ -171,19 +171,17 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         Constants.BASE_URL = sharedPreferences.getString("BASE_URL", Constants.BASE_URL);
 
 
-
         displayGpsSignalRequest(); //for showing gps request
 
         //Location Receiver from LocationMonitoringService
         mLocalBroadcastManager = LocalBroadcastManager.getInstance(getApplicationContext());
 
-       // From  LocationMonitoringService to this activity
+        // From  LocationMonitoringService to this activity
         mLocalBroadcastManager.registerReceiver(
                 gpsBroadcastStateListener, new IntentFilter("GPS")
         );
         // From GpsLocationBroadcaster to this activity
         mLocalBroadcastManager.registerReceiver(gpsBroadcastStateListener, new IntentFilter("GpsState"));
-
 
 
         manufacturer = android.os.Build.MANUFACTURER;
@@ -387,7 +385,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     }
 
 
-
     private void displayGpsSignalRequest() {
 
         LocationRequest locationRequest = LocationRequest.create();
@@ -441,16 +438,16 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 switch (resultCode) {
                     case Activity.RESULT_OK:
                         // All required changes were successfully made
-               //         Toast.makeText(context, "Must turn on GPs", Toast.LENGTH_SHORT).show();
+                        //         Toast.makeText(context, "Must turn on GPs", Toast.LENGTH_SHORT).show();
                         try {
                             int locationMode = Settings.Secure.getInt(this.getContentResolver(), Settings.Secure.LOCATION_MODE);
 
-                            if(locationMode == LOCATION_MODE_HIGH_ACCURACY) {
+                            if (locationMode == LOCATION_MODE_HIGH_ACCURACY) {
                                 //request location updates
-                                Log.d("tareq_test" , "High Accuracy found");
+                                Log.d("tareq_test", "High Accuracy found");
                             } else { //redirect user to settings page
                                 //need high accuracy
-                                Log.d("tareq_test" , "need high accuracy");
+                                Log.d("tareq_test", "need high accuracy");
                                 startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
                             }
                         } catch (Settings.SettingNotFoundException e) {
@@ -704,7 +701,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
               Because if we do not stop it, the service will die with our app.
               Instead, by stopping the service, we will force the service to call its own onDestroy which will force it to recreate itself after the app is dead.*/
         } catch (Exception e) {
-            Log.e("tareq_test" , "Stop location Service intent: "+ e.getMessage());
+            Log.e("tareq_test", "Stop location Service intent: " + e.getMessage());
         }
         super.onDestroy();
         if (sessionManager.isLoggedIn()) {
@@ -965,7 +962,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         //endregion
 
 
-
         if (activeNetworkInfo == null || !activeNetworkInfo.isConnected()) {
             promptInternetConnect();
             return false;
@@ -987,12 +983,14 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
      */
     private void promptInternetConnect() {
 
-        if(!dialogInternetConnectionError.isShowing())
-        dialogInternetConnectionError.show();
+        if (!dialogInternetConnectionError.isShowing())
+            dialogInternetConnectionError.show();
     }
+
     AlertDialog dialogInternetConnectionError;
+
     private void alartDialogBuilder() {
-        AlertDialog.Builder    internetConnectionErrorDialogBuilder= new AlertDialog.Builder(HomeActivity.this);
+        AlertDialog.Builder internetConnectionErrorDialogBuilder = new AlertDialog.Builder(HomeActivity.this);
         internetConnectionErrorDialogBuilder.setTitle("Error");
         internetConnectionErrorDialogBuilder.setMessage("No Internet ");
         String positiveText = "Refresh";

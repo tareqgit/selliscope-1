@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -63,6 +64,7 @@ public class DashboardFragment extends Fragment {
         dashboadItems.add(new DashboardItem(getString(R.string.dashboard_inspection), R.drawable.ic_inspection));
         dashboadItems.add(new DashboardItem(getString(R.string.dashboard_productList), R.drawable.ic_insights));
         dashboadItems.add(new DashboardItem(getString(R.string.dashboard_promotionAds), R.drawable.ic_payments));
+        dashboadItems.add(new DashboardItem("Help", R.drawable.ic_help_icon));
         gridLayoutManager = new GridLayoutManager(activity, itemNumber);
         recyclerView.setLayoutManager(gridLayoutManager);
         dashboardRecyclerViewAdapter = new DashboardRecyclerViewAdapter(activity, dashboadItems);
@@ -159,6 +161,12 @@ public class DashboardFragment extends Fragment {
                                             Toast.makeText(getActivity(), "You Don't Have access", Toast.LENGTH_SHORT).show();
                                         }
 
+                                        break;
+                                    }
+                                    case 6: {
+                                        BottomSheetHelpDialogFragment bottomSheetHelpDialogFragment = new BottomSheetHelpDialogFragment();
+                                        assert getFragmentManager() != null;
+                                        bottomSheetHelpDialogFragment.show(getFragmentManager(),bottomSheetHelpDialogFragment.getTag() );
                                         break;
                                     }
                                     default: {

@@ -99,13 +99,16 @@ public class LoadLocalIntoBackground {
         call.enqueue(new Callback<CategoryResponse>() {
             @Override
             public void onResponse(Call<CategoryResponse> call, Response<CategoryResponse> response) {
+
                 if (response.code() == 200) {
+
                     try {
                         List<CategoryResponse.CategoryResult> categories = response.body().result.categoryResults;
                         for (CategoryResponse.CategoryResult result : categories) {
                             databaseHandler.addCategory(result.id, result.name);
                         }
                     } catch (Exception e) {
+                        Log.d("tareq_test", "Categories error: " + e.getMessage());
                         e.printStackTrace();
                     }
                 }
@@ -113,6 +116,7 @@ public class LoadLocalIntoBackground {
 
             @Override
             public void onFailure(Call<CategoryResponse> call, Throwable t) {
+                Log.d("tareq_test", "Caregories failed");
                 t.printStackTrace();
             }
         });
@@ -153,16 +157,18 @@ public class LoadLocalIntoBackground {
                     try {
                         Outlets getOutletListSuccessful = gson.fromJson(response.body().string(), Outlets.class);
                         if (!fullUpdate) {
-                           // if (getOutletListSuccessful.outletsResult.outlets.size() != databaseHandler.getSizeOfOutlet()) {
-                                databaseHandler.removeOutlet();
-                                databaseHandler.addOutlet(getOutletListSuccessful.outletsResult.outlets);
-                                if(mOnOutletUpdateComplete!=null) mOnOutletUpdateComplete.onUpdateComplete();
-                           //  }
+                            // if (getOutletListSuccessful.outletsResult.outlets.size() != databaseHandler.getSizeOfOutlet()) {
+                            databaseHandler.removeOutlet();
+                            databaseHandler.addOutlet(getOutletListSuccessful.outletsResult.outlets);
+                            if (mOnOutletUpdateComplete != null)
+                                mOnOutletUpdateComplete.onUpdateComplete();
+                            //  }
                         } else {
                             databaseHandler.removeOutlet();
                             databaseHandler.addOutlet(getOutletListSuccessful.outletsResult.outlets);
-                            if(mOnOutletUpdateComplete!=null) mOnOutletUpdateComplete.onUpdateComplete();
-                         }
+                            if (mOnOutletUpdateComplete != null)
+                                mOnOutletUpdateComplete.onUpdateComplete();
+                        }
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -172,12 +178,12 @@ public class LoadLocalIntoBackground {
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 t.printStackTrace();
-              }
+            }
         });
     }
 
 
-    public void saveOutletRoutePlan(List<RouteDetailsResponse.OutletItem> outletItemList){
+    public void saveOutletRoutePlan(List<RouteDetailsResponse.OutletItem> outletItemList) {
         //databaseHandler.removeOutlet();
         databaseHandler.updateOutletRoutePlan(outletItemList);
     }
@@ -251,7 +257,8 @@ public class LoadLocalIntoBackground {
             }
         });
     }
-    public interface OnOutletUpdateComplete{
-            void onUpdateComplete();
+
+    public interface OnOutletUpdateComplete {
+        void onUpdateComplete();
     }
 }

@@ -15,7 +15,7 @@ public class CategoryResponse {
     public Categories result;
 
     public class Categories {
-        @SerializedName("categories")
+        @SerializedName("category")
         public List<CategoryResult> categoryResults;
     }
 

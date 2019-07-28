@@ -14,6 +14,8 @@
     <color name="colorFocused">@color/colorPrimaryDark</color>
     <color name="background_shimmer">#dddddd</color>
 
+    <color name="text_black"> #212121</color>
+    <color name="text_blue">#448AFF</color>
     <!--For Te-->
     <color name="light_font">#FBFBFB</color>
     <color name="grey_font">#ff9e9e9e</color>

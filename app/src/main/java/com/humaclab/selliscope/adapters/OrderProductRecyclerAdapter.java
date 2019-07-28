@@ -29,16 +29,13 @@ import java.util.List;
  */
 
 public class OrderProductRecyclerAdapter extends RecyclerView.Adapter<OrderProductRecyclerAdapter.OrderProductViewHolder> {
-    private OrderActivity orderActivity;
     private Context context;
     private List<ProductsItem> productsItemList;
-    private OrderProductViewHolder holder;
     private List<SelectedProductHelper> selectedProductList;
     private OnSelectProductListener mOnSelectProductListener;
     private String outletType;
 
-    public OrderProductRecyclerAdapter(Context context, OrderActivity orderActivity, List<ProductsItem> productsItemList, List<SelectedProductHelper> selectedProductList, String outletType, OnSelectProductListener onSelectProductListener) {
-        this.orderActivity = orderActivity;
+    public OrderProductRecyclerAdapter(Context context, List<ProductsItem> productsItemList, List<SelectedProductHelper> selectedProductList, String outletType, OnSelectProductListener onSelectProductListener) {
         this.context = context;
         this.productsItemList = productsItemList;
         this.selectedProductList = selectedProductList;
@@ -46,13 +43,8 @@ public class OrderProductRecyclerAdapter extends RecyclerView.Adapter<OrderProdu
         this.mOnSelectProductListener=onSelectProductListener;
     }
 
-    public OrderProductRecyclerAdapter(Context context, OrderActivity orderActivity, List<ProductsItem> productsItemList, List<SelectedProductHelper> selectedProductList, String outletType) {
-        this.orderActivity = orderActivity;
-        this.context = context;
-        this.productsItemList = productsItemList;
-        this.selectedProductList = selectedProductList;
-        this.outletType = outletType;
-    }
+
+
 
     @Override
     public OrderProductViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -62,11 +54,10 @@ public class OrderProductRecyclerAdapter extends RecyclerView.Adapter<OrderProdu
 
     @Override
     public void onBindViewHolder( OrderProductViewHolder holder,  int position) {
-        this.holder = holder;
 
         ProductsItem products = productsItemList.get(position);
 
-        /*First we have to make sure everything is resetted beacause the view changes will be reused */
+        /*First we have to make sure everything is resetted because the view changes will be reused */
         holder.getBinding().ivRemoveProduct.setVisibility(View.GONE);
         holder.getBinding().llQuantity.setVisibility(View.GONE);
         holder.cv_product_background.setCardBackgroundColor(Color.WHITE);
@@ -76,13 +67,12 @@ public class OrderProductRecyclerAdapter extends RecyclerView.Adapter<OrderProdu
             for (final SelectedProductHelper selectedProductHelper : selectedProductList) {
                 //as we don't have any unique key we need to check two condition for make this thing unique
                 if (selectedProductHelper.getProductID().equals(String.valueOf(products.getId())) &&
-                        (selectedProductHelper.getProductRow().equals(products.getVariantRow()))) {
+                        (selectedProductHelper.getProductRow().equals(products.getVariantRow())) && !selectedProductHelper.isFree()) {
                          // Log.d("tareq_test", "colored" + position);
                         holder.cv_product_background.setCardBackgroundColor(Color.GREEN);
                         holder.getBinding().llQuantity.setVisibility(View.VISIBLE);
                         holder.getBinding().tvProductQuantity.setText(selectedProductHelper.getProductQuantity());
                         holder.getBinding().ivRemoveProduct.setVisibility(View.VISIBLE);
-
 
                     }
             }
@@ -93,16 +83,16 @@ public class OrderProductRecyclerAdapter extends RecyclerView.Adapter<OrderProdu
 
             //we want to show a dialog
             ShowProductSelectionDialog showProductSelectionDialog = new ShowProductSelectionDialog(context,
-                    productsItemList.get(position), outletType,selectedProduct ->  {
+                    productsItemList.get(position), outletType,selectedProducts ->  {
 
-                mOnSelectProductListener.onSetSelectedProduct(selectedProduct);
+                mOnSelectProductListener.onSetSelectedProduct(selectedProducts);
 
                 //    Log.d("tareq_test", "dialog fianl colored" + position);
 
                 /*Then update apearance of that card*/
                 holder.cv_product_background.setCardBackgroundColor(Color.GREEN);
                 holder.getBinding().llQuantity.setVisibility(View.VISIBLE);
-                holder.getBinding().tvProductQuantity.setText(selectedProduct.getProductQuantity());
+                holder.getBinding().tvProductQuantity.setText(selectedProducts.get(0).getProductQuantity());//as 0 no product is order product
                 holder.getBinding().ivRemoveProduct.setVisibility(View.VISIBLE);
             });
 
@@ -193,7 +183,7 @@ public class OrderProductRecyclerAdapter extends RecyclerView.Adapter<OrderProdu
             return binding;
         }
 
-        //on selected product show the price and quenty
+        //on selected product show the price and quantity
 
     /*    @Override
         public void onSetSelectedProduct(SelectedProductHelper selectedProduct) {
@@ -216,9 +206,9 @@ public class OrderProductRecyclerAdapter extends RecyclerView.Adapter<OrderProdu
         /**
          * Update UI when product select for order
          *
-         * @param selectedProduct SelectedProductHelper selected product details
+         * @param selectedProducts SelectedProductHelper selected product details
          */
-        void onSetSelectedProduct(SelectedProductHelper selectedProduct);
+        void onSetSelectedProduct(List<SelectedProductHelper> selectedProducts);
 
         /**
          * Update UI when product is removed from order

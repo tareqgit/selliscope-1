@@ -4,14 +4,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 
-import androidx.core.view.MenuItemCompat;
 import androidx.databinding.DataBindingUtil;
+
 import android.os.Bundle;
 import android.os.Parcelable;
+
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.appcompat.widget.Toolbar;
+
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -23,7 +25,6 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
 import com.humaclab.selliscope.R;
 import com.humaclab.selliscope.adapters.OrderProductRecyclerAdapter;
 import com.humaclab.selliscope.databinding.ActivityOrderBinding;
@@ -36,10 +37,8 @@ import com.humaclab.selliscope.utils.SessionManager;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
-import static androidx.core.view.MenuItemCompat.getActionView;
 import static com.humaclab.selliscope.sales_return.SalesReturn_2019_Activity.sSalesReturn2019SelectedProducts;
 
 public class OrderActivity extends AppCompatActivity implements OrderProductRecyclerAdapter.OnSelectProductListener {
@@ -93,10 +92,10 @@ public class OrderActivity extends AppCompatActivity implements OrderProductRecy
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (!s.toString().equals("")) {
                     List<ProductsItem> productsItemList = databaseHandler.getProduct(categoryID.get(binding.spProductCategory.getSelectedItemPosition()), brandID.get(binding.spProductBrand.getSelectedItemPosition()), s.toString());
-                    binding.rvProduct.setAdapter(new OrderProductRecyclerAdapter(context, OrderActivity.this, productsItemList, selectedProductList, outletType,OrderActivity.this));
+                    binding.rvProduct.setAdapter(new OrderProductRecyclerAdapter(context, productsItemList, selectedProductList, outletType, OrderActivity.this));
                 } else {
                     List<ProductsItem> productsItemList = databaseHandler.getProduct(categoryID.get(binding.spProductCategory.getSelectedItemPosition()), brandID.get(binding.spProductBrand.getSelectedItemPosition()));
-                    binding.rvProduct.setAdapter(new OrderProductRecyclerAdapter(context, OrderActivity.this, productsItemList, selectedProductList, outletType,OrderActivity.this));
+                    binding.rvProduct.setAdapter(new OrderProductRecyclerAdapter(context, productsItemList, selectedProductList, outletType, OrderActivity.this));
                 }
             }
 
@@ -121,6 +120,7 @@ public class OrderActivity extends AppCompatActivity implements OrderProductRecy
     protected void onResume() {
         super.onResume();
 
+        getProducts();
         mOrderProductRecyclerAdapter.notifyDataSetChanged(); //we are Notify to update recycler view cz if we delete any Item from cart should be live in this activity also
         // Restore state
         binding.rvProduct.getLayoutManager().onRestoreInstanceState(recyclerViewState); //we are restoring recycler position
@@ -144,7 +144,7 @@ public class OrderActivity extends AppCompatActivity implements OrderProductRecy
                 if (position != 0) {
                     binding.srlProduct.setRefreshing(false);
                     List<ProductsItem> productsItemList = databaseHandler.getProduct(categoryID.get(position), brandID.get(binding.spProductBrand.getSelectedItemPosition()));
-                    binding.rvProduct.setAdapter(new OrderProductRecyclerAdapter(context, OrderActivity.this, productsItemList, selectedProductList, outletType,OrderActivity.this));
+                    binding.rvProduct.setAdapter(new OrderProductRecyclerAdapter(context, productsItemList, selectedProductList, outletType, OrderActivity.this));
                 }
             }
 
@@ -165,7 +165,7 @@ public class OrderActivity extends AppCompatActivity implements OrderProductRecy
             brandID.add(Integer.valueOf(result.getId()));
         }
         ArrayAdapter<String> adapter = new ArrayAdapter<>(context, R.layout.color_spinner_layout_white, brandName);
-       // ArrayAdapter adapter= (ArrayAdapter) ArrayAdapter.createFromResource(this,brandName,R.layout.color_spinner_layout_white);
+        // ArrayAdapter adapter= (ArrayAdapter) ArrayAdapter.createFromResource(this,brandName,R.layout.color_spinner_layout_white);
         binding.spProductBrand.setAdapter(adapter);
         binding.spProductBrand.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -173,7 +173,7 @@ public class OrderActivity extends AppCompatActivity implements OrderProductRecy
                 if (position != 0) {
                     binding.srlProduct.setRefreshing(false);
                     List<ProductsItem> productsItemList = databaseHandler.getProduct(categoryID.get(binding.spProductCategory.getSelectedItemPosition()), brandID.get(position));
-                    binding.rvProduct.setAdapter(new OrderProductRecyclerAdapter(context, OrderActivity.this, productsItemList, selectedProductList, outletType,OrderActivity.this));
+                    binding.rvProduct.setAdapter(new OrderProductRecyclerAdapter(context, productsItemList, selectedProductList, outletType, OrderActivity.this));
                 }
             }
 
@@ -182,12 +182,13 @@ public class OrderActivity extends AppCompatActivity implements OrderProductRecy
             }
         });
     }
+
     OrderProductRecyclerAdapter mOrderProductRecyclerAdapter;
 
     public void getProducts() {
         binding.srlProduct.setRefreshing(false);
         List<ProductsItem> productsItemList = databaseHandler.getProduct(categoryID.get(binding.spProductCategory.getSelectedItemPosition()), brandID.get(binding.spProductBrand.getSelectedItemPosition()));
-        mOrderProductRecyclerAdapter =  new OrderProductRecyclerAdapter(context, OrderActivity.this, productsItemList, selectedProductList, outletType,this);
+        mOrderProductRecyclerAdapter = new OrderProductRecyclerAdapter(context, productsItemList, selectedProductList, outletType, this);
         binding.rvProduct.setAdapter(mOrderProductRecyclerAdapter);
         //if this activity called from product activity
         update_Total_Discount_Grnd();
@@ -208,32 +209,40 @@ public class OrderActivity extends AppCompatActivity implements OrderProductRecy
     }
 
     @Override
-    public void onSetSelectedProduct(SelectedProductHelper selectedProduct) {
+    public void onSetSelectedProduct(List<SelectedProductHelper> selectedProducts) {
 
-        for (Iterator<SelectedProductHelper> iterator = selectedProductList.iterator(); iterator.hasNext(); ) {
-            SelectedProductHelper selected = iterator.next();
-            if (selected.getProductName().equalsIgnoreCase(selectedProduct.getProductName()) && selected.getProductID().equalsIgnoreCase(selectedProduct.getProductID())) {
+        List<SelectedProductHelper> tempProductList = new ArrayList<>(selectedProductList);
+
+        for (SelectedProductHelper selected : tempProductList) {
+
+
+            if (selected.getProductName().equalsIgnoreCase(selectedProducts.get(0).getProductName())//as 0 no product of selected product list os ordered product
+                    && selected.getProductID().equalsIgnoreCase(selectedProducts.get(0).getProductID())
+                    && !selected.isFree()//if the products in the cart is not free then we replace the product.
+            ) {
                 Log.d("tareq_test", "product matched" + selected.getProductName());
-                iterator.remove();
+
+
+                //region Free product should be removed along with Ordered product
+                //if next product is free product then remove that too
+                try {
+                    int indexOfSelectedProduct = selectedProductList.indexOf(selected);
+                    if (selectedProductList.get(indexOfSelectedProduct + 1).isFree())
+                        selectedProductList.remove(indexOfSelectedProduct + 1);
+                } catch (Exception e) {
+                    Log.e("tareq_test", "Error while removing next free product");
+                }
+
+                selectedProductList.remove(selected); //as we removing free item according to index with the help of SelectedProduct we can't remove this first. First remove free Item then Order Item
+                //endregion
+
             }
         }
 
 
-        /*for (SelectedProductHelper selected : selectedProductList) {
-            if (selected.getProductName().equalsIgnoreCase(selectedProduct.getProductName()) && selected.getProductID().equalsIgnoreCase(selectedProduct.getProductID())) {
-                Log.d("tareq_test", "product matched" + selected.getProductName());
 
-                selectedProductList.remove(selected);
-            }
-        }*/
-     /*   if (selectedProductList.contains(selectedProduct)) {
-            selectedProductList.remove(selectedProductList.indexOf(selectedProduct));
-            selectedProductList.add(selectedProductList.indexOf(selectedProduct), selectedProduct);
-        } else
-     */
-        selectedProductList.add(selectedProduct);
+        selectedProductList.addAll(selectedProducts);
 
-        System.out.println("Product list:" + new Gson().toJson(selectedProductList) + "\nIndex: " + selectedProductList.indexOf(selectedProduct));
 
         Double totalAmt = 0.00;
         Double totalDiscount = 0.00;
@@ -246,18 +255,25 @@ public class OrderActivity extends AppCompatActivity implements OrderProductRecy
         binding.tvTotalGr.setText(String.format("%.2f", (totalAmt - totalDiscount)));
         Log.d("tareq_test", "" + totalAmt + " " + totalDiscount + " ");
 
-       // getProducts();//for refreshing
 
-        updateBadge();
+        updateBadge(); //on product add in the cart list update badge
     }
 
     @Override
     public void onRemoveSelectedProduct(SelectedProductHelper selectedProduct) {
-        if (selectedProductList.contains(selectedProduct)) {
-            selectedProductList.remove(selectedProductList.indexOf(selectedProduct));
+
+        //region Remove the free product along with ordered product
+        //if next product is free product then remove that too
+        try {
+            int indexOfSelectedProduct = selectedProductList.indexOf(selectedProduct);
+            if (selectedProductList.get(indexOfSelectedProduct + 1).isFree())
+                selectedProductList.remove(indexOfSelectedProduct + 1);
+        } catch (Exception e) {
+            Log.e("tareq_test", "Error while removing next free product");
         }
 
-        System.out.println("Product list:" + new Gson().toJson(selectedProductList) + "\nIndex: " + selectedProductList.indexOf(selectedProduct));
+        selectedProductList.remove(selectedProduct);//as we removing free item according to index with the help of SelectedProduct we can't remove this first. First remove free Item then Order Item
+        //endregion
 
 
         Double totalAmt = 0.00;
@@ -272,7 +288,7 @@ public class OrderActivity extends AppCompatActivity implements OrderProductRecy
         binding.tvTotalGr.setText(String.format("%.2f", (totalAmt - totalDiscount)));
         Log.d("tareq_test", "" + totalAmt + " " + totalDiscount + " ");
 
-        updateBadge();
+        updateBadge(); //on remove item need to update the badge
     }
 
     @Override
@@ -287,13 +303,14 @@ public class OrderActivity extends AppCompatActivity implements OrderProductRecy
     }
 
     TextView textCartItemCount;
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_order, menu);
         final MenuItem menuItem = menu.findItem(R.id.action_cart);
 
         View actionView = menuItem.getActionView();
-        textCartItemCount = (TextView) actionView.findViewById(R.id.cart_badge);
+        textCartItemCount = actionView.findViewById(R.id.cart_badge);
 
         updateBadge();
 

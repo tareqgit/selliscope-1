@@ -41,6 +41,7 @@ import com.humaclab.selliscope.utils.SessionManager;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -154,7 +155,7 @@ public class ActivityCart extends AppCompatActivity implements  SelectedProductR
             salesReturnTotal+=salesReturn2019SelectedProduct.getProductTotal();
         }
 
-        binding.tvTotal.setText(String.format("%s - %s", String.valueOf(total), String.valueOf(salesReturnTotal)));
+        binding.tvTotal.setText(String.format("%s - %s", String.format(Locale.ENGLISH,"%.2f",total), String.format(Locale.ENGLISH,"%.2f",salesReturnTotal)));
 
         if (!binding.etDiscount.getText().toString().equals("")){
             binding.tvGrandTotal.setText(String.valueOf(
@@ -167,6 +168,7 @@ public class ActivityCart extends AppCompatActivity implements  SelectedProductR
     }
 
     public  static PosModel sPosModel;
+
     public void print(){
         PosModel.Builder posModelBuilder = new PosModel.Builder();
         posModelBuilder.withOutletName(outletName);
@@ -270,6 +272,7 @@ public class ActivityCart extends AppCompatActivity implements  SelectedProductR
                 product.qty = Integer.parseInt(selectedProduct.getProductQuantity());
                 product.row = Integer.parseInt(selectedProduct.getProductRow());
                 product.price = selectedProduct.getProductPrice();
+                product.is_free=selectedProduct.isFree()?1:0;
                 product.tpDiscount = Double.parseDouble(selectedProduct.getTpDiscount());
                 product.productTotal = Double.parseDouble(selectedProduct.getTotalPrice());
                 product.productSubTotal = Double.parseDouble(selectedProduct.getTppromotionGrandPrice());

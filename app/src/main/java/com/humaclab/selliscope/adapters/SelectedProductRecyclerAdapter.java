@@ -38,12 +38,7 @@ public class SelectedProductRecyclerAdapter extends RecyclerView.Adapter<Selecte
         notifyDataSetChanged();
     }
 
-    public SelectedProductRecyclerAdapter(Context context, ActivityCart activityCart, List<SelectedProductHelper> selectedProductList) {
-        this.context = context;
-        this.activityCart = activityCart;
-      //  this.selectedProductList = selectedProductList;
 
-    }
     public SelectedProductRecyclerAdapter(Context context, ActivityCart activityCart, OnRemoveFromCartListener onRemoveFromCartListener) {
         this.context = context;
         this.activityCart = activityCart;
@@ -63,8 +58,49 @@ public class SelectedProductRecyclerAdapter extends RecyclerView.Adapter<Selecte
     @Override
     public void onBindViewHolder(SelectedProductViewHolder holder, final int position) {
         Log.d("tareq_test" , "size"+ mSelectedProductList.size());
+
+       //for default product
+
+        //region for Product Reset
+        holder.getBinding().btnRemove.setVisibility(View.VISIBLE);
+
+        holder.getBinding().textViewPromotionLabel.setVisibility(View.VISIBLE);
+        holder.getBinding().textViewPromotionLabel.setText("PromotionalDiscount");
+        holder.getBinding().textViewPromotionEqual.setVisibility(View.VISIBLE);
+        holder.getBinding().tvPromotiondiscount.setVisibility(View.VISIBLE);
+
+        holder.getBinding().textViewTotalLabel.setVisibility(View.VISIBLE);
+        holder.getBinding().textViewTotalEqual.setVisibility(View.VISIBLE);
+        holder.getBinding().tvFinaltotal.setVisibility(View.VISIBLE);
+
+        holder.getBinding().textViewFree.setVisibility(View.GONE);
+        holder.getBinding().textViewReturn.setVisibility(View.GONE);
+        //endregion
+
+
+
         if((isItOrder(mSelectedProductList.get(position)))){
             SelectedProductHelper selectedProduct = (SelectedProductHelper) mSelectedProductList.get(position);
+            if( selectedProduct.isFree()) {
+                holder.getBinding().btnRemove.setVisibility(View.GONE);
+
+                holder.getBinding().textViewPromotionLabel.setVisibility(View.GONE);
+                holder.getBinding().textViewPromotionEqual.setVisibility(View.GONE);
+                holder.getBinding().tvPromotiondiscount.setVisibility(View.GONE);
+
+                holder.getBinding().textViewTotalLabel.setVisibility(View.GONE);
+                holder.getBinding().textViewTotalEqual.setVisibility(View.GONE);
+                holder.getBinding().tvFinaltotal.setVisibility(View.GONE);
+
+                holder.getBinding().textViewFree.setVisibility(View.VISIBLE);
+
+            }
+
+            if(selectedProduct.getFreeProductdetails()!=null && !selectedProduct.getFreeProductdetails().equals("") ){
+                holder.getBinding().textViewPromotionLabel.setText(selectedProduct.getFreeProductdetails().toString());
+            //    holder.getBinding().textViewPromotionEqual.setVisibility(View.GONE);
+            //    holder.getBinding().tvPromotiondiscount.setVisibility(View.GONE);
+            }
          //   holder.getBinding().setVariable(BR.selectedProduct, selectedProduct);
             holder.getBinding().tvProductName.setText(selectedProduct.getProductName());
             holder.getBinding().tvPrice.setText(selectedProduct.getProductPrice());
@@ -75,7 +111,14 @@ public class SelectedProductRecyclerAdapter extends RecyclerView.Adapter<Selecte
 
             holder.getBinding().btnRemove.setOnClickListener(v -> {
                 if (selectedProductList.size() != 0) {
+
+                    try {
+                        if( selectedProductList.get(position+1).isFree()) selectedProductList.remove(position+1);
+                    } catch (Exception e) {
+                       Log.e("tareq_test" , "can't remove free item from cart: "+ e.getMessage());
+                    }
                     selectedProductList.remove(position);
+
                     SelectedProductRecyclerAdapter.this.notifyItemRemoved(position);
                     SelectedProductRecyclerAdapter.this.notifyItemRangeChanged(position, selectedProductList.size());
                     mOnRemoveFromCartListener.onRemoveSelectedProduct(selectedProduct);
@@ -94,9 +137,11 @@ public class SelectedProductRecyclerAdapter extends RecyclerView.Adapter<Selecte
             holder.getBinding().tvFinaltotal.setText(String.valueOf(selectedProduct.getProductTotal()));
 
             //for hiding promotional discount
-            holder.getBinding().textView5.setVisibility(View.GONE);
-            holder.getBinding().textView6.setVisibility(View.GONE);
+            holder.getBinding().textViewPromotionLabel.setVisibility(View.GONE);
+            holder.getBinding().textViewPromotionEqual.setVisibility(View.GONE);
             holder.getBinding().tvPromotiondiscount.setVisibility(View.GONE);
+
+            //for default products
 
             //for showing return badge
             holder.getBinding().textViewReturn.setVisibility(View.VISIBLE);

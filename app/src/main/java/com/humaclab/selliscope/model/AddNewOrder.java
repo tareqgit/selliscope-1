@@ -58,6 +58,9 @@ public class AddNewOrder implements Serializable {
             @SerializedName("productSubTotal")
             public Double productSubTotal;
 
+            @SerializedName("is_free")
+            public int is_free;
+
             @SerializedName("order_return_id")
             public int order_return_id;
         }

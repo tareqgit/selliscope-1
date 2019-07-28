@@ -136,7 +136,7 @@
             app:layout_constraintTop_toTopOf="@+id/textView4" />
 
         <TextView
-            android:id="@+id/textView5"
+            android:id="@+id/textView_promotion_label"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_gravity="center"
@@ -151,7 +151,7 @@
             app:layout_constraintTop_toBottomOf="@+id/tv_price" />
 
         <TextView
-            android:id="@+id/textView6"
+            android:id="@+id/textView_promotion_equal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -161,9 +161,9 @@
             android:gravity="center"
             android:text="="
             android:textColor="#000"
-            app:layout_constraintBottom_toBottomOf="@+id/textView5"
-            app:layout_constraintStart_toEndOf="@+id/textView5"
-            app:layout_constraintTop_toTopOf="@+id/textView5" />
+            app:layout_constraintBottom_toBottomOf="@+id/textView_promotion_label"
+            app:layout_constraintStart_toEndOf="@+id/textView_promotion_label"
+            app:layout_constraintTop_toTopOf="@+id/textView_promotion_label" />
         <!--   android:text='@{selectedProduct.tpDiscount}'-->
         <TextView
             android:id="@+id/tv_promotiondiscount"
@@ -178,12 +178,12 @@
             android:textAlignment="center"
             android:textColor="#000"
             android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@+id/textView6"
+            app:layout_constraintBottom_toBottomOf="@+id/textView_promotion_equal"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/textView6" />
+            app:layout_constraintTop_toTopOf="@+id/textView_promotion_equal" />
 
         <TextView
-            android:id="@+id/textView7"
+            android:id="@+id/textView_total_label"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_gravity="center"
@@ -197,10 +197,10 @@
             android:textColor="#000"
             app:layout_constraintBottom_toTopOf="@+id/tableRow2"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView5" />
+            app:layout_constraintTop_toBottomOf="@+id/textView_promotion_label" />
 
         <TextView
-            android:id="@+id/textView8"
+            android:id="@+id/textView_total_equal"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_gravity="center"
@@ -210,9 +210,9 @@
             android:gravity="center"
             android:text="="
             android:textColor="#000"
-            app:layout_constraintBottom_toBottomOf="@+id/textView7"
-            app:layout_constraintStart_toEndOf="@+id/textView7"
-            app:layout_constraintTop_toTopOf="@+id/textView7" />
+            app:layout_constraintBottom_toBottomOf="@+id/textView_total_label"
+            app:layout_constraintStart_toEndOf="@+id/textView_total_label"
+            app:layout_constraintTop_toTopOf="@+id/textView_total_label" />
 
         <!--  android:text='@{Double.toString(Double.parseDouble(selectedProduct.totalPrice) - Double.parseDouble(selectedProduct.tpDiscount))}'-->
         <TextView
@@ -228,9 +228,9 @@
             android:textAlignment="center"
             android:textColor="#000"
             android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@+id/textView8"
+            app:layout_constraintBottom_toBottomOf="@+id/textView_total_equal"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/textView8" />
+            app:layout_constraintTop_toTopOf="@+id/textView_total_equal" />
 
         <TableRow
             android:id="@+id/tableRow2"
@@ -256,6 +256,26 @@
             android:shadowRadius="2"
             android:text="Return"
             android:textColor="@color/light_font"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/textViewFree"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:background="@drawable/moss_gradient_blue_free"
+            android:padding="2dp"
+            android:paddingStart="8dp"
+            android:paddingEnd="24dp"
+            android:shadowColor="@color/text_shadow"
+            android:shadowDx="1"
+            android:shadowDy="1"
+            android:shadowRadius="2"
+            android:text="Free"
+            android:textColor="@color/light_font"
+
             android:visibility="gone"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

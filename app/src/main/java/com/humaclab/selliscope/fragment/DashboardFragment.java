@@ -51,6 +51,9 @@ public class DashboardFragment extends Fragment {
 //        dashboadItems.add(new DashboardItem("Payment", R.drawable.ic_payments));
         dashboadItems.add(new DashboardItem(getString(R.string.inspection), R.drawable.ic_inspection));
         dashboadItems.add(new DashboardItem("Promotional Products", R.drawable.ic_insights));
+        dashboadItems.add(new DashboardItem("Help", R.drawable.ic_help_icon));
+
+
  //       dashboadItems.add(new DashboardItem(getString(R.string.sales_return), R.drawable.ic_sales_return));
 //        dashboadItems.add(new DashboardItem("Insights", R.drawable.ic_insights));
         gridLayoutManager = new GridLayoutManager(activity, itemNumber);
@@ -116,11 +119,12 @@ public class DashboardFragment extends Fragment {
                                                 Toast.LENGTH_SHORT).show();
                                         break;
                                     }
-/*                                    case 5: {
-                                        Toast.makeText(getActivity(), "This feature is under development.",
-                                                Toast.LENGTH_SHORT).show();
-                                        break;
-                                    }*/
+                                   case 5: {
+                                       BottomSheetHelpDialogFragment bottomSheetHelpDialogFragment = new BottomSheetHelpDialogFragment();
+                                       assert getFragmentManager() != null;
+                                       bottomSheetHelpDialogFragment.show(getFragmentManager(),bottomSheetHelpDialogFragment.getTag() );
+                                       break;
+                                    }
                                     default: {
                                         Toast.makeText(getActivity(), "Please upgrade your package" +
                                                         " to use this feature",

@@ -2,6 +2,7 @@ package com.humaclab.selliscope.fragment;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -70,8 +71,13 @@ public class DashboardFragment extends Fragment {
                             public void onItemClick(View view, int position) {
                                 switch (position) {
                                     case 0: {
-                                        getActivity().startActivity(new Intent(getActivity(),
-                                                RouteActivity.class));
+
+                                        if (Build.VERSION.SDK_INT <= 27) {
+                                            getActivity().startActivity(new Intent(getActivity(),
+                                                    RouteActivity.class));
+                                        }else{
+                                            Toast.makeText(getContext(), "Please, Wait till next update", Toast.LENGTH_SHORT).show();
+                                        }
                                         break;
                                     }
                                     case 1: {

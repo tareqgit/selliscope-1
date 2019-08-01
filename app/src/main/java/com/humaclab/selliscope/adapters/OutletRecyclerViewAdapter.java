@@ -4,9 +4,11 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
+import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -34,6 +36,7 @@ import com.humaclab.selliscope.activity.OutletActivity;
 import com.humaclab.selliscope.activity.OutletDetailsActivity;
 import com.humaclab.selliscope.activity.OutletMapActivity;
 import com.humaclab.selliscope.activity.PurchaseHistoryActivity;
+import com.humaclab.selliscope.databinding.OutletItemBinding;
 import com.humaclab.selliscope.model.Outlets;
 import com.humaclab.selliscope.model.UserLocation;
 import com.humaclab.selliscope.utils.DatabaseHandler;
@@ -97,36 +100,35 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
         shimmerDrawable.setShimmer(shimmer);
 
 
+
         assert outlet.outletImgUrl != null;
         if(!outlet.outletImgUrl.equals("")) {
         Glide.with(context).
                 load(outlet.outletImgUrl)
                 .thumbnail(0.1f)
                 .placeholder(shimmerDrawable)
-                .centerCrop()
                 .transition(DrawableTransitionOptions.withCrossFade())
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
-                .into(holder.iv_outlet_image);
+                .into(holder.getBinding().outletImage);
         }else{
-            holder.iv_outlet_image.setImageResource(R.drawable.selliscope_splash);
+            holder.getBinding().outletImage.setImageResource(R.drawable.selliscope_splash);
         }
-        holder.tvOutletName.setText(outlet.outletName);
-        holder.tvOutletID.setText(outlet.ClientID == null ? "Pending" : outlet.ClientID);
-        holder.tvOutletAddress.setText(outlet.outletAddress);
-        holder.tvOutletContactNumber.setText(outlet.phone);
-        holder.tvOutletOwnerName.setText(outlet.ownerName);
+        holder.getBinding().tvOutletName.setText(outlet.outletName);
+        holder.getBinding().tvClientId.setText(outlet.ClientID == null ? "Pending" : outlet.ClientID);
+        holder.getBinding().tvOutletAddress.setText(outlet.outletAddress);
+        holder.getBinding().tvOutletContactNumber.setText(outlet.phone);
+        holder.getBinding().tvOwnerName.setText(outlet.ownerName);
         if (outlet.outlet_routeplan.equals("1")) {
-            holder.lo_routeplan_background2.setImageResource(R.drawable.moss_gradient2);
+            holder.getBinding().routeplanBackground2.setImageResource(R.drawable.moss_gradient2);
 
         }else{
-            holder.lo_routeplan_background2.setImageResource(R.color.white);
+            holder.getBinding().routeplanBackground2.setImageResource(R.color.white);
         }
-        holder.checkInButton.setOnClickListener(new View.OnClickListener() {
+        holder.getBinding().btnCheckIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                holder.pbCheckIn.setVisibility(View.VISIBLE);
+                holder.getBinding().pbCheckIn.setVisibility(View.VISIBLE);
                 googleApiClient = new GoogleApiClient.Builder(context)
-                        .addApi(Awareness.API)
                         .addApi(LocationServices.API)
                         .build();
                 googleApiClient.connect();
@@ -136,32 +138,38 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
                         Location outletLocation = new Location("outlet_location");
                         outletLocation.setLatitude(outlet.outletLatitude);
                         outletLocation.setLongitude(outlet.outletLongitude);
-                        getLocation(outlet.outletId, outletLocation, holder.pbCheckIn);
+                        getLocation(outlet.outletId, outletLocation, holder.getBinding().pbCheckIn);
                     }
 
                     @Override
                     public void onConnectionSuspended(int i) {
-                        holder.pbCheckIn.setVisibility(View.INVISIBLE);
+                        holder.getBinding().pbCheckIn.setVisibility(View.INVISIBLE);
                         Toast.makeText(context, "Didn't able to get location " +
                                 "data. Please, try again later!", Toast.LENGTH_SHORT).show();
                     }
                 });
             }
         });
-        holder.mapButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //TODO: add map direction layout here.
-                Intent intent = new Intent(context, OutletMapActivity.class);
-                intent.putExtra("outletName", outlet.outletName);
-                intent.putExtra("outletID", outlet.outletId);
-                intent.putExtra("outletLat", outlet.outletLatitude);
-                intent.putExtra("outletLong", outlet.outletLongitude);
 
-                context.startActivity(intent);
+            holder.getBinding().btnMap.setOnClickListener(v -> {
+
+                if (Build.VERSION.SDK_INT <= 27) {
+                    //TODO: add map direction layout here.
+                    Intent intent = new Intent(context, OutletMapActivity.class);
+                    intent.putExtra("outletName", outlet.outletName);
+                    intent.putExtra("outletID", outlet.outletId);
+                    intent.putExtra("outletLat", outlet.outletLatitude);
+                    intent.putExtra("outletLong", outlet.outletLongitude);
+
+                    context.startActivity(intent);
+                }else{
+                Toast.makeText(context, "Please, Wait till next update", Toast.LENGTH_SHORT).show();
             }
-        });
-        holder.historyButton.setOnClickListener(new View.OnClickListener() {
+            });
+
+
+
+        holder.getBinding().btnHistory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, PurchaseHistoryActivity.class);
@@ -173,24 +181,21 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
 
     private void getLocation(final int outletId, final Location outletLocation, final ProgressBar progressbar) {
         SendUserLocationData sendUserLocationData = new SendUserLocationData(context);
-        sendUserLocationData.getInstantLocation(activity, new SendUserLocationData.OnGetLocation() {
-            @Override
-            public void getLocation(Double latitude, Double longitude) {
+        sendUserLocationData.getInstantLocation(activity, (latitude, longitude) -> {
 
-                Location location = new Location("");
-                location.setLatitude(latitude);
-                location.setLongitude(longitude);
-                if (location.distanceTo(outletLocation) <= sessionManager.getDiameter()) {
-                    if (NetworkUtility.isNetworkAvailable(context)) {
-                        sendUserLocation(location, outletId, progressbar);
-                    } else {
-                        progressbar.setVisibility(View.INVISIBLE);
-                        Toast.makeText(context, "Enable Wifi or Mobile data.", Toast.LENGTH_SHORT).show();
-                    }
+            Location location = new Location("");
+            location.setLatitude(latitude);
+            location.setLongitude(longitude);
+            if (location.distanceTo(outletLocation) <= sessionManager.getDiameter()) {
+                if (NetworkUtility.isNetworkAvailable(context)) {
+                    sendUserLocation(location, outletId, progressbar);
                 } else {
                     progressbar.setVisibility(View.INVISIBLE);
-                    Toast.makeText(context, "You are not within 70m radius of the outlet.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "Enable Wifi or Mobile data.", Toast.LENGTH_SHORT).show();
                 }
+            } else {
+                progressbar.setVisibility(View.INVISIBLE);
+                Toast.makeText(context, "You are not within 70m radius of the outlet.", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -250,42 +255,27 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
     }
 
     public class OutletViewHolder extends RecyclerView.ViewHolder {
-        CardView cardView;
-        ImageView iv_outlet_image;
 
-        TextView tvOutletName, tvOutletAddress, tvOutletOwnerName, tvOutletContactNumber,tvOutletID;
-        Button checkInButton, mapButton, historyButton;
-        ProgressBar pbCheckIn;
-        TextView tv_checkroute;
-        ImageView lo_routeplan_background2;
+       private OutletItemBinding mOutletItemBinding;
+
 
         public OutletViewHolder(View itemView) {
             super(itemView);
+            mOutletItemBinding = DataBindingUtil.bind(itemView);
 
-            cardView = itemView.findViewById(R.id.cv_outlet_item);
-            tvOutletName = itemView.findViewById(R.id.tv_outlet_name);
-            tvOutletID = itemView.findViewById(R.id.tv_client_id);
-            tvOutletAddress = itemView.findViewById(R.id.tv_outlet_address);
-            tvOutletContactNumber = itemView.findViewById(R.id.tv_outlet_contact_number);
-            tvOutletOwnerName = itemView.findViewById(R.id.tv_owner_name);
-            checkInButton = itemView.findViewById(R.id.btn_check_in);
-            mapButton = itemView.findViewById(R.id.btn_map);
-            historyButton = itemView.findViewById(R.id.btn_history);
-            pbCheckIn = itemView.findViewById(R.id.pb_check_in);
-            iv_outlet_image = itemView.findViewById(R.id.iv_outlet_image);
 
-            lo_routeplan_background2 = itemView.findViewById(R.id.routeplan_background2);
 
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(context, OutletDetailsActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    //intent.putExtra("outletID",outlet))
-                    intent.putExtra("outletDetails", outletItems.outlets.get(getLayoutPosition()));
-                    context.startActivity(intent);
-                }
+            itemView.setOnClickListener(v -> {
+                Intent intent = new Intent(context, OutletDetailsActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                //intent.putExtra("outletID",outlet))
+                intent.putExtra("outletDetails", outletItems.outlets.get(getLayoutPosition()));
+                context.startActivity(intent);
             });
+        }
+
+        public OutletItemBinding getBinding() {
+            return mOutletItemBinding;
         }
     }
 }

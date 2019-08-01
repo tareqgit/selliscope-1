@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.core.app.ActivityCompat;
@@ -12,7 +13,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.telephony.TelephonyManager;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -21,6 +24,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.gson.Gson;
 import com.humaclab.selliscope.BuildConfig;
 import com.humaclab.selliscope.R;
@@ -36,6 +40,8 @@ import com.humaclab.selliscope.utils.SessionManager;
 import java.io.IOException;
 import java.util.Locale;
 
+
+import jp.wasabeef.blurry.Blurry;
 import lib.kingja.switchbutton.SwitchMultiButton;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -44,9 +50,7 @@ import retrofit2.Response;
 import timber.log.Timber;
 
 public class LoginActivity extends AppCompatActivity {
-    private TextView forgotPassword;
-    private EditText email, password;
-    private Button signIn;
+    private TextInputLayout email, password;
     private SelliscopeApiEndpointInterface apiService;
     private SessionManager sessionManager;
     private ProgressBar loginProgresssBar;
@@ -71,6 +75,8 @@ public class LoginActivity extends AppCompatActivity {
         //For Bangla
         LoadLocale();
         setContentView(R.layout.activity_login);
+
+        Blurry.with(this).radius(10).sampling(8).async().onto(findViewById(R.id.back));
         //For Bangla
         //rg_language = findViewById(R.id.rg_language);
         mSwitchMultiButton = findViewById(R.id.swith_language);
@@ -84,20 +90,17 @@ public class LoginActivity extends AppCompatActivity {
         // rbEnglish.setOnClickListener(this);
         LoadPreferences();
 
-        mSwitchMultiButton.setOnSwitchListener(new SwitchMultiButton.OnSwitchListener() {
-            @Override
-            public void onSwitch(int position, String tabText) {
-                if (position == 1) {
-                    //Do something
-                    SavePreferences(KEY_SAVED_RADIO_BUTTON_INDEX, 1);
-                    setLocale("bn");
-                    recreate();
+        mSwitchMultiButton.setOnSwitchListener((position, tabText) -> {
+            if (position == 1) {
+                //Do something
+                SavePreferences(KEY_SAVED_RADIO_BUTTON_INDEX, 1);
+                setLocale("bn");
+                recreate();
 
-                } else if (position == 0) {
-                    SavePreferences(KEY_SAVED_RADIO_BUTTON_INDEX, 0);
-                    setLocale("en");
-                    recreate();
-                }
+            } else if (position == 0) {
+                SavePreferences(KEY_SAVED_RADIO_BUTTON_INDEX, 0);
+                setLocale("en");
+                recreate();
             }
         });
 
@@ -111,50 +114,50 @@ public class LoginActivity extends AppCompatActivity {
         //View version
 
         loginProgresssBar = findViewById(R.id.pb_login);
-        forgotPassword = findViewById(R.id.tv_forgot_password);
-        forgotPassword.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(LoginActivity.this, "Please contact to your admin.", Toast.LENGTH_SHORT).show();
-            }
-        });
-        email = findViewById(R.id.et_email);
-        password = findViewById(R.id.et_password);
-        signIn = findViewById(R.id.btn_sign_in);
-        signIn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        TextView forgotPassword = findViewById(R.id.tv_forgot_password);
+        forgotPassword.setOnClickListener(v -> Toast.makeText(LoginActivity.this, "Please contact to your admin.", Toast.LENGTH_SHORT).show());
+        email = findViewById(R.id.textInputLayoutEmail);
+        password = findViewById(R.id.textInputLayoutPassword);
+        Button signIn = findViewById(R.id.btn_sign_in);
+        signIn.setOnClickListener(v -> login_validate());
 
-                boolean isValidEmail = true;
-                boolean isValidPassword = true;
-                if (email.getText().toString().trim().isEmpty()) {
-                    email.setError("Email is required!");
-                    isValidEmail = false;
-                } else if (!isValidEmail(email.getText().toString().trim())) {
-                    email.setError("Invalid email address!");
-                    isValidEmail = false;
-                } else {
-                    isValidEmail = true;
-                }
-                if (password.getText().toString().trim().isEmpty()) {
-                    password.setError("Password is required!");
-                    isValidPassword = false;
-                } else {
-                    isValidPassword = true;
-                }
-                if (isValidEmail && isValidPassword) {
-                    if (NetworkUtility.isNetworkAvailable(LoginActivity.this) == true) {
-                        loginProgresssBar.setVisibility(View.VISIBLE);
-                        getUser(email.getText().toString().trim(), password.getText().toString()
-                                .trim());
-                    } else {
-                        Toast.makeText(LoginActivity.this, "Network Unavailable.Please, connect " +
-                                "to wifi or use mobile data.", Toast.LENGTH_SHORT).show();
-                    }
-
-                }
+        password.getEditText().setOnEditorActionListener((v, actionId, event) -> {
+            if(actionId== EditorInfo.IME_ACTION_DONE){
+                login_validate();
             }
+            return false;
         });
+    }
+
+    private void login_validate() {
+        boolean isValidEmail = true;
+        boolean isValidPassword = true;
+        if (email.getEditText().getText().toString().trim().isEmpty()) {
+            email.setError("Email is required!");
+            isValidEmail = false;
+        } else if (!isValidEmail(email.getEditText().getText().toString().trim())) {
+            email.setError("Invalid email address!");
+            isValidEmail = false;
+        } else {
+            isValidEmail = true;
+        }
+        if (password.getEditText().getText().toString().trim().isEmpty()) {
+            password.setError("Password is required!");
+            isValidPassword = false;
+        } else {
+            isValidPassword = true;
+        }
+        if (isValidEmail && isValidPassword) {
+            if (NetworkUtility.isNetworkAvailable(LoginActivity.this) == true) {
+                loginProgresssBar.setVisibility(View.VISIBLE);
+                getUser(email.getEditText().getText().toString().trim(), password.getEditText().getText().toString()
+                        .trim());
+            } else {
+                Toast.makeText(LoginActivity.this, "Network Unavailable.Please, connect " +
+                        "to wifi or use mobile data.", Toast.LENGTH_SHORT).show();
+            }
+
+        }
     }
 
     void getUser(final String email, final String password) {

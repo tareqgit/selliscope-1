@@ -21,6 +21,8 @@ import com.humaclab.selliscope.model.Outlets;
 import com.humaclab.selliscope.model.target.OutletTarget;
 import com.humaclab.selliscope.utils.SessionManager;
 
+import java.util.Objects;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -39,7 +41,7 @@ public class OutletDetailsActivity extends AppCompatActivity {
         TextView toolbarTitle = findViewById(R.id.tv_toolbar_title);
         toolbarTitle.setText(getString(R.string.outlet_information));
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         outlet = (Outlets.Outlet) getIntent().getSerializableExtra("outletDetails");
         binding.setVariable(com.humaclab.selliscope.BR.outletDetails, outlet);
         loadTargetOutlet();
@@ -52,21 +54,15 @@ public class OutletDetailsActivity extends AppCompatActivity {
                 .thumbnail(0.5f)
                 .into(binding.ivAddOutletImage);
 
-        binding.btnEditOutlet.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), EditOutletActivity.class);
-                intent.putExtra("outletDetails", outlet);
-                startActivity(intent);
-            }
+        binding.btnEditOutlet.setOnClickListener(v -> {
+            Intent intent = new Intent(getApplicationContext(), EditOutletActivity.class);
+            intent.putExtra("outletDetails", outlet);
+            startActivity(intent);
         });
-        binding.btnCallCard.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), CallCardActivity.class);
-                intent.putExtra("outletDetails", outlet);
-                startActivity(intent);
-            }
+        binding.btnCallCard.setOnClickListener(v -> {
+            Intent intent = new Intent(getApplicationContext(), CallCardActivity.class);
+            intent.putExtra("outletDetails", outlet);
+            startActivity(intent);
         });
     }
 

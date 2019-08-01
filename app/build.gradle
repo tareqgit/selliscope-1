@@ -97,9 +97,12 @@ dependencies {
     implementation 'com.github.eralpyucel:CircleProgressView:v1.1'
     implementation 'com.ogaclejapan.smarttablayout:library:1.6.1@aar'
     implementation 'com.jakewharton.timber:timber:4.5.1'
+
+
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
     implementation 'com.google.android.gms:play-services-location:17.0.0'
     implementation 'com.google.android.gms:play-services-awareness:16.0.0'
+
     implementation 'com.google.firebase:firebase-messaging:19.0.1'
     implementation 'com.google.firebase:firebase-core:17.0.0'
     /*implementation 'com.squareup.picasso:picasso:2.5.2'
@@ -135,6 +138,8 @@ dependencies {
     implementation 'pl.allegro.finance:tradukisto:1.8.0'
 
     implementation 'com.github.tareq3:PushDown_ExtSingleClick:1.0'
+
+    implementation 'jp.wasabeef:blurry:3.0.0'
 
     implementation files('libs/btsdk.jar')
     implementation files('libs/zixng.jar')

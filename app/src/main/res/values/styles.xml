@@ -11,6 +11,13 @@
 
     </style>
 
+<!--
+    <style name="LoginTextInputLayoutStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+        <item name="boxStrokeColor">#CFCFCF</item>
+        <item name="boxStrokeWidth">2dp</item>
+    </style>
+-->
+
     <style name="BottomBarItemVertical">
         <item name="android:textSize">@dimen/text_size_12</item>
         <item name="android:textColor">@color/white</item>

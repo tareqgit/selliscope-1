@@ -360,7 +360,6 @@ public class LocationMonitoringService extends Service implements
         //getting data from sqlite database
         for (UserVisit userVisit : dbHandler.getUSerVisits()) {
             userLocationVisits.add(new UserLocation.Visit(userVisit.getLatitude(), userVisit.getLongitude(), GetAddressFromLatLang.getAddressFromLatLan(getApplicationContext(), userVisit.getLatitude(), userVisit.getLongitude()), userVisit.getTimeStamp()));
-
         }
 
         userLocationVisits.add(new UserLocation.Visit(latitude, longitude, GetAddressFromLatLang.getAddressFromLatLan(getApplicationContext(), latitude, longitude), timeStamp));

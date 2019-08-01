@@ -1,105 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/back"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/splash_and_login_background">
-
-    <EditText
-        android:id="@+id/et_email"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:layout_marginBottom="20dp"
-        android:layout_marginLeft="30dp"
-        android:layout_marginRight="30dp"
-        android:background="@drawable/edit_text_shape"
-        android:hint="@string/email"
-        android:fontFamily="@font/latoregular"
-        android:imeOptions="actionNext"
-        android:inputType="textEmailAddress"
-        android:paddingBottom="5dp"
-        android:paddingLeft="23dp"
-        android:paddingRight="23dp"
-        android:paddingTop="5dp" />
-
-
-    <EditText
-        android:id="@+id/et_password"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/et_email"
-        android:layout_marginLeft="30dp"
-        android:layout_marginRight="30dp"
-        android:background="@drawable/edit_text_shape"
-        android:hint="@string/password"
-        android:fontFamily="@font/latoregular"
-        android:imeOptions="actionDone"
-        android:inputType="textPassword"
-        android:paddingBottom="5dp"
-        android:paddingLeft="23dp"
-        android:paddingRight="23dp"
-        android:paddingTop="5dp" />
-
-    <TextView
-        android:id="@+id/tv_forgot_password"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/et_password"
-        android:layout_centerHorizontal="true"
-        android:padding="@dimen/padding_16"
-        android:text="Forgot Password"
-        android:fontFamily="@font/latoregular"
-        android:textColor="@color/white"
-        android:textSize="@dimen/text_size_16"
-        android:textStyle="bold" />
-
-
-    <Button
-        android:id="@+id/btn_sign_in"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:layout_alignParentBottom="true"
-        android:background="@drawable/button_background"
-        android:gravity="center"
-        android:text="@string/sign_in"
-        android:fontFamily="@font/latoregular"
-        android:textColor="@color/white"
-        android:textSize="@dimen/text_size_16"
-        android:textStyle="bold" />
-
-
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_above="@+id/et_email"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="60dp"
-        android:src="@drawable/selliscope_login_icon" />
-
-    <ProgressBar
-        android:id="@+id/pb_login"
-        style="?android:attr/progressBarStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/tv_forgot_password"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="31dp"
-        android:visibility="invisible" />
-
-    <TextView
-        android:id="@+id/tv_selliscope_version"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/btn_sign_in"
-        android:layout_centerHorizontal="true"
-        android:padding="10dp"
-        android:text="Verison"
-        android:fontFamily="@font/latoregular"
-        android:textAlignment="center"
-        android:textColor="#ddd"
-        android:textSize="16sp" />
 
     <lib.kingja.switchbutton.SwitchMultiButton
         android:id="@+id/swith_language"
@@ -108,13 +14,13 @@
         android:layout_alignStart="@+id/imageView"
         android:layout_alignEnd="@+id/imageView"
         android:layout_alignParentTop="true"
-        android:layout_marginStart="-13dp"
 
-        android:layout_marginTop="7dp"
-        android:layout_marginEnd="-14dp"
-
+        android:layout_marginTop="16dp"
         android:padding="8dp"
         app:disableColor="@color/background_shimmer"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:selectedColor="#03A9F4"
         app:selectedTab="0"
         app:strokeRadius="8dp"
@@ -122,46 +28,184 @@
         app:switchTabs="@array/my_lang"
         app:textSize="14sp" />
 
-  <!-- <RadioGroup
-        android:id="@+id/rg_language"
-        android:layout_width="250dp"
-        android:layout_height="30dp"
-        android:layout_alignParentTop="true"
+
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+
         android:layout_centerHorizontal="true"
-        android:background="@drawable/pink_out_line"
+        android:layout_marginTop="32dp"
+        android:src="@drawable/selliscope_login_icon"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.501"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/swith_language" />
+
+
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputLayoutEmail"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        app:boxStrokeColor="@color/white"
+
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textColorHint="@color/text_shadow_white"
+       android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/pb_login">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Email"
+            android:imeOptions="actionNext"
+            android:singleLine="true"
+            android:inputType="textEmailAddress"
+            android:textColor="@color/text_shadow_white"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/textInputLayoutPassword"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        app:boxStrokeColor="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:textColorHint="@color/text_shadow_white"
+
+        app:passwordToggleEnabled="true"
+        app:passwordToggleTint="@color/grey_font"
+
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textInputLayoutEmail">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Password"
+            android:imeOptions="actionDone"
+            android:textColor="@color/text_shadow_white"
+            android:inputType="textPassword"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <TextView
+        android:id="@+id/tv_forgot_password"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="8dp"
+        android:fontFamily="@font/latoregular"
+        android:padding="@dimen/padding_16"
+        android:text="Forgot Password"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_size_16"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textInputLayoutPassword" />
+
+
+    <ProgressBar
+        android:id="@+id/pb_login"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_forgot_password"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="8dp"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+
+    <TextView
+        android:id="@+id/tv_selliscope_version"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/btn_sign_in"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="8dp"
+        android:fontFamily="@font/latoregular"
+        android:padding="10dp"
+        android:text="Verison"
+        android:textAlignment="center"
+        android:textColor="#ddd"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/btn_sign_in"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/btn_sign_in"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/button_background"
+        android:fontFamily="@font/latoregular"
         android:gravity="center"
-        android:orientation="horizontal">
+        android:text="@string/sign_in"
+        android:textColor="@color/white"
+        android:textSize="@dimen/text_size_16"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
-        <RadioButton
-            android:id="@+id/rbBangle"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="1dp"
-            android:layout_marginLeft="1dp"
-            android:layout_marginTop="1dp"
-            android:layout_weight="1"
-            android:background="@drawable/toggle_widget_background"
-            android:button="@null"
-            android:gravity="center"
-            android:text="Bangla"
-            android:fontFamily="@font/latoregular"
-            android:textColor="@drawable/button_text"
-            android:textStyle="bold" />
+    <!-- <RadioGroup
+          android:id="@+id/rg_language"
+          android:layout_width="250dp"
+          android:layout_height="30dp"
+          android:layout_alignParentTop="true"
+          android:layout_centerHorizontal="true"
+          android:background="@drawable/pink_out_line"
+          android:gravity="center"
+          android:orientation="horizontal">
 
-        <RadioButton
-            android:id="@+id/rbEnglish"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="1dp"
-            android:layout_marginRight="1dp"
-            android:layout_marginTop="1dp"
-            android:layout_weight="1"
-            android:background="@drawable/toggle_widget_background"
-            android:button="@null"
-            android:gravity="center"
-            android:text="English"
-            android:fontFamily="@font/latoregular"
-            android:textColor="@drawable/button_text"
-            android:textStyle="bold" />
-    </RadioGroup>-->
-</RelativeLayout>
+          <RadioButton
+              android:id="@+id/rbBangle"
+              android:layout_width="0dp"
+              android:layout_height="match_parent"
+              android:layout_marginBottom="1dp"
+              android:layout_marginLeft="1dp"
+              android:layout_marginTop="1dp"
+              android:layout_weight="1"
+              android:background="@drawable/toggle_widget_background"
+              android:button="@null"
+              android:gravity="center"
+              android:text="Bangla"
+              android:fontFamily="@font/latoregular"
+              android:textColor="@drawable/button_text"
+              android:textStyle="bold" />
+
+          <RadioButton
+              android:id="@+id/rbEnglish"
+              android:layout_width="0dp"
+              android:layout_height="match_parent"
+              android:layout_marginBottom="1dp"
+              android:layout_marginRight="1dp"
+              android:layout_marginTop="1dp"
+              android:layout_weight="1"
+              android:background="@drawable/toggle_widget_background"
+              android:button="@null"
+              android:gravity="center"
+              android:text="English"
+              android:fontFamily="@font/latoregular"
+              android:textColor="@drawable/button_text"
+              android:textStyle="bold" />
+      </RadioGroup>-->
+</androidx.constraintlayout.widget.ConstraintLayout>

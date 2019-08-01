@@ -247,28 +247,25 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         });
 */
 
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
+        BottomNavigationView navigation = findViewById(R.id.navigation);
 
-        navigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.navigation_target:
-                        toolbar.setTitle(getString(R.string.target_plan));
-                        getFragment(TargetFragment.class, FRAGMENT_TAGS.Target_Fragment);
+        navigation.setOnNavigationItemSelectedListener(item -> {
+            switch (item.getItemId()) {
+                case R.id.navigation_target:
+                    toolbar.setTitle(getString(R.string.target_plan));
+                    getFragment(TargetFragment.class, FRAGMENT_TAGS.Target_Fragment);
 
-                        return true;
-                    case R.id.navigation_dashboard:
-                        toolbar.setTitle(getString(R.string.dashboard));
-                        getFragment(DashboardFragment.class, FRAGMENT_TAGS.Dashboard_Fragment);
-                        return true;
-                    case R.id.navigation_performance:
-                        toolbar.setTitle(getString(R.string.performance));
-                        getFragment(PerformanceFragment.class, FRAGMENT_TAGS.Performance_Fragment);
-                        return true;
-                }
-                return false;
+                    return true;
+                case R.id.navigation_dashboard:
+                    toolbar.setTitle(getString(R.string.dashboard));
+                    getFragment(DashboardFragment.class, FRAGMENT_TAGS.Dashboard_Fragment);
+                    return true;
+                case R.id.navigation_performance:
+                    toolbar.setTitle(getString(R.string.performance));
+                    getFragment(PerformanceFragment.class, FRAGMENT_TAGS.Performance_Fragment);
+                    return true;
             }
+            return false;
         });
 
 
@@ -304,7 +301,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 .into(profilePicture);
         navigationView.setNavigationItemSelectedListener(this);
         TextView tv_selliscope_version = navigationView.getHeaderView(0).findViewById(R.id.tv_selliscope_version);
-        tv_selliscope_version.setText("Version - " + BuildConfig.VERSION_NAME);
+        tv_selliscope_version.setText(String.format("Version - %s", BuildConfig.VERSION_NAME));
 
         //For getting diameter
         setDiameter();
@@ -399,31 +396,25 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         SettingsClient client = LocationServices.getSettingsClient(this);
         Task<LocationSettingsResponse> task = client.checkLocationSettings(builder.build());
 
-        task.addOnSuccessListener(this, new OnSuccessListener<LocationSettingsResponse>() {
-            @Override
-            public void onSuccess(LocationSettingsResponse locationSettingsResponse) {
-                // All location settings are satisfied. The client can initialize
-                // location requests here.
-                // ...
-                Log.d("tareq_test", "on Success");
-            }
+        task.addOnSuccessListener(this, locationSettingsResponse -> {
+            // All location settings are satisfied. The client can initialize
+            // location requests here.
+            // ...
+            Log.d("tareq_test", "on Success");
         });
 
-        task.addOnFailureListener(this, new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.d("tareq_test", "OnFailed");
-                if (e instanceof ResolvableApiException) {
-                    // Location settings are not satisfied, but this can be fixed
-                    // by showing the user a dialog.
-                    // Show the dialog by calling startResolutionForResult(),
-                    // and check the result in onActivityResult().
-                    ResolvableApiException resolvable = (ResolvableApiException) e;
-                    try {
-                        resolvable.startResolutionForResult(HomeActivity.this, REQUEST_CHECK_SETTINGS); //976 is just the reference number
-                    } catch (IntentSender.SendIntentException e1) {
-                        e1.printStackTrace();
-                    }
+        task.addOnFailureListener(this, e -> {
+            Log.d("tareq_test", "OnFailed");
+            if (e instanceof ResolvableApiException) {
+                // Location settings are not satisfied, but this can be fixed
+                // by showing the user a dialog.
+                // Show the dialog by calling startResolutionForResult(),
+                // and check the result in onActivityResult().
+                ResolvableApiException resolvable = (ResolvableApiException) e;
+                try {
+                    resolvable.startResolutionForResult(HomeActivity.this, REQUEST_CHECK_SETTINGS); //976 is just the reference number
+                } catch (IntentSender.SendIntentException e1) {
+                    e1.printStackTrace();
                 }
             }
         });
@@ -789,8 +780,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         View dialogView = inflater.inflate(R.layout.information, null);
         builder.setView(dialogView);
 
-        TextView tv_details_information = (TextView) dialogView.findViewById(R.id.tv_details_information);
-        TextView tv_title = (TextView) dialogView.findViewById(R.id.tv_title_name);
+        TextView tv_details_information = dialogView.findViewById(R.id.tv_details_information);
+        TextView tv_title = dialogView.findViewById(R.id.tv_title_name);
 
 
         tv_details_information.setText("A new version is available on PlayStore .Please Update it");
@@ -798,35 +789,32 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
 
         Button iv_info_cancel = dialogView.findViewById(R.id.btn_update);
-        iv_info_cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                builder.dismiss();
+        iv_info_cancel.setOnClickListener(v -> {
+            builder.dismiss();
 
 
-                stopService(new Intent(HomeActivity.this, LocationMonitoringService.class));
-                mAlreadyStartedService = false;
+            stopService(new Intent(HomeActivity.this, LocationMonitoringService.class));
+            mAlreadyStartedService = false;
 
 
-                sessionManager.logoutUser(false);
-                schedulerForMinute.shutdownNow();
-                schedulerForHour.shutdownNow();
-                //stopService(new Intent(HomeActivity.this, SendLocationDataService.class));
-                HomeActivity.this.deleteDatabase(Constants.databaseName);
-                try {
-                    mLocalBroadcastManager.unregisterReceiver(gpsBroadcastStateListener);
-                    unregisterReceiver(internetBroadcastReciever);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                finish();
+            sessionManager.logoutUser(false);
+            schedulerForMinute.shutdownNow();
+            schedulerForHour.shutdownNow();
+            //stopService(new Intent(HomeActivity.this, SendLocationDataService.class));
+            HomeActivity.this.deleteDatabase(Constants.databaseName);
+            try {
+                mLocalBroadcastManager.unregisterReceiver(gpsBroadcastStateListener);
+                unregisterReceiver(internetBroadcastReciever);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            finish();
 
-                final String appPackageName = getPackageName(); // getPackageName() from Context or Activity object
-                try {
-                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
-                } catch (android.content.ActivityNotFoundException anfe) {
-                    startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
-                }
+            final String appPackageName = getPackageName(); // getPackageName() from Context or Activity object
+            try {
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + appPackageName)));
+            } catch (android.content.ActivityNotFoundException anfe) {
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://play.google.com/store/apps/details?id=" + appPackageName)));
             }
         });
         builder.setCancelable(false);
@@ -864,7 +852,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     private void welcome(String message) {
         TextView welcome_text = findViewById(R.id.textview_greeting);
         welcome_text.setVisibility(View.VISIBLE); //as this is disabled for other uses
-        welcome_text.setText(message + ", " + sessionManager.getUserDetails().get("userName"));
+        welcome_text.setText(String.format("%s, %s", message, sessionManager.getUserDetails().get("userName")));
 
     }
 

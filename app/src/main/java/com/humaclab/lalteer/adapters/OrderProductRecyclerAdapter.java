@@ -1,15 +1,23 @@
 package com.humaclab.lalteer.adapters;
 
 import android.content.Context;
+
 import androidx.databinding.DataBindingUtil;
+
 import android.graphics.Color;
+
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
+import com.google.gson.Gson;
 import com.humaclab.lalteer.BR;
 import com.humaclab.lalteer.R;
 import com.humaclab.lalteer.activity.OrderActivity;
@@ -18,6 +26,7 @@ import com.humaclab.lalteer.helper.SelectedProductHelper;
 import com.humaclab.lalteer.helper.ShowProductSelectionDialog;
 
 import com.humaclab.lalteer.model.variant_product.ProductsItem;
+import com.humaclab.lalteer.utils.Constants;
 
 import java.util.List;
 
@@ -46,8 +55,9 @@ public class OrderProductRecyclerAdapter extends RecyclerView.Adapter<OrderProdu
         this.context = context;
         this.productsItemList = productsItemList;
         this.selectedProductList = selectedProductList;
-        this.mOnSelectProductListener=onSelectProductListener;
+        this.mOnSelectProductListener = onSelectProductListener;
     }
+
     @Override
     public OrderProductViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.item_order_product, parent, false);
@@ -58,7 +68,7 @@ public class OrderProductRecyclerAdapter extends RecyclerView.Adapter<OrderProdu
     public void onBindViewHolder(final OrderProductViewHolder holder, int position) {
         this.holder = holder;
         ProductsItem products = productsItemList.get(position);
-
+        Log.d("tareq_test", "prduct: " + new Gson().toJson(products));
         /*First we have to make sure everything is resetted beacause the view changes will be reused */
         holder.getBinding().ivRemoveProduct.setVisibility(View.GONE);
         holder.getBinding().llQuantity.setVisibility(View.GONE);
@@ -134,6 +144,16 @@ public class OrderProductRecyclerAdapter extends RecyclerView.Adapter<OrderProdu
                 }
             }
         });
+
+        if (products.getImg() != null && !products.getImg().equals("")) {
+            Glide.with(context)
+                    .load(Constants.baseUrl + products.getImg())
+                    .centerCrop()
+                    .thumbnail(0.1f)
+                    .transition(DrawableTransitionOptions.withCrossFade())
+                    .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+                    .into(holder.getBinding().ivProductImage);
+        }
 
         holder.getBinding().setVariable(BR.product, products);
         holder.getBinding().executePendingBindings();

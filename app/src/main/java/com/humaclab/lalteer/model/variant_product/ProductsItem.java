@@ -2,15 +2,16 @@ package com.humaclab.lalteer.model.variant_product;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by leon on 9/3/2017.
  */
 
-public class ProductsItem {
+public class ProductsItem implements Serializable {
 
-    @SerializedName("img")
+    @SerializedName("image")
     private String img;
 
     private String variantRow;

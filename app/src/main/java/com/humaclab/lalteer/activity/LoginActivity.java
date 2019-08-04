@@ -19,6 +19,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.gson.Gson;
 import com.humaclab.lalteer.BuildConfig;
 import com.humaclab.lalteer.R;
@@ -27,6 +28,7 @@ import com.humaclab.lalteer.SelliscopeApplication;
 import com.humaclab.lalteer.model.IMEIandVerison;
 import com.humaclab.lalteer.model.Login;
 import com.humaclab.lalteer.utils.AccessPermission;
+import com.humaclab.lalteer.utils.Constants;
 import com.humaclab.lalteer.utils.NetworkUtility;
 import com.humaclab.lalteer.utils.SessionManager;
 
@@ -42,7 +44,8 @@ import timber.log.Timber;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
     private TextView forgotPassword;
-    private EditText email, password;
+    private EditText email;
+    TextInputLayout password;
     private Button signIn;
     private SelliscopeApiEndpointInterface apiService;
     private SessionManager sessionManager;
@@ -115,7 +118,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             }
         });
         email = findViewById(R.id.et_email);
-        password = findViewById(R.id.et_password);
+        password = findViewById(R.id.textInputLayoutPassword);
         signIn = findViewById(R.id.btn_sign_in);
         signIn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -134,7 +137,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 else {
                     isValidEmail = true;
                 }
-                if (password.getText().toString().trim().isEmpty()) {
+                if (password.getEditText().getText().toString().trim().isEmpty()) {
                     password.setError(getString(R.string.passwordRequire));
                     isValidPassword = false;
                 } else {
@@ -143,7 +146,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 if (isValidEmail && isValidPassword) {
                     if (NetworkUtility.isNetworkAvailable(LoginActivity.this) == true) {
                         loginProgresssBar.setVisibility(View.VISIBLE);
-                        getUser(email.getText().toString().trim(), password.getText().toString()
+                        getUser(email.getText().toString().trim(), password.getEditText().getText().toString()
                                 .trim());
                     } else {
                         Toast.makeText(LoginActivity.this, "Network Unavailable.Please, connect " +
@@ -191,6 +194,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                 password
                         );
                         loginProgresssBar.setVisibility(View.INVISIBLE);
+
+                        SharedPreferences sharedPreferencesLanguage = getSharedPreferences("Settings", MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPreferencesLanguage.edit();
+                        editor.putString("BASE_URL", Constants.BASE_URL);
+                        editor.apply();
 
                         sendIMEIAndVersion();
                         startActivity(new Intent(LoginActivity.this, HomeActivity.class));
@@ -243,8 +251,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 loginProgresssBar.setVisibility(View.INVISIBLE);
-                Toast.makeText(LoginActivity.this, t.toString(), Toast.LENGTH_SHORT).show();
-                Log.d("Response", t.toString());
+                Log.e("tareq_test", "Error on Login: " + t.getMessage());
+                Constants.BASE_URL = Constants.BASE_URL_HTTP;
+                getUser(email.trim(), password.trim());
             }
         });
     }

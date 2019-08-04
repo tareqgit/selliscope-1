@@ -3,12 +3,16 @@ package com.humaclab.lalteer.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+
 import androidx.databinding.DataBindingUtil;
+
 import android.os.Bundle;
 import android.os.Parcelable;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.appcompat.widget.Toolbar;
+
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -43,7 +47,7 @@ public class OrderActivity extends AppCompatActivity implements OrderProductRecy
     private Context context;
     private DatabaseHandler databaseHandler;
     private SessionManager sessionManager;
-    private String outletName, outletID;
+    private String outletName, outletID, outletType;
     private List<String> categoryName = new ArrayList<>(), brandName = new ArrayList<>();
     private List<Integer> categoryID = new ArrayList<>(), brandID = new ArrayList<>();
 
@@ -61,6 +65,7 @@ public class OrderActivity extends AppCompatActivity implements OrderProductRecy
 
         outletName = getIntent().getStringExtra("outletName");
         outletID = getIntent().getStringExtra("outletID");
+        outletType = getIntent().getStringExtra("outletType");
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("");
@@ -148,12 +153,39 @@ public class OrderActivity extends AppCompatActivity implements OrderProductRecy
         });
     }
 
+    private List<Brand> getBrandsAsOutletType() {
+        List<Brand> brands = new ArrayList<>();
+        List<Brand> brandsFromDb = databaseHandler.getBrand();
+        if (outletType.equalsIgnoreCase("ccsl-pesticide")) {
+            for (Brand brand : brandsFromDb) {
+                if (brand.getName().equalsIgnoreCase("pes"))
+                    brands.add(brand);
+            }
+        } else if (outletType.equalsIgnoreCase("rice-nssl")) {
+            for (Brand brand : brandsFromDb) {
+                if (brand.getName().equalsIgnoreCase("cer-r"))
+                    brands.add(brand);
+            }
+        } else if (outletType.equalsIgnoreCase("ltsl-veg")) {
+            for (Brand brand : brandsFromDb) {
+                if (!brand.getName().equalsIgnoreCase("pes") && !brand.getName().equalsIgnoreCase("cer-r")) {
+                    brands.add(brand);
+                }
+
+            }
+        } else {
+            brands.addAll(brandsFromDb);
+        }
+
+        return brands;
+    }
+
     private void getBrand() {
-        List<Brand> brands = databaseHandler.getBrand();
+
         brandName.clear();
         brandName.add(getString(R.string.select_brand));
         brandID.add(0);
-        for (Brand result : brands) {
+        for (Brand result : getBrandsAsOutletType()) {
             brandName.add(result.getName());
             brandID.add(Integer.valueOf(result.getId()));
         }
@@ -173,6 +205,7 @@ public class OrderActivity extends AppCompatActivity implements OrderProductRecy
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
+        binding.spProductBrand.setSelection(1);
     }
 
     OrderProductRecyclerAdapter mOrderProductRecyclerAdapter;

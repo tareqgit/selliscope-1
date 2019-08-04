@@ -69,6 +69,7 @@ public class PurchaseHistoryActivity extends AppCompatActivity {
                 Intent intent = new Intent(PurchaseHistoryActivity.this, OrderActivity.class);
                 intent.putExtra("outletName", outlet.outletName);
                 intent.putExtra("outletID", String.valueOf(outlet.outletId));
+                intent.putExtra("outletType", outlet.outletType);
                 startActivity(intent);
             }
         });

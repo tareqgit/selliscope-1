@@ -86,7 +86,6 @@ public class AddOutletActivity extends AppCompatActivity {
         checkPermission();
 
         googleApiClient = new GoogleApiClient.Builder(AddOutletActivity.this)
-                .addApi(Awareness.API)
                 .addApi(LocationServices.API)
                 .build();
         googleApiClient.connect();

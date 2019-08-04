@@ -130,7 +130,6 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
 
                 holder.pbCheckIn.setVisibility(View.VISIBLE);
                 googleApiClient = new GoogleApiClient.Builder(context)
-                        .addApi(Awareness.API)
                         .addApi(LocationServices.API)
                         .build();
                 googleApiClient.connect();

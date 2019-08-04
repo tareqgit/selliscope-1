@@ -212,9 +212,9 @@ public class ActivityCart extends AppCompatActivity implements SelectedProductRe
                 call.enqueue(new Callback<AddNewOrder.OrderResponse>() {
                     @Override
                     public void onResponse(Call<AddNewOrder.OrderResponse> call, Response<AddNewOrder.OrderResponse> response) {
-                        pd.dismiss();
+
                         if (response.code() == 200) {
-                            System.out.println(new Gson().toJson(response.body()));
+                          Log.d("tareq_test" , ""+new Gson().toJson(response.body()));
                             Toast.makeText(ActivityCart.this, "Order created successfully", Toast.LENGTH_LONG).show();
 
                             //clear selected Item list
@@ -226,12 +226,14 @@ public class ActivityCart extends AppCompatActivity implements SelectedProductRe
                             finish();
                             //startActivity(new Intent(ActivityCart.this, OutletActivity.class));
                         } else if (response.code() == 401) {
-                            System.out.println(new Gson().toJson(response.body()));
+                             Log.d("tareq_test" , ""+new Gson().toJson(response.body()));
                             Toast.makeText(ActivityCart.this, response.code()+" Invalid Response from server.", Toast.LENGTH_SHORT).show();
                         } else {
-                            System.out.println(new Gson().toJson(response.body()));
+                         Log.d("tareq_test" , ""+new Gson().toJson(response.body()));
                             Toast.makeText(ActivityCart.this, response.code()+" Server Error! Try Again Later!", Toast.LENGTH_SHORT).show();
                         }
+
+                        pd.dismiss();
                     }
 
                     @Override

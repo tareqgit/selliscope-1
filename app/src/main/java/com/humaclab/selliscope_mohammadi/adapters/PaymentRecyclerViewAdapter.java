@@ -21,6 +21,7 @@ import com.humaclab.selliscope_mohammadi.BR;
 import com.humaclab.selliscope_mohammadi.R;
 import com.humaclab.selliscope_mohammadi.SelliscopeApiEndpointInterface;
 import com.humaclab.selliscope_mohammadi.SelliscopeApplication;
+import com.humaclab.selliscope_mohammadi.databinding.PaymentItemBinding;
 import com.humaclab.selliscope_mohammadi.model.Payment;
 import com.humaclab.selliscope_mohammadi.model.PaymentResponse;
 import com.humaclab.selliscope_mohammadi.utils.SessionManager;
@@ -58,6 +59,8 @@ public class PaymentRecyclerViewAdapter extends RecyclerView.Adapter<PaymentRecy
     @Override
     public void onBindViewHolder(final PaymentViewHolder holder, final int position) {
         final Payment.OrderList orderList = orderLists.get(position);
+        Log.d("tareq_test" , "orderId:"+ orderList.orderId +"  "+ "sub total: " + orderList.amount);
+      //  holder.getBinding().tvSubTotal.setText(String.valueOf( Double.parseDouble(orderList.amount.replace(",",""))+orderList.truckFare- Double.parseDouble(orderList.discount) <0?0 :Double.parseDouble(orderList.amount.replace(",",""))+orderList.truckFare- Double.parseDouble(orderList.discount)));
         holder.getBinding().setVariable(BR.payments, orderList);
         holder.getBinding().executePendingBindings();
 
@@ -252,7 +255,7 @@ public class PaymentRecyclerViewAdapter extends RecyclerView.Adapter<PaymentRecy
     }
 
     public class PaymentViewHolder extends RecyclerView.ViewHolder {
-        private ViewDataBinding binding;
+        private PaymentItemBinding binding;
         private Button btn_pay;
         private Spinner sp_payment_type;
         private LinearLayout ll_check_details;
@@ -270,7 +273,7 @@ public class PaymentRecyclerViewAdapter extends RecyclerView.Adapter<PaymentRecy
             et_deposit_form = itemView.findViewById(R.id.et_deposit_form);
         }
 
-        public ViewDataBinding getBinding() {
+        public PaymentItemBinding getBinding() {
             return binding;
         }
     }

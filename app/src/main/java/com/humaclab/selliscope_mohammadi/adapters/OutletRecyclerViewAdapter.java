@@ -84,73 +84,63 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
         holder.tvOutletAddress.setText(outlet.outletAddress);
         holder.tvOutletContactNumber.setText(outlet.phone);
         holder.tvOutletOwnerName.setText(outlet.ownerName);
-        holder.checkInButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                holder.pbCheckIn.setVisibility(View.VISIBLE);
-                googleApiClient = new GoogleApiClient.Builder(context)
-                        .addApi(Awareness.API)
-                        .addApi(LocationServices.API)
-                        .build();
-                googleApiClient.connect();
-                googleApiClient.registerConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
-                    @Override
-                    public void onConnected(@Nullable Bundle bundle) {
-                        Location outletLocation = new Location("outlet_location");
-                        outletLocation.setLatitude(outlet.outletLatitude);
-                        outletLocation.setLongitude(outlet.outletLongitude);
-                        getLocation(outlet.outletId, outletLocation, holder.pbCheckIn);
-                    }
+        holder.checkInButton.setOnClickListener(v -> {
 
-                    @Override
-                    public void onConnectionSuspended(int i) {
-                        holder.pbCheckIn.setVisibility(View.INVISIBLE);
-                        Toast.makeText(context, "Didn't able to get location " +
-                                "data. Please, try again later!", Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
+            holder.pbCheckIn.setVisibility(View.VISIBLE);
+            googleApiClient = new GoogleApiClient.Builder(context)
+
+                    .addApi(LocationServices.API)
+                    .build();
+            googleApiClient.connect();
+            googleApiClient.registerConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
+                @Override
+                public void onConnected(@Nullable Bundle bundle) {
+                    Location outletLocation = new Location("outlet_location");
+                    outletLocation.setLatitude(outlet.outletLatitude);
+                    outletLocation.setLongitude(outlet.outletLongitude);
+                    getLocation(outlet.outletId, outletLocation, holder.pbCheckIn);
+                }
+
+                @Override
+                public void onConnectionSuspended(int i) {
+                    holder.pbCheckIn.setVisibility(View.INVISIBLE);
+                    Toast.makeText(context, "Didn't able to get location " +
+                            "data. Please, try again later!", Toast.LENGTH_SHORT).show();
+                }
+            });
         });
-     PushDownAnim.setPushDownAnimTo(holder.orderButton).setOnSingleClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-              //  Intent intent = new Intent(context, OrderActivity.class);
-                Intent intent = new Intent(context, OrderNewActivity.class);
+     PushDownAnim.setPushDownAnimTo(holder.orderButton).setOnSingleClickListener(v -> {
+        // Intent intent = new Intent(context, OrderActivity.class);
+        Intent intent = new Intent(context, OrderNewActivity.class);
 
-                intent.putExtra("outletName", outlet.outletName);
-                intent.putExtra("outletID", outlet.outletId);
+         intent.putExtra("outletName", outlet.outletName);
+         intent.putExtra("outletID", outlet.outletId);
 
-                intent.putExtra("outletCreditBalance", outlet.outletCreditBalance);
-                context.startActivity(intent);
-            }
-        });
+         intent.putExtra("outletCreditBalance", outlet.outletCreditBalance);
+         context.startActivity(intent);
+     });
     }
 
     private void getLocation(final int outletId, final Location outletLocation,
                              final ProgressBar progressbar) {
         SendUserLocationData sendUserLocationData = new SendUserLocationData(context);
-        sendUserLocationData.getInstantLocation(activity, new SendUserLocationData.OnGetLocation() {
-            @Override
-            public void getLocation(Double latitude, Double longitude) {
-                Timber.d("User location: Latitude: " + latitude + "," + "Longitude: " + longitude);
-                Timber.d("Outlet location: Latitude: " + outletLocation.getLatitude() + "," + "Longitude: " + outletLocation.getLongitude());
-
-                Location location = new Location("");
-                location.setLatitude(latitude);
-                location.setLongitude(longitude);
-                if (location.distanceTo(outletLocation) <= sessionManager.getDiameter()) {
-                    if (NetworkUtility.isNetworkAvailable(context)) {
-                        sendUserLocation(location, outletId, progressbar);
-                    } else {
-                        progressbar.setVisibility(View.INVISIBLE);
-                        Toast.makeText(context, "Enable Wifi or Mobile data.",
-                                Toast.LENGTH_SHORT).show();
-                    }
-
+        sendUserLocationData.getInstantLocation(activity, (latitude, longitude) -> {
+          Location location = new Location("");
+            location.setLatitude(latitude);
+            location.setLongitude(longitude);
+            Log.d("tareq_test" , "dia: "+ sessionManager.getDiameter());
+            if (location.distanceTo(outletLocation) <= sessionManager.getDiameter()) {
+                if (NetworkUtility.isNetworkAvailable(context)) {
+                    sendUserLocation(location, outletId, progressbar);
                 } else {
                     progressbar.setVisibility(View.INVISIBLE);
-                    Toast.makeText(context, "You are not within 70m radius of the outlet.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "Enable Wifi or Mobile data.",
+                            Toast.LENGTH_SHORT).show();
                 }
+
+            } else {
+                progressbar.setVisibility(View.INVISIBLE);
+                Toast.makeText(context, "You are not within 70m radius of the outlet.", Toast.LENGTH_SHORT).show();
             }
         });
     }

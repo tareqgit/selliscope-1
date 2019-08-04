@@ -2,6 +2,7 @@ package com.humaclab.selliscope_mohammadi.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import androidx.core.app.ActivityCompat;
@@ -23,6 +24,7 @@ import com.humaclab.selliscope_mohammadi.SelliscopeApplication;
 import com.humaclab.selliscope_mohammadi.model.IMEIandVerison;
 import com.humaclab.selliscope_mohammadi.model.Login;
 import com.humaclab.selliscope_mohammadi.utils.AccessPermission;
+import com.humaclab.selliscope_mohammadi.utils.Constants;
 import com.humaclab.selliscope_mohammadi.utils.NetworkUtility;
 import com.humaclab.selliscope_mohammadi.utils.SessionManager;
 
@@ -127,6 +129,12 @@ public class LoginActivity extends AppCompatActivity {
                                 password
                         );
                         loginProgresssBar.setVisibility(View.INVISIBLE);
+
+                        SharedPreferences sharedPreferencesLanguage = getSharedPreferences("Settings", MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPreferencesLanguage.edit();
+                        editor.putString("BASE_URL", Constants.BASE_URL);
+                        editor.apply();
+
                         startActivity(new Intent(LoginActivity.this, HomeActivity.class));
                         sendIMEIAndVersion();
 
@@ -175,8 +183,11 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 loginProgresssBar.setVisibility(View.INVISIBLE);
-                Toast.makeText(LoginActivity.this, t.toString(), Toast.LENGTH_SHORT).show();
-                Log.d("Response", t.toString());
+
+                Log.e("tareq_test", "Error on Login: " + t.getMessage());
+                Constants.BASE_URL = Constants.BASE_URL_HTTP;
+                getUser(email.trim(), password.trim());
+
             }
         });
     }

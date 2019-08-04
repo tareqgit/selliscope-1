@@ -103,7 +103,7 @@ public class AddOutletActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_outlet);
         googleApiClient = new GoogleApiClient.Builder(AddOutletActivity.this)
-                .addApi(Awareness.API)
+
                 .addApi(LocationServices.API)
                 .build();
         googleApiClient.connect();

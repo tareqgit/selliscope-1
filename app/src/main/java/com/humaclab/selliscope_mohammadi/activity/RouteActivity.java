@@ -31,6 +31,8 @@ import com.google.android.gms.awareness.Awareness;
 import com.google.android.gms.awareness.snapshot.LocationResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -42,6 +44,8 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.gson.Gson;
 import com.humaclab.selliscope_mohammadi.R;
 import com.humaclab.selliscope_mohammadi.SelliscopeApiEndpointInterface;
@@ -65,7 +69,12 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
         LocationSource.OnLocationChangedListener {
 
     private GoogleMap mMap;
-    private GoogleApiClient googleApiClient;
+    // The entry point to the Fused Location Provider.
+    private FusedLocationProviderClient mFusedLocationProviderClient;
+    private Location mLastKnownLocation;
+    private final LatLng mDefaultLocation = new LatLng(-33.8523341, 151.2106085);
+    private static final int DEFAULT_ZOOM = 15;
+
 
     public static boolean checkPermission(final Context context) {
         return ActivityCompat.checkSelfPermission(context,
@@ -81,22 +90,10 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
         TextView toolbarTitle = (TextView) findViewById(R.id.tv_toolbar_title);
         toolbarTitle.setText(getResources().getString(R.string.route));
         setSupportActionBar(toolbar);
-        googleApiClient = new GoogleApiClient.Builder(RouteActivity.this)
-                .addApi(Awareness.API)
-                .build();
-        googleApiClient.connect();
-        googleApiClient.registerConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
-            @Override
-            public void onConnected(@Nullable Bundle bundle) {
 
-                getLocation();
-            }
+        // Construct a FusedLocationProviderClient.
+        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
-            @Override
-            public void onConnectionSuspended(int i) {
-
-            }
-        });
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -128,31 +125,36 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
     @NeedsPermission(Manifest.permission.ACCESS_FINE_LOCATION)
     public void getLocation() {
         if (checkPermission(RouteActivity.this)) {
-            Awareness.SnapshotApi.getLocation(googleApiClient)
-                    .setResultCallback(new ResultCallback<LocationResult>() {
-                        @Override
-                        public void onResult(@NonNull LocationResult locationResult) {
-                            if (locationResult.getStatus().isSuccess()) {
-                                Location location = locationResult.getLocation();
-                                if (mMap != null) {
-                                    LatLng currentLocation = new LatLng(Double.parseDouble(String.format("%.05f", location.getLatitude())),
-                                            Double.parseDouble(String.format("%.05f", location.getLongitude())));
-                                    mMap.addMarker(new MarkerOptions().position(currentLocation)
-                                            .title("You are here!")
-                                            .icon(BitmapDescriptorFactory.fromResource(
-                                                    R.drawable.ic_user_current_location)));
-                                    CameraPosition cameraPosition = new CameraPosition(
-                                            currentLocation, 15, 70, 0);
-                                    CameraUpdate yourLocation = CameraUpdateFactory
-                                            .newCameraPosition(cameraPosition);
-                                    mMap.animateCamera(yourLocation);
-                                    getVisits();
-                                }
-                            } else {
-                                Timber.d("Didn't get Location Data");
-                            }
-                        }
-                    });
+            Task<Location> locationResult = mFusedLocationProviderClient.getLastLocation();
+            locationResult.addOnCompleteListener(this, new OnCompleteListener<Location>() {
+                @Override
+                public void onComplete(@NonNull Task<Location> task) {
+                    if (task.isSuccessful()) {
+                        // Set the map's camera position to the current location of the device.
+                        mLastKnownLocation = task.getResult();
+                        LatLng currentLocation = new LatLng(mLastKnownLocation.getLatitude(), mLastKnownLocation.getLongitude());
+                        mMap.addMarker(new MarkerOptions().position(currentLocation)
+                                .title("You are here!")
+                                .icon(BitmapDescriptorFactory.fromResource(
+                                        R.drawable.ic_user_current_location)));
+                      /*  mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
+                                new LatLng(mLastKnownLocation.getLatitude(),
+                                        mLastKnownLocation.getLongitude()), DEFAULT_ZOOM));*/
+                        CameraPosition cameraPosition = new CameraPosition(
+                                currentLocation, 15, 70, 0);
+                        CameraUpdate yourLocation = CameraUpdateFactory
+                                .newCameraPosition(cameraPosition);
+                        mMap.animateCamera(yourLocation);
+                        getVisits();
+                    } else {
+                        Log.d("tareq_test", "Current location is null. Using defaults.");
+                        Log.e("tareq_test", "Exception: %s", task.getException());
+                        mMap.moveCamera(CameraUpdateFactory
+                                .newLatLngZoom(mDefaultLocation, DEFAULT_ZOOM));
+                        mMap.getUiSettings().setMyLocationButtonEnabled(false);
+                    }
+                }
+            });
         } else {
             Timber.d("Location Permission is not enabled.");
         }
@@ -224,7 +226,7 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
 
     @Override
     public void onDestroy() {
-        googleApiClient.disconnect();
+
         super.onDestroy();
     }
 

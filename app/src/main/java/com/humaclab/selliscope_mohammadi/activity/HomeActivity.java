@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.Uri;
@@ -75,6 +76,11 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        //
+        SharedPreferences sharedPreferences = getSharedPreferences("Settings", MODE_PRIVATE);
+        Constants.BASE_URL = sharedPreferences.getString("BASE_URL", Constants.BASE_URL);
+
+
         sessionManager = new SessionManager(this);
         databaseHandler = new DatabaseHandler(this);
         loadLocalIntoBackground = new LoadLocalIntoBackground(this);
@@ -175,12 +181,15 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             public void onResponse(Call<DiameterResponse> call, Response<DiameterResponse> response) {
                 if (response.code() == 200) {
                     sessionManager.setDiameter(response.body().getDiameter().getDiameter());
+                }else{
+                    Log.e("tareq_test" , "Can't get Diameter from server. Code: "+ response.code() );
+
                 }
             }
 
             @Override
             public void onFailure(Call<DiameterResponse> call, Throwable t) {
-
+                Log.e("tareq_test" , "Can't get Diameter from server. : "+ t.getMessage() );
             }
         });
     }

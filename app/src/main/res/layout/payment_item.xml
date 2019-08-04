@@ -99,7 +99,9 @@
                         android:paddingRight="10dp"
                         android:paddingStart="5dp"
                         android:paddingTop="10dp"
-                        android:text="@{payments.amount}"/>
+                        android:text='@{Double.toString((Double.parseDouble(payments.amount.replace(",","")) ) + Double.parseDouble(payments.discount.replace(",","")) - Double.parseDouble(String.valueOf(payments.truckFare)))}'/>
+
+                    />
                 </LinearLayout>
 
                 <LinearLayout
@@ -204,10 +206,13 @@
                         android:paddingRight="10dp"
                         android:paddingStart="5dp"
                         android:paddingTop="10dp"
-                        android:text='@{Double.toString((Double.parseDouble(payments.amount.replace(",","")) - Double.parseDouble(payments.discount.replace(",",""))) + Double.parseDouble(String.valueOf(payments.truckFare)))}'/>
+                        android:text='@{Double.toString((Double.parseDouble(payments.amount.replace(",","")) ))}'/>
+                    />
+
                 </LinearLayout>
             </LinearLayout>
-
+<!--   android:text='@{Double.toString((Double.parseDouble(payments.amount.replace(",","")) - Double.parseDouble(payments.discount.replace(",",""))) + Double.parseDouble(String.valueOf(payments.truckFare)))}'/>
+         -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

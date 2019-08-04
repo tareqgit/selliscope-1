@@ -6,7 +6,6 @@
 
 package com.humaclab.selliscope_mohammadi.order;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
@@ -15,13 +14,9 @@ import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -57,7 +52,7 @@ public class ShowProductSelectionDialog extends DialogFragment {
         this.dia=dia;
 
 
-        for (String str : (databaseHandler.getVariants(2, 2))){
+        for (String str : (databaseHandler.getVariants(2, databaseHandler.getProductIds().size()==0? 0 :databaseHandler.getProductIds().get(0)))){
             mCartObjectArrayList.add(new CartObject.Builder().withDia(dia).withGrade(str).build());
         }
 

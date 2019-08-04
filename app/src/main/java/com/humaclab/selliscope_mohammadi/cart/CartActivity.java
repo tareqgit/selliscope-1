@@ -212,7 +212,7 @@ public class CartActivity extends AppCompatActivity {
 
                 AddNewOrder.NewOrder.Product product = new AddNewOrder.NewOrder.Product();
 
-                product.id = 2;
+                product.id =  databaseHandler.getProductIds().size()==0? 0 :databaseHandler.getProductIds().get(0);
                 product.discount = 0.00;
                 product.qty = cartObject.getQty();
 

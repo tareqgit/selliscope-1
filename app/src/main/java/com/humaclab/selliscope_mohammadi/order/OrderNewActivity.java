@@ -6,11 +6,6 @@
 
 package com.humaclab.selliscope_mohammadi.order;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,15 +13,17 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.gson.Gson;
 import com.humaclab.selliscope_mohammadi.R;
-import com.humaclab.selliscope_mohammadi.activity.OrderActivity;
 import com.humaclab.selliscope_mohammadi.cart.CartActivity;
 import com.humaclab.selliscope_mohammadi.cart.model.CartObject;
-import com.humaclab.selliscope_mohammadi.model.Outlets;
 import com.humaclab.selliscope_mohammadi.utils.DatabaseHandler;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -64,9 +61,10 @@ public class OrderNewActivity extends AppCompatActivity {
         DatabaseHandler databaseHandler = new DatabaseHandler(this);
 
 
-        diameters.addAll(databaseHandler.getVariants(1, 2));
-        grades.addAll(databaseHandler.getVariants(2, 2));
+        diameters.addAll(databaseHandler.getVariants(1, databaseHandler.getProductIds().size()==0? 0 :databaseHandler.getProductIds().get(0)));
+        grades.addAll(databaseHandler.getVariants(2,  databaseHandler.getProductIds().size()==0? 0 :databaseHandler.getProductIds().get(0)));
 
+        Log.d("tareq_test" , "grades"+ new Gson().toJson(grades));
 
         mDiameterAdapter = new DiameterAdapter(this, diameters, null);
         mRecyclerView.setAdapter(mDiameterAdapter);

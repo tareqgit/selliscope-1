@@ -232,7 +232,7 @@ public class OrderActivity extends AppCompatActivity implements View.OnClickList
                             .create(SelliscopeApiEndpointInterface.class);
 
                     System.out.println("Order: " + new Gson().toJson(addNewOrder));
-
+                    Log.d("tareq_test" , "Order"+ new Gson().toJson(addNewOrder));
                     if (NetworkUtility.isNetworkAvailable(OrderActivity.this)) {
                         Call<AddNewOrder.OrderResponse> call = apiService.addOrder(addNewOrder);
                         call.enqueue(new Callback<AddNewOrder.OrderResponse>() {

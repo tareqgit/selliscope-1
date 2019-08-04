@@ -1050,6 +1050,26 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return variantNames;
     }
 
+    public List<Integer> getProductIds() {
+        SQLiteDatabase db = this.getWritableDatabase();
+       List<Integer> productIds= new ArrayList<>();
+        String query = "SELECT DISTINCT " + KEY_PRODUCT_ID
+                + " FROM " + TABLE_PRODUCT;
+//        System.out.println("variant query" + query);
+
+        Cursor cursor = db.rawQuery(query, null);
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                cursor.getColumnNames();
+                productIds.add(cursor.getInt(cursor.getColumnIndex(KEY_PRODUCT_ID)));
+            } while (cursor.moveToNext());
+        }
+        db.close();
+        return productIds;
+    }
+
     public String getProductStock(int productId) {
         SQLiteDatabase db = this.getWritableDatabase();
         String prouctStock = "";

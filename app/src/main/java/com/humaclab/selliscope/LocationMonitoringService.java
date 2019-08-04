@@ -139,6 +139,7 @@ public class LocationMonitoringService extends Service implements
         super.onCreate();
         sessionManager = new SessionManager(this);
         lastTimeMediaPlayed = Calendar.getInstance().getTime().toString(); //for Media player concurrency playing prblme resolve
+
         Intent notificationIntent = new Intent(this, HomeActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this,
                 0, notificationIntent, 0);

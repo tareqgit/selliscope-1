@@ -153,7 +153,7 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
 
             holder.getBinding().btnMap.setOnClickListener(v -> {
 
-                if (Build.VERSION.SDK_INT <= 27) {
+
                     //TODO: add map direction layout here.
                     Intent intent = new Intent(context, OutletMapActivity.class);
                     intent.putExtra("outletName", outlet.outletName);
@@ -162,9 +162,7 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
                     intent.putExtra("outletLong", outlet.outletLongitude);
 
                     context.startActivity(intent);
-                }else{
-                Toast.makeText(context, "Please, Wait till next update", Toast.LENGTH_SHORT).show();
-            }
+
             });
 
 

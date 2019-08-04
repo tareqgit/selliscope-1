@@ -72,12 +72,10 @@ public class DashboardFragment extends Fragment {
                                 switch (position) {
                                     case 0: {
 
-                                        if (Build.VERSION.SDK_INT <= 27) {
+
                                             getActivity().startActivity(new Intent(getActivity(),
                                                     RouteActivity.class));
-                                        }else{
-                                            Toast.makeText(getContext(), "Please, Wait till next update", Toast.LENGTH_SHORT).show();
-                                        }
+
                                         break;
                                     }
                                     case 1: {

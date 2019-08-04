@@ -765,7 +765,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
                 @Override
                 public void onFailure(Call<AppVersion> call, Throwable t) {
-                    Toast.makeText(HomeActivity.this, "Loading App Version  Error", Toast.LENGTH_SHORT).show();
+                    Log.d("tareq_test" , "Loading App version error");
                 }
 
             });

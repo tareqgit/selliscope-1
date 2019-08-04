@@ -88,7 +88,6 @@ public class AddOutletActivity extends AppCompatActivity {
         checkPermission();
 
         googleApiClient = new GoogleApiClient.Builder(AddOutletActivity.this)
-                .addApi(Awareness.API)
                 .addApi(LocationServices.API)
                 .build();
         googleApiClient.connect();
@@ -322,6 +321,7 @@ public class AddOutletActivity extends AppCompatActivity {
     }
 
     void getThanas(int districtId) {
+
         thanaAdapter = new ThanaAdapter(AddOutletActivity.this, databaseHandler.getThana(districtId));
         thana.setAdapter(thanaAdapter);
     }

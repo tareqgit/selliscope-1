@@ -4,12 +4,17 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.provider.MediaStore;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import android.util.Base64;
 import android.util.Log;
 import android.view.MenuItem;
@@ -231,6 +236,49 @@ public class AddOutletActivity extends AppCompatActivity {
             }
         });
 
+        try {
+            ((SwipeRefreshLayout)findViewById(R.id.swipeRefresher)).setRefreshing(true);
+            ((SwipeRefreshLayout)findViewById(R.id.swipeRefresher)).setColorSchemeColors(Color.parseColor("#EA5455"),Color.parseColor("#FCCF31"),Color.parseColor("#F55555"));
+            new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    //Do something here
+
+                    ((SwipeRefreshLayout)findViewById(R.id.swipeRefresher)).setRefreshing(false);
+                }
+            }, 5000);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+        ((SwipeRefreshLayout)findViewById(R.id.swipeRefresher)).setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                //if network is Available then update the data again
+                if (NetworkUtility.isNetworkAvailable(AddOutletActivity.this)) {
+                    LoadLocalIntoBackground loadLocalIntoBackground = new LoadLocalIntoBackground(AddOutletActivity.this);
+                    loadLocalIntoBackground.loadThana();
+                    loadLocalIntoBackground.loadOutletType();
+                    loadLocalIntoBackground.loadDistrict();
+
+                    try {
+                        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
+                              @Override
+                              public void run() {
+                                  //Do something here
+
+                                  ((SwipeRefreshLayout)findViewById(R.id.swipeRefresher)).setRefreshing(false);
+                              }
+                          }, 5000);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+
+                }
+            }
+        });
         //if network is Available then update the data again
         if (NetworkUtility.isNetworkAvailable(AddOutletActivity.this)) {
             LoadLocalIntoBackground loadLocalIntoBackground = new LoadLocalIntoBackground(AddOutletActivity.this);

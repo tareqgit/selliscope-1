@@ -20,6 +20,9 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-    <include layout="@layout/content_add_outlet"/>
+
+
+        <include layout="@layout/content_add_outlet" />
+
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

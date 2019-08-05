@@ -240,7 +240,7 @@ public class LoadLocalIntoBackground {
         databaseHandler.updateOutletRoutePlan(outletItemList);
     }
 
-    private void loadDistrict() {
+    public void loadDistrict() {
         Call<DistrictResponse> call = apiService.getDistricts();
         call.enqueue(new Callback<DistrictResponse>() {
             @Override
@@ -263,13 +263,13 @@ public class LoadLocalIntoBackground {
         });
     }
 
-    private void loadThana() {
+    public void loadThana() {
         Call<ThanaResponse> call = apiService.getThanas();
         call.enqueue(new Callback<ThanaResponse>() {
             @Override
             public void onResponse(Call<ThanaResponse> call, Response<ThanaResponse> response) {
                 Gson gson = new Gson();
-                Timber.d("Response " + response.code() + " " + response.body().toString());
+            Log.d("tareq_test" , "Response Thana:  " + response.code() + " " + response.body().toString());
                 if (response.code() == 200) {
                     try {
                         databaseHandler.setThana(response.body().getResult().getThana());
@@ -287,12 +287,12 @@ public class LoadLocalIntoBackground {
         });
     }
 
-    private void loadOutletType() {
+    public void loadOutletType() {
         Call<OutletTypeResponse> call = apiService.getOutletTypes();
         call.enqueue(new Callback<OutletTypeResponse>() {
             @Override
             public void onResponse(Call<OutletTypeResponse> call, Response<OutletTypeResponse> response) {
-                Gson gson = new Gson();
+
                 Timber.d("Response " + response.code() + " " + response.body().toString());
                 if (response.code() == 200) {
                     try {

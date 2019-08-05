@@ -229,7 +229,6 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-                //Toast.makeText(LoginActivity.this, t.toString(), Toast.LENGTH_SHORT).show();
                 Log.d("Response", t.toString());
             }
         });
@@ -248,23 +247,22 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
     }
 
     public boolean isGPSEnabled() {
-
         LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-
         return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
     }
 
     @Override
     public void onDestroy() {
-
         super.onDestroy();
     }
+
 
     @Override
     public void onLocationChanged(Location location) {
         mMap.clear();
         getLocation();
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

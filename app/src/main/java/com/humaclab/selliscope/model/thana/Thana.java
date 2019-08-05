@@ -3,6 +3,7 @@ package com.humaclab.selliscope.model.thana;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class Thana implements Serializable {
 
@@ -37,5 +38,21 @@ public class Thana implements Serializable {
 
     public void setDistrictId(int districtId) {
         this.districtId = districtId;
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Thana thana = (Thana) o;
+        return id == thana.id &&
+                districtId == thana.districtId &&
+                Objects.equals(name, thana.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, id, districtId);
     }
 }

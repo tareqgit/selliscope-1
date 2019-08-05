@@ -46,6 +46,7 @@ import com.humaclab.selliscope.utils.SessionManager;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -190,18 +191,10 @@ public class AddOutletActivity extends AppCompatActivity {
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Timber.d("Valid Address" + isValidAddress);
-                Timber.d("Valid Outle Name" + isValidOutletName);
-                Timber.d("valid owner naem" + isValidOwnerName);
-                Timber.d("Valid phone" + isValidPhone);
-                Timber.d("Latitude" + mLatitude);
-                Timber.d("Long" + mLongitude);
-                Timber.d("Type id" + outletTypeId);
-                Timber.d("Thana id" + thanaId);
 
                 if (!isEmpty()) {
                     if (mLatitude != 0.0 && mLongitude != 0.0) {
-                        Timber.d("addOutletRun");
+
                         if (NetworkUtility.isNetworkAvailable(AddOutletActivity.this)) {
                             Location currentLocation = new Location("");
                             currentLocation.setLatitude(mCurrentLatitude);
@@ -237,6 +230,14 @@ public class AddOutletActivity extends AppCompatActivity {
                 }
             }
         });
+
+        //if network is Available then update the data again
+        if (NetworkUtility.isNetworkAvailable(AddOutletActivity.this)) {
+            LoadLocalIntoBackground loadLocalIntoBackground = new LoadLocalIntoBackground(AddOutletActivity.this);
+            loadLocalIntoBackground.loadThana();
+            loadLocalIntoBackground.loadOutletType();
+            loadLocalIntoBackground.loadDistrict();
+        }
     }
 
     private boolean isEmpty() {
@@ -316,7 +317,13 @@ public class AddOutletActivity extends AppCompatActivity {
     }
 
     void getDistricts() {
-        districtAdapter = new DistrictAdapter(AddOutletActivity.this, databaseHandler.getDistrict());
+        District district1 = new District();
+        district1.setId(0);
+        district1.setName("Select district");
+        ArrayList<District> arrayListDistrict=new ArrayList<>();
+        arrayListDistrict.add(district1);
+        arrayListDistrict.addAll(databaseHandler.getDistrict());
+        districtAdapter = new DistrictAdapter(AddOutletActivity.this, arrayListDistrict);
         district.setAdapter(districtAdapter);
     }
 

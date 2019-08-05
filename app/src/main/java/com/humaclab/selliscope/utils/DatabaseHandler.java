@@ -142,7 +142,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String KEY_ORDER_PRODUCT_PRICE = "product_price";
     private static final String KEY_ORDER_PRODUCT_DISCOUNT = "product_discount";
     private static final String KEY_ORDER_PRODUCT_TP_DISCOUNT = "product_tp_discount";
-    private static final String KEY_ORDER_Return_Relation_ID= "order_return_id";
+    private static final String KEY_ORDER_Return_Relation_ID = "order_return_id";
 
     //price variation table column name
     private static final String KEY_PV_ID = "pv_id";
@@ -409,7 +409,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     public void deleteUserVisit() {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(TABLE_USER_VISITS,null,null);
+        db.delete(TABLE_USER_VISITS, null, null);
         db.close();
     }
 
@@ -817,7 +817,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     /**
-     * For adding extra temporary outlet which is added into from plan but not in the personal outlet list
+     * For adding extra temporary outlet which is added into from plan but not in the personal
+     * outlet list
      *
      * @param outlet RouteDetailsResponse.OutletItem
      */
@@ -850,8 +851,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }
-        else {
+        } else {
             try {
                 values.put(KEY_OUTLET_ID, outlet.getId());
                 values.put(KEY_OUTLET_NAME, outlet.getName());
@@ -1006,7 +1006,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         Outlets.OutletsResult outletsResult = new Outlets.OutletsResult();
         List<Outlets.Outlet> outletList = new ArrayList<>();
         // Select All Query
-        String selectQuery = "SELECT * FROM " + TABLE_OUTLET + " WHERE " + KEY_OUTLET_NAME + " LIKE \"" + outletName + "%\" OR "+ KEY_OUTLET_CLIENTID+" LIKE \""+ outletName + "%\" ORDER BY " + KEY_OUTLET_NAME + " ASC";
+        String selectQuery = "SELECT * FROM " + TABLE_OUTLET + " WHERE " + KEY_OUTLET_NAME + " LIKE \"" + outletName + "%\" OR " + KEY_OUTLET_CLIENTID + " LIKE \"" + outletName + "%\" ORDER BY " + KEY_OUTLET_NAME + " ASC";
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
 
@@ -1040,10 +1040,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public List<District> getDistrict() {
         List<District> districtList = new ArrayList<>();
 
-        District district1 = new District();
+        /*District district1 = new District();
         district1.setId(0);
         district1.setName("Select district");
-        districtList.add(district1);
+        districtList.add(district1);*/
 
         SQLiteDatabase db = this.getWritableDatabase();
         String query = "SELECT * FROM " + TABLE_DISTRICT;
@@ -1070,12 +1070,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         try {
             for (District district : districtList) {
-                values.put(KEY_DISTRICT_ID, district.getId());
-                values.put(KEY_DISTRICT_NAME, district.getName());
-                try {
-                    db.insert(TABLE_DISTRICT, null, values);
-                } catch (Exception e) {
-                    e.printStackTrace();
+                if(getDistrict().contains(district)) {
+                    values.put(KEY_DISTRICT_ID, district.getId());
+                    values.put(KEY_DISTRICT_NAME, district.getName());
+                    try {
+                        db.insert(TABLE_DISTRICT, null, values);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         } catch (Exception e) {
@@ -1116,17 +1118,22 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     public void setThana(List<Thana> thanaList) {
+
+        getAllThanas();
+
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         try {
             for (Thana thana : thanaList) {
-                values.put(KEY_THANA_ID, thana.getId());
-                values.put(KEY_THANA_NAME, thana.getName());
-                values.put(KEY_DISTRICT_ID, thana.getDistrictId());
-                try {
-                    db.insert(TABLE_THANA, null, values);
-                } catch (Exception e) {
-                    e.printStackTrace();
+                if (!getAllThanas().contains(thana)) {
+                    values.put(KEY_THANA_ID, thana.getId());
+                    values.put(KEY_THANA_NAME, thana.getName());
+                    values.put(KEY_DISTRICT_ID, thana.getDistrictId());
+                    try {
+                        db.insert(TABLE_THANA, null, values);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         } catch (Exception e) {
@@ -1134,6 +1141,32 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         }
         db.close();
     }
+
+    private List<Thana> getAllThanas() {
+        List<Thana> thanaList = new ArrayList<>();
+
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "SELECT * FROM " + TABLE_THANA;
+
+        Cursor cursor = db.rawQuery(query, null);
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                cursor.getColumnNames();
+                Thana thana = new Thana();
+                thana.setId(cursor.getInt(cursor.getColumnIndex(KEY_THANA_ID)));
+                thana.setName(cursor.getString(cursor.getColumnIndex(KEY_THANA_NAME)));
+                thana.setDistrictId(cursor.getInt(cursor.getColumnIndex(KEY_DISTRICT_ID)));
+                thanaList.add(thana);
+
+            } while (cursor.moveToNext());
+        }
+        db.close();
+        return thanaList;
+    }
+
 
     public List<OutletType> getOutletType() {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -1157,16 +1190,19 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     public void setOutletType(List<OutletType> outletTypeList) {
+
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         try {
             for (OutletType outletType : outletTypeList) {
-                values.put(KEY_TYPE_ID, outletType.getId());
-                values.put(KEY_TYPE_NAME, outletType.getName());
-                try {
-                    db.insert(TABLE_OUTLET_TYPE, null, values);
-                } catch (Exception e) {
-                    e.printStackTrace();
+                if (!getOutletType().contains(outletType)) {
+                    values.put(KEY_TYPE_ID, outletType.getId());
+                    values.put(KEY_TYPE_NAME, outletType.getName());
+                    try {
+                        db.insert(TABLE_OUTLET_TYPE, null, values);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         } catch (Exception e) {
@@ -1178,7 +1214,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     //Offline order taking
     public List<AddNewOrder> getOrder() {
         SQLiteDatabase db = this.getWritableDatabase();
-        String outletIds = "SELECT distinct " + KEY_ORDER_OUTLET_ID +"," +KEY_ORDER_DISCOUNT   + " FROM " + TABLE_ORDER;
+        String outletIds = "SELECT distinct " + KEY_ORDER_OUTLET_ID + "," + KEY_ORDER_DISCOUNT + " FROM " + TABLE_ORDER;
 
         List<AddNewOrder> addNewOrderList = new ArrayList<>();
 
@@ -1192,7 +1228,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 List<AddNewOrder.NewOrder.Product> productList = new ArrayList<>();
                 cursorOutletID.getColumnNames();
                 newOrder.outletId = cursorOutletID.getInt(cursorOutletID.getColumnIndex(KEY_ORDER_OUTLET_ID));
-                newOrder.discount =Double.valueOf(cursorOutletID.getString(cursorOutletID.getColumnIndex(KEY_ORDER_DISCOUNT)));
+                newOrder.discount = Double.valueOf(cursorOutletID.getString(cursorOutletID.getColumnIndex(KEY_ORDER_DISCOUNT)));
 
 
                 String orders = "SELECT * FROM " + TABLE_ORDER + " WHERE " + KEY_ORDER_OUTLET_ID + "=" + newOrder.outletId;
@@ -1205,7 +1241,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                         product.row = cursorOrders.getInt(cursorOrders.getColumnIndex(KEY_ORDER_PRODUCT_ROW));
                         product.price = cursorOrders.getString(cursorOrders.getColumnIndex(KEY_ORDER_PRODUCT_PRICE));
                         product.discount = Double.valueOf(cursorOrders.getString(cursorOrders.getColumnIndex(KEY_ORDER_PRODUCT_DISCOUNT)));
-                        product.tpDiscount= Double.valueOf(cursorOrders.getString(cursorOrders.getColumnIndex(KEY_ORDER_PRODUCT_TP_DISCOUNT)));
+                        product.tpDiscount = Double.valueOf(cursorOrders.getString(cursorOrders.getColumnIndex(KEY_ORDER_PRODUCT_TP_DISCOUNT)));
                         product.order_return_id = cursorOrders.getInt(cursorOrders.getColumnIndex(KEY_ORDER_Return_Relation_ID));
                         productList.add(product);
                     } while (cursorOrders.moveToNext());
@@ -1218,12 +1254,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.close();
         return addNewOrderList;
     }
+
     public void setOrder(AddNewOrder addNewOrder, int order_return_id) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(KEY_ORDER_OUTLET_ID, addNewOrder.newOrder.outletId);
         values.put(KEY_ORDER_DISCOUNT, addNewOrder.newOrder.discount);
-        values.put(KEY_ORDER_Return_Relation_ID,order_return_id);
+        values.put(KEY_ORDER_Return_Relation_ID, order_return_id);
         try {
             for (AddNewOrder.NewOrder.Product product : addNewOrder.newOrder.products) {
                 values.put(KEY_ORDER_PRODUCT_ID, product.id);
@@ -1278,10 +1315,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         }
         db.close(); // Closing database connection
     }
-    public List<PriceVariationStartEnd> getpriceVariationStartEndEprice(int productID,String outletType,int varianrRow){
+
+    public List<PriceVariationStartEnd> getpriceVariationStartEndEprice(int productID, String outletType, int varianrRow) {
         List<PriceVariationStartEnd> priceVariationStartEndList = new ArrayList<PriceVariationStartEnd>();
         String selectQuery = "SELECT  * FROM " + TABLE_PRICE_VARIATION
-                + " WHERE " + KEY_PV_PRODUCT_ID + "= "+productID+" AND "+KEY_PV_OUTLET_TYPE+ "= "+ "'"+outletType+"'"+ "AND "+KEY_VARIANT_ROW +"= "+varianrRow;
+                + " WHERE " + KEY_PV_PRODUCT_ID + "= " + productID + " AND " + KEY_PV_OUTLET_TYPE + "= " + "'" + outletType + "'" + "AND " + KEY_VARIANT_ROW + "= " + varianrRow;
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
         // looping through all rows and adding to list
@@ -1291,7 +1329,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                         cursor.getDouble(cursor.getColumnIndex(KEY_PV_STARTE_RANGE)),
                         cursor.getDouble(cursor.getColumnIndex(KEY_PV_END_RANGE)),
                         cursor.getDouble(cursor.getColumnIndex(KEY_PV_PRICE))
-                        );
+                );
                 priceVariationStartEndList.add(priceVariationStartEnd);
             } while (cursor.moveToNext());
         }
@@ -1309,12 +1347,12 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             //String productName = product.getName();
             values.put(KEY_TP_PRODUCT_ID, result.getProductId());
             for (Promotion promotion : result.getPromotion()) {
-                values.put(KEY_TP_PROMOTIONAL_TITLE, promotion.getPromotionTitle() );
-                values.put(KEY_TP_PROMOTION_TYPE, promotion.getPromotionType() );
-                values.put(KEY_TP_PROMOTION_VALUE, promotion.getPromotionValue() );
-                values.put(KEY_TP_OFFER_TYPE, promotion.getOfferType() );
-                values.put(KEY_TP_OFFER_VALUE,promotion.getOfferValue()  );
-                if(!(promotion.getOfferProduct() == null)) {
+                values.put(KEY_TP_PROMOTIONAL_TITLE, promotion.getPromotionTitle());
+                values.put(KEY_TP_PROMOTION_TYPE, promotion.getPromotionType());
+                values.put(KEY_TP_PROMOTION_VALUE, promotion.getPromotionValue());
+                values.put(KEY_TP_OFFER_TYPE, promotion.getOfferType());
+                values.put(KEY_TP_OFFER_VALUE, promotion.getOfferValue());
+                if (!(promotion.getOfferProduct() == null)) {
                     values.put(KEY_TP_OFFER_PRODUCT_NAME, promotion.getOfferProduct().get(0).getProductName());
                     values.put(KEY_TP_OFFER_PRODUCT_QTY, promotion.getOfferProduct().get(0).getProductQty());
                     values.put(KEY_TP_OFFER_PRODUCT_ID, promotion.getOfferProduct().get(0).getProductId());
@@ -1331,10 +1369,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.close(); // Closing database connection
     }
 
-    public List<TradePromoionData> getTradePromoion(int productID){
+    public List<TradePromoionData> getTradePromoion(int productID) {
         List<TradePromoionData> tradePromoionData = new ArrayList<TradePromoionData>();
         String selectQuery = "SELECT  * FROM " + TABLE_TRADE_PROMTOIN
-                + " WHERE " + KEY_TP_PRODUCT_ID + "= "+productID;
+                + " WHERE " + KEY_TP_PRODUCT_ID + "= " + productID;
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
         // looping through all rows and adding to list
@@ -1376,14 +1414,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.close();
     }
 
-    public List<ReasonResponse.Result> getSellsResponseReason(){
+    public List<ReasonResponse.Result> getSellsResponseReason() {
         SQLiteDatabase db = this.getWritableDatabase();
         String query = "SELECT * FROM " + TABLE_SELLS_REASON;
         List<ReasonResponse.Result> resultList = new ArrayList<>();
 
-        Cursor cursor = db.rawQuery(query,null);
+        Cursor cursor = db.rawQuery(query, null);
 
-        if(cursor.moveToFirst()){
+        if (cursor.moveToFirst()) {
             do {
                 cursor.getColumnNames();
                 ReasonResponse.Result result = new ReasonResponse.Result();

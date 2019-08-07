@@ -65,14 +65,10 @@ public class OutletActivity extends AppCompatActivity {
             }
         });
 
-        getRoute(); // For getting route plan data
-
         binding.rvOutlet.addItemDecoration(new VerticalSpaceItemDecoration(20));
         binding.rvOutlet.setLayoutManager(new LinearLayoutManager(this));
 
-        if (!NetworkUtility.isNetworkAvailable(this)) {
-            Toast.makeText(this, "Connect to Wifi or Mobile Data for better performance.", Toast.LENGTH_SHORT).show();
-        }
+
 
         binding.tvSearchOutlet.addTextChangedListener(new TextWatcher() {
             @Override
@@ -93,15 +89,25 @@ public class OutletActivity extends AppCompatActivity {
             }
         });
 
-        binding.srlOutlet.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                if (!NetworkUtility.isNetworkAvailable(OutletActivity.this)) {
-                    Toast.makeText(getApplicationContext(), "Connect to Wifi or Mobile Data for better performance.", Toast.LENGTH_SHORT).show();
-                }
-                getOutlets();
+        binding.srlOutlet.setOnRefreshListener(() -> {
+            if (NetworkUtility.isNetworkAvailable(OutletActivity.this)) {
+                LoadLocalIntoBackground loadLocalIntoBackground = new LoadLocalIntoBackground(this);
+                loadLocalIntoBackground.loadOutlet();
+
+
+
+            }else{
+                Toast.makeText(getApplicationContext(), "Connect to Wifi or Mobile Data for better performance.", Toast.LENGTH_SHORT).show();
             }
+
+            getOutlets();
         });
+
+   //if network is Available then update the data again
+        if (NetworkUtility.isNetworkAvailable(this)) {
+            LoadLocalIntoBackground loadLocalIntoBackground = new LoadLocalIntoBackground(this);
+            loadLocalIntoBackground.loadOutlet();
+        }
 
     }
 
@@ -120,7 +126,7 @@ public class OutletActivity extends AppCompatActivity {
             outletRecyclerViewAdapter = new OutletRecyclerViewAdapter(OutletActivity.this, OutletActivity.this, outletsResult);
             binding.rvOutlet.setAdapter(outletRecyclerViewAdapter);
         } else {
-            Toast.makeText(getApplicationContext(), "You don't have any outlet in your list.", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "Loading data from online.", Toast.LENGTH_LONG).show();
         }
     }
 

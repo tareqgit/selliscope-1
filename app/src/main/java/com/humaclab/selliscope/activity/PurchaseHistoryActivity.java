@@ -53,12 +53,14 @@ public class PurchaseHistoryActivity extends AppCompatActivity {
         SessionManager sessionManager = new SessionManager(this);
         apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(), sessionManager.getUserPassword(), false).create(SelliscopeApiEndpointInterface.class);
         binding.rlPurchaseHistory.setLayoutManager(new LinearLayoutManager(this));
+
         binding.srlPurchaseHistory.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 getPurchaseHistory();
             }
         });
+
         binding.srlPurchaseHistory.setRefreshing(true);
 
         binding.btnPayment.setOnClickListener(new View.OnClickListener() {

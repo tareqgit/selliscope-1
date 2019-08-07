@@ -29,15 +29,19 @@ import com.humaclab.selliscope.R;
 import com.humaclab.selliscope.adapters.OrderProductRecyclerAdapter;
 import com.humaclab.selliscope.databinding.ActivityOrderBinding;
 import com.humaclab.selliscope.helper.SelectedProductHelper;
+import com.humaclab.selliscope.model.performance.orders_model.Order;
 import com.humaclab.selliscope.model.variant_product.Brand;
 import com.humaclab.selliscope.model.variant_product.Category;
 import com.humaclab.selliscope.model.variant_product.ProductsItem;
 import com.humaclab.selliscope.utils.DatabaseHandler;
+import com.humaclab.selliscope.utils.LoadLocalIntoBackground;
+import com.humaclab.selliscope.utils.NetworkUtility;
 import com.humaclab.selliscope.utils.SessionManager;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import static com.humaclab.selliscope.sales_return.SalesReturn_2019_Activity.sSalesReturn2019SelectedProducts;
 
@@ -105,14 +109,30 @@ public class OrderActivity extends AppCompatActivity implements OrderProductRecy
             }
         });
 
-        binding.srlProduct.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                getProducts();
+        binding.srlProduct.setOnRefreshListener(() -> {
+            //if network is Available then update the data again
+            if (NetworkUtility.isNetworkAvailable(OrderActivity.this)) {
+                LoadLocalIntoBackground loadLocalIntoBackground = new LoadLocalIntoBackground(OrderActivity.this);
+
+                loadLocalIntoBackground.loadProduct();
+                getCategory();
+                getBrand();
             }
+            getProducts();
         });
         binding.srlProduct.setRefreshing(true);
 
+
+        //if network is Available then update the data again
+        if (NetworkUtility.isNetworkAvailable(this)) {
+            LoadLocalIntoBackground loadLocalIntoBackground = new LoadLocalIntoBackground(this);
+
+            loadLocalIntoBackground.loadProduct();
+
+            getCategory();
+            getBrand();
+
+        }
         getProducts();
     }
 
@@ -157,6 +177,7 @@ public class OrderActivity extends AppCompatActivity implements OrderProductRecy
 
     private void getBrand() {
         List<Brand> brands = databaseHandler.getBrand();
+        Log.d("tareq_test", "Brand Size: " + brands.size());
         brandName.clear();
         brandName.add("Brand");
         brandID.add(0);
@@ -188,6 +209,7 @@ public class OrderActivity extends AppCompatActivity implements OrderProductRecy
     public void getProducts() {
         binding.srlProduct.setRefreshing(false);
         List<ProductsItem> productsItemList = databaseHandler.getProduct(categoryID.get(binding.spProductCategory.getSelectedItemPosition()), brandID.get(binding.spProductBrand.getSelectedItemPosition()));
+        Log.d("tareq_test", "product size" + productsItemList.size());
         mOrderProductRecyclerAdapter = new OrderProductRecyclerAdapter(context, productsItemList, selectedProductList, outletType, this);
         binding.rvProduct.setAdapter(mOrderProductRecyclerAdapter);
         //if this activity called from product activity
@@ -202,9 +224,9 @@ public class OrderActivity extends AppCompatActivity implements OrderProductRecy
             totalAmt += Double.valueOf(selectedProductHelper.getTotalPrice());
             totalDiscount += Double.valueOf(selectedProductHelper.getTpDiscount());
         }
-        binding.tvTotalAmt.setText(String.format("%.2f", totalAmt));
-        binding.tvTotalDiscnt.setText(String.format("%.2f", totalDiscount));
-        binding.tvTotalGr.setText(String.format("%.2f", (totalAmt - totalDiscount)));
+        binding.tvTotalAmt.setText(String.format(Locale.ENGLISH, "%.2f", totalAmt));
+        binding.tvTotalDiscnt.setText(String.format(Locale.ENGLISH, "%.2f", totalDiscount));
+        binding.tvTotalGr.setText(String.format(Locale.ENGLISH, "%.2f", (totalAmt - totalDiscount)));
         updateBadge();
     }
 
@@ -240,7 +262,6 @@ public class OrderActivity extends AppCompatActivity implements OrderProductRecy
         }
 
 
-
         selectedProductList.addAll(selectedProducts);
 
 
@@ -250,9 +271,9 @@ public class OrderActivity extends AppCompatActivity implements OrderProductRecy
             totalAmt += Double.valueOf(selectedProductHelper.getTotalPrice());
             totalDiscount += Double.valueOf(selectedProductHelper.getTpDiscount());
         }
-        binding.tvTotalAmt.setText(String.format("%.2f", totalAmt));
-        binding.tvTotalDiscnt.setText(String.format("%.2f", totalDiscount));
-        binding.tvTotalGr.setText(String.format("%.2f", (totalAmt - totalDiscount)));
+        binding.tvTotalAmt.setText(String.format(Locale.ENGLISH, "%.2f", totalAmt));
+        binding.tvTotalDiscnt.setText(String.format(Locale.ENGLISH, "%.2f", totalDiscount));
+        binding.tvTotalGr.setText(String.format(Locale.ENGLISH, "%.2f", (totalAmt - totalDiscount)));
         Log.d("tareq_test", "" + totalAmt + " " + totalDiscount + " ");
 
 

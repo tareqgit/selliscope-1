@@ -13,6 +13,7 @@
         android:id="@+id/content_fragment"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+
         app:layout_constraintBottom_toTopOf="@+id/navigation"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -59,13 +60,25 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:background="@color/colorPrimary"
-        android:foreground="?attr/selectableItemBackground"
-        app:itemBackground="@color/colorPrimary"
+
         app:itemIconTint="@drawable/selector"
         app:itemTextColor="@android:color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:menu="@menu/bottom_navigation"
-        android:elevation="5dp"/>
+
+      />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="4dp"
+        android:layout_above="@id/navigation"
+        android:background="@drawable/reverse_shadow"
+        app:layout_constraintBottom_toTopOf="@+id/navigation"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <!--android:foreground="?attr/selectableItemBackground"
+        app:itemBackground="@color/colorPrimary"-->
 </androidx.constraintlayout.widget.ConstraintLayout>

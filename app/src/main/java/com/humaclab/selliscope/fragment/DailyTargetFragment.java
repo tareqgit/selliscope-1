@@ -27,6 +27,7 @@ import com.liulishuo.magicprogresswidget.MagicProgressCircle;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Locale;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -174,10 +175,10 @@ public class DailyTargetFragment extends Fragment {
 
                     tv_date.setText(response.body().getResult().getDate());
                     tv_target_label.setText(response.body().getResult().getTargetType());
-                    tv_target_achieved.setText(response.body().getResult().getAchieved()+" "+sales_types);
-                    tv_total.setText(total.toString()+" "+sales_types);
+                    tv_target_achieved.setText(String.format(Locale.ENGLISH,"%,.2f %s",achieved,sales_types));
+                    tv_total.setText(String.format(Locale.ENGLISH,"%,.2f %s",total,sales_types));
                     //tv_visited.setText(response.body().getResult().getVisited());
-                    tv_target_remaining.setText(remaining.toString()+" "+sales_types);
+                    tv_target_remaining.setText(String.format(Locale.ENGLISH,"%,.2f %s",remaining, sales_types));
                  //   circle_progress_view.setTextEnabled(true);
                  //   circle_progress_view.setInterpolator(new AccelerateDecelerateInterpolator());
                  //   circle_progress_view.setStartAngle(90);

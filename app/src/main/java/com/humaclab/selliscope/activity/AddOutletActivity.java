@@ -108,6 +108,7 @@ public class AddOutletActivity extends AppCompatActivity {
 
             }
         });
+
         databaseHandler = new DatabaseHandler(this);
         sessionManager = new SessionManager(this);
         apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(), sessionManager.getUserPassword(), false).create(SelliscopeApiEndpointInterface.class);
@@ -245,6 +246,8 @@ public class AddOutletActivity extends AppCompatActivity {
                     //Do something here
 
                     ((SwipeRefreshLayout)findViewById(R.id.swipeRefresher)).setRefreshing(false);
+                    getDistricts();
+                    getOutletTypes();
                 }
             }, 5000);
         } catch (Exception e) {
@@ -269,6 +272,8 @@ public class AddOutletActivity extends AppCompatActivity {
                                   //Do something here
 
                                   ((SwipeRefreshLayout)findViewById(R.id.swipeRefresher)).setRefreshing(false);
+                                  getDistricts();
+                                  getOutletTypes();
                               }
                           }, 5000);
                     } catch (Exception e) {
@@ -330,12 +335,12 @@ public class AddOutletActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 Gson gson = new Gson();
-                System.out.println("Response code: " + response.code());
+
                 pd.dismiss();
                 if (response.code() == 201) {
                     Toast.makeText(AddOutletActivity.this, "Outlet created successfully", Toast.LENGTH_SHORT).show();
                     LoadLocalIntoBackground loadLocalIntoBackground = new LoadLocalIntoBackground(AddOutletActivity.this);
-                    loadLocalIntoBackground.loadOutlet(true);
+                    loadLocalIntoBackground.loadOutlet();
                     try {
                         CreateOutlet createOutletResult = gson.fromJson(response.body().string(), CreateOutlet.class);
                         Toast.makeText(AddOutletActivity.this, createOutletResult.result, Toast.LENGTH_SHORT).show();

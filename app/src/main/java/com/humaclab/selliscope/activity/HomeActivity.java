@@ -18,6 +18,7 @@ import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -195,7 +196,10 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
         databaseHandler = new DatabaseHandler(this);
         loadLocalIntoBackground = new LoadLocalIntoBackground(this);
-        loadLocalIntoBackground.loadAll();
+
+        AsyncTask.execute(() -> loadLocalIntoBackground.loadAll());
+
+
         apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(), sessionManager.getUserPassword(), false).create(SelliscopeApiEndpointInterface.class);
         pd = new ProgressDialog(this);
 //        CheckAppUpdated.checkAppUpdate(this);
@@ -307,17 +311,17 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         setDiameter();
 
         //loading Data into background
-        schedulerForMinute = Executors.newSingleThreadScheduledExecutor();
+       /* schedulerForMinute = Executors.newSingleThreadScheduledExecutor();
         schedulerForMinute.scheduleAtFixedRate(() -> {
-           /* runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-           */
+
             Log.v("Running threads", "Thread running in background for updating products and outlets");
-            loadLocalIntoBackground.loadOutlet(false);
-            /*    }
-            });*/
-        }, 0, 1, TimeUnit.MINUTES);
+            loadLocalIntoBackground.loadOutlet();
+
+
+        }, 0, 1, TimeUnit.MINUTES);*/
+
+
+
         schedulerForHour = Executors.newSingleThreadScheduledExecutor();
         schedulerForHour.scheduleAtFixedRate(() -> {
           /*  runOnUiThread(new Runnable() {
@@ -585,7 +589,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
 //                if (databaseHandler.removeAll()) {
                 sessionManager.logoutUser(false);
-                schedulerForMinute.shutdownNow();
+         //       schedulerForMinute.shutdownNow();
                 schedulerForHour.shutdownNow();
 
 

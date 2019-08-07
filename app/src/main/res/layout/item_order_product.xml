@@ -179,7 +179,7 @@
                     android:shadowDy="1"
                     android:shadowRadius="2"
 
-                    android:text='@{product.price}'
+
                     android:textColor="@color/light_font" />
             </LinearLayout>
 

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.humaclab.selliscope.dbmodel.PriceVariationStartEnd;
@@ -417,51 +418,54 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public void addProduct(List<ProductsItem> products) {
         SQLiteDatabase db = this.getWritableDatabase();
         for (ProductsItem product : products) {
-            ContentValues values = new ContentValues();
-            String productName = product.getName();
-            values.put(KEY_PRODUCT_ID, product.getId());
-            values.put(KEY_PRODUCT_IMAGE, product.getImg());
-            values.put(KEY_CATEGORY_ID, product.getCategory().getId());
-            values.put(KEY_CATEGORY_NAME, product.getCategory().getName());
-            values.put(KEY_BRAND_ID, product.getBrand().getId());
-            values.put(KEY_BRAND_NAME, product.getBrand().getName());
-            if (product.getVariants().isEmpty()) {
-                values.put(KEY_PRODUCT_NAME, product.getName().toLowerCase());
-                values.put(KEY_PRODUCT_PRICE, product.getPrice());
-                int stock = 0;
-                for (GodownItem godownItem : product.getGodown()) {
-                    stock += Integer.parseInt(godownItem.getStock());
-                }
-                values.put(KEY_PRODUCT_STOCK, String.valueOf(stock));
-
-                try {
-                    db.insert(TABLE_PRODUCT, null, values);
-                    values.clear();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            } else {
-                for (VariantsItem variants : product.getVariants()) {
-                    for (VariantDetailsItem variantDetailsItem : variants.getVariantDetailsItems()) {
-                        if (variantDetailsItem.getRow() != null) {
-                            values.put(KEY_VARIANT_ROW, variantDetailsItem.getRow());
-                        } else if (variantDetailsItem.getStock() != null) {
-                            values.put(KEY_PRODUCT_STOCK, variantDetailsItem.getStock());
-                        } else {
-                            if (variantDetailsItem.getVariantCatName().toLowerCase().equals("price")) {
-                                values.put(KEY_PRODUCT_PRICE, variantDetailsItem.getName());
-                                productName += "-" + variantDetailsItem.getName();
-                            } else
-                                productName += "-" + variantDetailsItem.getName();
-                        }
+            if (!getAllProduct().contains(product)) {
+                ContentValues values = new ContentValues();
+                String productName = product.getName();
+                values.put(KEY_PRODUCT_ID, product.getId());
+                values.put(KEY_PRODUCT_IMAGE, product.getImg());
+                values.put(KEY_CATEGORY_ID, product.getCategory().getId());
+                values.put(KEY_CATEGORY_NAME, product.getCategory().getName());
+                values.put(KEY_BRAND_ID, product.getBrand().getId());
+                values.put(KEY_BRAND_NAME, product.getBrand().getName());
+                if (product.getVariants().isEmpty()) {
+                    values.put(KEY_PRODUCT_NAME, product.getName().toLowerCase());
+                    values.put(KEY_PRODUCT_PRICE, product.getPrice());
+                    int stock = 0;
+                    for (GodownItem godownItem : product.getGodown()) {
+                        stock += Integer.parseInt(godownItem.getStock());
                     }
-                    values.put(KEY_PRODUCT_NAME, productName.toLowerCase().replace(" ", ""));
+                    values.put(KEY_PRODUCT_STOCK, String.valueOf(stock));
 
                     try {
                         db.insert(TABLE_PRODUCT, null, values);
-                        productName = product.getName();
+                        values.clear();
                     } catch (Exception e) {
                         e.printStackTrace();
+                    }
+                } else {
+                    for (VariantsItem variants : product.getVariants()) {
+                        for (VariantDetailsItem variantDetailsItem : variants.getVariantDetailsItems()) {
+                            if (variantDetailsItem.getRow() != null) {
+                                values.put(KEY_VARIANT_ROW, variantDetailsItem.getRow());
+                            } else if (variantDetailsItem.getStock() != null) {
+                                values.put(KEY_PRODUCT_STOCK, variantDetailsItem.getStock());
+                            } else {
+                                if (variantDetailsItem.getVariantCatName().toLowerCase().equals("price")) {
+                                    values.put(KEY_PRODUCT_PRICE, variantDetailsItem.getName());
+                                    productName += "-" + variantDetailsItem.getName();
+                                } else
+                                    productName += "-" + variantDetailsItem.getName();
+                            }
+                        }
+                        values.put(KEY_PRODUCT_NAME, productName.toLowerCase().replace(" ", ""));
+
+                        try {
+                            if(!db.isOpen()) db = this.getWritableDatabase();
+                            db.insert(TABLE_PRODUCT, null, values);
+                            productName = product.getName();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
             }
@@ -472,12 +476,15 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public void addCategory(int categoryID, String categoryName) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(KEY_CATEGORY_ID, categoryID);
-        values.put(KEY_CATEGORY_NAME, categoryName);
-        try {
-            db.insert(TABLE_CATEGORY, null, values);
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (!getCategory().contains(new Category(categoryName, String.valueOf(categoryID)))) {
+            values.put(KEY_CATEGORY_ID, categoryID);
+            values.put(KEY_CATEGORY_NAME, categoryName);
+            try {
+                if(!db.isOpen())db = this.getWritableDatabase();
+                db.insert(TABLE_CATEGORY, null, values);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         values.clear();
         db.close(); // Closing database connection
@@ -486,14 +493,18 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public void addBrand(int brandID, String brandName) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(KEY_BRAND_ID, brandID);
-        values.put(KEY_BRAND_NAME, brandName);
-        try {
-            db.insert(TABLE_BRAND, null, values);
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (!getBrand().contains(new Brand(brandName, String.valueOf(brandID)))) {
+            values.put(KEY_BRAND_ID, brandID);
+            values.put(KEY_BRAND_NAME, brandName);
+            try {
+                if (!db.isOpen()) db = this.getWritableDatabase();
+                db.insert(TABLE_BRAND, null, values);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         values.clear();
+
         db.close(); // Closing database connection
     }
 
@@ -505,6 +516,45 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.delete(TABLE_PRICE_VARIATION, KEY_PV_ID + " > ?", new String[]{String.valueOf(-1)});
         db.delete(TABLE_TRADE_PROMTOIN, KEY_TP_ID + " > ?", new String[]{String.valueOf(-1)});
         db.close();
+    }
+
+    public List<ProductsItem> getAllProduct() {
+        List<ProductsItem> productList = new ArrayList<>();
+        // Select All Query
+        String selectQuery;
+
+            selectQuery = "SELECT  * FROM " + TABLE_PRODUCT + " ORDER BY " + KEY_PRODUCT_NAME + " ASC";
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                cursor.getColumnNames();
+                ProductsItem productsItem = new ProductsItem();
+                Category category = new Category();
+                Brand brand = new Brand();
+
+                productsItem.setId(cursor.getInt(cursor.getColumnIndex(KEY_PRODUCT_ID)));
+                productsItem.setName(cursor.getString(cursor.getColumnIndex(KEY_PRODUCT_NAME)));
+                productsItem.setPrice(cursor.getString(cursor.getColumnIndex(KEY_PRODUCT_PRICE)));
+                productsItem.setImg(cursor.getString(cursor.getColumnIndex(KEY_PRODUCT_IMAGE)));
+                productsItem.setStock(cursor.getString(cursor.getColumnIndex(KEY_PRODUCT_STOCK)));
+                productsItem.setVariantRow(cursor.getString(cursor.getColumnIndex(KEY_VARIANT_ROW)) == null ? "0" : cursor.getString(cursor.getColumnIndex(KEY_VARIANT_ROW)));
+
+                category.setName(cursor.getString(cursor.getColumnIndex(KEY_CATEGORY_NAME)));
+                category.setId(String.valueOf(cursor.getInt(cursor.getColumnIndex(KEY_CATEGORY_ID))));
+                productsItem.setCategory(category);
+
+                brand.setId(String.valueOf(cursor.getInt(cursor.getColumnIndex(KEY_BRAND_ID))));
+                brand.setName(cursor.getString(cursor.getColumnIndex(KEY_BRAND_NAME)));
+                productsItem.setBrand(brand);
+
+                productList.add(productsItem);
+            } while (cursor.moveToNext());
+        }
+        return productList;
     }
 
     public List<ProductsItem> getProduct(int categoryID, int brandID) {
@@ -785,33 +835,45 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.close();
     }
 
+    //For outlet
+    public void removeOutletWithId(int outletId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_OUTLET, KEY_OUTLET_ID + " = ?", new String[]{String.valueOf(outletId)});
+        db.close();
+    }
+
     public void addOutlet(List<Outlets.Outlet> outletList) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         try {
             for (Outlets.Outlet outlet : outletList) {
-                values.put(KEY_OUTLET_ID, outlet.outletId);
-                values.put(KEY_OUTLET_NAME, outlet.outletName);
-                values.put(KEY_OUTLET_TYPE, outlet.outletType);
-                values.put(KEY_OUTLET_OWNER_NAME, outlet.ownerName);
-                values.put(KEY_OUTLET_ADDRESS, outlet.outletAddress);
-                values.put(KEY_OUTLET_DISTRICT, outlet.district);
-                values.put(KEY_OUTLET_THANA, outlet.thana);
-                values.put(KEY_OUTLET_PHONE, outlet.phone);
-                values.put(KEY_OUTLET_IMAGE, outlet.outletImgUrl);
-                values.put(KEY_OUTLET_LONGITUDE, outlet.outletLongitude);
-                values.put(KEY_OUTLET_LATITUDE, outlet.outletLatitude);
-                values.put(KEY_OUTLET_DUE, outlet.outletDue);
-                values.put(KEY_OUTLET_ROUTEPLAN, "0");
-                values.put(KEY_OUTLET_CLIENTID, outlet.ClientID);
-                try {
-                    db.insert(TABLE_OUTLET, null, values);
-                } catch (Exception e) {
-                    e.printStackTrace();
+
+                if (!getAllOutlet().outlets.contains(outlet)) {
+                    values.put(KEY_OUTLET_ID, outlet.outletId);
+                    values.put(KEY_OUTLET_NAME, outlet.outletName);
+                    values.put(KEY_OUTLET_TYPE, outlet.outletType);
+                    values.put(KEY_OUTLET_OWNER_NAME, outlet.ownerName);
+                    values.put(KEY_OUTLET_ADDRESS, outlet.outletAddress);
+                    values.put(KEY_OUTLET_DISTRICT, outlet.district);
+                    values.put(KEY_OUTLET_THANA, outlet.thana);
+                    values.put(KEY_OUTLET_PHONE, outlet.phone);
+                    values.put(KEY_OUTLET_IMAGE, outlet.outletImgUrl);
+                    values.put(KEY_OUTLET_LONGITUDE, outlet.outletLongitude);
+                    values.put(KEY_OUTLET_LATITUDE, outlet.outletLatitude);
+                    values.put(KEY_OUTLET_DUE, outlet.outletDue);
+                    values.put(KEY_OUTLET_ROUTEPLAN, outlet.getOutlet_routeplan());
+                    values.put(KEY_OUTLET_CLIENTID, outlet.getClientID());
+                    try {
+                        removeOutletWithId(outlet.outletId);
+                        if (!db.isOpen()) db = this.getWritableDatabase();
+                        db.insert(TABLE_OUTLET, null, values);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            Log.e("tareq_test", "can't update outlet " + e.getMessage());
         }
         db.close();
     }
@@ -961,8 +1023,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 outlet.outletLongitude = Double.parseDouble(cursor.getString(cursor.getColumnIndex(KEY_OUTLET_LONGITUDE)));
                 outlet.outletLatitude = Double.parseDouble(cursor.getString(cursor.getColumnIndex(KEY_OUTLET_LATITUDE)));
                 outlet.outletDue = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_DUE));
-                outlet.outlet_routeplan = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_ROUTEPLAN));
-                outlet.ClientID = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_CLIENTID));
+                outlet.setOutlet_routeplan(cursor.getString(cursor.getColumnIndex(KEY_OUTLET_ROUTEPLAN)));
+                outlet.setClientID(cursor.getString(cursor.getColumnIndex(KEY_OUTLET_CLIENTID)));
 
                 outletList.add(outlet);
             } while (cursor.moveToNext());
@@ -1027,8 +1089,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 outlet.outletLongitude = Double.parseDouble(cursor.getString(cursor.getColumnIndex(KEY_OUTLET_LONGITUDE)));
                 outlet.outletLatitude = Double.parseDouble(cursor.getString(cursor.getColumnIndex(KEY_OUTLET_LATITUDE)));
                 outlet.outletDue = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_DUE));
-                outlet.outlet_routeplan = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_ROUTEPLAN));
-                outlet.ClientID = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_CLIENTID));
+                outlet.setOutlet_routeplan(cursor.getString(cursor.getColumnIndex(KEY_OUTLET_ROUTEPLAN)));
+                outlet.setClientID(cursor.getString(cursor.getColumnIndex(KEY_OUTLET_CLIENTID)));
                 outletList.add(outlet);
             } while (cursor.moveToNext());
         }
@@ -1066,14 +1128,17 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     public void setDistrict(List<District> districtList) {
+        List<District> districts = getDistrict();
+
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         try {
             for (District district : districtList) {
-                if(getDistrict().contains(district)) {
+                if (!districts.contains(district)) {
                     values.put(KEY_DISTRICT_ID, district.getId());
                     values.put(KEY_DISTRICT_NAME, district.getName());
                     try {
+                        if (!db.isOpen()) db = this.getWritableDatabase();
                         db.insert(TABLE_DISTRICT, null, values);
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -1119,17 +1184,18 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     public void setThana(List<Thana> thanaList) {
 
-        getAllThanas();
+        List<Thana> thanas = getAllThanas();
 
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         try {
             for (Thana thana : thanaList) {
-                if (!getAllThanas().contains(thana)) {
+                if (!thanas.contains(thana)) {
                     values.put(KEY_THANA_ID, thana.getId());
                     values.put(KEY_THANA_NAME, thana.getName());
                     values.put(KEY_DISTRICT_ID, thana.getDistrictId());
                     try {
+                        if (!db.isOpen()) db = this.getWritableDatabase();
                         db.insert(TABLE_THANA, null, values);
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -1191,15 +1257,19 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     public void setOutletType(List<OutletType> outletTypeList) {
 
+        List<OutletType> outletTypes = getOutletType();
+
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         try {
             for (OutletType outletType : outletTypeList) {
-                if (!getOutletType().contains(outletType)) {
+                if (!outletTypes.contains(outletType)) {
                     values.put(KEY_TYPE_ID, outletType.getId());
                     values.put(KEY_TYPE_NAME, outletType.getName());
                     try {
+                        if (!db.isOpen()) db = this.getWritableDatabase();
                         db.insert(TABLE_OUTLET_TYPE, null, values);
+                        Log.d("tareq_test", "" + new Gson().toJson(getOutletType()));
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

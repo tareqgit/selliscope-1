@@ -23,6 +23,7 @@ import com.humaclab.selliscope.model.variant_product.ProductsItem;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by leon on 14/3/18.
@@ -136,6 +137,7 @@ public class OrderProductRecyclerAdapter extends RecyclerView.Adapter<OrderProdu
                 .thumbnail(0.1f)
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
                 .into(holder.imageView);
+        holder.getBinding().tvProductPrice.setText(String.format(Locale.ENGLISH,"%,.2f ", Double.parseDouble((products.getPrice()==null?"0":products.getPrice()).replace(",",""))));
         holder.getBinding().setProduct(products);
         holder.getBinding().executePendingBindings();
     }

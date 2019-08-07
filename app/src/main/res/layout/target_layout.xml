@@ -21,7 +21,7 @@
             android:id="@+id/tv_target_label"
             android:layout_width="wrap_content"
             android:layout_height="31dp"
-            android:layout_toRightOf="@id/icon_target"
+
             android:background="@drawable/moss_back"
             android:drawableStart="@drawable/ic_target_sales"
             android:drawablePadding="2dp"
@@ -55,7 +55,7 @@
 
         <TextView
             android:id="@+id/tv_target_achieved"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_above="@+id/tv_completed"
             android:layout_alignParentStart="true"
@@ -64,9 +64,10 @@
             android:fontFamily="@font/latoregular"
             android:text="0.0"
             android:textColor="@color/colorPrimary"
-            android:textSize="24sp"
+            android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/tv_completed"
             app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
@@ -152,12 +153,13 @@
             android:layout_alignParentEnd="true"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="8dp"
-            android:fontFamily="@font/latoregular"
-            android:text="@string/remaining"
             android:drawableStart="@drawable/ic_task_left"
             android:drawablePadding="2dp"
+            android:fontFamily="@font/latoregular"
             android:gravity="center"
+            android:text="@string/remaining"
 
+            android:textAlignment="textEnd"
             android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@+id/tv_target_remaining"
@@ -165,7 +167,7 @@
 
         <TextView
             android:id="@+id/tv_target_remaining"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_above="@+id/tv_completed"
             android:layout_alignParentEnd="true"
@@ -173,11 +175,13 @@
             android:layout_marginBottom="8dp"
             android:fontFamily="@font/latoregular"
             android:text="0.0"
+            android:textAlignment="textEnd"
             android:textColor="@color/red"
-            android:textSize="24sp"
+            android:textSize="18sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/tv_remaining" />
 
         <TextView
             android:id="@+id/tv_date"

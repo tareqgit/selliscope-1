@@ -114,11 +114,11 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
             holder.getBinding().outletImage.setImageResource(R.drawable.selliscope_splash);
         }
         holder.getBinding().tvOutletName.setText(outlet.outletName);
-        holder.getBinding().tvClientId.setText(outlet.ClientID == null ? "Pending" : outlet.ClientID);
+        holder.getBinding().tvClientId.setText(outlet.getClientID().equals("") ? " Pending" : outlet.getClientID());
         holder.getBinding().tvOutletAddress.setText(outlet.outletAddress);
         holder.getBinding().tvOutletContactNumber.setText(outlet.phone);
         holder.getBinding().tvOwnerName.setText(outlet.ownerName);
-        if (outlet.outlet_routeplan.equals("1")) {
+        if (outlet.getOutlet_routeplan().equals("1")) {
             holder.getBinding().routeplanBackground2.setImageResource(R.drawable.moss_gradient2);
 
         }else{

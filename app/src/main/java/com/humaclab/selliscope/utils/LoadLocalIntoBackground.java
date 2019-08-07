@@ -50,22 +50,22 @@ public class LoadLocalIntoBackground {
     public void loadAll() {
         if (!sessionManager.isAllDataLoaded()) {
             this.loadProduct();
-            this.loadOutlet(false);
+            this.loadOutlet();
             this.loadOutletType();
             this.loadDistrict();
             this.loadThana();
-            this.loadReason();
+          //  this.loadReason();
             sessionManager.setAllDataLoaded();
         }
     }
 
     public void updateAllData() {
         this.loadProduct();
-        this.loadOutlet(true);
+        this.loadOutlet();
         this.loadOutletType();
         this.loadDistrict();
         this.loadThana();
-        this.loadReason();
+   //     this.loadReason();
     }
 
     public void loadProduct() {
@@ -78,7 +78,7 @@ public class LoadLocalIntoBackground {
                         try {
                             List<ProductsItem> products = response.body().getResult().getProducts();
                             //for removing previous data
-                            databaseHandler.removeProductCategoryBrand();
+                          //  databaseHandler.removeProductCategoryBrand();
                             databaseHandler.addProduct(products);
                             loadCategory();
                             loadBrand();
@@ -154,7 +154,7 @@ public class LoadLocalIntoBackground {
             }
         });
     }
-    private void loadCategory() {
+    public void loadCategory() {
         Call<CategoryResponse> call = apiService.getCategories();
         call.enqueue(new Callback<CategoryResponse>() {
             @Override
@@ -179,7 +179,7 @@ public class LoadLocalIntoBackground {
 
     }
 
-    private void loadBrand() {
+    public void loadBrand() {
         Call<BrandResponse> call = apiService.getBrands();
         call.enqueue(new Callback<BrandResponse>() {
             @Override
@@ -191,19 +191,20 @@ public class LoadLocalIntoBackground {
                             databaseHandler.addBrand(result.id, result.name);
                         }
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        Log.e("tareq_test" , "Brand: "+ e.getMessage());
                     }
                 }
             }
 
             @Override
             public void onFailure(Call<BrandResponse> call, Throwable t) {
-                t.printStackTrace();
+
+                Log.e("tareq_test" , "Brand: "+ t.getMessage());
             }
         });
     }
 
-    public void loadOutlet(final boolean fullUpdate) {
+    public void loadOutlet() {
         Call<ResponseBody> call = apiService.getOutlets();
         call.enqueue(new Callback<ResponseBody>() {
             @Override
@@ -212,15 +213,16 @@ public class LoadLocalIntoBackground {
                 if (response.code() == 200) {
                     try {
                         Outlets getOutletListSuccessful = gson.fromJson(response.body().string(), Outlets.class);
-                        if (!fullUpdate) {
+                       /* if (!fullUpdate) {
                             if (getOutletListSuccessful.outletsResult.outlets.size() != databaseHandler.getSizeOfOutlet()) {
                                 databaseHandler.removeOutlet();
                                 databaseHandler.addOutlet(getOutletListSuccessful.outletsResult.outlets);
                             }
                         } else {
-                            databaseHandler.removeOutlet();
+                            databaseHandler.removeOutlet();*/
                             databaseHandler.addOutlet(getOutletListSuccessful.outletsResult.outlets);
-                        }
+
+                        //}
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -293,12 +295,13 @@ public class LoadLocalIntoBackground {
             @Override
             public void onResponse(Call<OutletTypeResponse> call, Response<OutletTypeResponse> response) {
 
-                Timber.d("Response " + response.code() + " " + response.body().toString());
+
                 if (response.code() == 200) {
                     try {
                         databaseHandler.setOutletType(response.body().getResult().getType());
+                        Log.d("tareq_test" , "outlet Type: "+ new Gson().toJson(response.body().getResult().getType()));
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        Log.e("tareq_test" , "outlet Type error: "+e.getMessage());
                     }
                 }
             }

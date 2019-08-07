@@ -194,19 +194,12 @@ public class EditOutletActivity extends AppCompatActivity {
                 } else {
                     isValidAddress = true;
                 }
-                Timber.d("Valid Address" + isValidAddress);
-                Timber.d("Valid Outle Name" + isValidOutletName);
-                Timber.d("valid owner naem" + isValidOwnerName);
-                Timber.d("Valid phone" + isValidPhone);
-                Timber.d("Latitude" + outlet.outletLatitude);
-                Timber.d("Long" + outlet.outletLongitude);
-                Timber.d("Type id" + outletTypeId);
-                Timber.d("Thana id" + thanaId);
+
 
                 if (isValidAddress && isValidOutletName && isValidOwnerName
                         && isValidPhone && outlet.outletLatitude != 0.0 && outlet.outletLongitude != 0.0
                         && outletTypeId != -1 && thanaId != -1) {
-                    Timber.d("addOutletRun");
+
                     if (NetworkUtility.isNetworkAvailable(EditOutletActivity.this)) {
                         updatedOutlet(email, password, outletTypeId, outletName.getText().toString().trim(),
                                 outletOwner.getText().toString().trim(),
@@ -255,8 +248,9 @@ public class EditOutletActivity extends AppCompatActivity {
                             "Server Error! Try Again Later!", Toast.LENGTH_SHORT).show();
                 }
 
-                finish();
+
                 startActivity(new Intent(EditOutletActivity.this, OutletActivity.class));
+                finish();
             }
 
             @Override

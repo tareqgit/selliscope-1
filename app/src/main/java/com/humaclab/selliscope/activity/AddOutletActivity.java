@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.MediaStore;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -73,7 +74,7 @@ public class AddOutletActivity extends AppCompatActivity {
     private int outletTypeId, thanaId = -1;
     private SelliscopeApiEndpointInterface apiService;
     private SessionManager sessionManager;
-    private EditText outletName, outletAddress, outletOwner, outletContactNumber,outletrefnumber;
+    private EditText outletName, outletAddress, outletOwner, outletContactNumber, outletrefnumber;
     private Spinner outletType, district, thana;
     private ImageView iv_outlet;
     private Button submit, cancel, getLocation;
@@ -238,58 +239,111 @@ public class AddOutletActivity extends AppCompatActivity {
         });
 
         try {
-            ((SwipeRefreshLayout)findViewById(R.id.swipeRefresher)).setRefreshing(true);
-            ((SwipeRefreshLayout)findViewById(R.id.swipeRefresher)).setColorSchemeColors(Color.parseColor("#EA5455"),Color.parseColor("#FCCF31"),Color.parseColor("#F55555"));
-            new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    //Do something here
 
-                    ((SwipeRefreshLayout)findViewById(R.id.swipeRefresher)).setRefreshing(false);
-                    getDistricts();
-                    getOutletTypes();
-                }
-            }, 5000);
+            ((SwipeRefreshLayout) findViewById(R.id.swipeRefresher)).setColorSchemeColors(Color.parseColor("#EA5455"), Color.parseColor("#FCCF31"), Color.parseColor("#F55555"));
+
+            //Do something here
+
+
+            getDistricts();
+            getOutletTypes();
+
+
         } catch (Exception e) {
             e.printStackTrace();
         }
 
+        LoadLocalIntoBackground loadLocalIntoBackground = new LoadLocalIntoBackground(AddOutletActivity.this);
 
-        ((SwipeRefreshLayout)findViewById(R.id.swipeRefresher)).setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                //if network is Available then update the data again
-                if (NetworkUtility.isNetworkAvailable(AddOutletActivity.this)) {
-                    LoadLocalIntoBackground loadLocalIntoBackground = new LoadLocalIntoBackground(AddOutletActivity.this);
-                    loadLocalIntoBackground.loadThana();
-                    loadLocalIntoBackground.loadOutletType();
-                    loadLocalIntoBackground.loadDistrict();
 
-                    try {
-                        new Handler(Looper.getMainLooper()).postDelayed(new Runnable() {
-                              @Override
-                              public void run() {
-                                  //Do something here
 
-                                  ((SwipeRefreshLayout)findViewById(R.id.swipeRefresher)).setRefreshing(false);
-                                  getDistricts();
-                                  getOutletTypes();
-                              }
-                          }, 5000);
-                    } catch (Exception e) {
-                        e.printStackTrace();
+        ((SwipeRefreshLayout) findViewById(R.id.swipeRefresher)).setOnRefreshListener(() -> {
+            //if network is Available then update the data again
+            if (NetworkUtility.isNetworkAvailable(AddOutletActivity.this)) {
+                ((SwipeRefreshLayout) findViewById(R.id.swipeRefresher)).setRefreshing(true);
+
+                loadLocalIntoBackground.loadOutletType(new LoadLocalIntoBackground.LoadCompleteListener() {
+                    @Override
+                    public void onLoadComplete() {
+                        loadLocalIntoBackground.loadDistrict(new LoadLocalIntoBackground.LoadCompleteListener() {
+                            @Override
+                            public void onLoadComplete() {
+                                loadLocalIntoBackground.loadThana(new LoadLocalIntoBackground.LoadCompleteListener() {
+                                    @Override
+                                    public void onLoadComplete() {
+                                        ((SwipeRefreshLayout) findViewById(R.id.swipeRefresher)).setRefreshing(false);
+                                        getDistricts();
+                                        getOutletTypes();
+
+                                    }
+
+                                    @Override
+                                    public void onLoadFailed(String reason) {
+                                        Log.d("tareq_test", "Thana error: " + reason);
+                                    }
+                                });
+                            }
+
+                            @Override
+                            public void onLoadFailed(String reason) {
+                                Log.d("tareq_test", "District error: " + reason);
+                            }
+                        });
                     }
 
+                    @Override
+                    public void onLoadFailed(String reason) {
+                        Log.d("tareq_test", "Outlet Type error: " + reason);
+                    }
+                });
 
-                }
+
             }
         });
+
+
         //if network is Available then update the data again
         if (NetworkUtility.isNetworkAvailable(AddOutletActivity.this)) {
-            LoadLocalIntoBackground loadLocalIntoBackground = new LoadLocalIntoBackground(AddOutletActivity.this);
-            loadLocalIntoBackground.loadThana();
-            loadLocalIntoBackground.loadOutletType();
-            loadLocalIntoBackground.loadDistrict();
+            if (NetworkUtility.isNetworkAvailable(AddOutletActivity.this)) {
+                ((SwipeRefreshLayout) findViewById(R.id.swipeRefresher)).setRefreshing(true);
+
+                loadLocalIntoBackground.loadOutletType(new LoadLocalIntoBackground.LoadCompleteListener() {
+                    @Override
+                    public void onLoadComplete() {
+                        loadLocalIntoBackground.loadDistrict(new LoadLocalIntoBackground.LoadCompleteListener() {
+                            @Override
+                            public void onLoadComplete() {
+                                loadLocalIntoBackground.loadThana(new LoadLocalIntoBackground.LoadCompleteListener() {
+                                    @Override
+                                    public void onLoadComplete() {
+                                        ((SwipeRefreshLayout) findViewById(R.id.swipeRefresher)).setRefreshing(false);
+                                        getDistricts();
+                                        getOutletTypes();
+
+                                    }
+
+                                    @Override
+                                    public void onLoadFailed(String reason) {
+                                        Log.d("tareq_test", "Thana error: " + reason);
+                                    }
+                                });
+                            }
+
+                            @Override
+                            public void onLoadFailed(String reason) {
+                                Log.d("tareq_test", "District error: " + reason);
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onLoadFailed(String reason) {
+                        Log.d("tareq_test", "Outlet Type error: " + reason);
+                    }
+                });
+
+
+            }
         }
     }
 
@@ -325,12 +379,12 @@ public class AddOutletActivity extends AppCompatActivity {
 
     private void addOutlet(int outletTypeId, String outletName,
                            String ownerName, String address, int thanaId, String phone,
-                           double latitude, double longitude,String outletrefnumber) {
+                           double latitude, double longitude, String outletrefnumber) {
         pd.setMessage("Creating outlet......");
         pd.setCancelable(false);
         pd.show();
-        Log.d("tareq_test" , ""+outletImage);
-        Call<ResponseBody> call = apiService.createOutlet(new CreateOutlet(outletTypeId, outletName, ownerName, address, thanaId, phone, latitude, longitude, outletImage,outletrefnumber));
+        Log.d("tareq_test", "" + outletImage);
+        Call<ResponseBody> call = apiService.createOutlet(new CreateOutlet(outletTypeId, outletName, ownerName, address, thanaId, phone, latitude, longitude, outletImage, outletrefnumber));
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -340,7 +394,7 @@ public class AddOutletActivity extends AppCompatActivity {
                 if (response.code() == 201) {
                     Toast.makeText(AddOutletActivity.this, "Outlet created successfully", Toast.LENGTH_SHORT).show();
                     LoadLocalIntoBackground loadLocalIntoBackground = new LoadLocalIntoBackground(AddOutletActivity.this);
-                    loadLocalIntoBackground.loadOutlet();
+                    loadLocalIntoBackground.loadOutlet(null);
                     try {
                         CreateOutlet createOutletResult = gson.fromJson(response.body().string(), CreateOutlet.class);
                         Toast.makeText(AddOutletActivity.this, createOutletResult.result, Toast.LENGTH_SHORT).show();
@@ -373,7 +427,7 @@ public class AddOutletActivity extends AppCompatActivity {
         District district1 = new District();
         district1.setId(0);
         district1.setName("Select district");
-        ArrayList<District> arrayListDistrict=new ArrayList<>();
+        ArrayList<District> arrayListDistrict = new ArrayList<>();
         arrayListDistrict.add(district1);
         arrayListDistrict.addAll(databaseHandler.getDistrict());
         districtAdapter = new DistrictAdapter(AddOutletActivity.this, arrayListDistrict);
@@ -436,6 +490,7 @@ public class AddOutletActivity extends AppCompatActivity {
         googleApiClient.disconnect();
         super.onDestroy();
     }
+
     @Override
     public void onBackPressed() {
         super.onBackPressed();

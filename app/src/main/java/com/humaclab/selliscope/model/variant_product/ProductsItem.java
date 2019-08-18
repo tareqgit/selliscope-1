@@ -3,6 +3,7 @@ package com.humaclab.selliscope.model.variant_product;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Created by leon on 9/3/2017.
@@ -159,5 +160,32 @@ public class ProductsItem {
 
     public void setBrand(Brand brand) {
         this.brand = brand;
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ProductsItem that = (ProductsItem) o;
+        return discount == that.discount &&
+                id == that.id &&
+                hasVariant == that.hasVariant &&
+                Objects.equals(img, that.img) &&
+            /*   Objects.equals(variantRow, that.variantRow) &&*/
+             /*   Objects.equals(stock,that.stock) &&*/
+               /* Objects.equals(godown, that.godown) &&
+                Objects.equals(price, that.price) &&*/
+              /*  Objects.equals(name, that.name) &&*/
+             /*    Objects.equals(pitch, that.pitch) &&
+                Objects.equals(promotion, that.promotion) &&
+                Objects.equals(variants, that.variants) &&*/
+                Objects.equals(category, that.category) &&
+                Objects.equals(brand, that.brand);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(img, variantRow, stock, godown, price, name, discount, id, pitch, promotion, variants, hasVariant, category, brand);
     }
 }

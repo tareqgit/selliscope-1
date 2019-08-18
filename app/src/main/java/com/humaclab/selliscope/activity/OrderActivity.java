@@ -6,6 +6,7 @@ import android.content.res.Configuration;
 
 import androidx.databinding.DataBindingUtil;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Parcelable;
 
@@ -65,6 +66,7 @@ public class OrderActivity extends AppCompatActivity implements OrderProductRecy
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_order);
         context = OrderActivity.this;
+        binding.srlProduct.setColorSchemeColors(Color.parseColor("#EA5455"), Color.parseColor("#FCCF31"), Color.parseColor("#F55555"));
 
         outletName = getIntent().getStringExtra("outletName");
         outletID = getIntent().getStringExtra("outletID");
@@ -109,31 +111,63 @@ public class OrderActivity extends AppCompatActivity implements OrderProductRecy
             }
         });
 
+        LoadLocalIntoBackground loadLocalIntoBackground = new LoadLocalIntoBackground(OrderActivity.this);
+
+        getProducts();
+        binding.srlProduct.setRefreshing(false);
+
         binding.srlProduct.setOnRefreshListener(() -> {
             //if network is Available then update the data again
             if (NetworkUtility.isNetworkAvailable(OrderActivity.this)) {
-                LoadLocalIntoBackground loadLocalIntoBackground = new LoadLocalIntoBackground(OrderActivity.this);
 
-                loadLocalIntoBackground.loadProduct();
-                getCategory();
-                getBrand();
+                binding.srlProduct.setRefreshing(true);
+                loadLocalIntoBackground.loadProduct(new LoadLocalIntoBackground.LoadCompleteListener() {
+                    @Override
+                    public void onLoadComplete() {
+                        getProducts();
+                        getCategory();
+                        getBrand();
+                        binding.srlProduct.setRefreshing(false);
+                        Log.d("tareq_test" , "Loading data complete");
+                    }
+
+                    @Override
+                    public void onLoadFailed(String reason) {
+                        Log.e("tareq_test" , "Loading data failed");
+                        binding.srlProduct.setRefreshing(false);
+                    }
+                });
+
+
             }
-            getProducts();
+
         });
-        binding.srlProduct.setRefreshing(true);
 
 
         //if network is Available then update the data again
-        if (NetworkUtility.isNetworkAvailable(this)) {
-            LoadLocalIntoBackground loadLocalIntoBackground = new LoadLocalIntoBackground(this);
+        if (NetworkUtility.isNetworkAvailable(OrderActivity.this)) {
 
-            loadLocalIntoBackground.loadProduct();
+            binding.srlProduct.setRefreshing(true);
+            loadLocalIntoBackground.loadProduct(new LoadLocalIntoBackground.LoadCompleteListener() {
+                @Override
+                public void onLoadComplete() {
+                    getProducts();
+                    getCategory();
+                    getBrand();
+                    binding.srlProduct.setRefreshing(false);
+                    Log.d("tareq_test" , "Loading data complete");
+                }
 
-            getCategory();
-            getBrand();
+                @Override
+                public void onLoadFailed(String reason) {
+                    Log.e("tareq_test" , "Loading data failed");
+                    binding.srlProduct.setRefreshing(false);
+                }
+            });
+
 
         }
-        getProducts();
+        // getProducts();
     }
 
     @Override
@@ -162,7 +196,7 @@ public class OrderActivity extends AppCompatActivity implements OrderProductRecy
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (position != 0) {
-                    binding.srlProduct.setRefreshing(false);
+                    //  binding.srlProduct.setRefreshing(false);
                     List<ProductsItem> productsItemList = databaseHandler.getProduct(categoryID.get(position), brandID.get(binding.spProductBrand.getSelectedItemPosition()));
                     binding.rvProduct.setAdapter(new OrderProductRecyclerAdapter(context, productsItemList, selectedProductList, outletType, OrderActivity.this));
                 }
@@ -192,7 +226,7 @@ public class OrderActivity extends AppCompatActivity implements OrderProductRecy
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (position != 0) {
-                    binding.srlProduct.setRefreshing(false);
+                    //   binding.srlProduct.setRefreshing(false);
                     List<ProductsItem> productsItemList = databaseHandler.getProduct(categoryID.get(binding.spProductCategory.getSelectedItemPosition()), brandID.get(position));
                     binding.rvProduct.setAdapter(new OrderProductRecyclerAdapter(context, productsItemList, selectedProductList, outletType, OrderActivity.this));
                 }
@@ -207,7 +241,7 @@ public class OrderActivity extends AppCompatActivity implements OrderProductRecy
     OrderProductRecyclerAdapter mOrderProductRecyclerAdapter;
 
     public void getProducts() {
-        binding.srlProduct.setRefreshing(false);
+        // binding.srlProduct.setRefreshing(false);
         List<ProductsItem> productsItemList = databaseHandler.getProduct(categoryID.get(binding.spProductCategory.getSelectedItemPosition()), brandID.get(binding.spProductBrand.getSelectedItemPosition()));
         Log.d("tareq_test", "product size" + productsItemList.size());
         mOrderProductRecyclerAdapter = new OrderProductRecyclerAdapter(context, productsItemList, selectedProductList, outletType, this);

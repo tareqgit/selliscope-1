@@ -419,6 +419,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         for (ProductsItem product : products) {
             if (!getAllProduct().contains(product)) {
+               List<ProductsItem> productsItems= getAllProduct();
                 ContentValues values = new ContentValues();
                 String productName = product.getName();
                 values.put(KEY_PRODUCT_ID, product.getId());
@@ -437,6 +438,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                     values.put(KEY_PRODUCT_STOCK, String.valueOf(stock));
 
                     try {
+                        if(!db.isOpen()) db = this.getWritableDatabase();
                         db.insert(TABLE_PRODUCT, null, values);
                         values.clear();
                     } catch (Exception e) {
@@ -1349,6 +1351,27 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        db.close();
+    }
+
+    public void deleteAllData() {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        db.delete(TABLE_BRAND, null, null);
+        db.delete(TABLE_CATEGORY, null, null);
+        db.delete(TABLE_DELIVERY, null, null);
+        db.delete(TABLE_DELIVERY_PRODUCT, null,null);
+        db.delete(TABLE_DISTRICT, null, null);
+        db.delete(TABLE_ORDER, null, null);
+        db.delete(TABLE_OUTLET, null, null);
+        db.delete(TABLE_OUTLET_TYPE, null, null);
+        db.delete(TABLE_PRICE_VARIATION, null, null);
+        db.delete(TABLE_PRODUCT, null, null);
+        db.delete(TABLE_SELLS_REASON, null,null);
+        db.delete(TABLE_TARGET, null, null);
+        db.delete(TABLE_THANA, null, null);
+        db.delete(TABLE_TRADE_PROMTOIN, null, null);
+        db.delete(TABLE_USER_VISITS, null, null);
         db.close();
     }
 

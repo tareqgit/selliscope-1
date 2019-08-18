@@ -60,7 +60,7 @@
     <string name="GoodEvening">Good Evening</string>
     <string name="GoodNight">Good Night</string>
     <string name="logout">Logout</string>
-    <string name="update_data">Update Data</string>
+    <string name="upload_data">Upload Data</string>
     <string name="contact_us">Contact US</string>
     <string name="privacy_policy">Privacy Policy</string>
     <string name="about_us">About Us</string>
@@ -172,6 +172,7 @@
     <string name="selesReturn">Sales Return</string>
     <string name="reason">Reason:</string>
     <string name="sku_no">SKU No:</string>
+    <string name="refresh_data">Refresh Data</string>
 
 
     <string-array name="paymentType">

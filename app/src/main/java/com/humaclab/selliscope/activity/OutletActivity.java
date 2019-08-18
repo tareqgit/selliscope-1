@@ -2,6 +2,8 @@ package com.humaclab.selliscope.activity;
 
 import android.content.Intent;
 import androidx.databinding.DataBindingUtil;
+
+import android.graphics.Color;
 import android.os.Bundle;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -9,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
@@ -58,12 +61,7 @@ public class OutletActivity extends AppCompatActivity {
 
         FloatingActionButton addOutlet = findViewById(R.id.fab_add_outlet);
 
-        addOutlet.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(OutletActivity.this, AddOutletActivity.class));
-            }
-        });
+        addOutlet.setOnClickListener(v -> startActivity(new Intent(OutletActivity.this, AddOutletActivity.class)));
 
         binding.rvOutlet.addItemDecoration(new VerticalSpaceItemDecoration(20));
         binding.rvOutlet.setLayoutManager(new LinearLayoutManager(this));
@@ -88,11 +86,25 @@ public class OutletActivity extends AppCompatActivity {
 
             }
         });
+binding.srlOutlet.setColorSchemeColors(Color.parseColor("#EA5455"), Color.parseColor("#FCCF31"), Color.parseColor("#F55555"));
 
         binding.srlOutlet.setOnRefreshListener(() -> {
             if (NetworkUtility.isNetworkAvailable(OutletActivity.this)) {
                 LoadLocalIntoBackground loadLocalIntoBackground = new LoadLocalIntoBackground(this);
-                loadLocalIntoBackground.loadOutlet();
+                binding.srlOutlet.setRefreshing(true);
+                loadLocalIntoBackground.loadOutlet(new LoadLocalIntoBackground.LoadCompleteListener() {
+                    @Override
+                    public void onLoadComplete() {
+                        getOutlets();
+                        binding.srlOutlet.setRefreshing(false);
+                        Log.d("tareq_test" , "Outlets updated from Server");
+                    }
+
+                    @Override
+                    public void onLoadFailed(String reason) {
+                        Log.d("tareq_test" , "Outlets updated from Server");
+                    }
+                });
 
 
 
@@ -100,13 +112,26 @@ public class OutletActivity extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Connect to Wifi or Mobile Data for better performance.", Toast.LENGTH_SHORT).show();
             }
 
-            getOutlets();
+
         });
 
    //if network is Available then update the data again
         if (NetworkUtility.isNetworkAvailable(this)) {
             LoadLocalIntoBackground loadLocalIntoBackground = new LoadLocalIntoBackground(this);
-            loadLocalIntoBackground.loadOutlet();
+            binding.srlOutlet.setRefreshing(true);
+            loadLocalIntoBackground.loadOutlet(new LoadLocalIntoBackground.LoadCompleteListener() {
+                @Override
+                public void onLoadComplete() {
+                    getOutlets();
+                    Log.d("tareq_test" , "Outlets updated from Server");
+                    binding.srlOutlet.setRefreshing(false);
+                }
+
+                @Override
+                public void onLoadFailed(String reason) {
+                    Log.d("tareq_test" , "Outlets updated from Server");
+                }
+            });
         }
 
     }
@@ -121,12 +146,9 @@ public class OutletActivity extends AppCompatActivity {
     public void getOutlets() {
         outletsResult = databaseHandler.getAllOutlet();
         if (!outletsResult.outlets.isEmpty()) {
-            if (binding.srlOutlet.isRefreshing())
-                binding.srlOutlet.setRefreshing(false);
+
             outletRecyclerViewAdapter = new OutletRecyclerViewAdapter(OutletActivity.this, OutletActivity.this, outletsResult);
             binding.rvOutlet.setAdapter(outletRecyclerViewAdapter);
-        } else {
-            Toast.makeText(getApplicationContext(), "Loading data from online.", Toast.LENGTH_LONG).show();
         }
     }
 

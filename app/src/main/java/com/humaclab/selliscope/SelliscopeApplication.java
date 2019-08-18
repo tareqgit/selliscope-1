@@ -59,6 +59,7 @@ public class SelliscopeApplication extends Application {
                     .addInterceptor(new HttpAuthInterceptor(email.toLowerCase(), password))
                     .connectTimeout(600, TimeUnit.SECONDS)
                     .readTimeout(600, TimeUnit.SECONDS)
+                    .retryOnConnectionFailure(true)
                     .addNetworkInterceptor(new StethoInterceptor())
                     .build();
 

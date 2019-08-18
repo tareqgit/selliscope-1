@@ -27,6 +27,7 @@ import com.humaclab.selliscope.model.PaymentResponse;
 import com.humaclab.selliscope.utils.SessionManager;
 
 import java.util.List;
+import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -61,6 +62,9 @@ public class PaymentRecyclerViewAdapter extends RecyclerView.Adapter<PaymentRecy
         final Payment.OrderList orderList = orderLists.get(position);
         holder.getBinding().setVariable(BR.payments, orderList);
         holder.getBinding().executePendingBindings();
+        Double grandTotal=Double.parseDouble(orderList.amount.replace(",","")) - Double.parseDouble(orderList.discount.replace(",",""));
+        holder.getBinding().tvGrandTotal.setText( String.format(Locale.ENGLISH,"%,.2f",grandTotal));
+
         holder.getBinding().btnPay.setOnClickListener(v -> {
             if (holder.getBinding().etPayment.getText().toString().isEmpty() || Double.parseDouble(holder.et_payment.getText().toString()) <= 0) {
                 holder.getBinding().etPayment.setError("Payment amount can't be less than 1 or empty");

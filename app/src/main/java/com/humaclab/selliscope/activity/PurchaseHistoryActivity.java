@@ -1,8 +1,12 @@
 package com.humaclab.selliscope.activity;
 
 import android.content.Intent;
+
 import androidx.databinding.DataBindingUtil;
+
+import android.graphics.Color;
 import android.os.Bundle;
+
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -54,35 +58,25 @@ public class PurchaseHistoryActivity extends AppCompatActivity {
         apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(), sessionManager.getUserPassword(), false).create(SelliscopeApiEndpointInterface.class);
         binding.rlPurchaseHistory.setLayoutManager(new LinearLayoutManager(this));
 
-        binding.srlPurchaseHistory.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                getPurchaseHistory();
-            }
-        });
+        binding.srlPurchaseHistory.setOnRefreshListener(() -> getPurchaseHistory());
 
+        binding.srlPurchaseHistory.setColorSchemeColors(Color.parseColor("#EA5455"), Color.parseColor("#FCCF31"), Color.parseColor("#F55555"));
         binding.srlPurchaseHistory.setRefreshing(true);
 
-        binding.btnPayment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(PurchaseHistoryActivity.this, PaymentActivity.class);
-                intent.putExtra("outletID",outlet.outletId);
-                startActivity(intent);
-            }
+        binding.btnPayment.setOnClickListener(v -> {
+            Intent intent = new Intent(PurchaseHistoryActivity.this, PaymentActivity.class);
+            intent.putExtra("outletID", outlet.outletId);
+            startActivity(intent);
         });
 
-        binding.btnOrder.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(PurchaseHistoryActivity.this, OrderActivity.class);
-                intent.putExtra("outletName", outlet.outletName);
-                intent.putExtra("outletID", String.valueOf(outlet.outletId));
-                intent.putExtra("outletType", String.valueOf(outlet.outletType));
-                startActivity(intent);
-            }
+        binding.btnOrder.setOnClickListener(v -> {
+            Intent intent = new Intent(PurchaseHistoryActivity.this, OrderActivity.class);
+            intent.putExtra("outletName", outlet.outletName);
+            intent.putExtra("outletID", String.valueOf(outlet.outletId));
+            intent.putExtra("outletType", String.valueOf(outlet.outletType));
+            startActivity(intent);
         });
-      getReturnProducts(); //this calls getPurchaseProducts
+        getReturnProducts(); //this calls getPurchaseProducts
     }
 
     private void getPurchaseHistory() {
@@ -93,23 +87,23 @@ public class PurchaseHistoryActivity extends AppCompatActivity {
                 if (response.code() == 200) {
 
 
-
                     binding.tvTotalPaid.setText(response.body().getResult().getTotalPaid());
                     binding.tvTotalDue.setText(response.body().getResult().getTotalDue());
                     binding.srlPurchaseHistory.setRefreshing(false);
-                    binding.rlPurchaseHistory.setAdapter(new PurchaseHistoryRecyclerAdapter(PurchaseHistoryActivity.this, response.body().getResult().getPurchaseHistory(),salesReturnDataItems, outlet));
+                    binding.rlPurchaseHistory.setAdapter(new PurchaseHistoryRecyclerAdapter(PurchaseHistoryActivity.this, response.body().getResult().getPurchaseHistory(), salesReturnDataItems, outlet));
                 } else {
                     Toast.makeText(PurchaseHistoryActivity.this, "Server error: " + response.code(), Toast.LENGTH_SHORT).show();
                 }
             }
+
             @Override
             public void onFailure(Call<PurchaseHistoryResponse> call, Throwable t) {
+                Toast.makeText(PurchaseHistoryActivity.this, "Couldn't get Purchase history: " +t.getMessage(), Toast.LENGTH_SHORT).show();
                 binding.srlPurchaseHistory.setRefreshing(false);
                 t.printStackTrace();
             }
         });
     }
-
 
 
     List<DataItem> salesReturnDataItems = new ArrayList<>();
@@ -131,7 +125,7 @@ public class PurchaseHistoryActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<SalesReturnGetResponse> call, Throwable t) {
-               Log.e("tareq_test" , "Sales return get: "+ t.getMessage());
+                Log.e("tareq_test", "Sales return get: " + t.getMessage());
             }
         });
     }

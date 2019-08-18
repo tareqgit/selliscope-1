@@ -65,20 +65,20 @@ public class ShowProductSelectionDialog {
         if (productsItem.getPrice() != null)
             priceOfRate = Double.valueOf(productsItem.getPrice().replace(",", ""));
         binding = DataBindingUtil.inflate(LayoutInflater.from(context), R.layout.item_order_product_selection, null, false);
-        binding.tvProductName.setText(productsItem.getName());
-        binding.tvProductPrice.setText(String.valueOf(priceOfRate));
-        binding.tvProductStock.setText(productsItem.getStock());
+        binding.tvProductName.setText( productsItem.getName());
+        binding.tvProductPrice.setText(String.format(Locale.ENGLISH,"%,.2f", priceOfRate));
+        binding.tvProductStock.setText(String.format(Locale.ENGLISH,"%,.2f", Double.parseDouble(productsItem.getStock())));
 
         if (selectedProductHelper != null) {
             if(!selectedProductHelper.isFree()) {
                 binding.etProductQty.setText(selectedProductHelper.getProductQuantity());
-                binding.tvTotalPrice.setText(String.format(Locale.ENGLISH, "%.2f", Double.valueOf(binding.tvProductPrice.getText().toString().replace(",", "")) * Double.valueOf(binding.etProductQty.getText().toString())));
+                binding.tvTotalPrice.setText(String.format(Locale.ENGLISH, "%,.2f", Double.valueOf(binding.tvProductPrice.getText().toString().replace(",", "")) * Double.valueOf(binding.etProductQty.getText().toString())));
 
                 try {
                     List<TradePromoionData> tradePromoionData = mDatabaseHandler.getTradePromoion(productsItem.getId());
                     if (tradePromoionData.size() > 0) {
                         binding.tvOfferName.setText("Free: " + tradePromoionData.get(0).getFreeProductName());
-                        binding.tvOfferQty.setText(String.valueOf((Integer.parseInt(binding.etProductQty.getText().toString()) / Integer.parseInt(tradePromoionData.get(0).getPromoionValue())) * Integer.parseInt(tradePromoionData.get(0).getFreeProductQty())));
+                        binding.tvOfferQty.setText(String.format(Locale.ENGLISH, "%,.2f", (Integer.parseInt(binding.etProductQty.getText().toString()) / Integer.parseInt(tradePromoionData.get(0).getPromoionValue())) * Integer.parseInt(tradePromoionData.get(0).getFreeProductQty())));
                     }
                 } catch (NumberFormatException e) {
                     Log.d("tareq_test", "Eroor while reloading Product Selection Dialog: " + e.getMessage());
@@ -93,8 +93,8 @@ public class ShowProductSelectionDialog {
                 discount = 0.0;
                 binding.tvOfferName.setText("");
                 binding.tvOfferQty.setText("");
-                binding.tvDiscount.setText((String.valueOf(discount)));
-                binding.tvGrandTotal.setText(String.valueOf(totalPrice));
+                binding.tvDiscount.setText((String.format(Locale.ENGLISH, "%,.2f", discount)));
+                binding.tvGrandTotal.setText(String.format(Locale.ENGLISH, "%,.2f", totalPrice));
             }
 
             @Override
@@ -122,11 +122,11 @@ public class ShowProductSelectionDialog {
                             }
 
                         }
-                    binding.tvProductPrice.setText(String.valueOf(priceOfRate));
+                    binding.tvProductPrice.setText(String.format(Locale.ENGLISH, "%,.2f", priceOfRate));
                     //binding.tvTotalPrice.setText(String.format("%.2f", Double.valueOf(binding.tvProductPrice.getText().toString().replace(",", "")) * Double.valueOf(binding.etProductQty.getText().toString())));
-                    binding.tvTotalPrice.setText(String.format(Locale.ENGLISH, "%.2f", Double.valueOf(binding.tvProductPrice.getText().toString().replace(",", "")) * Double.valueOf(binding.etProductQty.getText().toString())));
+                    binding.tvTotalPrice.setText(String.format(Locale.ENGLISH, "%,.2f",  Double.valueOf(binding.tvProductPrice.getText().toString().replace(",", "")) * Double.valueOf(binding.etProductQty.getText().toString())));
 
-                    totalPrice = Double.valueOf(String.valueOf(binding.tvTotalPrice.getText()));
+                    totalPrice = Double.valueOf(String.valueOf( binding.tvTotalPrice.getText()).replace(",",""));
                     if (Double.valueOf(tradePromoionData.get(0).getPromoionValue()) <= inputFinalPrice && !inputPrice.equals("")) {
 
                         int countOfferNumber = (int) (inputFinalPrice / Double.valueOf(tradePromoionData.get(0).getPromoionValue()));
@@ -137,14 +137,14 @@ public class ShowProductSelectionDialog {
 
                                 discount = (totalPrice * offerValue) / 100;
                                 binding.tvOfferName.setText(tradePromoionData.get(0).getPromoionTitle());
-                                binding.tvOfferQty.setText(tradePromoionData.get(0).getOfferType());
-                                binding.tvDiscount.setText((String.valueOf(discount)));
+                                binding.tvOfferQty.setText( tradePromoionData.get(0).getOfferType());
+                                binding.tvDiscount.setText((String.format(Locale.ENGLISH, "%,.2f", discount)));
                                 break;
                             case "Flat":
                                 discount = offerValue * countOfferNumber;
                                 binding.tvOfferName.setText(tradePromoionData.get(0).getPromoionTitle());
                                 binding.tvOfferQty.setText(tradePromoionData.get(0).getOfferType());
-                                binding.tvDiscount.setText((String.valueOf(discount)));
+                                binding.tvDiscount.setText((String.format(Locale.ENGLISH, "%,.2f", discount)));
                                 break;
                             case "Qty":
                                 discount = 0.0;
@@ -186,7 +186,7 @@ public class ShowProductSelectionDialog {
                     e.printStackTrace();
                 }
 
-                binding.tvGrandTotal.setText(String.valueOf(totalPrice - discount));
+                binding.tvGrandTotal.setText(String.format(Locale.ENGLISH, "%,.2f", totalPrice - discount));
             }
 
             @Override

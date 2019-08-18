@@ -3,6 +3,7 @@ package com.humaclab.selliscope.activity;
 import android.Manifest;
 import android.app.Activity;
 import android.app.ActivityManager;
+import android.app.Application;
 import android.app.ProgressDialog;
 import android.app.job.JobInfo;
 import android.app.job.JobScheduler;
@@ -81,6 +82,7 @@ import com.humaclab.selliscope.utils.Constants;
 import com.humaclab.selliscope.utils.DatabaseHandler;
 import com.humaclab.selliscope.utils.LoadLocalIntoBackground;
 import com.humaclab.selliscope.utils.SessionManager;
+import com.humaclab.selliscope.utils.UpLoadDataService;
 
 import java.util.Calendar;
 import java.util.List;
@@ -192,12 +194,21 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         sessionManager = new SessionManager(this);
 
 
-        Timber.i("Send Location Data Service onStartCommand");
 
         databaseHandler = new DatabaseHandler(this);
         loadLocalIntoBackground = new LoadLocalIntoBackground(this);
 
-        AsyncTask.execute(() -> loadLocalIntoBackground.loadAll());
+        AsyncTask.execute(() -> loadLocalIntoBackground.loadAll(new LoadLocalIntoBackground.LoadCompleteListener() {
+            @Override
+            public void onLoadComplete() {
+                Log.d("tareq_test" , "Data load all complete");
+            }
+
+            @Override
+            public void onLoadFailed(String msg) {
+                Log.d("tareq_test" , "Data load all failed: "+ msg);
+            }
+        }));
 
 
         apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(), sessionManager.getUserPassword(), false).create(SelliscopeApiEndpointInterface.class);
@@ -322,18 +333,16 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
 
 
-        schedulerForHour = Executors.newSingleThreadScheduledExecutor();
+      /*  schedulerForHour = Executors.newSingleThreadScheduledExecutor();
         schedulerForHour.scheduleAtFixedRate(() -> {
-          /*  runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-          */
+           // runOnUiThread(new Runnable() {
+          //      @Override
+           //     public void run() {
             Log.v("Running threads", "Thread running in background for updating products and outlets after 30 Minutes interval");
-            loadLocalIntoBackground.loadProduct();
-            /*    }
-            });
-*/
-        }, 30, 30, TimeUnit.MINUTES);
+            loadLocalIntoBackground.loadProduct(null);
+   //             }
+    //        });
+        }, 30, 30, TimeUnit.MINUTES);*/
         //loading Data into background
 
         try {
@@ -590,7 +599,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 //                if (databaseHandler.removeAll()) {
                 sessionManager.logoutUser(false);
          //       schedulerForMinute.shutdownNow();
-                schedulerForHour.shutdownNow();
+            //    schedulerForHour.shutdownNow();
 
 
 
@@ -618,16 +627,33 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 alertDialog.show();
                 break;
             case R.id.nav_update_data:
-                pd.setMessage("Local data is updating.\nPlease be patient....");
+                pd.setMessage("Offline data is Uploading to Server.\nPlease be patient....");
                 pd.setCancelable(false);
                 pd.show();
-                loadLocalIntoBackground.updateAllData();
-                new Handler().postDelayed(new Runnable() {
+                UpLoadDataService upLoadDataService = new UpLoadDataService(HomeActivity.this);
+                upLoadDataService.uploadData(new UpLoadDataService.UploadCompleteListener() {
+                    @Override
+                    public void uploadComplete() {
+                            pd.dismiss();
+                            Log.d("tareq_test" , "Upload data complete");
+                    }
+
+                    @Override
+                    public void uploadFailed(String reason) {
+                        pd.dismiss();
+                        Log.e("tareq_test" , ""+ reason);
+                        Toast.makeText(HomeActivity.this, ""+ reason, Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+
+
+              /*  new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         pd.dismiss();
                     }
-                }, 60000);
+                }, 60000);*/
                 break;
             case R.id.nav_settings:
                 startActivity(new Intent(HomeActivity.this, SettingsActivity.class));
@@ -675,6 +701,43 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 });
                 alertDialogContact.show();
                 break;
+            case R.id.nav_refresh_data:
+
+                final AlertDialog alertDialogRefresh = new AlertDialog.Builder(this).create();
+                alertDialogRefresh.setTitle("Confirm");
+                alertDialogRefresh.setMessage("Are you sure? \n\nYou want to clear all data. ");
+                alertDialogRefresh.setButton(DialogInterface.BUTTON_POSITIVE, "Yes", (dialog, which) -> {
+
+                    pd.setMessage("Local data is updating.\nPlease be patient....");
+                    pd.setCancelable(false);
+                    pd.show();
+
+                    DatabaseHandler databaseHandler = new DatabaseHandler(HomeActivity.this);
+
+
+                   AsyncTask.execute(() -> {
+                        databaseHandler.deleteAllData();
+                        loadLocalIntoBackground.loadAll(new LoadLocalIntoBackground.LoadCompleteListener() {
+                            @Override
+                            public void onLoadComplete() {
+                                Log.d("tareq_test" , "Data refresh complete");
+                               pd.dismiss();
+                            }
+
+                            @Override
+                            public void onLoadFailed(String msg) {
+                                Log.d("tareq_test" , "Data refresh failed"+ msg);
+
+                            }
+                        });
+                    });
+
+
+                });
+
+                if(!alertDialogRefresh.isShowing())alertDialogRefresh.show();
+                break;
+
         }
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

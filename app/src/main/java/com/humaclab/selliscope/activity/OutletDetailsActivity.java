@@ -19,6 +19,8 @@ import com.humaclab.selliscope.SelliscopeApplication;
 import com.humaclab.selliscope.databinding.ActivityOutletDetailsBinding;
 import com.humaclab.selliscope.model.Outlets;
 import com.humaclab.selliscope.model.target.OutletTarget;
+import com.humaclab.selliscope.utils.LoadLocalIntoBackground;
+import com.humaclab.selliscope.utils.NetworkUtility;
 import com.humaclab.selliscope.utils.SessionManager;
 
 import java.util.Objects;
@@ -64,6 +66,15 @@ public class OutletDetailsActivity extends AppCompatActivity {
             intent.putExtra("outletDetails", outlet);
             startActivity(intent);
         });
+
+        //if network is Available then update the data again
+        if (NetworkUtility.isNetworkAvailable(OutletDetailsActivity.this)) {
+            LoadLocalIntoBackground loadLocalIntoBackground = new LoadLocalIntoBackground(OutletDetailsActivity.this);
+            loadLocalIntoBackground.loadThana(null  );
+            loadLocalIntoBackground.loadOutletType(null);
+            loadLocalIntoBackground.loadDistrict(null);
+        }
+
     }
 
     private void loadTargetOutlet(){

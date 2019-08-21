@@ -74,7 +74,10 @@ public class LoadLocalIntoBackground {
                 public void onResponse(Call<ProductResponse> call, Response<ProductResponse> response) {
                     if (response.code() == 200) {
                         try {
-                            List<Product> products = response.body().getResult().getProducts();
+                            List<Product> products = null;
+                            if (response.body() != null) {
+                                products = response.body().getResult().getProducts();
+                            }
                             //for removing previous data
                             databaseHandler.removeProductCategoryBrand();
                             databaseHandler.addProduct(products);
@@ -103,9 +106,14 @@ public class LoadLocalIntoBackground {
                 if (response.code() == 200) {
 
                     try {
-                        List<CategoryResponse.CategoryResult> categories = response.body().result.categoryResults;
-                        for (CategoryResponse.CategoryResult result : categories) {
-                            databaseHandler.addCategory(result.id, result.name);
+                        List<CategoryResponse.CategoryResult> categories = null;
+                        if (response.body() != null) {
+                            categories = response.body().result.categoryResults;
+                        }
+                        if (categories != null) {
+                            for (CategoryResponse.CategoryResult result : categories) {
+                                databaseHandler.addCategory(result.id, result.name);
+                            }
                         }
                     } catch (Exception e) {
                         Log.d("tareq_test", "Categories error: " + e.getMessage());
@@ -130,9 +138,14 @@ public class LoadLocalIntoBackground {
             public void onResponse(Call<BrandResponse> call, Response<BrandResponse> response) {
                 if (response.code() == 200) {
                     try {
-                        List<BrandResponse.BrandResult> brands = response.body().result.brandResults;
-                        for (BrandResponse.BrandResult result : brands) {
-                            databaseHandler.addBrand(result.id, result.name);
+                        List<BrandResponse.BrandResult> brands = null;
+                        if (response.body() != null) {
+                            brands = response.body().result.brandResults;
+                        }
+                        if (brands != null) {
+                            for (BrandResponse.BrandResult result : brands) {
+                                databaseHandler.addBrand(result.id, result.name);
+                            }
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -155,17 +168,24 @@ public class LoadLocalIntoBackground {
                 Gson gson = new Gson();
                 if (response.code() == 200) {
                     try {
-                        Outlets getOutletListSuccessful = gson.fromJson(response.body().string(), Outlets.class);
+                        Outlets getOutletListSuccessful = null;
+                        if (response.body() != null) {
+                            getOutletListSuccessful = gson.fromJson(response.body().string(), Outlets.class);
+                        }
                         if (!fullUpdate) {
                             // if (getOutletListSuccessful.outletsResult.outlets.size() != databaseHandler.getSizeOfOutlet()) {
                             databaseHandler.removeOutlet();
-                            databaseHandler.addOutlet(getOutletListSuccessful.outletsResult.outlets);
+                            if (getOutletListSuccessful != null) {
+                                databaseHandler.addOutlet(getOutletListSuccessful.outletsResult.outlets);
+                            }
                             if (mOnOutletUpdateComplete != null)
                                 mOnOutletUpdateComplete.onUpdateComplete();
                             //  }
                         } else {
                             databaseHandler.removeOutlet();
-                            databaseHandler.addOutlet(getOutletListSuccessful.outletsResult.outlets);
+                            if (getOutletListSuccessful != null) {
+                                databaseHandler.addOutlet(getOutletListSuccessful.outletsResult.outlets);
+                            }
                             if (mOnOutletUpdateComplete != null)
                                 mOnOutletUpdateComplete.onUpdateComplete();
                         }
@@ -194,10 +214,12 @@ public class LoadLocalIntoBackground {
             @Override
             public void onResponse(Call<DistrictResponse> call, Response<DistrictResponse> response) {
                 Gson gson = new Gson();
-                Timber.d("Response " + response.code() + " " + response.body().toString());
+
                 if (response.code() == 200) {
                     try {
-                        databaseHandler.setDistrict(response.body().getResult().getDistrict());
+                        if (response.body() != null) {
+                            databaseHandler.setDistrict(response.body().getResult().getDistrict());
+                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -217,10 +239,12 @@ public class LoadLocalIntoBackground {
             @Override
             public void onResponse(Call<ThanaResponse> call, Response<ThanaResponse> response) {
                 Gson gson = new Gson();
-                Timber.d("Response " + response.code() + " " + response.body().toString());
+
                 if (response.code() == 200) {
                     try {
-                        databaseHandler.setThana(response.body().getResult().getThana());
+                        if (response.body() != null) {
+                            databaseHandler.setThana(response.body().getResult().getThana());
+                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -241,10 +265,12 @@ public class LoadLocalIntoBackground {
             @Override
             public void onResponse(Call<OutletTypeResponse> call, Response<OutletTypeResponse> response) {
                 Gson gson = new Gson();
-                Timber.d("Response " + response.code() + " " + response.body().toString());
+
                 if (response.code() == 200) {
                     try {
-                        databaseHandler.setOutletType(response.body().getResult().getType());
+                        if (response.body() != null) {
+                            databaseHandler.setOutletType(response.body().getResult().getType());
+                        }
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

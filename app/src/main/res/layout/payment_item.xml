@@ -184,7 +184,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:layout_marginEnd="8dp"
                     android:entries="@array/paymentType"
                     android:spinnerMode="dropdown"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -205,15 +204,15 @@
                     app:layout_constraintVertical_bias="1.0" />
 
                 <EditText
-                    android:id="@+id/et_bank_name"
+                    android:id="@+id/et_branch_name"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
                     android:ems="10"
-                    android:hint="@string/bank_name"
+                    android:hint="Branch Name"
                     android:inputType="textPersonName"
-                    android:visibility="gone"
+                    android:visibility="visible"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/et_deposit_to" />
 
@@ -228,7 +227,7 @@
                     android:inputType="textPersonName"
                     android:visibility="gone"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/et_bank_name" />
+                    app:layout_constraintTop_toBottomOf="@+id/et_branch_name" />
 
                 <EditText
                     android:id="@+id/et_deposit_slip"
@@ -279,6 +278,17 @@
                     android:inputType="textPersonName"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/et_payment" />
+
+                <Spinner
+                    android:id="@+id/spinner_bank_name"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:entries="@array/bankType"
+                    android:visibility="visible"
+                    app:layout_constraintBottom_toBottomOf="@+id/et_branch_name"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/et_branch_name"
+                    app:layout_constraintTop_toTopOf="@+id/et_branch_name" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </LinearLayout>
     </androidx.cardview.widget.CardView>

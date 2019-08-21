@@ -46,11 +46,10 @@
                             android:layout_height="match_parent"
                             android:layout_marginEnd="10dp"
                             android:layout_weight="1"
+                            android:foreground="@drawable/custom_background_selector"
                             android:gravity="right"
-                            android:text="14/3"
                             android:padding="2dp"
                             android:textAlignment="center"
-                            android:foreground="@drawable/custom_background_selector"
                             android:textColor="@color/white"
                             android:textSize="@dimen/text_size_20"
 

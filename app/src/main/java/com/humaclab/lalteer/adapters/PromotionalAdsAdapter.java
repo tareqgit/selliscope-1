@@ -35,7 +35,7 @@ public class PromotionalAdsAdapter extends RecyclerView.Adapter<PromotionalAdsAd
 
         holder.txtName.setText(resultList.get(position).getTitle());
         Glide.with(context)
-                .load(Constants.baseUrl+resultList.get(position).getImage())
+                .load(Constants.BASE_URL.substring(0, Constants.BASE_URL.length()-4) + resultList.get(position).getImage())
                 .placeholder(R.drawable.placeholder)
                 .into(holder.imageView);
     }

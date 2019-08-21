@@ -149,6 +149,18 @@
         <item>Online</item>
     </string-array>
 
+    <string-array name="bankType">
+        <item>Bank Name</item>
+        <item>DBBL</item>
+        <item>UBL</item>
+        <item>IBBL</item>
+        <item>NBL</item>
+        <item>SIBL</item>
+        <item>FSIBL</item>
+        <item>JBL</item>
+        <item>IFIC</item>
+    </string-array>
+
     <string-array name="returnCause">
         <item>Select cause of return</item>
         <item>Damaged product</item>

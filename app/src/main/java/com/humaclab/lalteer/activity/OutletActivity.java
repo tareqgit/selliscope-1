@@ -28,6 +28,7 @@ import com.humaclab.lalteer.utils.SessionManager;
 import com.humaclab.lalteer.utils.VerticalSpaceItemDecoration;
 
 import java.util.List;
+import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -132,9 +133,9 @@ public class OutletActivity extends AppCompatActivity {
         call.enqueue(new Callback<RouteResponse>() {
             @Override
             public void onResponse(Call<RouteResponse> call, Response<RouteResponse> response) {
-                if (!response.body().getResult().getRoute().isEmpty()) {
-                    binding.tvToolbarTitle.setText(response.body().getResult().getRoute().get(0).getName());
-                    getRouteDetails(response.body().getResult().getRoute().get(0).getId());
+                if (!(response.body() != null && response.body().getResult().getRoute().isEmpty())) {
+                    binding.tvToolbarTitle.setText(response.body() != null ? response.body().getResult().getRoute().get(0).getName() : null);
+                    getRouteDetails(response.body() != null ? response.body().getResult().getRoute().get(0).getId() : 0);
                 } else {
                     binding.tvToolbarTitle.setText("Outlet");
                 }
@@ -157,9 +158,10 @@ public class OutletActivity extends AppCompatActivity {
         call.enqueue(new Callback<RouteDetailsResponse>() {
             @Override
             public void onResponse(Call<RouteDetailsResponse> call, Response<RouteDetailsResponse> response) {
-                final List<RouteDetailsResponse.OutletItem> check = response.body().getResult().getOutletItemList();
+
+                final List<RouteDetailsResponse.OutletItem> check = response.body() != null ? response.body().getResult().getOutletItemList() : null;
                 if (response.isSuccessful()) {
-                    binding.tvCheckInCount.setText(response.body().getResult().getCheckedOutlet() + " / " + response.body().getResult().getTotalOutlet());
+                    binding.tvCheckInCount.setText(String.format(Locale.ENGLISH,"%d / %d", response.body() != null ? response.body().getResult().getCheckedOutlet() : 0, response.body() != null ? response.body().getResult().getTotalOutlet() : 0));
                     loadLocalIntoBackground.saveOutletRoutePlan(check);
                     getOutlets(); //For reloading the outlet recycler view
                 }

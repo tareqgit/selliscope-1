@@ -100,8 +100,12 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
 
         assert outlet.outletImgUrl != null;
         if(!outlet.outletImgUrl.equals("")) {
+
+            final String url = Constants.BASE_URL.substring(0,Constants.BASE_URL.length() - 4) + outlet.outletImgUrl;
+
             Glide.with(context)
-                    .load(Constants.baseUrl + outlet.outletImgUrl)
+                    //as base usl has api in url but image don't have that
+                    .load(url)
                     .placeholder(shimmerDrawable)
                     .centerCrop()
                     .thumbnail(0.1f)

@@ -59,7 +59,7 @@ public class DashboardFragment extends Fragment {
         dashboadItems.add(new DashboardItem(getString(R.string.dashboard_Dealer), R.drawable.ic_outlet));
 //        dashboadItems.add(new DashboardItem("Product", R.drawable.ic_products));
 //        dashboadItems.add(new DashboardItem("Order", R.drawable.ic_order));
-        dashboadItems.add(new DashboardItem(getString(R.string.dashboard_delivery), R.drawable.ic_view_orders));
+//        dashboadItems.add(new DashboardItem(getString(R.string.dashboard_delivery), R.drawable.ic_view_orders));
 //        dashboadItems.add(new DashboardItem("Payment", R.drawable.ic_payments));
         dashboadItems.add(new DashboardItem(getString(R.string.dashboard_inspection), R.drawable.ic_inspection));
         dashboadItems.add(new DashboardItem(getString(R.string.dashboard_productList), R.drawable.ic_insights));
@@ -113,7 +113,7 @@ public class DashboardFragment extends Fragment {
                                                 OrderActivity.class));
                                         break;
                                     }*/
-                                    case 2: {
+                                  /*  case 2: {
                                         int access = helper.accessList("Delivery");
                                         if (access == 1) {
                                             getActivity().startActivity(new Intent(getActivity(),
@@ -124,13 +124,13 @@ public class DashboardFragment extends Fragment {
 
 
                                         break;
-                                    }
+                                    }*/
 /*                                    case 3: {
                                         getActivity().startActivity(new Intent(getActivity(),
                                                 PaymentActivity.class));
                                         break;
                                     }*/
-                                    case 3: {
+                                    case 2: {
                                         int access = helper.accessList("Inspection");
                                         if (access == 1) {
                                             getActivity().startActivity(new Intent(getActivity(),
@@ -142,7 +142,7 @@ public class DashboardFragment extends Fragment {
 
                                         break;
                                     }
-                                    case 4: {
+                                    case 3: {
                                         int access = helper.accessList("Map");
                                         if (access == 1) {
                                             getActivity().startActivity(new Intent(getActivity(), ProductListActivity.class));
@@ -153,7 +153,7 @@ public class DashboardFragment extends Fragment {
 
                                         break;
                                     }
-                                    case 5: {
+                                    case 4: {
                                         int access = helper.accessList("Map");
                                         if (access == 1) {
                                             getActivity().startActivity(new Intent(getActivity(), PromotionalAdsActivity.class));
@@ -163,7 +163,7 @@ public class DashboardFragment extends Fragment {
 
                                         break;
                                     }
-                                    case 6: {
+                                    case 5: {
                                         BottomSheetHelpDialogFragment bottomSheetHelpDialogFragment = new BottomSheetHelpDialogFragment();
                                         assert getFragmentManager() != null;
                                         bottomSheetHelpDialogFragment.show(getFragmentManager(),bottomSheetHelpDialogFragment.getTag() );

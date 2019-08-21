@@ -1,6 +1,10 @@
 package com.humaclab.lalteer;
 
 import android.app.Application;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.os.Build;
+
 import androidx.appcompat.app.AppCompatDelegate;
 
 import com.facebook.stetho.Stetho;
@@ -39,8 +43,9 @@ public class SelliscopeApplication extends Application {
 
             OkHttpClient client = new OkHttpClient.Builder()
                     .addInterceptor(new HttpAuthInterceptor(email.toLowerCase(), password))
-                    .connectTimeout(100000, TimeUnit.SECONDS)
-                    .readTimeout(100000, TimeUnit.SECONDS)
+                    .connectTimeout(15, TimeUnit.SECONDS)
+                    .readTimeout(120, TimeUnit.SECONDS)
+                    .retryOnConnectionFailure(true)
                     .addNetworkInterceptor(new StethoInterceptor())
                     .build();
 
@@ -60,11 +65,26 @@ public class SelliscopeApplication extends Application {
         if (BuildConfig.DEBUG) {
             Timber.plant(new Timber.DebugTree());
         }
+        createNotificationChannel();
         Stetho.initializeWithDefaults(this);
        /* Fabric.with(this, new Crashlytics());*/
         Realm.init(this);
         RealmConfiguration config = new RealmConfiguration.Builder().name("lalteer.realm").build();
 
         Realm.setDefaultConfiguration(config);
+    }
+
+
+    public static final String CHANNEL_ID="testServiceChannel";
+
+    private void createNotificationChannel() {
+        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.O) {
+            NotificationChannel serviceChannel = new NotificationChannel(
+                    CHANNEL_ID, "Test Service Channel",
+                    NotificationManager.IMPORTANCE_DEFAULT
+            );
+            NotificationManager manager = getSystemService(NotificationManager.class);
+            manager.createNotificationChannel(serviceChannel);
+        }
     }
 }

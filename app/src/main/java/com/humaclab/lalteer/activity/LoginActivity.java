@@ -159,7 +159,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     void getUser(final String email, final String password) {
-        Timber.d(email + " " + password);
+
         sessionManager = new SessionManager(this);
         apiService = SelliscopeApplication.getRetrofitInstance(email, password, true)
                 .create(SelliscopeApiEndpointInterface.class);
@@ -175,7 +175,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                         Login.Successful loginSuccessful = gson.fromJson(response.body().string()
                                 , Login.Successful.class);
-                        Timber.d("Login Successful");
+
 
                         loginResult = loginSuccessful.result;
 
@@ -206,6 +206,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                     } catch (IOException e) {
                         e.printStackTrace();
+                        Toast.makeText(LoginActivity.this, "Exc: "+ e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 } else if (response.code() == 401) {
                     try {
@@ -252,7 +253,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 loginProgresssBar.setVisibility(View.INVISIBLE);
                 Log.e("tareq_test", "Error on Login: " + t.getMessage());
-                Constants.BASE_URL = Constants.BASE_URL_HTTP;
+                if(Constants.BASE_URL.equals(Constants.BASE_URL_HTTPS)) {
+                    Constants.BASE_URL = Constants.BASE_URL_HTTP;
+                }else{
+                    Constants.BASE_URL = Constants.BASE_URL_HTTPS;
+                }
                 getUser(email.trim(), password.trim());
             }
         });

@@ -1,12 +1,14 @@
 package com.humaclab.lalteer.activity;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
@@ -18,6 +20,15 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
 import androidx.annotation.NonNull;
+
+import com.google.android.gms.common.api.ResolvableApiException;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResponse;
+import com.google.android.gms.location.LocationSettingsStates;
+import com.google.android.gms.location.SettingsClient;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
@@ -71,7 +82,9 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import timber.log.Timber;
 
+import static android.provider.Settings.Secure.LOCATION_MODE_HIGH_ACCURACY;
 import static com.humaclab.lalteer.R.id.content_fragment;
+import static io.nlopez.smartlocation.location.providers.LocationGooglePlayServicesProvider.REQUEST_CHECK_SETTINGS;
 
 public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     public static ScheduledExecutorService schedulerForMinute, schedulerForHour;
@@ -94,11 +107,14 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         LoadLocale();
         setContentView(R.layout.activity_home);
-
+        manufacturer = android.os.Build.MANUFACTURER;
         //
         SharedPreferences sharedPreferences = getSharedPreferences("Settings", MODE_PRIVATE);
         Constants.BASE_URL = sharedPreferences.getString("BASE_URL", Constants.BASE_URL);
 
+       // Toast.makeText(this, ""+ Constants.BASE_URL, Toast.LENGTH_SHORT).show();
+
+        displayGpsSignalRequest(); //for showing gps request
 
 
         sessionManager = new SessionManager(this);
@@ -228,6 +244,42 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             getBaseContext().getResources().updateConfiguration(config, getBaseContext().getResources().getDisplayMetrics());
         }*/
 
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        final LocationSettingsStates states = LocationSettingsStates.fromIntent(intent);
+        switch (requestCode) {
+            case REQUEST_CHECK_SETTINGS:
+                switch (resultCode) {
+                    case Activity.RESULT_OK:
+                        // All required changes were successfully made
+                        //         Toast.makeText(context, "Must turn on GPs", Toast.LENGTH_SHORT).show();
+                        try {
+                            int locationMode = Settings.Secure.getInt(this.getContentResolver(), Settings.Secure.LOCATION_MODE);
+
+                            if (locationMode == LOCATION_MODE_HIGH_ACCURACY) {
+                                //request location updates
+                                Log.d("tareq_test", "High Accuracy found");
+                            } else { //redirect user to settings page
+                                //need high accuracy
+                                Log.d("tareq_test", "need high accuracy");
+                                startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                            }
+                        } catch (Settings.SettingNotFoundException e) {
+                            e.printStackTrace();
+                        }
+                        break;
+                    case Activity.RESULT_CANCELED:
+                        // The user was asked to change settings, but chose not to
+                        displayGpsSignalRequest();
+                        break;
+                    default:
+                        break;
+                }
+                break;
+        }
     }
 
     private void setDiameter() {
@@ -374,12 +426,22 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
+    private String manufacturer;
+    Intent locationServiceIntent;
     @Override
     protected void onDestroy() {
+        try {
+            stopService(locationServiceIntent); /*The latter may seem rather peculiar:
+             why do we want to stop exactly the service that we want to keep alive?
+              Because if we do not stop it, the service will die with our app.
+              Instead, by stopping the service, we will force the service to call its own onDestroy which will force it to recreate itself after the app is dead.*/
+        } catch (Exception e) {
+            Log.e("tareq_test", "Stop location Service intent: " + e.getMessage());
+        }
         super.onDestroy();
         if (sessionManager.isLoggedIn()) {
-            Timber.d("Home Activity stopped.");
+
+            if (manufacturer.equals("Xiaomi"))
             startActivity(new Intent(getApplicationContext(), HomeActivity.class));
         }
     }
@@ -416,7 +478,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             public void onResponse(Call<AppVersion> call, Response<AppVersion> response) {
                 if (response.code() == 200) {
 
-                    System.out.println("APPS VERTION " + new Gson().toJson(response.body()));
+                   Log.d("tareq_test" , "APPS VERTION " + new Gson().toJson(response.body()));
 
                     int serverVersion = Integer.parseInt(response.body().getResult().getVersionCode());
                     int appVersion = BuildConfig.VERSION_CODE;
@@ -579,19 +641,21 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         //And it will be keep running until you close the entire application from task manager.
         //This method will executed only once.
 
+        LocationMonitoringService locationMonitoringService = new LocationMonitoringService();
+        locationServiceIntent = new Intent(this, locationMonitoringService.getClass());
         if (!mAlreadyStartedService) {
 
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                Intent intent2 = new Intent(this, LocationMonitoringService.class);
-                startForegroundService(intent2);
+            //    Intent intent2 = new Intent(this, LocationMonitoringService.class);
+                startForegroundService(locationServiceIntent);
             }
 
             //mMsgView.setText("msg_location_service_started");
 
             //Start location sharing service to app server.........
-            Intent intent = new Intent(this, LocationMonitoringService.class);
-            startService(intent);
+         //   Intent intent = new Intent(this, LocationMonitoringService.class);
+            startService(locationServiceIntent);
             mAlreadyStartedService = true;
             //Ends................................................
 
@@ -758,4 +822,43 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         welcome_text.setText(message + ", " + sessionManager.getUserDetails().get("userName"));
 
     }
+
+    private void displayGpsSignalRequest() {
+
+        LocationRequest locationRequest = LocationRequest.create();
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        locationRequest.setInterval(10000);
+        locationRequest.setFastestInterval(5000);
+
+        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder()
+                .addLocationRequest(locationRequest);
+
+
+        SettingsClient client = LocationServices.getSettingsClient(this);
+        Task<LocationSettingsResponse> task = client.checkLocationSettings(builder.build());
+
+        task.addOnSuccessListener(this, locationSettingsResponse -> {
+            // All location settings are satisfied. The client can initialize
+            // location requests here.
+            // ...
+            Log.d("tareq_test", "on Success");
+        });
+
+        task.addOnFailureListener(this, e -> {
+            Log.d("tareq_test", "OnFailed");
+            if (e instanceof ResolvableApiException) {
+                // Location settings are not satisfied, but this can be fixed
+                // by showing the user a dialog.
+                // Show the dialog by calling startResolutionForResult(),
+                // and check the result in onActivityResult().
+                ResolvableApiException resolvable = (ResolvableApiException) e;
+                try {
+                    resolvable.startResolutionForResult(HomeActivity.this, REQUEST_CHECK_SETTINGS); //976 is just the reference number
+                } catch (IntentSender.SendIntentException e1) {
+                    e1.printStackTrace();
+                }
+            }
+        });
+    }
+
 }

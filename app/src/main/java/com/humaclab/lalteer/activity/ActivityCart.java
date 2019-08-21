@@ -4,6 +4,8 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import androidx.databinding.DataBindingUtil;
+
+import android.graphics.Color;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -29,10 +31,12 @@ import com.humaclab.lalteer.helper.SelectedProductHelper;
 import com.humaclab.lalteer.model.AddNewOrder;
 import com.humaclab.lalteer.utils.CurrentTimeUtilityClass;
 import com.humaclab.lalteer.utils.DatabaseHandler;
+
 import com.humaclab.lalteer.utils.GetAddressFromLatLang;
 import com.humaclab.lalteer.utils.NetworkUtility;
 import com.humaclab.lalteer.utils.SendUserLocationData;
 import com.humaclab.lalteer.utils.SessionManager;
+import com.mti.pushdown_ext_onclick_single.PushDownAnim;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,6 +44,7 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
 import static com.humaclab.lalteer.activity.OrderActivity.selectedProductList;
 
 public class ActivityCart extends AppCompatActivity implements SelectedProductRecyclerAdapter.OnRemoveFromCartListener {
@@ -125,7 +130,7 @@ public class ActivityCart extends AppCompatActivity implements SelectedProductRe
         selectedProductRecyclerAdapter=new SelectedProductRecyclerAdapter(ActivityCart.this, ActivityCart.this, selectedProductList, ActivityCart.this);
         mCartBinding.rlSelectedProducts.setAdapter(selectedProductRecyclerAdapter);
 
-        mCartBinding.btnOrder.setOnClickListener(v -> orderNow());
+       PushDownAnim.setPushDownAnimTo(mCartBinding.btnOrder).setOnSingleClickListener(v -> orderNow());
 
         setPaymentTypeSprinner();
     }
@@ -174,6 +179,19 @@ public class ActivityCart extends AppCompatActivity implements SelectedProductRe
             newOrder.paymentType=mCartBinding.spinnerPaymentType.getSelectedItemPosition();
             newOrder.orderTimeStamp= CurrentTimeUtilityClass.getCurrentTimeStamp();
 
+            if (mCartBinding.spinnerPaymentType.getSelectedItemPosition()==0) {
+                View view = mCartBinding.spinnerPaymentType;
+                TextView errorText = (TextView)mCartBinding.spinnerPaymentType.getSelectedView();
+                errorText.setError("");
+                errorText.setTextColor(Color.RED);//just to highlight that this is an error
+                errorText.setText("Please Select An Invoice Type");//changes the selected item text to this
+
+                view.requestFocus();
+                pd.dismiss();
+                return;
+
+            }
+
             if (mCartBinding.etDiscount.getText().toString().equals("")) {
                 newOrder.discount = 0;
             } else {
@@ -203,6 +221,8 @@ public class ActivityCart extends AppCompatActivity implements SelectedProductRe
                     sessionManager.getUserPassword(), false)
                     .create(SelliscopeApiEndpointInterface.class);
 
+
+            Log.d("tareq_test" , ""+new Gson().toJson(addNewOrder));
 
             if (NetworkUtility.isNetworkAvailable(ActivityCart.this)) {
                addNewOrder.newOrder.address= String.valueOf(GetAddressFromLatLang.getAddressFromLatLan(this, lat,lon));
@@ -239,7 +259,7 @@ public class ActivityCart extends AppCompatActivity implements SelectedProductRe
                     @Override
                     public void onFailure(Call<AddNewOrder.OrderResponse> call, Throwable t) {
                         pd.dismiss();
-                        t.printStackTrace();
+                        Log.e("tareq_test" , "Order error: "+ t.getMessage());
                     }
                 });
             } else {
@@ -256,7 +276,8 @@ public class ActivityCart extends AppCompatActivity implements SelectedProductRe
                 finish();
             }
         } catch (Exception e) {
-            e.printStackTrace();
+           Log.e("tareq_test" , "Order error: "+ e.getMessage());
+            Toast.makeText(mContext, "Order Unsuccessful. \n Err: "+ e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
 

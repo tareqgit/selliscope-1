@@ -10,8 +10,9 @@ import androidx.databinding.DataBindingUtil;
 import androidx.databinding.ViewDataBinding;
 import android.graphics.Bitmap;
 
-import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -171,16 +172,18 @@ public class PaymentRecyclerViewAdapter extends RecyclerView.Adapter<PaymentRecy
 
                     case 0: {
                         holder.bankName.setVisibility(View.GONE);
+                        holder.sp_bank_name.setVisibility(View.GONE);
                         holder.chequeNumber.setVisibility(View.GONE);
                         holder.depositTo.setVisibility(View.VISIBLE);
                         holder.date_view.setVisibility(View.GONE);
                         holder.depositSlip.setVisibility(View.VISIBLE);
-                        holder.mImageButton.setVisibility(View.GONE);
+                        holder.mImageButton.setVisibility(View.VISIBLE);
 
                         break;
                     }
                     case 1: {
                         holder.bankName.setVisibility(View.VISIBLE);
+                        holder.sp_bank_name.setVisibility(View.VISIBLE);
                         holder.chequeNumber.setVisibility(View.VISIBLE);
                         holder.depositTo.setVisibility(View.VISIBLE);
                         holder.depositSlip.setVisibility(View.VISIBLE);
@@ -188,12 +191,13 @@ public class PaymentRecyclerViewAdapter extends RecyclerView.Adapter<PaymentRecy
                         holder.mImageButton.setVisibility(View.VISIBLE);
                         butClickedPos = orderList.orderId;
                         butClickedPos_spinner = holder.sp_payment_type.getSelectedItemPosition();
+
                         Log.d("tareq_test", "id " + butClickedPos);
                         break;
                     }
-
                     case 2: {
                         holder.bankName.setVisibility(View.VISIBLE);
+                        holder.sp_bank_name.setVisibility(View.VISIBLE);
                         holder.chequeNumber.setVisibility(View.GONE);
                         holder.depositTo.setVisibility(View.VISIBLE);
                         holder.depositSlip.setVisibility(View.VISIBLE);
@@ -244,7 +248,9 @@ public class PaymentRecyclerViewAdapter extends RecyclerView.Adapter<PaymentRecy
 
                 }
 
-                payment.bank_name = holder.bankName.getText().toString();
+             payment.bank_name = payment.type!=1 ?  holder.sp_bank_name.getSelectedItem().toString()+" ("+holder.bankName.getText().toString() +")" : "";
+
+
 
                 if (payment.type == 2) { //for cheque
                     if (holder.chequeNumber.getText().toString().equals("")) {
@@ -265,10 +271,23 @@ public class PaymentRecyclerViewAdapter extends RecyclerView.Adapter<PaymentRecy
 
                     }
 
+                    if (holder.sp_bank_name.getSelectedItemPosition()==0) {
+                        View view = holder.sp_bank_name;
+                        TextView errorText = (TextView)holder.sp_bank_name.getSelectedView();
+                        errorText.setError("");
+                        errorText.setTextColor(Color.RED);//just to highlight that this is an error
+                        errorText.setText("Bank name must be selected");//changes the selected item text to this
+
+                        view.requestFocus();
+                        pd.dismiss();
+                        return;
+
+                    }
+
 
                 }
                 payment.cheque_no = holder.chequeNumber.getText().toString();
-                payment.cheque_date = holder.date_view.getText().toString();
+                payment.cheque_date = payment.type !=1? holder.date_view.getText().toString() : "";
                 payment.deposit_to = holder.depositTo.getText().toString();
                 payment.deposit_from = sessionManager.getUserEmail().toString();
                 if (payment.type == 3) {
@@ -281,20 +300,35 @@ public class PaymentRecyclerViewAdapter extends RecyclerView.Adapter<PaymentRecy
 
                     }
 
+                    if (holder.sp_bank_name.getSelectedItemPosition()==0) {
+                        View view = holder.sp_bank_name;
+                        TextView errorText = (TextView)holder.sp_bank_name.getSelectedView();
+                        errorText.setError("");
+                        errorText.setTextColor(Color.RED);//just to highlight that this is an error
+                        errorText.setText("Bank name must be selected");//changes the selected item text to this
+
+                        view.requestFocus();
+                        pd.dismiss();
+                        return;
+
+                    }
+
                 }
                 payment.deposit_slip = holder.depositSlip.getText().toString();
 
                 payment.img = orderList.getImg(); //as this is getting from activity using listener
                 paymentResponse.payment = payment;
 
-                Log.d("tareq_test", "" + new Gson().toJson(paymentResponse));
+                Log.d("tareq_test", "payment res: " + new Gson().toJson(paymentResponse));
                 Call<PaymentResponse.PaymentSucessfull> call = apiService.payNow(paymentResponse);
                 call.enqueue(new Callback<PaymentResponse.PaymentSucessfull>() {
                     @Override
                     public void onResponse(Call<PaymentResponse.PaymentSucessfull> call, Response<PaymentResponse.PaymentSucessfull> response) {
                         if (response.code() == 200) {
                             try {
-                                Log.d("Payment response", new Gson().toJson(response.body().result));
+                                if (response.body() != null) {
+                                    Log.d("Payment response", new Gson().toJson(response.body().result));
+                                }
                                 pd.dismiss();
                                 Toast.makeText(context, "Payment received successfully.", Toast.LENGTH_SHORT).show();
                                 orderLists.remove(position);
@@ -352,7 +386,7 @@ public class PaymentRecyclerViewAdapter extends RecyclerView.Adapter<PaymentRecy
     public class PaymentViewHolder extends RecyclerView.ViewHolder {
         public ViewDataBinding binding;
         private Button btn_pay;
-        private Spinner sp_payment_type;
+        private Spinner sp_payment_type, sp_bank_name;
         private EditText et_payment, bankName, chequeNumber, depositSlip, depositTo;
         private TextView date_view;
         private ImageView mImageButton;
@@ -363,7 +397,8 @@ public class PaymentRecyclerViewAdapter extends RecyclerView.Adapter<PaymentRecy
             btn_pay = (Button) itemView.findViewById(R.id.btn_pay);
             sp_payment_type = (Spinner) itemView.findViewById(R.id.sp_payment_type);
             et_payment = (EditText) itemView.findViewById(R.id.et_payment);
-            bankName = (EditText) itemView.findViewById(R.id.et_bank_name);
+            bankName = (EditText) itemView.findViewById(R.id.et_branch_name);
+            sp_bank_name=(Spinner) itemView.findViewById(R.id.spinner_bank_name);
             chequeNumber = (EditText) itemView.findViewById(R.id.et_cheque_no);
             depositSlip = (EditText) itemView.findViewById(R.id.et_deposit_slip);
             mImageButton = itemView.findViewById(R.id.imageButton);

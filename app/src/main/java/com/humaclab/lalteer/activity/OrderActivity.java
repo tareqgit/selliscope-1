@@ -205,7 +205,9 @@ public class OrderActivity extends AppCompatActivity implements OrderProductRecy
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
-        binding.spProductBrand.setSelection(1);
+        if(brandName.size()>1) {
+            binding.spProductBrand.setSelection(1);
+        }
     }
 
     OrderProductRecyclerAdapter mOrderProductRecyclerAdapter;
@@ -213,8 +215,12 @@ public class OrderActivity extends AppCompatActivity implements OrderProductRecy
     private void getProducts() {
 
         binding.srlProduct.setRefreshing(false);
-        List<ProductsItem> productsItemList = databaseHandler.getProduct(categoryID.get(binding.spProductCategory.getSelectedItemPosition()), brandID.get(binding.spProductBrand.getSelectedItemPosition()));
+        List<ProductsItem> productsItemList = new ArrayList<>();
+
+        productsItemList = databaseHandler.getProduct(categoryID.get(binding.spProductCategory.getSelectedItemPosition()), brandID.get(binding.spProductBrand.getSelectedItemPosition()));
+
         mOrderProductRecyclerAdapter = new OrderProductRecyclerAdapter(context, OrderActivity.this, productsItemList, selectedProductList, this);
+
         binding.rvProduct.setAdapter(mOrderProductRecyclerAdapter);
         //if this activity called from product activity
         updateTotal_Discount_Grnd();

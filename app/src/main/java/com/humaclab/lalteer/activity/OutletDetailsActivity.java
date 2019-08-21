@@ -81,7 +81,7 @@ public class OutletDetailsActivity extends AppCompatActivity {
         }
 
         Glide.with(getApplicationContext())
-                .load(Constants.baseUrl + outlet.outletImgUrl)
+                .load(Constants.BASE_URL.substring(0, Constants.BASE_URL.length()-4) + outlet.outletImgUrl)
                 .thumbnail(0.5f)
                 .placeholder(R.drawable.ic_map)
                 .centerCrop()

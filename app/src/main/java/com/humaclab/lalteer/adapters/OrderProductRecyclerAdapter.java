@@ -68,7 +68,7 @@ public class OrderProductRecyclerAdapter extends RecyclerView.Adapter<OrderProdu
     public void onBindViewHolder(final OrderProductViewHolder holder, int position) {
         this.holder = holder;
         ProductsItem products = productsItemList.get(position);
-        Log.d("tareq_test", "prduct: " + new Gson().toJson(products));
+       // Log.d("tareq_test", "prduct: " + new Gson().toJson(products));
         /*First we have to make sure everything is resetted beacause the view changes will be reused */
         holder.getBinding().ivRemoveProduct.setVisibility(View.GONE);
         holder.getBinding().llQuantity.setVisibility(View.GONE);
@@ -147,7 +147,7 @@ public class OrderProductRecyclerAdapter extends RecyclerView.Adapter<OrderProdu
 
         if (products.getImg() != null && !products.getImg().equals("")) {
             Glide.with(context)
-                    .load(Constants.baseUrl + products.getImg())
+                    .load(Constants.BASE_URL.substring(0,Constants.BASE_URL.length()-4) + products.getImg())
                     .centerCrop()
                     .thumbnail(0.1f)
                     .transition(DrawableTransitionOptions.withCrossFade())
@@ -161,7 +161,9 @@ public class OrderProductRecyclerAdapter extends RecyclerView.Adapter<OrderProdu
 
     @Override
     public int getItemCount() {
-        return productsItemList.size();
+        if(productsItemList==null) return 0;
+        else return productsItemList.size();
+
     }
 
 

@@ -7,10 +7,13 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.appcompat.widget.Toolbar;
+
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.humaclab.lalteer.R;
 import com.humaclab.lalteer.SelliscopeApiEndpointInterface;
 import com.humaclab.lalteer.SelliscopeApplication;
@@ -81,16 +84,18 @@ public class PurchaseHistoryActivity extends AppCompatActivity {
         call.enqueue(new Callback<PurchaseHistoryResponse>() {
             @Override
             public void onResponse(Call<PurchaseHistoryResponse> call, Response<PurchaseHistoryResponse> response) {
-                binding.tvTotalPaid.setText(response.body().getResult().getTotalPaid());
-                binding.tvTotalDue.setText(response.body().getResult().getTotalDue());
+                binding.tvTotalPaid.setText(response.body() != null ? response.body().getResult().getTotalPaid() : null);
+                binding.tvTotalDue.setText(response.body() != null ? response.body().getResult().getTotalDue() : null);
                 binding.srlPurchaseHistory.setRefreshing(false);
-                binding.rlPurchaseHistory.setAdapter(new PurchaseHistoryRecyclerAdapter(PurchaseHistoryActivity.this, response.body().getResult().getPurchaseHistory(), outlet));
+                binding.rlPurchaseHistory.setAdapter(new PurchaseHistoryRecyclerAdapter(PurchaseHistoryActivity.this, response.body() != null ? response.body().getResult().getPurchaseHistory() : null, outlet));
+                Log.d("tareq_test" , "Res "+ response.code() +"  "+ new Gson().toJson(response.body() != null ? response.body().getResult() : null));
             }
 
             @Override
             public void onFailure(Call<PurchaseHistoryResponse> call, Throwable t) {
                 binding.srlPurchaseHistory.setRefreshing(false);
                 t.printStackTrace();
+                Log.e("tareq_test" , "Error: "+ t.getMessage());
             }
         });
     }

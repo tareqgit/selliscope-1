@@ -353,6 +353,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.close();
     }
 
+    public void deleteUserVisit() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_USER_VISITS, null, null);
+        db.close();
+    }
+
+
     /*public void addProduct(List<ProductsItem> products) {
         SQLiteDatabase db = this.getWritableDatabase();
         for (ProductsItem product : products) {

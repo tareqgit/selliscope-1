@@ -445,6 +445,23 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public void addCategory(int categoryID, String categoryName) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
+        if (!getCategory().contains(new Category(categoryName, String.valueOf(categoryID)))) {
+            values.put(KEY_CATEGORY_ID, categoryID);
+            values.put(KEY_CATEGORY_NAME, categoryName);
+            try {
+                if(!db.isOpen())db = this.getWritableDatabase();
+                db.insert(TABLE_CATEGORY, null, values);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        values.clear();
+        db.close(); // Closing database connection
+    }
+
+  /*  public void addCategory(int categoryID, String categoryName) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
         values.put(KEY_CATEGORY_ID, categoryID);
         values.put(KEY_CATEGORY_NAME, categoryName);
         try {
@@ -454,9 +471,27 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         }
         values.clear();
         db.close(); // Closing database connection
-    }
+    }*/
 
     public void addBrand(int brandID, String brandName) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        if (!getBrand().contains(new Brand(brandName, String.valueOf(brandID)))) {
+            values.put(KEY_BRAND_ID, brandID);
+            values.put(KEY_BRAND_NAME, brandName);
+            try {
+                if (!db.isOpen()) db = this.getWritableDatabase();
+                db.insert(TABLE_BRAND, null, values);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        values.clear();
+
+        db.close(); // Closing database connection
+    }
+
+  /*  public void addBrand(int brandID, String brandName) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(KEY_BRAND_ID, brandID);
@@ -468,7 +503,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         }
         values.clear();
         db.close(); // Closing database connection
-    }
+    }*/
 
     public void removeProductCategoryBrand() {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -1012,10 +1047,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public List<District> getDistrict() {
         List<District> districtList = new ArrayList<>();
 
-        District district1 = new District();
+        /*District district1 = new District();
         district1.setId(0);
         district1.setName("Select district");
-        districtList.add(district1);
+        districtList.add(district1);*/
 
         SQLiteDatabase db = this.getWritableDatabase();
         String query = "SELECT * FROM " + TABLE_DISTRICT;
@@ -1038,16 +1073,21 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     public void setDistrict(List<District> districtList) {
+        List<District> districts = getDistrict();
+
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         try {
             for (District district : districtList) {
-                values.put(KEY_DISTRICT_ID, district.getId());
-                values.put(KEY_DISTRICT_NAME, district.getName());
-                try {
-                    db.insert(TABLE_DISTRICT, null, values);
-                } catch (Exception e) {
-                    e.printStackTrace();
+                if (!districts.contains(district)) {
+                    values.put(KEY_DISTRICT_ID, district.getId());
+                    values.put(KEY_DISTRICT_NAME, district.getName());
+                    try {
+                        if (!db.isOpen()) db = this.getWritableDatabase();
+                        db.insert(TABLE_DISTRICT, null, values);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         } catch (Exception e) {
@@ -1087,18 +1127,50 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return thanaList;
     }
 
+    private List<Thana> getAllThanas() {
+        List<Thana> thanaList = new ArrayList<>();
+
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "SELECT * FROM " + TABLE_THANA;
+
+        Cursor cursor = db.rawQuery(query, null);
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                cursor.getColumnNames();
+                Thana thana = new Thana();
+                thana.setId(cursor.getInt(cursor.getColumnIndex(KEY_THANA_ID)));
+                thana.setName(cursor.getString(cursor.getColumnIndex(KEY_THANA_NAME)));
+                thana.setDistrictId(cursor.getInt(cursor.getColumnIndex(KEY_DISTRICT_ID)));
+                thanaList.add(thana);
+
+            } while (cursor.moveToNext());
+        }
+        db.close();
+        return thanaList;
+    }
+
+
     public void setThana(List<Thana> thanaList) {
+
+        List<Thana> thanas = getAllThanas();
+
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         try {
             for (Thana thana : thanaList) {
-                values.put(KEY_THANA_ID, thana.getId());
-                values.put(KEY_THANA_NAME, thana.getName());
-                values.put(KEY_DISTRICT_ID, thana.getDistrictId());
-                try {
-                    db.insert(TABLE_THANA, null, values);
-                } catch (Exception e) {
-                    e.printStackTrace();
+                if (!thanas.contains(thana)) {
+                    values.put(KEY_THANA_ID, thana.getId());
+                    values.put(KEY_THANA_NAME, thana.getName());
+                    values.put(KEY_DISTRICT_ID, thana.getDistrictId());
+                    try {
+                        if (!db.isOpen()) db = this.getWritableDatabase();
+                        db.insert(TABLE_THANA, null, values);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         } catch (Exception e) {
@@ -1106,6 +1178,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         }
         db.close();
     }
+
 
     public List<OutletType> getOutletType() {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -1129,16 +1202,23 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     public void setOutletType(List<OutletType> outletTypeList) {
+
+        List<OutletType> outletTypes = getOutletType();
+
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         try {
             for (OutletType outletType : outletTypeList) {
-                values.put(KEY_TYPE_ID, outletType.getId());
-                values.put(KEY_TYPE_NAME, outletType.getName());
-                try {
-                    db.insert(TABLE_OUTLET_TYPE, null, values);
-                } catch (Exception e) {
-                    e.printStackTrace();
+                if (!outletTypes.contains(outletType)) {
+                    values.put(KEY_TYPE_ID, outletType.getId());
+                    values.put(KEY_TYPE_NAME, outletType.getName());
+                    try {
+                        if (!db.isOpen()) db = this.getWritableDatabase();
+                        db.insert(TABLE_OUTLET_TYPE, null, values);
+                        Log.d("tareq_test", "" + new Gson().toJson(getOutletType()));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         } catch (Exception e) {

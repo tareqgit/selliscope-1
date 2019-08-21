@@ -184,8 +184,6 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
         sendUserLocationData.getInstantLocation(activity, new SendUserLocationData.OnGetLocation() {
             @Override
             public void getLocation(Double latitude, Double longitude) {
-                Timber.d("User location: Latitude: " + latitude + "," + "Longitude: " + longitude);
-                Timber.d("Outlet location: Latitude: " + outletLocation.getLatitude() + "," + "Longitude: " + outletLocation.getLongitude());
 
                 Location location = new Location("");
                 location.setLatitude(latitude);
@@ -220,18 +218,23 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
                 Gson gson = new Gson();
                 if (response.code() == 200) {
                     try {
-                        UserLocation.Successful userLocationSuccess = gson.fromJson(response.body().string(), UserLocation.Successful.class);
-                        Timber.d("Result:" + userLocationSuccess.result);
+                        UserLocation.Successful userLocationSuccess = null;
+                        if (response.body() != null) {
+                            userLocationSuccess = gson.fromJson(response.body().string(), UserLocation.Successful.class);
+                        }
+
                         progressBar.setVisibility(View.INVISIBLE);
 
-                        if (userLocationSuccess.msg.equals("")) { // To check if the user already checked in the outlet
-                            Toast.makeText(context, "You are checked in.", Toast.LENGTH_SHORT).show();
-                            databaseHandler.afterCheckinUpdateOutletRoutePlan(outletId);
+                        if (userLocationSuccess != null) {
+                            if (userLocationSuccess.msg.equals("")) { // To check if the user already checked in the outlet
+                                Toast.makeText(context, "You are checked in.", Toast.LENGTH_SHORT).show();
+                                databaseHandler.afterCheckinUpdateOutletRoutePlan(outletId);
 
-                            ((OutletActivity) context).getRoute();//For reloading the outlet recycler view
-                            ((OutletActivity) context).getOutlets();//For reloading the outlet recycler view
-                        } else {
-                            Toast.makeText(context, "You already checked in.", Toast.LENGTH_SHORT).show();
+                                ((OutletActivity) context).getRoute();//For reloading the outlet recycler view
+                                ((OutletActivity) context).getOutlets();//For reloading the outlet recycler view
+                            } else {
+                                Toast.makeText(context, "You already checked in.", Toast.LENGTH_SHORT).show();
+                            }
                         }
                     } catch (IOException e) {
                         progressBar.setVisibility(View.INVISIBLE);

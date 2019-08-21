@@ -4,12 +4,15 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import android.util.Base64;
 import android.util.Log;
 import android.view.MenuItem;
@@ -44,6 +47,7 @@ import com.humaclab.lalteer.utils.SessionManager;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -170,14 +174,11 @@ public class AddOutletActivity extends AppCompatActivity {
 
             }
         });
-        getLocation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(AddOutletActivity.this, LocationFromMapActivity.class);
-                intent.putExtra("latitude", mCurrentLatitude);
-                intent.putExtra("longitude", mCurrentLongitude);
-                startActivityForResult(intent, MAP_LOCATION);
-            }
+        getLocation.setOnClickListener(v -> {
+            Intent intent = new Intent(AddOutletActivity.this, LocationFromMapActivity.class);
+            intent.putExtra("latitude", mCurrentLatitude);
+            intent.putExtra("longitude", mCurrentLongitude);
+            startActivityForResult(intent, MAP_LOCATION);
         });
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -246,6 +247,113 @@ public class AddOutletActivity extends AppCompatActivity {
                 }
             }
         });
+
+        try {
+
+            ((SwipeRefreshLayout) findViewById(R.id.swipeRefresher)).setColorSchemeColors(Color.parseColor("#EA5455"), Color.parseColor("#FCCF31"), Color.parseColor("#F55555"));
+
+            //Do something here
+
+
+            getDistricts();
+            getOutletTypes();
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        LoadLocalIntoBackground loadLocalIntoBackground = new LoadLocalIntoBackground(AddOutletActivity.this);
+
+
+        ((SwipeRefreshLayout) findViewById(R.id.swipeRefresher)).setOnRefreshListener(() -> {
+            //if network is Available then update the data again
+            if (NetworkUtility.isNetworkAvailable(AddOutletActivity.this)) {
+                ((SwipeRefreshLayout) findViewById(R.id.swipeRefresher)).setRefreshing(true);
+
+                loadLocalIntoBackground.loadOutletType(new LoadLocalIntoBackground.LoadCompleteListener() {
+                    @Override
+                    public void onLoadComplete() {
+                        loadLocalIntoBackground.loadDistrict(new LoadLocalIntoBackground.LoadCompleteListener() {
+                            @Override
+                            public void onLoadComplete() {
+                                loadLocalIntoBackground.loadThana(new LoadLocalIntoBackground.LoadCompleteListener() {
+                                    @Override
+                                    public void onLoadComplete() {
+                                        ((SwipeRefreshLayout) findViewById(R.id.swipeRefresher)).setRefreshing(false);
+                                        getDistricts();
+                                        getOutletTypes();
+
+                                    }
+
+                                    @Override
+                                    public void onLoadFailed(String reason) {
+                                        Log.d("tareq_test", "Thana error: " + reason);
+                                    }
+                                });
+                            }
+
+                            @Override
+                            public void onLoadFailed(String reason) {
+                                Log.d("tareq_test", "District error: " + reason);
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onLoadFailed(String reason) {
+                        Log.d("tareq_test", "Outlet Type error: " + reason);
+                    }
+                });
+
+
+            }
+        });
+
+
+        //if network is Available then update the data again
+        if (NetworkUtility.isNetworkAvailable(AddOutletActivity.this)) {
+            if (NetworkUtility.isNetworkAvailable(AddOutletActivity.this)) {
+                ((SwipeRefreshLayout) findViewById(R.id.swipeRefresher)).setRefreshing(true);
+
+                loadLocalIntoBackground.loadOutletType(new LoadLocalIntoBackground.LoadCompleteListener() {
+                    @Override
+                    public void onLoadComplete() {
+                        loadLocalIntoBackground.loadDistrict(new LoadLocalIntoBackground.LoadCompleteListener() {
+                            @Override
+                            public void onLoadComplete() {
+                                loadLocalIntoBackground.loadThana(new LoadLocalIntoBackground.LoadCompleteListener() {
+                                    @Override
+                                    public void onLoadComplete() {
+                                        ((SwipeRefreshLayout) findViewById(R.id.swipeRefresher)).setRefreshing(false);
+                                        getDistricts();
+                                        getOutletTypes();
+
+                                    }
+
+                                    @Override
+                                    public void onLoadFailed(String reason) {
+                                        Log.d("tareq_test", "Thana error: " + reason);
+                                    }
+                                });
+                            }
+
+                            @Override
+                            public void onLoadFailed(String reason) {
+                                Log.d("tareq_test", "District error: " + reason);
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onLoadFailed(String reason) {
+                        Log.d("tareq_test", "Outlet Type error: " + reason);
+                    }
+                });
+
+
+            }
+        }
+
     }
 
     private boolean isEmpty() {
@@ -300,8 +408,13 @@ public class AddOutletActivity extends AppCompatActivity {
                     LoadLocalIntoBackground loadLocalIntoBackground = new LoadLocalIntoBackground(AddOutletActivity.this);
                     loadLocalIntoBackground.loadOutlet(true);
                     try {
-                        CreateOutlet createOutletResult = gson.fromJson(response.body().string(), CreateOutlet.class);
-                        Toast.makeText(AddOutletActivity.this, createOutletResult.result, Toast.LENGTH_SHORT).show();
+                        CreateOutlet createOutletResult = null;
+                        if (response.body() != null) {
+                            createOutletResult = gson.fromJson(response.body().string(), CreateOutlet.class);
+                        }
+                        if (createOutletResult != null) {
+                            Toast.makeText(AddOutletActivity.this, createOutletResult.result, Toast.LENGTH_SHORT).show();
+                        }
                         submit.setEnabled(false);
                         Intent intent = new Intent(getApplicationContext(), OutletActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -326,7 +439,13 @@ public class AddOutletActivity extends AppCompatActivity {
     }
 
     void getDistricts() {
-        districtAdapter = new DistrictAdapter(AddOutletActivity.this, databaseHandler.getDistrict());
+        District district1 = new District();
+        district1.setId(0);
+        district1.setName("Select district");
+        ArrayList<District> arrayListDistrict = new ArrayList<>();
+        arrayListDistrict.add(district1);
+        arrayListDistrict.addAll(databaseHandler.getDistrict());
+        districtAdapter = new DistrictAdapter(AddOutletActivity.this, arrayListDistrict);
         district.setAdapter(districtAdapter);
     }
 

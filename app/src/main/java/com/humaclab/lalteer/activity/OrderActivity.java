@@ -6,6 +6,7 @@ import android.content.res.Configuration;
 
 import androidx.databinding.DataBindingUtil;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Parcelable;
 
@@ -34,6 +35,8 @@ import com.humaclab.lalteer.model.variant_product.Brand;
 import com.humaclab.lalteer.model.variant_product.Category;
 import com.humaclab.lalteer.model.variant_product.ProductsItem;
 import com.humaclab.lalteer.utils.DatabaseHandler;
+import com.humaclab.lalteer.utils.LoadLocalIntoBackground;
+import com.humaclab.lalteer.utils.NetworkUtility;
 import com.humaclab.lalteer.utils.SessionManager;
 
 import java.io.Serializable;
@@ -62,6 +65,7 @@ public class OrderActivity extends AppCompatActivity implements OrderProductRecy
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_order);
         context = OrderActivity.this;
+        binding.srlProduct.setColorSchemeColors(Color.parseColor("#EA5455"), Color.parseColor("#FCCF31"), Color.parseColor("#F55555"));
 
         outletName = getIntent().getStringExtra("outletName");
         outletID = getIntent().getStringExtra("outletID");
@@ -106,12 +110,95 @@ public class OrderActivity extends AppCompatActivity implements OrderProductRecy
             }
         });
 
-        binding.srlProduct.setOnRefreshListener(() -> {
-            getProducts();
-        });
-        binding.srlProduct.setRefreshing(true);
+        LoadLocalIntoBackground loadLocalIntoBackground = new LoadLocalIntoBackground(OrderActivity.this);
 
         getProducts();
+        binding.srlProduct.setRefreshing(false);
+        binding.srlProduct.setOnRefreshListener(() -> {
+            //if network is Available then update the data again
+            if (NetworkUtility.isNetworkAvailable(OrderActivity.this)) {
+
+                binding.progressBar.setVisibility(View.VISIBLE);
+                loadLocalIntoBackground.loadCategory(new LoadLocalIntoBackground.LoadCompleteListener() {
+                    @Override
+                    public void onLoadComplete() {
+                        loadLocalIntoBackground.loadBrand(new LoadLocalIntoBackground.LoadCompleteListener() {
+                            @Override
+                            public void onLoadComplete() {
+
+                                getCategory();
+                                getBrand();
+                                getProducts();
+                                binding.progressBar.setVisibility(View.GONE);
+                                Log.d("tareq_test", "Loading data complete");
+                            }
+
+                            @Override
+                            public void onLoadFailed(String reason) {
+                                Log.e("tareq_test", "Loading data  brand failed " + reason);
+                                Toast.makeText(context, "Loading Interrupted \n" +
+                                        "Please Pull Down to Reload", Toast.LENGTH_SHORT).show();
+                                binding.progressBar.setVisibility(View.GONE);
+                            }
+                        });
+
+                    }
+
+                    @Override
+                    public void onLoadFailed(String reason) {
+                        Log.e("tareq_test", "Loading data category failed "+reason);
+                        Toast.makeText(context, "Loading Interrupted \n" +
+                                "Please Pull Down to Reload", Toast.LENGTH_SHORT).show();
+                        binding.progressBar.setVisibility(View.GONE);
+                    }
+                });
+
+
+            }
+
+        });
+
+        //if network is Available then update the data again
+        if (NetworkUtility.isNetworkAvailable(OrderActivity.this)) {
+
+            binding.progressBar.setVisibility(View.VISIBLE);
+            loadLocalIntoBackground.loadCategory(new LoadLocalIntoBackground.LoadCompleteListener() {
+                @Override
+                public void onLoadComplete() {
+                    loadLocalIntoBackground.loadBrand(new LoadLocalIntoBackground.LoadCompleteListener() {
+                        @Override
+                        public void onLoadComplete() {
+
+                            getCategory();
+                            getBrand();
+                            getProducts();
+                            binding.progressBar.setVisibility(View.GONE);
+                            Log.d("tareq_test", "Loading data complete");
+                        }
+
+                        @Override
+                        public void onLoadFailed(String reason) {
+                            Log.e("tareq_test", "Loading data  brand failed " + reason);
+                            Toast.makeText(context, "Loading Interrupted \n" +
+                                    "Please Pull Down to Reload", Toast.LENGTH_SHORT).show();
+                            binding.progressBar.setVisibility(View.GONE);
+                        }
+                    });
+
+                }
+
+                @Override
+                public void onLoadFailed(String reason) {
+                    Log.e("tareq_test", "Loading data category failed "+reason);
+                    Toast.makeText(context, "Loading Interrupted \n" +
+                            "Please Pull Down to Reload", Toast.LENGTH_SHORT).show();
+                    binding.progressBar.setVisibility(View.GONE);
+                }
+            });
+
+
+        }
+
     }
 
     @Override
@@ -140,7 +227,7 @@ public class OrderActivity extends AppCompatActivity implements OrderProductRecy
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (position != 0) {
 
-                    binding.srlProduct.setRefreshing(false);
+                    //binding.srlProduct.setRefreshing(false);
                     List<ProductsItem> productsItemList = databaseHandler.getProduct(categoryID.get(position), brandID.get(binding.spProductBrand.getSelectedItemPosition()));
                     binding.rvProduct.setAdapter(new OrderProductRecyclerAdapter(context, OrderActivity.this, productsItemList, selectedProductList, OrderActivity.this));
                 }
@@ -195,7 +282,7 @@ public class OrderActivity extends AppCompatActivity implements OrderProductRecy
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (position != 0) {
 
-                    binding.srlProduct.setRefreshing(false);
+                   // binding.srlProduct.setRefreshing(false);
                     List<ProductsItem> productsItemList = databaseHandler.getProduct(categoryID.get(binding.spProductCategory.getSelectedItemPosition()), brandID.get(position));
                     binding.rvProduct.setAdapter(new OrderProductRecyclerAdapter(context, OrderActivity.this, productsItemList, selectedProductList, OrderActivity.this));
                 }
@@ -205,7 +292,7 @@ public class OrderActivity extends AppCompatActivity implements OrderProductRecy
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
-        if(brandName.size()>1) {
+        if (brandName.size() > 1) {
             binding.spProductBrand.setSelection(1);
         }
     }
@@ -214,7 +301,7 @@ public class OrderActivity extends AppCompatActivity implements OrderProductRecy
 
     private void getProducts() {
 
-        binding.srlProduct.setRefreshing(false);
+       // binding.srlProduct.setRefreshing(false);
         List<ProductsItem> productsItemList = new ArrayList<>();
 
         productsItemList = databaseHandler.getProduct(categoryID.get(binding.spProductCategory.getSelectedItemPosition()), brandID.get(binding.spProductBrand.getSelectedItemPosition()));

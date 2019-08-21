@@ -19,6 +19,8 @@ import com.humaclab.lalteer.model.Thana.ThanaResponse;
 import java.io.IOException;
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -51,9 +53,9 @@ public class LoadLocalIntoBackground {
         if (!sessionManager.isAllDataLoaded()) {
             this.loadProduct();
             this.loadOutlet(false);
-            this.loadOutletType();
-            this.loadDistrict();
-            this.loadThana();
+            this.loadOutletType(null);
+            this.loadDistrict(null);
+            this.loadThana(null);
             sessionManager.setAllDataLoaded();
         }
     }
@@ -61,9 +63,9 @@ public class LoadLocalIntoBackground {
     public void updateAllData() {
         this.loadProduct();
         this.loadOutlet(true);
-        this.loadOutletType();
-        this.loadDistrict();
-        this.loadThana();
+        this.loadOutletType(null);
+        this.loadDistrict(null);
+        this.loadThana(null);
     }
 
     public void loadProduct() {
@@ -81,8 +83,8 @@ public class LoadLocalIntoBackground {
                             //for removing previous data
                             databaseHandler.removeProductCategoryBrand();
                             databaseHandler.addProduct(products);
-                            loadCategory();
-                            loadBrand();
+                            loadCategory(null);
+                            loadBrand(null);
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -97,7 +99,7 @@ public class LoadLocalIntoBackground {
         }
     }
 
-    private void loadCategory() {
+    public void loadCategory(@Nullable LoadCompleteListener loadCompleteListener) {
         Call<CategoryResponse> call = apiService.getCategories();
         call.enqueue(new Callback<CategoryResponse>() {
             @Override
@@ -114,6 +116,7 @@ public class LoadLocalIntoBackground {
                             for (CategoryResponse.CategoryResult result : categories) {
                                 databaseHandler.addCategory(result.id, result.name);
                             }
+                            if (loadCompleteListener != null) loadCompleteListener.onLoadComplete();
                         }
                     } catch (Exception e) {
                         Log.d("tareq_test", "Categories error: " + e.getMessage());
@@ -126,12 +129,13 @@ public class LoadLocalIntoBackground {
             public void onFailure(Call<CategoryResponse> call, Throwable t) {
                 Log.d("tareq_test", "Caregories failed");
                 t.printStackTrace();
+                if (loadCompleteListener != null) loadCompleteListener.onLoadFailed("load category: "+t.getMessage());
             }
         });
 
     }
 
-    private void loadBrand() {
+    public void loadBrand(@Nullable LoadCompleteListener loadCompleteListener) {
         Call<BrandResponse> call = apiService.getBrands();
         call.enqueue(new Callback<BrandResponse>() {
             @Override
@@ -146,6 +150,7 @@ public class LoadLocalIntoBackground {
                             for (BrandResponse.BrandResult result : brands) {
                                 databaseHandler.addBrand(result.id, result.name);
                             }
+                            if (loadCompleteListener != null) loadCompleteListener.onLoadComplete();
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -156,6 +161,7 @@ public class LoadLocalIntoBackground {
             @Override
             public void onFailure(Call<BrandResponse> call, Throwable t) {
                 t.printStackTrace();
+                if (loadCompleteListener != null) loadCompleteListener.onLoadFailed("load brand: "+t.getMessage());
             }
         });
     }
@@ -208,7 +214,7 @@ public class LoadLocalIntoBackground {
         databaseHandler.updateOutletRoutePlan(outletItemList);
     }
 
-    private void loadDistrict() {
+    public void loadDistrict(LoadCompleteListener loadCompleteListener) {
         Call<DistrictResponse> call = apiService.getDistricts();
         call.enqueue(new Callback<DistrictResponse>() {
             @Override
@@ -223,17 +229,19 @@ public class LoadLocalIntoBackground {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
+                    if (loadCompleteListener != null) loadCompleteListener.onLoadComplete();
                 }
             }
 
             @Override
             public void onFailure(Call<DistrictResponse> call, Throwable t) {
                 Log.d("Response", t.toString());
+                if (loadCompleteListener != null) loadCompleteListener.onLoadFailed("load district: "+t.getMessage());
             }
         });
     }
 
-    private void loadThana() {
+    public void loadThana(LoadCompleteListener loadCompleListener) {
         Call<ThanaResponse> call = apiService.getThanas();
         call.enqueue(new Callback<ThanaResponse>() {
             @Override
@@ -248,18 +256,20 @@ public class LoadLocalIntoBackground {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
+
+                    if (loadCompleListener != null) loadCompleListener.onLoadComplete();
                 }
             }
 
             @Override
             public void onFailure(Call<ThanaResponse> call, Throwable t) {
                 Log.d("Response", t.toString());
-
+                if (loadCompleListener != null) loadCompleListener.onLoadFailed("load thana: "+t.getMessage());
             }
         });
     }
 
-    private void loadOutletType() {
+    public void loadOutletType(LoadCompleteListener loadCompleListener) {
         Call<OutletTypeResponse> call = apiService.getOutletTypes();
         call.enqueue(new Callback<OutletTypeResponse>() {
             @Override
@@ -274,17 +284,27 @@ public class LoadLocalIntoBackground {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
+
+                    if (loadCompleListener != null) loadCompleListener.onLoadComplete();
                 }
             }
 
             @Override
             public void onFailure(Call<OutletTypeResponse> call, Throwable t) {
                 Log.d("Response", t.toString());
+                if (loadCompleListener != null) loadCompleListener.onLoadFailed("load outlet type: "+ t.getMessage());
             }
         });
     }
 
     public interface OnOutletUpdateComplete {
         void onUpdateComplete();
+    }
+
+
+    public interface LoadCompleteListener {
+        void onLoadComplete();
+
+        void onLoadFailed(String reason);
     }
 }

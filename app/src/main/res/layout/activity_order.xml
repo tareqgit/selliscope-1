@@ -3,19 +3,40 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:focusableInTouchMode="true"
         android:orientation="vertical"
         tools:context="com.humaclab.lalteer.activity.OrderActivity">
 
-        <include layout="@layout/toolbar_layout" />
+        <include
+            android:id="@+id/include5"
+            layout="@layout/toolbar_layout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="@android:style/Widget.Material.ProgressBar.Horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:indeterminate="true"
+            android:translationZ="4dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/include5" />
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            >
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/progressBar">
 
             <LinearLayout
                 android:id="@+id/ll_spinner"
@@ -27,8 +48,8 @@
                     android:id="@+id/sp_product_category"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginBottom="5dp"/>
+                    android:layout_marginBottom="5dp"
+                    android:layout_weight="1" />
 
                 <Spinner
                     android:id="@+id/sp_product_brand"
@@ -80,10 +101,10 @@
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentBottom="true"
                 android:background="#8990caf9"
+                android:elevation="3dp"
                 android:orientation="horizontal"
                 android:padding="10dp"
-                android:weightSum="2"
-                android:elevation="3dp">
+                android:weightSum="2">
 
                 <LinearLayout
                     android:id="@+id/linearLayout10"
@@ -166,5 +187,5 @@
                 </LinearLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
         </RelativeLayout>
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

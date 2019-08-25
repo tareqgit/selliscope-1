@@ -18,6 +18,10 @@ public class CurrentTimeUtilityClass {
         return new SimpleDateFormat("yyyy-M-d",Locale.ENGLISH).format(Calendar.getInstance().getTime());
     }
 
+    public static String getCurrentTimeStampDateLocale() {
+        return new SimpleDateFormat("yyyy-MM-dd",Locale.ENGLISH).format(Calendar.getInstance().getTime());
+    }
+
     public static long getDiffBetween(String preTime1){
 
         long diff=-1;

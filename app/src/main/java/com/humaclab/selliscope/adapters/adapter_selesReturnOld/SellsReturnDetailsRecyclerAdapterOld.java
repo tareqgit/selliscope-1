@@ -5,7 +5,6 @@ import androidx.databinding.DataBindingUtil;
 import androidx.databinding.ViewDataBinding;
 import android.graphics.Color;
 
-import androidx.databinding.library.baseAdapters.BR;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +17,7 @@ import android.widget.Toast;
 import com.humaclab.selliscope.R;
 import com.humaclab.selliscope.SelliscopeApiEndpointInterface;
 import com.humaclab.selliscope.SelliscopeApplication;
+import com.humaclab.selliscope.databinding.SellsReturnDetailsItemOldBinding;
 import com.humaclab.selliscope.model.model_sales_return_old.DeliveryResponseOld;
 import com.humaclab.selliscope.model.model_sales_return_old.SellsReturnResponseOld;
 import com.humaclab.selliscope.utils.SessionManager;
@@ -52,7 +52,7 @@ public class SellsReturnDetailsRecyclerAdapterOld extends RecyclerView.Adapter<S
     @Override
     public void onBindViewHolder(final SellsReturnDetailsViewHolder holder, int position) {
         final DeliveryResponseOld.Product product = products.get(position);
-        holder.getBinding().setVariable(BR.product, product);
+        holder.getBinding().setProduct(product);
         holder.getBinding().executePendingBindings();
 
         final int[] qty = {Integer.parseInt(holder.et_qty.getText().toString())};
@@ -125,7 +125,7 @@ public class SellsReturnDetailsRecyclerAdapterOld extends RecyclerView.Adapter<S
     }
 
     public class SellsReturnDetailsViewHolder extends RecyclerView.ViewHolder {
-        private ViewDataBinding binding;
+        private SellsReturnDetailsItemOldBinding binding;
         private Button btn_decrease, btn_increase, btn_return;
         private Spinner sp_return_cause;
         private EditText et_qty;
@@ -140,7 +140,7 @@ public class SellsReturnDetailsRecyclerAdapterOld extends RecyclerView.Adapter<S
             et_qty = (EditText) itemView.findViewById(R.id.et_qty);
         }
 
-        public ViewDataBinding getBinding() {
+        public SellsReturnDetailsItemOldBinding getBinding() {
             return binding;
         }
     }

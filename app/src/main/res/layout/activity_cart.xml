@@ -167,7 +167,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/latoregular"
                     android:gravity="end"
-                    android:hint="@string/total"
+                    android:hint="0"
                     android:padding="5dp"
                     android:textColor="#000"
                     android:textStyle="bold" />
@@ -198,9 +198,9 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/latoregular"
                     android:gravity="end"
-                    android:hint="@string/discount"
+                    android:hint="0"
                     android:inputType="numberDecimal"
-                    android:text="0"
+
                     android:textColor="#000" />
             </LinearLayout>
 
@@ -229,7 +229,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/latoregular"
                     android:gravity="end"
-                    android:hint="@string/grand_total"
+                    android:hint="0"
                     android:padding="5dp"
                     android:textColor="#000" />
             </LinearLayout>
@@ -259,7 +259,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/latoregular"
                     android:gravity="end"
-                    android:hint="@string/comment" />
+                    android:hint="Urgent, Query" />
             </LinearLayout>
 
             <Button

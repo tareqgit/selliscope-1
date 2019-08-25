@@ -4,7 +4,6 @@ import android.content.Context;
 import androidx.databinding.DataBindingUtil;
 import android.graphics.Color;
 import androidx.annotation.NonNull;
-import androidx.databinding.library.baseAdapters.BR;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -49,7 +48,7 @@ int pos;
     @Override
     public void onBindViewHolder(@NonNull TViewHolder tViewHolder, int i) {
         TopSellerModel topSellerModel = mDummies.get(i);
-        tViewHolder.getBinding().setVariable(BR.Data, topSellerModel);
+        tViewHolder.getBinding().setData(topSellerModel);
 
         if(!sorted)
             pos=mDummies.size()-i ;

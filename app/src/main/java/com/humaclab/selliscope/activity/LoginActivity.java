@@ -122,7 +122,7 @@ public class LoginActivity extends AppCompatActivity {
         signIn.setOnClickListener(v -> login_validate());
 
         password.getEditText().setOnEditorActionListener((v, actionId, event) -> {
-            if(actionId== EditorInfo.IME_ACTION_DONE){
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
                 login_validate();
             }
             return false;
@@ -245,7 +245,12 @@ public class LoginActivity extends AppCompatActivity {
                 loginProgresssBar.setVisibility(View.INVISIBLE);
 
                 Log.e("tareq_test", "Error on Login: " + t.getMessage());
-                Constants.BASE_URL = Constants.BASE_URL_HTTP;
+                if (Constants.BASE_URL.equals(Constants.BASE_URL_HTTPS))
+                    Constants.BASE_URL = Constants.BASE_URL_HTTP;
+                else
+                    Constants.BASE_URL = Constants.BASE_URL_HTTPS;
+
+
                 getUser(email.trim(), password.trim());
             }
         });

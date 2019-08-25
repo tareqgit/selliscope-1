@@ -3,7 +3,6 @@ package com.humaclab.selliscope.adapters;
 import android.content.Context;
 import android.content.Intent;
 import androidx.databinding.DataBindingUtil;
-import androidx.databinding.library.baseAdapters.BR;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
@@ -47,7 +46,7 @@ public class PurchaseHistoryRecyclerAdapter extends RecyclerView.Adapter<Purchas
     @Override
     public void onBindViewHolder(PurchaseHistoryViewHolder holder, int position) {
         PurchaseHistoryItem purchaseHistory = purchaseHistoryItemList.get(position);
-        holder.getBinding().setVariable(BR.purchaseHistory, purchaseHistory);
+        holder.getBinding().setPurchaseHistory( purchaseHistory);
     }
 
     @Override

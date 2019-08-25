@@ -6,11 +6,16 @@ import android.app.NotificationManager;
 import android.content.IntentFilter;
 import android.location.LocationManager;
 import android.os.Build;
+
 import androidx.appcompat.app.AppCompatDelegate;
 
 import com.facebook.stetho.Stetho;
 import com.facebook.stetho.okhttp3.StethoInterceptor;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.humaclab.selliscope.receiver.GpsLocationBroadcastReceiver;
+import com.humaclab.selliscope.sales_return.db.ReturnProductDatabase;
+import com.humaclab.selliscope.utility_db.db.RegularPerformanceEntity;
+import com.humaclab.selliscope.utility_db.db.UtilityDatabase;
 import com.humaclab.selliscope.utils.Constants;
 import com.humaclab.selliscope.utils.HttpAuthInterceptor;
 
@@ -27,20 +32,7 @@ import timber.log.Timber;
 
 public class SelliscopeApplication extends Application {
     private static Retrofit retrofitInstance;
-
-    public static boolean isActivityVisible() {
-        return activityVisible;
-    }
-
-    public static void activityResumed() {
-        activityVisible = true;
-    }
-
-    public static void activityPaused() {
-        activityVisible = false;
-    }
-    private static boolean activityVisible;
-
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     static {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
@@ -57,8 +49,8 @@ public class SelliscopeApplication extends Application {
 
             OkHttpClient client = new OkHttpClient.Builder()
                     .addInterceptor(new HttpAuthInterceptor(email.toLowerCase(), password))
-                    .connectTimeout(600, TimeUnit.SECONDS)
-                    .readTimeout(600, TimeUnit.SECONDS)
+                    .connectTimeout(30, TimeUnit.SECONDS)
+                    .readTimeout(120, TimeUnit.SECONDS)
                     .retryOnConnectionFailure(true)
                     .addNetworkInterceptor(new StethoInterceptor())
                     .build();
@@ -79,21 +71,22 @@ public class SelliscopeApplication extends Application {
         if (BuildConfig.DEBUG) {
             Timber.plant(new Timber.DebugTree());
         }
-
+        // Obtain the FirebaseAnalytics instance.
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         createNotificationChannel();
         Stetho.initializeWithDefaults(this);
-      /*  Fabric.with(this, new Crashlytics());*/
 
         //receiver for having gps
         registerReceiver(GpsLocationBroadcastReceiver.getInstance(), new IntentFilter(LocationManager.PROVIDERS_CHANGED_ACTION));
 
+        UtilityDatabase utilityDatabase = (UtilityDatabase) UtilityDatabase.getInstance(getApplicationContext());
     }
 
 
-    public static final String CHANNEL_ID="testServiceChannel";
+    public static final String CHANNEL_ID = "testServiceChannel";
 
     private void createNotificationChannel() {
-        if(Build.VERSION.SDK_INT>=Build.VERSION_CODES.O) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel serviceChannel = new NotificationChannel(
                     CHANNEL_ID, "Test Service Channel",
                     NotificationManager.IMPORTANCE_DEFAULT

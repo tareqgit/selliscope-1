@@ -5,7 +5,6 @@ import android.content.Intent;
 import androidx.databinding.DataBindingUtil;
 import android.os.Bundle;
 
-import androidx.databinding.library.baseAdapters.BR;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -61,7 +60,7 @@ public class DeliveryDetailsActivity extends AppCompatActivity {
         deliveryList = (DeliveryResponse.DeliveryList) getIntent().getSerializableExtra("deliveryList");
 
         binding.rvDeliveryDetails.setLayoutManager(new LinearLayoutManager(this));
-        binding.setVariable(BR.deliveryDetails, deliveryList);
+        binding.setDeliveryDetails(deliveryList);
 
         binding.srlDeliveryDetails.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override

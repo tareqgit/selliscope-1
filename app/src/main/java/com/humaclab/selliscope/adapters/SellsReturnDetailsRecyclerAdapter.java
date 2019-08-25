@@ -6,7 +6,6 @@ import androidx.databinding.DataBindingUtil;
 import androidx.databinding.ViewDataBinding;
 import android.graphics.Color;
 
-import androidx.databinding.library.baseAdapters.BR;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,6 +22,7 @@ import android.widget.Toast;
 import com.humaclab.selliscope.R;
 import com.humaclab.selliscope.SelliscopeApiEndpointInterface;
 import com.humaclab.selliscope.SelliscopeApplication;
+import com.humaclab.selliscope.databinding.SellsReturnDetailsItemBinding;
 import com.humaclab.selliscope.model.reason.ReasonResponse;
 import com.humaclab.selliscope.model.sales_return.SalesReturnResponse;
 import com.humaclab.selliscope.model.sales_return.SellsReturnResponsePost;
@@ -65,7 +65,7 @@ public class SellsReturnDetailsRecyclerAdapter extends RecyclerView.Adapter<Sell
     @Override
     public void onBindViewHolder(final SellsReturnDetailsViewHolder holder, int position) {
         final SalesReturnResponse.Product product = products.get(position);
-        holder.getBinding().setVariable(BR.product, product);
+        holder.getBinding().setProduct(product);
         holder.getBinding().executePendingBindings();
 
         final int[] qty = {Integer.parseInt(holder.et_qty.getText().toString())};
@@ -185,7 +185,7 @@ public class SellsReturnDetailsRecyclerAdapter extends RecyclerView.Adapter<Sell
     }
 
     public class SellsReturnDetailsViewHolder extends RecyclerView.ViewHolder {
-        private ViewDataBinding binding;
+        private SellsReturnDetailsItemBinding binding;
         private Button btn_decrease, btn_increase, btn_return;
         private Spinner sp_return_cause;
         private EditText et_qty;
@@ -207,7 +207,7 @@ public class SellsReturnDetailsRecyclerAdapter extends RecyclerView.Adapter<Sell
 
         }
 
-        public ViewDataBinding getBinding() {
+        public SellsReturnDetailsItemBinding  getBinding() {
             return binding;
         }
 

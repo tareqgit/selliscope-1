@@ -3,8 +3,6 @@ package com.humaclab.selliscope.adapters.adapter_selesReturnOld;
 import android.content.Context;
 import android.content.Intent;
 import androidx.databinding.DataBindingUtil;
-import androidx.databinding.ViewDataBinding;
-import androidx.databinding.library.baseAdapters.BR;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +10,7 @@ import android.view.ViewGroup;
 
 import com.humaclab.selliscope.R;
 import com.humaclab.selliscope.activity.activity_salesReturnOld.SalesReturnDetailsActivityOld;
+import com.humaclab.selliscope.databinding.SellsReturnItemOldBinding;
 import com.humaclab.selliscope.model.model_sales_return_old.DeliveryResponseOld;
 
 import java.util.List;
@@ -38,7 +37,7 @@ public class SellsReturnRecyclerAdapterOld extends RecyclerView.Adapter<SellsRet
     @Override
     public void onBindViewHolder(DeliveryListViewHolder holder, int position) {
         DeliveryResponseOld.DeliveryList delivery = deliveryLists.get(position);
-        holder.getBinding().setVariable(BR.deliveryDetails, delivery);
+        holder.getBinding().setDeliveryDetails( delivery);
         holder.getBinding().executePendingBindings();
     }
 
@@ -48,7 +47,7 @@ public class SellsReturnRecyclerAdapterOld extends RecyclerView.Adapter<SellsRet
     }
 
     public class DeliveryListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        private ViewDataBinding binding;
+        private SellsReturnItemOldBinding binding;
 
         public DeliveryListViewHolder(View itemView) {
             super(itemView);
@@ -56,7 +55,7 @@ public class SellsReturnRecyclerAdapterOld extends RecyclerView.Adapter<SellsRet
             itemView.setOnClickListener(this);
         }
 
-        public ViewDataBinding getBinding() {
+        public SellsReturnItemOldBinding getBinding() {
             return binding;
         }
 

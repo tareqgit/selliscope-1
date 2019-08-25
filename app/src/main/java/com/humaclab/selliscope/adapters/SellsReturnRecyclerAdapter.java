@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import androidx.databinding.DataBindingUtil;
 import androidx.databinding.ViewDataBinding;
-import androidx.databinding.library.baseAdapters.BR;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +11,7 @@ import android.view.ViewGroup;
 
 import com.humaclab.selliscope.R;
 import com.humaclab.selliscope.activity.SalesReturnDetailsActivity;
+import com.humaclab.selliscope.databinding.SellsReturnItemBinding;
 import com.humaclab.selliscope.model.sales_return.SalesReturnResponse;
 
 import java.util.List;
@@ -39,7 +39,7 @@ public class SellsReturnRecyclerAdapter extends RecyclerView.Adapter<SellsReturn
     @Override
     public void onBindViewHolder(DeliveryListViewHolder holder, int position) {
         SalesReturnResponse.DeliveryList delivery = deliveryLists.get(position);
-        holder.getBinding().setVariable(BR.sellsReturnOrder, delivery);
+        holder.getBinding().setSellsReturnOrder(delivery);
         holder.getBinding().executePendingBindings();
     }
 
@@ -49,7 +49,7 @@ public class SellsReturnRecyclerAdapter extends RecyclerView.Adapter<SellsReturn
     }
 
     public class DeliveryListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        private ViewDataBinding binding;
+        private SellsReturnItemBinding binding;
 
         public DeliveryListViewHolder(View itemView) {
             super(itemView);
@@ -57,7 +57,7 @@ public class SellsReturnRecyclerAdapter extends RecyclerView.Adapter<SellsReturn
             itemView.setOnClickListener(this);
         }
 
-        public ViewDataBinding getBinding() {
+        public SellsReturnItemBinding getBinding() {
             return binding;
         }
 

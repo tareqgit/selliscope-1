@@ -3,7 +3,6 @@ package com.humaclab.selliscope.activity;
 import android.Manifest;
 import android.app.Activity;
 import android.app.ActivityManager;
-import android.app.Application;
 import android.app.ProgressDialog;
 import android.app.job.JobInfo;
 import android.app.job.JobScheduler;
@@ -49,6 +48,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
+import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.ResolvableApiException;
@@ -58,12 +58,11 @@ import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResponse;
 import com.google.android.gms.location.LocationSettingsStates;
 import com.google.android.gms.location.SettingsClient;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.gson.Gson;
 import com.humaclab.selliscope.BuildConfig;
 import com.humaclab.selliscope.LocationMonitoringService;
@@ -75,28 +74,25 @@ import com.humaclab.selliscope.fragment.PerformanceFragment;
 import com.humaclab.selliscope.fragment.TargetFragment;
 import com.humaclab.selliscope.model.app_version.AppVersion;
 import com.humaclab.selliscope.model.diameter.DiameterResponse;
-import com.humaclab.selliscope.receiver.GpsLocationBroadcastReceiver;
 import com.humaclab.selliscope.receiver.InternetConnectivityChangeReceiver;
 import com.humaclab.selliscope.service.SendLocationDataService;
+import com.humaclab.selliscope.utility_db.db.UtilityDatabase;
 import com.humaclab.selliscope.utils.Constants;
 import com.humaclab.selliscope.utils.DatabaseHandler;
 import com.humaclab.selliscope.utils.LoadLocalIntoBackground;
 import com.humaclab.selliscope.utils.SessionManager;
 import com.humaclab.selliscope.utils.UpLoadDataService;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.Observable;
-import java.util.Observer;
-import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import timber.log.Timber;
 
 import static android.provider.Settings.Secure.LOCATION_MODE_HIGH_ACCURACY;
 import static com.humaclab.selliscope.R.id.content_fragment;
@@ -113,7 +109,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     private FragmentManager fragmentManager;
     private SessionManager sessionManager;
     private SelliscopeApiEndpointInterface apiService;
-    private DatabaseHandler databaseHandler;
     private ProgressDialog pd;
     private LoadLocalIntoBackground loadLocalIntoBackground;
     private Context context;
@@ -194,19 +189,18 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         sessionManager = new SessionManager(this);
 
 
-
-        databaseHandler = new DatabaseHandler(this);
+        DatabaseHandler databaseHandler = new DatabaseHandler(this);
         loadLocalIntoBackground = new LoadLocalIntoBackground(this);
 
         AsyncTask.execute(() -> loadLocalIntoBackground.loadAll(new LoadLocalIntoBackground.LoadCompleteListener() {
             @Override
             public void onLoadComplete() {
-                Log.d("tareq_test" , "Data load all complete");
+                Log.d("tareq_test", "Data load all complete");
             }
 
             @Override
             public void onLoadFailed(String msg) {
-                Log.d("tareq_test" , "Data load all failed: "+ msg);
+                Log.d("tareq_test", "Data load all failed: " + msg);
             }
         }));
 
@@ -225,6 +219,31 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
 
         setSupportActionBar(toolbar);
+        // Obtain the FirebaseAnalytics instance.
+        //region For Testing Utility Database
+        UtilityDatabase utilityDatabase = (UtilityDatabase) UtilityDatabase.getInstance(getApplicationContext());
+
+        // new Thread(() -> utilityDatabase.returnUtilityDao().deleteAllRegularPerformance()).start();
+
+
+        Date d = Calendar.getInstance().getTime();
+        SimpleDateFormat formatDate = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+        String date = formatDate.format(d);
+        SimpleDateFormat formathour = new SimpleDateFormat("HH", Locale.ENGLISH);
+        String hour = formathour.format(d);
+
+       /*new Thread(()-> {
+           utilityDatabase.returnUtilityDao().insertRegularPerformance(new RegularPerformanceEntity.Builder().withDate("2019-08-22").withHour(hour).build());
+       utilityDatabase.returnUtilityDao().insertRegularPerformance(new RegularPerformanceEntity.Builder().withDate("2019-08-22").withHour(hour).build());
+      utilityDatabase.returnUtilityDao().insertRegularPerformance(new RegularPerformanceEntity.Builder().withDate("2019-07-19").withHour(hour).build());
+      utilityDatabase.returnUtilityDao().insertRegularPerformance(new RegularPerformanceEntity.Builder().withDate("2019-07-10").withHour(hour).build());
+      utilityDatabase.returnUtilityDao().insertRegularPerformance(new RegularPerformanceEntity.Builder().withDate("2020-08-22").withHour(hour).build());
+      utilityDatabase.returnUtilityDao().insertRegularPerformance(new RegularPerformanceEntity.Builder().withDate("2020-08-22").withHour(hour).build());
+       }).start();
+*/
+        //    new Thread(()-> Log.d("tareq_test" , ""+ new Gson().toJson(utilityDatabase.returnUtilityDao().getAllRegularPerformance()))).start();
+        //endregion
+
 
         fragmentManager = getSupportFragmentManager();
         getFragment(TargetFragment.class, FRAGMENT_TAGS.Target_Fragment);
@@ -598,8 +617,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
 //                if (databaseHandler.removeAll()) {
                 sessionManager.logoutUser(false);
-         //       schedulerForMinute.shutdownNow();
-            //    schedulerForHour.shutdownNow();
+                //       schedulerForMinute.shutdownNow();
+                //    schedulerForHour.shutdownNow();
 
 
 
@@ -634,15 +653,15 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 upLoadDataService.uploadData(new UpLoadDataService.UploadCompleteListener() {
                     @Override
                     public void uploadComplete() {
-                            pd.dismiss();
-                            Log.d("tareq_test" , "Upload data complete");
+                        pd.dismiss();
+                        Log.d("tareq_test", "Upload data complete");
                     }
 
                     @Override
                     public void uploadFailed(String reason) {
                         pd.dismiss();
-                        Log.e("tareq_test" , ""+ reason);
-                        Toast.makeText(HomeActivity.this, ""+ reason, Toast.LENGTH_SHORT).show();
+                        Log.e("tareq_test", "" + reason);
+                        Toast.makeText(HomeActivity.this, "" + reason, Toast.LENGTH_SHORT).show();
                     }
                 });
 
@@ -715,18 +734,18 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                     DatabaseHandler databaseHandler = new DatabaseHandler(HomeActivity.this);
 
 
-                   AsyncTask.execute(() -> {
+                    AsyncTask.execute(() -> {
                         databaseHandler.deleteAllData();
                         loadLocalIntoBackground.loadAll(new LoadLocalIntoBackground.LoadCompleteListener() {
                             @Override
                             public void onLoadComplete() {
-                                Log.d("tareq_test" , "Data refresh complete");
-                               pd.dismiss();
+                                Log.d("tareq_test", "Data refresh complete");
+                                pd.dismiss();
                             }
 
                             @Override
                             public void onLoadFailed(String msg) {
-                                Log.d("tareq_test" , "Data refresh failed"+ msg);
+                                Log.d("tareq_test", "Data refresh failed" + msg);
 
                             }
                         });
@@ -735,7 +754,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
                 });
 
-                if(!alertDialogRefresh.isShowing())alertDialogRefresh.show();
+                if (!alertDialogRefresh.isShowing()) alertDialogRefresh.show();
                 break;
 
         }
@@ -832,7 +851,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
                 @Override
                 public void onFailure(Call<AppVersion> call, Throwable t) {
-                    Log.d("tareq_test" , "Loading App version error");
+                    Log.d("tareq_test", "Loading App version error");
                 }
 
             });
@@ -888,18 +907,11 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         builder.show();
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        SelliscopeApplication.activityResumed();
-
-    }
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onResume() {
         super.onResume();
-        SelliscopeApplication.activityResumed();
 
 
         welcome();
@@ -1076,14 +1088,13 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
      */
 
     Intent locationServiceIntent;
-    private LocationMonitoringService mLocationMonitoringService;
 
     private void startStep3() {
 
         //And it will be keep running until you close the entire application from task manager.
         //This method will executed only once.
-        mLocationMonitoringService = new LocationMonitoringService();
-        locationServiceIntent = new Intent(this, mLocationMonitoringService.getClass());
+        LocationMonitoringService locationMonitoringService = new LocationMonitoringService();
+        locationServiceIntent = new Intent(this, locationMonitoringService.getClass());
         if (!mAlreadyStartedService) {
 
 

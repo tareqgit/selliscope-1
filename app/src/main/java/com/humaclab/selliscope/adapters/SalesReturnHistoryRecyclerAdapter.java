@@ -4,13 +4,13 @@ package com.humaclab.selliscope.adapters;
 import android.content.Context;
 import androidx.databinding.DataBindingUtil;
 import androidx.databinding.ViewDataBinding;
-import androidx.databinding.library.baseAdapters.BR;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.humaclab.selliscope.R;
+import com.humaclab.selliscope.databinding.SellsReturnHistoryItemBinding;
 import com.humaclab.selliscope.model.sales_return.SalesReturnHistory;
 
 import java.util.List;
@@ -37,7 +37,7 @@ public class SalesReturnHistoryRecyclerAdapter  extends RecyclerView.Adapter<Sal
     @Override
     public void onBindViewHolder(HistoryListViewHolder holder, int position) {
         SalesReturnHistory.Result result = results.get(position);
-        holder.getBinding().setVariable(BR.sellsReturnHistory,result);
+        holder.getBinding().setSellsReturnHistory(result);
         holder.getBinding().executePendingBindings();
 
     }
@@ -49,12 +49,12 @@ public class SalesReturnHistoryRecyclerAdapter  extends RecyclerView.Adapter<Sal
     }
 
     public class HistoryListViewHolder extends RecyclerView.ViewHolder{
-        private ViewDataBinding binding;
+        private SellsReturnHistoryItemBinding binding;
         public HistoryListViewHolder(View itemView) {
             super(itemView);
             binding = DataBindingUtil.bind(itemView);
         }
-        public ViewDataBinding getBinding(){
+        public SellsReturnHistoryItemBinding getBinding(){
             return binding;
         }
     }

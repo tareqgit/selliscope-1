@@ -47,7 +47,7 @@ import java.util.Locale;
 import static com.humaclab.selliscope.sales_return.SalesReturn_2019_Activity.sSalesReturn2019SelectedProducts;
 
 public class OrderActivity extends AppCompatActivity implements OrderProductRecyclerAdapter.OnSelectProductListener {
-    private ActivityOrderBinding binding;
+ private ActivityOrderBinding binding;
     private Context context;
     private DatabaseHandler databaseHandler;
     private SessionManager sessionManager;
@@ -255,8 +255,8 @@ public class OrderActivity extends AppCompatActivity implements OrderProductRecy
         Double totalAmt = 0.00;
         Double totalDiscount = 0.00;
         for (SelectedProductHelper selectedProductHelper : selectedProductList) {
-            totalAmt += Double.valueOf(selectedProductHelper.getTotalPrice());
-            totalDiscount += Double.valueOf(selectedProductHelper.getTpDiscount());
+            totalAmt += Double.valueOf(selectedProductHelper.getTotalPrice().replace(",",""));
+            totalDiscount += Double.valueOf(selectedProductHelper.getTpDiscount().replace(",",""));
         }
         binding.tvTotalAmt.setText(String.format(Locale.ENGLISH, "%.2f", totalAmt));
         binding.tvTotalDiscnt.setText(String.format(Locale.ENGLISH, "%.2f", totalDiscount));
@@ -302,8 +302,8 @@ public class OrderActivity extends AppCompatActivity implements OrderProductRecy
         Double totalAmt = 0.00;
         Double totalDiscount = 0.00;
         for (SelectedProductHelper selectedProductHelper : selectedProductList) {
-            totalAmt += Double.valueOf(selectedProductHelper.getTotalPrice());
-            totalDiscount += Double.valueOf(selectedProductHelper.getTpDiscount());
+            totalAmt += Double.valueOf(selectedProductHelper.getTotalPrice().replace(",",""));
+            totalDiscount += Double.valueOf(selectedProductHelper.getTpDiscount().replace(",",""));
         }
         binding.tvTotalAmt.setText(String.format(Locale.ENGLISH, "%.2f", totalAmt));
         binding.tvTotalDiscnt.setText(String.format(Locale.ENGLISH, "%.2f", totalDiscount));

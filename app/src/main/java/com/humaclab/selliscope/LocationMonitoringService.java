@@ -40,6 +40,8 @@ import com.humaclab.selliscope.activity.HomeActivity;
 import com.humaclab.selliscope.dbmodel.UserVisit;
 import com.humaclab.selliscope.model.UserLocation;
 import com.humaclab.selliscope.service.LocationServiceRestarterBroadcastReceiver;
+import com.humaclab.selliscope.utility_db.db.RegularPerformanceEntity;
+import com.humaclab.selliscope.utility_db.db.UtilityDatabase;
 import com.humaclab.selliscope.utils.CurrentTimeUtilityClass;
 import com.humaclab.selliscope.utils.DatabaseHandler;
 import com.humaclab.selliscope.utils.GetAddressFromLatLang;
@@ -47,8 +49,10 @@ import com.humaclab.selliscope.utils.NetworkUtility;
 import com.humaclab.selliscope.utils.SessionManager;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Timer;
@@ -179,7 +183,7 @@ public class LocationMonitoringService extends Service implements
 
                 for (Location location : locationResult.getLocations()) {
                     // Update UI  and sound with location data
-                 //   updateUIandSoundonAccuracyChanges(location); //turn on if you need location accuracy update
+                    //   updateUIandSoundonAccuracyChanges(location); //turn on if you need location accuracy update
 
                     onLocationChanged(location);
 
@@ -263,13 +267,18 @@ public class LocationMonitoringService extends Service implements
         Log.d("tareq_test", "Connection suspended");
     }
 
-
+    UtilityDatabase utilityDatabase;
     //to get the location change
 
     public void onLocationChanged(Location location) {
 
         if (location != null) {
+           utilityDatabase = (UtilityDatabase) UtilityDatabase.getInstance(getApplicationContext());
+            Date d=Calendar.getInstance().getTime();
+            SimpleDateFormat formatDate = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+            String date= formatDate.format(d);
             Log.d(TAG, "== location != null");
+
 
             //Send result to activities
             //sendMessageToUI(String.valueOf(location.getLatitude()), String.valueOf(location.getLongitude()));
@@ -284,12 +293,55 @@ public class LocationMonitoringService extends Service implements
                 //      Log.d("tareq_test", "diff " + CurrentTimeUtilityClass.getDiffbetweenTimeStamps(lastTime));
                 Log.d("tareq_test", "diff " + CurrentTimeUtilityClass.getDiffBetween(lastTime));
 
+
+
+
+
+
+
                 //  if ( CurrentTimeUtilityClass.getDiffbetweenTimeStamps(lastTime) >= 5 || (CurrentTimeUtilityClass.getDiffbetweenTimeStamps(lastTime) >= -55 && CurrentTimeUtilityClass.getDiffbetweenTimeStamps(lastTime) <0) ) {
                 if (CurrentTimeUtilityClass.getDiffBetween(lastTime) >= 5) {
                     Log.d("tareq_test", "Filtered_addr_if: " + GetAddressFromLatLang.getAddressFromLatLan(getApplicationContext(), location.getLatitude(), location.getLongitude()) + " acc: " + location.getAccuracy() + " T: " + CurrentTimeUtilityClass.getCurrentTimeStamp());
 
 
+                    //region Distance
+                    Location prevLocation = new Location("");
+                    prevLocation.setLatitude(Double.parseDouble(prefs.getString("last_pos_lat", "0")));
+                    prevLocation.setLongitude(Double.parseDouble(prefs.getString("last_pos_long", "0")));
+
+                    double dist = location.distanceTo(prevLocation);
+
+                    if (dist < 250) {
+                        Log.d("tareq_test", "Valid distance " + dist );
+                        new Thread(()->{
+                            List<RegularPerformanceEntity> regularPerformanceEntities= utilityDatabase.returnUtilityDao().getRegularPerformance(date);
+                            if(regularPerformanceEntities.size()==0){
+                                double distance;
+                                String sDist = String.format(Locale.ENGLISH, "%.2f", dist);
+                                Log.d("tareq_test" , "distance"+ sDist);
+                                distance = Double.parseDouble(sDist);
+                                utilityDatabase.returnUtilityDao().insertRegularPerformance(new RegularPerformanceEntity.Builder().withDate(date).withDistance(distance).build());
+                            }else{
+                                double distance=regularPerformanceEntities.get(0).distance;
+                                distance+=dist;
+                                String sDist = String.format(Locale.ENGLISH, "%.2f", distance);
+                                Log.d("tareq_test" , "distance"+ sDist);
+                                distance = Double.parseDouble(sDist);
+
+                                utilityDatabase.returnUtilityDao().updateRegularPerformance(distance,date);
+                            }
+                        }).start();
+                    }
+
+
+                    //endregion
+
+
+
+
+
                     if (NetworkUtility.isNetworkAvailable(getApplicationContext())) {
+
 
                         sendUserLocation(latitude, longitude, CurrentTimeUtilityClass.getCurrentTimeStamp(), false, -1);
                         Log.d("tareq_test", "user location send ");
@@ -307,6 +359,10 @@ public class LocationMonitoringService extends Service implements
                         lastTime = Calendar.getInstance().getTime().toString();
 
                         prefs.edit().putString("lasttime", lastTime).apply();
+                        //region Distance calculation
+                        prefs.edit().putString("last_pos_lat", String.valueOf(latitude)).apply();
+                        prefs.edit().putString("last_pos_long", String.valueOf(longitude)).apply();
+                        //endregion
                     } else {
                         dbHandler.addUserVisits(new UserVisit(latitude, longitude, CurrentTimeUtilityClass.getCurrentTimeStamp()));
 
@@ -314,6 +370,10 @@ public class LocationMonitoringService extends Service implements
                         lastTime = Calendar.getInstance().getTime().toString();
 
                         prefs.edit().putString("lasttime", lastTime).apply();
+                        //region Distance calculation
+                        prefs.edit().putString("last_pos_lat", String.valueOf(latitude)).apply();
+                        prefs.edit().putString("last_pos_long", String.valueOf(longitude)).apply();
+                        //endregion
                     }
                 }
 
@@ -327,7 +387,8 @@ public class LocationMonitoringService extends Service implements
                 lastTime = Calendar.getInstance().getTime().toString();
 
                 prefs.edit().putString("lasttime", lastTime).apply();
-
+                prefs.edit().putString("last_pos_lat", String.valueOf(latitude)).apply();
+                prefs.edit().putString("last_pos_long", String.valueOf(longitude)).apply();
             }
 
             Log.d("tareq_test", "location changed");
@@ -450,6 +511,9 @@ public class LocationMonitoringService extends Service implements
             }
         });
     }
+
+
+
 
     @Override
     public void onDestroy() {

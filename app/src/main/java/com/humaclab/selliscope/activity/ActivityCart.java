@@ -38,6 +38,7 @@ import com.humaclab.selliscope.utils.DatabaseHandler;
 import com.humaclab.selliscope.utils.NetworkUtility;
 import com.humaclab.selliscope.utils.SendUserLocationData;
 import com.humaclab.selliscope.utils.SessionManager;
+import com.mti.pushdown_ext_onclick_single.PushDownAnim;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -125,7 +126,7 @@ public class ActivityCart extends AppCompatActivity implements  SelectedProductR
         selectedProductRecyclerAdapter = new SelectedProductRecyclerAdapter(ActivityCart.this, ActivityCart.this,  ActivityCart.this);
         binding.rlSelectedProducts.setAdapter(selectedProductRecyclerAdapter);
 
-        binding.btnOrder.setOnClickListener(v -> orderNow());
+       PushDownAnim.setPushDownAnimTo(binding.btnOrder).setOnSingleClickListener(v -> orderNow());
 
         // for pos printer
        /* binding.printBtn.setOnClickListener(v->{
@@ -147,7 +148,7 @@ public class ActivityCart extends AppCompatActivity implements  SelectedProductR
           //this Segment Used for calculation of total price without promotion discount
             //  total += Double.valueOf(selectedProduct.getTotalPrice());
             //this Segment Used for calculation of total price with promotion discount
-            Double t= Double.valueOf(selectedProduct.getTppromotionGrandPrice().isEmpty()?"0":selectedProduct.getTppromotionGrandPrice());
+            Double t= Double.valueOf(selectedProduct.getTppromotionGrandPrice().isEmpty()?"0":selectedProduct.getTppromotionGrandPrice().replace(",",""));
             total += t ;
         }
 
@@ -241,7 +242,7 @@ public class ActivityCart extends AppCompatActivity implements  SelectedProductR
         pd.setCancelable(false);
         pd.show();
 
-        try {
+      /*  try {*/
             AddNewOrder addNewOrder = new AddNewOrder();
             AddNewOrder.NewOrder newOrder = new AddNewOrder.NewOrder();
             List<AddNewOrder.NewOrder.Product> products = new ArrayList<>();
@@ -255,8 +256,8 @@ public class ActivityCart extends AppCompatActivity implements  SelectedProductR
             if (binding.etDiscount.getText().toString().equals("")) {
                 newOrder.discount = 0.0;
             } else {
-                newOrder.discount =  Double.parseDouble(binding.etDiscount.getText().toString());
-                newOrder.orderGrandTotal = total- Double.parseDouble(binding.etDiscount.getText().toString());
+                newOrder.discount =  Double.parseDouble(binding.etDiscount.getText().toString().replace(",",""));
+                newOrder.orderGrandTotal = total- Double.parseDouble(binding.etDiscount.getText().toString().replace(",",""));
                // newOrder.discount = Double.parseDouble(binding.etDiscount.getText().toString());
             }
 
@@ -269,13 +270,13 @@ public class ActivityCart extends AppCompatActivity implements  SelectedProductR
                 } else {
                     product.discount = 0.00;
                 }
-                product.qty = Integer.parseInt(selectedProduct.getProductQuantity());
-                product.row = Integer.parseInt(selectedProduct.getProductRow());
-                product.price = selectedProduct.getProductPrice();
+                product.qty = Integer.parseInt(selectedProduct.getProductQuantity().replace(",",""));
+                product.row = Integer.parseInt(selectedProduct.getProductRow().replace(",",""));
+                product.price = selectedProduct.getProductPrice().replace(",","");
                 product.is_free=selectedProduct.isFree()?1:0;
-                product.tpDiscount = Double.parseDouble(selectedProduct.getTpDiscount());
-                product.productTotal = Double.parseDouble(selectedProduct.getTotalPrice());
-                product.productSubTotal = Double.parseDouble(selectedProduct.getTppromotionGrandPrice());
+                product.tpDiscount = Double.parseDouble(selectedProduct.getTpDiscount().replace(",",""));
+                product.productTotal = Double.parseDouble(selectedProduct.getTotalPrice().replace(",",""));
+                product.productSubTotal = Double.parseDouble(selectedProduct.getTppromotionGrandPrice().replace(",",""));
                 products.add(product);
             }
 
@@ -286,16 +287,16 @@ public class ActivityCart extends AppCompatActivity implements  SelectedProductR
                     sessionManager.getUserPassword(), false)
                     .create(SelliscopeApiEndpointInterface.class);
 
-            Log.d("tareq_test" , "Order: " + new Gson().toJson(addNewOrder));
 
             if (NetworkUtility.isNetworkAvailable(ActivityCart.this)) {
+                Log.d("tareq_test" , "order: "+ new Gson().toJson(addNewOrder));
                 Call<AddNewOrder.OrderResponse> call = apiService.addOrder(addNewOrder);
                 call.enqueue(new Callback<AddNewOrder.OrderResponse>() {
                     @Override
                     public void onResponse(Call<AddNewOrder.OrderResponse> call, Response<AddNewOrder.OrderResponse> response) {
 
                         if (response.isSuccessful()) {
-                            pd.dismiss();
+
                            Log.d("tareq_test" , "Order Successful");
                             Toast.makeText(ActivityCart.this, "Order created successfully", Toast.LENGTH_LONG).show();
                            //clear selected Item list
@@ -314,19 +315,21 @@ public class ActivityCart extends AppCompatActivity implements  SelectedProductR
                                 finish();
                             }
                             //startActivity(new Intent(ActivityCart.this, OutletActivity.class));
-                        } /*else if (response.code() == 401) {
+                        } else if (response.code() == 401) {
                             System.out.println(new Gson().toJson(response.body()));
-                            Toast.makeText(ActivityCart.this, "Invalid Response from server.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(ActivityCart.this, "Invalid Response from server.", Toast.LENGTH_LONG).show();
                         } else {
                             System.out.println(new Gson().toJson(response.body()));
-                            Toast.makeText(ActivityCart.this, response.code()+" Server Error! Try Again Later!", Toast.LENGTH_SHORT).show();
-                        }*/
+                            Toast.makeText(ActivityCart.this, response.code()+" Server Error! Try Again Later!", Toast.LENGTH_LONG).show();
+                        }
+                        pd.dismiss();
                     }
 
                     @Override
                     public void onFailure(Call<AddNewOrder.OrderResponse> call, Throwable t) {
                         pd.dismiss();
-                        t.printStackTrace();
+                      Log.e("tareq_test" , "Error on order: "+ t.getMessage());
+                        Toast.makeText(ActivityCart.this, " Server connection failure! Try Again Later!"+ t.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 });
             } else {
@@ -370,10 +373,10 @@ public class ActivityCart extends AppCompatActivity implements  SelectedProductR
                 startActivity(intent);
                 finish();
             }
-        } catch (Exception e) {
+       /* } catch (Exception e) {
             Log.d("tareq_test" , "exceptin in order "+ e.getMessage());
             e.printStackTrace();
-        }
+        }*/
     }
 
 

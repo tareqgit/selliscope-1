@@ -17,6 +17,7 @@ import com.humaclab.selliscope.sales_return.model.post.SalesReturn2019SelectedPr
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import static com.humaclab.selliscope.activity.OrderActivity.selectedProductList;
 import static com.humaclab.selliscope.sales_return.SalesReturn_2019_Activity.sSalesReturn2019SelectedProducts;
@@ -107,7 +108,7 @@ public class SelectedProductRecyclerAdapter extends RecyclerView.Adapter<Selecte
             holder.getBinding().etQty.setText(selectedProduct.getProductQuantity());
             holder.getBinding().tvAmount.setText(selectedProduct.getTotalPrice());
             holder.getBinding().tvPromotiondiscount.setText(selectedProduct.getTpDiscount());
-            holder.getBinding().tvFinaltotal.setText(Double.toString(Double.parseDouble(selectedProduct.getTotalPrice()) - Double.parseDouble(selectedProduct.getTpDiscount())));
+            holder.getBinding().tvFinaltotal.setText(String.format(Locale.ENGLISH,"%,.2f",Double.parseDouble(selectedProduct.getTotalPrice().replace(",","")) - Double.parseDouble(selectedProduct.getTpDiscount().replace(",",""))));
 
             holder.getBinding().btnRemove.setOnClickListener(v -> {
                 if (selectedProductList.size() != 0) {

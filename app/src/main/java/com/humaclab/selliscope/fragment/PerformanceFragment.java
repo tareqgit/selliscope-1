@@ -15,6 +15,7 @@ import com.humaclab.selliscope.R;
 import com.humaclab.selliscope.adapters.DashboardRecyclerViewAdapter;
 import com.humaclab.selliscope.adapters.PerformanceRecyclerViewAdapter;
 import com.humaclab.selliscope.model.DashboardItem;
+import com.humaclab.selliscope.performance.daily_activities.RegularPerformanceActivity;
 import com.humaclab.selliscope.performance.leaderboard.LeaderBoardActivity;
 import com.humaclab.selliscope.performance.orders.PerformanceOrdersActivity;
 import com.humaclab.selliscope.performance.payments.PerformancePaymentsActivity;
@@ -47,11 +48,11 @@ public class PerformanceFragment extends Fragment {
         performanceItems.add(new DashboardItem(getString(R.string.leaderboard), R.drawable.ic_trophy));
      performanceItems.add(new DashboardItem(getString(R.string.orders), R.drawable.ic_order_list));
         performanceItems.add(new DashboardItem(getString(R.string.payments), R.drawable.ic_payments));
-       /* performanceItems.add(new DashboardItem("Sales Return Request", R.drawable.ic_return));
-        performanceItems.add(new DashboardItem("Commission", R.drawable.ic_commission));
-        performanceItems.add(new DashboardItem("New Outlet", R.drawable.ic_outlet));
-        performanceItems.add(new DashboardItem("Attendance", R.drawable.ic_attendence));
-*/
+       // performanceItems.add(new DashboardItem("Sales Return Request", R.drawable.ic_return));
+     //   performanceItems.add(new DashboardItem("Commission", R.drawable.ic_commission));
+      //  performanceItems.add(new DashboardItem("New Outlet", R.drawable.ic_outlet));
+        performanceItems.add(new DashboardItem("Daily Activities", R.drawable.ic_attendence));
+
         gridLayoutManager = new GridLayoutManager(activity, itemNumber);
         int spacingInPixels = getResources().getDimensionPixelSize(R.dimen.grid_layout_margin);
 
@@ -79,6 +80,10 @@ public class PerformanceFragment extends Fragment {
                                     }
                                     case 2: {
                                         getActivity().startActivity(new Intent(getActivity(), PerformancePaymentsActivity.class));
+                                        break;
+                                    }
+                                    case 3: {
+                                        getActivity().startActivity(new Intent(getActivity(), RegularPerformanceActivity.class));
                                         break;
                                     }
 

@@ -39,6 +39,9 @@ import com.humaclab.selliscope.activity.PurchaseHistoryActivity;
 import com.humaclab.selliscope.databinding.OutletItemBinding;
 import com.humaclab.selliscope.model.Outlets;
 import com.humaclab.selliscope.model.UserLocation;
+import com.humaclab.selliscope.performance.daily_activities.model.OutletWithCheckInTime;
+import com.humaclab.selliscope.utility_db.db.RegularPerformanceEntity;
+import com.humaclab.selliscope.utility_db.db.UtilityDatabase;
 import com.humaclab.selliscope.utils.DatabaseHandler;
 import com.humaclab.selliscope.utils.GetAddressFromLatLang;
 import com.humaclab.selliscope.utils.NetworkUtility;
@@ -46,8 +49,12 @@ import com.humaclab.selliscope.utils.SendUserLocationData;
 import com.humaclab.selliscope.utils.SessionManager;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -138,7 +145,7 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
                         Location outletLocation = new Location("outlet_location");
                         outletLocation.setLatitude(outlet.outletLatitude);
                         outletLocation.setLongitude(outlet.outletLongitude);
-                        getLocation(outlet.outletId, outletLocation, holder.getBinding().pbCheckIn);
+                        getLocation(outlet, outletLocation, holder.getBinding().pbCheckIn);
                     }
 
                     @Override
@@ -177,7 +184,7 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
         });
     }
 
-    private void getLocation(final int outletId, final Location outletLocation, final ProgressBar progressbar) {
+    private void getLocation(final Outlets.Outlet outlet, final Location outletLocation, final ProgressBar progressbar) {
         SendUserLocationData sendUserLocationData = new SendUserLocationData(context);
         sendUserLocationData.getInstantLocation(activity, (latitude, longitude) -> {
 
@@ -186,7 +193,7 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
             location.setLongitude(longitude);
             if (location.distanceTo(outletLocation) <= sessionManager.getDiameter()) {
                 if (NetworkUtility.isNetworkAvailable(context)) {
-                    sendUserLocation(location, outletId, progressbar);
+                    sendUserLocation(location, outlet, progressbar);
                 } else {
                     progressbar.setVisibility(View.INVISIBLE);
                     Toast.makeText(context, "Enable Wifi or Mobile data.", Toast.LENGTH_SHORT).show();
@@ -198,13 +205,13 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
         });
     }
 
-    private void sendUserLocation(Location location, final int outletId, final ProgressBar progressBar) {
+    private void sendUserLocation(Location location, final Outlets.Outlet outlet, final ProgressBar progressBar) {
         SessionManager sessionManager = new SessionManager(context);
         apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(),
                 sessionManager.getUserPassword(), false)
                 .create(SelliscopeApiEndpointInterface.class);
         List<UserLocation.Visit> userLocationVisits = new ArrayList<>();
-        userLocationVisits.add(new UserLocation.Visit(location.getLatitude(), location.getLongitude(), GetAddressFromLatLang.getAddressFromLatLan(context, location.getLatitude(), location.getLongitude()), outletId));
+        userLocationVisits.add(new UserLocation.Visit(location.getLatitude(), location.getLongitude(), GetAddressFromLatLang.getAddressFromLatLan(context, location.getLatitude(), location.getLongitude()), outlet.outletId));
         Call<ResponseBody> call = apiService.sendUserLocation(new UserLocation(userLocationVisits));
         call.enqueue(new Callback<ResponseBody>() {
             @Override
@@ -216,7 +223,35 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
                          progressBar.setVisibility(View.INVISIBLE);
                         if (userLocationSuccess.msg.equals("")) { // To check if the user already checked in the outlet
                             Toast.makeText(context, "You have successfully checked in.", Toast.LENGTH_SHORT).show();
-                            databaseHandler.afterCheckinUpdateOutletRoutePlan(outletId);
+                            databaseHandler.afterCheckinUpdateOutletRoutePlan(outlet.outletId);
+
+                            //region Update checkedin for Activities
+                            UtilityDatabase   utilityDatabase = (UtilityDatabase) UtilityDatabase.getInstance(context);
+                            Date d= Calendar.getInstance().getTime();
+                            SimpleDateFormat formatDate = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+                            String date= formatDate.format(d);
+                            SimpleDateFormat formathour = new SimpleDateFormat("HH-mm",Locale.ENGLISH);
+                            String hour= formathour.format(d);
+
+                            OutletWithCheckInTime outletWithCheckInTime = new OutletWithCheckInTime(outlet, hour);
+
+                            new Thread(()->{
+                                List<RegularPerformanceEntity> regularPerformanceEntities= utilityDatabase.returnUtilityDao().getRegularPerformance(date);
+                                if(regularPerformanceEntities.size()==0){
+                                    utilityDatabase.returnUtilityDao().insertRegularPerformance(new RegularPerformanceEntity.Builder().withDate(date).withDistance(0).withOutlets_checked_in(new Gson().toJson(outletWithCheckInTime) +"~;~").build());
+                                }else{
+
+                                    String outlets= regularPerformanceEntities.get(0).outlets_checked_in + new Gson().toJson(outletWithCheckInTime) +"~;~";
+
+
+                                    utilityDatabase.returnUtilityDao().updateRegularPerformanceOutlets(outlets,date);
+                                }
+                            }).start();
+
+                            //endregion
+
+
+
 
                             ((OutletActivity) context).getRoute();//For reloading the outlet recycler view
                             ((OutletActivity) context).getOutlets();//For reloading the outlet recycler view
@@ -276,4 +311,7 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
             return mOutletItemBinding;
         }
     }
+
+
+
 }

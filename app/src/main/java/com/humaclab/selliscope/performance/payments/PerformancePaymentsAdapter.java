@@ -9,7 +9,6 @@ package com.humaclab.selliscope.performance.payments;
 import android.content.Context;
 import androidx.databinding.DataBindingUtil;
 import androidx.annotation.NonNull;
-import androidx.databinding.library.baseAdapters.BR;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,7 +47,7 @@ public class PerformancePaymentsAdapter extends RecyclerView.Adapter<Performance
     @Override
     public void onBindViewHolder(@NonNull TViewHolder holder, int position) {
         Datum datum=mDatumList.get(position);
-        holder.getBinding().setVariable(BR.Data,datum);
+        holder.getBinding().setData(datum);
     }
 
     @Override

@@ -9,7 +9,6 @@ package com.humaclab.selliscope.performance.orders;
 import android.content.Context;
 import androidx.databinding.DataBindingUtil;
 import androidx.annotation.NonNull;
-import androidx.databinding.library.baseAdapters.BR;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -44,7 +43,7 @@ public class PerformanceOrdersProductsActivityAdapter extends RecyclerView.Adapt
     @Override
     public void onBindViewHolder(@NonNull TViewHolder holder, int position) {
         Product product=mProductList.get(position);
-        holder.getBinding().setVariable(BR.Product,product);
+        holder.getBinding().setProduct( product);
     }
 
     @Override

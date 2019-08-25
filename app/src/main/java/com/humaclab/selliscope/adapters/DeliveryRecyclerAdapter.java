@@ -3,8 +3,6 @@ package com.humaclab.selliscope.adapters;
 import android.app.ProgressDialog;
 import android.content.Context;
 import androidx.databinding.DataBindingUtil;
-import androidx.databinding.ViewDataBinding;
-import androidx.databinding.library.baseAdapters.BR;
 import androidx.recyclerview.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -16,6 +14,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 
 import com.humaclab.selliscope.R;
+import com.humaclab.selliscope.databinding.DeliveryDetailsItemBinding;
 import com.humaclab.selliscope.model.DeliveryResponse;
 import com.humaclab.selliscope.model.GodownRespons;
 import com.humaclab.selliscope.utils.ImportentFunction;
@@ -53,7 +52,7 @@ public class DeliveryRecyclerAdapter extends RecyclerView.Adapter<DeliveryRecycl
     @Override
     public void onBindViewHolder(final DeliveryDetailsViewHolder holder, int position) {
         final DeliveryResponse.Product product = products.get(position);
-        holder.getBinding().setVariable(BR.product, product);
+        holder.getBinding().setProduct(product);
         holder.getBinding().executePendingBindings();
 
         pd = new ProgressDialog(context);
@@ -194,7 +193,7 @@ public class DeliveryRecyclerAdapter extends RecyclerView.Adapter<DeliveryRecycl
     }
 
     public class DeliveryDetailsViewHolder extends RecyclerView.ViewHolder {
-        private ViewDataBinding binding;
+        private DeliveryDetailsItemBinding binding;
         private Spinner sp_godown;
         private Button btn_decrease, btn_increase, btn_deliver;
         private EditText et_qty;
@@ -209,7 +208,7 @@ public class DeliveryRecyclerAdapter extends RecyclerView.Adapter<DeliveryRecycl
             et_qty = itemView.findViewById(R.id.et_qty);
         }
 
-        public ViewDataBinding getBinding() {
+        public DeliveryDetailsItemBinding getBinding() {
             return binding;
         }
     }

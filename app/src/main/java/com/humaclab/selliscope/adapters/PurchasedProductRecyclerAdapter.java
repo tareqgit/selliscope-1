@@ -2,7 +2,6 @@ package com.humaclab.selliscope.adapters;
 
 import android.content.Context;
 import androidx.databinding.DataBindingUtil;
-import androidx.databinding.library.baseAdapters.BR;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;

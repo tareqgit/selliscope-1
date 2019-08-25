@@ -4,8 +4,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 
 import androidx.databinding.DataBindingUtil;
-import androidx.databinding.ViewDataBinding;
-import androidx.databinding.library.baseAdapters.BR;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
@@ -60,7 +58,7 @@ public class PaymentRecyclerViewAdapter extends RecyclerView.Adapter<PaymentRecy
     @Override
     public void onBindViewHolder(final PaymentViewHolder holder, final int position) {
         final Payment.OrderList orderList = orderLists.get(position);
-        holder.getBinding().setVariable(BR.payments, orderList);
+        holder.getBinding().setPayments( orderList);
         holder.getBinding().executePendingBindings();
         Double grandTotal=Double.parseDouble(orderList.amount.replace(",","")) - Double.parseDouble(orderList.discount.replace(",",""));
         holder.getBinding().tvGrandTotal.setText( String.format(Locale.ENGLISH,"%,.2f",grandTotal));

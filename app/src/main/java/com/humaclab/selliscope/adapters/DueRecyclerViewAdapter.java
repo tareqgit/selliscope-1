@@ -2,14 +2,13 @@ package com.humaclab.selliscope.adapters;
 
 import android.content.Context;
 import androidx.databinding.DataBindingUtil;
-import androidx.databinding.ViewDataBinding;
-import androidx.databinding.library.baseAdapters.BR;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.humaclab.selliscope.R;
+import com.humaclab.selliscope.databinding.DueItemBinding;
 import com.humaclab.selliscope.model.Payment;
 
 import java.util.List;
@@ -36,7 +35,7 @@ public class DueRecyclerViewAdapter extends RecyclerView.Adapter<DueRecyclerView
     @Override
     public void onBindViewHolder(DueViewHolder holder, int position) {
         Payment.OrderList orderList = orderLists.get(position);
-        holder.getBinding().setVariable(BR.payments, orderList);
+        holder.getBinding().setPayments( orderList);
         holder.getBinding().executePendingBindings();
     }
 
@@ -46,14 +45,14 @@ public class DueRecyclerViewAdapter extends RecyclerView.Adapter<DueRecyclerView
     }
 
     public class DueViewHolder extends RecyclerView.ViewHolder {
-        private ViewDataBinding binding;
+        private DueItemBinding binding;
 
         public DueViewHolder(View itemView) {
             super(itemView);
             binding = DataBindingUtil.bind(itemView);
         }
 
-        public ViewDataBinding getBinding() {
+        public DueItemBinding getBinding() {
             return binding;
         }
     }

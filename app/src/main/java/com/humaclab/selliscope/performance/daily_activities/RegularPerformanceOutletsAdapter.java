@@ -10,12 +10,8 @@ import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.humaclab.selliscope.R;
-import com.humaclab.selliscope.databinding.ActivityPerformanceOrdersProductsModelBinding;
 import com.humaclab.selliscope.databinding.ActivityRegularPerformanceOutletModelBinding;
-import com.humaclab.selliscope.databinding.ActivityRegularPerformanceOutletsBinding;
-import com.humaclab.selliscope.model.performance.orders_model.Product;
 import com.humaclab.selliscope.performance.daily_activities.model.OutletWithCheckInTime;
-import com.humaclab.selliscope.performance.orders.PerformanceOrdersProductsActivityAdapter;
 
 import java.util.List;
 

@@ -161,7 +161,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     void getUser(final String email, final String password) {
-        Timber.d(email + " " + password);
+
         sessionManager = new SessionManager(this);
         apiService = SelliscopeApplication.getRetrofitInstance(email, password, true)
                 .create(SelliscopeApiEndpointInterface.class);
@@ -175,7 +175,6 @@ public class LoginActivity extends AppCompatActivity {
                     try {
                         Login.Successful loginSuccessful = gson.fromJson(response.body().string()
                                 , Login.Successful.class);
-                        Timber.d("Login Successful");
 
                         sessionManager.createLoginSession(
                                 loginSuccessful.result.user.name,
@@ -242,7 +241,7 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-                loginProgresssBar.setVisibility(View.INVISIBLE);
+                loginProgresssBar.setVisibility(View.VISIBLE);
 
                 Log.e("tareq_test", "Error on Login: " + t.getMessage());
                 if (Constants.BASE_URL.equals(Constants.BASE_URL_HTTPS))

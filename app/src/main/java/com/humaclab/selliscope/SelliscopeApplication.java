@@ -3,9 +3,12 @@ package com.humaclab.selliscope;
 import android.app.Application;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.content.Context;
 import android.content.IntentFilter;
 import android.location.LocationManager;
 import android.os.Build;
+import android.util.Log;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatDelegate;
 
@@ -18,7 +21,10 @@ import com.humaclab.selliscope.utility_db.db.RegularPerformanceEntity;
 import com.humaclab.selliscope.utility_db.db.UtilityDatabase;
 import com.humaclab.selliscope.utils.Constants;
 import com.humaclab.selliscope.utils.HttpAuthInterceptor;
+import com.humaclab.selliscope.utils.UpLoadDataService;
 
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
@@ -49,7 +55,7 @@ public class SelliscopeApplication extends Application {
 
             OkHttpClient client = new OkHttpClient.Builder()
                     .addInterceptor(new HttpAuthInterceptor(email.toLowerCase(), password))
-                    .connectTimeout(30, TimeUnit.SECONDS)
+                    .connectTimeout(20, TimeUnit.SECONDS)
                     .readTimeout(120, TimeUnit.SECONDS)
                     .retryOnConnectionFailure(true)
                     .addNetworkInterceptor(new StethoInterceptor())
@@ -80,10 +86,13 @@ public class SelliscopeApplication extends Application {
         registerReceiver(GpsLocationBroadcastReceiver.getInstance(), new IntentFilter(LocationManager.PROVIDERS_CHANGED_ACTION));
 
         UtilityDatabase utilityDatabase = (UtilityDatabase) UtilityDatabase.getInstance(getApplicationContext());
+
     }
 
 
     public static final String CHANNEL_ID = "testServiceChannel";
+
+
 
     private void createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

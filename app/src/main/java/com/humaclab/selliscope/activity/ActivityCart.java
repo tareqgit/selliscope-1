@@ -288,7 +288,7 @@ public class ActivityCart extends AppCompatActivity implements  SelectedProductR
                     .create(SelliscopeApiEndpointInterface.class);
 
 
-            if (NetworkUtility.isNetworkAvailable(ActivityCart.this)) {
+         /*   if (NetworkUtility.isNetworkAvailable(ActivityCart.this)) {
                 Log.d("tareq_test" , "order: "+ new Gson().toJson(addNewOrder));
                 Call<AddNewOrder.OrderResponse> call = apiService.addOrder(addNewOrder);
                 call.enqueue(new Callback<AddNewOrder.OrderResponse>() {
@@ -304,8 +304,10 @@ public class ActivityCart extends AppCompatActivity implements  SelectedProductR
 
                             if(sSalesReturn2019SelectedProducts.size()!=0){
                                 pd.show();
-                                assert response.body() != null;
-                                postSalesReturn(apiService,response.body().result.order.id,Integer.parseInt(outletID));
+
+                                if (response.body() != null) {
+                                    postSalesReturn(apiService,response.body().result.order.id,Integer.parseInt(outletID));
+                                }
                             }else {
 
                                 Intent intent = new Intent(getApplicationContext(), OutletActivity.class);
@@ -332,7 +334,7 @@ public class ActivityCart extends AppCompatActivity implements  SelectedProductR
                         Toast.makeText(ActivityCart.this, " Server connection failure! Try Again Later!"+ t.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 });
-            } else {
+            } else*/ {
 
                 int order_return_id = (int) (Math.random() * 10000 + 1);
                 databaseHandler.setOrder(addNewOrder, order_return_id); //for random number between 1 to 100

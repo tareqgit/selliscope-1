@@ -32,10 +32,7 @@ public class RegularPerformanceAdapter extends RecyclerView.Adapter<RegularPerfo
     private List<RegularPerformanceEntity> mDatumList;
     private OnOutletItemClickListener mOnOutletItemClickListener;
 
-    public RegularPerformanceAdapter(Context context, List<RegularPerformanceEntity> datumList) {
-        mContext = context;
-        mDatumList = datumList;
-    }
+
 
     public RegularPerformanceAdapter(Context context, List<RegularPerformanceEntity> datumList, OnOutletItemClickListener onOutletItemClickListener) {
         mContext = context;
@@ -56,13 +53,21 @@ public class RegularPerformanceAdapter extends RecyclerView.Adapter<RegularPerfo
 
     @Override
     public void onBindViewHolder(@NonNull TViewHolder holder, int position) {
-        RegularPerformanceEntity datum = mDatumList.get(position);
 
+            RegularPerformanceEntity datum = mDatumList.get(position);
+        List<String> outlets = new ArrayList<>();
+          if(datum.outlets_checked_in!=null) {
+               outlets = Arrays.asList(datum.outlets_checked_in.split("~;~"));
+          }
+          if(outlets.size()>0){
+              if(!outlets.get(0).equals("")){
+                  holder.getBinding().textViewTotalCheckin.setText(String.format(Locale.ENGLISH, "No of check-in: %d", outlets.size()));
 
+              }
+          }
+         //     holder.getBinding().textViewTotalCheckin.setText(String.format(Locale.ENGLISH, "No of check-in: %d", outlets.size()));
+            holder.getBinding().setActivities(datum);
 
-        List<String> outlets = Arrays.asList(      datum.outlets_checked_in.split("~;~"));
-        holder.getBinding().textViewTotalCheckin.setText(String.format(Locale.ENGLISH, "No of check-in: %d", outlets.size()));
-        holder.getBinding().setActivities(datum);
     }
 
     @Override

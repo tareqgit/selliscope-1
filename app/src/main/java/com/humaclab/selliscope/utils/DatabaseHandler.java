@@ -412,6 +412,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_USER_VISITS, null, null);
         db.close();
+
     }
 
 
@@ -419,7 +420,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         for (ProductsItem product : products) {
             if (!getAllProduct().contains(product)) {
-               List<ProductsItem> productsItems= getAllProduct();
+                List<ProductsItem> productsItems = getAllProduct();
                 ContentValues values = new ContentValues();
                 String productName = product.getName();
                 values.put(KEY_PRODUCT_ID, product.getId());
@@ -438,7 +439,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                     values.put(KEY_PRODUCT_STOCK, String.valueOf(stock));
 
                     try {
-                        if(!db.isOpen()) db = this.getWritableDatabase();
+                        if (!db.isOpen()) db = this.getWritableDatabase();
                         db.insert(TABLE_PRODUCT, null, values);
                         values.clear();
                     } catch (Exception e) {
@@ -462,7 +463,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                         values.put(KEY_PRODUCT_NAME, productName.toLowerCase().replace(" ", ""));
 
                         try {
-                            if(!db.isOpen()) db = this.getWritableDatabase();
+                            if (!db.isOpen()) db = this.getWritableDatabase();
                             db.insert(TABLE_PRODUCT, null, values);
                             productName = product.getName();
                         } catch (Exception e) {
@@ -482,7 +483,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             values.put(KEY_CATEGORY_ID, categoryID);
             values.put(KEY_CATEGORY_NAME, categoryName);
             try {
-                if(!db.isOpen())db = this.getWritableDatabase();
+                if (!db.isOpen()) db = this.getWritableDatabase();
                 db.insert(TABLE_CATEGORY, null, values);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -525,7 +526,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         // Select All Query
         String selectQuery;
 
-            selectQuery = "SELECT  * FROM " + TABLE_PRODUCT + " ORDER BY " + KEY_PRODUCT_NAME + " ASC";
+        selectQuery = "SELECT  * FROM " + TABLE_PRODUCT + " ORDER BY " + KEY_PRODUCT_NAME + " ASC";
 
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -1070,7 +1071,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         Outlets.OutletsResult outletsResult = new Outlets.OutletsResult();
         List<Outlets.Outlet> outletList = new ArrayList<>();
         // Select All Query
-        String selectQuery = "SELECT * FROM " + TABLE_OUTLET + " WHERE " + KEY_OUTLET_NAME + " LIKE \"" + outletName + "%\" OR " + KEY_OUTLET_CLIENTID + " LIKE \"" + outletName + "%\" ORDER BY " + KEY_OUTLET_NAME + " ASC";
+        String selectQuery = "SELECT * FROM " + TABLE_OUTLET + " WHERE " + KEY_OUTLET_NAME + " LIKE  '%" + outletName + "%' OR " + KEY_OUTLET_CLIENTID + " LIKE '%" + outletName + "%' ORDER BY " + KEY_OUTLET_NAME + " ASC";
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
 
@@ -1360,14 +1361,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.delete(TABLE_BRAND, null, null);
         db.delete(TABLE_CATEGORY, null, null);
         db.delete(TABLE_DELIVERY, null, null);
-        db.delete(TABLE_DELIVERY_PRODUCT, null,null);
+        db.delete(TABLE_DELIVERY_PRODUCT, null, null);
         db.delete(TABLE_DISTRICT, null, null);
         db.delete(TABLE_ORDER, null, null);
         db.delete(TABLE_OUTLET, null, null);
         db.delete(TABLE_OUTLET_TYPE, null, null);
         db.delete(TABLE_PRICE_VARIATION, null, null);
         db.delete(TABLE_PRODUCT, null, null);
-        db.delete(TABLE_SELLS_REASON, null,null);
+        db.delete(TABLE_SELLS_REASON, null, null);
         db.delete(TABLE_TARGET, null, null);
         db.delete(TABLE_THANA, null, null);
         db.delete(TABLE_TRADE_PROMTOIN, null, null);

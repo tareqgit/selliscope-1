@@ -62,7 +62,8 @@ public class UpLoadDataService {
                 uploadOrderToServer(new UploadCompleteListener() {
                     @Override
                     public void uploadComplete() {
-                        if (uploadCompleteListener != null) uploadCompleteListener.uploadComplete();
+                        if (uploadCompleteListener != null)
+                            uploadCompleteListener.uploadComplete();
                     }
 
                     @Override
@@ -99,29 +100,51 @@ public class UpLoadDataService {
                 @Override
                 public void onResponse(Call<AddNewOrder.OrderResponse> call, Response<AddNewOrder.OrderResponse> response) {
                     Log.d("tareq_test", "Offline order: Order completed." + response.code());
-                    if (response.code() == 201) {
-                        databaseHandler.removeOrder(addNewOrder.newOrder.outletId);
-                        Log.d("tareq_test", "Offline order: Order removed.");
+                    if (response.code() == 201 || response.isSuccessful()) {
+
 
                         new Thread(() -> {
                             if (returnProductDatabase.returnProductDao().getAllReturnProduct(addNewOrder.newOrder.products.get(0).order_return_id).size() != 0) {
                                 Log.d("tareq_test", "Sales Return Item found with " + addNewOrder.newOrder.products.get(0).order_return_id + " is " + returnProductDatabase.returnProductDao().getAllReturnProduct(addNewOrder.newOrder.products.get(0).order_return_id).size());
-                                assert response.body() != null;
-                                postSalesReturn(apiService, response.body().result.order.id, response.body().result.order.outlet_id, addNewOrder.newOrder.products.get(0).order_return_id, new UploadCompleteListener() {
-                                    @Override
-                                    public void uploadComplete() {
-                                        if (uploadCompleteListener != null)
-                                            uploadCompleteListener.uploadComplete();
-                                    }
 
-                                    @Override
-                                    public void uploadFailed(String reason) {
-                                        if (uploadCompleteListener != null)
-                                            uploadCompleteListener.uploadFailed(reason);
-                                    }
-                                });
+
+                                    postSalesRetunModule(response);
+
+                            }else{
+                                Log.d("tareq_test" , "No Return Product found");
+                                if (uploadCompleteListener != null)
+                                    uploadCompleteListener.uploadComplete();
                             }
                         }).start();
+
+                        databaseHandler.removeOrder(addNewOrder.newOrder.outletId);
+                        Log.d("tareq_test", "Offline order: Order removed.");
+                    }else{
+                        if (uploadCompleteListener != null)
+                            uploadCompleteListener.uploadFailed("Order Failed Bad response:"+ response.code());
+                    }
+                }
+
+                private void postSalesRetunModule(Response<AddNewOrder.OrderResponse> response) {
+                    if (response.body() != null) {
+                        postSalesReturn(apiService, response.body().result.order.id, response.body().result.order.outlet_id, addNewOrder.newOrder.products.get(0).order_return_id, new UploadCompleteListener() {
+                            @Override
+                            public void uploadComplete() {
+                                if (uploadCompleteListener != null)
+                                    uploadCompleteListener.uploadComplete();
+
+
+                            }
+
+                            @Override
+                            public void uploadFailed(String reason) {
+                                if (uploadCompleteListener != null)
+                                    uploadCompleteListener.uploadFailed(reason +"trying again sales return");
+
+                                postSalesRetunModule(response);
+
+                            }
+                        });
                     }
                 }
 
@@ -135,6 +158,9 @@ public class UpLoadDataService {
             });
         }
     }
+
+
+
 
 
     void postSalesReturn(SelliscopeApiEndpointInterface apiService, int orderId, int outletId, int order_return_id, UploadCompleteListener uploadCompleteListener) {
@@ -178,7 +204,7 @@ public class UpLoadDataService {
                 } else {
                     Log.d("tareq_test", "Salesreturn failed" + response.code());
                     if (uploadCompleteListener != null)
-                        uploadCompleteListener.uploadFailed("Salesreturn failed" + response.code());
+                        uploadCompleteListener.uploadFailed("Salesreturn failed Bad Responses" + response.code());
                 }
             }
 

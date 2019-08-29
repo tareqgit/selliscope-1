@@ -37,12 +37,12 @@ import java.util.Locale;
 
 public class RegularPerformanceActivity extends AppCompatActivity implements RegularPerformanceAdapter.OnOutletItemClickListener {
     ActivityRegularPerformanceBinding mBinding;
-    private static String startDate="";
-    private static String endDate="";
+    private static String startDate = "";
+    private static String endDate = "";
     private UtilityDatabase mUtilityDatabase;
     private RegularPerformanceAdapter mRegularPerformanceAdapter;
 
-    private List<RegularPerformanceEntity> mDatumList=new ArrayList<>();
+    private List<RegularPerformanceEntity> mDatumList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,7 +56,7 @@ public class RegularPerformanceActivity extends AppCompatActivity implements Reg
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-         mUtilityDatabase = (UtilityDatabase) UtilityDatabase.getInstance(getApplicationContext());
+        mUtilityDatabase = (UtilityDatabase) UtilityDatabase.getInstance(getApplicationContext());
 
         mBinding.ordersRecycler.setLayoutManager(new LinearLayoutManager(this));
 
@@ -64,22 +64,22 @@ public class RegularPerformanceActivity extends AppCompatActivity implements Reg
         mBinding.ordersRecycler.setAdapter(mRegularPerformanceAdapter);
 
 
-        startDate= CurrentTimeUtilityClass.getCurrentTimeStampDateLocale();
+        startDate = CurrentTimeUtilityClass.getCurrentTimeStampDateLocale();
 
-        Log.d("tareq_test" , "Hey Date: " + startDate);
-        endDate=CurrentTimeUtilityClass.getCurrentTimeStampDateLocale();
+        Log.d("tareq_test", "Hey Date: " + startDate);
+        endDate = CurrentTimeUtilityClass.getCurrentTimeStampDateLocale();
 
         mBinding.recyclerLoader.setRefreshing(true);
 
         mBinding.recyclerLoader.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                getDailyPerformances(startDate,endDate); //for Initial value in recyclerview get the data of today
+                getDailyPerformances(startDate, endDate); //for Initial value in recyclerview get the data of today
 
             }
         });
 
-        getDailyPerformances(startDate,endDate);
+        getDailyPerformances(startDate, endDate);
 
         mBinding.startDateText.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -88,14 +88,14 @@ public class RegularPerformanceActivity extends AppCompatActivity implements Reg
                 int year = c.get(Calendar.YEAR);
                 int month = c.get(Calendar.MONTH);
                 final int day = c.get(Calendar.DAY_OF_MONTH);
-                DatePickerDialog datePickerDialog= new DatePickerDialog(RegularPerformanceActivity.this, new DatePickerDialog.OnDateSetListener() {
+                DatePickerDialog datePickerDialog = new DatePickerDialog(RegularPerformanceActivity.this, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                         DecimalFormat fmt = new DecimalFormat("00");
-                        mBinding.startDateText.setText(String.format(Locale.ENGLISH,"%d-%2s-%2s", year, fmt.format(month + 1), fmt.format(dayOfMonth)));
-                        startDate=mBinding.startDateText.getText().toString();
+                        mBinding.startDateText.setText(String.format(Locale.ENGLISH, "%d-%2s-%2s", year, fmt.format(month + 1), fmt.format(dayOfMonth)));
+                        startDate = mBinding.startDateText.getText().toString();
                     }
-                },year,month,day);
+                }, year, month, day);
                 datePickerDialog.getDatePicker().setMaxDate(c.getTimeInMillis());
                 datePickerDialog.show();
             }
@@ -108,15 +108,15 @@ public class RegularPerformanceActivity extends AppCompatActivity implements Reg
                 int year = c.get(Calendar.YEAR);
                 int month = c.get(Calendar.MONTH);
                 int day = c.get(Calendar.DAY_OF_MONTH);
-                DatePickerDialog datePickerDialog= new DatePickerDialog(RegularPerformanceActivity.this, new DatePickerDialog.OnDateSetListener() {
+                DatePickerDialog datePickerDialog = new DatePickerDialog(RegularPerformanceActivity.this, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
                         DecimalFormat fmt = new DecimalFormat("00");
                         mBinding.endDateText.setText(String.format(Locale.ENGLISH, "%d-%2s-%2s", year, fmt.format(month + 1), fmt.format(dayOfMonth)));
-                        endDate=mBinding.endDateText.getText().toString();
+                        endDate = mBinding.endDateText.getText().toString();
 
                     }
-                },year,month,day);
+                }, year, month, day);
                 datePickerDialog.getDatePicker().setMaxDate(c.getTimeInMillis());
                 datePickerDialog.show();
             }
@@ -128,78 +128,77 @@ public class RegularPerformanceActivity extends AppCompatActivity implements Reg
 
                 mBinding.recyclerLoader.setRefreshing(true);
 
-             getDailyPerformances(startDate, endDate);
+                getDailyPerformances(startDate, endDate);
 
             }
-
 
 
         });
 
     }
 
-    private MyDate convertDateToMyDate(String date){
+    private MyDate convertDateToMyDate(String date) {
 
 
-        int startDay,startMonth,startYear=0;
+        int startDay, startMonth, startYear = 0;
 
-        startDay=Integer.parseInt(date.substring(8,10));
-
-
-        startMonth=Integer.parseInt(date.substring(5,7));
+        startDay = Integer.parseInt(date.substring(8, 10));
 
 
-        startYear=Integer.parseInt(date.substring(0,4));
+        startMonth = Integer.parseInt(date.substring(5, 7));
 
-        return new MyDate(startDay,startMonth,startYear);
+
+        startYear = Integer.parseInt(date.substring(0, 4));
+
+        return new MyDate(startDay, startMonth, startYear);
     }
 
     private void getDailyPerformances(String startDate, String endDate) {
 
-        MyDate myStartDate=convertDateToMyDate(startDate);
+        MyDate myStartDate = convertDateToMyDate(startDate);
         MyDate myEndDate = convertDateToMyDate(endDate);
 
 
-
-        Date d=Calendar.getInstance().getTime();
+      /*  Date d = Calendar.getInstance().getTime();
         SimpleDateFormat formatDate = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
-        String date= formatDate.format(d);
-        SimpleDateFormat formathour = new SimpleDateFormat("HH",Locale.ENGLISH);
-        String hour= formathour.format(d);
+        String date = formatDate.format(d);
+        SimpleDateFormat formathour = new SimpleDateFormat("HH", Locale.ENGLISH);
+        String hour = formathour.format(d);*/
 
-        List<RegularPerformanceEntity> sortedItems=new ArrayList<>();
+        List<RegularPerformanceEntity> sortedItems = new ArrayList<>();
         getRegularPerformances(new DataLoadingListener() {
             @Override
             public void onLoadComplete(List<RegularPerformanceEntity> datas) {
 
-                for (RegularPerformanceEntity regularPerformence :datas  ) {
-                    MyDate regDate=convertDateToMyDate(regularPerformence.date);
+                for (RegularPerformanceEntity regularPerformence : datas) {
+                    MyDate regDate = convertDateToMyDate(regularPerformence.date);
 
 
-               //     if((regDate.year <= myEndDate.year && regDate.year>=2019) && (regDate.year>=myStartDate.year && regDate.year<=2050)) {
-                        if ((regDate.month <= myEndDate.month && regDate.month > 0) && (regDate.month >= myStartDate.month && regDate.month <= 12)) {
-                            if(myEndDate.month-myStartDate.month>0) {
-                                if ( regDate.day > 0 && (regDate.day >= myStartDate.day && regDate.day <= 31)) {
-                                    sortedItems.add(regularPerformence);
-                                }
-                            }else{
-                                if ((regDate.day <= myEndDate.day && regDate.day > 0) && (regDate.day >= myStartDate.day && regDate.day <= 31)) {
-                                    sortedItems.add(regularPerformence);
-                                }
+                    //     if((regDate.year <= myEndDate.year && regDate.year>=2019) && (regDate.year>=myStartDate.year && regDate.year<=2050)) {
+                    if ((regDate.month <= myEndDate.month && regDate.month > 0) && (regDate.month >= myStartDate.month && regDate.month <= 12)) {
+                        if (myEndDate.month - myStartDate.month > 0) {
+                            if (regDate.day > 0 && (regDate.day >= myStartDate.day && regDate.day <= 31)) {
+                                sortedItems.add(regularPerformence);
+                            }
+                        } else {
+                            if ((regDate.day <= myEndDate.day && regDate.day > 0) && (regDate.day >= myStartDate.day && regDate.day <= 31)) {
+                                sortedItems.add(regularPerformence);
                             }
                         }
-                 //   }
+                    }
+                    //   }
                 }
 
-                Log.d("tareq_test" , "Sorted Items: "+ new Gson().toJson(sortedItems));
+                Log.d("tareq_test", "Sorted Items: " + new Gson().toJson(sortedItems));
 
                 mDatumList.clear();
                 mDatumList.addAll(sortedItems);
 
 
-                mBinding.recyclerLoader.setRefreshing(false);
+
 
                 runOnUiThread(() -> {
+                    mBinding.recyclerLoader.setRefreshing(false);
                     mRegularPerformanceAdapter.notifyDataSetChanged();
                     updateTotalDistance();
                 });
@@ -210,16 +209,16 @@ public class RegularPerformanceActivity extends AppCompatActivity implements Reg
     }
 
     private void updateTotalDistance() {
-        double totalDistance=0;
-        for (RegularPerformanceEntity regularPerformanceEntity:  mDatumList   ) {
+        double totalDistance = 0;
+        for (RegularPerformanceEntity regularPerformanceEntity : mDatumList) {
             totalDistance += regularPerformanceEntity.distance;
         }
-        mBinding.totalAmountTextView.setText(String.format(Locale.ENGLISH,"%s : %.2fm","Total",totalDistance));
+        mBinding.totalAmountTextView.setText(String.format(Locale.ENGLISH, "%s : %.2fm", "Total", totalDistance));
     }
 
-    private void getRegularPerformances(DataLoadingListener callback){
-        new Thread(()->{
-          callback.onLoadComplete(  mUtilityDatabase.returnUtilityDao().getAllRegularPerformance());
+    private void getRegularPerformances(DataLoadingListener callback) {
+        new Thread(() -> {
+            callback.onLoadComplete(mUtilityDatabase.returnUtilityDao().getAllRegularPerformance());
         }).start();
     }
 
@@ -235,19 +234,19 @@ public class RegularPerformanceActivity extends AppCompatActivity implements Reg
 
     @Override
     public void onOutletClick(RegularPerformanceEntity performanceEntity) {
-        Intent intent=new Intent(RegularPerformanceActivity.this, RegularPerformanceOutlets.class);
+        Intent intent = new Intent(RegularPerformanceActivity.this, RegularPerformanceOutlets.class);
         //   Toast.makeText(this, ""+order.getProducts().get(0).getName(), Toast.LENGTH_SHORT).show();
 
         intent.putExtra("outlets", (Serializable) performanceEntity);
         startActivity(intent);
     }
 
-    public  interface DataLoadingListener{
+    public interface DataLoadingListener {
         void onLoadComplete(List<RegularPerformanceEntity> datas);
     }
 
 
-    public class MyDate{
+    public class MyDate {
         int day;
         int month;
         int year;

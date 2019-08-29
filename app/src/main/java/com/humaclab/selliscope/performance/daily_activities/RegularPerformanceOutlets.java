@@ -27,6 +27,7 @@ public class RegularPerformanceOutlets extends AppCompatActivity {
     RegularPerformanceOutletsAdapter mRegularPerformanceOutletsAdapter;
 
     List<OutletWithCheckInTime> mOutletWithCheckInTimeList = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,22 +41,28 @@ public class RegularPerformanceOutlets extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mBinding.outletRecycler.setLayoutManager(new LinearLayoutManager(this));
 
-        RegularPerformanceEntity performanceEntity=(RegularPerformanceEntity) getIntent().getSerializableExtra("outlets");
-        List<String> outlets = Arrays.asList(      performanceEntity.outlets_checked_in.split("~;~"));
+        RegularPerformanceEntity performanceEntity = (RegularPerformanceEntity) getIntent().getSerializableExtra("outlets");
+        Log.d("tareq_test", "Entity: " + new Gson().toJson(performanceEntity));
+        List<String> outlets = new ArrayList<>();
+        if (performanceEntity.outlets_checked_in != null)
+            outlets = Arrays.asList(performanceEntity.outlets_checked_in.split("~;~"));
+        Log.d("tareq_test", "Entitities" + new Gson().toJson(outlets));
 
-        for (String outlet :    outlets          ) {
+        if (outlets.size() > 0) {
+            for (String outlet : outlets) {
+                if (!outlet.equals("")) {
+                    Gson gson = new Gson();
+                    JsonParser parser = new JsonParser();
+                    JsonObject object = (JsonObject) parser.parse(outlet);// response will be the json String
+                    OutletWithCheckInTime outletWithCheckInTime = gson.fromJson(object, OutletWithCheckInTime.class);
 
-            Gson gson = new Gson();
-            JsonParser parser = new JsonParser();
-            JsonObject object = (JsonObject) parser.parse(outlet);// response will be the json String
-            OutletWithCheckInTime outletWithCheckInTime = gson.fromJson(object, OutletWithCheckInTime.class);
-
-            mOutletWithCheckInTimeList.add(outletWithCheckInTime);
+                    mOutletWithCheckInTimeList.add(outletWithCheckInTime);
+                }
+            }
         }
+        Log.d("tareq_test", "Check in time list " + mOutletWithCheckInTimeList.size());
 
-        Log.d("tareq_test" , "Check in time list "+ mOutletWithCheckInTimeList.size());
-
-        mRegularPerformanceOutletsAdapter=new RegularPerformanceOutletsAdapter(this, mOutletWithCheckInTimeList);
+        mRegularPerformanceOutletsAdapter = new RegularPerformanceOutletsAdapter(this, mOutletWithCheckInTimeList);
         mBinding.outletRecycler.setAdapter(mRegularPerformanceOutletsAdapter);
     }
 

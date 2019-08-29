@@ -11,6 +11,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.media.MediaPlayer;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.provider.Settings;
@@ -18,6 +19,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
@@ -35,6 +37,9 @@ import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResponse;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.analytics.FirebaseAnalytics;
+import com.google.firebase.perf.FirebasePerformance;
+import com.google.firebase.perf.metrics.Trace;
 import com.google.gson.Gson;
 import com.humaclab.selliscope.activity.HomeActivity;
 import com.humaclab.selliscope.dbmodel.UserVisit;
@@ -270,14 +275,18 @@ public class LocationMonitoringService extends Service implements
     UtilityDatabase utilityDatabase;
     //to get the location change
 
+
     public void onLocationChanged(Location location) {
 
-        if (location != null) {
-           utilityDatabase = (UtilityDatabase) UtilityDatabase.getInstance(getApplicationContext());
-            Date d=Calendar.getInstance().getTime();
+        if (location != null && location.getAccuracy()<35) {
+            utilityDatabase = (UtilityDatabase) UtilityDatabase.getInstance(getApplicationContext());
+            Date d = Calendar.getInstance().getTime();
             SimpleDateFormat formatDate = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
-            String date= formatDate.format(d);
+            String date = formatDate.format(d);
             Log.d(TAG, "== location != null");
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                Log.d("tareq_test" , "Accuracy: "+ location.getAccuracy() +"Speed: "+ location.getSpeed()+ "Speed Accuracy meter: "+ location.getSpeedAccuracyMetersPerSecond());
+            }
 
 
             //Send result to activities
@@ -294,11 +303,6 @@ public class LocationMonitoringService extends Service implements
                 Log.d("tareq_test", "diff " + CurrentTimeUtilityClass.getDiffBetween(lastTime));
 
 
-
-
-
-
-
                 //  if ( CurrentTimeUtilityClass.getDiffbetweenTimeStamps(lastTime) >= 5 || (CurrentTimeUtilityClass.getDiffbetweenTimeStamps(lastTime) >= -55 && CurrentTimeUtilityClass.getDiffbetweenTimeStamps(lastTime) <0) ) {
                 if (CurrentTimeUtilityClass.getDiffBetween(lastTime) >= 5) {
                     Log.d("tareq_test", "Filtered_addr_if: " + GetAddressFromLatLang.getAddressFromLatLan(getApplicationContext(), location.getLatitude(), location.getLongitude()) + " acc: " + location.getAccuracy() + " T: " + CurrentTimeUtilityClass.getCurrentTimeStamp());
@@ -309,35 +313,40 @@ public class LocationMonitoringService extends Service implements
                     prevLocation.setLatitude(Double.parseDouble(prefs.getString("last_pos_lat", "0")));
                     prevLocation.setLongitude(Double.parseDouble(prefs.getString("last_pos_long", "0")));
 
+
+                    Trace myTrace = FirebasePerformance.getInstance().newTrace("test_trace");
+                    myTrace.start();
+
+                    // code that you want to trace
                     double dist = location.distanceTo(prevLocation);
 
-                    if (dist < 250) {
-                        Log.d("tareq_test", "Valid distance " + dist );
-                        new Thread(()->{
-                            List<RegularPerformanceEntity> regularPerformanceEntities= utilityDatabase.returnUtilityDao().getRegularPerformance(date);
-                            if(regularPerformanceEntities.size()==0){
+                    if (dist < 5000) {
+                        Log.d("tareq_test", "Valid distance " + dist);
+                        new Thread(() -> {
+                            List<RegularPerformanceEntity> regularPerformanceEntities = utilityDatabase.returnUtilityDao().getRegularPerformance(date);
+                            if (regularPerformanceEntities.size() == 0) {
                                 double distance;
                                 String sDist = String.format(Locale.ENGLISH, "%.2f", dist);
-                                Log.d("tareq_test" , "distance"+ sDist);
+                                Log.d("tareq_test", "distance" + sDist);
                                 distance = Double.parseDouble(sDist);
-                                utilityDatabase.returnUtilityDao().insertRegularPerformance(new RegularPerformanceEntity.Builder().withDate(date).withDistance(distance).build());
-                            }else{
-                                double distance=regularPerformanceEntities.get(0).distance;
-                                distance+=dist;
+                                utilityDatabase.returnUtilityDao().insertRegularPerformance(new RegularPerformanceEntity.Builder().withDate(date).withDistance(distance).withOutlets_checked_in("").build());
+                            } else {
+                                double distance = regularPerformanceEntities.get(0).distance;
+                                distance += dist;
                                 String sDist = String.format(Locale.ENGLISH, "%.2f", distance);
-                                Log.d("tareq_test" , "distance"+ sDist);
+                                Log.d("tareq_test", "distance" + sDist);
                                 distance = Double.parseDouble(sDist);
 
-                                utilityDatabase.returnUtilityDao().updateRegularPerformance(distance,date);
+                                utilityDatabase.returnUtilityDao().updateRegularPerformance(distance, date);
                             }
                         }).start();
+                    } else {
+                        Log.d("tareq_test", "Meters: " + dist);
                     }
 
+                    myTrace.stop();
 
                     //endregion
-
-
-
 
 
                     if (NetworkUtility.isNetworkAvailable(getApplicationContext())) {
@@ -437,12 +446,12 @@ public class LocationMonitoringService extends Service implements
                 if (response.code() == 201) {
                     try {
                         UserLocation.Successful userLocationSuccess = gson.fromJson(response.body().string(), UserLocation.Successful.class);
-                        Timber.d("Result:" + userLocationSuccess.result);
+
                         //   if (fromDB)
                         dbHandler.deleteUserVisit();
                         Log.d("tareq_test", "Data send and deleted from db");
                     } catch (IOException e) {
-                        Timber.d("Error:" + e.toString());
+
                         e.printStackTrace();
                     }
                 } else if (response.code() == 400) {
@@ -511,8 +520,6 @@ public class LocationMonitoringService extends Service implements
             }
         });
     }
-
-
 
 
     @Override

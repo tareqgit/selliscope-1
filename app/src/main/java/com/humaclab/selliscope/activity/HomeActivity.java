@@ -62,7 +62,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.gson.Gson;
 import com.humaclab.selliscope.BuildConfig;
 import com.humaclab.selliscope.LocationMonitoringService;
@@ -88,7 +87,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -223,8 +224,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         //region For Testing Utility Database
         UtilityDatabase utilityDatabase = (UtilityDatabase) UtilityDatabase.getInstance(getApplicationContext());
 
-        // new Thread(() -> utilityDatabase.returnUtilityDao().deleteAllRegularPerformance()).start();
-
 
         Date d = Calendar.getInstance().getTime();
         SimpleDateFormat formatDate = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
@@ -232,17 +231,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         SimpleDateFormat formathour = new SimpleDateFormat("HH", Locale.ENGLISH);
         String hour = formathour.format(d);
 
-       /*new Thread(()-> {
-           utilityDatabase.returnUtilityDao().insertRegularPerformance(new RegularPerformanceEntity.Builder().withDate("2019-08-22").withHour(hour).build());
-       utilityDatabase.returnUtilityDao().insertRegularPerformance(new RegularPerformanceEntity.Builder().withDate("2019-08-22").withHour(hour).build());
-      utilityDatabase.returnUtilityDao().insertRegularPerformance(new RegularPerformanceEntity.Builder().withDate("2019-07-19").withHour(hour).build());
-      utilityDatabase.returnUtilityDao().insertRegularPerformance(new RegularPerformanceEntity.Builder().withDate("2019-07-10").withHour(hour).build());
-      utilityDatabase.returnUtilityDao().insertRegularPerformance(new RegularPerformanceEntity.Builder().withDate("2020-08-22").withHour(hour).build());
-      utilityDatabase.returnUtilityDao().insertRegularPerformance(new RegularPerformanceEntity.Builder().withDate("2020-08-22").withHour(hour).build());
-       }).start();
-*/
-        //    new Thread(()-> Log.d("tareq_test" , ""+ new Gson().toJson(utilityDatabase.returnUtilityDao().getAllRegularPerformance()))).start();
-        //endregion
+
 
 
         fragmentManager = getSupportFragmentManager();
@@ -376,7 +365,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         }
 
 
-        //LoadappsVertion();
+        LoadappsVertion();
 
 
        /* //startService(new Intent(this, SendLocationDataService.class));
@@ -411,8 +400,41 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         jobInfo = builder.build();
         jobScheduler = (JobScheduler) getSystemService(JOB_SCHEDULER_SERVICE);
         jobScheduler.schedule(jobInfo);*/
+
+
+      uploadDataFromLocalStorage(this);
+        //initialize
+
     }
 
+
+    private void uploadDataFromLocalStorage(Context context){
+
+        schedulerForMinute = Executors.newSingleThreadScheduledExecutor();
+        schedulerForMinute.scheduleAtFixedRate(() -> {
+
+            Log.d("Running threads", "Thread running in background for updating products and outlets");
+
+            UpLoadDataService upLoadDataService = new UpLoadDataService(context);
+
+            upLoadDataService.uploadData(new UpLoadDataService.UploadCompleteListener() {
+                @Override
+                public void uploadComplete() {
+                    Log.d("tareq_test", "Upload complete");
+
+
+                }
+
+                @Override
+                public void uploadFailed(String reason) {
+                    Log.e("tareq_test", "" + reason);
+
+                }
+            });
+
+        }, 0, 5, TimeUnit.MINUTES);
+
+    }
 
     private void displayGpsSignalRequest() {
 
@@ -515,13 +537,15 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onResponse(Call<DiameterResponse> call, Response<DiameterResponse> response) {
                 if (response.code() == 200) {
-                    sessionManager.setDiameter(response.body().getDiameter().getDiameter());
+                    if (response.body() != null) {
+                        sessionManager.setDiameter(response.body().getDiameter().getDiameter());
+                    }
                 }
             }
 
             @Override
             public void onFailure(Call<DiameterResponse> call, Throwable t) {
-
+            Log.e("tareq_test" , "Getting diameter error");
             }
         });
     }
@@ -884,8 +908,10 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
 
             sessionManager.logoutUser(false);
-            schedulerForMinute.shutdownNow();
-            schedulerForHour.shutdownNow();
+            if( schedulerForMinute!=null && schedulerForHour!=null) {
+                schedulerForMinute.shutdownNow();
+                schedulerForHour.shutdownNow();
+            }
             //stopService(new Intent(HomeActivity.this, SendLocationDataService.class));
             HomeActivity.this.deleteDatabase(Constants.databaseName);
             try {
@@ -908,6 +934,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     }
 
 
+
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     protected void onResume() {
@@ -923,7 +950,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 LoadappsVertion();
             }
         }, 2000);*/
-        LoadappsVertion();
+
         //Start Android Service for sending location to service
         startStep1();
     }

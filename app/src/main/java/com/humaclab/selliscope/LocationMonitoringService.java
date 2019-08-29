@@ -19,7 +19,6 @@ import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
@@ -37,7 +36,6 @@ import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResponse;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.analytics.FirebaseAnalytics;
 import com.google.firebase.perf.FirebasePerformance;
 import com.google.firebase.perf.metrics.Trace;
 import com.google.gson.Gson;
@@ -333,9 +331,9 @@ public class LocationMonitoringService extends Service implements
                             } else {
                                 double distance = regularPerformanceEntities.get(0).distance;
                                 distance += dist;
-                                String sDist = String.format(Locale.ENGLISH, "%.2f", distance);
+                                String sDist = String.format(Locale.ENGLISH, "%.2f", (distance* 1.1f));
                                 Log.d("tareq_test", "distance" + sDist);
-                                distance = Double.parseDouble(sDist);
+                                distance = Double.parseDouble(sDist) ;
 
                                 utilityDatabase.returnUtilityDao().updateRegularPerformance(distance, date);
                             }

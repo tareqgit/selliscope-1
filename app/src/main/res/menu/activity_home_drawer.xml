@@ -42,4 +42,6 @@
             android:id="@+id/nav_about_us"
             android:title="@string/about_us" />
     </group>
+
+
 </menu>

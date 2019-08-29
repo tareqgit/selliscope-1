@@ -235,7 +235,7 @@ public class OutletMapActivity extends AppCompatActivity implements OnMapReadyCa
                                     new LatLng(outlets.get(i).outletLatitude,
                                             outlets.get(i).outletLongitude))
                                     .icon(vectorToBitmap(
-                                            R.drawable.store_location_marker, 0))
+                                            R.drawable.ic_dokan, 0))
                                     .title(outlets.get(i).outletName));
                         }
 

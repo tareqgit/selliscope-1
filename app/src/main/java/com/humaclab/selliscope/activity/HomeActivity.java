@@ -105,7 +105,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         Target_Fragment, Dashboard_Fragment, Performance_Fragment
     }
 
-    public static ScheduledExecutorService schedulerForMinute, schedulerForHour;
+    public static ScheduledExecutorService schedulerForMinute, schedulerForHour, schedulerForDataUpdate;
     public static BroadcastReceiver internetBroadcastReciever = new InternetConnectivityChangeReceiver();
     private FragmentManager fragmentManager;
     private SessionManager sessionManager;
@@ -230,8 +230,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         String date = formatDate.format(d);
         SimpleDateFormat formathour = new SimpleDateFormat("HH", Locale.ENGLISH);
         String hour = formathour.format(d);
-
-
 
 
         fragmentManager = getSupportFragmentManager();
@@ -402,37 +400,39 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         jobScheduler.schedule(jobInfo);*/
 
 
-      uploadDataFromLocalStorage(this);
+        uploadDataFromLocalStorage(this);
         //initialize
 
     }
 
 
-    private void uploadDataFromLocalStorage(Context context){
+    private void uploadDataFromLocalStorage(Context context) {
 
-        schedulerForMinute = Executors.newSingleThreadScheduledExecutor();
-        schedulerForMinute.scheduleAtFixedRate(() -> {
+        if (schedulerForDataUpdate == null || schedulerForDataUpdate.isShutdown() || schedulerForDataUpdate.isTerminated()) {
+            schedulerForDataUpdate = Executors.newSingleThreadScheduledExecutor();
+            schedulerForDataUpdate.scheduleAtFixedRate(() -> {
 
-            Log.d("Running threads", "Thread running in background for updating products and outlets");
+                Log.d("Running threads", "Thread running in background for updating products and outlets");
 
-            UpLoadDataService upLoadDataService = new UpLoadDataService(context);
+                UpLoadDataService upLoadDataService = new UpLoadDataService(context);
 
-            upLoadDataService.uploadData(new UpLoadDataService.UploadCompleteListener() {
-                @Override
-                public void uploadComplete() {
-                    Log.d("tareq_test", "Upload complete");
+                upLoadDataService.uploadData(new UpLoadDataService.UploadCompleteListener() {
+                    @Override
+                    public void uploadComplete() {
+                        Log.d("tareq_test", "Upload complete");
 
 
-                }
+                    }
 
-                @Override
-                public void uploadFailed(String reason) {
-                    Log.e("tareq_test", "" + reason);
+                    @Override
+                    public void uploadFailed(String reason) {
+                        Log.e("tareq_test", "" + reason);
 
-                }
-            });
+                    }
+                });
 
-        }, 0, 3, TimeUnit.MINUTES);
+            }, 0, 3, TimeUnit.MINUTES);
+        }
 
     }
 
@@ -545,7 +545,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
             @Override
             public void onFailure(Call<DiameterResponse> call, Throwable t) {
-            Log.e("tareq_test" , "Getting diameter error");
+                Log.e("tareq_test", "Getting diameter error");
             }
         });
     }
@@ -643,6 +643,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 sessionManager.logoutUser(false);
                 //       schedulerForMinute.shutdownNow();
                 //    schedulerForHour.shutdownNow();
+                schedulerForDataUpdate.shutdown();
 
 
 
@@ -661,6 +662,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 alertDialog.setTitle("About Us");
                 alertDialog.setMessage("ICT Incubator,\nSoftware Technology Park (4th Floor), Janata Tower,\nKawranbazar, Dhaka 1215, Bangladesh\ninfo@humaclab.com\nMobile: +8801711505322");
                 alertDialog.setMessage("Humac Lab ,\nHouse - 11, Road - 21\nSector - 04, Uttara ,\n Dhaka 1230, Bangladesh\ninfo@humaclab.com\nMobile: +8801711505322");
+
                 alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, "OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -707,7 +709,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             case R.id.nav_contact:
                 final AlertDialog alertDialogContact = new AlertDialog.Builder(this).create();
                 alertDialogContact.setTitle("Contact Us");
-                alertDialogContact.setMessage("Email: support@humaclab.com \nMobile: 01707073175");
+                alertDialogContact.setMessage("Email: support@humaclab.com \nMobile: 01707073175 \nSunday - Thursday \n9.00am - 6.00pm" );
                 alertDialogContact.setButton(DialogInterface.BUTTON_POSITIVE, "CAll", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -908,10 +910,12 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
 
             sessionManager.logoutUser(false);
-            if( schedulerForMinute!=null && schedulerForHour!=null) {
+            if (schedulerForMinute != null && schedulerForHour != null) {
                 schedulerForMinute.shutdownNow();
                 schedulerForHour.shutdownNow();
+
             }
+            schedulerForDataUpdate.shutdown();
             //stopService(new Intent(HomeActivity.this, SendLocationDataService.class));
             HomeActivity.this.deleteDatabase(Constants.databaseName);
             try {
@@ -932,7 +936,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         builder.setCancelable(false);
         builder.show();
     }
-
 
 
     @RequiresApi(api = Build.VERSION_CODES.M)

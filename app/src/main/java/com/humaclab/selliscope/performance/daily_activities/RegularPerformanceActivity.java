@@ -52,7 +52,7 @@ public class RegularPerformanceActivity extends AppCompatActivity implements Reg
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("");
         TextView toolbarTitle = findViewById(R.id.tv_toolbar_title);
-
+        toolbarTitle.setText("Regular Activities");
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 

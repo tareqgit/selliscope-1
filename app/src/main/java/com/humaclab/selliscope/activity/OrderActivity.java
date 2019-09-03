@@ -145,7 +145,7 @@ public class OrderActivity extends AppCompatActivity implements OrderProductRecy
 
 
         //if network is Available then update the data again
-        if (NetworkUtility.isNetworkAvailable(OrderActivity.this)) {
+       /* if (NetworkUtility.isNetworkAvailable(OrderActivity.this)) {
 
             binding.srlProduct.setRefreshing(true);
             loadLocalIntoBackground.loadProduct(new LoadLocalIntoBackground.LoadCompleteListener() {
@@ -166,7 +166,7 @@ public class OrderActivity extends AppCompatActivity implements OrderProductRecy
             });
 
 
-        }
+        }*/
         // getProducts();
     }
 

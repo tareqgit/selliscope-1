@@ -418,9 +418,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     public void addProduct(List<ProductsItem> products) {
         SQLiteDatabase db = this.getWritableDatabase();
+        db.beginTransaction();
+        List<ProductsItem> productsItems = getAllProduct();
         for (ProductsItem product : products) {
-            if (!getAllProduct().contains(product)) {
-                List<ProductsItem> productsItems = getAllProduct();
+            if (!productsItems.contains(product)) {
+
                 ContentValues values = new ContentValues();
                 String productName = product.getName();
                 values.put(KEY_PRODUCT_ID, product.getId());
@@ -473,6 +475,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 }
             }
         }
+        db.setTransactionSuccessful();
+        db.endTransaction();
         db.close(); // Closing database connection
     }
 
@@ -847,11 +851,15 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     public void addOutlet(List<Outlets.Outlet> outletList) {
         SQLiteDatabase db = this.getWritableDatabase();
+     /*   db.beginTransaction();*/
         ContentValues values = new ContentValues();
+
         try {
+            List<Outlets.Outlet> outlets = getAllOutlet().outlets;
             for (Outlets.Outlet outlet : outletList) {
 
-                if (!getAllOutlet().outlets.contains(outlet)) {
+
+                if (!outlets.contains(outlet)) {
                     values.put(KEY_OUTLET_ID, outlet.outletId);
                     values.put(KEY_OUTLET_NAME, outlet.outletName);
                     values.put(KEY_OUTLET_TYPE, outlet.outletType);
@@ -867,6 +875,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                     values.put(KEY_OUTLET_ROUTEPLAN, outlet.getOutlet_routeplan());
                     values.put(KEY_OUTLET_CLIENTID, outlet.getClientID());
                     try {
+                   /*     db.setTransactionSuccessful();
+                        db.endTransaction();*/
+                        db.close();
                         removeOutletWithId(outlet.outletId);
                         if (!db.isOpen()) db = this.getWritableDatabase();
                         db.insert(TABLE_OUTLET, null, values);
@@ -878,6 +889,10 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         } catch (Exception e) {
             Log.e("tareq_test", "can't update outlet " + e.getMessage());
         }
+      /*if(db.inTransaction()) {
+          db.setTransactionSuccessful();
+          db.endTransaction();
+      }*/
         db.close();
     }
 

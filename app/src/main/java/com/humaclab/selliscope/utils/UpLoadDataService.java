@@ -100,7 +100,7 @@ public class UpLoadDataService {
                 @Override
                 public void onResponse(Call<AddNewOrder.OrderResponse> call, Response<AddNewOrder.OrderResponse> response) {
                     Log.d("tareq_test", "Offline order: Order completed." + response.code());
-                    if (response.code() == 201 || response.isSuccessful()) {
+                    if (response.code() == 201 ) {
 
 
                         new Thread(() -> {

@@ -1,6 +1,10 @@
 package com.humaclab.selliscope.activity;
 
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+
+import androidx.appcompat.app.AlertDialog;
 import androidx.databinding.DataBindingUtil;
 
 import android.graphics.Color;
@@ -31,6 +35,8 @@ import com.humaclab.selliscope.utils.SessionManager;
 import com.humaclab.selliscope.utils.VerticalSpaceItemDecoration;
 
 import java.util.List;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -90,22 +96,46 @@ binding.srlOutlet.setColorSchemeColors(Color.parseColor("#EA5455"), Color.parseC
 
         binding.srlOutlet.setOnRefreshListener(() -> {
             if (NetworkUtility.isNetworkAvailable(OutletActivity.this)) {
-                LoadLocalIntoBackground loadLocalIntoBackground = new LoadLocalIntoBackground(this);
-                binding.srlOutlet.setRefreshing(true);
-                loadLocalIntoBackground.loadOutlet(new LoadLocalIntoBackground.LoadCompleteListener() {
-                    @Override
-                    public void onLoadComplete() {
-                        getOutlets();
-                        binding.srlOutlet.setRefreshing(false);
-                        Log.d("tareq_test" , "Outlets updated from Server");
-                    }
 
+             /*   final AlertDialog alertDialogRefresh = new AlertDialog.Builder(this).create();
+                alertDialogRefresh.setTitle("Confirm");
+                alertDialogRefresh.setMessage("Are you sure? \n\nYou want to Update all Outlet. ");
+                alertDialogRefresh.setOnDismissListener(new DialogInterface.OnDismissListener() {
                     @Override
-                    public void onLoadFailed(String reason) {
-                        Log.d("tareq_test" , "Outlets updated from Server");
+                    public void onDismiss(DialogInterface dialog) {
+                        binding.srlOutlet.setRefreshing(false);
                     }
                 });
+                alertDialogRefresh.setButton(DialogInterface.BUTTON_POSITIVE, "Yes", (dialog, which) -> {
+                    ProgressDialog pd = new ProgressDialog(OutletActivity.this);
+                    pd.setMessage("Local data is updating.\nPlease be patient....");
+                    pd.setCancelable(false);
+                    pd.show();
+*/
+                    LoadLocalIntoBackground loadLocalIntoBackground = new LoadLocalIntoBackground(this);
+                    binding.srlOutlet.setRefreshing(true);
 
+                    loadLocalIntoBackground.loadOutlet(new LoadLocalIntoBackground.LoadCompleteListener() {
+                        @Override
+                        public void onLoadComplete() {
+                             getOutlets();
+                            binding.srlOutlet.setRefreshing(false);
+                            Log.d("tareq_test", "Outlets updated from Server");
+                            //    pd.dismiss();
+                        }
+
+                        @Override
+                        public void onLoadFailed(String reason) {
+                            binding.srlOutlet.setRefreshing(false);
+                            //     pd.dismiss();
+                            Log.d("tareq_test", "Outlets couldn't updated from Server");
+                        }
+                    });
+
+
+              /*  });
+                if (!alertDialogRefresh.isShowing()) alertDialogRefresh.show();
+*/
 
 
             }else{
@@ -116,7 +146,7 @@ binding.srlOutlet.setColorSchemeColors(Color.parseColor("#EA5455"), Color.parseC
         });
 
    //if network is Available then update the data again
-        if (NetworkUtility.isNetworkAvailable(this)) {
+    /*    if (NetworkUtility.isNetworkAvailable(this)) {
             LoadLocalIntoBackground loadLocalIntoBackground = new LoadLocalIntoBackground(this);
             binding.srlOutlet.setRefreshing(true);
             loadLocalIntoBackground.loadOutlet(new LoadLocalIntoBackground.LoadCompleteListener() {
@@ -132,7 +162,7 @@ binding.srlOutlet.setColorSchemeColors(Color.parseColor("#EA5455"), Color.parseC
                     Log.d("tareq_test" , "Outlets updated from Server");
                 }
             });
-        }
+        }*/
 
     }
 

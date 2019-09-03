@@ -6,10 +6,12 @@ import android.content.Intent;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -84,7 +86,7 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
         this.sessionManager = new SessionManager(context);
 
 
-        shimmer= new Shimmer.ColorHighlightBuilder()
+        shimmer = new Shimmer.ColorHighlightBuilder()
                 .setBaseAlpha(.85f)
                 .setIntensity(0)
                 .build();
@@ -100,24 +102,24 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
 
     @Override
     public void onBindViewHolder(final OutletViewHolder holder, final int position) {
-       // holder.setIsRecyclable(false);
+        // holder.setIsRecyclable(false);
         final Outlets.Outlet outlet = outletItems.outlets.get(position);
 
-        ShimmerDrawable shimmerDrawable=new ShimmerDrawable();
+        ShimmerDrawable shimmerDrawable = new ShimmerDrawable();
         shimmerDrawable.setShimmer(shimmer);
 
 
+        if (!outlet.outletImgUrl.equals("")) {
 
-        assert outlet.outletImgUrl != null;
-        if(!outlet.outletImgUrl.equals("")) {
-        Glide.with(context).
-                load(outlet.outletImgUrl)
-                .thumbnail(0.1f)
-                .placeholder(shimmerDrawable)
-                .transition(DrawableTransitionOptions.withCrossFade())
-                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
-                .into(holder.getBinding().outletImage);
-        }else{
+            Glide.with(context).
+                    load(outlet.outletImgUrl)
+                    .thumbnail(0.1f)
+                    .placeholder(shimmerDrawable)
+                    .transition(DrawableTransitionOptions.withCrossFade())
+                    .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+                    .into(holder.getBinding().outletImage);
+
+        } else {
             holder.getBinding().outletImage.setImageResource(R.drawable.selliscope_splash);
         }
         holder.getBinding().tvOutletName.setText(outlet.outletName);
@@ -128,7 +130,7 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
         if (outlet.getOutlet_routeplan().equals("1")) {
             holder.getBinding().routeplanBackground2.setImageResource(R.drawable.moss_gradient2);
 
-        }else{
+        } else {
             holder.getBinding().routeplanBackground2.setImageResource(R.color.white);
         }
         holder.getBinding().btnCheckIn.setOnClickListener(new View.OnClickListener() {
@@ -158,20 +160,19 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
             }
         });
 
-            holder.getBinding().btnMap.setOnClickListener(v -> {
+        holder.getBinding().btnMap.setOnClickListener(v -> {
 
 
-                    //TODO: add map direction layout here.
-                    Intent intent = new Intent(context, OutletMapActivity.class);
-                    intent.putExtra("outletName", outlet.outletName);
-                    intent.putExtra("outletID", outlet.outletId);
-                    intent.putExtra("outletLat", outlet.outletLatitude);
-                    intent.putExtra("outletLong", outlet.outletLongitude);
+            //TODO: add map direction layout here.
+            Intent intent = new Intent(context, OutletMapActivity.class);
+            intent.putExtra("outletName", outlet.outletName);
+            intent.putExtra("outletID", outlet.outletId);
+            intent.putExtra("outletLat", outlet.outletLatitude);
+            intent.putExtra("outletLong", outlet.outletLongitude);
 
-                    context.startActivity(intent);
+            context.startActivity(intent);
 
-            });
-
+        });
 
 
         holder.getBinding().btnHistory.setOnClickListener(new View.OnClickListener() {
@@ -216,41 +217,39 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                 Gson gson = new Gson();
+                Gson gson = new Gson();
                 if (response.code() == 201) {
                     try {
                         UserLocation.Successful userLocationSuccess = gson.fromJson(response.body().string(), UserLocation.Successful.class);
-                         progressBar.setVisibility(View.INVISIBLE);
+                        progressBar.setVisibility(View.INVISIBLE);
                         if (userLocationSuccess.msg.equals("")) { // To check if the user already checked in the outlet
                             Toast.makeText(context, "You have successfully checked in.", Toast.LENGTH_SHORT).show();
                             databaseHandler.afterCheckinUpdateOutletRoutePlan(outlet.outletId);
 
                             //region Update checkedin for Activities
-                            UtilityDatabase   utilityDatabase = (UtilityDatabase) UtilityDatabase.getInstance(context);
-                            Date d= Calendar.getInstance().getTime();
+                            UtilityDatabase utilityDatabase = (UtilityDatabase) UtilityDatabase.getInstance(context);
+                            Date d = Calendar.getInstance().getTime();
                             SimpleDateFormat formatDate = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
-                            String date= formatDate.format(d);
-                            SimpleDateFormat formathour = new SimpleDateFormat("HH-mm",Locale.ENGLISH);
-                            String hour= formathour.format(d);
+                            String date = formatDate.format(d);
+                            SimpleDateFormat formathour = new SimpleDateFormat("HH-mm", Locale.ENGLISH);
+                            String hour = formathour.format(d);
 
                             OutletWithCheckInTime outletWithCheckInTime = new OutletWithCheckInTime(outlet, hour);
 
-                            new Thread(()->{
-                                List<RegularPerformanceEntity> regularPerformanceEntities= utilityDatabase.returnUtilityDao().getRegularPerformance(date);
-                                if(regularPerformanceEntities.size()==0){
-                                    utilityDatabase.returnUtilityDao().insertRegularPerformance(new RegularPerformanceEntity.Builder().withDate(date).withDistance(0).withOutlets_checked_in(new Gson().toJson(outletWithCheckInTime) +"~;~").build());
-                                }else{
+                            new Thread(() -> {
+                                List<RegularPerformanceEntity> regularPerformanceEntities = utilityDatabase.returnUtilityDao().getRegularPerformance(date);
+                                if (regularPerformanceEntities.size() == 0) {
+                                    utilityDatabase.returnUtilityDao().insertRegularPerformance(new RegularPerformanceEntity.Builder().withDate(date).withDistance(0).withOutlets_checked_in(new Gson().toJson(outletWithCheckInTime) + "~;~").build());
+                                } else {
 
-                                    String outlets= regularPerformanceEntities.get(0).outlets_checked_in + new Gson().toJson(outletWithCheckInTime) +"~;~";
+                                    String outlets = regularPerformanceEntities.get(0).outlets_checked_in + new Gson().toJson(outletWithCheckInTime) + "~;~";
 
 
-                                    utilityDatabase.returnUtilityDao().updateRegularPerformanceOutlets(outlets,date);
+                                    utilityDatabase.returnUtilityDao().updateRegularPerformanceOutlets(outlets, date);
                                 }
                             }).start();
 
                             //endregion
-
-
 
 
                             ((OutletActivity) context).getRoute();//For reloading the outlet recycler view
@@ -264,7 +263,7 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
                     }
                 } else if (response.code() == 400) {
                     progressBar.setVisibility(View.INVISIBLE);
-                    Toast.makeText(context, "Outlet Check-in response code: "+ response.code(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "Outlet Check-in response code: " + response.code(), Toast.LENGTH_SHORT).show();
 
                 } else {
                     progressBar.setVisibility(View.INVISIBLE);
@@ -289,13 +288,12 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
 
     public class OutletViewHolder extends RecyclerView.ViewHolder {
 
-       private OutletItemBinding mOutletItemBinding;
+        private OutletItemBinding mOutletItemBinding;
 
 
         public OutletViewHolder(View itemView) {
             super(itemView);
             mOutletItemBinding = DataBindingUtil.bind(itemView);
-
 
 
             itemView.setOnClickListener(v -> {
@@ -311,7 +309,6 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
             return mOutletItemBinding;
         }
     }
-
 
 
 }

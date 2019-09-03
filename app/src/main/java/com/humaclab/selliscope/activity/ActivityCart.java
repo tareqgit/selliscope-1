@@ -276,7 +276,7 @@ public class ActivityCart extends AppCompatActivity implements  SelectedProductR
                 product.is_free=selectedProduct.isFree()?1:0;
                 product.tpDiscount = Double.parseDouble(selectedProduct.getTpDiscount().replace(",",""));
                 product.productTotal = Double.parseDouble(selectedProduct.getTotalPrice().replace(",",""));
-                product.productSubTotal = Double.parseDouble(selectedProduct.getTppromotionGrandPrice().replace(",",""));
+                product.productSubTotal = Double.parseDouble(selectedProduct.getTppromotionGrandPrice().equals("") ? "0" : selectedProduct.getTppromotionGrandPrice().replace(",",""));
                 products.add(product);
             }
 

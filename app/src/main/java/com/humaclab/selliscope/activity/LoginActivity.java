@@ -193,7 +193,8 @@ public class LoginActivity extends AppCompatActivity {
                         editor.apply();
 
                         sendIMEIAndVersion();
-                        startActivity(new Intent(LoginActivity.this, HomeActivity.class));
+
+                        startActivity(new Intent(LoginActivity.this, LoadingActivity.class));
                         finish();
 
                     } catch (IOException e) {

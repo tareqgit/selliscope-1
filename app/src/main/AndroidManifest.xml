@@ -11,7 +11,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".performance.daily_activities.RegularPerformanceOutlets"></activity>
+        <activity android:name=".activity.LoadingActivity"></activity>
+        <activity android:name=".performance.daily_activities.RegularPerformanceOutlets" />
         <activity android:name=".performance.daily_activities.RegularPerformanceActivity" /> <!-- android:networkSecurityConfig="@xml/network_security_config" -->
         <activity android:name=".sales_return.SalesReturn_2019_Activity" />
         <activity
@@ -72,7 +73,6 @@
             android:configChanges="orientation|keyboardHidden"
             android:label="Select the connected device"
             android:theme="@android:style/Theme.Dialog" />
-
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
@@ -136,7 +136,6 @@
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />

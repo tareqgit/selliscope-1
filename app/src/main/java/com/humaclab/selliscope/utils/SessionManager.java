@@ -7,6 +7,7 @@ import android.content.SharedPreferences.Editor;
 import android.util.Log;
 
 import com.humaclab.selliscope.activity.HomeActivity;
+import com.humaclab.selliscope.activity.LoadingActivity;
 import com.humaclab.selliscope.activity.LoginActivity;
 import com.humaclab.selliscope.model.update_profile.UpdateProfileResponse;
 

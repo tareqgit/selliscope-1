@@ -34,6 +34,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+import androidx.annotation.UiThread;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -164,7 +165,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         //For Bangla
         LoadLocale();
         setContentView(R.layout.activity_home);
-
+        context=this;
         //
         SharedPreferences sharedPreferences = getSharedPreferences("Settings", MODE_PRIVATE);
         Constants.BASE_URL = sharedPreferences.getString("BASE_URL", Constants.BASE_URL);
@@ -193,7 +194,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         DatabaseHandler databaseHandler = new DatabaseHandler(this);
         loadLocalIntoBackground = new LoadLocalIntoBackground(this);
 
-        AsyncTask.execute(() -> loadLocalIntoBackground.loadAll(new LoadLocalIntoBackground.LoadCompleteListener() {
+  /*      AsyncTask.execute(() -> loadLocalIntoBackground.loadAll(new LoadLocalIntoBackground.LoadCompleteListener() {
             @Override
             public void onLoadComplete() {
                 Log.d("tareq_test", "Data load all complete");
@@ -204,7 +205,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 Log.d("tareq_test", "Data load all failed: " + msg);
             }
         }));
-
+*/
 
         apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(), sessionManager.getUserPassword(), false).create(SelliscopeApiEndpointInterface.class);
         pd = new ProgressDialog(this);
@@ -477,7 +478,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        final LocationSettingsStates states = LocationSettingsStates.fromIntent(intent);
+     //   final LocationSettingsStates states = LocationSettingsStates.fromIntent(intent);
         switch (requestCode) {
             case REQUEST_CHECK_SETTINGS:
                 switch (resultCode) {
@@ -600,7 +601,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         }
 
         fragmentTransaction.replace(content_fragment, fragment, fragTag.toString())
-                .commit();
+                .commitAllowingStateLoss();
 
     }
 
@@ -760,25 +761,29 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                     DatabaseHandler databaseHandler = new DatabaseHandler(HomeActivity.this);
 
 
-                    AsyncTask.execute(() -> {
+
                         databaseHandler.deleteAllData();
                         loadLocalIntoBackground.loadAll(new LoadLocalIntoBackground.LoadCompleteListener() {
                             @Override
                             public void onLoadComplete() {
                                 Log.d("tareq_test", "Data refresh complete");
+                                runOnUiThread(() -> Toast.makeText(getApplicationContext(), "Data Load Complete", Toast.LENGTH_SHORT).show());
+
                                 pd.dismiss();
                             }
 
                             @Override
                             public void onLoadFailed(String msg) {
+                                pd.dismiss();
                                 Log.d("tareq_test", "Data refresh failed" + msg);
+                                runOnUiThread(() -> Toast.makeText(getApplicationContext(), "failed: "+ msg +"\n Please Try Again", Toast.LENGTH_SHORT).show());
 
                             }
                         });
                     });
 
 
-                });
+
 
                 if (!alertDialogRefresh.isShowing()) alertDialogRefresh.show();
                 break;

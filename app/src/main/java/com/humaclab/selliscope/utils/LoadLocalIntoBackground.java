@@ -51,70 +51,70 @@ public class LoadLocalIntoBackground {
 
 
     public void loadAll(LoadCompleteListener loadCompleteListener) {
-     /*   if (!sessionManager.isAllDataLoaded()) {*/
-            this.loadProduct(new LoadCompleteListener() {
-                @Override
-                public void onLoadComplete() {
-                    loadOutlet(new LoadCompleteListener() {
-                        @Override
-                        public void onLoadComplete() {
-                            loadOutletType(new LoadCompleteListener() {
-                                @Override
-                                public void onLoadComplete() {
+        /*   if (!sessionManager.isAllDataLoaded()) {*/
+        this.loadProduct(new LoadCompleteListener() {
+            @Override
+            public void onLoadComplete() {
+                loadOutlet(new LoadCompleteListener() {
+                    @Override
+                    public void onLoadComplete() {
+                        loadOutletType(new LoadCompleteListener() {
+                            @Override
+                            public void onLoadComplete() {
 
-                                    loadDistrict(new LoadCompleteListener() {
-                                        @Override
-                                        public void onLoadComplete() {
-                                            loadThana(new LoadCompleteListener() {
-                                                @Override
-                                                public void onLoadComplete() {
+                                loadDistrict(new LoadCompleteListener() {
+                                    @Override
+                                    public void onLoadComplete() {
+                                        loadThana(new LoadCompleteListener() {
+                                            @Override
+                                            public void onLoadComplete() {
 
-                                                    if (loadCompleteListener != null)
-                                                        loadCompleteListener.onLoadComplete();
-                                                    //  this.loadReason();
-                                     /*               sessionManager.setAllDataLoaded();*/
-                                                }
+                                                if (loadCompleteListener != null)
+                                                    loadCompleteListener.onLoadComplete();
+                                                //  this.loadReason();
+                                                /*               sessionManager.setAllDataLoaded();*/
+                                            }
 
-                                                @Override
-                                                public void onLoadFailed(String msg) {
-                                                    if (loadCompleteListener != null)
-                                                        loadCompleteListener.onLoadFailed(msg);
-                                                }
-                                            });
-                                        }
+                                            @Override
+                                            public void onLoadFailed(String msg) {
+                                                if (loadCompleteListener != null)
+                                                    loadCompleteListener.onLoadFailed(msg);
+                                            }
+                                        });
+                                    }
 
-                                        @Override
-                                        public void onLoadFailed(String msg) {
-                                            if (loadCompleteListener != null)
-                                                loadCompleteListener.onLoadFailed(msg);
-                                        }
-                                    });
-                                }
+                                    @Override
+                                    public void onLoadFailed(String msg) {
+                                        if (loadCompleteListener != null)
+                                            loadCompleteListener.onLoadFailed(msg);
+                                    }
+                                });
+                            }
 
-                                @Override
-                                public void onLoadFailed(String msg) {
+                            @Override
+                            public void onLoadFailed(String msg) {
 
-                                    if (loadCompleteListener != null)
-                                        loadCompleteListener.onLoadFailed(msg);
-                                }
-                            });
-                        }
+                                if (loadCompleteListener != null)
+                                    loadCompleteListener.onLoadFailed(msg);
+                            }
+                        });
+                    }
 
-                        @Override
-                        public void onLoadFailed(String msg) {
-                            if (loadCompleteListener != null) loadCompleteListener.onLoadFailed(msg);
-                        }
-                    });
-                }
+                    @Override
+                    public void onLoadFailed(String msg) {
+                        if (loadCompleteListener != null) loadCompleteListener.onLoadFailed(msg);
+                    }
+                });
+            }
 
-                @Override
-                public void onLoadFailed(String msg) {
-                    if (loadCompleteListener != null) loadCompleteListener.onLoadFailed(msg);
-                }
-            });
+            @Override
+            public void onLoadFailed(String msg) {
+                if (loadCompleteListener != null) loadCompleteListener.onLoadFailed(msg);
+            }
+        });
 
 
-      /*  }*/
+        /*  }*/
     }
 
     public void updateAllData(LoadCompleteListener loadCompleteListener) {
@@ -249,7 +249,8 @@ public class LoadLocalIntoBackground {
                 @Override
                 public void onFailure(Call<VariantProductResponse> call, Throwable t) {
                     t.printStackTrace();
-                    if (loadCompleteListener != null) loadCompleteListener.onLoadFailed("load product: "+t.getMessage());
+                    if (loadCompleteListener != null)
+                        loadCompleteListener.onLoadFailed("load product: " + t.getMessage());
                 }
             });
         }
@@ -279,7 +280,8 @@ public class LoadLocalIntoBackground {
             @Override
             public void onFailure(Call<PriceVariationResponse> call, Throwable t) {
                 t.getMessage();
-                if (loadCompleteListener != null) loadCompleteListener.onLoadFailed("load price variation: "+t.getMessage());
+                if (loadCompleteListener != null)
+                    loadCompleteListener.onLoadFailed("load price variation: " + t.getMessage());
 
             }
         });
@@ -309,7 +311,8 @@ public class LoadLocalIntoBackground {
             @Override
             public void onFailure(Call<TradePromotion> call, Throwable t) {
                 t.getMessage();
-                if (loadCompleteListener != null) loadCompleteListener.onLoadFailed("load trade promo: "+t.getMessage());
+                if (loadCompleteListener != null)
+                    loadCompleteListener.onLoadFailed("load trade promo: " + t.getMessage());
 
             }
         });
@@ -336,7 +339,8 @@ public class LoadLocalIntoBackground {
             @Override
             public void onFailure(Call<CategoryResponse> call, Throwable t) {
                 t.printStackTrace();
-                if (loadCompleteListener != null) loadCompleteListener.onLoadFailed("load category: "+t.getMessage());
+                if (loadCompleteListener != null)
+                    loadCompleteListener.onLoadFailed("load category: " + t.getMessage());
             }
         });
 
@@ -364,7 +368,8 @@ public class LoadLocalIntoBackground {
             public void onFailure(Call<BrandResponse> call, Throwable t) {
 
                 Log.e("tareq_test", "Brand: " + t.getMessage());
-                if (loadCompleteListener != null) loadCompleteListener.onLoadFailed("load brand: "+t.getMessage());
+                if (loadCompleteListener != null)
+                    loadCompleteListener.onLoadFailed("load brand: " + t.getMessage());
             }
         });
     }
@@ -377,7 +382,11 @@ public class LoadLocalIntoBackground {
                 Gson gson = new Gson();
                 if (response.code() == 200) {
                     try {
-                        Outlets getOutletListSuccessful = gson.fromJson(response.body().string(), Outlets.class);
+                        String string = null;
+                        if (response.body() != null) {
+                            string = response.body().string();
+                        }
+                                            Outlets getOutletListSuccessful = gson.fromJson(string, Outlets.class);
                        /* if (!fullUpdate) {
                             if (getOutletListSuccessful.outletsResult.outlets.size() != databaseHandler.getSizeOfOutlet()) {
                                 databaseHandler.removeOutlet();
@@ -389,7 +398,7 @@ public class LoadLocalIntoBackground {
                         if (callback != null) callback.onLoadComplete();
                         //}
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        Log.e("tareq_test", "LoadLocalIntoBackground #403: onResponse:  " + e.getMessage());
 
                     }
                 }
@@ -398,7 +407,7 @@ public class LoadLocalIntoBackground {
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 t.printStackTrace();
-                if (callback != null) callback.onLoadFailed("load outlet: "+t.getMessage());
+                if (callback != null) callback.onLoadFailed("load outlet: " + t.getMessage());
             }
         });
     }
@@ -430,7 +439,8 @@ public class LoadLocalIntoBackground {
             @Override
             public void onFailure(Call<DistrictResponse> call, Throwable t) {
                 Log.d("Response", t.toString());
-                if (loadCompleteListener != null) loadCompleteListener.onLoadFailed("load district: "+t.getMessage());
+                if (loadCompleteListener != null)
+                    loadCompleteListener.onLoadFailed("load district: " + t.getMessage());
             }
         });
     }
@@ -456,7 +466,8 @@ public class LoadLocalIntoBackground {
             @Override
             public void onFailure(Call<ThanaResponse> call, Throwable t) {
                 Log.d("Response", t.toString());
-                if (loadCompleListener != null) loadCompleListener.onLoadFailed("load thana: "+t.getMessage());
+                if (loadCompleListener != null)
+                    loadCompleListener.onLoadFailed("load thana: " + t.getMessage());
 
             }
         });
@@ -485,7 +496,8 @@ public class LoadLocalIntoBackground {
             @Override
             public void onFailure(Call<OutletTypeResponse> call, Throwable t) {
                 Log.d("Response", t.toString());
-                if (loadCompleListener != null) loadCompleListener.onLoadFailed("load outlet type: "+ t.getMessage());
+                if (loadCompleListener != null)
+                    loadCompleListener.onLoadFailed("load outlet type: " + t.getMessage());
             }
         });
     }

@@ -12,6 +12,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.Settings;
+
 import androidx.annotation.ColorInt;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
@@ -21,6 +22,7 @@ import androidx.core.content.res.ResourcesCompat;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -56,6 +58,7 @@ import com.humaclab.selliscope.utils.SessionManager;
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -92,12 +95,12 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
 
-
-
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
+        if (mapFragment != null) {
+            mapFragment.getMapAsync(this);
+        }
     }
 
     @Override
@@ -106,19 +109,16 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
         if (checkPermission(RouteActivity.this))
             mMap.getUiSettings().setMapToolbarEnabled(true);
         if (isGPSEnabled()) {
-           getLocation();
+            getLocation();
 
 
         } else {
             final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
             alertDialog.setTitle("Enable GPS");
             alertDialog.setMessage("Enable GPS to get current location.");
-            alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, "OK", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
-                    alertDialog.dismiss();
-                }
+            alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, "OK", (dialog, which) -> {
+                startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                alertDialog.dismiss();
             });
             alertDialog.show();
         }
@@ -157,33 +157,36 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
                     });*/
 
             Task<Location> locationResult = mFusedLocationProviderClient.getLastLocation();
-            locationResult.addOnCompleteListener(this, new OnCompleteListener<Location>() {
-                @Override
-                public void onComplete(@NonNull Task<Location> task) {
-                    if (task.isSuccessful()) {
-                        // Set the map's camera position to the current location of the device.
-                        mLastKnownLocation = task.getResult();
-                        LatLng currentLocation = new LatLng(mLastKnownLocation.getLatitude(), mLastKnownLocation.getLongitude());
+            locationResult.addOnCompleteListener(this, task -> {
+                if (task.isSuccessful()) {
+                    // Set the map's camera position to the current location of the device.
+                    mLastKnownLocation = task.getResult();
+                    LatLng currentLocation;
+                    if (mLastKnownLocation != null) {
+                        currentLocation = new LatLng(mLastKnownLocation.getLatitude(), mLastKnownLocation.getLongitude());
                         mMap.addMarker(new MarkerOptions().position(currentLocation)
                                 .title("You are here!")
                                 .icon(BitmapDescriptorFactory.fromResource(
                                         R.drawable.ic_user_current_location)));
-                      /*  mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
-                                new LatLng(mLastKnownLocation.getLatitude(),
-                                        mLastKnownLocation.getLongitude()), DEFAULT_ZOOM));*/
+
+
+                  /*  mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
+                            new LatLng(mLastKnownLocation.getLatitude(),
+                                    mLastKnownLocation.getLongitude()), DEFAULT_ZOOM));*/
                         CameraPosition cameraPosition = new CameraPosition(
                                 currentLocation, 15, 70, 0);
+
                         CameraUpdate yourLocation = CameraUpdateFactory
                                 .newCameraPosition(cameraPosition);
                         mMap.animateCamera(yourLocation);
                         getVisits();
-                    } else {
-                        Log.d("tareq_test", "Current location is null. Using defaults.");
-                        Log.e("tareq_test", "Exception: %s", task.getException());
-                        mMap.moveCamera(CameraUpdateFactory
-                                .newLatLngZoom(mDefaultLocation, DEFAULT_ZOOM));
-                        mMap.getUiSettings().setMyLocationButtonEnabled(false);
                     }
+                } else {
+                    Log.d("tareq_test", "Current location is null. Using defaults.");
+                    Log.e("tareq_test", "Exception: %s", task.getException());
+                    mMap.moveCamera(CameraUpdateFactory
+                            .newLatLngZoom(mDefaultLocation, DEFAULT_ZOOM));
+                    mMap.getUiSettings().setMyLocationButtonEnabled(false);
                 }
             });
         } else {
@@ -199,20 +202,24 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
         Call<ResponseBody> call = apiService.getOutlets();
         call.enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
                 Gson gson = new Gson();
                 if (response.code() == 200) {
                     try {
-                        Outlets getOutletListSuccessful = gson.fromJson(response.body().string(), Outlets.class);
-                        List<Outlets.Outlet> outlets = getOutletListSuccessful
-                                .outletsResult.outlets;
-                        for (int i = 0; i < outlets.size(); i++) {
-                            mMap.addMarker(new MarkerOptions().position(
-                                    new LatLng(outlets.get(i).outletLatitude,
-                                            outlets.get(i).outletLongitude))
-                                    .icon(vectorToBitmap(
-                                            R.drawable.ic_dokan, 0))
-                                    .title(outlets.get(i).outletName));
+                        Outlets getOutletListSuccessful ;
+                        if (response.body() != null) {
+                            getOutletListSuccessful = gson.fromJson(response.body().string(), Outlets.class);
+
+                            List<Outlets.Outlet> outlets = getOutletListSuccessful
+                                    .outletsResult.outlets;
+                            for (int i = 0; i < outlets.size(); i++) {
+                                mMap.addMarker(new MarkerOptions().position(
+                                        new LatLng(outlets.get(i).outletLatitude,
+                                                outlets.get(i).outletLongitude))
+                                        .icon(vectorToBitmap(
+                                                R.drawable.ic_dokan, 0))
+                                        .title(outlets.get(i).outletName));
+                            }
                         }
 
                     } catch (IOException e) {
@@ -228,7 +235,7 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
                 Log.d("Response", t.toString());
             }
         });
@@ -237,7 +244,7 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
 
     private BitmapDescriptor vectorToBitmap(@DrawableRes int id, @ColorInt int color) {
         Drawable vectorDrawable = ResourcesCompat.getDrawable(getResources(), id, null);
-        Bitmap bitmap = Bitmap.createBitmap(vectorDrawable.getIntrinsicWidth(),
+        Bitmap bitmap = Bitmap.createBitmap(Objects.requireNonNull(vectorDrawable).getIntrinsicWidth(),
                 vectorDrawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
         vectorDrawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());

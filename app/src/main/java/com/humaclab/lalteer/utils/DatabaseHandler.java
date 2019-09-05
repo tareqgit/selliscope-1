@@ -505,11 +505,22 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.close(); // Closing database connection
     }*/
 
-    public void removeProductCategoryBrand() {
+    public void removeProduct() {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_PRODUCT, KEY_PRODUCT_ID + " > ?", new String[]{String.valueOf(-1)});
-        db.delete(TABLE_CATEGORY, KEY_CATEGORY_ID + " > ?", new String[]{String.valueOf(-1)});
+        db.close();
+
+    }
+
+    public void removeAllBrand() {
+        SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_BRAND, KEY_BRAND_ID + " > ?", new String[]{String.valueOf(-1)});
+        db.close();
+    }
+
+    public void removeAllCategory() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_CATEGORY, KEY_CATEGORY_ID + " > ?", new String[]{String.valueOf(-1)});
         db.close();
     }
 
@@ -795,31 +806,45 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         try {
+            List<Outlets.Outlet> outlets = getAllOutlet().outlets;
             for (Outlets.Outlet outlet : outletList) {
-                values.put(KEY_OUTLET_ID, outlet.outletId);
-                values.put(KEY_OUTLET_NAME, outlet.outletName);
-                values.put(KEY_OUTLET_TYPE, outlet.outletType);
-                values.put(KEY_OUTLET_OWNER_NAME, outlet.ownerName);
-                values.put(KEY_OUTLET_ADDRESS, outlet.outletAddress);
-                values.put(KEY_OUTLET_DISTRICT, outlet.district);
-                values.put(KEY_OUTLET_THANA, outlet.thana);
-                values.put(KEY_OUTLET_PHONE, outlet.phone);
-                values.put(KEY_OUTLET_IMAGE, outlet.outletImgUrl);
-                values.put(KEY_OUTLET_LONGITUDE, outlet.outletLongitude);
-                values.put(KEY_OUTLET_LATITUDE, outlet.outletLatitude);
-                values.put(KEY_OUTLET_DUE, outlet.outletDue);
-                values.put(KEY_OUTLET_ROUTEPLAN, "0");
-                values.put(KEY_OUTLET_CREDITLIMIT, outlet.credit_limit);
-                values.put(KEY_OUTLET_CODE, outlet.outlet_code);
-                try {
-                    db.insert(TABLE_OUTLET, null, values);
-                } catch (Exception e) {
-                    e.printStackTrace();
+                if (!outlets.contains(outlet)) {
+                    values.put(KEY_OUTLET_ID, outlet.outletId);
+                    values.put(KEY_OUTLET_NAME, outlet.outletName);
+                    values.put(KEY_OUTLET_TYPE, outlet.outletType);
+                    values.put(KEY_OUTLET_OWNER_NAME, outlet.ownerName);
+                    values.put(KEY_OUTLET_ADDRESS, outlet.outletAddress);
+                    values.put(KEY_OUTLET_DISTRICT, outlet.district);
+                    values.put(KEY_OUTLET_THANA, outlet.thana);
+                    values.put(KEY_OUTLET_PHONE, outlet.phone);
+                    values.put(KEY_OUTLET_IMAGE, outlet.outletImgUrl);
+                    values.put(KEY_OUTLET_LONGITUDE, outlet.outletLongitude);
+                    values.put(KEY_OUTLET_LATITUDE, outlet.outletLatitude);
+                    values.put(KEY_OUTLET_DUE, outlet.outletDue);
+                    values.put(KEY_OUTLET_ROUTEPLAN, "0");
+                    values.put(KEY_OUTLET_CREDITLIMIT, outlet.credit_limit);
+                    values.put(KEY_OUTLET_CODE, outlet.outlet_code);
+                    try {
+                        db.close();
+                        removeOutletWithId(outlet.outletId);
+                        if (!db.isOpen()) db = this.getWritableDatabase();
+                        db.insert(TABLE_OUTLET, null, values);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
+            Log.e("tareq_test", "can't update outlet " + e.getMessage());
         }
+        db.close();
+    }
+
+    //For outlet
+    public void removeOutletWithId(int outletId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_OUTLET, KEY_OUTLET_ID + " = ?", new String[]{String.valueOf(outletId)});
         db.close();
     }
 
@@ -1013,7 +1038,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         List<Outlets.Outlet> outletList = new ArrayList<>();
         // Select All Query
         //String selectQuery = "SELECT * FROM " + TABLE_OUTLET + " WHERE " + KEY_OUTLET_NAME + " LIKE \"" + outletName + "%\" ORDER BY " + KEY_OUTLET_NAME + " ASC";
-        String selectQuery = "SELECT * FROM " + TABLE_OUTLET + " WHERE " + KEY_OUTLET_NAME + " LIKE \"" + outletName + "%\" OR "+ KEY_OUTLET_CODE+" LIKE \""+ outletName + "%\" ORDER BY " + KEY_OUTLET_NAME + " ASC";
+        String selectQuery = "SELECT * FROM " + TABLE_OUTLET + " WHERE " + KEY_OUTLET_NAME + " LIKE  '%" + outletName + "%' OR "+ KEY_OUTLET_CODE+ " LIKE  '%" + outletName + "%' ORDER BY " + KEY_OUTLET_NAME + " ASC";
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
 

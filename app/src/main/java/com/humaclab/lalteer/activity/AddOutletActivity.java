@@ -49,6 +49,11 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import io.reactivex.SingleObserver;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -82,6 +87,8 @@ public class AddOutletActivity extends AppCompatActivity {
 
     private ProgressDialog pd;
     private int MAP_LOCATION = 512;
+
+    private CompositeDisposable mCompositeDisposable = new CompositeDisposable();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -262,7 +269,7 @@ public class AddOutletActivity extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        LoadLocalIntoBackground loadLocalIntoBackground = new LoadLocalIntoBackground(AddOutletActivity.this);
+        LoadLocalIntoBackground loadLocalIntoBackground = new LoadLocalIntoBackground(AddOutletActivity.this, mCompositeDisposable);
 
 
         ((SwipeRefreshLayout) findViewById(R.id.swipeRefresher)).setOnRefreshListener(() -> {
@@ -396,46 +403,51 @@ public class AddOutletActivity extends AppCompatActivity {
         CreateOutlet createOutlet = new CreateOutlet(outletTypeId, outletName, ownerName, address, thanaId, phone, latitude, longitude, outletImage,creditLimit);
         Log.d("response", new Gson().toJson(createOutlet));
 
-        Call<ResponseBody> call = apiService.createOutlet(new CreateOutlet(outletTypeId, outletName, ownerName, address, thanaId, phone, latitude, longitude, outletImage,creditLimit));
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                Gson gson = new Gson();
-                System.out.println("Response code: " + response.code());
-                pd.dismiss();
-                if (response.code() == 200) {
-                    Toast.makeText(AddOutletActivity.this, getString(R.string.dealer_created_msg), Toast.LENGTH_SHORT).show();
-                    LoadLocalIntoBackground loadLocalIntoBackground = new LoadLocalIntoBackground(AddOutletActivity.this);
-                    loadLocalIntoBackground.loadOutlet(true);
-                    try {
-                        CreateOutlet createOutletResult = null;
-                        if (response.body() != null) {
-                            createOutletResult = gson.fromJson(response.body().string(), CreateOutlet.class);
-                        }
-                        if (createOutletResult != null) {
-                            Toast.makeText(AddOutletActivity.this, createOutletResult.result, Toast.LENGTH_SHORT).show();
-                        }
-                        submit.setEnabled(false);
-                        Intent intent = new Intent(getApplicationContext(), OutletActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(intent);
-                    } catch (IOException e) {
-                        e.printStackTrace();
+        apiService.createOutlet(createOutlet).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new SingleObserver<Response<ResponseBody>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        if(mCompositeDisposable!=null) mCompositeDisposable.add(d);
                     }
-                } else if (response.code() == 401) {
-                    Toast.makeText(AddOutletActivity.this, "Invalid Response from server.", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(AddOutletActivity.this, "Server Error! Try Again Later!", Toast.LENGTH_SHORT).show();
-                }
-            }
 
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                //Toast.makeText(LoginActivity.this, t.toString(), Toast.LENGTH_SHORT).show();
-                Log.d("Response", t.toString());
+                    @Override
+                    public void onSuccess(Response<ResponseBody> response) {
+                        Gson gson = new Gson();
+                        System.out.println("Response code: " + response.code());
+                        pd.dismiss();
+                        if (response.code() == 200) {
+                            Toast.makeText(AddOutletActivity.this, getString(R.string.dealer_created_msg), Toast.LENGTH_SHORT).show();
+                            LoadLocalIntoBackground loadLocalIntoBackground = new LoadLocalIntoBackground(AddOutletActivity.this, mCompositeDisposable);
+                            loadLocalIntoBackground.loadOutlet(null);
+                            try {
+                                CreateOutlet createOutletResult = null;
+                                if (response.body() != null) {
+                                    createOutletResult = gson.fromJson(response.body().string(), CreateOutlet.class);
+                                }
+                                if (createOutletResult != null) {
+                                    Toast.makeText(AddOutletActivity.this, createOutletResult.result, Toast.LENGTH_SHORT).show();
+                                }
+                                submit.setEnabled(false);
+                                Intent intent = new Intent(getApplicationContext(), OutletActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                startActivity(intent);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        } else if (response.code() == 401) {
+                            Toast.makeText(AddOutletActivity.this, "Invalid Response from server.", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(AddOutletActivity.this, "Server Error! Try Again Later!", Toast.LENGTH_SHORT).show();
+                        }
+                    }
 
-            }
-        });
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.d("Response", e.toString());
+
+                    }
+                });
+
     }
 
     void getDistricts() {
@@ -499,6 +511,8 @@ public class AddOutletActivity extends AppCompatActivity {
     public void onDestroy() {
         googleApiClient.disconnect();
         super.onDestroy();
+        if (mCompositeDisposable != null && !mCompositeDisposable.isDisposed())
+            mCompositeDisposable.dispose();
     }
     @Override
     public void onBackPressed() {

@@ -332,7 +332,7 @@ public class LocationMonitoringService extends Service implements
                 if (response.code() == 200) {
                     try {
                         UserLocation.Successful userLocationSuccess = gson.fromJson(response.body().string(), UserLocation.Successful.class);
-                        Timber.d("Result:" + userLocationSuccess.result);
+
                      //   if (fromDB)
                         dbHandler.deleteUserVisit();
                         Log.d("tareq_test", "Data send and deleted from db");

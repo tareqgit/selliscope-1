@@ -36,10 +36,14 @@ import com.humaclab.lalteer.model.UserLocation;
 import com.humaclab.lalteer.model.performance.orders_model.PerformanceOrderResponse;
 import com.humaclab.lalteer.model.performance.paymentsModel.PaymentsResponse;
 
+import io.reactivex.Single;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
@@ -53,85 +57,85 @@ public interface SelliscopeApiEndpointInterface {
     //GET methods
 
     @GET("dealers")
-    Call<ResponseBody> getOutlets();
+    Single<Response<ResponseBody>> getOutlets();
 
     @GET("category")
-    Call<CategoryResponse> getCategories();
+    Single<Response<CategoryResponse>> getCategories();
 
     @GET("brands")
-    Call<BrandResponse> getBrands();
+    Single<Response<BrandResponse>> getBrands();
 
     @GET("products")
-    Call<ProductResponse> getProducts();
+    Single<Response<ProductResponse>> getProducts();
 
     /*@GET("variant-product")
     Call<VariantProductResponse> getProducts();*/
 
     @GET("order")
-    Call<OrderResponse> getOrders();
+    Single<Response<OrderResponse>> getOrders();
 
     @GET("outlet-payment-order/{outlet_id}")
-    Call<Payment> getPayment(@Path("outlet_id") int outletId);
+    Single<Response<Payment>> getPayment(@Path("outlet_id") int outletId);
 
     @GET("payment")
-    Call<Payment> getPayment();
+    Single<Response<Payment>> getPayment();
 
     @GET("order/delivery")
-    Call<DeliveryResponse> getDelivery();
+    Single<Response<DeliveryResponse>> getDelivery();
 
     @GET("delivery")
-    Call<DeliveryResponse> getSalesReturn(@Query("outlet_id") int outletID);
+    Single<Response<DeliveryResponse>> getSalesReturn(@Query("outlet_id") int outletID);
 
     @GET("godown")
     Call<GodownRespons> getGodown();
 
      @GET("district")
-    Call<DistrictResponse> getDistricts();
+    Single<Response<DistrictResponse>> getDistricts();
 
      @GET("thana")
-    Call<ThanaResponse> getThanas();
+    Single<Response<ThanaResponse>> getThanas();
 
     @GET("dealers-type")
-    Call<OutletTypeResponse> getOutletTypes();
+    Single<Response<OutletTypeResponse>> getOutletTypes();
 
-    @GET("visit")
-    Call<ResponseBody> getVisits();
+  /*  @GET("visit")
+    Call<ResponseBody> getVisits();*/
 
     @GET("target")
-    Call<ResponseBody> getTargets();
+    Single<Response<ResponseBody>> getTargets();
 
     @GET("diameter")
-    Call<DiameterResponse> getDiameter();
+    Single<Response<DiameterResponse>> getDiameter();
 
     @GET("dealers/{outlet_id}/purchase-history")
-    Call<PurchaseHistoryResponse> getPurchaseHistory(@Path("outlet_id") int outletID);
+    Single<Response<PurchaseHistoryResponse>> getPurchaseHistory(@Path("outlet_id") int outletID);
 
     @GET("target/user")
-    Call<OutletTarget> getTarget();
+    Single<Response<OutletTarget>> getTarget();
 
      @GET("route-plan")
-    Call<RouteResponse> getRoutes();
+    Single<Response<RouteResponse>> getRoutes();
 
      @GET("route-plan/{route_id}")
-    Call<RouteDetailsResponse> getRouteDetails(@Path("route_id") int routeId);
+    Single<Response<RouteDetailsResponse>> getRouteDetails(@Path("route_id") int routeId);
     //POST methods
 
     @GET("login")
-    Call<ResponseBody> getUser();
+    Single<Response<ResponseBody>> getUser();
 
     @GET("app-version")
-    Call<AppVersion> getAppsversion();
+    Single<Response<AppVersion>> getAppsversion();
 
     //Outlet Wise Target
     @GET("target/dealer/{outlet_id}")
-    Call<OutletTarget> getPutletTarget(@Path("outlet_id") int outletId);
+    Single<Response<OutletTarget>> getOutletTarget(@Path("outlet_id") int outletId);
 
     @GET("banner")
-    Call<PromotionalAds> getPromotionalAds();
+    Single<Response<PromotionalAds>> getPromotionalAds();
 
 
     @POST("dealers/create/")
-    Call<ResponseBody> createOutlet(@Body CreateOutlet createOutlet);
+    Single<Response<ResponseBody>> createOutlet(@Body CreateOutlet createOutlet);
 
      @POST("visit/store/")
     Call<ResponseBody> sendUserLocation(@Body UserLocation userLocation);
@@ -139,13 +143,13 @@ public interface SelliscopeApiEndpointInterface {
     @POST("order/store/")
     Call<AddNewOrder.OrderResponse> addOrder(@Body AddNewOrder order);
     /*@POST("order/store")
-    Call<AddNewOrder.OrderResponse> addOrder(@Body AddNewOrder order);*/
+    Single<Response<AddNewOrder.OrderResponse> addOrder(@Body AddNewOrder order);*/
 
     @POST("payment/collect/")
-    Call<PaymentResponse.PaymentSucessfull> payNow(@Body PaymentResponse payment);
+   Call<PaymentResponse.PaymentSucessfull> payNow(@Body PaymentResponse payment);
 
     @POST("order/delivery/store/")
-    Call<DeliverProductResponse> deliverProduct(@Body DeliverProductResponse deliverProduct);
+   Call<DeliverProductResponse> deliverProduct(@Body DeliverProductResponse deliverProduct);
 
     @POST("return-product")
     Call<SellsReturnResponse> returnProduct(@Body SellsReturnResponse.SellsReturn returnProduct);
@@ -154,10 +158,10 @@ public interface SelliscopeApiEndpointInterface {
     Call<InspectionResponse> inspectOutlet(@Body InspectionResponse.Inspection inspection);
 
     @POST("version-imei/")
-    Call<ResponseBody> sendIMEIAndVersion(@Body IMEIandVerison imeIandVerison);
+    Single<Response<ResponseBody>> sendIMEIAndVersion(@Body IMEIandVerison imeIandVerison);
 
     @POST("change-password")
-    Call<ChangePasswordResponse> changePassword(@Body ChangePassword changePassword);
+   Call<ChangePasswordResponse> changePassword(@Body ChangePassword changePassword);
 
     @PUT("dealers/{id}/edit/")
     Call<ResponseBody> updateOutlet(@Path("id") int outletID, @Body CreateOutlet createOutlet);
@@ -172,7 +176,7 @@ public interface SelliscopeApiEndpointInterface {
     Call<PaymentsResponse> performancePayments(@Query("date_from") String date_from, @Query("date_to") String date_to);
 
     @GET("getAdvance/{outlet_id}")
-    Call<AdvancedPaymentResponse> getAdvancePayments(@Path("outlet_id") int outletId);
+  Single<Response<AdvancedPaymentResponse>> getAdvancePayments(@Path("outlet_id") int outletId);
 
     @POST("getAdvance/{outlet_id}")
     Call<AdvancePaymentPostResponse> postAdvancePayment(@Path("outlet_id") int outletId,@Body AdvancePaymentsSendItem updateProfile);

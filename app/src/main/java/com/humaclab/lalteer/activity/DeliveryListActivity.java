@@ -28,6 +28,11 @@ import com.humaclab.lalteer.utils.SessionManager;
 import java.util.List;
 import java.util.Map;
 
+import io.reactivex.SingleObserver;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -40,6 +45,7 @@ public class DeliveryListActivity extends AppCompatActivity {
     private Spinner sp_outlet_list;
     private DatabaseHandler databaseHandler;
     private ProgressDialog pd;
+    private CompositeDisposable mCompositeDisposable = new CompositeDisposable();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,40 +91,45 @@ public class DeliveryListActivity extends AppCompatActivity {
 
         apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(),
                 sessionManager.getUserPassword(), false).create(SelliscopeApiEndpointInterface.class);
-        Call<DeliveryResponse> call = apiService.getDelivery();
-        call.enqueue(new Callback<DeliveryResponse>() {
-            @Override
-            public void onResponse(Call<DeliveryResponse> call, Response<DeliveryResponse> response) {
-                pd.dismiss();
-                System.out.println("Response " + new Gson().toJson(response.body()));
-                if (response.code() == 200) {
-                    try {
-                        if (srl_delivery.isRefreshing())
-                            srl_delivery.setRefreshing(false);
+         apiService.getDelivery().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                 .subscribe(new SingleObserver<Response<DeliveryResponse>>() {
+                     @Override
+                     public void onSubscribe(Disposable d) {
+                         if(mCompositeDisposable!=null) mCompositeDisposable.add(d);
+                     }
 
-                        List<DeliveryResponse.DeliveryList> delivers = response.body().result.deliveryList;
-                        if (!delivers.isEmpty()) {
-                            rv_delivery_list.setAdapter(new DeliveryListRecyclerAdapter(getApplication(), delivers));
-                        } else {
-                            Toast.makeText(getApplicationContext(), "You don't have any deliveries yet.", Toast.LENGTH_LONG).show();
-                        }
-                        storeDeliveriesIntoLocal(delivers);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                } else if (response.code() == 401) {
-                    Toast.makeText(DeliveryListActivity.this, "Invalid Response from server.", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(DeliveryListActivity.this, "Server Error! Try Again Later!", Toast.LENGTH_SHORT).show();
-                }
-            }
+                     @Override
+                     public void onSuccess(Response<DeliveryResponse> response) {
+                         pd.dismiss();
+                         System.out.println("Response " + new Gson().toJson(response.body()));
+                         if (response.code() == 200) {
+                             try {
+                                 if (srl_delivery.isRefreshing())
+                                     srl_delivery.setRefreshing(false);
 
-            @Override
-            public void onFailure(Call<DeliveryResponse> call, Throwable t) {
-                pd.dismiss();
-                t.printStackTrace();
-            }
-        });
+                                 List<DeliveryResponse.DeliveryList> delivers = response.body().result.deliveryList;
+                                 if (!delivers.isEmpty()) {
+                                     rv_delivery_list.setAdapter(new DeliveryListRecyclerAdapter(getApplication(), delivers));
+                                 } else {
+                                     Toast.makeText(getApplicationContext(), "You don't have any deliveries yet.", Toast.LENGTH_LONG).show();
+                                 }
+                                 storeDeliveriesIntoLocal(delivers);
+                             } catch (Exception e) {
+                                 e.printStackTrace();
+                             }
+                         } else if (response.code() == 401) {
+                             Toast.makeText(DeliveryListActivity.this, "Invalid Response from server.", Toast.LENGTH_SHORT).show();
+                         } else {
+                             Toast.makeText(DeliveryListActivity.this, "Server Error! Try Again Later!", Toast.LENGTH_SHORT).show();
+                         }
+                     }
+
+                     @Override
+                     public void onError(Throwable e) {
+                         pd.dismiss();
+                     }
+                 });
+
     }
 
     private void storeDeliveriesIntoLocal(List<DeliveryResponse.DeliveryList> delivers) {
@@ -166,5 +177,12 @@ public class DeliveryListActivity extends AppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mCompositeDisposable != null && !mCompositeDisposable.isDisposed())
+            mCompositeDisposable.dispose();
     }
 }

@@ -56,6 +56,11 @@ import com.humaclab.lalteer.utils.SessionManager;
 import java.io.IOException;
 import java.util.List;
 
+import io.reactivex.SingleObserver;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -71,7 +76,7 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
     private Location mLastKnownLocation;
     private final LatLng mDefaultLocation = new LatLng(-33.8523341, 151.2106085);
     private static final int DEFAULT_ZOOM = 15;
-
+    CompositeDisposable mCompositeDisposable = new CompositeDisposable();
     public static boolean checkPermission(final Context context) {
         return ActivityCompat.checkSelfPermission(context,
                 Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
@@ -195,8 +200,53 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
         SelliscopeApiEndpointInterface apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(),
                 sessionManager.getUserPassword(), false)
                 .create(SelliscopeApiEndpointInterface.class);
-        Call<ResponseBody> call = apiService.getOutlets();
-        call.enqueue(new Callback<ResponseBody>() {
+
+
+      apiService.getOutlets()
+              .subscribeOn(Schedulers.io())
+              .observeOn(AndroidSchedulers.mainThread())
+              .subscribe(new SingleObserver<Response<ResponseBody>>() {
+                  @Override
+                  public void onSubscribe(Disposable d) {
+                      mCompositeDisposable.add(d);
+                  }
+
+                  @Override
+                  public void onSuccess(Response<ResponseBody> response) {
+                      Gson gson = new Gson();
+                      if (response.code() == 200) {
+                          try {
+                              Outlets getOutletListSuccessful = gson.fromJson(response.body().string(), Outlets.class);
+                              List<Outlets.Outlet> outlets = getOutletListSuccessful
+                                      .outletsResult.outlets;
+                              for (int i = 0; i < outlets.size(); i++) {
+                                  mMap.addMarker(new MarkerOptions().position(
+                                          new LatLng(outlets.get(i).outletLatitude,
+                                                  outlets.get(i).outletLongitude))
+                                          .icon(vectorToBitmap(
+                                                  R.drawable.ic_dokan, 0))
+                                          .title(outlets.get(i).outletName));
+                              }
+
+                          } catch (IOException e) {
+                              e.printStackTrace();
+                          }
+                      } else if (response.code() == 401) {
+                          Toast.makeText(RouteActivity.this,
+                                  "Invalid Response from server.", Toast.LENGTH_SHORT).show();
+                      } else {
+                          Toast.makeText(RouteActivity.this,
+                                  "Server Error! Try Again Later!", Toast.LENGTH_SHORT).show();
+                      }
+                  }
+
+                  @Override
+                  public void onError(Throwable e) {
+                      Log.d("Response", e.toString());
+                  }
+              });
+
+      /*  call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 Gson gson = new Gson();
@@ -231,7 +281,7 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
                 //Toast.makeText(LoginActivity.this, t.toString(), Toast.LENGTH_SHORT).show();
                 Log.d("Response", t.toString());
             }
-        });
+        });*/
 
     }
 
@@ -257,6 +307,8 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
     public void onDestroy() {
 
         super.onDestroy();
+        if (mCompositeDisposable != null && !mCompositeDisposable.isDisposed())
+            mCompositeDisposable.dispose();
     }
 
     @Override

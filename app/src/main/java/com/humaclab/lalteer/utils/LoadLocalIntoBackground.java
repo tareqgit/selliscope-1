@@ -21,6 +21,11 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import io.reactivex.SingleObserver;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -36,11 +41,9 @@ public class LoadLocalIntoBackground {
     private SessionManager sessionManager;
     private DatabaseHandler databaseHandler;
     private SelliscopeApiEndpointInterface apiService;
-    private OnOutletUpdateComplete mOnOutletUpdateComplete;
 
-    public void setOnOutletUpdateComplete(OnOutletUpdateComplete onOutletUpdateComplete) {
-        mOnOutletUpdateComplete = onOutletUpdateComplete;
-    }
+    private CompositeDisposable mCompositeDisposable;
+
 
     public LoadLocalIntoBackground(Context context) {
         this.context = context;
@@ -49,59 +52,206 @@ public class LoadLocalIntoBackground {
         this.apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(), sessionManager.getUserPassword(), false).create(SelliscopeApiEndpointInterface.class);
     }
 
-    public void loadAll() {
-        if (!sessionManager.isAllDataLoaded()) {
-            this.loadProduct();
-            this.loadOutlet(false);
-            this.loadOutletType(null);
-            this.loadDistrict(null);
-            this.loadThana(null);
-            sessionManager.setAllDataLoaded();
-        }
+    public LoadLocalIntoBackground(Context context, CompositeDisposable compositeDisposable) {
+        this.context = context;
+        this.sessionManager = new SessionManager(context);
+        this.databaseHandler = new DatabaseHandler(context);
+        this.apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(), sessionManager.getUserPassword(), false).create(SelliscopeApiEndpointInterface.class);
+        mCompositeDisposable = compositeDisposable;
+    }
+
+    public void loadAll(LoadCompleteListener loadCompleteListener) {
+
+        this.loadProduct(new LoadCompleteListener() {
+            @Override
+            public void onLoadComplete() {
+                loadCategory(new LoadCompleteListener() {
+                    @Override
+                    public void onLoadComplete() {
+                        loadBrand(new LoadCompleteListener() {
+                            @Override
+                            public void onLoadComplete() {
+                                loadOutlet(new LoadCompleteListener() {
+                                    @Override
+                                    public void onLoadComplete() {
+                                        loadOutletType(new LoadCompleteListener() {
+                                            @Override
+                                            public void onLoadComplete() {
+                                                loadDistrict(new LoadCompleteListener() {
+                                                    @Override
+                                                    public void onLoadComplete() {
+                                                        loadThana(new LoadCompleteListener() {
+                                                            @Override
+                                                            public void onLoadComplete() {
+                                                                if (loadCompleteListener != null)
+                                                                    loadCompleteListener.onLoadComplete();
+                                                            }
+
+                                                            @Override
+                                                            public void onLoadFailed(String reason) {
+                                                                if (loadCompleteListener != null)
+                                                                    loadCompleteListener.onLoadFailed(reason);
+                                                            }
+                                                        });
+                                                    }
+
+                                                    @Override
+                                                    public void onLoadFailed(String reason) {
+                                                        if (loadCompleteListener != null)
+                                                            loadCompleteListener.onLoadFailed(reason);
+                                                    }
+                                                });
+                                            }
+
+                                            @Override
+                                            public void onLoadFailed(String reason) {
+                                                if (loadCompleteListener != null)
+                                                    loadCompleteListener.onLoadFailed(reason);
+                                            }
+                                        });
+                                    }
+
+                                    @Override
+                                    public void onLoadFailed(String reason) {
+                                        if (loadCompleteListener != null)
+                                            loadCompleteListener.onLoadFailed(reason);
+                                    }
+                                });
+
+                            }
+
+                            @Override
+                            public void onLoadFailed(String reason) {
+                                if (loadCompleteListener != null)
+                                    loadCompleteListener.onLoadFailed(reason);
+                            }
+                        });
+
+                    }
+
+                    @Override
+                    public void onLoadFailed(String reason) {
+                        if (loadCompleteListener != null)
+                            loadCompleteListener.onLoadFailed(reason);
+                    }
+                });
+            }
+
+            @Override
+            public void onLoadFailed(String reason) {
+                if (loadCompleteListener != null)
+                    loadCompleteListener.onLoadFailed(reason);
+            }
+        });
+
+
     }
 
     public void updateAllData() {
-        this.loadProduct();
-        this.loadOutlet(true);
+        this.loadProduct(null);
+        this.loadCategory(null);
+        this.loadBrand(null);
+        this.loadOutlet( null);
         this.loadOutletType(null);
         this.loadDistrict(null);
         this.loadThana(null);
     }
 
-    public void loadProduct() {
-        if (sessionManager.isLoggedIn()) {
-            Call<ProductResponse> call = apiService.getProducts();
-            call.enqueue(new Callback<ProductResponse>() {
-                @Override
-                public void onResponse(Call<ProductResponse> call, Response<ProductResponse> response) {
-                    if (response.code() == 200) {
-                        try {
-                            List<Product> products = null;
-                            if (response.body() != null) {
-                                products = response.body().getResult().getProducts();
-                            }
-                            //for removing previous data
-                            databaseHandler.removeProductCategoryBrand();
-                            databaseHandler.addProduct(products);
-                            loadCategory(null);
-                            loadBrand(null);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
+    public void loadProduct(@Nullable LoadCompleteListener loadCompleteListener) {
+    /*    if (sessionManager.isLoggedIn()) {*/
 
-                @Override
-                public void onFailure(Call<ProductResponse> call, Throwable t) {
-                    t.printStackTrace();
-                }
-            });
-        }
+            apiService.getProducts()
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new SingleObserver<Response<ProductResponse>>() {
+                        @Override
+                        public void onSubscribe(Disposable d) {
+                            if (mCompositeDisposable != null) mCompositeDisposable.add(d);
+                        }
+
+                        @Override
+                        public void onSuccess(Response<ProductResponse> response) {
+                            if (response.code() == 200) {
+                                try {
+                                    List<Product> products = null;
+                                    if (response.body() != null) {
+                                        products = response.body().getResult().getProducts();
+                                    }
+                                    //for removing previous data
+                                    databaseHandler.removeProduct();
+                                    if (products != null) {
+                                        databaseHandler.addProduct(products);
+                                    }
+                                    if (loadCompleteListener != null)
+                                        loadCompleteListener.onLoadComplete();
+
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+
+                                    if (loadCompleteListener != null)
+                                        loadCompleteListener.onLoadFailed("Load Product Error: "+e.getMessage());
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            Log.d("tareq_test", "LoadLocalIntoBackground #122: onError:  " + e.getMessage());
+                            if (loadCompleteListener != null)
+                                loadCompleteListener.onLoadFailed("Load Product Error: "+e.getMessage());
+                        }
+                    });
+
+     /*   }*/
     }
 
     public void loadCategory(@Nullable LoadCompleteListener loadCompleteListener) {
-        Call<CategoryResponse> call = apiService.getCategories();
-        call.enqueue(new Callback<CategoryResponse>() {
+        apiService.getCategories()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new SingleObserver<Response<CategoryResponse>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        if (mCompositeDisposable != null) mCompositeDisposable.add(d);
+                    }
+
+                    @Override
+                    public void onSuccess(Response<CategoryResponse> response) {
+                        if (response.code() == 200) {
+
+                            try {
+                                List<CategoryResponse.CategoryResult> categories = null;
+                                if (response.body() != null) {
+                                    categories = response.body().result.categoryResults;
+                                }
+                                if (categories != null) {
+
+                                    //for removing previous data
+                                    databaseHandler.removeAllCategory();
+
+                                    for (CategoryResponse.CategoryResult result : categories) {
+                                        databaseHandler.addCategory(result.id, result.name);
+                                    }
+                                    if (loadCompleteListener != null)
+                                        loadCompleteListener.onLoadComplete();
+                                }
+                            } catch (Exception e) {
+                                Log.d("tareq_test", "Categories error: " + e.getMessage());
+                                e.printStackTrace();
+                                loadCompleteListener.onLoadFailed("load category: " + e.getMessage());
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.d("tareq_test", "Categories error: " + e.getMessage());
+                        if (loadCompleteListener != null)
+                            loadCompleteListener.onLoadFailed("load category: " + e.getMessage());
+
+                    }
+                });
+      /*  call.enqueue(new Callback<CategoryResponse>() {
             @Override
             public void onResponse(Call<CategoryResponse> call, Response<CategoryResponse> response) {
 
@@ -131,44 +281,108 @@ public class LoadLocalIntoBackground {
                 t.printStackTrace();
                 if (loadCompleteListener != null) loadCompleteListener.onLoadFailed("load category: "+t.getMessage());
             }
-        });
+        });*/
 
     }
 
     public void loadBrand(@Nullable LoadCompleteListener loadCompleteListener) {
-        Call<BrandResponse> call = apiService.getBrands();
-        call.enqueue(new Callback<BrandResponse>() {
-            @Override
-            public void onResponse(Call<BrandResponse> call, Response<BrandResponse> response) {
-                if (response.code() == 200) {
-                    try {
-                        List<BrandResponse.BrandResult> brands = null;
-                        if (response.body() != null) {
-                            brands = response.body().result.brandResults;
-                        }
-                        if (brands != null) {
-                            for (BrandResponse.BrandResult result : brands) {
-                                databaseHandler.addBrand(result.id, result.name);
-                            }
-                            if (loadCompleteListener != null) loadCompleteListener.onLoadComplete();
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
+        apiService.getBrands().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new SingleObserver<Response<BrandResponse>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        if (mCompositeDisposable != null) mCompositeDisposable.add(d);
                     }
-                }
-            }
 
-            @Override
-            public void onFailure(Call<BrandResponse> call, Throwable t) {
-                t.printStackTrace();
-                if (loadCompleteListener != null) loadCompleteListener.onLoadFailed("load brand: "+t.getMessage());
-            }
-        });
+                    @Override
+                    public void onSuccess(Response<BrandResponse> response) {
+                        if (response.code() == 200) {
+                            try {
+                                List<BrandResponse.BrandResult> brands = null;
+                                if (response.body() != null) {
+                                    brands = response.body().result.brandResults;
+                                }
+                                if (brands != null) {
+
+                                    //for removing previous data
+                                    databaseHandler.removeAllBrand();
+
+                                    for (BrandResponse.BrandResult result : brands) {
+                                        databaseHandler.addBrand(result.id, result.name);
+                                    }
+                                    if (loadCompleteListener != null)
+                                        loadCompleteListener.onLoadComplete();
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                if (loadCompleteListener != null) {
+                                    loadCompleteListener.onLoadFailed("load brand: " + e.getMessage());
+                                }
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        if (loadCompleteListener != null)
+                            loadCompleteListener.onLoadFailed("load brand: " + e.getMessage());
+
+                    }
+                });
+
     }
 
-    public void loadOutlet(final boolean fullUpdate) {
-        Call<ResponseBody> call = apiService.getOutlets();
-        call.enqueue(new Callback<ResponseBody>() {
+    public void loadOutlet( LoadCompleteListener loadCompleteListener) {
+        apiService.getOutlets().subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new SingleObserver<Response<ResponseBody>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        if (mCompositeDisposable != null) mCompositeDisposable.add(d);
+                    }
+
+                    @Override
+                    public void onSuccess(Response<ResponseBody> response) {
+                        Gson gson = new Gson();
+                        if (response.code() == 200) {
+                            try {
+                                Outlets getOutletListSuccessful = null;
+                                if (response.body() != null) {
+                                    getOutletListSuccessful = gson.fromJson(response.body().string(), Outlets.class);
+                                }
+                           /*     if (!fullUpdate) {
+                                    // if (getOutletListSuccessful.outletsResult.outlets.size() != databaseHandler.getSizeOfOutlet()) {
+                                    databaseHandler.removeOutlet();
+                                    if (getOutletListSuccessful != null) {
+                                        databaseHandler.addOutlet(getOutletListSuccessful.outletsResult.outlets);
+                                    }
+                                    if (mOnOutletUpdateComplete != null)
+                                        mOnOutletUpdateComplete.onUpdateComplete();
+                                    //  }
+                                } else {
+                                    databaseHandler.removeOutlet();*/
+
+                                if (getOutletListSuccessful != null) {
+                                    databaseHandler.addOutlet(getOutletListSuccessful.outletsResult.outlets);
+                                }
+
+
+                                if (loadCompleteListener != null)
+                                    loadCompleteListener.onLoadComplete();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                                if (loadCompleteListener != null)
+                                    loadCompleteListener.onLoadFailed("Load Outlets: " + e.getMessage());
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        if (loadCompleteListener != null)
+                            loadCompleteListener.onLoadFailed("Load Outlets: " + e.getMessage());
+                    }
+                });
+        /*call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 Gson gson = new Gson();
@@ -205,7 +419,7 @@ public class LoadLocalIntoBackground {
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 t.printStackTrace();
             }
-        });
+        });*/
     }
 
 
@@ -215,91 +429,115 @@ public class LoadLocalIntoBackground {
     }
 
     public void loadDistrict(LoadCompleteListener loadCompleteListener) {
-        Call<DistrictResponse> call = apiService.getDistricts();
-        call.enqueue(new Callback<DistrictResponse>() {
-            @Override
-            public void onResponse(Call<DistrictResponse> call, Response<DistrictResponse> response) {
-                Gson gson = new Gson();
+        apiService.getDistricts().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new SingleObserver<Response<DistrictResponse>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
 
-                if (response.code() == 200) {
-                    try {
-                        if (response.body() != null) {
-                            databaseHandler.setDistrict(response.body().getResult().getDistrict());
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                        if (mCompositeDisposable != null) mCompositeDisposable.add(d);
                     }
-                    if (loadCompleteListener != null) loadCompleteListener.onLoadComplete();
-                }
-            }
 
-            @Override
-            public void onFailure(Call<DistrictResponse> call, Throwable t) {
-                Log.d("Response", t.toString());
-                if (loadCompleteListener != null) loadCompleteListener.onLoadFailed("load district: "+t.getMessage());
-            }
-        });
+                    @Override
+                    public void onSuccess(Response<DistrictResponse> response) {
+                        Gson gson = new Gson();
+
+                        if (response.code() == 200) {
+                            try {
+                                if (response.body() != null) {
+                                    databaseHandler.setDistrict(response.body().getResult().getDistrict());
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            if (loadCompleteListener != null) loadCompleteListener.onLoadComplete();
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.d("Response", e.toString());
+                        if (loadCompleteListener != null)
+                            loadCompleteListener.onLoadFailed("load district: " + e.getMessage());
+
+                    }
+                });
+
     }
 
     public void loadThana(LoadCompleteListener loadCompleListener) {
-        Call<ThanaResponse> call = apiService.getThanas();
-        call.enqueue(new Callback<ThanaResponse>() {
-            @Override
-            public void onResponse(Call<ThanaResponse> call, Response<ThanaResponse> response) {
-                Gson gson = new Gson();
-
-                if (response.code() == 200) {
-                    try {
-                        if (response.body() != null) {
-                            databaseHandler.setThana(response.body().getResult().getThana());
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
+        apiService.getThanas().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new SingleObserver<Response<ThanaResponse>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        if (mCompositeDisposable != null) mCompositeDisposable.add(d);
                     }
 
-                    if (loadCompleListener != null) loadCompleListener.onLoadComplete();
-                }
-            }
+                    @Override
+                    public void onSuccess(Response<ThanaResponse> response) {
+                        Gson gson = new Gson();
 
-            @Override
-            public void onFailure(Call<ThanaResponse> call, Throwable t) {
-                Log.d("Response", t.toString());
-                if (loadCompleListener != null) loadCompleListener.onLoadFailed("load thana: "+t.getMessage());
-            }
-        });
+                        if (response.code() == 200) {
+                            try {
+                                if (response.body() != null) {
+                                    databaseHandler.setThana(response.body().getResult().getThana());
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+
+                            if (loadCompleListener != null) loadCompleListener.onLoadComplete();
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.d("Response", e.toString());
+                        if (loadCompleListener != null)
+                            loadCompleListener.onLoadFailed("load thana: " + e.getMessage());
+
+                    }
+                });
+
+
     }
 
     public void loadOutletType(LoadCompleteListener loadCompleListener) {
-        Call<OutletTypeResponse> call = apiService.getOutletTypes();
-        call.enqueue(new Callback<OutletTypeResponse>() {
-            @Override
-            public void onResponse(Call<OutletTypeResponse> call, Response<OutletTypeResponse> response) {
-                Gson gson = new Gson();
+        apiService.getOutletTypes().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new SingleObserver<Response<OutletTypeResponse>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
 
-                if (response.code() == 200) {
-                    try {
-                        if (response.body() != null) {
-                            databaseHandler.setOutletType(response.body().getResult().getType());
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                        if (mCompositeDisposable != null) mCompositeDisposable.add(d);
                     }
 
-                    if (loadCompleListener != null) loadCompleListener.onLoadComplete();
-                }
-            }
+                    @Override
+                    public void onSuccess(Response<OutletTypeResponse> response) {
+                        Gson gson = new Gson();
 
-            @Override
-            public void onFailure(Call<OutletTypeResponse> call, Throwable t) {
-                Log.d("Response", t.toString());
-                if (loadCompleListener != null) loadCompleListener.onLoadFailed("load outlet type: "+ t.getMessage());
-            }
-        });
+                        if (response.code() == 200) {
+                            try {
+                                if (response.body() != null) {
+                                    databaseHandler.setOutletType(response.body().getResult().getType());
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+
+                            if (loadCompleListener != null) loadCompleListener.onLoadComplete();
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.d("Response", e.toString());
+                        if (loadCompleListener != null)
+                            loadCompleListener.onLoadFailed("load outlet type: " + e.getMessage());
+
+                    }
+                });
     }
 
-    public interface OnOutletUpdateComplete {
-        void onUpdateComplete();
-    }
+
 
 
     public interface LoadCompleteListener {

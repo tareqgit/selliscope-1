@@ -6,6 +6,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Created by leon on 5/18/17.
@@ -56,5 +57,42 @@ public class Outlets implements Serializable {
 
         @SerializedName("outlet_code")
         public String outlet_code;
+
+
+
+        public String getOutlet_routeplan() {
+            return outlet_routeplan;
+        }
+
+        public void setOutlet_routeplan(String outlet_routeplan) {
+            if(outlet_routeplan==null) this.outlet_routeplan="0";
+            else   this.outlet_routeplan = outlet_routeplan;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            Outlet outlet = (Outlet) o;
+            return outletId == outlet.outletId &&
+                    Objects.equals(outletType, outlet.outletType) &&
+                    Objects.equals(outletName, outlet.outletName) &&
+
+                    Objects.equals(ownerName, outlet.ownerName) &&
+                    Objects.equals(outletAddress, outlet.outletAddress) &&
+                    Objects.equals(district, outlet.district) &&
+                    Objects.equals(thana, outlet.thana) &&
+                    Objects.equals(phone, outlet.phone) &&
+
+                  /*  Objects.equals(outletLatitude, outlet.outletLatitude) &&
+                    Objects.equals(outletLongitude, outlet.outletLongitude) &&*/
+                    Objects.equals(outletImgUrl, outlet.outletImgUrl) &&
+                    Objects.equals(outletDue, outlet.outletDue) ;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(outletId, outletType, outletName,  ownerName, outletAddress, district, thana, phone, outletImgUrl, outletLatitude, outletLongitude, outletDue);
+        }
     }
 }

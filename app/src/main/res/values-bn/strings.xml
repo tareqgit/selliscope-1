@@ -62,6 +62,7 @@
     <string name="GoodNight">শুভ রাত্রি</string>
     <string name="logout">লগ আউট</string>
     <string name="update_data">আপডেট তথ্য</string>
+    <string name="upload_data">ডেটা আপলোড</string>
     <string name="contact_us">আমাদের সাথে যোগাযোগ করুন</string>
     <string name="privacy_policy">প্রাইভেসি পলিসি</string>
     <string name="about_us">আমাদের সম্পর্কে জানুন</string>
@@ -143,6 +144,7 @@
     <string name="cheque_date">চেক তারিখ</string>
     <string name="performance">অর্জন</string>
     <string name="deposit_to">জমা প্রতি</string>
+    <string name="refresh_data">রিফ্রেশ ডেটা</string>
     <string-array name="paymentType">
         <item>পরিশোধ নগদ</item>
         <item>চেক </item>

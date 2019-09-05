@@ -21,6 +21,11 @@ import com.humaclab.lalteer.utils.SessionManager;
 
 import java.util.List;
 
+import io.reactivex.SingleObserver;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -32,6 +37,7 @@ public class SalesReturnActivity extends AppCompatActivity {
     private RecyclerView rv_return_list;
     private int outletID;
     private ProgressDialog pd;
+    private CompositeDisposable mCompositeDisposable = new CompositeDisposable();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,36 +82,48 @@ public class SalesReturnActivity extends AppCompatActivity {
 
         apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(),
                 sessionManager.getUserPassword(), false).create(SelliscopeApiEndpointInterface.class);
-        Call<DeliveryResponse> call = apiService.getSalesReturn(outletID);
-        call.enqueue(new Callback<DeliveryResponse>() {
-            @Override
-            public void onResponse(Call<DeliveryResponse> call, Response<DeliveryResponse> response) {
-                pd.dismiss();
-                if (response.code() == 200) {
-                    try {
-                        if (srl_sells_return.isRefreshing())
-                            srl_sells_return.setRefreshing(false);
+         apiService.getSalesReturn(outletID).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                 .subscribe(new SingleObserver<Response<DeliveryResponse>>() {
+                     @Override
+                     public void onSubscribe(Disposable d) {
+                         if(mCompositeDisposable!=null) mCompositeDisposable.add(d);
+                     }
 
-                        System.out.println("Return Response " + new Gson().toJson(response.body()));
-                        List<DeliveryResponse.DeliveryList> delivers = response.body().result.deliveryList;
-                        rv_return_list.setAdapter(new SellsReturnRecyclerAdapter(getApplication(), delivers));
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                } else if (response.code() == 401) {
-                    Toast.makeText(SalesReturnActivity.this,
-                            "Invalid Response from server.", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(SalesReturnActivity.this,
-                            "Server Error! Try Again Later!", Toast.LENGTH_SHORT).show();
-                }
-            }
+                     @Override
+                     public void onSuccess(Response<DeliveryResponse> response) {
+                         pd.dismiss();
+                         if (response.code() == 200) {
+                             try {
+                                 if (srl_sells_return.isRefreshing())
+                                     srl_sells_return.setRefreshing(false);
 
-            @Override
-            public void onFailure(Call<DeliveryResponse> call, Throwable t) {
-                pd.dismiss();
-                t.printStackTrace();
-            }
-        });
+                                 System.out.println("Return Response " + new Gson().toJson(response.body()));
+                                 List<DeliveryResponse.DeliveryList> delivers = response.body().result.deliveryList;
+                                 rv_return_list.setAdapter(new SellsReturnRecyclerAdapter(getApplication(), delivers));
+                             } catch (Exception e) {
+                                 e.printStackTrace();
+                             }
+                         } else if (response.code() == 401) {
+                             Toast.makeText(SalesReturnActivity.this,
+                                     "Invalid Response from server.", Toast.LENGTH_SHORT).show();
+                         } else {
+                             Toast.makeText(SalesReturnActivity.this,
+                                     "Server Error! Try Again Later!", Toast.LENGTH_SHORT).show();
+                         }
+                     }
+
+                     @Override
+                     public void onError(Throwable e) {
+                         pd.dismiss();
+                     }
+                 });
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mCompositeDisposable != null && !mCompositeDisposable.isDisposed())
+            mCompositeDisposable.dispose();
     }
 }

@@ -14,6 +14,7 @@ import com.humaclab.lalteer.model.AddNewOrder;
 import com.humaclab.lalteer.utils.DatabaseHandler;
 import com.humaclab.lalteer.utils.GetAddressFromLatLang;
 import com.humaclab.lalteer.utils.SessionManager;
+import com.humaclab.lalteer.utils.UploadDataService;
 
 import java.util.List;
 
@@ -27,65 +28,21 @@ import timber.log.Timber;
  */
 
 public class InternetConnectivityChangeReceiver extends BroadcastReceiver {
-    private Context context;
-    private DatabaseHandler databaseHandler;
-    private SessionManager sessionManager;
-    private SelliscopeApiEndpointInterface apiService;
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        this.context = context;
-        this.databaseHandler = new DatabaseHandler(context);
-        this.sessionManager = new SessionManager(context);
-        this.apiService = SelliscopeApplication.getRetrofitInstance(
-                this.sessionManager.getUserEmail(),
-                this.sessionManager.getUserPassword(),
-                false)
-                .create(SelliscopeApiEndpointInterface.class);
 
-        final ConnectivityManager connMgr = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        UploadDataService uploadDataService = new UploadDataService(context);
+        uploadDataService.uploadData(new UploadDataService.UploadCompleteListener() {
+            @Override
+            public void uploadComplete() {
+                Log.d("tareq_test", "InternetConnectivityChangeReceiver #40: uploadComplete:  Upload Complete");
+            }
 
-        final NetworkInfo wifi = connMgr.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-
-        final NetworkInfo mobile = connMgr.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
-
-        if (wifi.isConnected() || mobile.isConnected()) {
-            if (databaseHandler.getOrder().size() != 0)
-                uploadOrderToServer();
-            else
-                Timber.e("No offline order is available.");
-            Timber.e("Network: Network available.");
-//            Toast.makeText(context, "Network available", Toast.LENGTH_SHORT).show();
-        } else {
-            Timber.e("Network: Network disabled.");
-//            Toast.makeText(context, "Network disabled", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-
-    private void uploadOrderToServer() {
-        List<AddNewOrder> addNewOrderList = databaseHandler.getOrder();
-        for (AddNewOrder addNewOrder : addNewOrderList) {
-           addNewOrder.newOrder.address=String.valueOf(GetAddressFromLatLang.getAddressFromLatLan(context,Double.valueOf(addNewOrder.newOrder.latitude),Double.valueOf(addNewOrder.newOrder.longitude)));
-            Log.d("tareq_test" , ""+new Gson().toJson(addNewOrder));
-            Call<AddNewOrder.OrderResponse> call = apiService.addOrder(addNewOrder);
-            call.enqueue(new Callback<AddNewOrder.OrderResponse>() {
-                @Override
-                public void onResponse(Call<AddNewOrder.OrderResponse> call, Response<AddNewOrder.OrderResponse> response) {
-                    //Timber.e("Offline order: Order completed.");
-                    Log.d("tareq_test" , "Offline order: Order completed");
-                    if (response.code() == 200) {
-                        databaseHandler.removeOrder(addNewOrder.newOrder.outletId);
-                   //     Timber.e("Offline order: Order removed.");
-                        Log.d("tareq_test" , "Offline order: Order removed.");
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<AddNewOrder.OrderResponse> call, Throwable t) {
-                    t.printStackTrace();
-                }
-            });
-        }
+            @Override
+            public void uploadFailed(String reason) {
+                Log.d("tareq_test", "InternetConnectivityChangeReceiver #45: uploadFailed: "+ reason);
+            }
+        });
     }
 }

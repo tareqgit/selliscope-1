@@ -29,6 +29,11 @@ import com.humaclab.lalteer.utils.SessionManager;
 import java.io.ByteArrayOutputStream;
 import java.util.List;
 
+import io.reactivex.SingleObserver;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -48,6 +53,8 @@ public class PaymentActivity extends AppCompatActivity {
     private ProgressDialog pd;
     private int outletId;
     PaymentRecyclerViewAdapter adapter;
+
+    CompositeDisposable mCompositeDisposable = new CompositeDisposable();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,47 +99,52 @@ public class PaymentActivity extends AppCompatActivity {
         SessionManager sessionManager = new SessionManager(PaymentActivity.this);
         apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(),
                 sessionManager.getUserPassword(), false).create(SelliscopeApiEndpointInterface.class);
-        Call<Payment> call = apiService.getPayment(outletId);
-        call.enqueue(new Callback<Payment>() {
-            @Override
-            public void onResponse(Call<Payment> call, Response<Payment> response) {
-                pd.dismiss();
-                if (response.code() == 200) {
-                    try {
-                        if (srl_payment.isRefreshing())
-                            srl_payment.setRefreshing(false);
-
-                        System.out.println("Response " + new Gson().toJson(response.body()));
-                        List<Payment.OrderList> orders = response.body().result.orderList;
-                        if (!orders.isEmpty()) {
-                             adapter = new PaymentRecyclerViewAdapter(PaymentActivity.this, orders, new PaymentRecyclerViewAdapter.OnPaymentListener() {
-                                 @Override
-                                 public void onPaymentComplete() {
-                                     loadPayments();
-                                 }
-                             });
-                            rv_payment.setAdapter(adapter);
-                        } else {
-                            Toast.makeText(getApplicationContext(), "You don't have any due payments.", Toast.LENGTH_LONG).show();
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
+        apiService.getPayment(outletId).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new SingleObserver<Response<Payment>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        if(mCompositeDisposable!=null) mCompositeDisposable.add(d);
                     }
-                } else if (response.code() == 401) {
-                    Toast.makeText(PaymentActivity.this,
-                            "Invalid Response from server.", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(PaymentActivity.this,
-                            "Server Error! Try Again Later!", Toast.LENGTH_SHORT).show();
-                }
-            }
 
-            @Override
-            public void onFailure(Call<Payment> call, Throwable t) {
-                pd.dismiss();
-                t.printStackTrace();
-            }
-        });
+                    @Override
+                    public void onSuccess(Response<Payment> response) {
+                        pd.dismiss();
+                        if (response.code() == 200) {
+                            try {
+                                if (srl_payment.isRefreshing())
+                                    srl_payment.setRefreshing(false);
+
+                                System.out.println("Response " + new Gson().toJson(response.body()));
+                                List<Payment.OrderList> orders = response.body().result.orderList;
+                                if (!orders.isEmpty()) {
+                                    adapter = new PaymentRecyclerViewAdapter(PaymentActivity.this, orders, new PaymentRecyclerViewAdapter.OnPaymentListener() {
+                                        @Override
+                                        public void onPaymentComplete() {
+                                            loadPayments();
+                                        }
+                                    });
+                                    rv_payment.setAdapter(adapter);
+                                } else {
+                                    Toast.makeText(getApplicationContext(), "You don't have any due payments.", Toast.LENGTH_LONG).show();
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        } else if (response.code() == 401) {
+                            Toast.makeText(PaymentActivity.this,
+                                    "Invalid Response from server.", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(PaymentActivity.this,
+                                    "Server Error! Try Again Later!", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        pd.dismiss();
+                    }
+                });
+
     }
     @Override
     public void onBackPressed() {
@@ -167,9 +179,14 @@ public class PaymentActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mCompositeDisposable != null && !mCompositeDisposable.isDisposed())
+            mCompositeDisposable.dispose();
+    }
 
-
-   /* @Override
+/* @Override
     public void onImageClick() {
         Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
         startActivityForResult(cameraIntent, CAMERA_REQUEST);

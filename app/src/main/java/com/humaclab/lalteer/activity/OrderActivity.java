@@ -44,6 +44,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import io.reactivex.disposables.CompositeDisposable;
+
 public class OrderActivity extends AppCompatActivity implements OrderProductRecyclerAdapter.OnSelectProductListener {
 
     private ActivityOrderBinding binding;
@@ -55,6 +57,8 @@ public class OrderActivity extends AppCompatActivity implements OrderProductRecy
     private List<Integer> categoryID = new ArrayList<>(), brandID = new ArrayList<>();
 
     public static List<SelectedProductHelper> selectedProductList = new ArrayList<>();
+
+    public CompositeDisposable mCompositeDisposable = new CompositeDisposable();
 
 
     // Save state
@@ -110,7 +114,7 @@ public class OrderActivity extends AppCompatActivity implements OrderProductRecy
             }
         });
 
-        LoadLocalIntoBackground loadLocalIntoBackground = new LoadLocalIntoBackground(OrderActivity.this);
+        LoadLocalIntoBackground loadLocalIntoBackground = new LoadLocalIntoBackground(OrderActivity.this, mCompositeDisposable);
 
         getProducts();
         binding.srlProduct.setRefreshing(false);
@@ -410,6 +414,10 @@ public class OrderActivity extends AppCompatActivity implements OrderProductRecy
         //clear selected Item list
         selectedProductList.clear();
         super.onDestroy();
+
+        if(mCompositeDisposable!=null && !mCompositeDisposable.isDisposed()){
+            mCompositeDisposable.dispose();
+        }
     }
 
     @Override

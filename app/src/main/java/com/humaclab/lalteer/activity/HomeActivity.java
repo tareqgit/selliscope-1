@@ -19,6 +19,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
+
 import androidx.annotation.NonNull;
 
 import com.google.android.gms.common.api.ResolvableApiException;
@@ -32,6 +33,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
+
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -41,6 +43,7 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -69,6 +72,7 @@ import com.humaclab.lalteer.utils.Constants;
 import com.humaclab.lalteer.utils.DatabaseHandler;
 import com.humaclab.lalteer.utils.LoadLocalIntoBackground;
 import com.humaclab.lalteer.utils.SessionManager;
+import com.humaclab.lalteer.utils.UploadDataService;
 
 
 import java.util.Calendar;
@@ -77,6 +81,11 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import io.reactivex.SingleObserver;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -87,7 +96,7 @@ import static com.humaclab.lalteer.R.id.content_fragment;
 import static io.nlopez.smartlocation.location.providers.LocationGooglePlayServicesProvider.REQUEST_CHECK_SETTINGS;
 
 public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
-    public static ScheduledExecutorService schedulerForMinute, schedulerForHour;
+    public static ScheduledExecutorService schedulerForMinute, schedulerForHour, schedulerForDataUpdate;
     public static BroadcastReceiver receiver = new InternetConnectivityChangeReceiver();
     private FragmentManager fragmentManager;
     private SessionManager sessionManager;
@@ -102,6 +111,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 34;
     private boolean mAlreadyStartedService = false;
 
+    /*for disposing all Observer at a single time*/
+    CompositeDisposable mCompositeDisposable = new CompositeDisposable();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -112,15 +124,27 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         SharedPreferences sharedPreferences = getSharedPreferences("Settings", MODE_PRIVATE);
         Constants.BASE_URL = sharedPreferences.getString("BASE_URL", Constants.BASE_URL);
 
-       // Toast.makeText(this, ""+ Constants.BASE_URL, Toast.LENGTH_SHORT).show();
+        // Toast.makeText(this, ""+ Constants.BASE_URL, Toast.LENGTH_SHORT).show();
 
         displayGpsSignalRequest(); //for showing gps request
 
 
         sessionManager = new SessionManager(this);
         databaseHandler = new DatabaseHandler(this);
-        loadLocalIntoBackground = new LoadLocalIntoBackground(this);
-        loadLocalIntoBackground.loadAll();
+        loadLocalIntoBackground = new LoadLocalIntoBackground(this, mCompositeDisposable);
+
+      /*  loadLocalIntoBackground.loadAll(new LoadLocalIntoBackground.LoadCompleteListener() {
+            @Override
+            public void onLoadComplete() {
+
+            }
+
+            @Override
+            public void onLoadFailed(String reason) {
+
+            }
+        });*/
+
         apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(), sessionManager.getUserPassword(), false).create(SelliscopeApiEndpointInterface.class);
         pd = new ProgressDialog(this);
 
@@ -194,33 +218,37 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         //For getting diameter
         setDiameter();
 
-        //loading Data into background
+       /* //loading Data into background
         schedulerForMinute = Executors.newSingleThreadScheduledExecutor();
         schedulerForMinute.scheduleAtFixedRate(new Runnable() {
             public void run() {
-               /* runOnUiThread(new Runnable() {
+               *//* runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                 */       Log.v("Running threads", "Thread running in background for updating products and outlets");
-                        loadLocalIntoBackground.loadOutlet(false);
-                    }
-                //});
-           // }
-        }, 0, 1, TimeUnit.MINUTES);
+                 *//*
+                Log.v("Running threads", "Thread running in background for updating products and outlets");
+                loadLocalIntoBackground.loadOutlet(null);
+            }
+            //});
+            // }
+        }, 0, 1, TimeUnit.MINUTES);*/
 
-        schedulerForHour = Executors.newSingleThreadScheduledExecutor();
+      /*  schedulerForHour = Executors.newSingleThreadScheduledExecutor();
         schedulerForHour.scheduleAtFixedRate(new Runnable() {
             public void run() {
-             /*   runOnUiThread(new Runnable() {
+             *//*   runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-              */          Log.v("Running threads", "Thread running in background for updating products and outlets after 30 Minutes interval");
-                        loadLocalIntoBackground.loadProduct();
-                /*    }
+              *//*
+                Log.v("Running threads", "Thread running in background for updating products and outlets after 30 Minutes interval");
+                loadLocalIntoBackground.loadProduct(null);
+                loadLocalIntoBackground.loadCategory(null);
+                loadLocalIntoBackground.loadBrand(null);
+                *//*    }
                 });
- */
+ *//*
             }
-        }, 30, 30, TimeUnit.MINUTES);
+        }, 30, 30, TimeUnit.MINUTES);*/
         //loading Data into background
 
         try {
@@ -228,8 +256,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             IntentFilter filter = new IntentFilter();
             filter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
             registerReceiver(receiver, filter);
-        }catch (Exception e){
-            Log.d("tareq_test" , ""+e.getMessage());
+        } catch (Exception e) {
+            Log.d("tareq_test", "" + e.getMessage());
         }
 
         // For Shared Preferrence to Language
@@ -243,7 +271,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             config.locale = locale;
             getBaseContext().getResources().updateConfiguration(config, getBaseContext().getResources().getDisplayMetrics());
         }*/
-
+        LoadappsVertion();
+        uploadDataFromLocalStorage(this);
     }
 
 
@@ -283,20 +312,26 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void setDiameter() {
-        Call<DiameterResponse> call = apiService.getDiameter();
-        call.enqueue(new Callback<DiameterResponse>() {
-            @Override
-            public void onResponse(Call<DiameterResponse> call, Response<DiameterResponse> response) {
-                if (response.code() == 200) {
-                    sessionManager.setDiameter(response.body().getDiameter().getDiameter());
-                }
-            }
+       apiService.getDiameter().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+               .subscribe(new SingleObserver<Response<DiameterResponse>>() {
+                   @Override
+                   public void onSubscribe(Disposable d) {
+                       if(mCompositeDisposable!=null) mCompositeDisposable.add(d);
+                   }
 
-            @Override
-            public void onFailure(Call<DiameterResponse> call, Throwable t) {
+                   @Override
+                   public void onSuccess(Response<DiameterResponse> response) {
+                       if (response.code() == 200) {
+                           sessionManager.setDiameter(response.body().getDiameter().getDiameter());
+                       }
+                   }
 
-            }
-        });
+                   @Override
+                   public void onError(Throwable e) {
+
+                   }
+               });
+
     }
 
     private void getFragment(Class createFragment) {
@@ -309,6 +344,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             e.printStackTrace();
         }
     }
+
+
+
 
     @Override
     public void onBackPressed() {
@@ -328,7 +366,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             case R.id.nav_logout:
                 pd.setMessage("Login out...");
                 pd.show();
-
 
                 stopService(new Intent(HomeActivity.this, LocationMonitoringService.class));
                 mAlreadyStartedService = false;
@@ -364,17 +401,47 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 alertDialog.show();
                 break;
             case R.id.nav_update_data:
-                pd.setMessage("Local data is updating.\nPlease be patient....");
+                pd.setMessage("Offline data is Uploading to Server. \nPlease be patient....");
                 pd.setCancelable(false);
                 pd.show();
-                loadLocalIntoBackground.updateAllData();
-                new Handler().postDelayed(new Runnable() {
+                UploadDataService upLoadDataService = new UploadDataService(HomeActivity.this);
+                upLoadDataService.uploadData(new UploadDataService.UploadCompleteListener() {
                     @Override
-                    public void run() {
+                    public void uploadComplete() {
                         pd.dismiss();
+                        Log.d("tareq_test", "Upload data complete");
                     }
-                }, 60000);
+
+                    @Override
+                    public void uploadFailed(String reason) {
+                        pd.dismiss();
+                        Log.e("tareq_test", "" + reason);
+                        Toast.makeText(HomeActivity.this, "" + reason, Toast.LENGTH_SHORT).show();
+                    }
+                });
                 break;
+
+            case R.id.nav_refresh_data:
+                final AlertDialog alertDialogRefresh = new AlertDialog.Builder(this).create();
+                alertDialogRefresh.setTitle("Confirm");
+                alertDialogRefresh.setMessage("Are you sure? \n\nYou want to clear all data. ");
+                alertDialogRefresh.setButton(DialogInterface.BUTTON_POSITIVE, "Yes", (dialog, which) -> {
+
+                    pd.setMessage("Local data is updating.\nPlease be patient....");
+                    pd.setCancelable(false);
+                    pd.show();
+
+                    loadLocalIntoBackground.updateAllData();
+                    new Handler().postDelayed(() -> pd.dismiss(), 60000);
+
+
+                });
+
+
+                if (!alertDialogRefresh.isShowing()) alertDialogRefresh.show();
+                break;
+
+
             case R.id.nav_settings:
                 startActivity(new Intent(HomeActivity.this, SettingsActivity.class));
                 break;
@@ -426,8 +493,10 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
     private String manufacturer;
     Intent locationServiceIntent;
+
     @Override
     protected void onDestroy() {
         try {
@@ -442,16 +511,49 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         if (sessionManager.isLoggedIn()) {
 
             if (manufacturer.equals("Xiaomi"))
-            startActivity(new Intent(getApplicationContext(), HomeActivity.class));
+                startActivity(new Intent(getApplicationContext(), HomeActivity.class));
         }
+
+        if (mCompositeDisposable != null && !mCompositeDisposable.isDisposed())
+            mCompositeDisposable.dispose();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        LoadappsVertion();
+
         welcome();
         startStep1();
+    }
+
+    private void uploadDataFromLocalStorage(Context context) {
+
+        if (schedulerForDataUpdate == null || schedulerForDataUpdate.isShutdown() || schedulerForDataUpdate.isTerminated()) {
+            schedulerForDataUpdate = Executors.newSingleThreadScheduledExecutor();
+            schedulerForDataUpdate.scheduleAtFixedRate(() -> {
+
+                Log.d("Running threads", "Thread running in background for updating products and outlets");
+
+                UploadDataService upLoadDataService = new UploadDataService(context);
+
+                upLoadDataService.uploadData(new UploadDataService.UploadCompleteListener() {
+                    @Override
+                    public void uploadComplete() {
+                        Log.d("tareq_test", "Upload complete");
+
+
+                    }
+
+                    @Override
+                    public void uploadFailed(String reason) {
+                        Log.e("tareq_test", "" + reason);
+
+                    }
+                });
+
+            }, 0, 3, TimeUnit.MINUTES);
+        }
+
     }
 
     public void setLocale(String lang) {
@@ -472,13 +574,45 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
     private void LoadappsVertion() {
         apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(), sessionManager.getUserPassword(), false).create(SelliscopeApiEndpointInterface.class);
-        Call<AppVersion> call = apiService.getAppsversion();
+
+        apiService.getAppsversion()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new SingleObserver<Response<AppVersion>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        mCompositeDisposable.add(d);
+                    }
+
+                    @Override
+                    public void onSuccess(Response<AppVersion> response) {
+                        if (response.code() == 200) {
+
+                            Log.d("tareq_test", "APPS VERTION " + new Gson().toJson(response.body()));
+
+                            int serverVersion = Integer.parseInt(response.body().getResult().getVersionCode());
+                            int appVersion = BuildConfig.VERSION_CODE;
+                            if (serverVersion > appVersion) {
+                                updateDialog(response.body().getResult().getVersionName(), response.body().getResult().getUrl());
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Toast.makeText(HomeActivity.this, "Loading Error: " +e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+
+
+    /*    Call<AppVersion> call = apiService.getAppsversion();
         call.enqueue(new Callback<AppVersion>() {
             @Override
             public void onResponse(Call<AppVersion> call, Response<AppVersion> response) {
                 if (response.code() == 200) {
 
-                   Log.d("tareq_test" , "APPS VERTION " + new Gson().toJson(response.body()));
+                    Log.d("tareq_test", "APPS VERTION " + new Gson().toJson(response.body()));
 
                     int serverVersion = Integer.parseInt(response.body().getResult().getVersionCode());
                     int appVersion = BuildConfig.VERSION_CODE;
@@ -494,9 +628,10 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 Toast.makeText(HomeActivity.this, "Loading Error", Toast.LENGTH_SHORT).show();
             }
 
-        });
+        });*/
 
     }
+
 
     private void updateDialog(String version, final String link) {
 
@@ -647,14 +782,14 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            //    Intent intent2 = new Intent(this, LocationMonitoringService.class);
+                //    Intent intent2 = new Intent(this, LocationMonitoringService.class);
                 startForegroundService(locationServiceIntent);
             }
 
             //mMsgView.setText("msg_location_service_started");
 
             //Start location sharing service to app server.........
-         //   Intent intent = new Intent(this, LocationMonitoringService.class);
+            //   Intent intent = new Intent(this, LocationMonitoringService.class);
             startService(locationServiceIntent);
             mAlreadyStartedService = true;
             //Ends................................................

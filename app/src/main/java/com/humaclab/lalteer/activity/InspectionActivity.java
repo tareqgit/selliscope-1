@@ -31,6 +31,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.SingleObserver;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -45,6 +50,8 @@ public class InspectionActivity extends AppCompatActivity {
     SessionManager sessionManager;
     private List<Integer> outletIDs;
     private List<String> outletNames;
+
+    CompositeDisposable mCompositeDisposable = new CompositeDisposable();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -126,43 +133,62 @@ public class InspectionActivity extends AppCompatActivity {
         apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(),
                 sessionManager.getUserPassword(), false)
                 .create(SelliscopeApiEndpointInterface.class);
-        Call<ResponseBody> call = apiService.getOutlets();
-        call.enqueue(new Callback<ResponseBody>() {
+
+
+        apiService.getOutlets().subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new SingleObserver<Response<ResponseBody>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onSuccess(Response<ResponseBody> response) {
+                        Gson gson = new Gson();
+                        if (response.code() == 200) {
+                            try {
+                                Outlets getOutletListSuccessful = gson.fromJson(response.body().string(), Outlets.class);
+                                if (!getOutletListSuccessful.outletsResult.outlets.isEmpty()) {
+                                    outletIDs = new ArrayList<>();
+                                    outletNames = new ArrayList<>();
+
+                                    for (Outlets.Outlet outlet : getOutletListSuccessful.outletsResult.outlets) {
+                                        outletIDs.add(outlet.outletId);
+                                        outletNames.add(outlet.outletName);
+                                    }
+                                    binding.spOutlets.setAdapter(new ArrayAdapter<>(InspectionActivity.this, R.layout.spinner_item, outletNames));
+                                    if (getIntent().hasExtra("outletName")) {
+                                        binding.spOutlets.setSelection(outletNames.indexOf(getIntent().getStringExtra("outletName")));
+                                    }
+                                } else {
+                                    Toast.makeText(getApplicationContext(), "You don't have any outlet in your list.", Toast.LENGTH_LONG).show();
+                                }
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        } else if (response.code() == 401) {
+                            Toast.makeText(InspectionActivity.this, "Invalid Response from server.", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(InspectionActivity.this, "Server Error! Try Again Later!", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+                });
+       /* call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                Gson gson = new Gson();
-                if (response.code() == 200) {
-                    try {
-                        Outlets getOutletListSuccessful = gson.fromJson(response.body().string(), Outlets.class);
-                        if (!getOutletListSuccessful.outletsResult.outlets.isEmpty()) {
-                            outletIDs = new ArrayList<>();
-                            outletNames = new ArrayList<>();
 
-                            for (Outlets.Outlet outlet : getOutletListSuccessful.outletsResult.outlets) {
-                                outletIDs.add(outlet.outletId);
-                                outletNames.add(outlet.outletName);
-                            }
-                            binding.spOutlets.setAdapter(new ArrayAdapter<>(InspectionActivity.this, R.layout.spinner_item, outletNames));
-                            if (getIntent().hasExtra("outletName")) {
-                                binding.spOutlets.setSelection(outletNames.indexOf(getIntent().getStringExtra("outletName")));
-                            }
-                        } else {
-                            Toast.makeText(getApplicationContext(), "You don't have any outlet in your list.", Toast.LENGTH_LONG).show();
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                } else if (response.code() == 401) {
-                    Toast.makeText(InspectionActivity.this, "Invalid Response from server.", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(InspectionActivity.this, "Server Error! Try Again Later!", Toast.LENGTH_SHORT).show();
-                }
             }
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
             }
-        });
+        });*/
     }
 
     @Override
@@ -179,9 +205,15 @@ public class InspectionActivity extends AppCompatActivity {
     private void checkPermission() {
         AccessPermission.accessPermission(InspectionActivity.this);
     }
+
+
     @Override
     public void onDestroy() {
+
         super.onDestroy();
+
+        if (mCompositeDisposable != null && !mCompositeDisposable.isDisposed())
+            mCompositeDisposable.dispose();
     }
     @Override
     public void onBackPressed() {

@@ -35,6 +35,11 @@ import com.humaclab.lalteer.utils.SessionManager;
 import java.io.IOException;
 import java.util.Locale;
 
+import io.reactivex.SingleObserver;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 import io.realm.Realm;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -55,6 +60,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     final String KEY_SAVED_RADIO_BUTTON_INDEX = "SAVED_RADIO_BUTTON_INDEX";
     private Realm realm;
     private Login.Successful.LoginResult loginResult;
+    private CompositeDisposable mCompositeDisposable = new CompositeDisposable();
     public final static boolean isValidEmail(CharSequence target) {
         if (target == null) {
             return false;
@@ -163,104 +169,118 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         sessionManager = new SessionManager(this);
         apiService = SelliscopeApplication.getRetrofitInstance(email, password, true)
                 .create(SelliscopeApiEndpointInterface.class);
-        Call<ResponseBody> call = apiService.getUser();
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                Gson gson = new Gson();
-                if (response.code() == 200) {
-                    try {
-
-                        loginResult = new Login.Successful().result;
-
-                        Login.Successful loginSuccessful = gson.fromJson(response.body().string()
-                                , Login.Successful.class);
-
-
-                        loginResult = loginSuccessful.result;
-
-                        realm.beginTransaction();
-                        realm.copyToRealmOrUpdate(loginSuccessful.result.access);
-                        realm.commitTransaction();
-                        realm.close();
-                        sessionManager.createLoginSession(
-                                loginSuccessful.result.user.name,
-                                loginSuccessful.result.clientId,
-                                loginSuccessful.result.user.profilePictureUrl,
-                                loginSuccessful.result.user.dob,
-                                loginSuccessful.result.user.gender,
-                                loginSuccessful.result.user.address,
-                                email,
-                                password
-                        );
-                        loginProgresssBar.setVisibility(View.INVISIBLE);
-
-                        SharedPreferences sharedPreferencesLanguage = getSharedPreferences("Settings", MODE_PRIVATE);
-                        SharedPreferences.Editor editor = sharedPreferencesLanguage.edit();
-                        editor.putString("BASE_URL", Constants.BASE_URL);
-                        editor.apply();
-
-                        sendIMEIAndVersion();
-                        startActivity(new Intent(LoginActivity.this, HomeActivity.class));
-                        finish();
-
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                        Toast.makeText(LoginActivity.this, "Exc: "+ e.getMessage(), Toast.LENGTH_SHORT).show();
+        apiService.getUser().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new SingleObserver<Response<ResponseBody>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        if(mCompositeDisposable!=null) mCompositeDisposable.add(d);
                     }
-                } else if (response.code() == 401) {
-                    try {
-                        loginProgresssBar.setVisibility(View.INVISIBLE);
-                        Toast.makeText(LoginActivity.this,
-                                response.errorBody().string(), Toast.LENGTH_SHORT).show();
-                    } catch (IOException e) {
-                        e.printStackTrace();
+
+                    @Override
+                    public void onSuccess(Response<ResponseBody> response) {
+                        Gson gson = new Gson();
+                        if (response.code() == 200) {
+                            try {
+
+                                loginResult = new Login.Successful().result;
+
+                                Login.Successful loginSuccessful = gson.fromJson(response.body().string()
+                                        , Login.Successful.class);
+
+
+                                loginResult = loginSuccessful.result;
+
+                                realm.beginTransaction();
+                                realm.copyToRealmOrUpdate(loginSuccessful.result.access);
+                                realm.commitTransaction();
+                                realm.close();
+                                sessionManager.createLoginSession(
+                                        loginSuccessful.result.user.name,
+                                        loginSuccessful.result.clientId,
+                                        loginSuccessful.result.user.profilePictureUrl,
+                                        loginSuccessful.result.user.dob,
+                                        loginSuccessful.result.user.gender,
+                                        loginSuccessful.result.user.address,
+                                        email,
+                                        password
+                                );
+                                loginProgresssBar.setVisibility(View.INVISIBLE);
+
+                                SharedPreferences sharedPreferencesLanguage = getSharedPreferences("Settings", MODE_PRIVATE);
+                                SharedPreferences.Editor editor = sharedPreferencesLanguage.edit();
+                                editor.putString("BASE_URL", Constants.BASE_URL);
+                                editor.apply();
+
+                                sendIMEIAndVersion();
+                                startActivity(new Intent(LoginActivity.this, LoadingActivity.class));
+                                finish();
+
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                                Toast.makeText(LoginActivity.this, "Exc: "+ e.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        } else if (response.code() == 401) {
+                            try {
+                                loginProgresssBar.setVisibility(View.INVISIBLE);
+                                Toast.makeText(LoginActivity.this,
+                                        response.errorBody().string(), Toast.LENGTH_SHORT).show();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        } else {
+                            loginProgresssBar.setVisibility(View.INVISIBLE);
+                            Toast.makeText(LoginActivity.this,
+                                    response.code()+
+                                            " Server Error! Try Again Later!", Toast.LENGTH_SHORT).show();
+                        }
                     }
-                } else {
-                    loginProgresssBar.setVisibility(View.INVISIBLE);
-                    Toast.makeText(LoginActivity.this,
-                            response.code()+
-                            " Server Error! Try Again Later!", Toast.LENGTH_SHORT).show();
-                }
-            }
 
-            private void sendIMEIAndVersion() {
-                TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-                if (ActivityCompat.checkSelfPermission(LoginActivity.this, android.Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-                    checkPermission();
-                    sendIMEIAndVersion();
-                } else {
-                    IMEIandVerison imeIandVerison = new IMEIandVerison();
-                    imeIandVerison.setIMEIcode(telephonyManager.getDeviceId());
-                    imeIandVerison.setAppVersion(BuildConfig.VERSION_NAME);
-                    System.out.println("IMEI and version: " + new Gson().toJson(imeIandVerison));
-                    Call<ResponseBody> call = apiService.sendIMEIAndVersion(imeIandVerison);
-                    call.enqueue(new Callback<ResponseBody>() {
-                        @Override
-                        public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                            Timber.d("Status code: " + String.valueOf(response.code()));
+                    private void sendIMEIAndVersion() {
+                        TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+                        if (ActivityCompat.checkSelfPermission(LoginActivity.this, android.Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+                            checkPermission();
+                            sendIMEIAndVersion();
+                        } else {
+                            IMEIandVerison imeIandVerison = new IMEIandVerison();
+                            imeIandVerison.setIMEIcode(telephonyManager.getDeviceId());
+                            imeIandVerison.setAppVersion(BuildConfig.VERSION_NAME);
+                            System.out.println("IMEI and version: " + new Gson().toJson(imeIandVerison));
+                             apiService.sendIMEIAndVersion(imeIandVerison).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                                     .subscribe(new SingleObserver<Response<ResponseBody>>() {
+                                         @Override
+                                         public void onSubscribe(Disposable d) {
+                                             if(mCompositeDisposable!=null)
+                                                 mCompositeDisposable.add(d);
+                                         }
+
+                                         @Override
+                                         public void onSuccess(Response<ResponseBody> response) {
+                                             Log.d("tareq_test", "LoginActivity #255: onSuccess:  Success");
+                                         }
+
+                                         @Override
+                                         public void onError(Throwable e) {
+
+                                         }
+                                     });
+
                         }
+                    }
 
-                        @Override
-                        public void onFailure(Call<ResponseBody> call, Throwable t) {
-                            t.printStackTrace();
+                    @Override
+                    public void onError(Throwable e) {
+                        loginProgresssBar.setVisibility(View.INVISIBLE);
+                        Log.e("tareq_test", "Error on Login: " + e.getMessage());
+                        if(Constants.BASE_URL.equals(Constants.BASE_URL_HTTPS)) {
+                            Constants.BASE_URL = Constants.BASE_URL_HTTP;
+                        }else{
+                            Constants.BASE_URL = Constants.BASE_URL_HTTPS;
                         }
-                    });
-                }
-            }
+                        getUser(email.trim(), password.trim());
+                    }
 
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                loginProgresssBar.setVisibility(View.INVISIBLE);
-                Log.e("tareq_test", "Error on Login: " + t.getMessage());
-                if(Constants.BASE_URL.equals(Constants.BASE_URL_HTTPS)) {
-                    Constants.BASE_URL = Constants.BASE_URL_HTTP;
-                }else{
-                    Constants.BASE_URL = Constants.BASE_URL_HTTPS;
-                }
-                getUser(email.trim(), password.trim());
-            }
-        });
+                });
+
     }
 
     private void checkPermission() {
@@ -392,4 +412,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         setLocale(language);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mCompositeDisposable != null && !mCompositeDisposable.isDisposed())
+            mCompositeDisposable.dispose();
+    }
 }

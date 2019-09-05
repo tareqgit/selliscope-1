@@ -43,8 +43,12 @@ import com.mti.pushdown_ext_onclick_single.PushDownAnim;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
+import io.reactivex.SingleObserver;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -56,6 +60,7 @@ public class OutletDetailsActivity extends AppCompatActivity {
     private List<AdvancePaymentsItem> mAdvancePaymentResponseList = new ArrayList<>();
     AdvancePaymentAdapter mAdvancePaymentAdapter;
     DialogFragment mDialogFragment;
+    private CompositeDisposable mCompositeDisposable = new CompositeDisposable();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -145,83 +150,96 @@ public class OutletDetailsActivity extends AppCompatActivity {
     }
 
     private void loadTargetOutlet() {
-        Call<OutletTarget> call = apiService.getPutletTarget(outlet.outletId);
-        call.enqueue(new Callback<OutletTarget>() {
-            @Override
-            public void onResponse(Call<OutletTarget> call, Response<OutletTarget> response) {
-                if (response.code() == 200) {
-                    binding.progressBar.setVisibility(View.GONE);
-                    Log.d("tareq_test", "outlet" + new Gson().toJson(response.body()));
+   apiService.getOutletTarget(outlet.outletId).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+           .subscribe(new SingleObserver<Response<OutletTarget>>() {
+               @Override
+               public void onSubscribe(Disposable d) {
+                   if(mCompositeDisposable!=null) mCompositeDisposable.add(d);
+               }
 
-                    String sales_types = response.body().getResult().getSalesTypes();
-                    Double total = Double.valueOf(response.body().getResult().getSalesTarget().replace(",", ""));
-                    Double achieved = Double.valueOf(response.body().getResult().getAchieved().replace(",", ""));
-                    Double remaining = total - achieved;
-                    int completePersentage = (int) ((achieved * 100) / total);
+               @Override
+               public void onSuccess(Response<OutletTarget> response) {
+                   if (response.code() == 200) {
+                       binding.progressBar.setVisibility(View.GONE);
+                       Log.d("tareq_test", "outlet" + new Gson().toJson(response.body()));
 
-                    binding.tvTargetLabel.setText(response.body().getResult().getTargetType());
-                    binding.tvTargetAchieved.setText(response.body().getResult().getAchieved() + " " + sales_types);
-                    binding.tvTargetTotal.setText(response.body().getResult().getSalesTarget() + " " + sales_types);
-                    binding.tvVisited.setText(response.body().getResult().getVisited().toString());
-                    binding.tvTargetRemaining.setText(remaining.toString() + " " + sales_types);
-                    binding.circleProgressView.setTextEnabled(false);
-                    binding.circleProgressView.setInterpolator(new AccelerateDecelerateInterpolator());
-                    binding.circleProgressView.setStartAngle(10);
-                    binding.circleProgressView.setProgressWithAnimation(completePersentage, 2000);
+                       String sales_types = response.body().getResult().getSalesTypes();
+                       Double total = Double.valueOf(response.body().getResult().getSalesTarget().replace(",", ""));
+                       Double achieved = Double.valueOf(response.body().getResult().getAchieved().replace(",", ""));
+                       Double remaining = total - achieved;
+                       int completePersentage = (int) ((achieved * 100) / total);
+
+                       binding.tvTargetLabel.setText(response.body().getResult().getTargetType());
+                       binding.tvTargetAchieved.setText(response.body().getResult().getAchieved() + " " + sales_types);
+                       binding.tvTargetTotal.setText(response.body().getResult().getSalesTarget() + " " + sales_types);
+                       binding.tvVisited.setText(response.body().getResult().getVisited().toString());
+                       binding.tvTargetRemaining.setText(remaining.toString() + " " + sales_types);
+                       binding.circleProgressView.setTextEnabled(false);
+                       binding.circleProgressView.setInterpolator(new AccelerateDecelerateInterpolator());
+                       binding.circleProgressView.setStartAngle(10);
+                       binding.circleProgressView.setProgressWithAnimation(completePersentage, 2000);
 
 
-                } else if (response.code() == 401) {
-                    binding.progressBar.setVisibility(View.GONE);
-                    Toast.makeText(OutletDetailsActivity.this,
-                            "Invalid Response from server.", Toast.LENGTH_SHORT).show();
-                } else {
-                    binding.progressBar.setVisibility(View.GONE);
-                    Toast.makeText(OutletDetailsActivity.this,
-                            "Server Error! Try Again Later!", Toast.LENGTH_SHORT).show();
-                }
-            }
+                   } else if (response.code() == 401) {
+                       binding.progressBar.setVisibility(View.GONE);
+                       Toast.makeText(OutletDetailsActivity.this,
+                               "Invalid Response from server.", Toast.LENGTH_SHORT).show();
+                   } else {
+                       binding.progressBar.setVisibility(View.GONE);
+                       Toast.makeText(OutletDetailsActivity.this,
+                               "Server Error! Try Again Later!", Toast.LENGTH_SHORT).show();
+                   }
+               }
 
-            @Override
-            public void onFailure(Call<OutletTarget> call, Throwable t) {
-                binding.progressBar.setVisibility(View.GONE);
-            }
-        });
+               @Override
+               public void onError(Throwable e) {
+                   binding.progressBar.setVisibility(View.GONE);
+               }
+           });
 
     }
 
 
     void loadAdvanceMoney() {
         binding.progressBar.setVisibility(View.VISIBLE);
-        apiService.getAdvancePayments(outlet.outletId).enqueue(new Callback<AdvancedPaymentResponse>() {
-            @Override
-            public void onResponse(Call<AdvancedPaymentResponse> call, Response<AdvancedPaymentResponse> response) {
-                binding.progressBar.setVisibility(View.GONE);
-                if (response.isSuccessful()) {
-                    Log.d("tareq_test", "" + new Gson().toJson(response.body().getAdvancePayments()));
-                    assert response.body() != null;
-                    mAdvancePaymentResponseList.clear();
-                    mAdvancePaymentResponseList.addAll(response.body().getAdvancePayments());
-                    mAdvancePaymentAdapter.notifyDataSetChanged();
+        apiService.getAdvancePayments(outlet.outletId).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new SingleObserver<Response<AdvancedPaymentResponse>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        if(mCompositeDisposable!=null) mCompositeDisposable.add(d);
+                    }
 
-                    binding.textInputLayouTotalAmount.getEditText().setText(String.valueOf(response.body().getTotalPaid()));
+                    @Override
+                    public void onSuccess(Response<AdvancedPaymentResponse> response) {
+                        binding.progressBar.setVisibility(View.GONE);
+                        if (response.isSuccessful()) {
+                            Log.d("tareq_test", "" + new Gson().toJson(response.body().getAdvancePayments()));
+                            assert response.body() != null;
+                            mAdvancePaymentResponseList.clear();
+                            mAdvancePaymentResponseList.addAll(response.body().getAdvancePayments());
+                            mAdvancePaymentAdapter.notifyDataSetChanged();
 
-                } else if (response.code() == 401) {
-                    binding.progressBar.setVisibility(View.GONE);
-                    Toast.makeText(OutletDetailsActivity.this,
-                            "Invalid Response from server.", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(OutletDetailsActivity.this, "Internal server error.", Toast.LENGTH_SHORT).show();
-                }
-            }
+                            binding.textInputLayouTotalAmount.getEditText().setText(String.valueOf(response.body().getTotalPaid()));
 
-            @Override
-            public void onFailure(Call<AdvancedPaymentResponse> call, Throwable t) {
-                binding.progressBar.setVisibility(View.GONE);
-                Toast.makeText(OutletDetailsActivity.this,
-                        "Server Error! Try Again Later!", Toast.LENGTH_SHORT).show();
+                        } else if (response.code() == 401) {
+                            binding.progressBar.setVisibility(View.GONE);
+                            Toast.makeText(OutletDetailsActivity.this,
+                                    "Invalid Response from server.", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(OutletDetailsActivity.this, "Internal server error.", Toast.LENGTH_SHORT).show();
+                        }
 
-            }
-        });
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        binding.progressBar.setVisibility(View.GONE);
+                        Toast.makeText(OutletDetailsActivity.this,
+                                "Server Error! Try Again Later!", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+
     }
 
     @Override
@@ -244,5 +262,12 @@ public class OutletDetailsActivity extends AppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mCompositeDisposable != null && !mCompositeDisposable.isDisposed())
+            mCompositeDisposable.dispose();
     }
 }

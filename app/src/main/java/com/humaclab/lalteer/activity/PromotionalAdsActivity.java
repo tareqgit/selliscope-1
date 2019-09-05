@@ -9,6 +9,12 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.view.MenuItem;
 import android.widget.TextView;
+
+import io.reactivex.SingleObserver;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -25,6 +31,7 @@ public class PromotionalAdsActivity extends AppCompatActivity {
     private SessionManager sessionManager;
     private RecyclerView recyclerView;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private CompositeDisposable mCompositeDisposable = new CompositeDisposable();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,19 +64,32 @@ public class PromotionalAdsActivity extends AppCompatActivity {
     }
 
     private void getPromotionalAds() {
-        Call<PromotionalAds>  promotionalAdsCall = apiService.getPromotionalAds();
-        promotionalAdsCall.enqueue(new Callback<PromotionalAds>() {
+
+    apiService.getPromotionalAds()
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(new SingleObserver<Response<PromotionalAds>>() {
             @Override
-            public void onResponse(Call<PromotionalAds> call, Response<PromotionalAds> response) {
-                swipeRefreshLayout.setRefreshing(false);
-                recyclerView.setAdapter(new PromotionalAdsAdapter(PromotionalAdsActivity.this,response.body().getResult()));
+            public void onSubscribe(Disposable d) {
+                mCompositeDisposable.add(d);
             }
 
             @Override
-            public void onFailure(Call<PromotionalAds> call, Throwable t) {
+            public void onSuccess(Response<PromotionalAds> promotionalAdsResponse) {
+                if(promotionalAdsResponse.isSuccessful()){
+                    swipeRefreshLayout.setRefreshing(false);
+                    if (promotionalAdsResponse.body() != null) {
+                        recyclerView.setAdapter(new PromotionalAdsAdapter(PromotionalAdsActivity.this,promotionalAdsResponse.body().getResult()));
+                    }
+                }
+            }
+
+            @Override
+            public void onError(Throwable e) {
                 swipeRefreshLayout.setRefreshing(false);
             }
         });
+
     }
 
     @Override

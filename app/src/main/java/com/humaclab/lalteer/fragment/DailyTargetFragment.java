@@ -29,6 +29,11 @@ import com.humaclab.lalteer.utils.SessionManager;
 import java.io.IOException;
 import java.util.List;
 
+import io.reactivex.SingleObserver;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -48,7 +53,7 @@ public class DailyTargetFragment extends Fragment {
     private TargetRecyclerViewAdapter targetRecyclerViewAdapter;
     private List<TargetItem> targetItems;
     private TextView tv_total,tv_target_achieved,tv_target_remaining,tv_target_label,tv_date;
-
+    CompositeDisposable mCompositeDisposable = new CompositeDisposable();
     private CircleProgressView circle_progress_view;
     public static DailyTargetFragment newInstance(int position) {
         DailyTargetFragment frag = new DailyTargetFragment();
@@ -108,17 +113,22 @@ public class DailyTargetFragment extends Fragment {
         apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(),
                 sessionManager.getUserPassword(), false)
                 .create(SelliscopeApiEndpointInterface.class);
-        Call<ResponseBody> call = apiService.getTargets();
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                Gson gson = new Gson();
-                if (response.code() == 200) {
-                    try {
-                        Targets.Successful getTargetListSuccessful = gson.fromJson(response.body().string()
-                                , Targets.Successful.class);
-                        if (swipeRefreshLayout.isRefreshing())
-                            swipeRefreshLayout.setRefreshing(false);
+         apiService.getTargets().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                 .subscribe(new SingleObserver<Response<ResponseBody>>() {
+                     @Override
+                     public void onSubscribe(Disposable d) {
+
+                     }
+
+                     @Override
+                     public void onSuccess(Response<ResponseBody> response) {
+                         Gson gson = new Gson();
+                         if (response.code() == 200) {
+                             try {
+                                 Targets.Successful getTargetListSuccessful = gson.fromJson(response.body().string()
+                                         , Targets.Successful.class);
+                                 if (swipeRefreshLayout.isRefreshing())
+                                     swipeRefreshLayout.setRefreshing(false);
 //                        for (Targets.Successful.Target target :
 //                                getTargetListSuccessful.targetResult.dailyTarget) {
 //                            targets.add(new Target("Must Sales", "Daily", target.mustSales.target,
@@ -128,84 +138,96 @@ public class DailyTargetFragment extends Fragment {
 //                            targets.add(new Target("Regular Sales", "Daily", target.regularSales.target,
 //                                    target.mustSales.achieved));
 //                        }
-                        targetRecyclerViewAdapter = new TargetRecyclerViewAdapter(getContext(),
-                                getTargetListSuccessful.targetResult.dailyTarget);
+                                 targetRecyclerViewAdapter = new TargetRecyclerViewAdapter(getContext(),
+                                         getTargetListSuccessful.targetResult.dailyTarget);
 
-                        recyclerView.setAdapter(targetRecyclerViewAdapter);
+                                 recyclerView.setAdapter(targetRecyclerViewAdapter);
 
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                } else if (response.code() == 401) {
-                    Toast.makeText(getContext(),
-                            "Invalid Response from server.", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(getContext(),
-                            "Server Error! Try Again Later!", Toast.LENGTH_SHORT).show();
-                }
-            }
+                             } catch (IOException e) {
+                                 e.printStackTrace();
+                             }
+                         } else if (response.code() == 401) {
+                             Toast.makeText(getContext(),
+                                     "Invalid Response from server.", Toast.LENGTH_SHORT).show();
+                         } else {
+                             Toast.makeText(getContext(),
+                                     "Server Error! Try Again Later!", Toast.LENGTH_SHORT).show();
+                         }
+                     }
 
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                //Toast.makeText(LoginActivity.this, t.toString(), Toast.LENGTH_SHORT).show();
-                Log.d("Response", t.toString());
-
-            }
-        });
+                     @Override
+                     public void onError(Throwable e) {
+                         Log.d("Response", e.toString());
+                     }
+                 });
 
     }
     private void loadTargetOutlet(){
         SessionManager sessionManager = new SessionManager(getContext());
         apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(),sessionManager.getUserPassword(),false).create(SelliscopeApiEndpointInterface.class);
-        Call<OutletTarget> call = apiService.getTarget();
-        call.enqueue(new Callback<OutletTarget>() {
-            @Override
-            public void onResponse(Call<OutletTarget> call, Response<OutletTarget> response) {
-                if(response.code() == 200) {
-                    if (swipeRefreshLayout.isRefreshing())
-                        swipeRefreshLayout.setRefreshing(false);
-                    System.out.println("Response " + new Gson().toJson(response.body()));
+       apiService.getTarget().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+               .subscribe(new SingleObserver<Response<OutletTarget>>() {
+                   @Override
+                   public void onSubscribe(Disposable d) {
+                       if(mCompositeDisposable!=null) mCompositeDisposable.add(d);
+                   }
 
-                    String sales_types = response.body().getResult().getSalesTypes().replace("Quantity","qt");
-                    Double total = Double.valueOf(response.body().getResult().getSalesTarget().replace(",",""));
-                    Double achieved = Double.valueOf(response.body().getResult().getAchieved().replace(",",""));
-                    Double remaining = total-achieved;
-                    int completePersentage = (int) ((achieved * 100)/total);
+                   @Override
+                   public void onSuccess(Response<OutletTarget> response) {
+                       if(response.code() == 200) {
+                           if (swipeRefreshLayout.isRefreshing())
+                               swipeRefreshLayout.setRefreshing(false);
+                           System.out.println("Response " + new Gson().toJson(response.body()));
 
-                    tv_date.setText(response.body().getResult().getDate());
-                    tv_target_label.setText(response.body().getResult().getTargetType());
-                    tv_target_achieved.setText(response.body().getResult().getAchieved()+" "+sales_types);
-                    tv_total.setText(total.toString()+" "+sales_types);
-                    //tv_visited.setText(response.body().getResult().getVisited());
-                    tv_target_remaining.setText(remaining.toString()+" "+sales_types);
-                    circle_progress_view.setTextEnabled(true);
-                    circle_progress_view.setInterpolator(new AccelerateDecelerateInterpolator());
-                    circle_progress_view.setStartAngle(10);
-                    circle_progress_view.setProgressWithAnimation(completePersentage,2000);
+                           String sales_types = response.body().getResult().getSalesTypes().replace("Quantity","qt");
+                           Double total = Double.valueOf(response.body().getResult().getSalesTarget().replace(",",""));
+                           Double achieved = Double.valueOf(response.body().getResult().getAchieved().replace(",",""));
+                           Double remaining = total-achieved;
+                           int completePersentage = (int) ((achieved * 100)/total);
 
-
-                }else if (response.code() == 401) {
-
-                    if (swipeRefreshLayout.isRefreshing())
-                        swipeRefreshLayout.setRefreshing(false);
-
-
-                } else {
-
-                    if (swipeRefreshLayout.isRefreshing())
-                        swipeRefreshLayout.setRefreshing(false);
+                           tv_date.setText(response.body().getResult().getDate());
+                           tv_target_label.setText(response.body().getResult().getTargetType());
+                           tv_target_achieved.setText(response.body().getResult().getAchieved()+" "+sales_types);
+                           tv_total.setText(total.toString()+" "+sales_types);
+                           //tv_visited.setText(response.body().getResult().getVisited());
+                           tv_target_remaining.setText(remaining.toString()+" "+sales_types);
+                           circle_progress_view.setTextEnabled(true);
+                           circle_progress_view.setInterpolator(new AccelerateDecelerateInterpolator());
+                           circle_progress_view.setStartAngle(10);
+                           circle_progress_view.setProgressWithAnimation(completePersentage,2000);
 
 
-                }
+                       }else if (response.code() == 401) {
 
-            }
+                           if (swipeRefreshLayout.isRefreshing())
+                               swipeRefreshLayout.setRefreshing(false);
 
-            @Override
-            public void onFailure(Call<OutletTarget> call, Throwable t) {
-                if (swipeRefreshLayout.isRefreshing())
-                    swipeRefreshLayout.setRefreshing(false);
-            }
-        });
+
+                       } else {
+
+                           if (swipeRefreshLayout.isRefreshing())
+                               swipeRefreshLayout.setRefreshing(false);
+
+
+                       }
+
+                   }
+
+                   @Override
+                   public void onError(Throwable e) {
+                       if (swipeRefreshLayout.isRefreshing())
+                           swipeRefreshLayout.setRefreshing(false);
+                   }
+               });
+
+
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        if (mCompositeDisposable != null && !mCompositeDisposable.isDisposed())
+            mCompositeDisposable.dispose();
 
     }
 }

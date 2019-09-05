@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatDelegate;
 
 import com.facebook.stetho.Stetho;
 import com.facebook.stetho.okhttp3.StethoInterceptor;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.humaclab.lalteer.utils.Constants;
 import com.humaclab.lalteer.utils.HttpAuthInterceptor;
 
@@ -18,6 +19,7 @@ import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 import timber.log.Timber;
 
@@ -27,7 +29,7 @@ import timber.log.Timber;
 
 public class SelliscopeApplication extends Application {
     private static Retrofit retrofitInstance;
-
+    private FirebaseAnalytics mFirebaseAnalytics;
     static {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
     }
@@ -43,8 +45,9 @@ public class SelliscopeApplication extends Application {
 
             OkHttpClient client = new OkHttpClient.Builder()
                     .addInterceptor(new HttpAuthInterceptor(email.toLowerCase(), password))
-                    .connectTimeout(15, TimeUnit.SECONDS)
+                    .connectTimeout(60, TimeUnit.SECONDS)
                     .readTimeout(120, TimeUnit.SECONDS)
+                    .writeTimeout(120, TimeUnit.SECONDS)
                     .retryOnConnectionFailure(true)
                     .addNetworkInterceptor(new StethoInterceptor())
                     .build();
@@ -52,7 +55,7 @@ public class SelliscopeApplication extends Application {
             retrofitInstance = new Retrofit.Builder()
                     .baseUrl(Constants.BASE_URL)
                     .addConverterFactory(GsonConverterFactory.create())
-                    //.addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                    .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                     .client(client)
                     .build();
         }
@@ -65,6 +68,8 @@ public class SelliscopeApplication extends Application {
         if (BuildConfig.DEBUG) {
             Timber.plant(new Timber.DebugTree());
         }
+        // Obtain the FirebaseAnalytics instance.
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         createNotificationChannel();
         Stetho.initializeWithDefaults(this);
        /* Fabric.with(this, new Crashlytics());*/

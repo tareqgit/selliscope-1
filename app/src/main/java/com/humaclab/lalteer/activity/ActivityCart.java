@@ -224,7 +224,7 @@ public class ActivityCart extends AppCompatActivity implements SelectedProductRe
 
             Log.d("tareq_test" , ""+new Gson().toJson(addNewOrder));
 
-            if (NetworkUtility.isNetworkAvailable(ActivityCart.this)) {
+           /* if (NetworkUtility.isNetworkAvailable(ActivityCart.this)) {
                addNewOrder.newOrder.address= String.valueOf(GetAddressFromLatLang.getAddressFromLatLan(this, lat,lon));
 
                 Log.d("tareq_test" , ""+new Gson().toJson(addNewOrder));
@@ -262,7 +262,7 @@ public class ActivityCart extends AppCompatActivity implements SelectedProductRe
                         Log.e("tareq_test" , "Order error: "+ t.getMessage());
                     }
                 });
-            } else {
+            } else */{
                 Log.d("tareq_test" , "Order has been queued in database");
                 databaseHandler.setOrder(addNewOrder);
                 Toast.makeText(ActivityCart.this, "Order created successfully", Toast.LENGTH_LONG).show();

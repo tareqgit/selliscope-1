@@ -21,6 +21,11 @@ import com.humaclab.lalteer.utils.SessionManager;
 
 import java.util.List;
 
+import io.reactivex.SingleObserver;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -30,6 +35,7 @@ public class DueActivity extends AppCompatActivity {
     private DatabaseHandler databaseHandler;
     private RecyclerView rv_due;
     private SwipeRefreshLayout srl_due;
+    private CompositeDisposable mCompositeDisposable = new CompositeDisposable();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,35 +74,52 @@ public class DueActivity extends AppCompatActivity {
         SessionManager sessionManager = new SessionManager(DueActivity.this);
         apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(),
                 sessionManager.getUserPassword(), false).create(SelliscopeApiEndpointInterface.class);
-        Call<Payment> call = apiService.getPayment();
-        call.enqueue(new Callback<Payment>() {
-            @Override
-            public void onResponse(Call<Payment> call, Response<Payment> response) {
-                if (response.code() == 200) {
-                    try {
-                        if (srl_due.isRefreshing())
-                            srl_due.setRefreshing(false);
-
-                        System.out.println("Response " + new Gson().toJson(response.body()));
-                        List<Payment.OrderList> orders = response.body().result.orderList;
-
-                        rv_due.setAdapter(new DueRecyclerViewAdapter(getApplication(), orders));
-                    } catch (Exception e) {
-                        e.printStackTrace();
+        apiService.getPayment().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new SingleObserver<Response<Payment>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        if(mCompositeDisposable!=null) mCompositeDisposable.add(d);
                     }
-                } else if (response.code() == 401) {
-                    Toast.makeText(DueActivity.this,
-                            "Invalid Response from server.", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(DueActivity.this,
-                            "Server Error! Try Again Later!", Toast.LENGTH_SHORT).show();
-                }
-            }
 
-            @Override
-            public void onFailure(Call<Payment> call, Throwable t) {
-                t.printStackTrace();
-            }
-        });
+                    @Override
+                    public void onSuccess(Response<Payment> response) {
+                        if (response.code() == 200) {
+                            try {
+                                if (srl_due.isRefreshing())
+                                    srl_due.setRefreshing(false);
+
+                                System.out.println("Response " + new Gson().toJson(response.body()));
+                                List<Payment.OrderList> orders = null;
+                                if (response.body() != null) {
+                                    orders = response.body().result.orderList;
+                                }
+
+                                rv_due.setAdapter(new DueRecyclerViewAdapter(getApplication(), orders));
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        } else if (response.code() == 401) {
+                            Toast.makeText(DueActivity.this,
+                                    "Invalid Response from server.", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(DueActivity.this,
+                                    "Server Error! Try Again Later!", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+                });
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(mCompositeDisposable!=null && !mCompositeDisposable.isDisposed()){
+            mCompositeDisposable.dispose();
+        }
     }
 }

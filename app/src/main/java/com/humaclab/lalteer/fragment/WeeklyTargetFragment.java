@@ -25,6 +25,10 @@ import com.humaclab.lalteer.utils.VerticalSpaceItemDecoration;
 import java.io.IOException;
 import java.util.List;
 
+import io.reactivex.SingleObserver;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -89,41 +93,45 @@ public class WeeklyTargetFragment extends Fragment {
         apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(),
                 sessionManager.getUserPassword(), false)
                 .create(SelliscopeApiEndpointInterface.class);
-        Call<ResponseBody> call = apiService.getTargets();
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                Gson gson = new Gson();
-                if (response.code() == 200) {
-                    try {
-                        Targets.Successful getTargetListSuccessful = gson.fromJson(response.body().string()
-                                , Targets.Successful.class);
-                        if (swipeRefreshLayout.isRefreshing())
-                            swipeRefreshLayout.setRefreshing(false);
-                        targetRecyclerViewAdapter = new TargetRecyclerViewAdapter(getContext(),
-                                getTargetListSuccessful.targetResult.weeklyTarget);
+       apiService.getTargets().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+               .subscribe(new SingleObserver<Response<ResponseBody>>() {
+                   @Override
+                   public void onSubscribe(Disposable d) {
 
-                        recyclerView.setAdapter(targetRecyclerViewAdapter);
+                   }
 
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                } else if (response.code() == 401) {
-                    Toast.makeText(getContext(),
-                            "Invalid Response from server.", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(getContext(),
-                            "Server Error! Try Again Later!", Toast.LENGTH_SHORT).show();
-                }
-            }
+                   @Override
+                   public void onSuccess(Response<ResponseBody> response) {
+                       Gson gson = new Gson();
+                       if (response.code() == 200) {
+                           try {
+                               Targets.Successful getTargetListSuccessful = gson.fromJson(response.body().string()
+                                       , Targets.Successful.class);
+                               if (swipeRefreshLayout.isRefreshing())
+                                   swipeRefreshLayout.setRefreshing(false);
+                               targetRecyclerViewAdapter = new TargetRecyclerViewAdapter(getContext(),
+                                       getTargetListSuccessful.targetResult.weeklyTarget);
 
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                //Toast.makeText(LoginActivity.this, t.toString(), Toast.LENGTH_SHORT).show();
-                Log.d("Response", t.toString());
+                               recyclerView.setAdapter(targetRecyclerViewAdapter);
 
-            }
-        });
+                           } catch (IOException e) {
+                               e.printStackTrace();
+                           }
+                       } else if (response.code() == 401) {
+                           Toast.makeText(getContext(),
+                                   "Invalid Response from server.", Toast.LENGTH_SHORT).show();
+                       } else {
+                           Toast.makeText(getContext(),
+                                   "Server Error! Try Again Later!", Toast.LENGTH_SHORT).show();
+                       }
+                   }
+
+                   @Override
+                   public void onError(Throwable e) {
+                       Log.d("Response", e.toString());
+                   }
+               });
+
 
     }
 }

@@ -3,67 +3,48 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.humaclab.lalteer">
 
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
-    <uses-permission android:name="android.permission.CALL_PHONE" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-
-    <uses-feature
-        android:name="android.hardware.camera.any"
-        android:required="true" />
-    <uses-feature
-        android:name="android.hardware.camera.autofocus"
-        android:required="true" />
-
     <application
         android:name=".SelliscopeApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:usesCleartextTraffic="true"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-        <uses-library
-            android:name="org.apache.http.legacy"
-            android:required="false" />
+        android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true">
+        <activity android:name=".activity.LoadingActivity"></activity>
 
+        <activity
+            android:name=".activity.SplashScreenActivity"
+            android:theme="@style/SplashScreenTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.VIEW" />
 
-        <!-- For Debug -->
-     <!--<meta-data
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity> <!-- For Debug -->
+        <!--
+<meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBZ5heET41mdUTW5UOouLZFn56kGsAocbM"/>
         <meta-data
             android:name="com.google.android.awareness.API_KEY"
-            android:value="AIzaSyBZ5heET41mdUTW5UOouLZFn56kGsAocbM"/>-->
+            android:value="AIzaSyBZ5heET41mdUTW5UOouLZFn56kGsAocbM"/>
+        -->
         <!-- For signed APK -->
-   <!--     <meta-data
+        <!--
+     <meta-data
             android:name="com.google.android.awareness.API_KEY"
             android:value="AIzaSyAhsz4pX62D7yu8twGT4ydn-_DRVB3p6_Y"/>
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyAhsz4pX62D7yu8twGT4ydn-_DRVB3p6_Y"/>
-
--->
-
-
-        <meta-data
-            android:name="com.google.android.awareness.API_KEY"
-            android:value="AIzaSyBXkKu_nToPi7wW1oyHEnkrG4MpjuJBTxw"/>
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyBXkKu_nToPi7wW1oyHEnkrG4MpjuJBTxw"/>
-
-<!--
+        -->
+        <activity android:name=".activity.LoginActivity" />
+        <activity
+            android:name=".activity.HomeActivity"
+            android:configChanges="orientation|screenSize" />
+        <!--
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="c2bca7824e6a758388318ecf6635fd2e8e11979a" />
@@ -78,46 +59,11 @@
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
-        </service>-->
-        <service
-            android:name=".service.SendLocationDataService"
-            android:exported="false"
-            android:permission="android.permission.RECEIVE_BOOT_COMPLETED"
-            android:process=":selliscope_process">
-            <intent-filter>
-                <action android:name=".Service.SendLocationDataService" />
-                <action android:name="android.content.SyncAdapter" />
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-            </intent-filter>
         </service>
-
-        <receiver
-            android:name=".receiver.InternetConnectivityChangeReceiver"
-            android:enabled="true">
-            <intent-filter>
-                <action
-                    android:name="android.net.conn.CONNECTIVITY_CHANGE"
-                    tools:ignore="BatteryLife" />
-            </intent-filter>
-        </receiver>
-        <!-- Services and Receivers -->
-
-        <activity
-            android:name=".activity.SplashScreenActivity"
-            android:theme="@style/SplashScreenTheme">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <action android:name="android.intent.action.VIEW"/>
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity android:name=".activity.LoginActivity" />
-        <activity
-            android:name=".activity.HomeActivity"
-            android:configChanges="orientation|screenSize" />
+        -->
         <activity android:name=".activity.RouteActivity" />
-        <activity android:name=".activity.OutletMapActivity"/>
+
+        <activity android:name=".activity.OutletMapActivity" /> <!-- Services and Receivers -->
         <activity android:name=".activity.OutletActivity" />
         <activity android:name=".activity.AddOutletActivity" />
         <activity android:name=".activity.OutletDetailsActivity" />
@@ -150,22 +96,72 @@
         <activity android:name=".activity.SettingsActivity" />
         <activity android:name=".activity.ProfileActivity" />
         <activity android:name=".activity.ProductListActivity" />
+        <activity android:name=".activity.PromotionalAdsActivity" />
+        <activity android:name=".performance.payments.PerformancePaymentsActivity" />
+        <activity android:name=".performance.orders.PerformanceOrdersProductsActivity" />
+        <activity android:name=".performance.orders.PerformanceOrdersActivity" />
+        <meta-data
+            android:name="com.google.android.awareness.API_KEY"
+            android:value="AIzaSyBXkKu_nToPi7wW1oyHEnkrG4MpjuJBTxw" />
 
-        <service
-            android:name=".LocationMonitoringService"
-            android:enabled="true" />
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyBXkKu_nToPi7wW1oyHEnkrG4MpjuJBTxw" />
+
+        <receiver
+            android:name=".receiver.InternetConnectivityChangeReceiver"
+            android:enabled="true">
+            <intent-filter>
+                <action
+                    android:name="android.net.conn.CONNECTIVITY_CHANGE"
+                    tools:ignore="BatteryLife" />
+            </intent-filter>
+        </receiver>
+
         <receiver
             android:name=".service.LocationServiceRestarterBroadcastReceiver"
             android:enabled="true"
             android:exported="true"
             android:label="RestartServiceWhenStopped" />
-
-        <activity android:name=".activity.PromotionalAdsActivity"></activity>
-
-        <activity android:name=".performance.payments.PerformancePaymentsActivity"></activity>
-        <activity android:name=".performance.orders.PerformanceOrdersProductsActivity" />
-        <activity android:name=".performance.orders.PerformanceOrdersActivity" />
-
+        <service
+            android:name=".service.SendLocationDataService"
+            android:exported="false"
+            android:permission="android.permission.RECEIVE_BOOT_COMPLETED"
+            android:process=":selliscope_process">
+            <intent-filter>
+                <action android:name=".Service.SendLocationDataService" />
+                <action android:name="android.content.SyncAdapter" />
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </service>
+        <service
+            android:name=".LocationMonitoringService"
+            android:enabled="true" />
+        <uses-library
+            android:name="org.apache.http.legacy"
+            android:required="false" />
     </application>
+    <uses-feature
+        android:name="android.hardware.camera.any"
+        android:required="true" />
+    <uses-feature
+        android:name="android.hardware.camera.autofocus"
+        android:required="true" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
 </manifest>

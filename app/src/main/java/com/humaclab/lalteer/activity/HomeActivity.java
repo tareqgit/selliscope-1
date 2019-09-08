@@ -373,8 +373,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
 //                if (databaseHandler.removeAll()) {
                 sessionManager.logoutUser(false);
-                schedulerForMinute.shutdownNow();
-                schedulerForHour.shutdownNow();
+              if(schedulerForMinute!=null)  schedulerForMinute.shutdownNow();
+              if(schedulerForHour!=null)  schedulerForHour.shutdownNow();
 
 
 

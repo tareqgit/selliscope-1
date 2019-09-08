@@ -44,7 +44,14 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import io.reactivex.Observer;
+import io.reactivex.SingleObserver;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Function;
+import io.reactivex.functions.Predicate;
+import io.reactivex.schedulers.Schedulers;
 
 public class OrderActivity extends AppCompatActivity implements OrderProductRecyclerAdapter.OnSelectProductListener {
 
@@ -99,11 +106,75 @@ public class OrderActivity extends AppCompatActivity implements OrderProductRecy
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (!s.toString().equals("")) {
-                    List<ProductsItem> productsItemList = databaseHandler.getProduct(categoryID.get(binding.spProductCategory.getSelectedItemPosition()), brandID.get(binding.spProductBrand.getSelectedItemPosition()), s.toString());
-                    binding.rvProduct.setAdapter(new OrderProductRecyclerAdapter(context, OrderActivity.this, productsItemList, selectedProductList, OrderActivity.this));
+                    databaseHandler.getProduct(categoryID.get(binding.spProductCategory.getSelectedItemPosition()), brandID.get(binding.spProductBrand.getSelectedItemPosition()), s.toString())
+                            .subscribeOn(Schedulers.io())
+                            .flatMapIterable(new Function<List<ProductsItem>, List<ProductsItem>>() {
+
+                                @Override
+                                public List<ProductsItem> apply(List<ProductsItem> productsItems) throws Exception {
+                                    return productsItems;
+                                }
+                            })
+                            .filter(new Predicate<ProductsItem>() {
+                                @Override
+                                public boolean test(ProductsItem productsItem) throws Exception {
+                                    return productsItem.getStatus().equals("1");
+                                }
+                            })
+                            .toList()
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(new SingleObserver<List<ProductsItem>>() {
+                                @Override
+                                public void onSubscribe(Disposable d) {
+                                    mCompositeDisposable.add(d);
+                                }
+
+                                @Override
+                                public void onSuccess(List<ProductsItem> productsItems) {
+                                    binding.rvProduct.setAdapter(new OrderProductRecyclerAdapter(context, OrderActivity.this, productsItems, selectedProductList, OrderActivity.this));
+
+                                }
+
+                                @Override
+                                public void onError(Throwable e) {
+
+                                }
+                            });
                 } else {
-                    List<ProductsItem> productsItemList = databaseHandler.getProduct(categoryID.get(binding.spProductCategory.getSelectedItemPosition()), brandID.get(binding.spProductBrand.getSelectedItemPosition()));
-                    binding.rvProduct.setAdapter(new OrderProductRecyclerAdapter(context, OrderActivity.this, productsItemList, selectedProductList, OrderActivity.this));
+                    databaseHandler.getProduct(categoryID.get(binding.spProductCategory.getSelectedItemPosition()), brandID.get(binding.spProductBrand.getSelectedItemPosition()))
+                            .subscribeOn(Schedulers.io())
+                            .flatMapIterable(new Function<List<ProductsItem>, List<ProductsItem>>() {
+
+                                @Override
+                                public List<ProductsItem> apply(List<ProductsItem> productsItems) throws Exception {
+                                    return productsItems;
+                                }
+                            })
+                            .filter(new Predicate<ProductsItem>() {
+                                @Override
+                                public boolean test(ProductsItem productsItem) throws Exception {
+                                    return productsItem.getStatus().equals("1");
+                                }
+                            })
+                            .toList()
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(new SingleObserver<List<ProductsItem>>() {
+                                @Override
+                                public void onSubscribe(Disposable d) {
+                                    mCompositeDisposable.add(d);
+                                }
+
+                                @Override
+                                public void onSuccess(List<ProductsItem> productsItems) {
+                                    binding.rvProduct.setAdapter(new OrderProductRecyclerAdapter(context, OrderActivity.this, productsItems, selectedProductList, OrderActivity.this));
+
+                                }
+
+                                @Override
+                                public void onError(Throwable e) {
+
+                                }
+                            });
                 }
             }
 
@@ -238,8 +309,43 @@ public class OrderActivity extends AppCompatActivity implements OrderProductRecy
                 if (position != 0) {
 
                     //binding.srlProduct.setRefreshing(false);
-                    List<ProductsItem> productsItemList = databaseHandler.getProduct(categoryID.get(position), brandID.get(binding.spProductBrand.getSelectedItemPosition()));
-                    binding.rvProduct.setAdapter(new OrderProductRecyclerAdapter(context, OrderActivity.this, productsItemList, selectedProductList, OrderActivity.this));
+                    databaseHandler.getProduct(categoryID.get(position), brandID.get(binding.spProductBrand.getSelectedItemPosition()))
+                            .subscribeOn(Schedulers.io())
+                            .flatMapIterable(new Function<List<ProductsItem>, List<ProductsItem>>() {
+
+                                @Override
+                                public List<ProductsItem> apply(List<ProductsItem> productsItems) throws Exception {
+                                    return productsItems;
+                                }
+                            })
+                            .filter(new Predicate<ProductsItem>() {
+                                @Override
+                                public boolean test(ProductsItem productsItem) throws Exception {
+                                    return productsItem.getStatus().equals("1");
+                                }
+                            })
+                            .toList()
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(new SingleObserver<List<ProductsItem>>() {
+                                           @Override
+                                           public void onSubscribe(Disposable d) {
+                                               mCompositeDisposable.add(d);
+                                           }
+
+                                           @Override
+                                           public void onSuccess(List<ProductsItem> productsItems) {
+
+                                               binding.rvProduct.setAdapter(new OrderProductRecyclerAdapter(context, OrderActivity.this, productsItems, selectedProductList, OrderActivity.this));
+
+                                           }
+
+                                           @Override
+                                           public void onError(Throwable e) {
+
+                                           }
+                                       }
+
+                            );
                 }
             }
 
@@ -293,8 +399,42 @@ public class OrderActivity extends AppCompatActivity implements OrderProductRecy
                 if (position != 0) {
 
                     // binding.srlProduct.setRefreshing(false);
-                    List<ProductsItem> productsItemList = databaseHandler.getProduct(categoryID.get(binding.spProductCategory.getSelectedItemPosition()), brandID.get(position));
-                    binding.rvProduct.setAdapter(new OrderProductRecyclerAdapter(context, OrderActivity.this, productsItemList, selectedProductList, OrderActivity.this));
+                    databaseHandler.getProduct(categoryID.get(binding.spProductCategory.getSelectedItemPosition()), brandID.get(position))
+                            .subscribeOn(Schedulers.io())
+                            .flatMapIterable(new Function<List<ProductsItem>, List<ProductsItem>>() {
+
+                                @Override
+                                public List<ProductsItem> apply(List<ProductsItem> productsItems) throws Exception {
+                                    return productsItems;
+                                }
+                            })
+                            .filter(new Predicate<ProductsItem>() {
+                                @Override
+                                public boolean test(ProductsItem productsItem) throws Exception {
+                                    return productsItem.getStatus().equals("1");
+                                }
+                            })
+                            .toList()
+                            .observeOn(AndroidSchedulers.mainThread())
+                            .subscribe(new SingleObserver<List<ProductsItem>>() {
+                                           @Override
+                                           public void onSubscribe(Disposable d) {
+                                               mCompositeDisposable.add(d);
+                                           }
+
+                                           @Override
+                                           public void onSuccess(List<ProductsItem> productsItems) {
+                                               binding.rvProduct.setAdapter(new OrderProductRecyclerAdapter(context, OrderActivity.this, productsItems, selectedProductList, OrderActivity.this));
+
+                                           }
+
+                                           @Override
+                                           public void onError(Throwable e) {
+
+                                           }
+                                       }
+
+                                  );
                 }
             }
 
@@ -312,13 +452,46 @@ public class OrderActivity extends AppCompatActivity implements OrderProductRecy
     private void getProducts() {
 
         // binding.srlProduct.setRefreshing(false);
-        List<ProductsItem> productsItemList = new ArrayList<>();
 
-        productsItemList = databaseHandler.getProduct(categoryID.get(binding.spProductCategory.getSelectedItemPosition()), brandID.get(binding.spProductBrand.getSelectedItemPosition()));
 
-        mOrderProductRecyclerAdapter = new OrderProductRecyclerAdapter(context, OrderActivity.this, productsItemList, selectedProductList, this);
+        databaseHandler.getProduct(categoryID.get(binding.spProductCategory.getSelectedItemPosition()), brandID.get(binding.spProductBrand.getSelectedItemPosition()))
+                .subscribeOn(Schedulers.io())
+                .flatMapIterable(new Function<List<ProductsItem>, List<ProductsItem>>() {
 
-        binding.rvProduct.setAdapter(mOrderProductRecyclerAdapter);
+                    @Override
+                    public List<ProductsItem> apply(List<ProductsItem> productsItems) throws Exception {
+                        return productsItems;
+                    }
+                })
+                .filter(new Predicate<ProductsItem>() {
+                    @Override
+                    public boolean test(ProductsItem productsItem) throws Exception {
+                        return productsItem.getStatus().equals("1");
+                    }
+                })
+                .toList()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new SingleObserver<List<ProductsItem>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        mCompositeDisposable.add(d);
+                    }
+
+                    @Override
+                    public void onSuccess(List<ProductsItem> productsItems) {
+                        mOrderProductRecyclerAdapter = new OrderProductRecyclerAdapter(context, OrderActivity.this, productsItems, selectedProductList, OrderActivity.this);
+
+                        binding.rvProduct.setAdapter(mOrderProductRecyclerAdapter);
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+                } );
+
+
         //if this activity called from product activity
         updateTotal_Discount_Grnd();
     }

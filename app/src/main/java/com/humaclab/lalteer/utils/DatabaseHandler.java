@@ -7,6 +7,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import androidx.databinding.ObservableList;
+
 import com.google.gson.Gson;
 import com.humaclab.lalteer.dbmodel.Target;
 import com.humaclab.lalteer.dbmodel.UserVisit;
@@ -26,6 +28,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import io.reactivex.Observable;
 
 /**
  * Created by leon on 19/3/18.
@@ -525,7 +529,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.close();
     }
 
-    public List<ProductsItem> getProduct(int categoryID, int brandID) {
+    public Observable<List<ProductsItem>> getProduct(int categoryID, int brandID) {
         List<ProductsItem> productList = new ArrayList<>();
         // Select All Query
         String selectQuery;
@@ -559,6 +563,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 productsItem.setImg(cursor.getString(cursor.getColumnIndex(KEY_PRODUCT_IMAGE)));
                 productsItem.setStock(cursor.getString(cursor.getColumnIndex(KEY_PRODUCT_STOCK)));
                 productsItem.setVariantRow(cursor.getString(cursor.getColumnIndex(KEY_VARIANT_ROW)) == null ? "0" : cursor.getString(cursor.getColumnIndex(KEY_VARIANT_ROW)));
+                productsItem.setStatus(cursor.getString(cursor.getColumnIndex(KEY_STATUS)));
 
                 category.setName(cursor.getString(cursor.getColumnIndex(KEY_CATEGORY_NAME)));
                 category.setId(String.valueOf(cursor.getInt(cursor.getColumnIndex(KEY_CATEGORY_ID))));
@@ -568,13 +573,14 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 brand.setName(cursor.getString(cursor.getColumnIndex(KEY_BRAND_NAME)));
                 productsItem.setBrand(brand);
 
+
                 productList.add(productsItem);
             } while (cursor.moveToNext());
         }
-        return productList;
+        return Observable.just(productList);
     }
 
-    public List<ProductsItem> getProduct(int categoryID, int brandID, String searchProduct) {
+    public Observable<List<ProductsItem>> getProduct(int categoryID, int brandID, String searchProduct) {
         List<ProductsItem> productList = new ArrayList<>();
         // Select All Query
         String selectQuery;
@@ -608,6 +614,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 productsItem.setImg(cursor.getString(cursor.getColumnIndex(KEY_PRODUCT_IMAGE)));
                 productsItem.setStock(cursor.getString(cursor.getColumnIndex(KEY_PRODUCT_STOCK)));
                 productsItem.setVariantRow(cursor.getString(cursor.getColumnIndex(KEY_VARIANT_ROW)) == null ? "0" : cursor.getString(cursor.getColumnIndex(KEY_VARIANT_ROW)));
+                productsItem.setStatus(cursor.getString(cursor.getColumnIndex(KEY_STATUS)));
 
                 category.setName(cursor.getString(cursor.getColumnIndex(KEY_CATEGORY_NAME)));
                 category.setId(String.valueOf(cursor.getInt(cursor.getColumnIndex(KEY_CATEGORY_ID))));
@@ -620,7 +627,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 productList.add(productsItem);
             } while (cursor.moveToNext());
         }
-        return productList;
+        return Observable.just(productList);
     }
 
     public List<Category> getCategory() {

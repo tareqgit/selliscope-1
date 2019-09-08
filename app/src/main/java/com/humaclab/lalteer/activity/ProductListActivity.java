@@ -29,6 +29,12 @@ import com.humaclab.lalteer.utils.SessionManager;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
+
 public class ProductListActivity extends AppCompatActivity  {
     private ActivityProductListBinding binding;
     private Context context;
@@ -39,6 +45,7 @@ public class ProductListActivity extends AppCompatActivity  {
     private List<Integer> categoryID = new ArrayList<>(), brandID = new ArrayList<>();
 
     private List<SelectedProductHelper> selectedProductList = new ArrayList<>();
+    private CompositeDisposable mCompositeDisposable = new CompositeDisposable();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,11 +81,51 @@ public class ProductListActivity extends AppCompatActivity  {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (!s.toString().equals("")) {
-                    List<ProductsItem> productsItemList = databaseHandler.getProduct(categoryID.get(binding.spProductCategory.getSelectedItemPosition()), brandID.get(binding.spProductBrand.getSelectedItemPosition()), s.toString());
-                    binding.rvProduct.setAdapter(new ProductListRecyclerAdapter(context, ProductListActivity.this, productsItemList, selectedProductList));
-                } else {
-                    List<ProductsItem> productsItemList = databaseHandler.getProduct(categoryID.get(binding.spProductCategory.getSelectedItemPosition()), brandID.get(binding.spProductBrand.getSelectedItemPosition()));
-                    binding.rvProduct.setAdapter(new ProductListRecyclerAdapter(context, ProductListActivity.this, productsItemList, selectedProductList));
+                   databaseHandler.getProduct(categoryID.get(binding.spProductCategory.getSelectedItemPosition()), brandID.get(binding.spProductBrand.getSelectedItemPosition()), s.toString()).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<List<ProductsItem>>() {
+                        @Override
+                        public void onSubscribe(Disposable d) {
+
+                        }
+
+                        @Override
+                        public void onNext(List<ProductsItem> productsItems) {
+                            binding.rvProduct.setAdapter(new ProductListRecyclerAdapter(context, ProductListActivity.this, productsItems, selectedProductList));
+
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+
+                        }
+
+                        @Override
+                        public void onComplete() {
+
+                        }
+                    });
+                  } else {
+                    databaseHandler.getProduct(categoryID.get(binding.spProductCategory.getSelectedItemPosition()), brandID.get(binding.spProductBrand.getSelectedItemPosition())).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<List<ProductsItem>>() {
+                        @Override
+                        public void onSubscribe(Disposable d) {
+
+                        }
+
+                        @Override
+                        public void onNext(List<ProductsItem> productsItems) {
+                            binding.rvProduct.setAdapter(new ProductListRecyclerAdapter(context, ProductListActivity.this, productsItems, selectedProductList));
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+
+                        }
+
+                        @Override
+                        public void onComplete() {
+
+                        }
+                    });
+
                 }
             }
 
@@ -111,9 +158,29 @@ public class ProductListActivity extends AppCompatActivity  {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 binding.srlProduct.setRefreshing(false);
-                List<ProductsItem> productsItemList = databaseHandler.getProduct(categoryID.get(position), brandID.get(binding.spProductBrand.getSelectedItemPosition()));
-                binding.rvProduct.setAdapter(new ProductListRecyclerAdapter(context, ProductListActivity.this, productsItemList, selectedProductList));
-            }
+                databaseHandler.getProduct(categoryID.get(position), brandID.get(binding.spProductBrand.getSelectedItemPosition())).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<List<ProductsItem>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        mCompositeDisposable.add(d);
+                    }
+
+                    @Override
+                    public void onNext(List<ProductsItem> productsItems) {
+                        binding.rvProduct.setAdapter(new ProductListRecyclerAdapter(context, ProductListActivity.this, productsItems, selectedProductList));
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+                  }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
@@ -136,9 +203,29 @@ public class ProductListActivity extends AppCompatActivity  {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 binding.srlProduct.setRefreshing(false);
-                List<ProductsItem> productsItemList = databaseHandler.getProduct(categoryID.get(binding.spProductCategory.getSelectedItemPosition()), brandID.get(position));
-                binding.rvProduct.setAdapter(new ProductListRecyclerAdapter(context, ProductListActivity.this, productsItemList, selectedProductList));
-            }
+               databaseHandler.getProduct(categoryID.get(binding.spProductCategory.getSelectedItemPosition()), brandID.get(position)).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<List<ProductsItem>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        mCompositeDisposable.add(d);
+                    }
+
+                    @Override
+                    public void onNext(List<ProductsItem> productsItems) {
+                        binding.rvProduct.setAdapter(new ProductListRecyclerAdapter(context, ProductListActivity.this, productsItems, selectedProductList));
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+              }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
@@ -148,9 +235,29 @@ public class ProductListActivity extends AppCompatActivity  {
 
     private void getProducts() {
         binding.srlProduct.setRefreshing(false);
-        List<ProductsItem> productsItemList = databaseHandler.getProduct(0, 0);
-        binding.rvProduct.setAdapter(new ProductListRecyclerAdapter(context, ProductListActivity.this, productsItemList, selectedProductList));
-        //if this activity called from product activity
+        databaseHandler.getProduct(0, 0).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<List<ProductsItem>>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                mCompositeDisposable.add(d);
+            }
+
+            @Override
+            public void onNext(List<ProductsItem> productsItems) {
+                binding.rvProduct.setAdapter(new ProductListRecyclerAdapter(context, ProductListActivity.this, productsItems, selectedProductList));
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        });
+          //if this activity called from product activity
     }
 
 
@@ -173,6 +280,10 @@ public class ProductListActivity extends AppCompatActivity  {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        if(mCompositeDisposable!=null && !mCompositeDisposable.isDisposed()){
+            mCompositeDisposable.dispose();
+
+        }
     }
 
     @Override

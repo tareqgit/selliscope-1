@@ -47,6 +47,9 @@ public class ProductsItem implements Serializable {
     @SerializedName("category")
     private Category category;
 
+    @SerializedName("status")
+    private String status;
+
     @SerializedName("brand")
     private Brand brand;
 
@@ -160,5 +163,13 @@ public class ProductsItem implements Serializable {
 
     public void setBrand(Brand brand) {
         this.brand = brand;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

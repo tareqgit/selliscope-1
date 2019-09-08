@@ -23,6 +23,13 @@ import com.humaclab.lalteer.utils.DatabaseHandler;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.Observable;
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
+
 public class ProductActivity extends AppCompatActivity {
     private SelliscopeApiEndpointInterface apiService;
     private RecyclerView rv_product;
@@ -31,6 +38,7 @@ public class ProductActivity extends AppCompatActivity {
     private List<String> categoryName = new ArrayList<>(), brandName = new ArrayList<>();
     private List<Integer> categoryID = new ArrayList<>(), brandID = new ArrayList<>();
     private DatabaseHandler databaseHandler;
+    private CompositeDisposable mCompositeDisposable = new CompositeDisposable();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +70,28 @@ public class ProductActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 try {
-                    rv_product.setAdapter(new ProductRecyclerViewAdapter(getApplication(), databaseHandler.getProduct(categoryID.get(position), brandID.get(sp_brand.getSelectedItemPosition()))));
+                     databaseHandler.getProduct(categoryID.get(position), brandID.get(sp_brand.getSelectedItemPosition())).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<List<ProductsItem>>() {
+                         @Override
+                         public void onSubscribe(Disposable d) {
+                            mCompositeDisposable.add(d);
+                         }
+
+                         @Override
+                         public void onNext(List<ProductsItem> productsItems) {
+                             rv_product.setAdapter(new ProductRecyclerViewAdapter(getApplication(), productsItems));
+                         }
+
+                         @Override
+                         public void onError(Throwable e) {
+
+                         }
+
+                         @Override
+                         public void onComplete() {
+
+                         }
+                     });
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -77,7 +106,28 @@ public class ProductActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 try {
-                    rv_product.setAdapter(new ProductRecyclerViewAdapter(getApplication(), databaseHandler.getProduct(categoryID.get(sp_category.getSelectedItemPosition()), brandID.get(position))));
+                    databaseHandler.getProduct(categoryID.get(sp_category.getSelectedItemPosition()), brandID.get(position)).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<List<ProductsItem>>() {
+                        @Override
+                        public void onSubscribe(Disposable d) {
+                            mCompositeDisposable.add(d);
+                        }
+
+                        @Override
+                        public void onNext(List<ProductsItem> productsItems) {
+                            rv_product.setAdapter(new ProductRecyclerViewAdapter(getApplication(), productsItems));
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+
+                        }
+
+                        @Override
+                        public void onComplete() {
+
+                        }
+                    });
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -94,8 +144,28 @@ public class ProductActivity extends AppCompatActivity {
     private void getFromLocal() {
         if (srl_product.isRefreshing())
             srl_product.setRefreshing(false);
-        List<ProductsItem> products = databaseHandler.getProduct(0, 0);
-        rv_product.setAdapter(new ProductRecyclerViewAdapter(getApplication(), products));
+        databaseHandler.getProduct(0, 0).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new Observer<List<ProductsItem>>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                mCompositeDisposable.add(d);
+            }
+
+            @Override
+            public void onNext(List<ProductsItem> productsItems) {
+                rv_product.setAdapter(new ProductRecyclerViewAdapter(getApplication(), productsItems));
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        });
+
 
         //For spinner
         List<Category> categories = databaseHandler.getCategory();
@@ -120,5 +190,15 @@ public class ProductActivity extends AppCompatActivity {
         sp_brand.setAdapter(new ArrayAdapter<>(getApplicationContext(), R.layout.spinner_item, brandName));
         sp_brand.setSelection(0);
         //For spinner
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        if(mCompositeDisposable!=null && !mCompositeDisposable.isDisposed()){
+            mCompositeDisposable.dispose();
+
+        }
     }
 }

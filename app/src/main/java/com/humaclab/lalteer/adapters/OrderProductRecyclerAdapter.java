@@ -13,6 +13,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -157,6 +159,19 @@ public class OrderProductRecyclerAdapter extends RecyclerView.Adapter<OrderProdu
 
         holder.getBinding().setVariable(BR.product, products);
         holder.getBinding().executePendingBindings();
+        setAnimation(holder.getBinding().cvProductBackground, position);
+    }
+
+    private int lastPosition = -1;
+    private void setAnimation(View viewToAnimate, int position)
+    {
+        // If the bound view wasn't previously displayed on screen, it's animated
+        if (position > lastPosition)
+        {
+            Animation animation = AnimationUtils.loadAnimation(context, R.anim.up_from_bottom);
+            viewToAnimate.startAnimation(animation);
+            lastPosition = position;
+        }
     }
 
     @Override

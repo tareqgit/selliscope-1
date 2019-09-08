@@ -12,6 +12,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -177,6 +179,19 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
                 context.startActivity(intent);
             }
         });
+        setAnimation(holder.cardView, position);
+    }
+
+    private int lastPosition = -1;
+    private void setAnimation(View viewToAnimate, int position)
+    {
+        // If the bound view wasn't previously displayed on screen, it's animated
+        if (position > lastPosition)
+        {
+            Animation animation = AnimationUtils.loadAnimation(context, R.anim.up_from_bottom);
+            viewToAnimate.startAnimation(animation);
+            lastPosition = position;
+        }
     }
 
     private void getLocation(final int outletId, final Location outletLocation, final ProgressBar progressbar) {

@@ -4,6 +4,8 @@ import android.content.Intent;
 import androidx.databinding.DataBindingUtil;
 import android.os.Bundle;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -78,6 +80,8 @@ public class OutletActivity extends AppCompatActivity {
         binding.rvOutlet.addItemDecoration(new VerticalSpaceItemDecoration(20));
         binding.rvOutlet.setLayoutManager(new LinearLayoutManager(this));
 
+
+
         if (!NetworkUtility.isNetworkAvailable(this)) {
             Toast.makeText(this, "Connect to Wifi or Mobile Data for better performance.", Toast.LENGTH_SHORT).show();
         }
@@ -123,7 +127,26 @@ public class OutletActivity extends AppCompatActivity {
 
             }
         });
-        getOutlets();
+
+        if (NetworkUtility.isNetworkAvailable(OutletActivity.this)) {
+            loadLocalIntoBackground.loadOutlet(new LoadLocalIntoBackground.LoadCompleteListener() {
+                @Override
+                public void onLoadComplete() {
+                    Toast.makeText(OutletActivity.this, "Data load complete", Toast.LENGTH_SHORT).show();
+                    getOutlets();
+                }
+
+                @Override
+                public void onLoadFailed(String reason) {
+                    Toast.makeText(OutletActivity.this, "Data Load failed: "+reason, Toast.LENGTH_SHORT).show();
+                }
+            });
+        }else{
+            getOutlets();
+            Toast.makeText(getApplicationContext(), "Connect to Wifi or Mobile Data for better performance.", Toast.LENGTH_SHORT).show();
+        }
+
+
 
     }
 

@@ -87,8 +87,7 @@ public class OrderActivity extends AppCompatActivity implements OrderProductRecy
 
         binding.rvProduct.setLayoutManager(new GridLayoutManager(context, 2));
 
-        getCategory();
-        getBrand();
+
         //  getProducts();
 
         binding.etSearchProduct.addTextChangedListener(new TextWatcher() {
@@ -116,8 +115,7 @@ public class OrderActivity extends AppCompatActivity implements OrderProductRecy
 
         LoadLocalIntoBackground loadLocalIntoBackground = new LoadLocalIntoBackground(OrderActivity.this, mCompositeDisposable);
 
-        getProducts();
-        binding.srlProduct.setRefreshing(false);
+
         binding.srlProduct.setOnRefreshListener(() -> {
             //if network is Available then update the data again
             if (NetworkUtility.isNetworkAvailable(OrderActivity.this)) {
@@ -135,6 +133,7 @@ public class OrderActivity extends AppCompatActivity implements OrderProductRecy
                                 getProducts();
                                 binding.progressBar.setVisibility(View.GONE);
                                 Log.d("tareq_test", "Loading data complete");
+                                binding.srlProduct.setRefreshing(false);
                             }
 
                             @Override
@@ -143,6 +142,7 @@ public class OrderActivity extends AppCompatActivity implements OrderProductRecy
                                 Toast.makeText(context, "Loading Interrupted \n" +
                                         "Please Pull Down to Reload", Toast.LENGTH_SHORT).show();
                                 binding.progressBar.setVisibility(View.GONE);
+                                binding.srlProduct.setRefreshing(false);
                             }
                         });
 
@@ -150,10 +150,11 @@ public class OrderActivity extends AppCompatActivity implements OrderProductRecy
 
                     @Override
                     public void onLoadFailed(String reason) {
-                        Log.e("tareq_test", "Loading data category failed "+reason);
+                        Log.e("tareq_test", "Loading data category failed " + reason);
                         Toast.makeText(context, "Loading Interrupted \n" +
                                 "Please Pull Down to Reload", Toast.LENGTH_SHORT).show();
                         binding.progressBar.setVisibility(View.GONE);
+                        binding.srlProduct.setRefreshing(false);
                     }
                 });
 
@@ -193,7 +194,7 @@ public class OrderActivity extends AppCompatActivity implements OrderProductRecy
 
                 @Override
                 public void onLoadFailed(String reason) {
-                    Log.e("tareq_test", "Loading data category failed "+reason);
+                    Log.e("tareq_test", "Loading data category failed " + reason);
                     Toast.makeText(context, "Loading Interrupted \n" +
                             "Please Pull Down to Reload", Toast.LENGTH_SHORT).show();
                     binding.progressBar.setVisibility(View.GONE);
@@ -201,6 +202,10 @@ public class OrderActivity extends AppCompatActivity implements OrderProductRecy
             });
 
 
+        } else {
+            getCategory();
+            getBrand();
+            getProducts();
         }
 
     }
@@ -208,11 +213,12 @@ public class OrderActivity extends AppCompatActivity implements OrderProductRecy
     @Override
     protected void onResume() {
         super.onResume();
+        if (mOrderProductRecyclerAdapter != null) {
+            mOrderProductRecyclerAdapter.notifyDataSetChanged(); //we are Notify to update recycler view cz if we delete any Item from cart should be live in this activity also
 
-        mOrderProductRecyclerAdapter.notifyDataSetChanged(); //we are Notify to update recycler view cz if we delete any Item from cart should be live in this activity also
-        // Restore state
-        binding.rvProduct.getLayoutManager().onRestoreInstanceState(recyclerViewState); //we are restoring recycler position
-
+            // Restore state
+            binding.rvProduct.getLayoutManager().onRestoreInstanceState(recyclerViewState); //we are restoring recycler position
+        }
         updateTotal_Discount_Grnd(); //need to update snackbar on resume
     }
 
@@ -286,7 +292,7 @@ public class OrderActivity extends AppCompatActivity implements OrderProductRecy
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (position != 0) {
 
-                   // binding.srlProduct.setRefreshing(false);
+                    // binding.srlProduct.setRefreshing(false);
                     List<ProductsItem> productsItemList = databaseHandler.getProduct(categoryID.get(binding.spProductCategory.getSelectedItemPosition()), brandID.get(position));
                     binding.rvProduct.setAdapter(new OrderProductRecyclerAdapter(context, OrderActivity.this, productsItemList, selectedProductList, OrderActivity.this));
                 }
@@ -305,7 +311,7 @@ public class OrderActivity extends AppCompatActivity implements OrderProductRecy
 
     private void getProducts() {
 
-       // binding.srlProduct.setRefreshing(false);
+        // binding.srlProduct.setRefreshing(false);
         List<ProductsItem> productsItemList = new ArrayList<>();
 
         productsItemList = databaseHandler.getProduct(categoryID.get(binding.spProductCategory.getSelectedItemPosition()), brandID.get(binding.spProductBrand.getSelectedItemPosition()));
@@ -415,7 +421,7 @@ public class OrderActivity extends AppCompatActivity implements OrderProductRecy
         selectedProductList.clear();
         super.onDestroy();
 
-        if(mCompositeDisposable!=null && !mCompositeDisposable.isDisposed()){
+        if (mCompositeDisposable != null && !mCompositeDisposable.isDisposed()) {
             mCompositeDisposable.dispose();
         }
     }

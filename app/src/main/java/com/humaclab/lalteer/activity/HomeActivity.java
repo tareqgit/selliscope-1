@@ -15,6 +15,7 @@ import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -431,9 +432,27 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                     pd.setCancelable(false);
                     pd.show();
 
-                    loadLocalIntoBackground.updateAllData();
-                    new Handler().postDelayed(() -> pd.dismiss(), 60000);
+                 /*   loadLocalIntoBackground.updateAllData();
+                    new Handler().postDelayed(() -> pd.dismiss(), 60000);*/
+                    AsyncTask.execute(() -> loadLocalIntoBackground.loadAll(new LoadLocalIntoBackground.LoadCompleteListener() {
+                        @Override
+                        public void onLoadComplete() {
 
+                            Log.d("tareq_test", "Data load all complete");
+                            Toast.makeText(HomeActivity.this, "Loading Completed: " ,Toast.LENGTH_SHORT).show();
+                            pd.dismiss();
+
+                        }
+
+                        @Override
+                        public void onLoadFailed(String msg) {
+                            Log.d("tareq_test", "Data load all failed: " + msg);
+                            Toast.makeText(HomeActivity.this, "Loading Failed: " + msg, Toast.LENGTH_SHORT).show();
+
+                            pd.dismiss();
+
+                        }
+                    }));
 
                 });
 

@@ -512,6 +512,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     }
 
+
     public void removeAllBrand() {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_BRAND, KEY_BRAND_ID + " > ?", new String[]{String.valueOf(-1)});

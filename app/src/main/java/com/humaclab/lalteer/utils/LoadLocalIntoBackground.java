@@ -18,6 +18,8 @@ import com.humaclab.lalteer.model.Thana.ThanaResponse;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 import javax.annotation.Nullable;
 
@@ -362,7 +364,10 @@ public class LoadLocalIntoBackground {
                                     databaseHandler.removeOutlet();*/
 
                                 if (getOutletListSuccessful != null) {
-                                    databaseHandler.addOutlet(getOutletListSuccessful.outletsResult.outlets);
+                                  Executors.newSingleThreadExecutor().execute(() -> {
+
+                                  });
+
                                 }
 
 

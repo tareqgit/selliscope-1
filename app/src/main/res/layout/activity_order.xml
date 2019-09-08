@@ -82,9 +82,10 @@
             <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
                 android:id="@+id/srl_product"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_above="@id/ll_total"
                 android:layout_below="@id/et_search_product"
+                android:foregroundTint="@color/text_blue"
                 android:orientation="horizontal">
 
                 <androidx.recyclerview.widget.RecyclerView

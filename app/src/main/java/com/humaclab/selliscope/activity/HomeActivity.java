@@ -701,6 +701,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                     }
                 }, 60000);*/
                 break;
+
+
             case R.id.nav_settings:
                 startActivity(new Intent(HomeActivity.this, SettingsActivity.class));
                 break;

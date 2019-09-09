@@ -857,8 +857,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         try {
             List<Outlets.Outlet> outlets = getAllOutlet().outlets;
             for (Outlets.Outlet outlet : outletList) {
-
-
                 if (!outlets.contains(outlet)) {
                     values.put(KEY_OUTLET_ID, outlet.outletId);
                     values.put(KEY_OUTLET_NAME, outlet.outletName);

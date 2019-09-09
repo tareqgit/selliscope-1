@@ -46,7 +46,6 @@ public class InternetConnectivityChangeReceiver extends BroadcastReceiver {
             @Override
             public void uploadComplete() {
                 Log.d("tareq_test", "Upload complete");
-
             }
 
             @Override

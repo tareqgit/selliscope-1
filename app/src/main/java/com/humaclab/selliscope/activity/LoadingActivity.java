@@ -20,7 +20,6 @@ import com.humaclab.selliscope.utils.SessionManager;
 
 public class LoadingActivity extends AppCompatActivity {
     TextView relaod;
-    private SelliscopeApiEndpointInterface apiService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,7 +27,7 @@ public class LoadingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_loading);
 
         SessionManager sessionManager = new SessionManager(this);
-        apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(), sessionManager.getUserPassword(), false).create(SelliscopeApiEndpointInterface.class);
+        SelliscopeApiEndpointInterface apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(), sessionManager.getUserPassword(), false).create(SelliscopeApiEndpointInterface.class);
 
         LoadLocalIntoBackground loadLocalIntoBackground = new LoadLocalIntoBackground(getApplicationContext());
         relaod = (TextView) findViewById(R.id.textViewReload);

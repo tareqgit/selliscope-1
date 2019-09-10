@@ -334,7 +334,8 @@ public class LoadLocalIntoBackground {
     }
 
     public void loadOutlet( LoadCompleteListener loadCompleteListener) {
-        apiService.getOutlets().subscribeOn(Schedulers.io())
+        apiService.getOutlets()
+                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new SingleObserver<Response<ResponseBody>>() {
                     @Override
@@ -347,9 +348,17 @@ public class LoadLocalIntoBackground {
                         Gson gson = new Gson();
                         if (response.code() == 200) {
                             try {
-                                Outlets getOutletListSuccessful = null;
+
                                 if (response.body() != null) {
-                                    getOutletListSuccessful = gson.fromJson(response.body().string(), Outlets.class);
+                                    final   Outlets      getOutletListSuccessful = gson.fromJson(response.body().string(), Outlets.class);
+
+                                    if (getOutletListSuccessful != null) {
+                                        Executors.newSingleThreadExecutor().execute(() -> {
+                                            databaseHandler.addOutlet(getOutletListSuccessful.outletsResult.outlets);
+                                        });
+
+                                    }
+
                                 }
                            /*     if (!fullUpdate) {
                                     // if (getOutletListSuccessful.outletsResult.outlets.size() != databaseHandler.getSizeOfOutlet()) {
@@ -363,12 +372,7 @@ public class LoadLocalIntoBackground {
                                 } else {
                                     databaseHandler.removeOutlet();*/
 
-                                if (getOutletListSuccessful != null) {
-                                  Executors.newSingleThreadExecutor().execute(() -> {
 
-                                  });
-
-                                }
 
 
                                 if (loadCompleteListener != null)

@@ -16,7 +16,7 @@ public class PaymentResponse {
         @SerializedName("outlet_id")
         public int outlet_id;
         @SerializedName("amount")
-        public int amount;
+        public double amount;
         @SerializedName("type")
         public int type;
         @SerializedName("discount")

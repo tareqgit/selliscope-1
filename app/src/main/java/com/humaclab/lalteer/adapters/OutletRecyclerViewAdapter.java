@@ -49,6 +49,7 @@ import com.humaclab.lalteer.utils.SessionManager;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -67,12 +68,12 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
     private SelliscopeApiEndpointInterface apiService;
     private Context context;
     private Activity activity;
-    private Outlets.OutletsResult outletItems;
+    private List<Outlets.Outlet> outlets;
     private SessionManager sessionManager;
     private DatabaseHandler databaseHandler;
 
-    public OutletRecyclerViewAdapter(Context context, Activity activity, Outlets.OutletsResult outletItems) {
-        this.outletItems = outletItems;
+    public OutletRecyclerViewAdapter(Context context, Activity activity, List<Outlets.Outlet> outlets) {
+        this.outlets = outlets;
         this.context = context;
         this.activity = activity;
         this.sessionManager = new SessionManager(context);
@@ -82,26 +83,35 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
                 .setBaseAlpha(.85f)
                 .setIntensity(0)
                 .build();
+
+        databaseHandler = new DatabaseHandler(context);
     }
+
+
+    public void updateOutlets( List<Outlets.Outlet> outlets){
+        this.outlets=outlets;
+        notifyDataSetChanged();
+    }
+
 
     @Override
     public OutletViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        databaseHandler = new DatabaseHandler(context);
+
         View layoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.outlet_item, parent, false);
         return new OutletViewHolder(layoutView);
     }
 
     @Override
     public void onBindViewHolder(final OutletViewHolder holder, final int position) {
-      //  holder.setIsRecyclable(false);
-        final Outlets.Outlet outlet = outletItems.outlets.get(position);
+
+        Outlets.Outlet outlet = outlets.get(position);
 
         ShimmerDrawable shimmerDrawable=new ShimmerDrawable();
         shimmerDrawable.setShimmer(shimmer);
 
 
-        assert outlet.outletImgUrl != null;
-        if(!outlet.outletImgUrl.equals("")) {
+
+        if(!Objects.equals(outlet.outletImgUrl, "")) {
 
             final String url = Constants.BASE_URL.substring(0,Constants.BASE_URL.length() - 4) + outlet.outletImgUrl;
 
@@ -277,7 +287,8 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
 
     @Override
     public int getItemCount() {
-        return outletItems.outlets.size();
+
+        return outlets == null ? 0 : outlets.size();
     }
 
     public class OutletViewHolder extends RecyclerView.ViewHolder {
@@ -308,7 +319,7 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
             itemView.setOnClickListener(v -> {
                 Intent intent = new Intent(context, OutletDetailsActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.putExtra("outletDetails", outletItems.outlets.get(getLayoutPosition()));
+                intent.putExtra("outletDetails", outlets.get(getLayoutPosition()));
                 context.startActivity(intent);
             });
         }

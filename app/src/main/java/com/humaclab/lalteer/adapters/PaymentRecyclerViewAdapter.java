@@ -243,8 +243,13 @@ public class PaymentRecyclerViewAdapter extends RecyclerView.Adapter<PaymentRecy
                     view.requestFocus();
                     pd.dismiss();
                     return;
-                } else {
-                    payment.amount = Integer.parseInt(holder.et_payment.getText().toString());
+                }else if(Double.parseDouble(holder.et_payment.getText().toString())> Double.parseDouble(holder.tvGrandTotal.getText().toString())) {
+                    View view = holder.et_payment;
+                    holder.et_payment.setError("Payment Value Exceed");
+                    view.requestFocus();
+                    pd.dismiss();
+                }else {
+                    payment.amount = Double.parseDouble(holder.et_payment.getText().toString());
 
                 }
 
@@ -339,9 +344,7 @@ public class PaymentRecyclerViewAdapter extends RecyclerView.Adapter<PaymentRecy
                                 pd.dismiss();
                                 e.printStackTrace();
                             }
-                        } else if (response.code() == 400) {
-                            pd.dismiss();
-                        } else {
+                      } else {
                             pd.dismiss();
                             Toast.makeText(context,
                                     "Server Error! Try Again Later!", Toast.LENGTH_SHORT).show();
@@ -388,7 +391,7 @@ public class PaymentRecyclerViewAdapter extends RecyclerView.Adapter<PaymentRecy
         private Button btn_pay;
         private Spinner sp_payment_type, sp_bank_name;
         private EditText et_payment, bankName, chequeNumber, depositSlip, depositTo;
-        private TextView date_view;
+        private TextView date_view, tvGrandTotal;
         private ImageView mImageButton;
 
         public PaymentViewHolder(View itemView) {
@@ -404,6 +407,7 @@ public class PaymentRecyclerViewAdapter extends RecyclerView.Adapter<PaymentRecy
             mImageButton = itemView.findViewById(R.id.imageButton);
             date_view = itemView.findViewById(R.id.textView_date);
             depositTo = itemView.findViewById(R.id.et_deposit_to);
+            tvGrandTotal=itemView.findViewById(R.id.tv_grand_total);
 
 
             /**

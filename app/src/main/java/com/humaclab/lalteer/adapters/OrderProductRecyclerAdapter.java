@@ -30,6 +30,7 @@ import com.humaclab.lalteer.helper.ShowProductSelectionDialog;
 import com.humaclab.lalteer.model.variant_product.ProductsItem;
 import com.humaclab.lalteer.utils.Constants;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -44,12 +45,7 @@ public class OrderProductRecyclerAdapter extends RecyclerView.Adapter<OrderProdu
     private List<SelectedProductHelper> selectedProductList;
     private OnSelectProductListener mOnSelectProductListener;
 
-    private OrderProductRecyclerAdapter(Context context, OrderActivity orderActivity, List<ProductsItem> productsItemList, List<SelectedProductHelper> selectedProductList) {
-        this.orderActivity = orderActivity;
-        this.context = context;
-        this.productsItemList = productsItemList;
-        this.selectedProductList = selectedProductList;
-    }
+
 
 
     public OrderProductRecyclerAdapter(Context context, OrderActivity orderActivity, List<ProductsItem> productsItemList, List<SelectedProductHelper> selectedProductList, OnSelectProductListener onSelectProductListener) {
@@ -58,6 +54,12 @@ public class OrderProductRecyclerAdapter extends RecyclerView.Adapter<OrderProdu
         this.productsItemList = productsItemList;
         this.selectedProductList = selectedProductList;
         this.mOnSelectProductListener = onSelectProductListener;
+    }
+
+
+    public   void updateProductItemList( List<ProductsItem> productsItemList){
+        this.productsItemList = productsItemList;
+        notifyDataSetChanged();
     }
 
     @Override
@@ -131,7 +133,8 @@ public class OrderProductRecyclerAdapter extends RecyclerView.Adapter<OrderProdu
         /*On remove button click */
         holder.getBinding().ivRemoveProduct.setOnClickListener(v -> {
             if (!selectedProductList.isEmpty()) {
-                for (final SelectedProductHelper selectedProductHelper : selectedProductList) {
+                List<SelectedProductHelper> selectedProductHelperList = new ArrayList<>(selectedProductList);
+                for (final SelectedProductHelper selectedProductHelper : selectedProductHelperList) {
                     if (selectedProductHelper.getProductID().equals(String.valueOf(products.getId()))
                             && selectedProductHelper.getProductRow().equals(products.getVariantRow())) {
 

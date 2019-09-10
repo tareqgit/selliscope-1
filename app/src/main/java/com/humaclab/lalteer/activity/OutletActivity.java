@@ -1,14 +1,18 @@
 package com.humaclab.lalteer.activity;
 
 import android.content.Intent;
+
 import androidx.databinding.DataBindingUtil;
+
 import android.os.Bundle;
+
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
+
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.MenuItem;
@@ -29,6 +33,7 @@ import com.humaclab.lalteer.utils.NetworkUtility;
 import com.humaclab.lalteer.utils.SessionManager;
 import com.humaclab.lalteer.utils.VerticalSpaceItemDecoration;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -47,7 +52,7 @@ public class OutletActivity extends AppCompatActivity {
     private OutletRecyclerViewAdapter outletRecyclerViewAdapter;
     private DatabaseHandler databaseHandler;
     private SessionManager sessionManager;
-    private Outlets.OutletsResult outletsResult;
+    List<Outlets.Outlet> outlets =new ArrayList<>();
     private LoadLocalIntoBackground loadLocalIntoBackground;
     private CompositeDisposable mCompositeDisposable = new CompositeDisposable();
 
@@ -80,7 +85,9 @@ public class OutletActivity extends AppCompatActivity {
         binding.rvOutlet.addItemDecoration(new VerticalSpaceItemDecoration(20));
         binding.rvOutlet.setLayoutManager(new LinearLayoutManager(this));
 
-
+     //   outlets = new ArrayList<>();
+        outletRecyclerViewAdapter = new OutletRecyclerViewAdapter(OutletActivity.this, OutletActivity.this, outlets);
+        binding.rvOutlet.setAdapter(outletRecyclerViewAdapter);
 
         if (!NetworkUtility.isNetworkAvailable(this)) {
             Toast.makeText(this, "Connect to Wifi or Mobile Data for better performance.", Toast.LENGTH_SHORT).show();
@@ -94,9 +101,9 @@ public class OutletActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                Outlets.OutletsResult outletsResult = databaseHandler.getSearchedOutlet(String.valueOf(s));
-                outletRecyclerViewAdapter = new OutletRecyclerViewAdapter(OutletActivity.this, OutletActivity.this, outletsResult);
-                binding.rvOutlet.setAdapter(outletRecyclerViewAdapter);
+                outlets.clear();
+                outlets = databaseHandler.getSearchedOutlet(String.valueOf(s)).outlets;
+                outletRecyclerViewAdapter.updateOutlets(outlets);
             }
 
             @Override
@@ -110,6 +117,7 @@ public class OutletActivity extends AppCompatActivity {
             public void onRefresh() {
                 if (!NetworkUtility.isNetworkAvailable(OutletActivity.this)) {
                     Toast.makeText(getApplicationContext(), "Connect to Wifi or Mobile Data for better performance.", Toast.LENGTH_SHORT).show();
+                    binding.srlOutlet.setRefreshing(false);
                 }
 
                 loadLocalIntoBackground.loadOutlet(new LoadLocalIntoBackground.LoadCompleteListener() {
@@ -121,7 +129,7 @@ public class OutletActivity extends AppCompatActivity {
 
                     @Override
                     public void onLoadFailed(String reason) {
-                        Toast.makeText(OutletActivity.this, "Data Load failed: "+reason, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(OutletActivity.this, "Data Load failed: " + reason, Toast.LENGTH_SHORT).show();
                     }
                 });
 
@@ -138,25 +146,27 @@ public class OutletActivity extends AppCompatActivity {
 
                 @Override
                 public void onLoadFailed(String reason) {
-                    Toast.makeText(OutletActivity.this, "Data Load failed: "+reason, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(OutletActivity.this, "Data Load failed: " + reason, Toast.LENGTH_SHORT).show();
                 }
             });
-        }else{
+        } else {
             getOutlets();
             Toast.makeText(getApplicationContext(), "Connect to Wifi or Mobile Data for better performance.", Toast.LENGTH_SHORT).show();
         }
 
 
+        getOutlets();
 
     }
 
     public void getOutlets() {
-        outletsResult = databaseHandler.getAllOutlet();
-        if (!outletsResult.outlets.isEmpty()) {
+       outlets.clear();
+        outlets = databaseHandler.getAllOutlet().outlets;
+        if (!outlets.isEmpty()) {
             if (binding.srlOutlet.isRefreshing())
                 binding.srlOutlet.setRefreshing(false);
-            outletRecyclerViewAdapter = new OutletRecyclerViewAdapter(OutletActivity.this, OutletActivity.this, outletsResult);
-            binding.rvOutlet.setAdapter(outletRecyclerViewAdapter);
+
+            outletRecyclerViewAdapter.updateOutlets(outlets);
         } else {
             Toast.makeText(getApplicationContext(), "You don't have any Dealer in your list.", Toast.LENGTH_LONG).show();
         }
@@ -166,29 +176,29 @@ public class OutletActivity extends AppCompatActivity {
      * For getting route-plan data
      */
     public void getRoute() {
-         apiService.getRoutes().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                 .subscribe(new SingleObserver<Response<RouteResponse>>() {
-                     @Override
-                     public void onSubscribe(Disposable d) {
-                         if(mCompositeDisposable!=null) mCompositeDisposable.add(d);
+        apiService.getRoutes().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new SingleObserver<Response<RouteResponse>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        if (mCompositeDisposable != null) mCompositeDisposable.add(d);
 
-                     }
+                    }
 
-                     @Override
-                     public void onSuccess(Response<RouteResponse> response) {
-                         if (!(response.body() != null && response.body().getResult().getRoute().isEmpty())) {
-                             binding.tvToolbarTitle.setText(response.body() != null ? response.body().getResult().getRoute().get(0).getName() : null);
-                             getRouteDetails(response.body() != null ? response.body().getResult().getRoute().get(0).getId() : 0);
-                         } else {
-                             binding.tvToolbarTitle.setText("Outlet");
-                         }
-                     }
+                    @Override
+                    public void onSuccess(Response<RouteResponse> response) {
+                        if (!(response.body() != null && response.body().getResult().getRoute().isEmpty())) {
+                            binding.tvToolbarTitle.setText(response.body() != null ? response.body().getResult().getRoute().get(0).getName() : null);
+                            getRouteDetails(response.body() != null ? response.body().getResult().getRoute().get(0).getId() : 0);
+                        } else {
+                            binding.tvToolbarTitle.setText("Outlet");
+                        }
+                    }
 
-                     @Override
-                     public void onError(Throwable e) {
+                    @Override
+                    public void onError(Throwable e) {
 
-                     }
-                 });
+                    }
+                });
 
     }
 
@@ -198,28 +208,28 @@ public class OutletActivity extends AppCompatActivity {
      * @param routeID int
      */
     private void getRouteDetails(int routeID) {
-       apiService.getRouteDetails(routeID).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-               .subscribe(new SingleObserver<Response<RouteDetailsResponse>>() {
-                   @Override
-                   public void onSubscribe(Disposable d) {
-                       if(mCompositeDisposable!=null) mCompositeDisposable.add(d);
-                   }
+        apiService.getRouteDetails(routeID).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new SingleObserver<Response<RouteDetailsResponse>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        if (mCompositeDisposable != null) mCompositeDisposable.add(d);
+                    }
 
-                   @Override
-                   public void onSuccess(Response<RouteDetailsResponse> response) {
-                       final List<RouteDetailsResponse.OutletItem> check = response.body() != null ? response.body().getResult().getOutletItemList() : null;
-                       if (response.isSuccessful()) {
-                           binding.tvCheckInCount.setText(String.format(Locale.ENGLISH,"%d / %d", response.body() != null ? response.body().getResult().getCheckedOutlet() : 0, response.body() != null ? response.body().getResult().getTotalOutlet() : 0));
-                           loadLocalIntoBackground.saveOutletRoutePlan(check);
-                           getOutlets(); //For reloading the outlet recycler view
-                       }
-                   }
+                    @Override
+                    public void onSuccess(Response<RouteDetailsResponse> response) {
+                        final List<RouteDetailsResponse.OutletItem> check = response.body() != null ? response.body().getResult().getOutletItemList() : null;
+                        if (response.isSuccessful()) {
+                            binding.tvCheckInCount.setText(String.format(Locale.ENGLISH, "%d / %d", response.body() != null ? response.body().getResult().getCheckedOutlet() : 0, response.body() != null ? response.body().getResult().getTotalOutlet() : 0));
+                            loadLocalIntoBackground.saveOutletRoutePlan(check);
+                            getOutlets(); //For reloading the outlet recycler view
+                        }
+                    }
 
-                   @Override
-                   public void onError(Throwable e) {
+                    @Override
+                    public void onError(Throwable e) {
 
-                   }
-               });
+                    }
+                });
 
     }
 

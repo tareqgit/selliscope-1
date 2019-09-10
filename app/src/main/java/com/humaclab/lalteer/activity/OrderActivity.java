@@ -67,9 +67,11 @@ public class OrderActivity extends AppCompatActivity implements OrderProductRecy
 
     public CompositeDisposable mCompositeDisposable = new CompositeDisposable();
 
-
+    OrderProductRecyclerAdapter mOrderProductRecyclerAdapter;
     // Save state
     private Parcelable recyclerViewState; //for storing recycler scroll postion
+
+    List<ProductsItem> productsItemList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,6 +96,9 @@ public class OrderActivity extends AppCompatActivity implements OrderProductRecy
 
         binding.rvProduct.setLayoutManager(new GridLayoutManager(context, 2));
 
+
+        mOrderProductRecyclerAdapter = new OrderProductRecyclerAdapter(context, OrderActivity.this, productsItemList, selectedProductList, OrderActivity.this);
+        binding.rvProduct.setAdapter(mOrderProductRecyclerAdapter);
 
         //  getProducts();
 
@@ -131,7 +136,7 @@ public class OrderActivity extends AppCompatActivity implements OrderProductRecy
 
                                 @Override
                                 public void onSuccess(List<ProductsItem> productsItems) {
-                                    binding.rvProduct.setAdapter(new OrderProductRecyclerAdapter(context, OrderActivity.this, productsItems, selectedProductList, OrderActivity.this));
+                                    mOrderProductRecyclerAdapter.updateProductItemList(productsItems);
 
                                 }
 
@@ -166,8 +171,7 @@ public class OrderActivity extends AppCompatActivity implements OrderProductRecy
 
                                 @Override
                                 public void onSuccess(List<ProductsItem> productsItems) {
-                                    binding.rvProduct.setAdapter(new OrderProductRecyclerAdapter(context, OrderActivity.this, productsItems, selectedProductList, OrderActivity.this));
-
+                                    mOrderProductRecyclerAdapter.updateProductItemList(productsItems);
                                 }
 
                                 @Override
@@ -186,12 +190,17 @@ public class OrderActivity extends AppCompatActivity implements OrderProductRecy
 
         LoadLocalIntoBackground loadLocalIntoBackground = new LoadLocalIntoBackground(OrderActivity.this, mCompositeDisposable);
 
+        binding.progressBar.setVisibility(View.INVISIBLE);
+
+
 
         binding.srlProduct.setOnRefreshListener(() -> {
             //if network is Available then update the data again
+            binding.etSearchProduct.setText("");
             if (NetworkUtility.isNetworkAvailable(OrderActivity.this)) {
 
                 binding.progressBar.setVisibility(View.VISIBLE);
+                binding.srlProduct.setRefreshing(false);
                 loadLocalIntoBackground.loadCategory(new LoadLocalIntoBackground.LoadCompleteListener() {
                     @Override
                     public void onLoadComplete() {
@@ -230,6 +239,8 @@ public class OrderActivity extends AppCompatActivity implements OrderProductRecy
                 });
 
 
+            }else{
+                binding.srlProduct.setRefreshing(false);
             }
 
         });
@@ -273,11 +284,10 @@ public class OrderActivity extends AppCompatActivity implements OrderProductRecy
             });
 
 
-        } else {
-            getCategory();
-            getBrand();
-            getProducts();
         }
+        getCategory();
+        getBrand();
+        getProducts();
 
     }
 
@@ -335,8 +345,7 @@ public class OrderActivity extends AppCompatActivity implements OrderProductRecy
                                            @Override
                                            public void onSuccess(List<ProductsItem> productsItems) {
 
-                                               binding.rvProduct.setAdapter(new OrderProductRecyclerAdapter(context, OrderActivity.this, productsItems, selectedProductList, OrderActivity.this));
-
+                                                mOrderProductRecyclerAdapter.updateProductItemList(productsItems);
                                            }
 
                                            @Override
@@ -424,8 +433,7 @@ public class OrderActivity extends AppCompatActivity implements OrderProductRecy
 
                                            @Override
                                            public void onSuccess(List<ProductsItem> productsItems) {
-                                               binding.rvProduct.setAdapter(new OrderProductRecyclerAdapter(context, OrderActivity.this, productsItems, selectedProductList, OrderActivity.this));
-
+                                                mOrderProductRecyclerAdapter.updateProductItemList(productsItems);
                                            }
 
                                            @Override
@@ -447,7 +455,7 @@ public class OrderActivity extends AppCompatActivity implements OrderProductRecy
         }
     }
 
-    OrderProductRecyclerAdapter mOrderProductRecyclerAdapter;
+
 
     private void getProducts() {
 
@@ -479,9 +487,7 @@ public class OrderActivity extends AppCompatActivity implements OrderProductRecy
 
                     @Override
                     public void onSuccess(List<ProductsItem> productsItems) {
-                        mOrderProductRecyclerAdapter = new OrderProductRecyclerAdapter(context, OrderActivity.this, productsItems, selectedProductList, OrderActivity.this);
-
-                        binding.rvProduct.setAdapter(mOrderProductRecyclerAdapter);
+                        mOrderProductRecyclerAdapter.updateProductItemList(productsItems);
 
                     }
 

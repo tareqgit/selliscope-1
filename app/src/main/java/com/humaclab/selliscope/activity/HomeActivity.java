@@ -186,7 +186,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
         manufacturer = android.os.Build.MANUFACTURER;
         //registerReceiver();
-        sendLocationDataService = new SendLocationDataService();
+    ////I think this is redundent now ///    sendLocationDataService = new SendLocationDataService();
 
         sessionManager = new SessionManager(this);
 

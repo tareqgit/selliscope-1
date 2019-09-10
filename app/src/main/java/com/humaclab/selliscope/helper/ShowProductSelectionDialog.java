@@ -124,44 +124,45 @@ public class ShowProductSelectionDialog {
                         }
                     binding.tvProductPrice.setText(String.format(Locale.ENGLISH, "%,.2f", priceOfRate));
                     //binding.tvTotalPrice.setText(String.format("%.2f", Double.valueOf(binding.tvProductPrice.getText().toString().replace(",", "")) * Double.valueOf(binding.etProductQty.getText().toString())));
-                    binding.tvTotalPrice.setText(String.format(Locale.ENGLISH, "%,.2f",  Double.valueOf(binding.tvProductPrice.getText().toString().replace(",", "")) * Double.valueOf(binding.etProductQty.getText().toString())));
+                    binding.tvTotalPrice.setText(String.format(Locale.ENGLISH, "%,.2f", Double.valueOf(binding.tvProductPrice.getText().toString().replace(",", "")) * Double.valueOf(binding.etProductQty.getText().toString())));
 
-                    totalPrice = Double.valueOf(String.valueOf( binding.tvTotalPrice.getText()).replace(",",""));
-                    if (Double.valueOf(tradePromoionData.get(0).getPromoionValue()) <= inputFinalPrice && !inputPrice.equals("")) {
+                    totalPrice = Double.valueOf(String.valueOf(binding.tvTotalPrice.getText()).replace(",", ""));
+                    if (tradePromoionData.size() > 0){
+                        if (Double.valueOf(tradePromoionData.get(0).getPromoionValue()) <= inputFinalPrice && !inputPrice.equals("")) {
 
-                        int countOfferNumber = (int) (inputFinalPrice / Double.valueOf(tradePromoionData.get(0).getPromoionValue()));
-                        double offerValue = Double.valueOf(tradePromoionData.get(0).getOfferValue());
+                            int countOfferNumber = (int) (inputFinalPrice / Double.valueOf(tradePromoionData.get(0).getPromoionValue()));
+                            double offerValue = Double.valueOf(tradePromoionData.get(0).getOfferValue());
 
-                        switch (tradePromoionData.get(0).getOfferType()) {
-                            case "Percentage":
+                            switch (tradePromoionData.get(0).getOfferType()) {
+                                case "Percentage":
 
-                                discount = (totalPrice * offerValue) / 100;
-                                binding.tvOfferName.setText(tradePromoionData.get(0).getPromoionTitle());
-                                binding.tvOfferQty.setText( tradePromoionData.get(0).getOfferType());
-                                binding.tvDiscount.setText((String.format(Locale.ENGLISH, "%,.2f", discount)));
-                                break;
-                            case "Flat":
-                                discount = offerValue * countOfferNumber;
-                                binding.tvOfferName.setText(tradePromoionData.get(0).getPromoionTitle());
-                                binding.tvOfferQty.setText(tradePromoionData.get(0).getOfferType());
-                                binding.tvDiscount.setText((String.format(Locale.ENGLISH, "%,.2f", discount)));
-                                break;
-                            case "Qty":
-                                discount = 0.0;
-                                binding.tvOfferName.setText("Free: " + tradePromoionData.get(0).getFreeProductName());
-                                binding.tvOfferQty.setText(String.valueOf((Integer.parseInt(binding.etProductQty.getText().toString()) / Integer.parseInt(tradePromoionData.get(0).getPromoionValue())) * Integer.parseInt(tradePromoionData.get(0).getFreeProductQty())));
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                                    binding.layoutSelect.setBackground(context.getDrawable(R.color.background));
-                                }
-                                binding.tvDiscount.setText((String.valueOf(discount)));
+                                    discount = (totalPrice * offerValue) / 100;
+                                    binding.tvOfferName.setText(tradePromoionData.get(0).getPromoionTitle());
+                                    binding.tvOfferQty.setText(tradePromoionData.get(0).getOfferType());
+                                    binding.tvDiscount.setText((String.format(Locale.ENGLISH, "%,.2f", discount)));
+                                    break;
+                                case "Flat":
+                                    discount = offerValue * countOfferNumber;
+                                    binding.tvOfferName.setText(tradePromoionData.get(0).getPromoionTitle());
+                                    binding.tvOfferQty.setText(tradePromoionData.get(0).getOfferType());
+                                    binding.tvDiscount.setText((String.format(Locale.ENGLISH, "%,.2f", discount)));
+                                    break;
+                                case "Qty":
+                                    discount = 0.0;
+                                    binding.tvOfferName.setText("Free: " + tradePromoionData.get(0).getFreeProductName());
+                                    binding.tvOfferQty.setText(String.valueOf((Integer.parseInt(binding.etProductQty.getText().toString()) / Integer.parseInt(tradePromoionData.get(0).getPromoionValue())) * Integer.parseInt(tradePromoionData.get(0).getFreeProductQty())));
+                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                                        binding.layoutSelect.setBackground(context.getDrawable(R.color.background));
+                                    }
+                                    binding.tvDiscount.setText((String.valueOf(discount)));
 
-                                break;
-                            default:
-                                discount = 0.0;
-                                break;
+                                    break;
+                                default:
+                                    discount = 0.0;
+                                    break;
 
-                        }
-                        //Changing for specific option
+                            }
+                            //Changing for specific option
                        /* binding.tvOffer.setText(tradePromoionData.get(0).getPromoionTitle());
                         binding.tvDiscountName.setText(tradePromoionData.get(0).getOfferType());
                         binding.tvDiscount.setText((String.valueOf(discount)));*/
@@ -179,7 +180,8 @@ public class ShowProductSelectionDialog {
                         binding.tvDiscount.setText((String.valueOf(discount)));
                         */
 
-                    }
+                        }
+                }
 
 
                 } catch (Exception e) {

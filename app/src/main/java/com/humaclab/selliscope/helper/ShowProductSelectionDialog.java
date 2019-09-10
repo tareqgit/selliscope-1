@@ -8,6 +8,7 @@ import android.os.Build;
 
 import androidx.appcompat.app.AlertDialog;
 
+import android.os.Parcelable;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -45,6 +46,8 @@ public class ShowProductSelectionDialog {
     private double discount = 0.0;
     private double totalPrice = 0.0;
     private DatabaseHandler mDatabaseHandler;
+
+
 
     public ShowProductSelectionDialog(Context context, ProductsItem productsItem, String outletType, OnDialogSelectListener onDialogSelectListener) {
         this.context = context;

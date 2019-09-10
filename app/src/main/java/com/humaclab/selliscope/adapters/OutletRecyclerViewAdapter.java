@@ -76,12 +76,12 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
     private SelliscopeApiEndpointInterface apiService;
     private Context context;
     private Activity activity;
-    private Outlets.OutletsResult outletItems;
+    public List<Outlets.Outlet> outlets;
     private SessionManager sessionManager;
     private DatabaseHandler databaseHandler;
 
-    public OutletRecyclerViewAdapter(Context context, Activity activity, Outlets.OutletsResult outletItems) {
-        this.outletItems = outletItems;
+    public OutletRecyclerViewAdapter(Context context, Activity activity,   List<Outlets.Outlet> outlets) {
+        this.outlets = outlets;
         this.context = context;
         this.activity = activity;
         this.sessionManager = new SessionManager(context);
@@ -94,6 +94,12 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
 
     }
 
+
+    public void updateOutlate(  List<Outlets.Outlet> outlets){
+        this.outlets = outlets;
+        notifyDataSetChanged();
+    }
+
     @Override
     public OutletViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         databaseHandler = new DatabaseHandler(context);
@@ -104,7 +110,7 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
     @Override
     public void onBindViewHolder(final OutletViewHolder holder, final int position) {
         // holder.setIsRecyclable(false);
-        final Outlets.Outlet outlet = outletItems.outlets.get(position);
+        final Outlets.Outlet outlet = outlets.get(position);
 
         ShimmerDrawable shimmerDrawable = new ShimmerDrawable();
         shimmerDrawable.setShimmer(shimmer);
@@ -284,7 +290,7 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
 
     @Override
     public int getItemCount() {
-        return outletItems.outlets.size();
+        return outlets.size();
     }
 
     public class OutletViewHolder extends RecyclerView.ViewHolder {
@@ -301,7 +307,7 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
                 Intent intent = new Intent(context, OutletDetailsActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 //intent.putExtra("outletID",outlet))
-                intent.putExtra("outletDetails", outletItems.outlets.get(getLayoutPosition()));
+                intent.putExtra("outletDetails", outlets.get(getLayoutPosition()));
                 context.startActivity(intent);
             });
         }

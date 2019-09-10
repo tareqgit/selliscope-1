@@ -9,10 +9,14 @@ import androidx.databinding.DataBindingUtil;
 
 import android.graphics.Color;
 import android.os.Bundle;
+
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
+
+import android.os.Parcelable;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -48,8 +52,12 @@ public class OutletActivity extends AppCompatActivity {
     private OutletRecyclerViewAdapter outletRecyclerViewAdapter;
     private DatabaseHandler databaseHandler;
     private SessionManager sessionManager;
-    private Outlets.OutletsResult outletsResult;
+    public List<Outlets.Outlet> mOutletList;
     private LoadLocalIntoBackground loadLocalIntoBackground;
+
+
+    // Save state
+    private Parcelable recyclerViewState; //for storing recycler scroll postion
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +79,8 @@ public class OutletActivity extends AppCompatActivity {
 
         binding.rvOutlet.addItemDecoration(new VerticalSpaceItemDecoration(20));
         binding.rvOutlet.setLayoutManager(new LinearLayoutManager(this));
-
+        outletRecyclerViewAdapter = new OutletRecyclerViewAdapter(OutletActivity.this, OutletActivity.this, mOutletList);
+        binding.rvOutlet.setAdapter(outletRecyclerViewAdapter);
 
 
         binding.tvSearchOutlet.addTextChangedListener(new TextWatcher() {
@@ -82,9 +91,9 @@ public class OutletActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                Outlets.OutletsResult outletsResult = databaseHandler.getSearchedOutlet(String.valueOf(s));
-                outletRecyclerViewAdapter = new OutletRecyclerViewAdapter(OutletActivity.this, OutletActivity.this, outletsResult);
-                binding.rvOutlet.setAdapter(outletRecyclerViewAdapter);
+                mOutletList = databaseHandler.getSearchedOutlet(String.valueOf(s)).outlets;
+                outletRecyclerViewAdapter.updateOutlate(mOutletList);
+
             }
 
             @Override
@@ -92,7 +101,8 @@ public class OutletActivity extends AppCompatActivity {
 
             }
         });
-binding.srlOutlet.setColorSchemeColors(Color.parseColor("#EA5455"), Color.parseColor("#FCCF31"), Color.parseColor("#F55555"));
+
+        binding.srlOutlet.setColorSchemeColors(Color.parseColor("#EA5455"), Color.parseColor("#FCCF31"), Color.parseColor("#F55555"));
 
         binding.srlOutlet.setOnRefreshListener(() -> {
             if (NetworkUtility.isNetworkAvailable(OutletActivity.this)) {
@@ -112,25 +122,25 @@ binding.srlOutlet.setColorSchemeColors(Color.parseColor("#EA5455"), Color.parseC
                     pd.setCancelable(false);
                     pd.show();
 */
-                    LoadLocalIntoBackground loadLocalIntoBackground = new LoadLocalIntoBackground(this);
-                    binding.srlOutlet.setRefreshing(true);
+                LoadLocalIntoBackground loadLocalIntoBackground = new LoadLocalIntoBackground(this);
+                binding.srlOutlet.setRefreshing(true);
 
-                    loadLocalIntoBackground.loadOutlet(new LoadLocalIntoBackground.LoadCompleteListener() {
-                        @Override
-                        public void onLoadComplete() {
-                             getOutlets();
-                            binding.srlOutlet.setRefreshing(false);
-                            Log.d("tareq_test", "Outlets updated from Server");
-                            //    pd.dismiss();
-                        }
+                loadLocalIntoBackground.loadOutlet(new LoadLocalIntoBackground.LoadCompleteListener() {
+                    @Override
+                    public void onLoadComplete() {
+                        getOutlets();
+                        binding.srlOutlet.setRefreshing(false);
+                        Log.d("tareq_test", "Outlets updated from Server");
+                        //    pd.dismiss();
+                    }
 
-                        @Override
-                        public void onLoadFailed(String reason) {
-                            binding.srlOutlet.setRefreshing(false);
-                            //     pd.dismiss();
-                            Log.d("tareq_test", "Outlets couldn't updated from Server");
-                        }
-                    });
+                    @Override
+                    public void onLoadFailed(String reason) {
+                        binding.srlOutlet.setRefreshing(false);
+                        //     pd.dismiss();
+                        Log.d("tareq_test", "Outlets couldn't updated from Server");
+                    }
+                });
 
 
               /*  });
@@ -138,14 +148,14 @@ binding.srlOutlet.setColorSchemeColors(Color.parseColor("#EA5455"), Color.parseC
 */
 
 
-            }else{
+            } else {
                 Toast.makeText(getApplicationContext(), "Connect to Wifi or Mobile Data for better performance.", Toast.LENGTH_SHORT).show();
             }
 
 
         });
 
-   //if network is Available then update the data again
+        //if network is Available then update the data again
     /*    if (NetworkUtility.isNetworkAvailable(this)) {
             LoadLocalIntoBackground loadLocalIntoBackground = new LoadLocalIntoBackground(this);
             binding.srlOutlet.setRefreshing(true);
@@ -171,16 +181,19 @@ binding.srlOutlet.setColorSchemeColors(Color.parseColor("#EA5455"), Color.parseC
         super.onResume();
         getOutlets();
         getRoute(); // For getting route plan data
+        // Restore state
+        binding.rvOutlet.getLayoutManager().onRestoreInstanceState(recyclerViewState); //we are restoring recycler position
+
     }
 
     public void getOutlets() {
-        outletsResult = databaseHandler.getAllOutlet();
-        if (!outletsResult.outlets.isEmpty()) {
+        mOutletList = databaseHandler.getAllOutlet().outlets;
+        if (!mOutletList.isEmpty()) {
 
-            outletRecyclerViewAdapter = new OutletRecyclerViewAdapter(OutletActivity.this, OutletActivity.this, outletsResult);
-            binding.rvOutlet.setAdapter(outletRecyclerViewAdapter);
+            outletRecyclerViewAdapter.updateOutlate(mOutletList);
         }
     }
+
 
     /**
      * For getting route-plan data
@@ -190,12 +203,14 @@ binding.srlOutlet.setColorSchemeColors(Color.parseColor("#EA5455"), Color.parseC
         call.enqueue(new Callback<RouteResponse>() {
             @Override
             public void onResponse(Call<RouteResponse> call, Response<RouteResponse> response) {
-                if (!response.body().getResult().getRoute().isEmpty()) {
-                   // Toast.makeText(OutletActivity.this, ""+response.body().getResult().getRoute().get(0).getName(), Toast.LENGTH_SHORT).show();
-                    binding.tvToolbarTitle.setText(response.body().getResult().getRoute().get(0).getName());
-                    getRouteDetails(response.body().getResult().getRoute().get(0).getId());
-                } else {
-                    binding.tvToolbarTitle.setText(getString(R.string.outlet));
+                if (response.body() != null) {
+                    if (!response.body().getResult().getRoute().isEmpty()) {
+                        // Toast.makeText(OutletActivity.this, ""+response.body().getResult().getRoute().get(0).getName(), Toast.LENGTH_SHORT).show();
+                        binding.tvToolbarTitle.setText(response.body().getResult().getRoute().get(0).getName());
+                        getRouteDetails(response.body().getResult().getRoute().get(0).getId());
+                    } else {
+                        binding.tvToolbarTitle.setText(getString(R.string.outlet));
+                    }
                 }
             }
 

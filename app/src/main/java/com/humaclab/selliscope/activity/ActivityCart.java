@@ -18,6 +18,7 @@ import static com.humaclab.selliscope.sales_return.SalesReturn_2019_Activity.sSa
 
 
 import com.google.gson.Gson;
+import com.humaclab.selliscope.LocationMonitoringService;
 import com.humaclab.selliscope.R;
 import com.humaclab.selliscope.SelliscopeApiEndpointInterface;
 import com.humaclab.selliscope.SelliscopeApplication;
@@ -35,8 +36,6 @@ import com.humaclab.selliscope.sales_return.model.post.SalesReturn2019SelectedPr
 import com.humaclab.selliscope.sales_return.model.post.SalesReturnPostBody;
 import com.humaclab.selliscope.utils.CurrentTimeUtilityClass;
 import com.humaclab.selliscope.utils.DatabaseHandler;
-import com.humaclab.selliscope.utils.NetworkUtility;
-import com.humaclab.selliscope.utils.SendUserLocationData;
 import com.humaclab.selliscope.utils.SessionManager;
 import com.mti.pushdown_ext_onclick_single.PushDownAnim;
 
@@ -56,7 +55,6 @@ public class ActivityCart extends AppCompatActivity implements  SelectedProductR
     private SessionManager sessionManager;
     private DatabaseHandler databaseHandler;
     private ProgressDialog pd;
-    private SendUserLocationData sendUserLocationData;
     private Double lat = 0.0, lon = 0.0;
     private String outletName, outletID;
     SelectedProductRecyclerAdapter selectedProductRecyclerAdapter;
@@ -86,14 +84,12 @@ public class ActivityCart extends AppCompatActivity implements  SelectedProductR
         apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(), sessionManager.getUserPassword(), true).create(SelliscopeApiEndpointInterface.class);
 
         //For getting location
-        sendUserLocationData = new SendUserLocationData(this);
-        sendUserLocationData.getInstantLocation(this, new SendUserLocationData.OnGetLocation() {
-            @Override
-            public void getLocation(Double latitude, Double longitude) {
-                lat = latitude;
-                lon = longitude;
-            }
-        });
+        if(LocationMonitoringService.sLocation!=null) {
+            lat = LocationMonitoringService.sLocation.getLatitude();
+            lon = LocationMonitoringService.sLocation.getLongitude();
+        }else{
+            Toast.makeText(this, "Can't get Location", Toast.LENGTH_SHORT).show();
+        }
 
 
 

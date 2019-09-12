@@ -31,6 +31,7 @@ import com.google.android.gms.awareness.Awareness;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.gson.Gson;
+import com.humaclab.selliscope.LocationMonitoringService;
 import com.humaclab.selliscope.R;
 import com.humaclab.selliscope.SelliscopeApiEndpointInterface;
 import com.humaclab.selliscope.SelliscopeApplication;
@@ -48,7 +49,6 @@ import com.humaclab.selliscope.utility_db.db.UtilityDatabase;
 import com.humaclab.selliscope.utils.DatabaseHandler;
 import com.humaclab.selliscope.utils.GetAddressFromLatLang;
 import com.humaclab.selliscope.utils.NetworkUtility;
-import com.humaclab.selliscope.utils.SendUserLocationData;
 import com.humaclab.selliscope.utils.SessionManager;
 
 import java.io.IOException;
@@ -193,24 +193,28 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
     }
 
     private void getLocation(final Outlets.Outlet outlet, final Location outletLocation, final ProgressBar progressbar) {
-        SendUserLocationData sendUserLocationData = new SendUserLocationData(context);
-        sendUserLocationData.getInstantLocation(activity, (latitude, longitude) -> {
-
-            Location location = new Location("");
-            location.setLatitude(latitude);
-            location.setLongitude(longitude);
-            if (location.distanceTo(outletLocation) <= sessionManager.getDiameter()) {
-                if (NetworkUtility.isNetworkAvailable(context)) {
-                    sendUserLocation(location, outlet, progressbar);
-                } else {
-                    progressbar.setVisibility(View.INVISIBLE);
-                    Toast.makeText(context, "Enable Wifi or Mobile data.", Toast.LENGTH_SHORT).show();
-                }
-            } else {
-                progressbar.setVisibility(View.INVISIBLE);
-                Toast.makeText(context, "You are not within 70m radius of the outlet.", Toast.LENGTH_SHORT).show();
-            }
-        });
+    //    SendUserLocationData sendUserLocationData = new SendUserLocationData(context);
+     //   sendUserLocationData.getInstantLocation(activity, (latitude, longitude) -> {
+       if( LocationMonitoringService.sLocation!=null) {
+           Log.d("tareq_test", "OutletRecyclerViewAdapter #200: getLocation:  "+ LocationMonitoringService.sLocation.getLatitude() +" , "+ LocationMonitoringService.sLocation.getLongitude());
+           Location location = new Location("");
+           location.setLatitude(LocationMonitoringService.sLocation.getLatitude());
+           location.setLongitude(LocationMonitoringService.sLocation.getLongitude());
+           if (location.distanceTo(outletLocation) <= sessionManager.getDiameter()) {
+               if (NetworkUtility.isNetworkAvailable(context)) {
+                   sendUserLocation(location, outlet, progressbar);
+               } else {
+                   progressbar.setVisibility(View.INVISIBLE);
+                   Toast.makeText(context, "Enable Wifi or Mobile data.", Toast.LENGTH_SHORT).show();
+               }
+           } else {
+               progressbar.setVisibility(View.INVISIBLE);
+               Toast.makeText(context, "You are not within 70m radius of the outlet.", Toast.LENGTH_SHORT).show();
+           }
+       }else{
+           Toast.makeText(context, "Can't get the location", Toast.LENGTH_SHORT).show();
+       }
+       // });
     }
 
     private void sendUserLocation(Location location, final Outlets.Outlet outlet, final ProgressBar progressBar) {
@@ -227,42 +231,47 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
                 Gson gson = new Gson();
                 if (response.code() == 201) {
                     try {
-                        UserLocation.Successful userLocationSuccess = gson.fromJson(response.body().string(), UserLocation.Successful.class);
+                        UserLocation.Successful userLocationSuccess = null;
+                        if (response.body() != null) {
+                            userLocationSuccess = gson.fromJson(response.body().string(), UserLocation.Successful.class);
+                        }
                         progressBar.setVisibility(View.INVISIBLE);
-                        if (userLocationSuccess.msg.equals("")) { // To check if the user already checked in the outlet
-                            Toast.makeText(context, "You have successfully checked in.", Toast.LENGTH_SHORT).show();
-                            databaseHandler.afterCheckinUpdateOutletRoutePlan(outlet.outletId);
+                        if (userLocationSuccess != null) {
+                            if (userLocationSuccess.msg.equals("")) { // To check if the user already checked in the outlet
+                                Toast.makeText(context, "You have successfully checked in.", Toast.LENGTH_SHORT).show();
+                                databaseHandler.afterCheckinUpdateOutletRoutePlan(outlet.outletId);
 
-                            //region Update checkedin for Activities
-                            UtilityDatabase utilityDatabase = (UtilityDatabase) UtilityDatabase.getInstance(context);
-                            Date d = Calendar.getInstance().getTime();
-                            SimpleDateFormat formatDate = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
-                            String date = formatDate.format(d);
-                            SimpleDateFormat formathour = new SimpleDateFormat("HH-mm", Locale.ENGLISH);
-                            String hour = formathour.format(d);
+                                //region Update checkedin for Activities
+                                UtilityDatabase utilityDatabase = (UtilityDatabase) UtilityDatabase.getInstance(context);
+                                Date d = Calendar.getInstance().getTime();
+                                SimpleDateFormat formatDate = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+                                String date = formatDate.format(d);
+                                SimpleDateFormat formathour = new SimpleDateFormat("HH-mm", Locale.ENGLISH);
+                                String hour = formathour.format(d);
 
-                            OutletWithCheckInTime outletWithCheckInTime = new OutletWithCheckInTime(outlet, hour);
+                                OutletWithCheckInTime outletWithCheckInTime = new OutletWithCheckInTime(outlet, hour);
 
-                            new Thread(() -> {
-                                List<RegularPerformanceEntity> regularPerformanceEntities = utilityDatabase.returnUtilityDao().getRegularPerformance(date);
-                                if (regularPerformanceEntities.size() == 0) {
-                                    utilityDatabase.returnUtilityDao().insertRegularPerformance(new RegularPerformanceEntity.Builder().withDate(date).withDistance(0).withOutlets_checked_in(new Gson().toJson(outletWithCheckInTime) + "~;~").build());
-                                } else {
+                                new Thread(() -> {
+                                    List<RegularPerformanceEntity> regularPerformanceEntities = utilityDatabase.returnUtilityDao().getRegularPerformance(date);
+                                    if (regularPerformanceEntities.size() == 0) {
+                                        utilityDatabase.returnUtilityDao().insertRegularPerformance(new RegularPerformanceEntity.Builder().withDate(date).withDistance(0).withOutlets_checked_in(new Gson().toJson(outletWithCheckInTime) + "~;~").build());
+                                    } else {
 
-                                    String outlets = regularPerformanceEntities.get(0).outlets_checked_in + new Gson().toJson(outletWithCheckInTime) + "~;~";
-
-
-                                    utilityDatabase.returnUtilityDao().updateRegularPerformanceOutlets(outlets, date);
-                                }
-                            }).start();
-
-                            //endregion
+                                        String outlets = regularPerformanceEntities.get(0).outlets_checked_in + new Gson().toJson(outletWithCheckInTime) + "~;~";
 
 
-                            ((OutletActivity) context).getRoute();//For reloading the outlet recycler view
-                            ((OutletActivity) context).getOutlets();//For reloading the outlet recycler view
-                        } else {
-                            Toast.makeText(context, "You have already checked in.", Toast.LENGTH_SHORT).show();
+                                        utilityDatabase.returnUtilityDao().updateRegularPerformanceOutlets(outlets, date);
+                                    }
+                                }).start();
+
+                                //endregion
+
+
+                                ((OutletActivity) context).getRoute();//For reloading the outlet recycler view
+                                ((OutletActivity) context).getOutlets();//For reloading the outlet recycler view
+                            } else {
+                                Toast.makeText(context, "You have already checked in.", Toast.LENGTH_SHORT).show();
+                            }
                         }
                     } catch (IOException e) {
                         progressBar.setVisibility(View.INVISIBLE);

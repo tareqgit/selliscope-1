@@ -97,6 +97,8 @@ public class LocationMonitoringService extends Service implements
 
     public Timer myTimer;
 
+    public static Location sLocation;
+
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
@@ -188,6 +190,7 @@ public class LocationMonitoringService extends Service implements
                     // Update UI  and sound with location data
                     //   updateUIandSoundonAccuracyChanges(location); //turn on if you need location accuracy update
 
+                    sLocation = location;
                     onLocationChanged(location);
 
                 }
@@ -350,7 +353,7 @@ public class LocationMonitoringService extends Service implements
                     if (NetworkUtility.isNetworkAvailable(getApplicationContext())) {
 
 
-                        sendUserLocation(latitude, longitude, CurrentTimeUtilityClass.getCurrentTimeStamp(), false, -1);
+                        sendUserLocation(latitude, longitude, CurrentTimeUtilityClass.getCurrentTimeStamp(), -1);
                         Log.d("tareq_test", "user location send ");
                         /*                List<UserVisit> userVisits = dbHandler.getUSerVisits();
                 if (!userVisits.isEmpty())
@@ -389,7 +392,7 @@ public class LocationMonitoringService extends Service implements
                 // if there  is nothing to compare
                 Log.d("tareq_test", "Filtered_addr_if: " + GetAddressFromLatLang.getAddressFromLatLan(getApplicationContext(), location.getLatitude(), location.getLongitude()) + " acc: " + location.getAccuracy() + " T: " + CurrentTimeUtilityClass.getCurrentTimeStamp());
 
-                sendUserLocation(latitude, longitude, CurrentTimeUtilityClass.getCurrentTimeStamp(), false, -1);
+                sendUserLocation(latitude, longitude, CurrentTimeUtilityClass.getCurrentTimeStamp(), -1);
 
                 lastTime = Calendar.getInstance().getTime().toString();
 
@@ -421,7 +424,7 @@ public class LocationMonitoringService extends Service implements
     }
 
 
-    private void sendUserLocation(double latitude, double longitude, String timeStamp, final boolean fromDB, final int visitId) {
+    private void sendUserLocation(double latitude, double longitude, String timeStamp, final int visitId) {
         SelliscopeApiEndpointInterface apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(),
                 sessionManager.getUserPassword(), false)
                 .create(SelliscopeApiEndpointInterface.class);
@@ -445,7 +448,7 @@ public class LocationMonitoringService extends Service implements
                     try {
                         UserLocation.Successful userLocationSuccess = gson.fromJson(response.body().string(), UserLocation.Successful.class);
 
-                        //   if (fromDB)
+
                         dbHandler.deleteUserVisit();
                         Log.d("tareq_test", "Data send and deleted from db");
                     } catch (IOException e) {

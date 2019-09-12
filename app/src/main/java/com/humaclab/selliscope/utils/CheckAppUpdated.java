@@ -1,15 +1,6 @@
 package com.humaclab.selliscope.utils;
 
-import android.app.ProgressDialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.net.Uri;
-import android.os.Handler;
 
-
-import com.humaclab.selliscope.activity.HomeActivity;
-import com.humaclab.selliscope.service.SendLocationDataService;
 
 /**
  * Created by leon on 9/26/17.

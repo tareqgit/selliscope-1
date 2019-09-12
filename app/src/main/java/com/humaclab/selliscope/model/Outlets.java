@@ -56,6 +56,8 @@ public class Outlets implements Serializable {
         @SerializedName("refphone")
         public String outletrefPhoneNumber;
 
+        private double distance_from_cur_location; //only for sorting lists according to distance
+
         public String getClientID() {
             return ClientID;
         }
@@ -100,6 +102,14 @@ public class Outlets implements Serializable {
         @Override
         public int hashCode() {
             return Objects.hash(outletId, outletType, outletName,  ownerName, outletAddress, district, thana, phone, outletImgUrl, outletLatitude, outletLongitude, outletDue, outletrefPhoneNumber);
+        }
+
+        public double getDistance_from_cur_location() {
+            return distance_from_cur_location;
+        }
+
+        public void setDistance_from_cur_location(double distance_from_cur_location) {
+            this.distance_from_cur_location = distance_from_cur_location;
         }
     }
 }

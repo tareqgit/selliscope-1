@@ -8,6 +8,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.databinding.DataBindingUtil;
 
 import android.graphics.Color;
+import android.location.Location;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -24,6 +25,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.humaclab.selliscope.LocationMonitoringService;
 import com.humaclab.selliscope.R;
 import com.humaclab.selliscope.SelliscopeApiEndpointInterface;
 import com.humaclab.selliscope.SelliscopeApplication;
@@ -38,6 +40,8 @@ import com.humaclab.selliscope.utils.NetworkUtility;
 import com.humaclab.selliscope.utils.SessionManager;
 import com.humaclab.selliscope.utils.VerticalSpaceItemDecoration;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -189,8 +193,31 @@ public class OutletActivity extends AppCompatActivity {
     public void getOutlets() {
         mOutletList = databaseHandler.getAllOutlet().outlets;
         if (!mOutletList.isEmpty()) {
+            if(LocationMonitoringService.sLocation!=null) {
 
-            outletRecyclerViewAdapter.updateOutlate(mOutletList);
+                Location location = new Location("");
+                location.setLatitude(LocationMonitoringService.sLocation.getLatitude());
+                location.setLongitude(LocationMonitoringService.sLocation.getLongitude());
+
+                for (Outlets.Outlet outlet : mOutletList) {
+                    Location loca = new Location("");
+                    loca.setLatitude(outlet.outletLatitude);
+                    loca.setLongitude(outlet.outletLongitude);
+
+                    outlet.setDistance_from_cur_location(location.distanceTo(loca));
+
+                }
+
+                Collections.sort(mOutletList, (o1, o2) -> Double.compare(o1.getDistance_from_cur_location(), o2.getDistance_from_cur_location()));
+
+
+
+                outletRecyclerViewAdapter.updateOutlate(mOutletList);
+
+            }else {
+                Toast.makeText(this, "Can't get Location", Toast.LENGTH_SHORT).show();
+            }
+
         }
     }
 
@@ -220,6 +247,8 @@ public class OutletActivity extends AppCompatActivity {
             }
         });
     }
+
+
 
     /**
      * For getting the details of route-plan by its ID

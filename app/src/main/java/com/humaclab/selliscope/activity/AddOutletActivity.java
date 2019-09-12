@@ -33,6 +33,7 @@ import com.google.android.gms.awareness.Awareness;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.gson.Gson;
+import com.humaclab.selliscope.LocationMonitoringService;
 import com.humaclab.selliscope.R;
 import com.humaclab.selliscope.SelliscopeApiEndpointInterface;
 import com.humaclab.selliscope.SelliscopeApplication;
@@ -47,7 +48,6 @@ import com.humaclab.selliscope.utils.AccessPermission;
 import com.humaclab.selliscope.utils.DatabaseHandler;
 import com.humaclab.selliscope.utils.LoadLocalIntoBackground;
 import com.humaclab.selliscope.utils.NetworkUtility;
-import com.humaclab.selliscope.utils.SendUserLocationData;
 import com.humaclab.selliscope.utils.SessionManager;
 
 import java.io.ByteArrayOutputStream;
@@ -256,7 +256,6 @@ public class AddOutletActivity extends AppCompatActivity {
         LoadLocalIntoBackground loadLocalIntoBackground = new LoadLocalIntoBackground(AddOutletActivity.this);
 
 
-
         ((SwipeRefreshLayout) findViewById(R.id.swipeRefresher)).setOnRefreshListener(() -> {
             //if network is Available then update the data again
             if (NetworkUtility.isNetworkAvailable(AddOutletActivity.this)) {
@@ -446,14 +445,13 @@ public class AddOutletActivity extends AppCompatActivity {
     }
 
     public void getLocation() {
-        SendUserLocationData sendUserLocationData = new SendUserLocationData(AddOutletActivity.this);
-        sendUserLocationData.getInstantLocation(this, new SendUserLocationData.OnGetLocation() {
-            @Override
-            public void getLocation(Double latitude, Double longitude) {
-                mCurrentLatitude = latitude;
-                mCurrentLongitude = longitude;
-            }
-        });
+        if (LocationMonitoringService.sLocation != null) {
+            mCurrentLatitude = LocationMonitoringService.sLocation.getLatitude();
+            mCurrentLongitude = LocationMonitoringService.sLocation.getLongitude();
+        }else{
+            Toast.makeText(this, "Can't get Location", Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     private void checkPermission() {

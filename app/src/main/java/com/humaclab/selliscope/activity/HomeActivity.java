@@ -75,7 +75,7 @@ import com.humaclab.selliscope.fragment.TargetFragment;
 import com.humaclab.selliscope.model.app_version.AppVersion;
 import com.humaclab.selliscope.model.diameter.DiameterResponse;
 import com.humaclab.selliscope.receiver.InternetConnectivityChangeReceiver;
-import com.humaclab.selliscope.service.SendLocationDataService;
+
 import com.humaclab.selliscope.utility_db.db.UtilityDatabase;
 import com.humaclab.selliscope.utils.Constants;
 import com.humaclab.selliscope.utils.DatabaseHandler;
@@ -114,7 +114,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     private ProgressDialog pd;
     private LoadLocalIntoBackground loadLocalIntoBackground;
     private Context context;
-    private SendLocationDataService sendLocationDataService;
+
     private BroadcastReceiver broadcastReceiver;
 
     private static final String TAG = HomeActivity.class.getSimpleName();
@@ -165,7 +165,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         //For Bangla
         LoadLocale();
         setContentView(R.layout.activity_home);
-        context=this;
+        context = this;
         //
         SharedPreferences sharedPreferences = getSharedPreferences("Settings", MODE_PRIVATE);
         Constants.BASE_URL = sharedPreferences.getString("BASE_URL", Constants.BASE_URL);
@@ -186,7 +186,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
         manufacturer = android.os.Build.MANUFACTURER;
         //registerReceiver();
-    ////I think this is redundent now ///    sendLocationDataService = new SendLocationDataService();
+        ////I think this is redundent now ///    sendLocationDataService = new SendLocationDataService();
 
         sessionManager = new SessionManager(this);
 
@@ -478,7 +478,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
-     //   final LocationSettingsStates states = LocationSettingsStates.fromIntent(intent);
+        //   final LocationSettingsStates states = LocationSettingsStates.fromIntent(intent);
         switch (requestCode) {
             case REQUEST_CHECK_SETTINGS:
                 switch (resultCode) {
@@ -712,7 +712,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             case R.id.nav_contact:
                 final AlertDialog alertDialogContact = new AlertDialog.Builder(this).create();
                 alertDialogContact.setTitle("Contact Us");
-                alertDialogContact.setMessage("Email: support@humaclab.com \nMobile: 01707073175 \nSunday - Thursday \n9.00am - 6.00pm" );
+                alertDialogContact.setMessage("Email: support@humaclab.com \nMobile: 01707073175 \nSunday - Thursday \n9.00am - 6.00pm");
                 alertDialogContact.setButton(DialogInterface.BUTTON_POSITIVE, "CAll", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -763,28 +763,25 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                     DatabaseHandler databaseHandler = new DatabaseHandler(HomeActivity.this);
 
 
+                    databaseHandler.deleteAllData();
+                    loadLocalIntoBackground.loadAll(new LoadLocalIntoBackground.LoadCompleteListener() {
+                        @Override
+                        public void onLoadComplete() {
+                            Log.d("tareq_test", "Data refresh complete");
+                            runOnUiThread(() -> Toast.makeText(getApplicationContext(), "Data Load Complete", Toast.LENGTH_SHORT).show());
 
-                        databaseHandler.deleteAllData();
-                        loadLocalIntoBackground.loadAll(new LoadLocalIntoBackground.LoadCompleteListener() {
-                            @Override
-                            public void onLoadComplete() {
-                                Log.d("tareq_test", "Data refresh complete");
-                                runOnUiThread(() -> Toast.makeText(getApplicationContext(), "Data Load Complete", Toast.LENGTH_SHORT).show());
+                            pd.dismiss();
+                        }
 
-                                pd.dismiss();
-                            }
+                        @Override
+                        public void onLoadFailed(String msg) {
+                            pd.dismiss();
+                            Log.d("tareq_test", "Data refresh failed" + msg);
+                            runOnUiThread(() -> Toast.makeText(getApplicationContext(), "failed: " + msg + "\n Please Try Again", Toast.LENGTH_SHORT).show());
 
-                            @Override
-                            public void onLoadFailed(String msg) {
-                                pd.dismiss();
-                                Log.d("tareq_test", "Data refresh failed" + msg);
-                                runOnUiThread(() -> Toast.makeText(getApplicationContext(), "failed: "+ msg +"\n Please Try Again", Toast.LENGTH_SHORT).show());
-
-                            }
-                        });
+                        }
                     });
-
-
+                });
 
 
                 if (!alertDialogRefresh.isShowing()) alertDialogRefresh.show();

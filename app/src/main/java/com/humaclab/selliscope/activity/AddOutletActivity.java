@@ -70,7 +70,8 @@ public class AddOutletActivity extends AppCompatActivity {
     boolean isValidOwnerName = true;
     boolean isValidAddress = true;
     boolean isValidPhone = true;
-    double mLatitude = 0.0, mLongitude = 0.0, mCurrentLongitude = 0.0, mCurrentLatitude = 0.0;
+    double mLatitude = 0.0, mLongitude = 0.0;
+  //  double  mCurrentLongitude = 0.0, mCurrentLatitude = 0.0;
     private int outletTypeId, thanaId = -1;
     private SelliscopeApiEndpointInterface apiService;
     private SessionManager sessionManager;
@@ -81,7 +82,7 @@ public class AddOutletActivity extends AppCompatActivity {
     private OutletTypeAdapter outletTypeAdapter;
     private ThanaAdapter thanaAdapter;
     private DistrictAdapter districtAdapter;
-    private GoogleApiClient googleApiClient;
+  //  private GoogleApiClient googleApiClient;
     private String outletImage;
     private DatabaseHandler databaseHandler;
 
@@ -94,21 +95,22 @@ public class AddOutletActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_outlet);
         checkPermission();
 
-        googleApiClient = new GoogleApiClient.Builder(AddOutletActivity.this)
+     /*   googleApiClient = new GoogleApiClient.Builder(AddOutletActivity.this)
                 .addApi(LocationServices.API)
                 .build();
         googleApiClient.connect();
         googleApiClient.registerConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
             @Override
             public void onConnected(@Nullable Bundle bundle) {
-                getLocation();
+
+              //  getLocation();
             }
 
             @Override
             public void onConnectionSuspended(int i) {
 
             }
-        });
+        });*/
 
         databaseHandler = new DatabaseHandler(this);
         sessionManager = new SessionManager(this);
@@ -184,8 +186,8 @@ public class AddOutletActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(AddOutletActivity.this, LocationFromMapActivity.class);
-                intent.putExtra("latitude", mCurrentLatitude);
-                intent.putExtra("longitude", mCurrentLongitude);
+           //     intent.putExtra("latitude", mCurrentLatitude);
+             //   intent.putExtra("longitude", mCurrentLongitude);
                 startActivityForResult(intent, MAP_LOCATION);
             }
         });
@@ -200,18 +202,18 @@ public class AddOutletActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 if (!isEmpty()) {
-                    if (mLatitude != 0.0 && mLongitude != 0.0) {
+               //     if (mLatitude != 0.0 && mLongitude != 0.0) {
 
                         if (NetworkUtility.isNetworkAvailable(AddOutletActivity.this)) {
-                            Location currentLocation = new Location("");
+                         /*   Location currentLocation = new Location("");
                             currentLocation.setLatitude(mCurrentLatitude);
                             currentLocation.setLongitude(mCurrentLongitude);
-
+*/
                             Location mapLocation = new Location("");
                             mapLocation.setLatitude(mLatitude);
                             mapLocation.setLongitude(mLongitude);
 
-                            if (mapLocation.distanceTo(currentLocation) <= 100) {
+                          //  if (mapLocation.distanceTo(currentLocation) <= 100) {
                                 if (thanaId != 0) {
                                     addOutlet(
                                             outletTypeId, outletName.getText().toString().trim(),
@@ -224,16 +226,16 @@ public class AddOutletActivity extends AppCompatActivity {
                                             outletrefnumber.getText().toString().trim()
                                     );
                                 } else {
-                                    Toast.makeText(AddOutletActivity.this, "Please select a thana first", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(AddOutletActivity.this, "Please select a thana first ", Toast.LENGTH_SHORT).show();
                                 }
-                            } else {
-                                Toast.makeText(AddOutletActivity.this, "Outlet location is not within your 100 meter radius.", Toast.LENGTH_SHORT).show();
-                            }
+                      //      } else {
+                         //       Toast.makeText(AddOutletActivity.this, "Outlet location is not within your 100 meter radius . "+mapLocation.distanceTo(currentLocation), Toast.LENGTH_SHORT).show();
+                       //     }
                         } else
                             Toast.makeText(AddOutletActivity.this, "Connect to Wifi or Mobile Data", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(AddOutletActivity.this, "Could not found any location yet.\nPlease try again.", Toast.LENGTH_SHORT).show();
-                    }
+                 //   } else {
+                //        Toast.makeText(AddOutletActivity.this, "Could not found any location yet.\nPlease try again.", Toast.LENGTH_SHORT).show();
+              //      }
                 }
             }
         });
@@ -444,7 +446,7 @@ public class AddOutletActivity extends AppCompatActivity {
         outletType.setAdapter(outletTypeAdapter);
     }
 
-    public void getLocation() {
+  /*  public void getLocation() {
         if (LocationMonitoringService.sLocation != null) {
             mCurrentLatitude = LocationMonitoringService.sLocation.getLatitude();
             mCurrentLongitude = LocationMonitoringService.sLocation.getLongitude();
@@ -452,7 +454,7 @@ public class AddOutletActivity extends AppCompatActivity {
             Toast.makeText(this, "Can't get Location", Toast.LENGTH_SHORT).show();
         }
 
-    }
+    }*/
 
     private void checkPermission() {
         AccessPermission.accessPermission(AddOutletActivity.this);
@@ -485,7 +487,7 @@ public class AddOutletActivity extends AppCompatActivity {
 
     @Override
     public void onDestroy() {
-        googleApiClient.disconnect();
+      //  googleApiClient.disconnect();
         super.onDestroy();
     }
 

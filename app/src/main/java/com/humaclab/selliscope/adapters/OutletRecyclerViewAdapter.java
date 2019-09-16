@@ -299,7 +299,10 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
 
     @Override
     public int getItemCount() {
+        if(outlets!=null)
         return outlets.size();
+        else
+            return 0;
     }
 
     public class OutletViewHolder extends RecyclerView.ViewHolder {

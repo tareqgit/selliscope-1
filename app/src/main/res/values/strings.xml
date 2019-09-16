@@ -49,7 +49,7 @@
     <string name="dashboard_productList">Product List</string>
     <string name="dashboard_promotionAds">Promotional Ads</string>
     <string name="btn_update_profile">Update Profile</string>
-    <string name="search_outlet">Search Dealer</string>
+    <string name="search_outlet">Search Outlet</string>
     <string name="permission_denied_explanation">permission denied</string>
     <string name="settings">Setting</string>
     <string name="txtPromotionalAdsTitle">Promotional Ads</string>

@@ -302,7 +302,7 @@ public class OrderActivity extends AppCompatActivity implements OrderProductRecy
         Double totalAmt = 0.00;
         Double totalDiscount = 0.00;
         for (SelectedProductHelper selectedProductHelper : selectedProductList) {
-            totalAmt += Double.valueOf(selectedProductHelper.getTotalPrice().replace(",",""));
+            totalAmt += Double.valueOf(selectedProductHelper.getTotalPrice().equals("")?"0":selectedProductHelper.getTotalPrice().replace(",","")) ;
             totalDiscount += Double.valueOf(selectedProductHelper.getTpDiscount().replace(",",""));
         }
         binding.tvTotalAmt.setText(String.format(Locale.ENGLISH, "%.2f", totalAmt));

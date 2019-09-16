@@ -14,6 +14,10 @@ public class LocationServiceRestarterBroadcastReceiver extends BroadcastReceiver
     @Override
     public void onReceive(Context context, Intent intent) {
         Log.d("tareq_test" , "Service Stoooop......");
-        context.startService(new Intent(context,LocationMonitoringService.class));
+        try {
+            context.startService(new Intent(context,LocationMonitoringService.class));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

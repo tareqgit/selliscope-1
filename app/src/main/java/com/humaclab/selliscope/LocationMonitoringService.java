@@ -105,8 +105,8 @@ public class LocationMonitoringService extends Service implements
         super.onStartCommand(intent, flags, startId);
 
 
-        mLocationRequest.setInterval(60 * 1000);
-        mLocationRequest.setFastestInterval(30 * 1000);
+        mLocationRequest.setInterval(30 * 1000);
+        mLocationRequest.setFastestInterval(15 * 1000);
 
         int priority = LocationRequest.PRIORITY_HIGH_ACCURACY; //by default
         //PRIORITY_BALANCED_POWER_ACCURACY, PRIORITY_LOW_POWER, PRIORITY_NO_POWER are the other priority modes
@@ -190,7 +190,7 @@ public class LocationMonitoringService extends Service implements
                     // Update UI  and sound with location data
                     //   updateUIandSoundonAccuracyChanges(location); //turn on if you need location accuracy update
 
-                    sLocation = location;
+
                     onLocationChanged(location);
 
                 }
@@ -280,6 +280,8 @@ public class LocationMonitoringService extends Service implements
     public void onLocationChanged(Location location) {
 
         if (location != null && location.getAccuracy()<35) {
+            sLocation = location;
+
             utilityDatabase = (UtilityDatabase) UtilityDatabase.getInstance(getApplicationContext());
             Date d = Calendar.getInstance().getTime();
             SimpleDateFormat formatDate = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);

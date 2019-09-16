@@ -52,7 +52,7 @@ public class SelliscopeApplication extends Application {
                     .connectTimeout(60, TimeUnit.SECONDS)
                     .readTimeout(120, TimeUnit.SECONDS)
                     .writeTimeout(120, TimeUnit.SECONDS)
-                    .retryOnConnectionFailure(true)
+
                     .addNetworkInterceptor(new StethoInterceptor())
                     .build();
 

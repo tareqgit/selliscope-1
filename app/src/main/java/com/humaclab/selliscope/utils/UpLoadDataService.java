@@ -55,29 +55,34 @@ public class UpLoadDataService {
         final NetworkInfo mobile = connMgr.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
 
         if (wifi.isConnected() || mobile.isConnected()) {
-            if (databaseHandler.getOrder().size() != 0) {
-                Log.d("tareq_test", "Uploading order to server");
-                returnProductDatabase = (ReturnProductDatabase) ReturnProductDatabase.getInstance(context);
 
-                uploadOrderToServer(new UploadCompleteListener() {
-                    @Override
-                    public void uploadComplete() {
-                        if (uploadCompleteListener != null)
-                            uploadCompleteListener.uploadComplete();
-                    }
+            try {
+                if (databaseHandler.getOrder().size() != 0) {
+                    Log.d("tareq_test", "Uploading order to server");
+                    returnProductDatabase = (ReturnProductDatabase) ReturnProductDatabase.getInstance(context);
 
-                    @Override
-                    public void uploadFailed(String reason) {
-                        if (uploadCompleteListener != null)
-                            uploadCompleteListener.uploadFailed(reason);
-                    }
-                });
-            } else {
+                    uploadOrderToServer(new UploadCompleteListener() {
+                        @Override
+                        public void uploadComplete() {
+                            if (uploadCompleteListener != null)
+                                uploadCompleteListener.uploadComplete();
+                        }
 
-                if (uploadCompleteListener != null)
-                    uploadCompleteListener.uploadFailed("No offline order is available.");
+                        @Override
+                        public void uploadFailed(String reason) {
+                            if (uploadCompleteListener != null)
+                                uploadCompleteListener.uploadFailed(reason);
+                        }
+                    });
+                } else {
+
+                    if (uploadCompleteListener != null)
+                        uploadCompleteListener.uploadFailed("No offline order is available.");
 
 
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
 
         } else {

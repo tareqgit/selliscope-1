@@ -96,7 +96,7 @@ public class AddOutletActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_outlet);
         checkPermission();
 
-        googleApiClient = new GoogleApiClient.Builder(AddOutletActivity.this)
+        /*googleApiClient = new GoogleApiClient.Builder(AddOutletActivity.this)
                 .addApi(LocationServices.API)
                 .build();
         googleApiClient.connect();
@@ -110,7 +110,7 @@ public class AddOutletActivity extends AppCompatActivity {
             public void onConnectionSuspended(int i) {
 
             }
-        });
+        });*/
         databaseHandler = new DatabaseHandler(this);
         sessionManager = new SessionManager(this);
         apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(), sessionManager.getUserPassword(), false).create(SelliscopeApiEndpointInterface.class);
@@ -183,8 +183,8 @@ public class AddOutletActivity extends AppCompatActivity {
         });
         getLocation.setOnClickListener(v -> {
             Intent intent = new Intent(AddOutletActivity.this, LocationFromMapActivity.class);
-            intent.putExtra("latitude", mCurrentLatitude);
-            intent.putExtra("longitude", mCurrentLongitude);
+          //  intent.putExtra("latitude", mCurrentLatitude);
+           // intent.putExtra("longitude", mCurrentLongitude);
             startActivityForResult(intent, MAP_LOCATION);
         });
         cancel.setOnClickListener(new View.OnClickListener() {
@@ -196,28 +196,21 @@ public class AddOutletActivity extends AppCompatActivity {
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Timber.d("Valid Address" + isValidAddress);
-                Timber.d("Valid Outle Name" + isValidOutletName);
-                Timber.d("valid owner naem" + isValidOwnerName);
-                Timber.d("Valid phone" + isValidPhone);
-                Timber.d("Latitude" + mLatitude);
-                Timber.d("Long" + mLongitude);
-                Timber.d("Type id" + outletTypeId);
-                Timber.d("Thana id" + thanaId);
+
 
                 if (!isEmpty()) {
-                    if (mLatitude != 0.0 && mLongitude != 0.0) {
-                        Timber.d("addOutletRun");
+                 //   if (mLatitude != 0.0 && mLongitude != 0.0) {
+                   //     Timber.d("addOutletRun");
                         if (NetworkUtility.isNetworkAvailable(AddOutletActivity.this)) {
-                            Location currentLocation = new Location("");
+                         /*   Location currentLocation = new Location("");
                             currentLocation.setLatitude(mCurrentLatitude);
                             currentLocation.setLongitude(mCurrentLongitude);
-
+*/
                             Location mapLocation = new Location("");
                             mapLocation.setLatitude(mLatitude);
                             mapLocation.setLongitude(mLongitude);
 
-                            if (mapLocation.distanceTo(currentLocation) <= 100) {
+                         //   if (mapLocation.distanceTo(currentLocation) <= 100) {
                                 if (thanaId != 0) {
                                     if(outletContactNumber.getText().toString().length()<11) {
                                         outletContactNumber.setError("Number should be valid mobile number");
@@ -243,14 +236,14 @@ public class AddOutletActivity extends AppCompatActivity {
                                 } else {
                                     Toast.makeText(AddOutletActivity.this, getString(R.string.Please_select_a_thana), Toast.LENGTH_SHORT).show();
                                 }
-                            } else {
-                                Toast.makeText(AddOutletActivity.this, getString(R.string.Dealer_location_is), Toast.LENGTH_SHORT).show();
-                            }
+                           //} else {
+                           //     Toast.makeText(AddOutletActivity.this, getString(R.string.Dealer_location_is), Toast.LENGTH_SHORT).show();
+                           // }
                         } else
                             Toast.makeText(AddOutletActivity.this, getString(R.string.connect), Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(AddOutletActivity.this, getString(R.string.Could_not_found), Toast.LENGTH_SHORT).show();
-                    }
+                  //  } else {
+                 //       Toast.makeText(AddOutletActivity.this, getString(R.string.Could_not_found), Toast.LENGTH_SHORT).show();
+                //    }
                 }
             }
         });
@@ -471,7 +464,7 @@ public class AddOutletActivity extends AppCompatActivity {
         outletType.setAdapter(outletTypeAdapter);
     }
 
-    public void getLocation() {
+   /* public void getLocation() {
         SendUserLocationData sendUserLocationData = new SendUserLocationData(AddOutletActivity.this);
         sendUserLocationData.getInstantLocation(this, new SendUserLocationData.OnGetLocation() {
             @Override
@@ -480,7 +473,7 @@ public class AddOutletActivity extends AppCompatActivity {
                 mCurrentLongitude = longitude;
             }
         });
-    }
+    }*/
 
     private void checkPermission() {
         AccessPermission.accessPermission(AddOutletActivity.this);
@@ -509,7 +502,7 @@ public class AddOutletActivity extends AppCompatActivity {
 
     @Override
     public void onDestroy() {
-        googleApiClient.disconnect();
+   //     googleApiClient.disconnect();
         super.onDestroy();
         if (mCompositeDisposable != null && !mCompositeDisposable.isDisposed())
             mCompositeDisposable.dispose();

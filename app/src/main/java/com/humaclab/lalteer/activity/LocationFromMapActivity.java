@@ -13,17 +13,23 @@ import android.os.Build;
 import android.os.Bundle;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
+
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.tasks.Task;
 import com.humaclab.lalteer.R;
 import com.humaclab.lalteer.utils.SendUserLocationData;
 
@@ -33,6 +39,12 @@ import java.util.List;
 public class LocationFromMapActivity extends FragmentActivity implements OnMapReadyCallback {
     private SupportMapFragment mapFragment;
     private GoogleMap mMap;
+
+    // The entry point to the Fused Location Provider.
+    private FusedLocationProviderClient mFusedLocationProviderClient;
+
+
+
     private GoogleMap.OnCameraIdleListener onCameraIdleListener;
     private TextView resutText;
     private Button selectLocation;
@@ -51,13 +63,6 @@ public class LocationFromMapActivity extends FragmentActivity implements OnMapRe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_location_from_map);
 
-        sendUserLocationData = new SendUserLocationData(this);
-        sendUserLocationData.getInstantLocation(this, new SendUserLocationData.OnGetLocation() {
-            @Override
-            public void getLocation(Double latitude, Double longitude) {
-
-            }
-        });
 
         resutText = findViewById(R.id.dragg_result);
         selectLocation = findViewById(R.id.btn_select_location);
@@ -76,6 +81,11 @@ public class LocationFromMapActivity extends FragmentActivity implements OnMapRe
                 }
             }
         });
+
+
+        // Construct a FusedLocationProviderClient.
+        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
@@ -96,8 +106,21 @@ public class LocationFromMapActivity extends FragmentActivity implements OnMapRe
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
-//        Location location = locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria, false));
-        Location location = new Location("");
+        mMap.setMyLocationEnabled(true);
+        mMap.getUiSettings().setMyLocationButtonEnabled(true);
+
+        mMap.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
+            @Override
+            public boolean onMyLocationButtonClick() {
+                getLocation();
+                return false;
+            }
+        });
+        getLocation();
+    }
+
+    private void getLocation() {
+     /*   Location location = new Location("");
         location.setLatitude(getIntent().getDoubleExtra("latitude", 0.0));
         location.setLongitude(getIntent().getDoubleExtra("longitude", 0.0));
         if (location != null) {
@@ -109,7 +132,32 @@ public class LocationFromMapActivity extends FragmentActivity implements OnMapRe
                     .tilt(0)                   // Sets the tilt of the camera to 0 degrees
                     .build();                   // Creates a CameraPosition from the builder
             mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-        }
+        }*/
+
+        Task<Location> locationResult = mFusedLocationProviderClient.getLastLocation();
+        locationResult.addOnCompleteListener(this, task -> {
+            if (task.isSuccessful()) {
+                // Set the map's camera position to the current location of the device.
+                Location location =    task.getResult();
+                if (location != null) {
+                    Log.d("tareq_test", "LocationFromMapActivity #133: getLocation:  "+ location.getLatitude() +" "+ location.getLongitude());
+                    LatLngBounds hisLocation= new LatLngBounds(new LatLng(location.getLatitude()-.0005f, location.getLongitude()-.0005f), new LatLng(location.getLatitude()+.0005f, location.getLongitude()+.0005f));
+
+                    //   mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 13));
+                    CameraPosition cameraPosition = new CameraPosition.Builder()
+                            .target(new LatLng(location.getLatitude(), location.getLongitude()))      // Sets the center of the map to location user
+                            .zoom(20)                   // Sets the zoom
+
+                            .bearing(0)                // Sets the orientation of the camera to North
+                            .tilt(0)                   // Sets the tilt of the camera to 0 degrees
+
+                            .build();                   // Creates a CameraPosition from the builder
+                    mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+                    mMap.setLatLngBoundsForCameraTarget(hisLocation);
+                }
+            }
+        });
+
     }
 
     private void configureCameraIdle() {

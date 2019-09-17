@@ -13,6 +13,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import android.os.Parcelable;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.MenuItem;
@@ -55,6 +56,9 @@ public class OutletActivity extends AppCompatActivity {
     List<Outlets.Outlet> outlets =new ArrayList<>();
     private LoadLocalIntoBackground loadLocalIntoBackground;
     private CompositeDisposable mCompositeDisposable = new CompositeDisposable();
+
+    // Save state
+    private Parcelable recyclerViewState; //for storing recycler scroll postion
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -158,6 +162,8 @@ public class OutletActivity extends AppCompatActivity {
         getOutlets();
 
     }
+
+
 
     public void getOutlets() {
        outlets.clear();

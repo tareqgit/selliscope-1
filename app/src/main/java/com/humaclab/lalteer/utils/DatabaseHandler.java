@@ -974,6 +974,46 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
 
+    public  Outlets.Outlet getAllOutletById(int id) {
+
+        List<Outlets.Outlet> outletList = new ArrayList<>();
+        // Select All Query
+        String selectQuery = "SELECT * FROM " + TABLE_OUTLET + " WHERE " + KEY_OUTLET_ID + " = " + id;
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                cursor.getColumnNames();
+                Outlets.Outlet outlet = new Outlets.Outlet();
+                outlet.outletId = cursor.getInt(cursor.getColumnIndex(KEY_OUTLET_ID));
+                outlet.outletName = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_NAME));
+                outlet.outletType = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_TYPE));
+                outlet.ownerName = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_OWNER_NAME));
+                outlet.outletAddress = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_ADDRESS));
+                outlet.district = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_DISTRICT));
+                outlet.thana = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_THANA));
+                outlet.phone = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_PHONE));
+                outlet.outletImgUrl = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_IMAGE));
+                outlet.outletLongitude = Double.parseDouble(cursor.getString(cursor.getColumnIndex(KEY_OUTLET_LONGITUDE)));
+                outlet.outletLatitude = Double.parseDouble(cursor.getString(cursor.getColumnIndex(KEY_OUTLET_LATITUDE)));
+                outlet.outletDue = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_DUE));
+                outlet.outlet_routeplan = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_ROUTEPLAN));
+                outlet.credit_limit = cursor.getInt(cursor.getColumnIndex(KEY_OUTLET_CREDITLIMIT));
+                outlet.outlet_code = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_CODE));
+
+                outletList.add(outlet);
+            } while (cursor.moveToNext());
+        }
+
+        if(outletList.size()!=0)
+        return   outletList.get(0);
+        else
+            return null;
+    }
+
+
     public Outlets.OutletsResult getAllOutlet() {
         Outlets.OutletsResult outletsResult = new Outlets.OutletsResult();
         List<Outlets.Outlet> outletList = new ArrayList<>();

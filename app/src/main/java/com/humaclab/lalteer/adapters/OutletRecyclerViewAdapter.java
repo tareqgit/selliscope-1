@@ -5,9 +5,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
+
 import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,6 +40,7 @@ import com.humaclab.lalteer.activity.OutletMapActivity;
 import com.humaclab.lalteer.activity.PurchaseHistoryActivity;
 import com.humaclab.lalteer.model.Outlets;
 import com.humaclab.lalteer.model.UserLocation;
+import com.humaclab.lalteer.model.checked_in_dealer.CheckedInDealerResponse;
 import com.humaclab.lalteer.utils.Constants;
 import com.humaclab.lalteer.utils.DatabaseHandler;
 import com.humaclab.lalteer.utils.GetAddressFromLatLang;
@@ -51,6 +54,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import io.reactivex.SingleObserver;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -72,6 +80,8 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
     private SessionManager sessionManager;
     private DatabaseHandler databaseHandler;
 
+    private CompositeDisposable mCompositeDisposable = new CompositeDisposable();
+
     public OutletRecyclerViewAdapter(Context context, Activity activity, List<Outlets.Outlet> outlets) {
         this.outlets = outlets;
         this.context = context;
@@ -79,17 +89,19 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
         this.sessionManager = new SessionManager(context);
 
 
-        shimmer= new Shimmer.ColorHighlightBuilder()
+        shimmer = new Shimmer.ColorHighlightBuilder()
                 .setBaseAlpha(.85f)
                 .setIntensity(0)
                 .build();
 
         databaseHandler = new DatabaseHandler(context);
+        apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(), sessionManager.getUserPassword(), false).create(SelliscopeApiEndpointInterface.class);
+
     }
 
 
-    public void updateOutlets( List<Outlets.Outlet> outlets){
-        this.outlets=outlets;
+    public void updateOutlets(List<Outlets.Outlet> outlets) {
+        this.outlets = outlets;
         notifyDataSetChanged();
     }
 
@@ -106,14 +118,13 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
 
         Outlets.Outlet outlet = outlets.get(position);
 
-        ShimmerDrawable shimmerDrawable=new ShimmerDrawable();
+        ShimmerDrawable shimmerDrawable = new ShimmerDrawable();
         shimmerDrawable.setShimmer(shimmer);
 
 
+        if (!Objects.equals(outlet.outletImgUrl, "")) {
 
-        if(!Objects.equals(outlet.outletImgUrl, "")) {
-
-            final String url = Constants.BASE_URL.substring(0,Constants.BASE_URL.length() - 4) + outlet.outletImgUrl;
+            final String url = Constants.BASE_URL.substring(0, Constants.BASE_URL.length() - 4) + outlet.outletImgUrl;
 
             Glide.with(context)
                     //as base usl has api in url but image don't have that
@@ -124,7 +135,7 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
                     .transition(DrawableTransitionOptions.withCrossFade())
                     .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
                     .into(holder.iv_outlet_image);
-        }else{
+        } else {
             holder.iv_outlet_image.setImageResource(R.drawable.selliscope_splash);
         }
         holder.tv_outletCode.setText(outlet.outlet_code == null ? "Pending" : outlet.outlet_code);
@@ -136,7 +147,7 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
         if (outlet.outlet_routeplan.equals("1")) {
             holder.lo_routeplan_background2.setImageResource(R.drawable.moss_gradient2);
 
-        }else{
+        } else {
             holder.lo_routeplan_background2.setImageResource(R.color.white);
         }
         holder.checkInButton.setOnClickListener(new View.OnClickListener() {
@@ -171,7 +182,7 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
             @Override
             public void onClick(View v) {
                 //TODO: add map direction layout here.
-                Log.d("tareq_test" , ""+outlet.outletLatitude);
+                Log.d("tareq_test", "" + outlet.outletLatitude);
 
                 Intent intent = new Intent(context, OutletMapActivity.class);
                 intent.putExtra("outletName", outlet.outletName);
@@ -193,39 +204,82 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
     }
 
     private int lastPosition = -1;
-    private void setAnimation(View viewToAnimate, int position)
-    {
+
+    private void setAnimation(View viewToAnimate, int position) {
         // If the bound view wasn't previously displayed on screen, it's animated
-        if (position > lastPosition)
-        {
+        if (position > lastPosition) {
             Animation animation = AnimationUtils.loadAnimation(context, R.anim.up_from_bottom);
             viewToAnimate.startAnimation(animation);
             lastPosition = position;
         }
     }
 
-    private void getLocation(final int outletId, final Location outletLocation, final ProgressBar progressbar) {
-        SendUserLocationData sendUserLocationData = new SendUserLocationData(context);
-        sendUserLocationData.getInstantLocation(activity, new SendUserLocationData.OnGetLocation() {
-            @Override
-            public void getLocation(Double latitude, Double longitude) {
 
-                Location location = new Location("");
-                location.setLatitude(latitude);
-                location.setLongitude(longitude);
-                if (location.distanceTo(outletLocation) <= sessionManager.getDiameter()) {
-                    if (NetworkUtility.isNetworkAvailable(context)) {
-                        sendUserLocation(location, outletId, progressbar);
-                    } else {
-                        progressbar.setVisibility(View.INVISIBLE);
-                        Toast.makeText(context, "Enable Wifi or Mobile data.", Toast.LENGTH_SHORT).show();
+    private void getLocation(final int outletId, final Location outletLocation, final ProgressBar progressbar) {
+
+        apiService.getCheckedInDealers()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new SingleObserver<Response<CheckedInDealerResponse>>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+                        mCompositeDisposable.add(d);
                     }
-                } else {
-                    progressbar.setVisibility(View.INVISIBLE);
-                    Toast.makeText(context, "You are not within 70m radius of the outlet.", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+
+                    @Override
+                    public void onSuccess(Response<CheckedInDealerResponse> checkedInDealerResponseResponse) {
+                        List<Integer> outletIDLists = new ArrayList<>(checkedInDealerResponseResponse.body().getDealerIds());
+                        List<String> phoneNoLists = new ArrayList<>();
+
+                        String phoneNo="";
+                        if (databaseHandler.getAllOutletById(outletId) != null) {
+                            phoneNo = databaseHandler.getAllOutletById(outletId).phone;
+                        }
+
+                        for (Integer outletId : outletIDLists) {
+                            if (databaseHandler.getAllOutletById(outletId) != null) {
+                                phoneNoLists.add(databaseHandler.getAllOutletById(outletId).phone);
+                            }
+                        }
+
+                        if(phoneNoLists.contains(phoneNo)){
+                            Toast.makeText(context, "You are already checked in", Toast.LENGTH_SHORT).show();
+                            progressbar.setVisibility(View.INVISIBLE);
+                        }else{
+                            SendUserLocationData sendUserLocationData = new SendUserLocationData(context);
+                            sendUserLocationData.getInstantLocation(activity, new SendUserLocationData.OnGetLocation() {
+                                @Override
+                                public void getLocation(Double latitude, Double longitude) {
+
+                                    Location location = new Location("");
+                                    location.setLatitude(latitude);
+                                    location.setLongitude(longitude);
+                                    if (location.distanceTo(outletLocation) <= sessionManager.getDiameter()) {
+                                        if (NetworkUtility.isNetworkAvailable(context)) {
+                                            sendUserLocation(location, outletId, progressbar);
+                                        } else {
+                                            progressbar.setVisibility(View.INVISIBLE);
+                                            Toast.makeText(context, "Enable Wifi or Mobile data.", Toast.LENGTH_SHORT).show();
+                                        }
+                                    } else {
+                                        progressbar.setVisibility(View.INVISIBLE);
+                                        Toast.makeText(context, "You are not within 70m radius of the outlet.", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
+                        }
+
+
+                        }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.e("tareq_test", "OutletRecyclerViewAdapter #276: onError:  "+ e.getMessage());
+                    }
+                });
+
+
+
     }
 
     private void sendUserLocation(Location location, final int outletId, final ProgressBar progressBar) {
@@ -263,7 +317,7 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
                         }
                     } catch (IOException e) {
                         progressBar.setVisibility(View.INVISIBLE);
-                        Timber.d("Error:" + e.toString());
+                        Toast.makeText(context, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
                         e.printStackTrace();
                     }
                 } else if (response.code() == 400) {
@@ -294,7 +348,7 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
     public class OutletViewHolder extends RecyclerView.ViewHolder {
         CardView cardView;
         ImageView iv_outlet_image;
-        TextView tvOutletName, tvOutletAddress, tvOutletOwnerName, tvOutletContactNumber,tv_outletCode, tvOutletType;
+        TextView tvOutletName, tvOutletAddress, tvOutletOwnerName, tvOutletContactNumber, tv_outletCode, tvOutletType;
         Button checkInButton, mapButton, historyButton;
         ProgressBar pbCheckIn;
         TextView tv_checkroute;

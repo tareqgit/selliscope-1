@@ -22,6 +22,7 @@ import com.humaclab.lalteer.model.advance_payment.AdvancePaymentPostResponse;
 import com.humaclab.lalteer.model.advance_payment.AdvancePaymentsItem;
 import com.humaclab.lalteer.model.advance_payment.AdvancePaymentsSendItem;
 import com.humaclab.lalteer.model.advance_payment.AdvancedPaymentResponse;
+import com.humaclab.lalteer.model.checked_in_dealer.CheckedInDealerResponse;
 import com.humaclab.lalteer.model.purchase_history.PurchaseHistoryResponse;
 import com.humaclab.lalteer.model.RoutePlan.RouteDetailsResponse;
 import com.humaclab.lalteer.model.RoutePlan.RouteResponse;
@@ -136,6 +137,11 @@ public interface SelliscopeApiEndpointInterface {
 
     @POST("dealers/create/")
     Single<Response<ResponseBody>> createOutlet(@Body CreateOutlet createOutlet);
+
+
+    @GET("check-in-dealer")
+    Single<Response<CheckedInDealerResponse>> getCheckedInDealers();
+
 
      @POST("visit/store/")
     Call<ResponseBody> sendUserLocation(@Body UserLocation userLocation);

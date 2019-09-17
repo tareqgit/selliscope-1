@@ -22,6 +22,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.andrognito.flashbar.Flashbar;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
@@ -243,7 +244,13 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
                         }
 
                         if(phoneNoLists.contains(phoneNo)){
-                            Toast.makeText(context, "You are already checked in", Toast.LENGTH_SHORT).show();
+                          //  Toast.makeText(context, "You are already checked in", Toast.LENGTH_SHORT).show();
+                            new  Flashbar.Builder(activity)
+                                    .gravity(Flashbar.Gravity.TOP)
+                                    .message("You are already checked in.")
+                                    .backgroundDrawable(R.drawable.moss_gradient)
+                                    .duration(3000)
+                                    .build().show();
                             progressbar.setVisibility(View.INVISIBLE);
                         }else{
                             SendUserLocationData sendUserLocationData = new SendUserLocationData(context);
@@ -260,10 +267,19 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
                                         } else {
                                             progressbar.setVisibility(View.INVISIBLE);
                                             Toast.makeText(context, "Enable Wifi or Mobile data.", Toast.LENGTH_SHORT).show();
+
                                         }
                                     } else {
                                         progressbar.setVisibility(View.INVISIBLE);
-                                        Toast.makeText(context, "You are not within 70m radius of the outlet.", Toast.LENGTH_SHORT).show();
+                                       // Toast.makeText(context, "You are not within 70m radius of the outlet.", Toast.LENGTH_SHORT).show();
+                                        new  Flashbar.Builder(activity)
+                                                .gravity(Flashbar.Gravity.TOP)
+                                                .title("Sorry!")
+                                                .message("You are not within 70m radius of the outlet.")
+                                                .duration(3000)
+                                                .backgroundDrawable(R.drawable.moss_gradient2)
+                                                .build().show();
+
                                     }
                                 }
                             });
@@ -306,13 +322,28 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
 
                         if (userLocationSuccess != null) {
                             if (userLocationSuccess.msg.equals("")) { // To check if the user already checked in the outlet
-                                Toast.makeText(context, "You are checked in.", Toast.LENGTH_SHORT).show();
+                             //   Toast.makeText(context, "You are checked in.", Toast.LENGTH_SHORT).show();
+
+                                new  Flashbar.Builder(activity)
+                                        .gravity(Flashbar.Gravity.TOP)
+                                        .title("Congrats!")
+                                        .message("You are successfully checked in.")
+                                        .backgroundDrawable(R.drawable.moss_gradient)
+                                        .duration(3000)
+                                        .build().show();
+
                                 databaseHandler.afterCheckinUpdateOutletRoutePlan(outletId);
 
                                 ((OutletActivity) context).getRoute();//For reloading the outlet recycler view
                                 ((OutletActivity) context).getOutlets();//For reloading the outlet recycler view
                             } else {
-                                Toast.makeText(context, "You already checked in.", Toast.LENGTH_SHORT).show();
+                      //          Toast.makeText(context, "You already checked in.", Toast.LENGTH_SHORT).show();
+                              new  Flashbar.Builder(activity)
+                                        .gravity(Flashbar.Gravity.TOP)
+                                        .message("You already checked in.")
+                                        .backgroundDrawable(R.drawable.moss_gradient)
+                                        .duration(3000)
+                                        .build().show();
                             }
                         }
                     } catch (IOException e) {

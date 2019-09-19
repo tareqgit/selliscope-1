@@ -202,4 +202,6 @@ public interface SelliscopeApiEndpointInterface {
 
     @GET("v2/sales-return/{outlet_id}")
     Call<SalesReturnGetResponse> getSalesReturn(@Path("outlet_id") int outletId);
+
+
 }

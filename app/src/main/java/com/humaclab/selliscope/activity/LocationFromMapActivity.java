@@ -30,7 +30,6 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.tasks.Task;
-import com.google.gson.Gson;
 import com.humaclab.selliscope.R;
 
 import java.io.IOException;
@@ -75,19 +74,16 @@ public class LocationFromMapActivity extends FragmentActivity implements OnMapRe
 
         resutText = findViewById(R.id.dragg_result);
         selectLocation = findViewById(R.id.btn_select_location);
-        selectLocation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
-                    Intent intent = new Intent();
-                    intent.putExtra("latitude", mLatitude);
-                    intent.putExtra("longitude", mLongitude);
-                    intent.putExtra("address", address);
-                    setResult(MAP_LOCATION, intent);
-                    finish();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+        selectLocation.setOnClickListener(v -> {
+            try {
+                Intent intent = new Intent();
+                intent.putExtra("latitude", mLatitude);
+                intent.putExtra("longitude", mLongitude);
+                intent.putExtra("address", address);
+                setResult(MAP_LOCATION, intent);
+                finish();
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         });
 

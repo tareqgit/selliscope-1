@@ -2,13 +2,24 @@ package com.humaclab.selliscope.activity;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
+
+import androidx.core.content.FileProvider;
 import androidx.databinding.DataBindingUtil;
+
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Base64;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -27,8 +38,13 @@ import com.humaclab.selliscope.model.Outlets;
 import com.humaclab.selliscope.utils.SessionManager;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import okhttp3.ResponseBody;
@@ -45,6 +61,8 @@ public class InspectionActivity extends AppCompatActivity {
 
     private List<Integer> outletIDs;
     private List<String> outletNames;
+   public static final String AUTHORITY = "com.humaclab.selliscope.fileprovider";
+    private File output=null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,12 +80,28 @@ public class InspectionActivity extends AppCompatActivity {
 
         getOutlets();
 
-        binding.ivTakeImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(cameraIntent, CAMERA_REQUEST);
+        binding.ivTakeImage.setOnClickListener(v -> {
+            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            // Ensure that there's a camera activity to handle the intent
+            if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+                // Create the File where the photo should go
+                File photoFile = null;
+                try {
+                    output = createImageFile();
+                } catch (IOException ex) {
+                    // Error occurred while creating the File
+                    Log.d("tareq_test", "InspectionActivity #87: onCreate:  "+ ex.getMessage());
+                }
+                // Continue only if the File was successfully created
+                if (output != null) {
+
+                    Uri photoURI = FileProvider.getUriForFile(InspectionActivity.this, AUTHORITY,                            output);
+                   takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                    takePictureIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                    startActivityForResult(takePictureIntent, CAMERA_REQUEST);
+                }
             }
+
         });
 
         binding.btnSubmitInspection.setOnClickListener(v -> {
@@ -90,6 +124,9 @@ public class InspectionActivity extends AppCompatActivity {
             SessionManager sessionManager = new SessionManager(InspectionActivity.this);
             SelliscopeApiEndpointInterface apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(),
                     sessionManager.getUserPassword(), false).create(SelliscopeApiEndpointInterface.class);
+
+            Log.d("tareq_test", "InspectionActivity #126: onCreate:  "+ new Gson().toJson(inspection));
+
             Call<InspectionResponse> call = apiService.inspectOutlet(inspection);
             call.enqueue(new Callback<InspectionResponse>() {
                 @Override
@@ -119,6 +156,9 @@ public class InspectionActivity extends AppCompatActivity {
         apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(),
                 sessionManager.getUserPassword(), false)
                 .create(SelliscopeApiEndpointInterface.class);
+
+
+
         Call<ResponseBody> call = apiService.getOutlets();
         call.enqueue(new Callback<ResponseBody>() {
             @Override
@@ -162,18 +202,94 @@ public class InspectionActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-            Bitmap photo = (Bitmap) data.getExtras().get("data");
-            assert photo != null;
-            photo.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
-            promotionImage = Base64.encodeToString(outputStream.toByteArray(), Base64.DEFAULT);
 
 
-            Glide.with(binding.ivTakeImage)
-                    .load(photo)
-                    .transform(new CircleCrop())
-                    .into(binding.ivTakeImage);
+            Uri outputUri=FileProvider.getUriForFile(this, AUTHORITY, output);
+            final Uri imageUri =outputUri;
+            final InputStream imageStream;
+            try {
+                imageStream = getContentResolver().openInputStream(imageUri);
+                Bitmap photo = BitmapFactory.decodeStream(imageStream);
+
+                int factor=10;
+                while(photo.getWidth()>600){
+                    photo=Bitmap.createScaledBitmap(photo, (Math.round(photo.getWidth()*0.1f * factor)), (Math.round(photo.getHeight()*0.1f * factor)), false);
+                    factor--;
+                }
+
+
+                Log.d("tareq_test", "InspectionActivity #205: onActivityResult:  "+ photo.getHeight() +" , "+ photo.getWidth());
+                photo.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+                promotionImage = Base64.encodeToString(outputStream.toByteArray(), Base64.DEFAULT);
+
+
+                Glide.with(binding.ivTakeImage)
+                        .load(decodeBase64(promotionImage))
+                       // .transform(new CircleCrop())
+                        .into(binding.ivTakeImage);
+
+
+
+                SharedPreferences sharedPreferencesLanguage = getSharedPreferences("Settings", MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferencesLanguage.edit();
+                editor.putString("img", promotionImage);
+                editor.apply();
+
+
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+
+
+
 
         }
+    }
+
+
+    void sendMail(String msg){
+        String mailto = "mailto:tareq.android@humaclab.com" +
+                "?cc=" + "mti.tareq2@gmail.com" +
+                "&subject=" + Uri.encode("Nai") +
+                "&body=" + Uri.encode(msg);
+
+        Intent emailIntent = new Intent(Intent.ACTION_SENDTO);
+        emailIntent.setData(Uri.parse(mailto));
+
+        try {
+            startActivity(emailIntent);
+            Toast.makeText(this, "Email send", Toast.LENGTH_SHORT).show();
+        } catch (ActivityNotFoundException e) {
+            //TODO: Handle case where no email app is available
+            Toast.makeText(InspectionActivity.this, "There are no email clients installed.", Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+
+    public static Bitmap decodeBase64(String input)
+    {
+        byte[] decodedBytes = Base64.decode(input, 0);
+        return BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.length);
+    }
+
+
+    String currentPhotoPath;
+
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+
+        // Save a file: path for use with ACTION_VIEW intents
+        currentPhotoPath = image.getAbsolutePath();
+        return image;
     }
 
     @Override

@@ -37,6 +37,8 @@ import com.humaclab.selliscope.model.UserLocation;
 import com.humaclab.selliscope.model.price_variation.PriceVariationResponse;
 import com.humaclab.selliscope.model.variant_product.VariantProductResponse;
 import com.humaclab.selliscope.model.performance.payments_model.PaymentsResponse;
+import com.humaclab.selliscope.performance.leaderboard.db_model.LeaderboardTotalPerticipatesResponse;
+import com.humaclab.selliscope.performance.leaderboard.db_model.top_user.LeaderboardTopUserPositionResponse;
 import com.humaclab.selliscope.sales_return.model.get.SalesReturnGetResponse;
 import com.humaclab.selliscope.sales_return.model.post.SalesReturn2019Response;
 import com.humaclab.selliscope.sales_return.model.post.SalesReturnPostBody;
@@ -202,6 +204,20 @@ public interface SelliscopeApiEndpointInterface {
 
     @GET("v2/sales-return/{outlet_id}")
     Call<SalesReturnGetResponse> getSalesReturn(@Path("outlet_id") int outletId);
+
+
+
+    //For LeaderBoard
+    @GET("v1/leaderboard-checker-user-position")
+    Call<LeaderboardTopUserPositionResponse> getTopUserPosition(@Query("time") String time);
+
+
+    @GET("v1/leaderboard-total-perticipates")
+    Call<LeaderboardTotalPerticipatesResponse> getTotalPerticipants(@Query("time") String time);
+
+   // @GET("v1/leaderboard-collector_user_ranking")
+   // Call<> getUserRanking(@Query("time") String time);
+
 
 
 }

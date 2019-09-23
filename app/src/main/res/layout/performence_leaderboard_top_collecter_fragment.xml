@@ -119,7 +119,7 @@
                                 app:layout_constraintHorizontal_bias="0.51"
                                 app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toBottomOf="@+id/constraintLayout5"
-                                tools:srcCompat="@tools:sample/avatars" />
+                                android:src="@drawable/ic_man" />
 
                             <ImageView
                                 android:id="@+id/imageView_second"
@@ -131,7 +131,7 @@
                                 app:layout_constraintEnd_toEndOf="parent"
                                 app:layout_constraintHorizontal_bias="0.16"
                                 app:layout_constraintStart_toStartOf="parent"
-                                tools:srcCompat="@tools:sample/avatars" />
+                                android:src="@drawable/ic_girl" />
 
                             <ImageView
                                 android:id="@+id/imageView_third"
@@ -143,14 +143,14 @@
                                 app:layout_constraintEnd_toEndOf="parent"
                                 app:layout_constraintHorizontal_bias="0.86"
                                 app:layout_constraintStart_toStartOf="parent"
-                                tools:srcCompat="@tools:sample/avatars" />
+                                android:src="@drawable/ic_old_man" />
 
                             <TextView
                                 android:id="@+id/first_name"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginBottom="8dp"
-                                android:text="Tareq Islam"
+                                android:text="None"
                                 app:layout_constraintBottom_toTopOf="@+id/imageView_banner"
                                 app:layout_constraintEnd_toEndOf="@+id/imageView_first"
                                 app:layout_constraintStart_toStartOf="@+id/imageView_first" />
@@ -164,7 +164,7 @@
                                 android:shadowDx="1"
                                 android:shadowDy="1"
                                 android:shadowRadius="2"
-                                android:text="1st \n 123445"
+                                android:text="1st \n 0"
                                 android:textAlignment="center"
                                 android:textColor="@color/light_font"
                                 android:textSize="10sp"
@@ -177,7 +177,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginBottom="24dp"
-                                android:text="Rakib"
+                                android:text="None"
                                 app:layout_constraintBottom_toTopOf="@+id/second_total"
                                 app:layout_constraintEnd_toEndOf="@+id/imageView_second"
                                 app:layout_constraintStart_toStartOf="@+id/imageView_second" />
@@ -191,7 +191,7 @@
                                 android:shadowDx="1"
                                 android:shadowDy="1"
                                 android:shadowRadius="2"
-                                android:text="2nd \n 123445"
+                                android:text="2nd \n 0"
                                 android:textAlignment="center"
                                 android:textColor="@color/light_font"
                                 android:textSize="10sp"
@@ -204,7 +204,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginBottom="16dp"
-                                android:text="Islam"
+                                android:text="None"
                                 app:layout_constraintBottom_toTopOf="@+id/third_total"
                                 app:layout_constraintEnd_toEndOf="@+id/imageView_third"
                                 app:layout_constraintStart_toStartOf="@+id/imageView_third" />
@@ -218,7 +218,7 @@
                                 android:shadowDx="1"
                                 android:shadowDy="1"
                                 android:shadowRadius="2"
-                                android:text="3rd \n 123445"
+                                android:text="3rd \n 0"
                                 android:textAlignment="center"
                                 android:textColor="@color/light_font"
                                 android:textSize="10sp"
@@ -307,6 +307,18 @@
                                 app:layout_constraintEnd_toEndOf="parent"
                                 app:layout_constraintStart_toStartOf="parent"
 
+                                app:layout_constraintTop_toBottomOf="@+id/textView_title" />
+
+                            <ProgressBar
+                                android:id="@+id/progressBar_recycler"
+                                style="@style/Widget.AppCompat.ProgressBar"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="16dp"
+                                android:layout_marginEnd="16dp"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
                                 app:layout_constraintTop_toBottomOf="@+id/textView_title" />
 
                         </androidx.constraintlayout.widget.ConstraintLayout>

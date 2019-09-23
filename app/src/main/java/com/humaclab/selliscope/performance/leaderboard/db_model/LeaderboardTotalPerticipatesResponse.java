@@ -20,6 +20,17 @@ public class LeaderboardTotalPerticipatesResponse implements Serializable {
 	@SerializedName("status")
 	private int status;
 
+	@SerializedName("total_outlets")
+	private int total_outlets;
+
+	public int getTotal_outlets() {
+		return total_outlets;
+	}
+
+	public void setTotal_outlets(int total_outlets) {
+		this.total_outlets = total_outlets;
+	}
+
 	public void setParticipants(int participants){
 		this.participants = participants;
 	}

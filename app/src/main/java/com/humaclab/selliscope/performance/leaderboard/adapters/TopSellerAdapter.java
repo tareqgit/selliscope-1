@@ -1,10 +1,14 @@
 package com.humaclab.selliscope.performance.leaderboard.adapters;
 
 import android.content.Context;
+
 import androidx.databinding.DataBindingUtil;
+
 import android.graphics.Color;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,17 +19,26 @@ import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.humaclab.selliscope.R;
 import com.humaclab.selliscope.databinding.PerformenceLeaderboardTopSellerFragmentModelBinding;
 import com.humaclab.selliscope.model.performance.leaderboard_model.TopSellerModel;
+import com.humaclab.selliscope.utils.MyMath;
+import com.humaclab.selliscope.utils.SessionManager;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.text.MessageFormat;
 import java.util.List;
+import java.util.Locale;
 
 /***
  * Created by mtita on 30,April,2019.
  */
-public class TopSellerAdapter  extends  RecyclerView.Adapter<TopSellerAdapter.TViewHolder>{
-private Context mContext;
-private List<TopSellerModel> mDummies;
-private   boolean sorted=false;
+public class TopSellerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    private Context mContext;
+    private List<TopSellerModel> mDummies;
+    private boolean sorted = false;
+
+    private static final  int VIEW_TYPE_DATA=0;
+    private static final int VIEW_TYPE_EMPTY=2;
 
     public TopSellerAdapter(Context context, List<TopSellerModel> dummies) {
         mContext = context;
@@ -38,33 +51,57 @@ private   boolean sorted=false;
         this.sorted = sorted;
     }
 
+    @Override
+    public int getItemViewType(int position) {
+        if(mDummies.size()==0){
+            return VIEW_TYPE_EMPTY;
+        }else{
+            return VIEW_TYPE_DATA;
+        }
+    }
+
     @NonNull
     @Override
-    public TViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View  view = LayoutInflater.from(mContext).inflate(R.layout.performence_leaderboard_top_seller_fragment_model,viewGroup,false);
-        return new TViewHolder(view);
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
+        View view;
+        RecyclerView.ViewHolder vh;
+        if(viewType==VIEW_TYPE_DATA) {
+                view=LayoutInflater.from(mContext).inflate(R.layout.performence_leaderboard_top_seller_fragment_model, viewGroup, false);
+                vh=new TViewHolder(view);
+        }else{
+            view=LayoutInflater.from(mContext).inflate(R.layout.empty_view_for_recycler, viewGroup, false);
+            vh= new EmptyViewHolder(view);
+        }
+        return vh;
     }
-int pos;
+
+    int pos;
+
     @Override
-    public void onBindViewHolder(@NonNull TViewHolder tViewHolder, int i) {
-        TopSellerModel topSellerModel = mDummies.get(i);
-        tViewHolder.getBinding().setData(topSellerModel);
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
 
-        if(!sorted)
-            pos=mDummies.size()-i ;
-        else
-            pos=i+1;
-        tViewHolder.mBinding.textViewPos.setText(MessageFormat.format("{0}.",  topSellerModel.getPos()));
+        if(getItemViewType(i)==VIEW_TYPE_DATA) {
+            TViewHolder tViewHolder = (TViewHolder) viewHolder;
 
-        //color every even card background and user background
-        if(i==2){
-            tViewHolder.mBinding.body.setBackgroundColor(Color.parseColor("#E1F5FE"));
-        }else if(i%2==0){
-            tViewHolder.mBinding.body.setBackgroundColor(Color.parseColor("#F5F5F5"));
-        }
-        else{
-            tViewHolder.mBinding.body.setBackgroundColor(Color.parseColor("#FFFFFF"));
-        }
+            TopSellerModel topSellerModel = mDummies.get(i);
+
+            topSellerModel.setAmount(MyMath.round(topSellerModel.getAmount(), 2));
+
+
+            if (!sorted)
+                pos = mDummies.size() - i;
+            else
+                pos = i + 1;
+            tViewHolder.mBinding.textViewPos.setText(MessageFormat.format("{0}.", topSellerModel.getPos()));
+
+            //color every even card background and user background
+            if (topSellerModel.getName().equals(new SessionManager(mContext).getUserDetails().get("userName"))) {
+                tViewHolder.mBinding.body.setBackgroundColor(Color.parseColor("#E1F5FE"));
+            } else if (i % 2 == 0) {
+                tViewHolder.mBinding.body.setBackgroundColor(Color.parseColor("#F5F5F5"));
+            } else {
+                tViewHolder.mBinding.body.setBackgroundColor(Color.parseColor("#FFFFFF"));
+            }
 
       /*  switch (pos){
             case 1:
@@ -87,21 +124,27 @@ int pos;
                 break;
 
         }*/
-        Glide.with(mContext)
-                .load(R.drawable.default_profile_pic) //topSellerModel.getImage_url()
-                .placeholder(R.drawable.default_profile_pic)
-                .centerCrop()
-                .transform(new CircleCrop())
-                .into(tViewHolder.mBinding.imageView6);
+            Glide.with(mContext)
+                    .load(topSellerModel.getImage_url()) //topSellerModel.getImage_url()
+                    .placeholder(R.drawable.ic_employee)
+                    .centerCrop()
+                    .transform(new CircleCrop())
+                    .into(tViewHolder.mBinding.imageView6);
 
+
+            tViewHolder.getBinding().setData(topSellerModel);
+        }
     }
 
     @Override
     public int getItemCount() {
-        return mDummies.size();
+        if (mDummies.size() == 0)
+            return 1;
+        else
+            return mDummies.size();
     }
 
-    public class TViewHolder extends RecyclerView.ViewHolder{
+    public class TViewHolder extends RecyclerView.ViewHolder {
 
 
         public PerformenceLeaderboardTopSellerFragmentModelBinding getBinding() {
@@ -113,9 +156,17 @@ int pos;
         public TViewHolder(View itemView) {
             super(itemView);
 
-            mBinding= DataBindingUtil.bind(itemView);
+            mBinding = DataBindingUtil.bind(itemView);
 
         }
 
     }
+
+    public class EmptyViewHolder extends RecyclerView.ViewHolder {
+
+        public EmptyViewHolder(@NonNull View itemView) {
+            super(itemView);
+        }
+    }
+
 }

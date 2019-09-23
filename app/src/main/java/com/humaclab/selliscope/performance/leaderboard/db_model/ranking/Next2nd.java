@@ -1,10 +1,19 @@
-package com.humaclab.selliscope.performance.leaderboard.db_model.top_user;
+package com.humaclab.selliscope.performance.leaderboard.db_model.ranking;
 
 import javax.annotation.Generated;
 import com.google.gson.annotations.SerializedName;
 
 @Generated("com.robohorse.robopojogenerator")
-public class DataItem{
+public class Next2nd{
+
+	@SerializedName("total_outlet")
+	private int totalOutlet;
+
+	@SerializedName("amount")
+	private double amount;
+
+	@SerializedName("grand_total")
+	private double grand_total;
 
 	@SerializedName("Position")
 	private int position;
@@ -15,16 +24,6 @@ public class DataItem{
 	@SerializedName("name")
 	private String name;
 
-	@SerializedName("grand_total")
-	private double grandTotal;
-
-	@SerializedName("amount")
-	private double amount;
-
-	@SerializedName("total_outlet")
-	private int total_outlet;
-
-
 	public double getAmount() {
 		return amount;
 	}
@@ -33,12 +32,20 @@ public class DataItem{
 		this.amount = amount;
 	}
 
-	public int getTotal_outlet() {
-		return total_outlet;
+	public double getGrand_total() {
+		return grand_total;
 	}
 
-	public void setTotal_outlet(int total_outlet) {
-		this.total_outlet = total_outlet;
+	public void setGrand_total(double grand_total) {
+		this.grand_total = grand_total;
+	}
+
+	public void setTotalOutlet(int totalOutlet){
+		this.totalOutlet = totalOutlet;
+	}
+
+	public int getTotalOutlet(){
+		return totalOutlet;
 	}
 
 	public void setPosition(int position){
@@ -63,13 +70,5 @@ public class DataItem{
 
 	public String getName(){
 		return name;
-	}
-
-	public void setGrandTotal(double grandTotal){
-		this.grandTotal = grandTotal;
-	}
-
-	public double getGrandTotal(){
-		return grandTotal;
 	}
 }

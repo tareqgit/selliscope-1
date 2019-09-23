@@ -13,6 +13,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,14 +23,27 @@ import android.view.ViewGroup;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.humaclab.selliscope.R;
+import com.humaclab.selliscope.SelliscopeApiEndpointInterface;
+import com.humaclab.selliscope.SelliscopeApplication;
 import com.humaclab.selliscope.databinding.PerformanceLeaderboardTopCheckerFragmentBinding;
 import com.humaclab.selliscope.model.performance.leaderboard_model.TopCheckerModel;
+import com.humaclab.selliscope.model.performance.leaderboard_model.TopSellerModel;
 import com.humaclab.selliscope.performance.leaderboard.adapters.TopCheckerAdapter;
+import com.humaclab.selliscope.performance.leaderboard.adapters.TopSellerAdapter;
+import com.humaclab.selliscope.performance.leaderboard.db_model.LeaderboardTotalPerticipatesResponse;
+import com.humaclab.selliscope.performance.leaderboard.db_model.ranking.RankingResponse;
+import com.humaclab.selliscope.performance.leaderboard.db_model.top_user.LeaderboardTopUserPositionResponse;
+import com.humaclab.selliscope.utils.MyMath;
+import com.humaclab.selliscope.utils.SessionManager;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 /***
@@ -36,15 +51,19 @@ import java.util.List;
  */
 public class TopCheckerFragment extends Fragment {
 
+    private SelliscopeApiEndpointInterface apiService;
+
     private RecyclerView mRecyclerView;
-    public static List<TopCheckerModel> datum = new ArrayList<>(Arrays.asList(
+
+    private static String sortTime="";
+    public static List<TopCheckerModel> datum = new ArrayList<>(/*Arrays.asList(
             new TopCheckerModel("blah", 2,"Tareq" , 200000),
             new TopCheckerModel("blah",3,"Rakib" , 200000),
             new TopCheckerModel("blah",4,"Islam" , 200000),
             new TopCheckerModel("blah",5,"Tareq" , 200000),
             new TopCheckerModel("blah",6,"Rakib" , 200000)
 
-    ));
+    )*/);
     public TopCheckerFragment() {
     }
 
@@ -55,6 +74,9 @@ public class TopCheckerFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        SessionManager sessionManager = new SessionManager(getActivity());
+        apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(), sessionManager.getUserPassword(), false).create(SelliscopeApiEndpointInterface.class);
+
         setHasOptionsMenu(true);
     }
 
@@ -76,24 +98,8 @@ public class TopCheckerFragment extends Fragment {
         Collections.sort(datum, (o1, o2) -> (int) (o1.getNo_outlet()-o2.getNo_outlet()));
         mRecyclerView.setAdapter( new TopCheckerAdapter(getActivity(), datum, sort_icon));
 
-        Glide.with(mBinding.imageViewFirst)
-                .load(R.drawable.default_profile_pic)
-                .transform(new CircleCrop())
 
-                .into(mBinding.imageViewFirst);
-
-        Glide.with(mBinding.imageViewSecond)
-                .load(R.drawable.default_profile_pic)
-                .transform(new CircleCrop())
-
-                .into(mBinding.imageViewSecond);
-
-        Glide.with(mBinding.imageViewThird)
-                .load(R.drawable.default_profile_pic)
-                .transform(new CircleCrop())
-
-                .into(mBinding.imageViewThird);
-
+        loadData();
     }
 
     private   static boolean sort_icon = true;
@@ -122,37 +128,166 @@ public class TopCheckerFragment extends Fragment {
                 }
                 return true;
             case R.id.sort_day:
-                loadTodayData();
+                sortTime="";
+                loadData();
+
                 return  true;
 
             case R.id.sort_week:
-                loadWeekData();
+                sortTime="week";
+                loadData();
+
                 return true;
 
             case R.id.sort_month:
-                loadMonthData();
+                sortTime="month";
+                loadData();
+
+                return true;
+
+            case R.id.sort_quarterly:
+                sortTime="quarter";
+                loadData();
+
                 return true;
 
         }
         return false;
     }
-    private void loadMonthData() {
 
+    private void loadData() {
+        mBinding.progressBarRecycler.setVisibility(View.VISIBLE);
+        mBinding.progressBarRecycler.setEnabled(true);
         //here should load the data from api and update datum list
-        mRecyclerView.setAdapter( new TopCheckerAdapter(getActivity(), datum, sort_icon));
+        apiService.getCheckerUserRanking(sortTime).enqueue(new Callback<RankingResponse>() {
+            @Override
+            public void onResponse(Call<RankingResponse> call, Response<RankingResponse> response) {
+                if(response.isSuccessful()){
+
+                    if(response.body()!=null) {
+                        datum.clear();
+
+                        if (response.body().getPrevious2nd() != null) {
+                            datum.add(new TopCheckerModel(response.body().getPrevious2nd().getImageUrl(),
+                                    response.body().getPrevious2nd().getPosition(),
+                                    response.body().getPrevious2nd().getName(),
+                                    response.body().getPrevious2nd().getGrand_total()));
+                        }
+                        if (response.body().getPrevious1st() != null) {
+                            datum.add(new TopCheckerModel(response.body().getPrevious1st().getImageUrl(),
+                                    response.body().getPrevious1st().getPosition(),
+                                    response.body().getPrevious1st().getName(),
+                                    response.body().getPrevious1st().getGrand_total()));
+                        }
+
+                        if (response.body().getAuthenticUser() != null) {
+                            datum.add(new TopCheckerModel(response.body().getAuthenticUser().getImageUrl(),
+                                    response.body().getAuthenticUser().getPosition(),
+                                    response.body().getAuthenticUser().getName(),
+                                    response.body().getAuthenticUser().getGrand_total()));
+                        }
+                        if (response.body().getNext1st() != null) {
+                            datum.add(new TopCheckerModel(response.body().getNext1st().getImageUrl(),
+                                    response.body().getNext1st().getPosition(),
+                                    response.body().getNext1st().getName(),
+                                    response.body().getNext1st().getGrand_total()));
+                        }
+
+                        if(response.body().getNext2nd() !=null) {
+                            datum.add(new TopCheckerModel(response.body().getNext2nd().getImageUrl(),
+                                    response.body().getNext2nd().getPosition(),
+                                    response.body().getNext2nd().getName(),
+                                    response.body().getNext2nd().getGrand_total()));
+                        }
+
+                        TopCheckerAdapter adapter = new TopCheckerAdapter(getActivity(), datum, sort_icon);
+                        mRecyclerView.setAdapter(adapter);
+                        adapter.notifyDataSetChanged();
+                    }else {
+                        Log.d("tareq_test", "TopSellerFragment #209: onResponse:  null response body found");
+                    }
+                    mBinding.progressBarRecycler.setEnabled(false);
+                    mBinding.progressBarRecycler.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<RankingResponse> call, Throwable t) {
+                mBinding.progressBarRecycler.setEnabled(false);
+                mBinding.progressBarRecycler.setVisibility(View.GONE);
+                Log.d("tareq_test", "TopCheckerFragment #233: onFailure:  "+ t.getMessage());
+            }
+        });
+
+
+        apiService.getTopCheckerUserPosition(sortTime).enqueue(new Callback<LeaderboardTopUserPositionResponse>() {
+            @Override
+            public void onResponse(Call<LeaderboardTopUserPositionResponse> call, Response<LeaderboardTopUserPositionResponse> response) {
+                if(response.isSuccessful()){
+
+                    if (response.body() != null && response.body().getData() != null) {
+
+                        Glide.with(mBinding.imageViewFirst)
+
+                                .load(response.body().getData().size() > 0 ? response.body().getData().get(0).getImageUrl() : "")
+                                .placeholder(R.drawable.ic_man)
+                                .transform(new CircleCrop())
+
+                                .into(mBinding.imageViewFirst);
+
+                        mBinding.firstName.setText(response.body().getData().size() > 0 ? response.body().getData().get(0).getName() : "None");
+                        mBinding.firstTotal.setText(String.format("1st\n%s", MyMath.round(response.body().getData().size() > 0 ? response.body().getData().get(0).getTotal_outlet() : 0, 2)));
+
+                        Glide.with(mBinding.imageViewSecond)
+                                .load(response.body().getData().size() > 1 ? response.body().getData().get(1).getImageUrl() : "")
+                                .placeholder(R.drawable.ic_girl)
+                                .transform(new CircleCrop())
+                                .into(mBinding.imageViewSecond);
+
+                        mBinding.secondName.setText(response.body().getData().size() > 1 ? response.body().getData().get(1).getName() : "None");
+                        mBinding.secondTotal.setText(String.format("2nd\n%s", String.valueOf(MyMath.round(response.body().getData().size() > 1 ? response.body().getData().get(1).getTotal_outlet() : 0, 2))));
+
+                        Glide.with(mBinding.imageViewThird)
+                                .load(response.body().getData().size() > 2 ? response.body().getData().get(2).getImageUrl() : "")
+                                .placeholder(R.drawable.ic_old_man)
+                                .transform(new CircleCrop())
+                                .into(mBinding.imageViewThird);
+
+                        mBinding.thirdName.setText(response.body().getData().size() > 2 ? response.body().getData().get(2).getName() : "None");
+                        mBinding.thirdTotal.setText(String.format("3rd\n%s", String.valueOf(MyMath.round(response.body().getData().size() > 2 ? response.body().getData().get(2).getTotal_outlet() : 0, 2))));
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<LeaderboardTopUserPositionResponse> call, Throwable t) {
+                Log.e("tareq_test", "TopSellerFragment #116: onFailure:  " + t.getMessage());
+            }
+        });
+
+
+
+
+        apiService.getTotalCheckerPerticipants(sortTime).enqueue(new Callback<LeaderboardTotalPerticipatesResponse>() {
+            @Override
+            public void onResponse(Call<LeaderboardTotalPerticipatesResponse> call, Response<LeaderboardTotalPerticipatesResponse> response) {
+                if(response.isSuccessful()){
+                    mBinding.textViewParticipants.setText( String.valueOf(response.body().getParticipants()) +"\n Participants");
+
+                    mBinding.textViewTotalAvg.setText(String.format("%s\n Checked", String.valueOf(MyMath.round(response.body().getTotal_outlets(), 2))));
+                }else{
+                    Log.d("tareq_test", "TopSellerFragment #131: onResponse:  Server Error");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<LeaderboardTotalPerticipatesResponse> call, Throwable t) {
+                Log.e("tareq_test", "TopSellerFragment #133: onFailure:  " + t.getMessage());
+            }
+        });
     }
 
-    private void loadWeekData() {
 
-        //here should load the data from api and update datum list
-        mRecyclerView.setAdapter( new TopCheckerAdapter(getActivity(), datum, sort_icon));
-    }
-
-    private void loadTodayData() {
-
-        //here should load the data from api and update datum list
-        mRecyclerView.setAdapter( new TopCheckerAdapter(getActivity(), datum, sort_icon));
-    }
 
     private void updateAdapter() {
 

@@ -80,7 +80,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
 
-            android:text="Top Invoicer" />
+            android:text="Top Invoice" />
 
         <com.google.android.material.tabs.TabItem
             android:id="@+id/tabItem2"
@@ -88,14 +88,14 @@
             android:layout_height="26dp"
 
 
-            android:text="Top Collecter" />
+            android:text="Top Collection" />
 
         <com.google.android.material.tabs.TabItem
             android:id="@+id/tabItem3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
 
-            android:text="Top Checker" />
+            android:text="Top Check-in" />
 
 
     </com.google.android.material.tabs.TabLayout>

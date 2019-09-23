@@ -38,6 +38,7 @@ import com.humaclab.selliscope.model.price_variation.PriceVariationResponse;
 import com.humaclab.selliscope.model.variant_product.VariantProductResponse;
 import com.humaclab.selliscope.model.performance.payments_model.PaymentsResponse;
 import com.humaclab.selliscope.performance.leaderboard.db_model.LeaderboardTotalPerticipatesResponse;
+import com.humaclab.selliscope.performance.leaderboard.db_model.ranking.RankingResponse;
 import com.humaclab.selliscope.performance.leaderboard.db_model.top_user.LeaderboardTopUserPositionResponse;
 import com.humaclab.selliscope.sales_return.model.get.SalesReturnGetResponse;
 import com.humaclab.selliscope.sales_return.model.post.SalesReturn2019Response;
@@ -47,7 +48,6 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
-import retrofit2.http.Header;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
@@ -209,14 +209,30 @@ public interface SelliscopeApiEndpointInterface {
 
     //For LeaderBoard
     @GET("v1/leaderboard-checker-user-position")
-    Call<LeaderboardTopUserPositionResponse> getTopUserPosition(@Query("time") String time);
+    Call<LeaderboardTopUserPositionResponse> getTopCheckerUserPosition(@Query("time") String time);
+    @GET("v1/leaderboard-collector_user_position")
+    Call<LeaderboardTopUserPositionResponse> getTopCollectorUserPosition(@Query("time") String time);
+    @GET("v1/leaderboard-user-position")
+    Call<LeaderboardTopUserPositionResponse> getTopInvoicerUserPosition(@Query("time") String time);
 
 
+    @GET("v1/leaderboard-total-collector-perticipates")
+    Call<LeaderboardTotalPerticipatesResponse> getTotalCollectorPerticipants(@Query("time") String time);
+    @GET("v1/leaderboard-total-checker-perticipates")
+    Call<LeaderboardTotalPerticipatesResponse> getTotalCheckerPerticipants(@Query("time") String time);
     @GET("v1/leaderboard-total-perticipates")
-    Call<LeaderboardTotalPerticipatesResponse> getTotalPerticipants(@Query("time") String time);
+    Call<LeaderboardTotalPerticipatesResponse> getTotalInvoicerPerticipants(@Query("time") String time);
 
-   // @GET("v1/leaderboard-collector_user_ranking")
-   // Call<> getUserRanking(@Query("time") String time);
+
+
+    @GET("v1/leaderboard-user-ranking")
+    Call<RankingResponse> getInvoicerUserRanking(@Query("time") String time);
+
+    @GET("v1/leaderboard-collector_user_ranking")
+    Call<RankingResponse> getCollectorUserRanking(@Query("time") String time);
+
+    @GET("v1/leaderboard-checker_user_ranking")
+    Call<RankingResponse> getCheckerUserRanking(@Query("time") String time);
 
 
 

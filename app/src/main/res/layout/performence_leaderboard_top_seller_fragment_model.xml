@@ -43,7 +43,7 @@
                 app:layout_constraintBottom_toBottomOf="@+id/textView_pos"
                 app:layout_constraintStart_toEndOf="@+id/textView_pos"
                 app:layout_constraintTop_toTopOf="@+id/textView_pos" />
-
+<!-- android:text="@{`Total: ` + Data.amount}"-->
             <TextView
                 android:id="@+id/total_textView"
                 android:layout_width="wrap_content"
@@ -72,7 +72,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
-                android:text="TextView"
+                android:text="@{ Data.pos + `. ` }"
                 android:textColor="#424242"
                 app:layout_constraintStart_toEndOf="@+id/imageView6"
                 app:layout_constraintTop_toTopOf="parent" />

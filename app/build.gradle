@@ -132,6 +132,7 @@ dependencies {
 
     implementation 'jp.wasabeef:blurry:3.0.0'
 
+    implementation 'com.airbnb.android:lottie:3.0.1'
 
     implementation files('libs/btsdk.jar')
     implementation files('libs/zixng.jar')

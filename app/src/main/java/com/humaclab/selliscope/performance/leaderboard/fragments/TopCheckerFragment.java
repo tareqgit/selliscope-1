@@ -171,33 +171,33 @@ public class TopCheckerFragment extends Fragment {
                             datum.add(new TopCheckerModel(response.body().getPrevious2nd().getImageUrl(),
                                     response.body().getPrevious2nd().getPosition(),
                                     response.body().getPrevious2nd().getName(),
-                                    response.body().getPrevious2nd().getGrand_total()));
+                                    response.body().getPrevious2nd().getTotalOutlet()));
                         }
                         if (response.body().getPrevious1st() != null) {
                             datum.add(new TopCheckerModel(response.body().getPrevious1st().getImageUrl(),
                                     response.body().getPrevious1st().getPosition(),
                                     response.body().getPrevious1st().getName(),
-                                    response.body().getPrevious1st().getGrand_total()));
+                                    response.body().getPrevious1st().getTotalOutlet()));
                         }
 
                         if (response.body().getAuthenticUser() != null) {
                             datum.add(new TopCheckerModel(response.body().getAuthenticUser().getImageUrl(),
                                     response.body().getAuthenticUser().getPosition(),
                                     response.body().getAuthenticUser().getName(),
-                                    response.body().getAuthenticUser().getGrand_total()));
+                                    response.body().getAuthenticUser().getTotalOutlet()));
                         }
                         if (response.body().getNext1st() != null) {
                             datum.add(new TopCheckerModel(response.body().getNext1st().getImageUrl(),
                                     response.body().getNext1st().getPosition(),
                                     response.body().getNext1st().getName(),
-                                    response.body().getNext1st().getGrand_total()));
+                                    response.body().getNext1st().getTotalOutlet()));
                         }
 
                         if(response.body().getNext2nd() !=null) {
                             datum.add(new TopCheckerModel(response.body().getNext2nd().getImageUrl(),
                                     response.body().getNext2nd().getPosition(),
                                     response.body().getNext2nd().getName(),
-                                    response.body().getNext2nd().getGrand_total()));
+                                    response.body().getNext2nd().getTotalOutlet()));
                         }
 
                         TopCheckerAdapter adapter = new TopCheckerAdapter(getActivity(), datum, sort_icon);

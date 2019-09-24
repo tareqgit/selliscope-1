@@ -35,6 +35,13 @@ public class Payment implements Serializable {
         public String amount;
         @SerializedName("order_date")
         public String orderDate;
+
+        @SerializedName("paid")
+        public double paid;
+
+        @SerializedName("due")
+        public double due;
+
         @SerializedName("products")
         public List<Product> productList;
 

@@ -6,13 +6,18 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 
+import androidx.core.content.FileProvider;
 import androidx.databinding.DataBindingUtil;
 import androidx.databinding.ViewDataBinding;
+
 import android.graphics.Bitmap;
 
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.graphics.Color;
+import android.net.Uri;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,13 +36,18 @@ import com.humaclab.lalteer.BR;
 import com.humaclab.lalteer.R;
 import com.humaclab.lalteer.SelliscopeApiEndpointInterface;
 import com.humaclab.lalteer.SelliscopeApplication;
+import com.humaclab.lalteer.activity.InspectionActivity;
 import com.humaclab.lalteer.activity.PaymentActivity;
 import com.humaclab.lalteer.model.Payment;
 import com.humaclab.lalteer.model.PaymentResponse;
 import com.humaclab.lalteer.utils.SessionManager;
 
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import retrofit2.Call;
@@ -58,9 +68,12 @@ public class PaymentRecyclerViewAdapter extends RecyclerView.Adapter<PaymentRecy
 
     private static List<Integer> orderIDList = new ArrayList<>();
 
-   static PaymentResponse.Payment temo_Payment;
+    static PaymentResponse.Payment temo_Payment;
     private int butClickedPos = 0;
     private int butClickedPos_spinner = 0;
+    public static File output=null;
+    public static final String AUTHORITY = "com.humaclab.lalteer.fileprovider";
+
 
     /*public PaymentRecyclerViewAdapter(Context context, List<Payment.OrderList> orderLists) {
         this.context = context;
@@ -136,22 +149,44 @@ public class PaymentRecyclerViewAdapter extends RecyclerView.Adapter<PaymentRecy
         }
 
 
-        holder.mImageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                ((Activity) v.getContext()).startActivityForResult(cameraIntent, CAMERA_REQUEST);
-                butClickedPos = orderList.orderId;
-                butClickedPos_spinner = holder.sp_payment_type.getSelectedItemPosition();
+        holder.mImageButton.setOnClickListener(v -> {
+         /*   Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+            ((Activity) v.getContext()).startActivityForResult(cameraIntent, CAMERA_REQUEST);
+            */
 
-                temo_Payment.amount = Integer.parseInt(holder.et_payment.getText().toString().equals("") ? "0" : holder.et_payment.getText().toString().trim());
-                temo_Payment.deposit_to = holder.depositTo.getText().toString();
-                temo_Payment.deposit_slip = holder.depositSlip.getText().toString();
-                temo_Payment.bank_name = holder.bankName.getText().toString();
-                temo_Payment.cheque_no = holder.chequeNumber.getText().toString();
-                temo_Payment.cheque_date = holder.date_view.getText().toString();
-                Log.d("tareq_test", "id " + butClickedPos);
+            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            // Ensure that there's a camera activity to handle the intent
+            if (takePictureIntent.resolveActivity(v.getContext().getPackageManager()) != null) {
+                // Create the File where the photo should go
+                File photoFile = null;
+                try {
+                    output = createImageFile(v.getContext());
+                } catch (IOException ex) {
+                    // Error occurred while creating the File
+                    Log.d("tareq_test", "InspectionActivity #87: onCreate:  "+ ex.getMessage());
+                }
+                // Continue only if the File was successfully created
+                if (output != null) {
+
+                    Uri photoURI = FileProvider.getUriForFile(v.getContext(), AUTHORITY,output);
+                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                    takePictureIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                    ((Activity) v.getContext()).startActivityForResult(takePictureIntent, CAMERA_REQUEST);
+                }
             }
+
+
+
+            butClickedPos = orderList.orderId;
+            butClickedPos_spinner = holder.sp_payment_type.getSelectedItemPosition();
+
+            temo_Payment.amount = Double.parseDouble(holder.et_payment.getText().toString().equals("") ? "0" : holder.et_payment.getText().toString().trim());
+            temo_Payment.deposit_to = holder.depositTo.getText().toString();
+            temo_Payment.deposit_slip = holder.depositSlip.getText().toString();
+            temo_Payment.bank_name = holder.bankName.getText().toString();
+            temo_Payment.cheque_no = holder.chequeNumber.getText().toString();
+            temo_Payment.cheque_date = holder.date_view.getText().toString();
+            Log.d("tareq_test", "id " + butClickedPos);
         });
 
         ((PaymentActivity) context).setOnImageResultAchiveListener(this);
@@ -222,144 +257,166 @@ public class PaymentRecyclerViewAdapter extends RecyclerView.Adapter<PaymentRecy
             }
         });
 
-        holder.btn_pay.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                pd.show();
-                SessionManager sessionManager = new SessionManager(context);
-                apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(),
-                        sessionManager.getUserPassword(), false)
-                        .create(SelliscopeApiEndpointInterface.class);
-                PaymentResponse paymentResponse = new PaymentResponse();
-                PaymentResponse.Payment payment = new PaymentResponse.Payment();
-                payment.order_id = orderList.orderId;
-                payment.outlet_id = orderList.outletId;
+        holder.btn_pay.setOnClickListener(v -> {
+            pd.show();
+            SessionManager sessionManager = new SessionManager(context);
+            apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(),
+                    sessionManager.getUserPassword(), false)
+                    .create(SelliscopeApiEndpointInterface.class);
+            PaymentResponse paymentResponse = new PaymentResponse();
+            PaymentResponse.Payment payment = new PaymentResponse.Payment();
+            payment.order_id = orderList.orderId;
+            payment.outlet_id = orderList.outletId;
 //                payment.type = (holder.sp_payment_type.getSelectedItemPosition() == 0) ? 1 : 2;
-                payment.type = holder.sp_payment_type.getSelectedItemPosition() + 1;
+            payment.type = holder.sp_payment_type.getSelectedItemPosition() + 1;
 
-                if (holder.et_payment.getText().toString().equals("")) {
-                    View view = holder.et_payment;
-                    holder.et_payment.setError(context.getString(R.string.error_field_required));
+            if (holder.et_payment.getText().toString().equals("")) {
+                View view = holder.et_payment;
+                holder.et_payment.setError(context.getString(R.string.error_field_required));
+                view.requestFocus();
+                pd.dismiss();
+                return;
+            } else if (Double.parseDouble(holder.et_payment.getText().toString()) <=0 ) {
+                View view = holder.et_payment;
+                holder.et_payment.setError("Payment Value must be Greater than 0");
+                view.requestFocus();
+                pd.dismiss();
+                return;
+
+            } else if (Double.parseDouble(holder.et_payment.getText().toString()) > Double.parseDouble(holder.tv_due.getText().toString())) {
+                View view = holder.et_payment;
+                holder.et_payment.setError("Payment Value Exceed");
+                view.requestFocus();
+                pd.dismiss();
+                return;
+            } else {
+                payment.amount = Double.parseDouble(holder.et_payment.getText().toString());
+
+            }
+
+            payment.bank_name = payment.type != 1 ? holder.sp_bank_name.getSelectedItem().toString() + " (" + holder.bankName.getText().toString() + ")" : "";
+
+
+            if (payment.type == 2) { //for cheque
+                if (holder.chequeNumber.getText().toString().equals("")) {
+                    View view = holder.chequeNumber;
+                    holder.chequeNumber.setError(context.getString(R.string.error_field_required));
                     view.requestFocus();
                     pd.dismiss();
                     return;
-                }else if(Double.parseDouble(holder.et_payment.getText().toString())> Double.parseDouble(holder.tvGrandTotal.getText().toString())) {
-                    View view = holder.et_payment;
-                    holder.et_payment.setError("Payment Value Exceed");
+                }
+
+
+                if (holder.date_view.getText().toString().equals("")) {
+                    View view = holder.date_view;
+                    holder.date_view.setError(context.getString(R.string.error_field_required));
                     view.requestFocus();
                     pd.dismiss();
-                }else {
-                    payment.amount = Double.parseDouble(holder.et_payment.getText().toString());
+                    return;
 
                 }
 
-             payment.bank_name = payment.type!=1 ?  holder.sp_bank_name.getSelectedItem().toString()+" ("+holder.bankName.getText().toString() +")" : "";
+                if (holder.sp_bank_name.getSelectedItemPosition() == 0) {
+                    View view = holder.sp_bank_name;
+                    TextView errorText = (TextView) holder.sp_bank_name.getSelectedView();
+                    errorText.setError("");
+                    errorText.setTextColor(Color.RED);//just to highlight that this is an error
+                    errorText.setText("Bank name must be selected");//changes the selected item text to this
 
-
-
-                if (payment.type == 2) { //for cheque
-                    if (holder.chequeNumber.getText().toString().equals("")) {
-                        View view = holder.chequeNumber;
-                        holder.chequeNumber.setError(context.getString(R.string.error_field_required));
-                        view.requestFocus();
-                        pd.dismiss();
-                        return;
-                    }
-
-
-                    if (holder.date_view.getText().toString().equals("")) {
-                        View view = holder.date_view;
-                        holder.date_view.setError(context.getString(R.string.error_field_required));
-                        view.requestFocus();
-                        pd.dismiss();
-                        return;
-
-                    }
-
-                    if (holder.sp_bank_name.getSelectedItemPosition()==0) {
-                        View view = holder.sp_bank_name;
-                        TextView errorText = (TextView)holder.sp_bank_name.getSelectedView();
-                        errorText.setError("");
-                        errorText.setTextColor(Color.RED);//just to highlight that this is an error
-                        errorText.setText("Bank name must be selected");//changes the selected item text to this
-
-                        view.requestFocus();
-                        pd.dismiss();
-                        return;
-
-                    }
-
+                    view.requestFocus();
+                    pd.dismiss();
+                    return;
 
                 }
-                payment.cheque_no = holder.chequeNumber.getText().toString();
-                payment.cheque_date = payment.type !=1? holder.date_view.getText().toString() : "";
-                payment.deposit_to = holder.depositTo.getText().toString();
-                payment.deposit_from = sessionManager.getUserEmail().toString();
-                if (payment.type == 3) {
-                    if (holder.depositSlip.getText().toString().equals("")) {
-                        View view = holder.depositSlip;
-                        holder.depositSlip.setError(context.getString(R.string.error_field_required));
-                        view.requestFocus();
-                        pd.dismiss();
-                        return;
 
-                    }
 
-                    if (holder.sp_bank_name.getSelectedItemPosition()==0) {
-                        View view = holder.sp_bank_name;
-                        TextView errorText = (TextView)holder.sp_bank_name.getSelectedView();
-                        errorText.setError("");
-                        errorText.setTextColor(Color.RED);//just to highlight that this is an error
-                        errorText.setText("Bank name must be selected");//changes the selected item text to this
-
-                        view.requestFocus();
-                        pd.dismiss();
-                        return;
-
-                    }
-
-                }
-                payment.deposit_slip = holder.depositSlip.getText().toString();
-
-                payment.img = orderList.getImg(); //as this is getting from activity using listener
-                paymentResponse.payment = payment;
-
-                Log.d("tareq_test", "payment res: " + new Gson().toJson(paymentResponse));
-                Call<PaymentResponse.PaymentSucessfull> call = apiService.payNow(paymentResponse);
-                call.enqueue(new Callback<PaymentResponse.PaymentSucessfull>() {
-                    @Override
-                    public void onResponse(Call<PaymentResponse.PaymentSucessfull> call, Response<PaymentResponse.PaymentSucessfull> response) {
-                        if (response.code() == 200) {
-                            try {
-                                if (response.body() != null) {
-                                    Log.d("Payment response", new Gson().toJson(response.body().result));
-                                }
-                                pd.dismiss();
-                                Toast.makeText(context, "Payment received successfully.", Toast.LENGTH_SHORT).show();
-                                orderLists.remove(position);
-                                PaymentRecyclerViewAdapter.this.notifyItemRemoved(position);
-                                PaymentRecyclerViewAdapter.this.notifyItemRangeChanged(position, orderLists.size());
-                                mOnPaymentListener.onPaymentComplete();
-                            } catch (Exception e) {
-                                pd.dismiss();
-                                e.printStackTrace();
-                            }
-                      } else {
-                            pd.dismiss();
-                            Toast.makeText(context,
-                                    "Server Error! Try Again Later!", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<PaymentResponse.PaymentSucessfull> call, Throwable t) {
-                        pd.dismiss();
-                    }
-                });
             }
+            payment.cheque_no = holder.chequeNumber.getText().toString();
+            payment.cheque_date = payment.type != 1 ? holder.date_view.getText().toString() : "";
+            payment.deposit_to = holder.depositTo.getText().toString();
+            payment.deposit_from = sessionManager.getUserEmail().toString();
+            if (payment.type == 3) {
+                if (holder.depositSlip.getText().toString().equals("")) {
+                    View view = holder.depositSlip;
+                    holder.depositSlip.setError(context.getString(R.string.error_field_required));
+                    view.requestFocus();
+                    pd.dismiss();
+                    return;
+
+                }
+
+                if (holder.sp_bank_name.getSelectedItemPosition() == 0) {
+                    View view = holder.sp_bank_name;
+                    TextView errorText = (TextView) holder.sp_bank_name.getSelectedView();
+                    errorText.setError("");
+                    errorText.setTextColor(Color.RED);//just to highlight that this is an error
+                    errorText.setText("Bank name must be selected");//changes the selected item text to this
+
+                    view.requestFocus();
+                    pd.dismiss();
+                    return;
+
+                }
+
+            }
+            payment.deposit_slip = holder.depositSlip.getText().toString();
+
+            payment.img = orderList.getImg(); //as this is getting from activity using listener
+            paymentResponse.payment = payment;
+
+            Log.d("tareq_test", "payment res: " + new Gson().toJson(paymentResponse));
+            Call<PaymentResponse.PaymentSucessfull> call = apiService.payNow(paymentResponse);
+            call.enqueue(new Callback<PaymentResponse.PaymentSucessfull>() {
+                @Override
+                public void onResponse(Call<PaymentResponse.PaymentSucessfull> call, Response<PaymentResponse.PaymentSucessfull> response) {
+                    if (response.code() == 200) {
+                        try {
+                            if (response.body() != null) {
+                                Log.d("Payment response", new Gson().toJson(response.body().result));
+                            }
+                            pd.dismiss();
+                            Toast.makeText(context, "Payment received successfully.", Toast.LENGTH_SHORT).show();
+                            orderLists.remove(position);
+                            PaymentRecyclerViewAdapter.this.notifyItemRemoved(position);
+                            PaymentRecyclerViewAdapter.this.notifyItemRangeChanged(position, orderLists.size());
+                            mOnPaymentListener.onPaymentComplete();
+                        } catch (Exception e) {
+                            pd.dismiss();
+                            e.printStackTrace();
+                        }
+                    } else {
+                        pd.dismiss();
+                        Toast.makeText(context,
+                                "Server Error! Try Again Later!", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<PaymentResponse.PaymentSucessfull> call, Throwable t) {
+                    pd.dismiss();
+                }
+            });
         });
 
     }
+
+    String currentPhotoPath;
+    private File createImageFile(Context context) throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+
+        // Save a file: path for use with ACTION_VIEW intents
+        currentPhotoPath = image.getAbsolutePath();
+        return image;
+    }
+
 
     @Override
     public int getItemCount() {
@@ -391,23 +448,24 @@ public class PaymentRecyclerViewAdapter extends RecyclerView.Adapter<PaymentRecy
         private Button btn_pay;
         private Spinner sp_payment_type, sp_bank_name;
         private EditText et_payment, bankName, chequeNumber, depositSlip, depositTo;
-        private TextView date_view, tvGrandTotal;
+        private TextView date_view, tvGrandTotal, tv_due;
         private ImageView mImageButton;
 
         public PaymentViewHolder(View itemView) {
             super(itemView);
             binding = DataBindingUtil.bind(itemView);
-            btn_pay = (Button) itemView.findViewById(R.id.btn_pay);
-            sp_payment_type = (Spinner) itemView.findViewById(R.id.sp_payment_type);
-            et_payment = (EditText) itemView.findViewById(R.id.et_payment);
-            bankName = (EditText) itemView.findViewById(R.id.et_branch_name);
-            sp_bank_name=(Spinner) itemView.findViewById(R.id.spinner_bank_name);
-            chequeNumber = (EditText) itemView.findViewById(R.id.et_cheque_no);
-            depositSlip = (EditText) itemView.findViewById(R.id.et_deposit_slip);
+            btn_pay = itemView.findViewById(R.id.btn_pay);
+            sp_payment_type = itemView.findViewById(R.id.sp_payment_type);
+            et_payment = itemView.findViewById(R.id.et_payment);
+            bankName = itemView.findViewById(R.id.et_branch_name);
+            sp_bank_name = itemView.findViewById(R.id.spinner_bank_name);
+            chequeNumber = itemView.findViewById(R.id.et_cheque_no);
+            depositSlip = itemView.findViewById(R.id.et_deposit_slip);
             mImageButton = itemView.findViewById(R.id.imageButton);
             date_view = itemView.findViewById(R.id.textView_date);
             depositTo = itemView.findViewById(R.id.et_deposit_to);
-            tvGrandTotal=itemView.findViewById(R.id.tv_grand_total);
+            tvGrandTotal = itemView.findViewById(R.id.tv_grand_total);
+            tv_due= itemView.findViewById(R.id.tv_due_value);
 
 
             /**

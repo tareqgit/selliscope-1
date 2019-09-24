@@ -81,6 +81,7 @@ public class UploadDataService {
         }
     }
 
+
     private void uploadOrderToServer(UploadCompleteListener uploadCompleteListener) {
         List<AddNewOrder> addNewOrderList = databaseHandler.getOrder();
         for (AddNewOrder addNewOrder : addNewOrderList) {

@@ -4,7 +4,11 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+
+import androidx.core.content.FileProvider;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -27,6 +31,8 @@ import com.humaclab.lalteer.utils.NetworkUtility;
 import com.humaclab.lalteer.utils.SessionManager;
 
 import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.List;
 
 import io.reactivex.SingleObserver;
@@ -37,6 +43,9 @@ import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static com.humaclab.lalteer.adapters.PaymentRecyclerViewAdapter.AUTHORITY;
+import static com.humaclab.lalteer.adapters.PaymentRecyclerViewAdapter.output;
 
 public class PaymentActivity extends AppCompatActivity {
     private final int CAMERA_REQUEST = 3214;
@@ -114,7 +123,7 @@ public class PaymentActivity extends AppCompatActivity {
                                 if (srl_payment.isRefreshing())
                                     srl_payment.setRefreshing(false);
 
-                                System.out.println("Response " + new Gson().toJson(response.body()));
+                                Log.d("tareq_test", "PaymentActivity #127: onSuccess:  "+ new Gson().toJson(response.body()));
                                 List<Payment.OrderList> orders = response.body().result.orderList;
                                 if (!orders.isEmpty()) {
                                     adapter = new PaymentRecyclerViewAdapter(PaymentActivity.this, orders, new PaymentRecyclerViewAdapter.OnPaymentListener() {
@@ -167,15 +176,32 @@ public class PaymentActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-            Bitmap photo = (Bitmap) data.getExtras().get("data");
-            assert photo != null;
-            photo.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
-            String promotionImage = Base64.encodeToString(outputStream.toByteArray(), Base64.DEFAULT);
-            // binding.ivTakeImage.setImageBitmap(photo);
-            Log.d("tareq_test" , ""+promotionImage);
-         //   Toast.makeText(this, ""+promotionImage, Toast.LENGTH_SHORT).show();
-            mOnImageResultAchiveListener.onImageAchive(photo, promotionImage);
 
+
+            Uri outputUri= FileProvider.getUriForFile(this, AUTHORITY, output);
+            final Uri imageUri =outputUri;
+            final InputStream imageStream;
+            try {
+                imageStream = getContentResolver().openInputStream(imageUri);
+                Bitmap photo = BitmapFactory.decodeStream(imageStream);
+
+                int factor = 10;
+                while (photo.getWidth() > 600) {
+                    photo = Bitmap.createScaledBitmap(photo, (Math.round(photo.getWidth() * 0.1f * factor)), (Math.round(photo.getHeight() * 0.1f * factor)), false);
+                    factor--;
+                }
+
+                Log.d("tareq_test", "PaymentActivity #172: onActivityResult:  Dimension:" + photo.getWidth() + " : " + photo.getHeight());
+
+                photo.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+                String promotionImage = Base64.encodeToString(outputStream.toByteArray(), Base64.DEFAULT);
+                // binding.ivTakeImage.setImageBitmap(photo);
+
+                //   Toast.makeText(this, ""+promotionImage, Toast.LENGTH_SHORT).show();
+                mOnImageResultAchiveListener.onImageAchive(photo, promotionImage);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
         }
     }
 

@@ -108,8 +108,12 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         if (checkPermission(RouteActivity.this))
+
             mMap.getUiSettings().setMapToolbarEnabled(true);
         if (isGPSEnabled()) {
+            mMap.setMyLocationEnabled(true);
+            mMap.getUiSettings().setMyLocationButtonEnabled(true);
+
             getLocation();
         } else {
             final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
@@ -245,6 +249,7 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
                       Log.d("Response", e.toString());
                   }
               });
+
 
       /*  call.enqueue(new Callback<ResponseBody>() {
             @Override

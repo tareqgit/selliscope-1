@@ -107,7 +107,11 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         if (checkPermission(RouteActivity.this))
-            mMap.getUiSettings().setMapToolbarEnabled(true);
+
+        mMap.setMyLocationEnabled(true);
+        mMap.getUiSettings().setMyLocationButtonEnabled(true);
+        mMap.getUiSettings().setMapToolbarEnabled(true);
+
         if (isGPSEnabled()) {
             getLocation();
 

@@ -212,6 +212,7 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
                Toast.makeText(context, "You are not within 70m radius of the outlet.", Toast.LENGTH_SHORT).show();
            }
        }else{
+           progressbar.setVisibility(View.INVISIBLE);
            Toast.makeText(context, "Can't get the location", Toast.LENGTH_SHORT).show();
        }
        // });

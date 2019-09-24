@@ -215,7 +215,8 @@ public class OutletActivity extends AppCompatActivity {
                 outletRecyclerViewAdapter.updateOutlate(mOutletList);
 
             }else {
-                Toast.makeText(this, "Can't get Location", Toast.LENGTH_SHORT).show();
+                outletRecyclerViewAdapter.updateOutlate(mOutletList);
+                Toast.makeText(this, "Can't sort  outlet yet. Need some time", Toast.LENGTH_SHORT).show();
             }
 
         }

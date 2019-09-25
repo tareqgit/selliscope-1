@@ -45,13 +45,13 @@ public class FcmGetNotificationService extends FirebaseMessagingService {
         if (remoteMessage.getData().size() > 0) {
             Log.d("FCM", "Message data payload: " + remoteMessage.getData());
 
-            if (/* Check if data needs to be processed by long running job */ true) {
+          /*  if (*//* Check if data needs to be processed by long running job *//* true) {
                 // For long-running tasks (10 seconds or more) use WorkManager.
                 ////       scheduleJob();
             } else {
                 // Handle message within 10 seconds
                 handleNow();
-            }
+            }*/
 
         }
 

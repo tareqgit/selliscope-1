@@ -1,17 +1,13 @@
 package com.humaclab.selliscope;
 
+
 import android.app.Application;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.content.Context;
 import android.content.IntentFilter;
 import android.location.LocationManager;
 import android.os.Build;
-import android.util.Log;
-import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatDelegate;
-
 import com.facebook.stetho.Stetho;
 import com.facebook.stetho.okhttp3.StethoInterceptor;
 import com.google.firebase.analytics.FirebaseAnalytics;
@@ -20,7 +16,6 @@ import com.humaclab.selliscope.utility_db.db.UtilityDatabase;
 import com.humaclab.selliscope.utils.Constants;
 import com.humaclab.selliscope.utils.HttpAuthInterceptor;
 import java.util.concurrent.TimeUnit;
-
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -34,9 +29,12 @@ public class SelliscopeApplication extends Application {
     private static Retrofit retrofitInstance;
     private FirebaseAnalytics mFirebaseAnalytics;
 
+
     static {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
     }
+
+
 
     /**
      * @param email
@@ -86,7 +84,6 @@ public class SelliscopeApplication extends Application {
 
 
     public static final String CHANNEL_ID = "testServiceChannel";
-
 
 
     private void createNotificationChannel() {

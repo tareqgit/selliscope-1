@@ -60,10 +60,13 @@ import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResponse;
 import com.google.android.gms.location.LocationSettingsStates;
 import com.google.android.gms.location.SettingsClient;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 import com.google.gson.Gson;
 import com.humaclab.selliscope.BuildConfig;
 import com.humaclab.selliscope.LocationMonitoringService;
@@ -167,6 +170,12 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         LoadLocale();
         setContentView(R.layout.activity_home);
         context = this;
+
+
+
+        get_FCM_Token(); ///Should be called  Once app open for the first time as this token naturally static if it changes new token can be found from FCMNotificationService-> newToken().
+        // [END handle_data_extras]
+
         //
         SharedPreferences sharedPreferences = getSharedPreferences("Settings", MODE_PRIVATE);
         Constants.BASE_URL = sharedPreferences.getString("BASE_URL", Constants.BASE_URL);
@@ -488,9 +497,33 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     }
 
 
+    private void get_FCM_Token(){
+        FirebaseInstanceId.getInstance().getInstanceId()
+                .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                        if (!task.isSuccessful()) {
+                            Log.w("FCM", "getInstanceId failed", task.getException());
+                            return;
+                        }
+
+                        // Get new Instance ID token
+                        String token = task.getResult().getToken();
+
+
+                        Log.d("FCM", "InstanceID Token: "+ token);
+
+                   //     Toast.makeText(HomeActivity.this, msg, Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+    }
+
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         //   final LocationSettingsStates states = LocationSettingsStates.fromIntent(intent);
+        super.onActivityResult(requestCode, resultCode, intent);
         switch (requestCode) {
             case REQUEST_CHECK_SETTINGS:
                 switch (resultCode) {

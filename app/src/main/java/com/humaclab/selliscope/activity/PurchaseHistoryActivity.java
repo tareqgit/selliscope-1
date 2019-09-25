@@ -24,6 +24,7 @@ import com.humaclab.selliscope.SelliscopeApplication;
 import com.humaclab.selliscope.adapters.PurchaseHistoryRecyclerAdapter;
 import com.humaclab.selliscope.databinding.ActivityPurchaseHistoryBinding;
 import com.humaclab.selliscope.model.Outlets;
+import com.humaclab.selliscope.model.purchase_history.PurchaseHistoryItem;
 import com.humaclab.selliscope.model.purchase_history.PurchaseHistoryResponse;
 import com.humaclab.selliscope.sales_return.model.get.DataItem;
 import com.humaclab.selliscope.sales_return.model.get.SalesReturnGetResponse;
@@ -40,6 +41,10 @@ public class PurchaseHistoryActivity extends AppCompatActivity {
     private ActivityPurchaseHistoryBinding binding;
     private Outlets.Outlet outlet;
     private SelliscopeApiEndpointInterface apiService;
+    private PurchaseHistoryRecyclerAdapter mPurchaseHistoryRecyclerAdapter;
+    private List<PurchaseHistoryItem> mPurchaseHistoryItemList= new ArrayList<>();
+    private List<DataItem> salesReturnDataItems = new ArrayList<>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +62,9 @@ public class PurchaseHistoryActivity extends AppCompatActivity {
         SessionManager sessionManager = new SessionManager(this);
         apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(), sessionManager.getUserPassword(), false).create(SelliscopeApiEndpointInterface.class);
         binding.rlPurchaseHistory.setLayoutManager(new LinearLayoutManager(this));
+        binding.rlPurchaseHistory.setHasFixedSize(true);
+        mPurchaseHistoryRecyclerAdapter = new PurchaseHistoryRecyclerAdapter(this, mPurchaseHistoryItemList, salesReturnDataItems, outlet);
+        binding.rlPurchaseHistory.setAdapter(mPurchaseHistoryRecyclerAdapter);
 
         binding.srlPurchaseHistory.setOnRefreshListener(() -> getPurchaseHistory());
 
@@ -87,10 +95,17 @@ public class PurchaseHistoryActivity extends AppCompatActivity {
                 if (response.code() == 200) {
 
 
-                    binding.tvTotalPaid.setText(response.body().getResult().getTotalPaid());
+                    if (response.body() != null) {
+                        binding.tvTotalPaid.setText(response.body().getResult().getTotalPaid());
+
                     binding.tvTotalDue.setText(response.body().getResult().getTotalDue());
                     binding.srlPurchaseHistory.setRefreshing(false);
-                    binding.rlPurchaseHistory.setAdapter(new PurchaseHistoryRecyclerAdapter(PurchaseHistoryActivity.this, response.body().getResult().getPurchaseHistory(), salesReturnDataItems, outlet));
+                    mPurchaseHistoryItemList= response.body().getResult().getPurchaseHistory();
+                    mPurchaseHistoryRecyclerAdapter.notifyDataSetChanged();
+
+                    }else{
+                        Toast.makeText(PurchaseHistoryActivity.this, "Server Response null", Toast.LENGTH_SHORT).show();
+                    }
                 } else {
                     Toast.makeText(PurchaseHistoryActivity.this, "Server error: " + response.code(), Toast.LENGTH_SHORT).show();
                 }
@@ -106,7 +121,6 @@ public class PurchaseHistoryActivity extends AppCompatActivity {
     }
 
 
-    List<DataItem> salesReturnDataItems = new ArrayList<>();
 
     private void getReturnProducts() {
         Call<SalesReturnGetResponse> call = apiService.getSalesReturn(outlet.outletId);

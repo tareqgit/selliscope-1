@@ -159,13 +159,13 @@ public class LocationMonitoringService extends Service implements
             notification = new Notification.Builder(this, CHANNEL_ID)
                     .setContentTitle("Hello " + sessionManager.getUserDetails().get("userName"))
 
-                    .setSmallIcon(R.drawable.ic_untitled)
+                    .setSmallIcon(R.drawable.ic_selliscope_icon)
                     .setColor(ContextCompat.getColor(this, R.color.colorDefault))
                     .setContentIntent(pendingIntent)
                     .build();
         } else {
             NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
-                    .setSmallIcon(R.drawable.ic_untitled)
+                    .setSmallIcon(R.drawable.ic_selliscope_icon)
                     .setContentTitle("Hello " + sessionManager.getUserDetails().get("userName"))
                     .setColor(ContextCompat.getColor(this, R.color.colorDefault))
                     .setTicker("TICKER")

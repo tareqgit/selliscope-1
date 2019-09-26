@@ -7,9 +7,9 @@
     android:title="sort"
     android:icon="@drawable/ic_sort_white_24dp"
 
-    app:showAsAction="always"
 
-    />
+        app:showAsAction="always"
+        />
     <item
         android:id="@+id/sort_day"
         android:title="Today"

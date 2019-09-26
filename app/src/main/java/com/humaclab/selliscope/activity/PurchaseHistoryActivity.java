@@ -101,7 +101,7 @@ public class PurchaseHistoryActivity extends AppCompatActivity {
                     binding.tvTotalDue.setText(response.body().getResult().getTotalDue());
                     binding.srlPurchaseHistory.setRefreshing(false);
                     mPurchaseHistoryItemList= response.body().getResult().getPurchaseHistory();
-                    mPurchaseHistoryRecyclerAdapter.notifyDataSetChanged();
+                    mPurchaseHistoryRecyclerAdapter.updateData(mPurchaseHistoryItemList, salesReturnDataItems);
 
                     }else{
                         Toast.makeText(PurchaseHistoryActivity.this, "Server Response null", Toast.LENGTH_SHORT).show();

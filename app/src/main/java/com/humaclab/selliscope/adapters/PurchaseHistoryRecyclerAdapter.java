@@ -37,6 +37,14 @@ public class PurchaseHistoryRecyclerAdapter extends RecyclerView.Adapter<Purchas
         this.outlet = outlet;
     }
 
+    public void updateData(List<PurchaseHistoryItem> purchaseHistoryItemList,List<DataItem> mSalesReturnItems){
+        this.purchaseHistoryItemList.clear();
+        this.purchaseHistoryItemList.addAll(purchaseHistoryItemList);
+        this.mSalesReturnItems.clear();
+        this.mSalesReturnItems.addAll(mSalesReturnItems);
+        this.notifyDataSetChanged();
+    }
+
     @Override
     public PurchaseHistoryViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.item_purchase_history, parent, false);

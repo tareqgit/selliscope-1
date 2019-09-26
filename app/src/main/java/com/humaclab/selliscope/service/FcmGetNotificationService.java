@@ -26,6 +26,7 @@ import com.humaclab.selliscope.activity.HomeActivity;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Objects;
 
 /**
  * Created by leon on 8/28/17.
@@ -64,8 +65,11 @@ public class FcmGetNotificationService extends FirebaseMessagingService {
         // message, here is where that should be initiated. See sendNotification method below.
 
         //To get a Bitmap image from the URL received
-        bitmap = getBitmapfromUrl(remoteMessage.getNotification().getImageUrl().toString());
-        sendNotification(remoteMessage.getNotification().getBody(), remoteMessage.getNotification().getTitle(), bitmap);
+        if(Objects.requireNonNull(remoteMessage.getNotification()).getImageUrl()!=null) {
+            bitmap = getBitmapfromUrl(remoteMessage.getNotification().getImageUrl().toString());
+        }
+            sendNotification(remoteMessage.getNotification().getBody(), remoteMessage.getNotification().getTitle(), bitmap);
+
 
     }
 
@@ -107,7 +111,7 @@ public class FcmGetNotificationService extends FirebaseMessagingService {
         builder.setSmallIcon(R.drawable.ic_selliscope_icon);
         builder.setContentTitle(titleBody);
         builder.setContentTitle(messageBody);
-        builder.setLargeIcon(bigImage);
+        if(bigImage!=null)  builder.setLargeIcon(bigImage);
         builder.setAutoCancel(true);
         builder.setSound(defaultSoundUri);
         builder.setContentIntent(pendingIntent);

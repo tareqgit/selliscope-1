@@ -28,6 +28,7 @@ public class HttpAuthInterceptor implements Interceptor {
         Request newRequest = chain.request().newBuilder()
                 .addHeader("Authorization", getAuthorizationValue())
                 .addHeader("User-Agent", userAgent)
+                .addHeader("Connection","close")
                 .build();
         return chain.proceed(newRequest);
     }

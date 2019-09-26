@@ -696,7 +696,14 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 /*stopService(new Intent(HomeActivity.this, SendLocationDataService.class));*/
                 HomeActivity.this.deleteDatabase(Constants.databaseName);
                 pd.dismiss();
-                unregisterReceiver(internetBroadcastReciever);
+
+                try {
+                    if(internetBroadcastReciever!=null)
+                    unregisterReceiver(internetBroadcastReciever);
+                } catch (Exception e) {
+                    Log.d("tareq_test", "HomeActivity #704: onNavigationItemSelected:  "+ e.getMessage());
+                }
+
                 finish();
 //                }
                 break;

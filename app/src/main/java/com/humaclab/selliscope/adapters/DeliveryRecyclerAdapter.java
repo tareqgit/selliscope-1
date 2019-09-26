@@ -189,7 +189,10 @@ public class DeliveryRecyclerAdapter extends RecyclerView.Adapter<DeliveryRecycl
 
     @Override
     public int getItemCount() {
+        if(products!=null)
         return products.size();
+        else
+            return 0;
     }
 
     public class DeliveryDetailsViewHolder extends RecyclerView.ViewHolder {

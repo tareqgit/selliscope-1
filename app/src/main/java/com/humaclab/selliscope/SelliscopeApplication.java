@@ -47,9 +47,10 @@ public class SelliscopeApplication extends Application {
 
             OkHttpClient client = new OkHttpClient.Builder()
                     .addInterceptor(new HttpAuthInterceptor(email.toLowerCase(), password))
-                    .connectTimeout(60, TimeUnit.SECONDS)
+                    .connectTimeout(70, TimeUnit.SECONDS)
                     .readTimeout(120, TimeUnit.SECONDS)
                     .writeTimeout(120, TimeUnit.SECONDS)
+                    .retryOnConnectionFailure(true)
 
                     .addNetworkInterceptor(new StethoInterceptor())
                     .build();

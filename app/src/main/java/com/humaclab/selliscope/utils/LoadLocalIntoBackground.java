@@ -1,7 +1,10 @@
 package com.humaclab.selliscope.utils;
 
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
@@ -42,8 +45,9 @@ public class LoadLocalIntoBackground {
     private SessionManager sessionManager;
     private DatabaseHandler databaseHandler;
     private SelliscopeApiEndpointInterface apiService;
-
+    private Context mContext;
     public LoadLocalIntoBackground(Context context) {
+        mContext=context;
         this.sessionManager = new SessionManager(context);
         this.databaseHandler = new DatabaseHandler(context);
         this.apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(), sessionManager.getUserPassword(), false).create(SelliscopeApiEndpointInterface.class);
@@ -51,68 +55,75 @@ public class LoadLocalIntoBackground {
 
 
     public void loadAll(LoadCompleteListener loadCompleteListener) {
-        /*   if (!sessionManager.isAllDataLoaded()) {*/
-        this.loadProduct(new LoadCompleteListener() {
-            @Override
-            public void onLoadComplete() {
-                loadOutlet(new LoadCompleteListener() {
-                    @Override
-                    public void onLoadComplete() {
-                        loadOutletType(new LoadCompleteListener() {
-                            @Override
-                            public void onLoadComplete() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        if (activeNetworkInfo != null && activeNetworkInfo.isConnected()) {
+            /*   if (!sessionManager.isAllDataLoaded()) {*/
+            this.loadProduct(new LoadCompleteListener() {
+                @Override
+                public void onLoadComplete() {
+                    loadOutlet(new LoadCompleteListener() {
+                        @Override
+                        public void onLoadComplete() {
+                            loadOutletType(new LoadCompleteListener() {
+                                @Override
+                                public void onLoadComplete() {
 
-                                loadDistrict(new LoadCompleteListener() {
-                                    @Override
-                                    public void onLoadComplete() {
-                                        loadThana(new LoadCompleteListener() {
-                                            @Override
-                                            public void onLoadComplete() {
+                                    loadDistrict(new LoadCompleteListener() {
+                                        @Override
+                                        public void onLoadComplete() {
+                                            loadThana(new LoadCompleteListener() {
+                                                @Override
+                                                public void onLoadComplete() {
 
-                                                if (loadCompleteListener != null)
-                                                    loadCompleteListener.onLoadComplete();
-                                                //  this.loadReason();
-                                                /*               sessionManager.setAllDataLoaded();*/
-                                            }
+                                                    if (loadCompleteListener != null)
+                                                        loadCompleteListener.onLoadComplete();
+                                                    //  this.loadReason();
+                                                    /*               sessionManager.setAllDataLoaded();*/
+                                                }
 
-                                            @Override
-                                            public void onLoadFailed(String msg) {
-                                                if (loadCompleteListener != null)
-                                                    loadCompleteListener.onLoadFailed(msg);
-                                            }
-                                        });
-                                    }
+                                                @Override
+                                                public void onLoadFailed(String msg) {
+                                                    if (loadCompleteListener != null)
+                                                        loadCompleteListener.onLoadFailed(msg);
+                                                }
+                                            });
+                                        }
 
-                                    @Override
-                                    public void onLoadFailed(String msg) {
-                                        if (loadCompleteListener != null)
-                                            loadCompleteListener.onLoadFailed(msg);
-                                    }
-                                });
-                            }
+                                        @Override
+                                        public void onLoadFailed(String msg) {
+                                            if (loadCompleteListener != null)
+                                                loadCompleteListener.onLoadFailed(msg);
+                                        }
+                                    });
+                                }
 
-                            @Override
-                            public void onLoadFailed(String msg) {
+                                @Override
+                                public void onLoadFailed(String msg) {
 
-                                if (loadCompleteListener != null)
-                                    loadCompleteListener.onLoadFailed(msg);
-                            }
-                        });
-                    }
+                                    if (loadCompleteListener != null)
+                                        loadCompleteListener.onLoadFailed(msg);
+                                }
+                            });
+                        }
 
-                    @Override
-                    public void onLoadFailed(String msg) {
-                        if (loadCompleteListener != null) loadCompleteListener.onLoadFailed(msg);
-                    }
-                });
-            }
+                        @Override
+                        public void onLoadFailed(String msg) {
+                            if (loadCompleteListener != null)
+                                loadCompleteListener.onLoadFailed(msg);
+                        }
+                    });
+                }
 
-            @Override
-            public void onLoadFailed(String msg) {
-                if (loadCompleteListener != null) loadCompleteListener.onLoadFailed(msg);
-            }
-        });
-
+                @Override
+                public void onLoadFailed(String msg) {
+                    if (loadCompleteListener != null) loadCompleteListener.onLoadFailed(msg);
+                }
+            });
+        }else{
+            if (loadCompleteListener != null) loadCompleteListener.onLoadFailed("No Internet");
+        }
 
         /*  }*/
     }
@@ -188,61 +199,66 @@ public class LoadLocalIntoBackground {
                     if (response.code() == 200) {
                         try {
 
-                            List<ProductsItem> products = response.body().getResult().getProducts();
-                            //for removing previous data
-                            //  databaseHandler.removeProductCategoryBrand();
-                            databaseHandler.addProduct(products);
-                            loadCategory(new LoadCompleteListener() {
-                                @Override
-                                public void onLoadComplete() {
-                                    loadBrand(new LoadCompleteListener() {
-                                        @Override
-                                        public void onLoadComplete() {
-                                            loadPriceVariation(new LoadCompleteListener() {
-                                                @Override
-                                                public void onLoadComplete() {
-                                                    loadTradePromoion(new LoadCompleteListener() {
-                                                        @Override
-                                                        public void onLoadComplete() {
-                                                            if (loadCompleteListener != null)
-                                                                loadCompleteListener.onLoadComplete();
-                                                        }
 
-                                                        @Override
-                                                        public void onLoadFailed(String msg) {
-                                                            if (loadCompleteListener != null)
-                                                                loadCompleteListener.onLoadFailed(msg);
-                                                        }
-                                                    });
-                                                }
+                            if (response.body() != null) {
+                                List<ProductsItem> products = response.body().getResult().getProducts();
 
-                                                @Override
-                                                public void onLoadFailed(String msg) {
-                                                    if (loadCompleteListener != null)
-                                                        loadCompleteListener.onLoadFailed(msg);
-                                                }
-                                            });
-                                        }
+                                //for removing previous data
+                                //  databaseHandler.removeProductCategoryBrand();
+                                databaseHandler.addProduct(products);
 
-                                        @Override
-                                        public void onLoadFailed(String msg) {
-                                            if (loadCompleteListener != null)
-                                                loadCompleteListener.onLoadFailed(msg);
-                                        }
-                                    });
-                                }
+                                loadCategory(new LoadCompleteListener() {
+                                    @Override
+                                    public void onLoadComplete() {
+                                        loadBrand(new LoadCompleteListener() {
+                                            @Override
+                                            public void onLoadComplete() {
+                                                loadPriceVariation(new LoadCompleteListener() {
+                                                    @Override
+                                                    public void onLoadComplete() {
+                                                        loadTradePromoion(new LoadCompleteListener() {
+                                                            @Override
+                                                            public void onLoadComplete() {
+                                                                if (loadCompleteListener != null)
+                                                                    loadCompleteListener.onLoadComplete();
+                                                            }
 
-                                @Override
-                                public void onLoadFailed(String msg) {
-                                    if (loadCompleteListener != null)
-                                        loadCompleteListener.onLoadFailed(msg);
-                                }
-                            });
+                                                            @Override
+                                                            public void onLoadFailed(String msg) {
+                                                                if (loadCompleteListener != null)
+                                                                    loadCompleteListener.onLoadFailed(msg);
+                                                            }
+                                                        });
+                                                    }
 
+                                                    @Override
+                                                    public void onLoadFailed(String msg) {
+                                                        if (loadCompleteListener != null)
+                                                            loadCompleteListener.onLoadFailed(msg);
+                                                    }
+                                                });
+                                            }
+
+                                            @Override
+                                            public void onLoadFailed(String msg) {
+                                                if (loadCompleteListener != null)
+                                                    loadCompleteListener.onLoadFailed(msg);
+                                            }
+                                        });
+                                    }
+
+                                    @Override
+                                    public void onLoadFailed(String msg) {
+                                        if (loadCompleteListener != null)
+                                            loadCompleteListener.onLoadFailed(msg);
+                                    }
+                                });
+                            }
 
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
+
                     }
                 }
 
@@ -382,24 +398,29 @@ public class LoadLocalIntoBackground {
                 Gson gson = new Gson();
                 if (response.code() == 200) {
                     try {
-                        String string = null;
+                        String string;
                         if (response.body() != null) {
                             string = response.body().string();
-                        }
-                                            Outlets getOutletListSuccessful = gson.fromJson(string, Outlets.class);
-                       /* if (!fullUpdate) {
-                            if (getOutletListSuccessful.outletsResult.outlets.size() != databaseHandler.getSizeOfOutlet()) {
+
+                            Outlets getOutletListSuccessful = gson.fromJson(string, Outlets.class);
+                            /* if (!fullUpdate) {
+                                if (getOutletListSuccessful.outletsResult.outlets.size() != databaseHandler.getSizeOfOutlet()) {
                                 databaseHandler.removeOutlet();
                                 databaseHandler.addOutlet(getOutletListSuccessful.outletsResult.outlets);
-                            }
-                        } else {
+                              }
+                          } else {
                             databaseHandler.removeOutlet();*/
-                        databaseHandler.addOutlet(getOutletListSuccessful.outletsResult.outlets);
-                        if (callback != null) callback.onLoadComplete();
-                        //}
+                            databaseHandler.addOutlet(getOutletListSuccessful.outletsResult.outlets);
+                            if (callback != null) callback.onLoadComplete();
+                            //}
+                        } else {
+                            if (callback != null)
+                                callback.onLoadFailed("Null response from Server");
+                        }
                     } catch (IOException e) {
                         Log.e("tareq_test", "LoadLocalIntoBackground #403: onResponse:  " + e.getMessage());
-
+                        if (callback != null)
+                            callback.onLoadFailed("Couldn't load data as " + e.getMessage());
                     }
                 }
             }

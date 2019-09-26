@@ -11,6 +11,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
+
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentActivity;
 
@@ -53,7 +54,6 @@ public class LocationFromMapActivity extends FragmentActivity implements OnMapRe
     private String address;
 
 
-
     public static boolean checkPermission(final Context context) {
         return ActivityCompat.checkSelfPermission(context,
                 Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
@@ -69,7 +69,6 @@ public class LocationFromMapActivity extends FragmentActivity implements OnMapRe
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_location_from_map);
-
 
 
         resutText = findViewById(R.id.dragg_result);
@@ -91,10 +90,11 @@ public class LocationFromMapActivity extends FragmentActivity implements OnMapRe
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
 
-
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
+        if (mapFragment != null) {
+            mapFragment.getMapAsync(this);
+        }
 
         configureCameraIdle();
 
@@ -135,10 +135,10 @@ public class LocationFromMapActivity extends FragmentActivity implements OnMapRe
         locationResult.addOnCompleteListener(this, task -> {
             if (task.isSuccessful()) {
                 // Set the map's camera position to the current location of the device.
-                Location location =    task.getResult();
+                Location location = task.getResult();
                 if (location != null) {
-                    Log.d("tareq_test", "LocationFromMapActivity #133: getLocation:  "+ location.getLatitude() +" "+ location.getLongitude());
-                    LatLngBounds hisLocation= new LatLngBounds(new LatLng(location.getLatitude()-.0005f, location.getLongitude()-.0005f), new LatLng(location.getLatitude()+.0005f, location.getLongitude()+.0005f));
+                    Log.d("tareq_test", "LocationFromMapActivity #133: getLocation:  " + location.getLatitude() + " " + location.getLongitude());
+                    LatLngBounds hisLocation = new LatLngBounds(new LatLng(location.getLatitude() - .0005f, location.getLongitude() - .0005f), new LatLng(location.getLatitude() + .0005f, location.getLongitude() + .0005f));
 
                     //   mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 13));
                     CameraPosition cameraPosition = new CameraPosition.Builder()
@@ -153,8 +153,7 @@ public class LocationFromMapActivity extends FragmentActivity implements OnMapRe
                     mMap.setLatLngBoundsForCameraTarget(hisLocation);
                 }
             }
-                });
-
+        });
 
 
     }

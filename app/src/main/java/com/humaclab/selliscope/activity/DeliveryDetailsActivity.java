@@ -77,8 +77,10 @@ public class DeliveryDetailsActivity extends AppCompatActivity {
         } else {
             Toast.makeText(this, "Connect to Wifi or Mobile Data", Toast.LENGTH_SHORT).show();
         }
-        for (int i = 0; i<deliveryList.productList.size();i++){
-            ImportentFunction.deliveryArrayList.add(Integer.valueOf(deliveryList.productList.get(i).qty));
+        if(deliveryList.productList!=null) {
+            for (int i = 0; i < deliveryList.productList.size(); i++) {
+                ImportentFunction.deliveryArrayList.add(Integer.valueOf(deliveryList.productList.get(i).qty));
+            }
         }
 
         binding.btnDeliverCancel.setOnClickListener(new View.OnClickListener() {

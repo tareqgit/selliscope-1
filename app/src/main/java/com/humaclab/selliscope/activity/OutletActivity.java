@@ -43,6 +43,7 @@ import com.humaclab.selliscope.utils.VerticalSpaceItemDecoration;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
@@ -261,11 +262,17 @@ public class OutletActivity extends AppCompatActivity {
         call.enqueue(new Callback<RouteDetailsResponse>() {
             @Override
             public void onResponse(Call<RouteDetailsResponse> call, Response<RouteDetailsResponse> response) {
-                final List<RouteDetailsResponse.OutletItem> check = response.body().getResult().getOutletItemList();
-                if (response.isSuccessful()) {
-                    binding.tvCheckInCount.setText(response.body().getResult().getCheckedOutlet() + " / " + response.body().getResult().getTotalOutlet());
-                    loadLocalIntoBackground.saveOutletRoutePlan(check);
-                    getOutlets(); //For reloading the outlet recycler view
+                final List<RouteDetailsResponse.OutletItem> check;
+                if (response.body() != null) {
+                    check = response.body().getResult().getOutletItemList();
+
+
+                        binding.tvCheckInCount.setText(String.format(Locale.ENGLISH,"%d / %d", response.body().getResult().getCheckedOutlet(), response.body().getResult().getTotalOutlet()));
+                        loadLocalIntoBackground.saveOutletRoutePlan(check);
+                        getOutlets(); //For reloading the outlet recycler view
+
+                }else{
+                    Toast.makeText(OutletActivity.this, "Null Response from Server", Toast.LENGTH_SHORT).show();
                 }
             }
 

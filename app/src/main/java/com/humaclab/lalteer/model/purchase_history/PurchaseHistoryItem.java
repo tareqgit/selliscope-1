@@ -38,6 +38,8 @@ public class PurchaseHistoryItem implements Serializable {
     @SerializedName("discount")
     private String discount;
 
+    @SerializedName("current_status")
+    private String currentStatus;
 
 
     @SerializedName("products")
@@ -85,6 +87,14 @@ public class PurchaseHistoryItem implements Serializable {
 
     public List<OrderDetailsItem> getOrderDetails() {
         return orderDetails;
+    }
+
+    public String getCurrentStatus() {
+        return currentStatus;
+    }
+
+    public void setCurrentStatus(String currentStatus) {
+        this.currentStatus = currentStatus;
     }
 
     public void setOrderDetails(List<OrderDetailsItem> orderDetails) {

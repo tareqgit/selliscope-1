@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Created by Tareq Islam on 9/25/19 4:34 PM
+  ~
+  ~  Last modified 9/25/19 4:34 PM
+  -->
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/pending"
+        android:title="Pending"
+
+
+        app:showAsAction="never"
+
+        />
+    <item
+        android:id="@+id/accepted"
+        android:title="Accepted"
+
+        app:showAsAction="never"
+
+        />
+    <item
+        android:id="@+id/rejected"
+        android:title="Rejected"
+
+
+        app:showAsAction="never"
+
+        />
+    <item
+        android:id="@+id/cancelled"
+        android:title="Canelled"
+
+
+        app:showAsAction="never"
+
+        />
+
+
+</menu>

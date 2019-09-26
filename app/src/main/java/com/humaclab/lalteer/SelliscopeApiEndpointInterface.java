@@ -108,8 +108,17 @@ public interface SelliscopeApiEndpointInterface {
     @GET("diameter")
     Single<Response<DiameterResponse>> getDiameter();
 
-    @GET("dealers/{outlet_id}/purchase-history")
-    Single<Response<PurchaseHistoryResponse>> getPurchaseHistory(@Path("outlet_id") int outletID);
+    @GET("dealers/{outlet_id}/purchase-history/accepted")
+    Single<Response<PurchaseHistoryResponse>> getPurchaseHistoryAccepted(@Path("outlet_id") int outletID);
+
+    @GET("dealers/{outlet_id}/purchase-history/pending")
+    Single<Response<PurchaseHistoryResponse>> getPurchaseHistoryPending(@Path("outlet_id") int outletID);
+
+    @GET("dealers/{outlet_id}/purchase-history/rejected")
+    Single<Response<PurchaseHistoryResponse>> getPurchaseHistoryRejected(@Path("outlet_id") int outletID);
+
+    @GET("dealers/{outlet_id}/purchase-history/cancelled")
+    Single<Response<PurchaseHistoryResponse>> getPurchaseHistoryCancelled(@Path("outlet_id") int outletID);
 
     @GET("target/user")
     Single<Response<OutletTarget>> getTarget();

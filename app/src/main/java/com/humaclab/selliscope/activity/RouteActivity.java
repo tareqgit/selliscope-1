@@ -168,6 +168,8 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
                     LatLng currentLocation;
                     if (mLastKnownLocation != null) {
                         currentLocation = new LatLng(mLastKnownLocation.getLatitude(), mLastKnownLocation.getLongitude());
+                        mMap.clear();
+
                         mMap.addMarker(new MarkerOptions().position(currentLocation)
                                 .title("You are here!")
                                 .icon(BitmapDescriptorFactory.fromResource(

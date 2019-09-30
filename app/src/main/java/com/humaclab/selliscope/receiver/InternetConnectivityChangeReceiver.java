@@ -8,6 +8,13 @@ import android.net.NetworkInfo;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.work.BackoffPolicy;
+import androidx.work.Constraints;
+import androidx.work.ExistingWorkPolicy;
+import androidx.work.NetworkType;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
+
 import com.google.gson.Gson;
 import com.humaclab.selliscope.SelliscopeApiEndpointInterface;
 import com.humaclab.selliscope.SelliscopeApplication;
@@ -18,12 +25,14 @@ import com.humaclab.selliscope.sales_return.model.post.JsonMemberReturn;
 import com.humaclab.selliscope.sales_return.model.post.SalesReturn2019Response;
 import com.humaclab.selliscope.sales_return.model.post.SalesReturn2019SelectedProduct;
 import com.humaclab.selliscope.sales_return.model.post.SalesReturnPostBody;
+import com.humaclab.selliscope.service.LocationSyncerWorker;
 import com.humaclab.selliscope.utils.DatabaseHandler;
 import com.humaclab.selliscope.utils.SessionManager;
 import com.humaclab.selliscope.utils.UpLoadDataService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -53,6 +62,18 @@ public class InternetConnectivityChangeReceiver extends BroadcastReceiver {
                 Log.d("tareq_test", "" + reason);
               }
         });
+
+        Log.d("tareq_test", "InternetConnectivityChangeReceiver #66: onReceive:  ");
+
+        OneTimeWorkRequest oneTimeWorkRequest= new OneTimeWorkRequest.Builder(LocationSyncerWorker.class)
+                .setConstraints(new Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build())
+                .addTag("sync tracking data")
+                .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, 30, TimeUnit.SECONDS)
+                .build();
+
+        WorkManager.getInstance(context)
+                    .beginUniqueWork("sync tracking", ExistingWorkPolicy.KEEP, oneTimeWorkRequest)
+                    .enqueue();
     }
 
 

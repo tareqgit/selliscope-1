@@ -132,6 +132,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     private JobScheduler jobScheduler;
     private JobInfo jobInfo;
     private String manufacturer;
+    private String modelHandset;
 
     //This receiver working as a medium for two , First from LocationMonitoringService and Second from GpsLocationBroadcastReceiver
     private BroadcastReceiver gpsBroadcastStateListener = new BroadcastReceiver() {
@@ -195,6 +196,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
 
         manufacturer = android.os.Build.MANUFACTURER;
+        modelHandset= Build.MODEL;
+
         //registerReceiver();
         ////I think this is redundent now ///    sendLocationDataService = new SendLocationDataService();
 
@@ -874,7 +877,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
 
             //as xiomi kills foreground service
-            if (manufacturer.equals("Xiaomi"))
+            if (manufacturer.equals("Xiaomi") || modelHandset.equals("Primo GH7i"))
                 startActivity(new Intent(getApplicationContext(), HomeActivity.class));
         }
     }

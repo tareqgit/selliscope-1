@@ -84,6 +84,8 @@ public class OutletActivity extends AppCompatActivity {
 
         binding.rvOutlet.addItemDecoration(new VerticalSpaceItemDecoration(20));
         binding.rvOutlet.setLayoutManager(new LinearLayoutManager(this));
+        binding.rvOutlet.setHasFixedSize(true);
+
         outletRecyclerViewAdapter = new OutletRecyclerViewAdapter(OutletActivity.this, OutletActivity.this, mOutletList);
         binding.rvOutlet.setAdapter(outletRecyclerViewAdapter);
 

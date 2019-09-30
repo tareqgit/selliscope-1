@@ -279,7 +279,7 @@ public class LocationMonitoringService extends Service implements
 
     public void onLocationChanged(Location location) {
 
-        if (location != null && location.getAccuracy()<35) {
+        if (location != null && location.getAccuracy() < 35) {
             sLocation = location;
 
             utilityDatabase = (UtilityDatabase) UtilityDatabase.getInstance(getApplicationContext());
@@ -288,7 +288,7 @@ public class LocationMonitoringService extends Service implements
             String date = formatDate.format(d);
             Log.d(TAG, "== location != null");
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                Log.d("tareq_test" , "Accuracy: "+ location.getAccuracy() +"Speed: "+ location.getSpeed()+ "Speed Accuracy meter: "+ location.getSpeedAccuracyMetersPerSecond());
+                Log.d("tareq_test", "Accuracy: " + location.getAccuracy() + "Speed: " + location.getSpeed() + "Speed Accuracy meter: " + location.getSpeedAccuracyMetersPerSecond());
             }
 
 
@@ -336,9 +336,9 @@ public class LocationMonitoringService extends Service implements
                             } else {
                                 double distance = regularPerformanceEntities.get(0).distance;
                                 distance += dist;
-                                String sDist = String.format(Locale.ENGLISH, "%.2f", (distance* 1.1f));
+                                String sDist = String.format(Locale.ENGLISH, "%.2f", (distance * 1.1f));
                                 Log.d("tareq_test", "distance" + sDist);
-                                distance = Double.parseDouble(sDist) ;
+                                distance = Double.parseDouble(sDist);
 
                                 utilityDatabase.returnUtilityDao().updateRegularPerformance(distance, date);
                             }
@@ -432,9 +432,11 @@ public class LocationMonitoringService extends Service implements
                 .create(SelliscopeApiEndpointInterface.class);
         List<UserLocation.Visit> userLocationVisits = new ArrayList<>();
         //getting data from sqlite database
+
         for (UserVisit userVisit : dbHandler.getUSerVisits()) {
             userLocationVisits.add(new UserLocation.Visit(userVisit.getLatitude(), userVisit.getLongitude(), GetAddressFromLatLang.getAddressFromLatLan(getApplicationContext(), userVisit.getLatitude(), userVisit.getLongitude()), userVisit.getTimeStamp()));
         }
+
 
         userLocationVisits.add(new UserLocation.Visit(latitude, longitude, GetAddressFromLatLang.getAddressFromLatLan(getApplicationContext(), latitude, longitude), timeStamp));
 
@@ -444,23 +446,25 @@ public class LocationMonitoringService extends Service implements
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                Timber.d("Code:" + response.code());
-                Gson gson = new Gson();
+
+
                 if (response.code() == 201) {
-                    try {
-                        UserLocation.Successful userLocationSuccess = gson.fromJson(response.body().string(), UserLocation.Successful.class);
 
 
-                        dbHandler.deleteUserVisit();
-                        Log.d("tareq_test", "Data send and deleted from db");
-                    } catch (IOException e) {
+                    dbHandler.deleteUserVisit();
+                    Log.d("tareq_test", "Data send and deleted from db");
 
-                        e.printStackTrace();
-                    }
-                } else if (response.code() == 400) {
-                    Toast.makeText(getApplicationContext(), response.code() + " Can't Send user location request invalid", Toast.LENGTH_SHORT).show();
+               /* } else if (response.code() == 400) {
+                    Toast.makeText(getApplicationContext(), response.code() + " Can't Send user location request invalid", Toast.LENGTH_SHORT).show();*/
                 } else {
-                    Toast.makeText(getApplicationContext(), response.code() + " Can't Send user location", Toast.LENGTH_SHORT).show();
+
+
+                    UserVisit currentUserVisit = new UserVisit(latitude, longitude, timeStamp);
+
+                    dbHandler.addUserVisits(currentUserVisit);
+
+
+                    Toast.makeText(getApplicationContext(), response.code() + " Can't Send user location So stored in Dbs", Toast.LENGTH_SHORT).show();
                 }
             }
 

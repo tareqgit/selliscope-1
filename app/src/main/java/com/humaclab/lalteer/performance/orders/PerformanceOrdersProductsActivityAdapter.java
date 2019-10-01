@@ -15,12 +15,12 @@ package com.humaclab.lalteer.performance.orders;
 import android.content.Context;
 import androidx.databinding.DataBindingUtil;
 import androidx.annotation.NonNull;
+import androidx.databinding.library.baseAdapters.BR;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.humaclab.lalteer.BR;
 import com.humaclab.lalteer.R;
 import com.humaclab.lalteer.databinding.ActivityPerformanceOrdersProductsModelBinding;
 import com.humaclab.lalteer.model.performance.orders_model.Product;

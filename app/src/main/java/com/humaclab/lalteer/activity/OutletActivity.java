@@ -16,10 +16,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import android.os.Parcelable;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.humaclab.lalteer.R;
 import com.humaclab.lalteer.SelliscopeApiEndpointInterface;
 import com.humaclab.lalteer.SelliscopeApplication;
@@ -28,6 +30,8 @@ import com.humaclab.lalteer.databinding.ActivityOutletBinding;
 import com.humaclab.lalteer.model.Outlets;
 import com.humaclab.lalteer.model.RoutePlan.RouteDetailsResponse;
 import com.humaclab.lalteer.model.RoutePlan.RouteResponse;
+import com.humaclab.lalteer.performance.claim.ClaimActivity;
+import com.humaclab.lalteer.performance.claim.model.Claim;
 import com.humaclab.lalteer.utils.DatabaseHandler;
 import com.humaclab.lalteer.utils.LoadLocalIntoBackground;
 import com.humaclab.lalteer.utils.NetworkUtility;
@@ -159,6 +163,9 @@ public class OutletActivity extends AppCompatActivity {
         }
 
 
+        binding.tvCheckInCount.setOnClickListener(v -> startActivity(new Intent(OutletActivity.this, ClaimActivity.class)));
+
+
         getOutlets();
 
     }
@@ -192,9 +199,11 @@ public class OutletActivity extends AppCompatActivity {
 
                     @Override
                     public void onSuccess(Response<RouteResponse> response) {
-                        if (!(response.body() != null && response.body().getResult().getRoute().isEmpty())) {
-                            binding.tvToolbarTitle.setText(response.body() != null ? response.body().getResult().getRoute().get(0).getName() : null);
-                            getRouteDetails(response.body() != null ? response.body().getResult().getRoute().get(0).getId() : 0);
+                        if (response.body() != null ) {
+                            binding.tvToolbarTitle.setText(response.body().getResult().getRoute().size()!=0 ? response.body().getResult().getRoute().get(0).getName() : "Dealers");
+
+                                getRouteDetails(response.body().getResult().getRoute().size()!=0 ? response.body().getResult().getRoute().get(0).getId() : 0);
+
                         } else {
                             binding.tvToolbarTitle.setText("Outlet");
                         }
@@ -202,7 +211,7 @@ public class OutletActivity extends AppCompatActivity {
 
                     @Override
                     public void onError(Throwable e) {
-
+                        Log.d("tareq_test", "OutletActivity #209: onError:  "+e.getMessage());
                     }
                 });
 
@@ -225,6 +234,7 @@ public class OutletActivity extends AppCompatActivity {
                     public void onSuccess(Response<RouteDetailsResponse> response) {
                         final List<RouteDetailsResponse.OutletItem> check = response.body() != null ? response.body().getResult().getOutletItemList() : null;
                         if (response.isSuccessful()) {
+                            Log.d("tareq_test", "OutletActivity #231: onSuccess:  "+ response.body().getResult());
                             binding.tvCheckInCount.setText(String.format(Locale.ENGLISH, "%d / %d", response.body() != null ? response.body().getResult().getCheckedOutlet() : 0, response.body() != null ? response.body().getResult().getTotalOutlet() : 0));
                             loadLocalIntoBackground.saveOutletRoutePlan(check);
                             getOutlets(); //For reloading the outlet recycler view
@@ -233,7 +243,7 @@ public class OutletActivity extends AppCompatActivity {
 
                     @Override
                     public void onError(Throwable e) {
-
+                        Log.d("tareq_test", "OutletActivity #237: onError:  "+ e.getMessage());
                     }
                 });
 

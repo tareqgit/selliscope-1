@@ -3,12 +3,12 @@ package com.humaclab.lalteer.adapters;
 import android.content.Context;
 import android.content.Intent;
 import androidx.databinding.DataBindingUtil;
+import androidx.databinding.library.baseAdapters.BR;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.humaclab.lalteer.BR;
 import com.humaclab.lalteer.R;
 import com.humaclab.lalteer.activity.PurchasedProductListActivity;
 import com.humaclab.lalteer.databinding.ItemPurchaseHistoryBinding;

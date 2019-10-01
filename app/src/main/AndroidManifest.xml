@@ -11,8 +11,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".activity.LoadingActivity"></activity>
-
+        <activity android:name=".performance.claim.ClaimActivity"></activity>
+        <activity android:name=".activity.LoadingActivity" />
         <activity
             android:name=".activity.SplashScreenActivity"
             android:theme="@style/SplashScreenTheme">
@@ -62,7 +62,6 @@
         </service>
         -->
         <activity android:name=".activity.RouteActivity" />
-
         <activity android:name=".activity.OutletMapActivity" /> <!-- Services and Receivers -->
         <activity android:name=".activity.OutletActivity" />
         <activity android:name=".activity.AddOutletActivity" />
@@ -100,14 +99,23 @@
         <activity android:name=".performance.payments.PerformancePaymentsActivity" />
         <activity android:name=".performance.orders.PerformanceOrdersProductsActivity" />
         <activity android:name=".performance.orders.PerformanceOrdersActivity" />
+
         <meta-data
             android:name="com.google.android.awareness.API_KEY"
             android:value="AIzaSyBXkKu_nToPi7wW1oyHEnkrG4MpjuJBTxw" />
-
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBXkKu_nToPi7wW1oyHEnkrG4MpjuJBTxw" />
 
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.humaclab.lalteer.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
         <receiver
             android:name=".receiver.InternetConnectivityChangeReceiver"
             android:enabled="true">
@@ -134,29 +142,18 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </service>
+
         <service
             android:name=".LocationMonitoringService"
-            android:enabled="true" />
+            android:enabled="true" /> <!-- File Provider for saving image in storage and getting that image back -->
         <uses-library
             android:name="org.apache.http.legacy"
             android:required="false" />
-
-
-        <!--File Provider for saving image in storage and getting that image back -->
-        <provider
-            android:name="androidx.core.content.FileProvider"
-            android:authorities="com.humaclab.lalteer.fileprovider"
-            android:exported="false"
-            android:grantUriPermissions="true">
-            <meta-data
-                android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths"></meta-data>
-        </provider>
-
     </application>
     <uses-feature
         android:name="android.hardware.camera.any"
         android:required="true" />
+
     <uses-feature
         android:name="android.hardware.camera.autofocus"
         android:required="true" />
@@ -171,12 +168,9 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.CALL_PHONE" />
-
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 

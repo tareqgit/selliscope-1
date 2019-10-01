@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.humaclab.lalteer.BR;
 import com.humaclab.lalteer.R;
 import com.humaclab.lalteer.activity.DeliveryDetailsActivity;
 import com.humaclab.lalteer.model.DeliveryResponse;
@@ -38,7 +37,7 @@ public class DeliveryListRecyclerAdapter extends RecyclerView.Adapter<DeliveryLi
     @Override
     public void onBindViewHolder(DeliveryListViewHolder holder, int position) {
         DeliveryResponse.DeliveryList delivery = deliveryLists.get(position);
-        holder.getBinding().setVariable(BR.deliveryDetails, delivery);
+        holder.getBinding().setVariable(com.humaclab.lalteer.BR.deliveryDetails, delivery);
         holder.getBinding().executePendingBindings();
     }
 

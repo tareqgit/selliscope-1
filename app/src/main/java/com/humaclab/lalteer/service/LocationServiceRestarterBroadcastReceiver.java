@@ -24,7 +24,7 @@ public class LocationServiceRestarterBroadcastReceiver extends BroadcastReceiver
         try {
             context.startService(new Intent(context, LocationMonitoringService.class));
         } catch (Exception e) {
-           context.Jo
+
         }
     }
 }

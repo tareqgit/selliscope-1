@@ -2,6 +2,8 @@ package com.humaclab.lalteer.activity;
 
 import androidx.databinding.DataBindingUtil;
 import android.os.Bundle;
+
+import androidx.databinding.library.baseAdapters.BR;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -9,7 +11,6 @@ import androidx.appcompat.widget.Toolbar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.humaclab.lalteer.BR;
 import com.humaclab.lalteer.R;
 import com.humaclab.lalteer.SelliscopeApiEndpointInterface;
 import com.humaclab.lalteer.SelliscopeApplication;

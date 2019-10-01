@@ -20,8 +20,8 @@ android {
         applicationId "com.humaclab.lalteer"
         minSdkVersion 19
         targetSdkVersion 28
-        versionCode 8
-        versionName "1.8"
+        versionCode 9
+        versionName "1.9"
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
@@ -94,6 +94,11 @@ dependencies {
     implementation 'com.google.android.gms:play-services-awareness:16.0.0'
 
 
+    implementation "androidx.room:room-runtime:2.1.0"
+    annotationProcessor "androidx.room:room-compiler:2.1.0"
+    implementation "androidx.lifecycle:lifecycle-viewmodel:2.1.0"
+
+
     implementation 'com.google.firebase:firebase-messaging:20.0.0'
     implementation 'com.google.firebase:firebase-core:17.2.0'
 
@@ -137,5 +142,6 @@ dependencies {
     implementation 'com.github.florent37:expansionpanel:1.2.2'
 
     implementation 'com.android.support:multidex:1.0.3'
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.1.0'
 }
 apply plugin: 'com.google.gms.google-services'

@@ -131,6 +131,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
 
         sessionManager = new SessionManager(this);
+        apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(), sessionManager.getUserPassword(), false).create(SelliscopeApiEndpointInterface.class);
+
         databaseHandler = new DatabaseHandler(this);
         loadLocalIntoBackground = new LoadLocalIntoBackground(this, mCompositeDisposable);
 
@@ -146,8 +148,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             }
         });*/
 
-        apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(), sessionManager.getUserPassword(), false).create(SelliscopeApiEndpointInterface.class);
-        pd = new ProgressDialog(this);
+         pd = new ProgressDialog(this);
 
 
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -417,7 +418,10 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                     public void uploadFailed(String reason) {
                         pd.dismiss();
                         Log.e("tareq_test", "" + reason);
-                        Toast.makeText(HomeActivity.this, "" + reason, Toast.LENGTH_SHORT).show();
+                        runOnUiThread(()->{
+                            Toast.makeText(HomeActivity.this, "" + reason, Toast.LENGTH_SHORT).show();
+                        });
+
                     }
                 });
                 break;

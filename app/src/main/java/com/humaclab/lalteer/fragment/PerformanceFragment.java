@@ -23,6 +23,7 @@ import com.humaclab.lalteer.activity.RouteActivity;
 import com.humaclab.lalteer.adapters.DashboardRecyclerViewAdapter;
 import com.humaclab.lalteer.adapters.PerformanceRecyclerViewAdapter;
 import com.humaclab.lalteer.model.DashboardItem;
+import com.humaclab.lalteer.performance.claim.ClaimActivity;
 import com.humaclab.lalteer.performance.orders.PerformanceOrdersActivity;
 import com.humaclab.lalteer.performance.payments.PerformancePaymentsActivity;
 import com.humaclab.lalteer.utils.RecyclerItemClickListener;
@@ -48,14 +49,14 @@ public class PerformanceFragment extends Fragment {
         View dashboardView = inflater.inflate(R.layout.fragment_performance, container, false);
         RecyclerView recyclerView = dashboardView.findViewById(R.id.rv_performance);
         performanceItems = new ArrayList<>();
-        performanceItems.add(new DashboardItem("Target", R.drawable.ic_target_sales));
-        performanceItems.add(new DashboardItem("Visited Outlet", R.drawable.ic_visited));
+   //     performanceItems.add(new DashboardItem("Target", R.drawable.ic_target_sales));
+    //    performanceItems.add(new DashboardItem("Visited Outlet", R.drawable.ic_visited));
+        performanceItems.add(new DashboardItem("Attendance", R.drawable.ic_attendance));
         performanceItems.add(new DashboardItem("Orders", R.drawable.ic_order_new));
         performanceItems.add(new DashboardItem("Payment", R.drawable.ic_payments));
-        performanceItems.add(new DashboardItem("Sales Return Request", R.drawable.ic_return));
-        performanceItems.add(new DashboardItem("Commission", R.drawable.ic_action_taka));
-        performanceItems.add(new DashboardItem("New Outlet", R.drawable.ic_outlet));
-        performanceItems.add(new DashboardItem("Attendance", R.drawable.ic_attendance));
+    //    performanceItems.add(new DashboardItem("Sales Return Request", R.drawable.ic_return));
+   //     performanceItems.add(new DashboardItem("Commission", R.drawable.ic_action_taka));
+    //    performanceItems.add(new DashboardItem("New Outlet", R.drawable.ic_outlet));
 
         gridLayoutManager = new GridLayoutManager(activity, itemNumber);
         recyclerView.setLayoutManager(gridLayoutManager);
@@ -72,14 +73,14 @@ public class PerformanceFragment extends Fragment {
                                 switch (position) {
                                     case 0: {
                                         getActivity().startActivity(new Intent(getActivity(),
-                                                RouteActivity.class));
+                                                ClaimActivity.class));
                                         break;
                                     }
-                                    case 2: {
+                                    case 1: {
                                        getActivity().startActivity(new Intent(getActivity(), PerformanceOrdersActivity.class));
                                         break;
                                     }
-                                    case 3: {
+                                    case 2: {
                                         getActivity().startActivity(new Intent(getActivity(), PerformancePaymentsActivity.class));
                                         break;
                                     }

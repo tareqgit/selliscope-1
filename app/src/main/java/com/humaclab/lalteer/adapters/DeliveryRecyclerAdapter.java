@@ -5,6 +5,8 @@ import android.content.Context;
 import androidx.databinding.DataBindingUtil;
 import androidx.databinding.ViewDataBinding;
 import android.graphics.Color;
+
+import androidx.databinding.library.baseAdapters.BR;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +18,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.humaclab.lalteer.BR;
+
 import com.humaclab.lalteer.R;
 import com.humaclab.lalteer.SelliscopeApiEndpointInterface;
 import com.humaclab.lalteer.SelliscopeApplication;

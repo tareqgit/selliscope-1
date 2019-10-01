@@ -4,12 +4,12 @@ import android.content.Context;
 import androidx.databinding.DataBindingUtil;
 import android.graphics.Color;
 import androidx.cardview.widget.CardView;
+import androidx.databinding.library.baseAdapters.BR;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.humaclab.lalteer.BR;
 import com.humaclab.lalteer.R;
 import com.humaclab.lalteer.activity.ProductListActivity;
 import com.humaclab.lalteer.databinding.ItemProductListBinding;

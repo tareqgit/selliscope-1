@@ -37,7 +37,7 @@ public class SendLocationDataService extends Service {
             PowerManager pm = (PowerManager) this.getSystemService(Context.POWER_SERVICE);
 
 			/* we don't need the screen on */
-            wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "locationtracker");
+            wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "Selliscope::MyWakeLockTag");
             wakeLock.setReferenceCounted(true);
         }
 

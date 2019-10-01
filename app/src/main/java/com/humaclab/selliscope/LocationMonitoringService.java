@@ -14,6 +14,7 @@ import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.os.PowerManager;
 import android.provider.Settings;
 import android.util.Log;
 import android.widget.Toast;
@@ -90,6 +91,7 @@ public class LocationMonitoringService extends Service implements
     public static String lastTimeMediaPlayed = "";
 
     LocationCallback mLocationCallback;
+    private static volatile PowerManager.WakeLock wakeLock;
 
 
     public LocationMonitoringService() {
@@ -104,6 +106,18 @@ public class LocationMonitoringService extends Service implements
 
         super.onStartCommand(intent, flags, startId);
 
+        /* Wake up */
+        if (wakeLock == null) {
+            PowerManager pm = (PowerManager) this.getSystemService(Context.POWER_SERVICE);
+
+            /* we don't need the screen on */
+            wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "Selliscope::MyWakeLockTag");
+            wakeLock.setReferenceCounted(true);
+        }
+
+        if (!wakeLock.isHeld()) {
+            wakeLock.acquire();
+        }
 
         mLocationRequest.setInterval(30 * 1000);
         mLocationRequest.setFastestInterval(15 * 1000);
@@ -533,6 +547,10 @@ public class LocationMonitoringService extends Service implements
     public void onDestroy() {
         super.onDestroy();
         if (sessionManager.isLoggedIn()) {
+
+            if(wakeLock.isHeld()){
+                wakeLock.release();
+            }
 
             Log.d("tareq_test", "OnDestroy Service");
             Intent bintent = new Intent(this, LocationServiceRestarterBroadcastReceiver.class);

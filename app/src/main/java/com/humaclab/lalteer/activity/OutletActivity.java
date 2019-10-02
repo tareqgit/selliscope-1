@@ -8,6 +8,8 @@ import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.appcompat.app.AppCompatActivity;
@@ -30,6 +32,7 @@ import com.humaclab.lalteer.databinding.ActivityOutletBinding;
 import com.humaclab.lalteer.model.Outlets;
 import com.humaclab.lalteer.model.RoutePlan.RouteDetailsResponse;
 import com.humaclab.lalteer.model.RoutePlan.RouteResponse;
+import com.humaclab.lalteer.model.checked_in_dealer.CheckedInDealerResponse;
 import com.humaclab.lalteer.performance.claim.ClaimActivity;
 import com.humaclab.lalteer.performance.claim.model.Claim;
 import com.humaclab.lalteer.utils.DatabaseHandler;
@@ -60,6 +63,7 @@ public class OutletActivity extends AppCompatActivity {
     List<Outlets.Outlet> outlets =new ArrayList<>();
     private LoadLocalIntoBackground loadLocalIntoBackground;
     private CompositeDisposable mCompositeDisposable = new CompositeDisposable();
+   private   MutableLiveData<Integer> sTotalCheckIn= new MutableLiveData<>();
 
     // Save state
     private Parcelable recyclerViewState; //for storing recycler scroll postion
@@ -166,10 +170,37 @@ public class OutletActivity extends AppCompatActivity {
         binding.tvCheckInCount.setOnClickListener(v -> startActivity(new Intent(OutletActivity.this, ClaimActivity.class)));
 
 
-        getOutlets();
+      //  getOutlets();
+
 
     }
 
+    private void getTotalCheckIn(){
+        apiService.getCheckedInDealers().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new SingleObserver<Response<CheckedInDealerResponse>>() {
+            @Override
+            public void onSubscribe(Disposable d) {
+                mCompositeDisposable.add(d);
+            }
+
+            @Override
+            public void onSuccess(Response<CheckedInDealerResponse> checkedInDealerResponseResponse) {
+
+                List<Integer> outletIDLists = null;
+                if (checkedInDealerResponseResponse.body() != null) {
+                    outletIDLists = new ArrayList<>(checkedInDealerResponseResponse.body().getDealerIds());
+                    sTotalCheckIn.setValue(outletIDLists.size());
+
+                }
+
+
+            }
+
+            @Override
+            public void onError(Throwable e) {
+                Log.e("tareq_test", "OutletActivity #194: onError:  "+ e);
+            }
+        });
+    }
 
 
     public void getOutlets() {
@@ -180,6 +211,16 @@ public class OutletActivity extends AppCompatActivity {
                 binding.srlOutlet.setRefreshing(false);
 
             outletRecyclerViewAdapter.updateOutlets(outlets);
+
+            getTotalCheckIn();
+
+            sTotalCheckIn.observe(this, new Observer<Integer>() {
+                @Override
+                public void onChanged(Integer no) {
+                    binding.tvCheckInCount.setText(String.format(Locale.ENGLISH, "%d ", no));
+
+                }
+            });
         } else {
             Toast.makeText(getApplicationContext(), "You don't have any Dealer in your list.", Toast.LENGTH_LONG).show();
         }

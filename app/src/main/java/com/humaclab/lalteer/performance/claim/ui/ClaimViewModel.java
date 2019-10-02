@@ -37,8 +37,8 @@ public class ClaimViewModel extends AndroidViewModel {
         return mClaimResponseLiveData;
     }
 
-    public void sendClaim(Claim claim){
-        mClaimRepository.postClaim(claim);
+    public void sendClaim(Claim claim, ClaimRepository.ClaimPostListener claimPostListener){
+        mClaimRepository.postClaim(claim, claimPostListener);
     }
 
 }

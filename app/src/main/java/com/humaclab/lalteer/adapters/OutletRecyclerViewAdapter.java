@@ -80,7 +80,7 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
     private List<Outlets.Outlet> outlets;
     private SessionManager sessionManager;
     private DatabaseHandler databaseHandler;
-
+    private CheckInListener mCheckInListener;
     private CompositeDisposable mCompositeDisposable = new CompositeDisposable();
 
     public OutletRecyclerViewAdapter(Context context, Activity activity, List<Outlets.Outlet> outlets) {
@@ -100,6 +100,9 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
 
     }
 
+    public void setCheckInListener(CheckInListener checkInListener) {
+        mCheckInListener = checkInListener;
+    }
 
     public void updateOutlets(List<Outlets.Outlet> outlets) {
         this.outlets = outlets;
@@ -247,7 +250,7 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
                           //  Toast.makeText(context, "You are already checked in", Toast.LENGTH_SHORT).show();
                             new  Flashbar.Builder(activity)
                                     .gravity(Flashbar.Gravity.TOP)
-                                    .message("You are already checked in.")
+                                    .message("You have already checked in.")
                                     .backgroundDrawable(R.drawable.moss_gradient)
                                     .duration(3000)
                                     .build().show();
@@ -372,7 +375,6 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
 
     @Override
     public int getItemCount() {
-
         return outlets == null ? 0 : outlets.size();
     }
 
@@ -408,5 +410,11 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
                 context.startActivity(intent);
             });
         }
+    }
+
+
+    public interface CheckInListener{
+        public void onSuccess();
+        public void onFail();
     }
 }

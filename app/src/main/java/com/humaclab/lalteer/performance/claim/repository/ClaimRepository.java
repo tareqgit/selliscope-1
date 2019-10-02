@@ -6,7 +6,9 @@
 
 package com.humaclab.lalteer.performance.claim.repository;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
@@ -15,8 +17,11 @@ import android.widget.Toast;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.google.gson.Gson;
 import com.humaclab.lalteer.SelliscopeApiEndpointInterface;
 import com.humaclab.lalteer.SelliscopeApplication;
+import com.humaclab.lalteer.activity.OutletActivity;
+import com.humaclab.lalteer.performance.claim.ClaimActivity;
 import com.humaclab.lalteer.performance.claim.model.Claim;
 import com.humaclab.lalteer.performance.claim.model.ClaimResponse;
 import com.humaclab.lalteer.performance.claim.model.ReasonItem;
@@ -96,25 +101,36 @@ public class ClaimRepository {
     }
 
 
-    public void postClaim(Claim claim){
+    public void postClaim(Claim claim, ClaimPostListener claimPostListener){
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
 
         if (activeNetworkInfo != null && activeNetworkInfo.isConnected()) {
+            Log.d("tareq_test", "ClaimRepository #108: postClaim:  "+ new Gson().toJson(claim));
+
             apiService.sendClaim(claim).enqueue(new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
                     if(response.isSuccessful() && response.body()!=null){
 
                             Toast.makeText(mContext, "Claim Send Successful", Toast.LENGTH_SHORT).show();
 
-                        Log.d("tareq_test", "ClaimRepository #114: onResponse:  success"  );
+                        Log.d("tareq_test", "ClaimRepository #114: onResponse:  success");
+
+                        claimPostListener.onComplete();
+
+
+                        
                     }
-                    if( response.code()>=501 && response.code()<=599){
+                    if( response.code()>=500 && response.code()<=599){
                         executor.execute(() -> lalteerRoomDb.returnClaimDao().insertClaim(claim));
                         Log.d("tareq_test", "ClaimRepository #118: onResponse:  stored in db");
+
                         Toast.makeText(mContext, "Claim queued Successful", Toast.LENGTH_SHORT).show();
+                        claimPostListener.onComplete();
+
                     }
                 }
 
@@ -123,13 +139,21 @@ public class ClaimRepository {
                     executor.execute(() -> lalteerRoomDb.returnClaimDao().insertClaim(claim));
                     Log.d("tareq_test", "ClaimRepository #125: onResponse:  stored in db");
                     Toast.makeText(mContext, "Claim queued Successful", Toast.LENGTH_SHORT).show();
+                    claimPostListener.onComplete();
                 }
             });
         }else{
             executor.execute(() -> lalteerRoomDb.returnClaimDao().insertClaim(claim));
             Log.d("tareq_test", "ClaimRepository #130: onResponse:  stored in db");
             Toast.makeText(mContext, "Claim queued Successful", Toast.LENGTH_SHORT).show();
+            claimPostListener.onComplete();
         }
+
+
+    }
+
+    public interface ClaimPostListener{
+        void onComplete();
 
 
     }

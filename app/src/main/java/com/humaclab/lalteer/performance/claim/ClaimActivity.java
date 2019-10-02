@@ -14,15 +14,20 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.humaclab.lalteer.R;
+import com.humaclab.lalteer.activity.OutletActivity;
 import com.humaclab.lalteer.databinding.ActivityClaimBinding;
 import com.humaclab.lalteer.performance.claim.model.Claim;
 import com.humaclab.lalteer.performance.claim.model.ReasonItem;
+import com.humaclab.lalteer.performance.claim.repository.ClaimRepository;
 import com.humaclab.lalteer.performance.claim.ui.ClaimViewModel;
 import com.humaclab.lalteer.utils.CurrentTimeUtilityClass;
 
@@ -89,10 +94,23 @@ public class ClaimActivity extends AppCompatActivity {
 
         mBinding.sendTxt.setOnClickListener(v -> {
            // Toast.makeText(this, "" + mBinding.radioGroup.getCheckedRadioButtonId(), Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(ClaimActivity.this, OutletActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             if(mBinding.radioGroup.getCheckedRadioButtonId()==0) {
-                mClaimViewModel.sendClaim(new Claim(mBinding.opinionTx.getEditText().getText().toString(), CurrentTimeUtilityClass.getCurrentTimeStampDate(),0));
+                mClaimViewModel.sendClaim(new Claim(mBinding.opinionTx.getEditText().getText().toString(), CurrentTimeUtilityClass.getCurrentTimeStampDate(), 0), new ClaimRepository.ClaimPostListener() {
+                    @Override
+                    public void onComplete() {
+                        finish();
+                    }
+                });
             }else{
-                mClaimViewModel.sendClaim(new Claim("", CurrentTimeUtilityClass.getCurrentTimeStampDate(),mBinding.radioGroup.getCheckedRadioButtonId()));
+                mClaimViewModel.sendClaim(new Claim("", CurrentTimeUtilityClass.getCurrentTimeStampDate(), mBinding.radioGroup.getCheckedRadioButtonId()), new ClaimRepository.ClaimPostListener() {
+                    @Override
+                    public void onComplete() {
+                        mContext.startActivity(intent);
+                        finish();
+                    }
+                });
             }
         });
     }
@@ -104,4 +122,13 @@ public class ClaimActivity extends AppCompatActivity {
         finish();
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }

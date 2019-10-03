@@ -1,12 +1,12 @@
-package com.humaclab.selliscope.utility_db.db;
+package com.humaclab.selliscope.utility_db.dao;
 
 import androidx.room.Dao;
 import androidx.room.Delete;
-import androidx.room.Entity;
 import androidx.room.Insert;
 import androidx.room.Query;
 
-import java.util.Date;
+import com.humaclab.selliscope.utility_db.model.RegularPerformanceEntity;
+
 import java.util.List;
 
 /***

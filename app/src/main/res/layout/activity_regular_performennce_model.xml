@@ -7,7 +7,7 @@
     <data>
             <variable
                 name="activities"
-                type="com.humaclab.selliscope.utility_db.db.RegularPerformanceEntity" />
+                type="com.humaclab.selliscope.utility_db.model.RegularPerformanceEntity" />
     </data>
 
     <androidx.cardview.widget.CardView

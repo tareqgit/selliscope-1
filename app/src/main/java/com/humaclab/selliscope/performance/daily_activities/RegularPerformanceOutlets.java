@@ -16,7 +16,7 @@ import com.google.gson.JsonParser;
 import com.humaclab.selliscope.R;
 import com.humaclab.selliscope.databinding.ActivityRegularPerformanceOutletsBinding;
 import com.humaclab.selliscope.performance.daily_activities.model.OutletWithCheckInTime;
-import com.humaclab.selliscope.utility_db.db.RegularPerformanceEntity;
+import com.humaclab.selliscope.utility_db.model.RegularPerformanceEntity;
 
 import java.util.ArrayList;
 import java.util.Arrays;

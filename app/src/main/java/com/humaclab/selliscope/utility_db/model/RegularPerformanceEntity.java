@@ -1,11 +1,10 @@
-package com.humaclab.selliscope.utility_db.db;
+package com.humaclab.selliscope.utility_db.model;
 
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 import java.io.Serializable;
-import java.util.Date;
 
 /***
  * Created by mtita on 22,August,2019.

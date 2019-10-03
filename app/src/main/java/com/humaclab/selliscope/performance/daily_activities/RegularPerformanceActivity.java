@@ -18,20 +18,14 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.humaclab.selliscope.R;
 import com.humaclab.selliscope.databinding.ActivityRegularPerformanceBinding;
-import com.humaclab.selliscope.model.performance.orders_model.Product;
-import com.humaclab.selliscope.performance.orders.PerformanceOrdersActivity;
-import com.humaclab.selliscope.performance.orders.PerformanceOrdersProductsActivity;
-import com.humaclab.selliscope.performance.payments.PerformancePaymentsActivity;
-import com.humaclab.selliscope.utility_db.db.RegularPerformanceEntity;
+import com.humaclab.selliscope.utility_db.model.RegularPerformanceEntity;
 import com.humaclab.selliscope.utility_db.db.UtilityDatabase;
 import com.humaclab.selliscope.utils.CurrentTimeUtilityClass;
 
 import java.io.Serializable;
 import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 

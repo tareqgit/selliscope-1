@@ -4,11 +4,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
-import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
-import androidx.cardview.widget.CardView;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -16,18 +14,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import com.andrognito.flashbar.Flashbar;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.facebook.shimmer.Shimmer;
 import com.facebook.shimmer.ShimmerDrawable;
-import com.google.android.gms.awareness.Awareness;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.gson.Gson;
@@ -35,16 +30,16 @@ import com.humaclab.selliscope.LocationMonitoringService;
 import com.humaclab.selliscope.R;
 import com.humaclab.selliscope.SelliscopeApiEndpointInterface;
 import com.humaclab.selliscope.SelliscopeApplication;
-import com.humaclab.selliscope.activity.LoginActivity;
 import com.humaclab.selliscope.activity.OutletActivity;
 import com.humaclab.selliscope.activity.OutletDetailsActivity;
 import com.humaclab.selliscope.activity.OutletMapActivity;
 import com.humaclab.selliscope.activity.PurchaseHistoryActivity;
+import com.humaclab.selliscope.activity.SelfieCheck_inActivity;
 import com.humaclab.selliscope.databinding.OutletItemBinding;
 import com.humaclab.selliscope.model.Outlets;
 import com.humaclab.selliscope.model.UserLocation;
 import com.humaclab.selliscope.performance.daily_activities.model.OutletWithCheckInTime;
-import com.humaclab.selliscope.utility_db.db.RegularPerformanceEntity;
+import com.humaclab.selliscope.utility_db.model.RegularPerformanceEntity;
 import com.humaclab.selliscope.utility_db.db.UtilityDatabase;
 import com.humaclab.selliscope.utils.DatabaseHandler;
 import com.humaclab.selliscope.utils.GetAddressFromLatLang;
@@ -63,7 +58,6 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import timber.log.Timber;
 
 /**
  * Created by Leon on 6/12/2017.
@@ -205,11 +199,43 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
                    sendUserLocation(location, outlet, progressbar);
                } else {
                    progressbar.setVisibility(View.INVISIBLE);
-                   Toast.makeText(context, "Enable Wifi or Mobile data.", Toast.LENGTH_SHORT).show();
+                   new  Flashbar.Builder(activity)
+                           .gravity(Flashbar.Gravity.TOP)
+                           .title("Sorry!")
+                           .message("Internet Connection not available.")
+                           .castShadow()
+                           .primaryActionText("Selfie")
+                           .primaryActionTapListener(new Flashbar.OnActionTapListener() {
+                               @Override
+                               public void onActionTapped(Flashbar flashbar) {
+                                   flashbar.dismiss();
+                                   Intent intent = new Intent(context, SelfieCheck_inActivity.class);
+                                   intent.putExtra("outletId",outlet.outletId);
+                                   context.startActivity(intent);
+                               }
+                           })
+                           .backgroundDrawable(R.drawable.moss_gradient2)
+                           .build().show();
                }
            } else {
                progressbar.setVisibility(View.INVISIBLE);
-               Toast.makeText(context, "You are not within 70m radius of the outlet.", Toast.LENGTH_SHORT).show();
+               new  Flashbar.Builder(activity)
+                       .gravity(Flashbar.Gravity.TOP)
+                       .title("Sorry!")
+                       .message("You are not within 70 meter.")
+                       .castShadow()
+                       .primaryActionText("Selfie")
+                       .primaryActionTapListener(new Flashbar.OnActionTapListener() {
+                           @Override
+                           public void onActionTapped(Flashbar flashbar) {
+                                flashbar.dismiss();
+                               Intent intent = new Intent(context, SelfieCheck_inActivity.class);
+                               intent.putExtra("outletId",outlet.outletId);
+                               context.startActivity(intent);
+                           }
+                       })
+                       .backgroundDrawable(R.drawable.moss_gradient2)
+                       .build().show();
            }
        }else{
            progressbar.setVisibility(View.INVISIBLE);
@@ -225,8 +251,12 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
                 .create(SelliscopeApiEndpointInterface.class);
         List<UserLocation.Visit> userLocationVisits = new ArrayList<>();
         userLocationVisits.add(new UserLocation.Visit(location.getLatitude(), location.getLongitude(), GetAddressFromLatLang.getAddressFromLatLan(context, location.getLatitude(), location.getLongitude()), outlet.outletId));
+        Log.d("tareq_test", "OutletRecyclerViewAdapter #244: sendUserLocation:  "+ new Gson().toJson(new UserLocation(userLocationVisits)));
         Call<ResponseBody> call = apiService.sendUserLocation(new UserLocation(userLocationVisits));
         call.enqueue(new Callback<ResponseBody>() {
+            private final Intent intent = new Intent(context, SelfieCheck_inActivity.class).putExtra("outletId",outlet.outletId);
+
+
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 Gson gson = new Gson();
@@ -239,7 +269,12 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
                         progressBar.setVisibility(View.INVISIBLE);
                         if (userLocationSuccess != null) {
                             if (userLocationSuccess.msg.equals("")) { // To check if the user already checked in the outlet
-                                Toast.makeText(context, "You have successfully checked in.", Toast.LENGTH_SHORT).show();
+                                new  Flashbar.Builder(activity)
+                                        .gravity(Flashbar.Gravity.TOP)
+                                        .message("You have successfully checked in.")
+                                        .backgroundDrawable(R.drawable.moss_gradient)
+                                        .duration(3000)
+                                        .build().show();
                                 databaseHandler.afterCheckinUpdateOutletRoutePlan(outlet.outletId);
 
                                 //region Update checkedin for Activities
@@ -271,7 +306,12 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
                                 ((OutletActivity) context).getRoute();//For reloading the outlet recycler view
                                 ((OutletActivity) context).getOutlets();//For reloading the outlet recycler view
                             } else {
-                                Toast.makeText(context, "You have already checked in.", Toast.LENGTH_SHORT).show();
+                                new  Flashbar.Builder(activity)
+                                        .gravity(Flashbar.Gravity.TOP)
+                                        .message("You have already checked in.")
+                                        .backgroundDrawable(R.drawable.moss_gradient)
+                                        .duration(3000)
+                                        .build().show();
                             }
                         }
                     } catch (IOException e) {
@@ -284,14 +324,43 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
 
                 } else {
                     progressBar.setVisibility(View.INVISIBLE);
-                    Toast.makeText(context,
-                            "Server Error! Try Again Later!", Toast.LENGTH_SHORT).show();
+                    new  Flashbar.Builder(activity)
+                            .gravity(Flashbar.Gravity.TOP)
+                            .title("Sorry!")
+                            .message("Server Error, Please try Selfie check-in.")
+                           .castShadow()
+                            .primaryActionText("Selfie")
+                            .primaryActionTapListener(new Flashbar.OnActionTapListener() {
+                                @Override
+                                public void onActionTapped(Flashbar flashbar) {
+                                    flashbar.dismiss();
+                                    context.startActivity(intent);
+                                }
+                            })
+                            .backgroundDrawable(R.drawable.moss_gradient2)
+                            .build().show();
                 }
             }
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Toast.makeText(context, t.getMessage(), Toast.LENGTH_SHORT).show();
+
+                new  Flashbar.Builder(activity)
+                        .gravity(Flashbar.Gravity.TOP)
+                        .title("Sorry!")
+                        .message("Network Error, Please try Selfie check-in.")
+                        .castShadow()
+                        .primaryActionText("Selfie")
+                        .primaryActionTapListener(new Flashbar.OnActionTapListener() {
+                            @Override
+                            public void onActionTapped(Flashbar flashbar) {
+
+                                flashbar.dismiss();
+                                context.startActivity(intent);
+                            }
+                        })
+                        .backgroundDrawable(R.drawable.moss_gradient2)
+                        .build().show();
                 Log.d("Response", t.toString());
                 progressBar.setVisibility(View.INVISIBLE);
             }

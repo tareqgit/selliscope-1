@@ -11,7 +11,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".activity.LoadingActivity"></activity>
+        <activity android:name=".activity.SelfieCheck_inActivity"></activity>
+        <activity android:name=".activity.LoadingActivity" />
         <activity android:name=".performance.daily_activities.RegularPerformanceOutlets" />
         <activity android:name=".performance.daily_activities.RegularPerformanceActivity" /> <!-- android:networkSecurityConfig="@xml/network_security_config" -->
         <activity android:name=".sales_return.SalesReturn_2019_Activity" />
@@ -64,7 +65,7 @@
             android:screenOrientation="landscape" />
         <activity android:name=".activity.activity_salesReturnOld.SalesReturnActivityOld" />
         <activity android:name=".activity.SalesReturnHistoryActivity" />
-        <activity android:name=".performance.payments.PerformancePaymentsActivity" /> <!-- for ols sellisreturn Model -->
+        <activity android:name=".performance.payments.PerformancePaymentsActivity" /> <!-- for ols sells return Model -->
         <activity android:name=".performance.orders.PerformanceOrdersProductsActivity" />
         <activity android:name=".performance.orders.PerformanceOrdersActivity" />
         <activity android:name=".pos_sdk.PosActivity" />
@@ -81,29 +82,43 @@
             android:name="com.google.android.awareness.API_KEY"
             android:value="AIzaSyBXkKu_nToPi7wW1oyHEnkrG4MpjuJBTxw" />
 
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/ic_selliscope_icon" />
+
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_color"
+            android:resource="@color/colorAccent" />
+        <!--
+ Set custom default icon. This is used when no icon is set for incoming notification messages.
+     See README(https://goo.gl/l4GJaQ) for more.
+        -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.humaclab.selliscope.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+        <!--
+ Set color used with incoming notification messages. This is used when no color is set for the incoming
+             notification message. See README(https://goo.gl/6BKBk7) for more.
+        -->
         <receiver
             android:name=".service.LocationServiceRestarterBroadcastReceiver"
             android:enabled="true"
             android:exported="true"
             android:label="RestartServiceWhenStopped" />
 
-        <service android:name=".service.FcmGetNotificationService"
+        <service
+            android:name=".service.FcmGetNotificationService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-        <!-- Set custom default icon. This is used when no icon is set for incoming notification messages.
-     See README(https://goo.gl/l4GJaQ) for more. -->
-        <meta-data
-            android:name="com.google.firebase.messaging.default_notification_icon"
-            android:resource="@drawable/ic_selliscope_icon" />
-        <!-- Set color used with incoming notification messages. This is used when no color is set for the incoming
-             notification message. See README(https://goo.gl/6BKBk7) for more. -->
-        <meta-data
-            android:name="com.google.firebase.messaging.default_notification_color"
-            android:resource="@color/colorAccent" />
-
         <service
             android:name=".service.SendLocationDataService"
             android:exported="false"
@@ -114,10 +129,11 @@
                 <action android:name="android.content.SyncAdapter" />
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
-        </service>
+        </service> <!-- ****************Pos Activities************************** -->
         <service
             android:name=".LocationMonitoringService"
-            android:enabled="true" /> <!-- ****************Pos Activities************************** -->
+            android:enabled="true" />
+
         <service
             android:name=".job_sheduler.MyJobScheduler"
             android:exported="true"
@@ -126,17 +142,6 @@
         <uses-library
             android:name="org.apache.http.legacy"
             android:required="false" />
-
-        <provider
-            android:name="androidx.core.content.FileProvider"
-            android:authorities="com.humaclab.selliscope.fileprovider"
-            android:exported="false"
-            android:grantUriPermissions="true">
-            <meta-data
-                android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths"></meta-data>
-        </provider>
-
     </application>
     <uses-feature
         android:name="android.hardware.camera.any"
@@ -151,7 +156,7 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />

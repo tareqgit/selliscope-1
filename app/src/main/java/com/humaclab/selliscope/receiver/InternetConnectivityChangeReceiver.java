@@ -14,29 +14,9 @@ import androidx.work.ExistingWorkPolicy;
 import androidx.work.NetworkType;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
-
-import com.google.gson.Gson;
-import com.humaclab.selliscope.SelliscopeApiEndpointInterface;
-import com.humaclab.selliscope.SelliscopeApplication;
-import com.humaclab.selliscope.model.AddNewOrder;
-import com.humaclab.selliscope.sales_return.db.ReturnProductDatabase;
-import com.humaclab.selliscope.sales_return.db.ReturnProductEntity;
-import com.humaclab.selliscope.sales_return.model.post.JsonMemberReturn;
-import com.humaclab.selliscope.sales_return.model.post.SalesReturn2019Response;
-import com.humaclab.selliscope.sales_return.model.post.SalesReturn2019SelectedProduct;
-import com.humaclab.selliscope.sales_return.model.post.SalesReturnPostBody;
 import com.humaclab.selliscope.service.LocationSyncerWorker;
-import com.humaclab.selliscope.utils.DatabaseHandler;
-import com.humaclab.selliscope.utils.SessionManager;
 import com.humaclab.selliscope.utils.UpLoadDataService;
-
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 /**
  * Created by leon on 20/12/17.

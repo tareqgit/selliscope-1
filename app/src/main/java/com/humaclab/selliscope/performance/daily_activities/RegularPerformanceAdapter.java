@@ -1,7 +1,6 @@
 package com.humaclab.selliscope.performance.daily_activities;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,9 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.humaclab.selliscope.R;
 import com.humaclab.selliscope.databinding.ActivityRegularPerformennceModelBinding;
 
-import com.humaclab.selliscope.model.performance.orders_model.Order;
-import com.humaclab.selliscope.model.performance.payments_model.Datum;
-import com.humaclab.selliscope.utility_db.db.RegularPerformanceEntity;
+import com.humaclab.selliscope.utility_db.model.RegularPerformanceEntity;
 
 import java.util.ArrayList;
 import java.util.Arrays;

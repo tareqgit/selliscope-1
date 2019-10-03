@@ -5,12 +5,14 @@ import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -41,10 +43,11 @@ import com.google.firebase.perf.FirebasePerformance;
 import com.google.firebase.perf.metrics.Trace;
 import com.google.gson.Gson;
 import com.humaclab.selliscope.activity.HomeActivity;
+import com.humaclab.selliscope.activity.InspectionActivity;
 import com.humaclab.selliscope.dbmodel.UserVisit;
 import com.humaclab.selliscope.model.UserLocation;
 import com.humaclab.selliscope.service.LocationServiceRestarterBroadcastReceiver;
-import com.humaclab.selliscope.utility_db.db.RegularPerformanceEntity;
+import com.humaclab.selliscope.utility_db.model.RegularPerformanceEntity;
 import com.humaclab.selliscope.utility_db.db.UtilityDatabase;
 import com.humaclab.selliscope.utils.CurrentTimeUtilityClass;
 import com.humaclab.selliscope.utils.DatabaseHandler;
@@ -52,7 +55,6 @@ import com.humaclab.selliscope.utils.GetAddressFromLatLang;
 import com.humaclab.selliscope.utils.NetworkUtility;
 import com.humaclab.selliscope.utils.SessionManager;
 
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -66,7 +68,6 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import timber.log.Timber;
 
 import static com.humaclab.selliscope.SelliscopeApplication.CHANNEL_ID;
 
@@ -139,12 +140,13 @@ public class LocationMonitoringService extends Service implements
                                  //Called each time when 1000 milliseconds (1 second) (the period parameter)
 
                                  displayLocationSettingsRequest(getApplicationContext());
+
                              }
                          },
 //Set how long before to start calling the TimerTask (in milliseconds)
                 3 * 60 * 1000,
 //Set the amount of time between each execution (in milliseconds)
-                60 * 1000);
+                60 *5 * 1000);
 
         //Make it stick to the notification panel so it is less prone to get cancelled by the Operating System.
         return START_STICKY;
@@ -278,6 +280,7 @@ public class LocationMonitoringService extends Service implements
         Log.d(TAG, "Connected to Google API");
     }
 
+
     /*
      * Called by Location Services if the connection to the
      * location client drops because of an error.
@@ -293,7 +296,7 @@ public class LocationMonitoringService extends Service implements
 
     public void onLocationChanged(Location location) {
 
-        if (location != null && location.getAccuracy() < 35) {
+        if (location != null && location.getAccuracy() < 200) {
             sLocation = location;
 
             utilityDatabase = (UtilityDatabase) UtilityDatabase.getInstance(getApplicationContext());

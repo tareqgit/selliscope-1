@@ -6,7 +6,6 @@ import androidx.databinding.DataBindingUtil;
 
 import android.os.Bundle;
 
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.appcompat.widget.Toolbar;
@@ -15,7 +14,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,7 +23,7 @@ import com.humaclab.lalteer.SelliscopeApiEndpointInterface;
 import com.humaclab.lalteer.SelliscopeApplication;
 import com.humaclab.lalteer.adapters.PurchaseHistoryRecyclerAdapter;
 import com.humaclab.lalteer.databinding.ActivityPurchaseHistoryBinding;
-import com.humaclab.lalteer.model.Outlets;
+import com.humaclab.lalteer.model.outlets.Outlets;
 import com.humaclab.lalteer.model.purchase_history.PurchaseHistoryItem;
 import com.humaclab.lalteer.model.purchase_history.PurchaseHistoryResponse;
 import com.humaclab.lalteer.utils.SessionManager;
@@ -38,8 +36,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
-import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 
 public class PurchaseHistoryActivity extends AppCompatActivity {

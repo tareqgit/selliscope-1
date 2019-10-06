@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.humaclab.lalteer.R;
-import com.humaclab.lalteer.model.PromotionalAds.Result;
+import com.humaclab.lalteer.model.promotional_ads.Result;
 import com.humaclab.lalteer.utils.Constants;
 
 

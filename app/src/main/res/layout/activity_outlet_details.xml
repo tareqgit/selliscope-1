@@ -7,7 +7,7 @@
 
         <variable
             name="outletDetails_var"
-            type="com.humaclab.lalteer.model.Outlets.Outlet" />
+            type="com.humaclab.lalteer.model.outlets.Outlets.Outlet" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

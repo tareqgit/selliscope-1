@@ -140,7 +140,7 @@ public class MyDialog extends DialogFragment {
     }
 
 
-    void postAdvancePayments(AdvancePaymentsSendItem advancePaymentsItem){
+    private void postAdvancePayments(AdvancePaymentsSendItem advancePaymentsItem){
 
         Log.d("tareq_test" , "send "+new Gson().toJson(advancePaymentsItem));
         mApiService.postAdvancePayment(outletId,advancePaymentsItem).enqueue(new Callback<AdvancePaymentPostResponse>() {
@@ -148,12 +148,14 @@ public class MyDialog extends DialogFragment {
             public void onResponse(Call<AdvancePaymentPostResponse> call, Response<AdvancePaymentPostResponse> response) {
                 mBinding.loadingProgressBar.setVisibility(View.GONE);
                if(response.isSuccessful()){
-                   Toast.makeText(getActivity().getApplicationContext(), ""+response.body().getResult(), Toast.LENGTH_SHORT).show();
+                   if (response.body() != null) {
+                       Toast.makeText(getContext(), ""+response.body().getResult(), Toast.LENGTH_SHORT).show();
+                   }
 
                    mOnDismissListener.onDismiss(); //setting callback
                    dismiss(); //for closing dialog
                }else{
-                   Toast.makeText(getActivity().getApplicationContext(), "Internal Server Error"+ response.code(), Toast.LENGTH_SHORT).show();
+                   Toast.makeText(getContext(), "Internal Server Error"+ response.code(), Toast.LENGTH_SHORT).show();
                }
 
             }
@@ -161,7 +163,7 @@ public class MyDialog extends DialogFragment {
             @Override
             public void onFailure(Call<AdvancePaymentPostResponse> call, Throwable t) {
                 mBinding.loadingProgressBar.setVisibility(View.GONE);
-                Toast.makeText(getActivity().getApplicationContext(), ""+t.getMessage(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), ""+t.getMessage(), Toast.LENGTH_SHORT).show();
 
             }
         });

@@ -1,10 +1,9 @@
 package com.humaclab.lalteer.utils;
 
-import com.humaclab.lalteer.model.Dashboard.Access;
+import com.humaclab.lalteer.model.dashboard.Access;
 
 import io.realm.Realm;
 import io.realm.RealmQuery;
-import io.realm.RealmResults;
 
 public class RealmHelper {
     Realm realm;

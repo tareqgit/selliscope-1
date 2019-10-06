@@ -6,8 +6,6 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import androidx.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -21,16 +19,13 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
-import com.esafirm.imagepicker.features.ImagePicker;
-import com.esafirm.imagepicker.features.ReturnMode;
-import com.esafirm.imagepicker.model.Image;
 import com.google.gson.Gson;
 import com.humaclab.lalteer.R;
 import com.humaclab.lalteer.SelliscopeApiEndpointInterface;
 import com.humaclab.lalteer.SelliscopeApplication;
 import com.humaclab.lalteer.databinding.ActivityProfileBinding;
-import com.humaclab.lalteer.model.UpdateProfile.UpdateProfile;
-import com.humaclab.lalteer.model.UpdateProfile.UpdateProfileResponse;
+import com.humaclab.lalteer.model.update_profile.UpdateProfile;
+import com.humaclab.lalteer.model.update_profile.UpdateProfileResponse;
 import com.humaclab.lalteer.utils.SessionManager;
 
 

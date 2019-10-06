@@ -23,6 +23,7 @@ import com.humaclab.lalteer.SelliscopeApplication;
 import com.humaclab.lalteer.activity.OutletActivity;
 import com.humaclab.lalteer.performance.claim.ClaimActivity;
 import com.humaclab.lalteer.performance.claim.model.Claim;
+import com.humaclab.lalteer.performance.claim.model.ClaimPostResponse;
 import com.humaclab.lalteer.performance.claim.model.ClaimResponse;
 import com.humaclab.lalteer.performance.claim.model.ReasonItem;
 import com.humaclab.lalteer.room_lalteer.LalteerRoomDb;
@@ -47,10 +48,11 @@ public class ClaimRepository {
     private Context mContext;
     private LalteerRoomDb lalteerRoomDb;
     private final Executor executor;
+
     public ClaimRepository(Context context) {
         mContext = context;
 
-        executor=  Executors.newSingleThreadExecutor();
+        executor = Executors.newSingleThreadExecutor();
         //For Room
         lalteerRoomDb = (LalteerRoomDb) LalteerRoomDb.getInstance(context);
 
@@ -61,10 +63,9 @@ public class ClaimRepository {
     }
 
 
-
     public LiveData<List<ReasonItem>> getClaimResponseLiveData() {
         getReasonItems();
-        return   mClaimResponseLiveData = lalteerRoomDb.returnClaimReasonsDao().getAllReason();
+        return mClaimResponseLiveData = lalteerRoomDb.returnClaimReasonsDao().getAllReason();
     }
 
     private LiveData<List<ReasonItem>> getReasonItems() {
@@ -78,10 +79,10 @@ public class ClaimRepository {
                         //    mutableLiveData.setValue(response.body().getResult());
                         executor.execute(() -> lalteerRoomDb.returnClaimReasonsDao().deleteAll());
 
-                        for (ReasonItem reasonItem: response.body().getResult()   ) {
-                           executor.execute(()-> {
-                               lalteerRoomDb.returnClaimReasonsDao().insert(reasonItem);
-                           });
+                        for (ReasonItem reasonItem : response.body().getResult()) {
+                            executor.execute(() -> {
+                                lalteerRoomDb.returnClaimReasonsDao().insert(reasonItem);
+                            });
                         }
 
                     }
@@ -101,30 +102,28 @@ public class ClaimRepository {
     }
 
 
-    public void postClaim(Claim claim, ClaimPostListener claimPostListener){
+    public void postClaim(Claim claim, ClaimPostListener claimPostListener) {
         ConnectivityManager connectivityManager
                 = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
 
         if (activeNetworkInfo != null && activeNetworkInfo.isConnected()) {
-            Log.d("tareq_test", "ClaimRepository #108: postClaim:  "+ new Gson().toJson(claim));
 
-            apiService.sendClaim(claim).enqueue(new Callback<ResponseBody>() {
+
+            apiService.sendClaim(claim).enqueue(new Callback<ClaimPostResponse>() {
                 @Override
-                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                public void onResponse(Call<ClaimPostResponse> call, Response<ClaimPostResponse> response) {
 
-                    if(response.isSuccessful() && response.body()!=null){
+                    if (response.isSuccessful() && response.body() != null) {
 
-                            Toast.makeText(mContext, "Claim Send Successful", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mContext, "Claim Send Successful", Toast.LENGTH_SHORT).show();
 
                         Log.d("tareq_test", "ClaimRepository #114: onResponse:  success");
 
                         claimPostListener.onComplete();
 
-
-                        
                     }
-                    if( response.code()>=500 && response.code()<=599){
+                    if (response.code() >= 500 && response.code() <= 599) {
                         executor.execute(() -> lalteerRoomDb.returnClaimDao().insertClaim(claim));
                         Log.d("tareq_test", "ClaimRepository #118: onResponse:  stored in db");
 
@@ -135,14 +134,14 @@ public class ClaimRepository {
                 }
 
                 @Override
-                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                public void onFailure(Call<ClaimPostResponse> call, Throwable t) {
                     executor.execute(() -> lalteerRoomDb.returnClaimDao().insertClaim(claim));
                     Log.d("tareq_test", "ClaimRepository #125: onResponse:  stored in db");
                     Toast.makeText(mContext, "Claim queued Successful", Toast.LENGTH_SHORT).show();
                     claimPostListener.onComplete();
                 }
             });
-        }else{
+        } else {
             executor.execute(() -> lalteerRoomDb.returnClaimDao().insertClaim(claim));
             Log.d("tareq_test", "ClaimRepository #130: onResponse:  stored in db");
             Toast.makeText(mContext, "Claim queued Successful", Toast.LENGTH_SHORT).show();
@@ -152,7 +151,7 @@ public class ClaimRepository {
 
     }
 
-    public interface ClaimPostListener{
+    public interface ClaimPostListener {
         void onComplete();
 
 

@@ -1,52 +1,52 @@
 package com.humaclab.lalteer;
 
         import com.humaclab.lalteer.model.AddNewOrder;
-        import com.humaclab.lalteer.model.AppVersion.AppVersion;
+        import com.humaclab.lalteer.model.Login;
+        import com.humaclab.lalteer.model.app_version.AppVersion;
         import com.humaclab.lalteer.model.BrandResponse;
         import com.humaclab.lalteer.model.CategoryResponse;
         import com.humaclab.lalteer.model.CreateOutlet;
         import com.humaclab.lalteer.model.DeliverProductResponse;
         import com.humaclab.lalteer.model.DeliveryResponse;
-        import com.humaclab.lalteer.model.Diameter.DiameterResponse;
-        import com.humaclab.lalteer.model.District.DistrictResponse;
+        import com.humaclab.lalteer.model.diameter.DiameterResponse;
+        import com.humaclab.lalteer.model.district.DistrictResponse;
         import com.humaclab.lalteer.model.GodownRespons;
         import com.humaclab.lalteer.model.IMEIandVerison;
         import com.humaclab.lalteer.model.InspectionResponse;
         import com.humaclab.lalteer.model.OrderResponse;
-        import com.humaclab.lalteer.model.OutletType.OutletTypeResponse;
+        import com.humaclab.lalteer.model.outlet_type.OutletTypeResponse;
         import com.humaclab.lalteer.model.Payment;
         import com.humaclab.lalteer.model.PaymentResponse;
-        import com.humaclab.lalteer.model.Products.ProductResponse;
-        import com.humaclab.lalteer.model.PromotionalAds.PromotionalAds;
+        import com.humaclab.lalteer.model.outlets.Outlets;
+        import com.humaclab.lalteer.model.products.ProductResponse;
+        import com.humaclab.lalteer.model.promotional_ads.PromotionalAds;
         import com.humaclab.lalteer.model.advance_payment.AdvancePaymentPostResponse;
-        import com.humaclab.lalteer.model.advance_payment.AdvancePaymentsItem;
         import com.humaclab.lalteer.model.advance_payment.AdvancePaymentsSendItem;
         import com.humaclab.lalteer.model.advance_payment.AdvancedPaymentResponse;
         import com.humaclab.lalteer.model.checked_in_dealer.CheckedInDealerResponse;
         import com.humaclab.lalteer.model.purchase_history.PurchaseHistoryResponse;
-        import com.humaclab.lalteer.model.RoutePlan.RouteDetailsResponse;
-        import com.humaclab.lalteer.model.RoutePlan.RouteResponse;
+        import com.humaclab.lalteer.model.route_plan.RouteDetailsResponse;
+        import com.humaclab.lalteer.model.route_plan.RouteResponse;
         import com.humaclab.lalteer.model.SellsReturnResponse;
-        import com.humaclab.lalteer.model.Target.OutletTarget;
-        import com.humaclab.lalteer.model.Thana.ThanaResponse;
-        import com.humaclab.lalteer.model.UpdatePassword.ChangePassword;
-        import com.humaclab.lalteer.model.UpdatePassword.ChangePasswordResponse;
-        import com.humaclab.lalteer.model.UpdateProfile.UpdateProfile;
-        import com.humaclab.lalteer.model.UpdateProfile.UpdateProfileResponse;
+        import com.humaclab.lalteer.model.target.OutletTarget;
+        import com.humaclab.lalteer.model.thana.ThanaResponse;
+        import com.humaclab.lalteer.model.update_password.ChangePassword;
+        import com.humaclab.lalteer.model.update_password.ChangePasswordResponse;
+        import com.humaclab.lalteer.model.update_profile.UpdateProfile;
+        import com.humaclab.lalteer.model.update_profile.UpdateProfileResponse;
         import com.humaclab.lalteer.model.UserLocation;
         import com.humaclab.lalteer.model.performance.orders_model.PerformanceOrderResponse;
         import com.humaclab.lalteer.model.performance.paymentsModel.PaymentsResponse;
         import com.humaclab.lalteer.performance.claim.model.Claim;
+        import com.humaclab.lalteer.performance.claim.model.ClaimPostResponse;
         import com.humaclab.lalteer.performance.claim.model.ClaimResponse;
 
         import io.reactivex.Single;
         import okhttp3.ResponseBody;
         import retrofit2.Call;
-        import retrofit2.Callback;
         import retrofit2.Response;
         import retrofit2.http.Body;
         import retrofit2.http.GET;
-        import retrofit2.http.Headers;
         import retrofit2.http.POST;
         import retrofit2.http.PUT;
         import retrofit2.http.Path;
@@ -60,7 +60,7 @@ public interface SelliscopeApiEndpointInterface {
     //GET methods
 
     @GET("dealers")
-    Single<Response<ResponseBody>> getOutlets();
+    Single<Response<Outlets>> getOutlets();
 
     @GET("category")
     Single<Response<CategoryResponse>> getCategories();
@@ -133,7 +133,7 @@ public interface SelliscopeApiEndpointInterface {
     //POST methods
 
     @GET("login")
-    Single<Response<ResponseBody>> getUser();
+    Single<Response<Login.Successful>> getUser();
 
     @GET("app-version")
     Single<Response<AppVersion>> getAppsversion();
@@ -202,5 +202,5 @@ public interface SelliscopeApiEndpointInterface {
     Call<ClaimResponse> getClaimReasons();
 
     @POST("claim/store")
-    Call<ResponseBody> sendClaim(@Body Claim claim);
+    Call<ClaimPostResponse> sendClaim(@Body Claim claim);
 }

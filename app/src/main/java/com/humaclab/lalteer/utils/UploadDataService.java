@@ -16,6 +16,7 @@ import com.humaclab.lalteer.SelliscopeApiEndpointInterface;
 import com.humaclab.lalteer.SelliscopeApplication;
 import com.humaclab.lalteer.model.AddNewOrder;
 import com.humaclab.lalteer.performance.claim.model.Claim;
+import com.humaclab.lalteer.performance.claim.model.ClaimPostResponse;
 import com.humaclab.lalteer.room_lalteer.LalteerRoomDb;
 
 import java.util.List;
@@ -153,9 +154,9 @@ public class UploadDataService {
     private void uploadClaimsToServer(UploadCompleteListener uploadCompleteListener) {
         List<Claim> claimList = lalteerRoomDb.returnClaimDao().getClaimList();
         for (Claim claim : claimList) {
-            apiService.sendClaim(claim).enqueue(new Callback<ResponseBody>() {
+            apiService.sendClaim(claim).enqueue(new Callback<ClaimPostResponse>() {
                 @Override
-                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                public void onResponse(Call<ClaimPostResponse> call, Response<ClaimPostResponse> response) {
                     if(response.isSuccessful()){
                       executor.execute(()->  lalteerRoomDb.returnClaimDao().deleteClaim(claim));
 
@@ -168,7 +169,7 @@ public class UploadDataService {
                 }
 
                 @Override
-                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                public void onFailure(Call<ClaimPostResponse> call, Throwable t) {
                     if (uploadCompleteListener != null)
                         uploadCompleteListener.uploadFailed("Claim send Failed Bad response:" + t.getMessage());
                 }

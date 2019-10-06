@@ -7,19 +7,17 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
-import androidx.databinding.ObservableList;
-
 import com.google.gson.Gson;
 import com.humaclab.lalteer.dbmodel.Target;
 import com.humaclab.lalteer.dbmodel.UserVisit;
 import com.humaclab.lalteer.model.AddNewOrder;
 import com.humaclab.lalteer.model.DeliveryResponse;
-import com.humaclab.lalteer.model.District.District;
-import com.humaclab.lalteer.model.OutletType.OutletType;
-import com.humaclab.lalteer.model.Outlets;
-import com.humaclab.lalteer.model.Products.Product;
-import com.humaclab.lalteer.model.RoutePlan.RouteDetailsResponse;
-import com.humaclab.lalteer.model.Thana.Thana;
+import com.humaclab.lalteer.model.district.District;
+import com.humaclab.lalteer.model.outlet_type.OutletType;
+import com.humaclab.lalteer.model.outlets.Outlets;
+import com.humaclab.lalteer.model.products.Product;
+import com.humaclab.lalteer.model.route_plan.RouteDetailsResponse;
+import com.humaclab.lalteer.model.thana.Thana;
 import com.humaclab.lalteer.model.variant_product.Brand;
 import com.humaclab.lalteer.model.variant_product.Category;
 import com.humaclab.lalteer.model.variant_product.ProductsItem;

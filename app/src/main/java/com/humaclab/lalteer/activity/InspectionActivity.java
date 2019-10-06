@@ -32,7 +32,7 @@ import com.humaclab.lalteer.SelliscopeApiEndpointInterface;
 import com.humaclab.lalteer.SelliscopeApplication;
 import com.humaclab.lalteer.databinding.ActivityInspectionBinding;
 import com.humaclab.lalteer.model.InspectionResponse;
-import com.humaclab.lalteer.model.Outlets;
+import com.humaclab.lalteer.model.outlets.Outlets;
 import com.humaclab.lalteer.utils.AccessPermission;
 import com.humaclab.lalteer.utils.SessionManager;
 
@@ -174,23 +174,24 @@ public class InspectionActivity extends AppCompatActivity {
 
         apiService.getOutlets().subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new SingleObserver<Response<ResponseBody>>() {
+                .subscribe(new SingleObserver<Response<Outlets>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
 
                     }
 
                     @Override
-                    public void onSuccess(Response<ResponseBody> response) {
-                        Gson gson = new Gson();
+                    public void onSuccess(Response<Outlets> response) {
+
                         if (response.code() == 200) {
-                            try {
-                                Outlets getOutletListSuccessful = gson.fromJson(response.body().string(), Outlets.class);
-                                if (!getOutletListSuccessful.outletsResult.outlets.isEmpty()) {
+
+
+                            if (response.body() != null) {
+                                if (!response.body().outletsResult.outlets.isEmpty()) {
                                     outletIDs = new ArrayList<>();
                                     outletNames = new ArrayList<>();
 
-                                    for (Outlets.Outlet outlet : getOutletListSuccessful.outletsResult.outlets) {
+                                    for (Outlets.Outlet outlet : response.body().outletsResult.outlets) {
                                         outletIDs.add(outlet.outletId);
                                         outletNames.add(outlet.outletName);
                                     }
@@ -201,9 +202,8 @@ public class InspectionActivity extends AppCompatActivity {
                                 } else {
                                     Toast.makeText(getApplicationContext(), "You don't have any outlet in your list.", Toast.LENGTH_LONG).show();
                                 }
-                            } catch (IOException e) {
-                                e.printStackTrace();
                             }
+
                         } else if (response.code() == 401) {
                             Toast.makeText(InspectionActivity.this, "Invalid Response from server.", Toast.LENGTH_SHORT).show();
                         } else {
@@ -216,6 +216,9 @@ public class InspectionActivity extends AppCompatActivity {
 
                     }
                 });
+
+
+
        /* call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {

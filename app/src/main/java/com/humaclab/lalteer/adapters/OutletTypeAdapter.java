@@ -9,7 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.humaclab.lalteer.R;
-import com.humaclab.lalteer.model.OutletType.OutletType;
+import com.humaclab.lalteer.model.outlet_type.OutletType;
 
 import java.util.List;
 

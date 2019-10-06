@@ -18,7 +18,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
 import android.provider.Settings;
 
 import androidx.annotation.NonNull;
@@ -66,8 +65,8 @@ import com.humaclab.lalteer.SelliscopeApplication;
 import com.humaclab.lalteer.fragment.DashboardFragment;
 import com.humaclab.lalteer.fragment.PerformanceFragment;
 import com.humaclab.lalteer.fragment.TargetFragment;
-import com.humaclab.lalteer.model.AppVersion.AppVersion;
-import com.humaclab.lalteer.model.Diameter.DiameterResponse;
+import com.humaclab.lalteer.model.app_version.AppVersion;
+import com.humaclab.lalteer.model.diameter.DiameterResponse;
 import com.humaclab.lalteer.receiver.InternetConnectivityChangeReceiver;
 import com.humaclab.lalteer.utils.Constants;
 import com.humaclab.lalteer.utils.DatabaseHandler;
@@ -87,10 +86,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
-import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
-import timber.log.Timber;
 
 import static android.provider.Settings.Secure.LOCATION_MODE_HIGH_ACCURACY;
 import static com.humaclab.lalteer.R.id.content_fragment;
@@ -280,7 +276,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        final LocationSettingsStates states = LocationSettingsStates.fromIntent(intent);
+    //    final LocationSettingsStates states = LocationSettingsStates.fromIntent(intent);
         switch (requestCode) {
             case REQUEST_CHECK_SETTINGS:
                 switch (resultCode) {

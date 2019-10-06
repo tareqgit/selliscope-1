@@ -12,9 +12,10 @@ import android.view.ViewGroup;
 import com.humaclab.lalteer.R;
 import com.humaclab.lalteer.activity.PurchasedProductListActivity;
 import com.humaclab.lalteer.databinding.ItemPurchaseHistoryBinding;
-import com.humaclab.lalteer.model.Outlets;
+import com.humaclab.lalteer.model.outlets.Outlets;
 import com.humaclab.lalteer.model.purchase_history.PurchaseHistoryItem;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -23,7 +24,7 @@ import java.util.List;
 
 public class PurchaseHistoryRecyclerAdapter extends RecyclerView.Adapter<PurchaseHistoryRecyclerAdapter.PurchaseHistoryViewHolder> {
     private Context context;
-    private List<PurchaseHistoryItem> purchaseHistoryItemList;
+    private List<PurchaseHistoryItem> purchaseHistoryItemList= new ArrayList<>();
     private Outlets.Outlet outlet;
 
     public PurchaseHistoryRecyclerAdapter(Context context, List<PurchaseHistoryItem> purchaseHistoryItems, Outlets.Outlet outlet) {

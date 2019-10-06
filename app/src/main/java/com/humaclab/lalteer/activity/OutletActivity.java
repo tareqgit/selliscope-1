@@ -10,7 +10,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
-import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -23,18 +22,16 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
 import com.humaclab.lalteer.R;
 import com.humaclab.lalteer.SelliscopeApiEndpointInterface;
 import com.humaclab.lalteer.SelliscopeApplication;
 import com.humaclab.lalteer.adapters.OutletRecyclerViewAdapter;
 import com.humaclab.lalteer.databinding.ActivityOutletBinding;
-import com.humaclab.lalteer.model.Outlets;
-import com.humaclab.lalteer.model.RoutePlan.RouteDetailsResponse;
-import com.humaclab.lalteer.model.RoutePlan.RouteResponse;
+import com.humaclab.lalteer.model.outlets.Outlets;
+import com.humaclab.lalteer.model.route_plan.RouteDetailsResponse;
+import com.humaclab.lalteer.model.route_plan.RouteResponse;
 import com.humaclab.lalteer.model.checked_in_dealer.CheckedInDealerResponse;
 import com.humaclab.lalteer.performance.claim.ClaimActivity;
-import com.humaclab.lalteer.performance.claim.model.Claim;
 import com.humaclab.lalteer.utils.DatabaseHandler;
 import com.humaclab.lalteer.utils.LoadLocalIntoBackground;
 import com.humaclab.lalteer.utils.NetworkUtility;
@@ -50,8 +47,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
-import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 
 public class OutletActivity extends AppCompatActivity {

@@ -15,15 +15,13 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
-import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 
 import com.humaclab.lalteer.R;
 import com.humaclab.lalteer.SelliscopeApiEndpointInterface;
 import com.humaclab.lalteer.SelliscopeApplication;
 import com.humaclab.lalteer.adapters.PromotionalAdsAdapter;
-import com.humaclab.lalteer.model.PromotionalAds.PromotionalAds;
+import com.humaclab.lalteer.model.promotional_ads.PromotionalAds;
 import com.humaclab.lalteer.utils.SessionManager;
 
 public class PromotionalAdsActivity extends AppCompatActivity {

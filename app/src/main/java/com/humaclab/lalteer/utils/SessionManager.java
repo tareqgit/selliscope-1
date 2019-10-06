@@ -8,7 +8,6 @@ import android.util.Log;
 
 import com.humaclab.lalteer.activity.HomeActivity;
 import com.humaclab.lalteer.activity.LoginActivity;
-import com.humaclab.lalteer.model.UpdateProfile.UpdateProfileResponse;
 
 import java.util.HashMap;
 

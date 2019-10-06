@@ -11,7 +11,7 @@ import android.widget.TextView;
 import com.humaclab.lalteer.R;
 import com.humaclab.lalteer.adapters.PurchasedProductRecyclerAdapter;
 import com.humaclab.lalteer.databinding.ActivityPurchasedProductListBinding;
-import com.humaclab.lalteer.model.Outlets;
+import com.humaclab.lalteer.model.outlets.Outlets;
 import com.humaclab.lalteer.model.purchase_history.PurchaseHistoryItem;
 import com.humaclab.lalteer.utils.SessionManager;
 // Purches History specific All Data

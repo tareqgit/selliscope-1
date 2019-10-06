@@ -1,12 +1,13 @@
 package com.humaclab.lalteer.performance.claim.model;
 
-        import androidx.room.ColumnInfo;
-        import androidx.room.Entity;
-        import androidx.room.PrimaryKey;
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.Ignore;
+import androidx.room.PrimaryKey;
 
-        import javax.annotation.Generated;
+import javax.annotation.Generated;
 
-        import com.google.gson.annotations.SerializedName;
+import com.google.gson.annotations.SerializedName;
 
 @Generated("com.robohorse.robopojogenerator")
 
@@ -22,6 +23,7 @@ public class ReasonItem {
     @SerializedName("id")
     private int id;
 
+    @Ignore
     public ReasonItem() {
     }
 

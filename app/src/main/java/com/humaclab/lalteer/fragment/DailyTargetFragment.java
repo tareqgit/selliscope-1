@@ -19,7 +19,7 @@ import com.humaclab.lalteer.SelliscopeApiEndpointInterface;
 import com.humaclab.lalteer.SelliscopeApplication;
 import com.humaclab.lalteer.adapters.TargetRecyclerViewAdapter;
 import com.humaclab.lalteer.dbmodel.Target;
-import com.humaclab.lalteer.model.Target.OutletTarget;
+import com.humaclab.lalteer.model.target.OutletTarget;
 import com.humaclab.lalteer.model.TargetItem;
 import com.humaclab.lalteer.model.Targets;
 import com.humaclab.lalteer.utils.DatabaseHandler;
@@ -35,8 +35,6 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 
 /**

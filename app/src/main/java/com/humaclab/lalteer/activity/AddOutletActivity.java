@@ -8,7 +8,7 @@ import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import androidx.annotation.Nullable;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -24,9 +24,7 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.google.android.gms.awareness.Awareness;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationServices;
 import com.google.gson.Gson;
 import com.humaclab.lalteer.R;
 import com.humaclab.lalteer.SelliscopeApiEndpointInterface;
@@ -35,14 +33,13 @@ import com.humaclab.lalteer.adapters.DistrictAdapter;
 import com.humaclab.lalteer.adapters.OutletTypeAdapter;
 import com.humaclab.lalteer.adapters.ThanaAdapter;
 import com.humaclab.lalteer.model.CreateOutlet;
-import com.humaclab.lalteer.model.District.District;
-import com.humaclab.lalteer.model.OutletType.OutletType;
-import com.humaclab.lalteer.model.Thana.Thana;
+import com.humaclab.lalteer.model.district.District;
+import com.humaclab.lalteer.model.outlet_type.OutletType;
+import com.humaclab.lalteer.model.thana.Thana;
 import com.humaclab.lalteer.utils.AccessPermission;
 import com.humaclab.lalteer.utils.DatabaseHandler;
 import com.humaclab.lalteer.utils.LoadLocalIntoBackground;
 import com.humaclab.lalteer.utils.NetworkUtility;
-import com.humaclab.lalteer.utils.SendUserLocationData;
 import com.humaclab.lalteer.utils.SessionManager;
 
 import java.io.ByteArrayOutputStream;
@@ -55,10 +52,7 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
-import timber.log.Timber;
 
 /**
  * Created by leon on 11/19/17.

@@ -9,6 +9,7 @@ package com.humaclab.lalteer.service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.util.Log;
 
 import com.humaclab.lalteer.LocationMonitoringService;
@@ -24,7 +25,9 @@ public class LocationServiceRestarterBroadcastReceiver extends BroadcastReceiver
         try {
             context.startService(new Intent(context, LocationMonitoringService.class));
         } catch (Exception e) {
-
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                context.startForegroundService(new Intent(context, LocationMonitoringService.class));
+            }
         }
     }
 }

@@ -28,7 +28,6 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.facebook.shimmer.Shimmer;
 import com.facebook.shimmer.ShimmerDrawable;
-import com.google.android.gms.awareness.Awareness;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.gson.Gson;
@@ -39,7 +38,7 @@ import com.humaclab.lalteer.activity.OutletActivity;
 import com.humaclab.lalteer.activity.OutletDetailsActivity;
 import com.humaclab.lalteer.activity.OutletMapActivity;
 import com.humaclab.lalteer.activity.PurchaseHistoryActivity;
-import com.humaclab.lalteer.model.Outlets;
+import com.humaclab.lalteer.model.outlets.Outlets;
 import com.humaclab.lalteer.model.UserLocation;
 import com.humaclab.lalteer.model.checked_in_dealer.CheckedInDealerResponse;
 import com.humaclab.lalteer.utils.Constants;
@@ -232,30 +231,34 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
 
                     @Override
                     public void onSuccess(Response<CheckedInDealerResponse> checkedInDealerResponseResponse) {
-                        List<Integer> outletIDLists = new ArrayList<>(checkedInDealerResponseResponse.body().getDealerIds());
-                        List<String> phoneNoLists = new ArrayList<>();
+                        List<Integer> outletIDLists = null;
+                        if (checkedInDealerResponseResponse.body() != null) {
+                            outletIDLists = new ArrayList<>(checkedInDealerResponseResponse.body().getDealerIds());
 
-                        String phoneNo="";
-                        if (databaseHandler.getAllOutletById(outletId) != null) {
-                            phoneNo = databaseHandler.getAllOutletById(outletId).phone;
-                        }
+                            List<String> phoneNoLists = new ArrayList<>();
 
-                        for (Integer outletId : outletIDLists) {
+                            String phoneNo = "";
                             if (databaseHandler.getAllOutletById(outletId) != null) {
-                                phoneNoLists.add(databaseHandler.getAllOutletById(outletId).phone);
+                                phoneNo = databaseHandler.getAllOutletById(outletId).phone;
                             }
-                        }
 
-                        if(phoneNoLists.contains(phoneNo)){
-                          //  Toast.makeText(context, "You are already checked in", Toast.LENGTH_SHORT).show();
-                            new  Flashbar.Builder(activity)
-                                    .gravity(Flashbar.Gravity.TOP)
-                                    .message("You have already checked in.")
-                                    .backgroundDrawable(R.drawable.moss_gradient)
-                                    .duration(3000)
-                                    .build().show();
-                            progressbar.setVisibility(View.INVISIBLE);
-                        }else{
+                            for (Integer outletId : outletIDLists) {
+                                if (databaseHandler.getAllOutletById(outletId) != null) {
+                                    phoneNoLists.add(databaseHandler.getAllOutletById(outletId).phone);
+                                }
+                            }
+                            if (phoneNoLists.contains(phoneNo)) {
+                                //  Toast.makeText(context, "You are already checked in", Toast.LENGTH_SHORT).show();
+                                new Flashbar.Builder(activity)
+                                        .gravity(Flashbar.Gravity.TOP)
+                                        .message("You have already checked in.")
+                                        .backgroundDrawable(R.drawable.moss_gradient)
+                                        .duration(3000)
+                                        .build().show();
+                                progressbar.setVisibility(View.INVISIBLE);
+                            }
+
+                        } else {
                             SendUserLocationData sendUserLocationData = new SendUserLocationData(context);
                             sendUserLocationData.getInstantLocation(activity, new SendUserLocationData.OnGetLocation() {
                                 @Override
@@ -274,8 +277,8 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
                                         }
                                     } else {
                                         progressbar.setVisibility(View.INVISIBLE);
-                                       // Toast.makeText(context, "You are not within 70m radius of the outlet.", Toast.LENGTH_SHORT).show();
-                                        new  Flashbar.Builder(activity)
+                                        // Toast.makeText(context, "You are not within 70m radius of the outlet.", Toast.LENGTH_SHORT).show();
+                                        new Flashbar.Builder(activity)
                                                 .gravity(Flashbar.Gravity.TOP)
                                                 .title("Sorry!")
                                                 .message("You are not within 70m radius of the outlet.")
@@ -289,14 +292,13 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
                         }
 
 
-                        }
+                    }
 
                     @Override
                     public void onError(Throwable e) {
-                        Log.e("tareq_test", "OutletRecyclerViewAdapter #276: onError:  "+ e.getMessage());
+                        Log.e("tareq_test", "OutletRecyclerViewAdapter #276: onError:  " + e.getMessage());
                     }
                 });
-
 
 
     }
@@ -325,9 +327,9 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
 
                         if (userLocationSuccess != null) {
                             if (userLocationSuccess.msg.equals("")) { // To check if the user already checked in the outlet
-                             //   Toast.makeText(context, "You are checked in.", Toast.LENGTH_SHORT).show();
+                                //   Toast.makeText(context, "You are checked in.", Toast.LENGTH_SHORT).show();
 
-                                new  Flashbar.Builder(activity)
+                                new Flashbar.Builder(activity)
                                         .gravity(Flashbar.Gravity.TOP)
                                         .title("Congrats!")
                                         .message("You are successfully checked in.")
@@ -340,8 +342,8 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
                                 ((OutletActivity) context).getRoute();//For reloading the outlet recycler view
                                 ((OutletActivity) context).getOutlets();//For reloading the outlet recycler view
                             } else {
-                      //          Toast.makeText(context, "You already checked in.", Toast.LENGTH_SHORT).show();
-                              new  Flashbar.Builder(activity)
+                                //          Toast.makeText(context, "You already checked in.", Toast.LENGTH_SHORT).show();
+                                new Flashbar.Builder(activity)
                                         .gravity(Flashbar.Gravity.TOP)
                                         .message("You already checked in.")
                                         .backgroundDrawable(R.drawable.moss_gradient)
@@ -413,8 +415,9 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
     }
 
 
-    public interface CheckInListener{
+    public interface CheckInListener {
         public void onSuccess();
+
         public void onFail();
     }
 }

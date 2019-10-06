@@ -1,7 +1,7 @@
 package com.humaclab.lalteer.model;
 
 import com.google.gson.annotations.SerializedName;
-import com.humaclab.lalteer.model.Dashboard.Access;
+import com.humaclab.lalteer.model.dashboard.Access;
 
 import java.util.List;
 

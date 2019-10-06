@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.humaclab.lalteer.R;
 import com.humaclab.lalteer.databinding.ActivityCallCardBinding;
-import com.humaclab.lalteer.model.Outlets;
+import com.humaclab.lalteer.model.outlets.Outlets;
 
 public class CallCardActivity extends AppCompatActivity {
     private ActivityCallCardBinding binding;

@@ -31,8 +31,8 @@ import com.humaclab.lalteer.SelliscopeApiEndpointInterface;
 import com.humaclab.lalteer.SelliscopeApplication;
 import com.humaclab.lalteer.adapters.AdvancePaymentAdapter;
 import com.humaclab.lalteer.databinding.ActivityOutletDetailsBinding;
-import com.humaclab.lalteer.model.Outlets;
-import com.humaclab.lalteer.model.Target.OutletTarget;
+import com.humaclab.lalteer.model.outlets.Outlets;
+import com.humaclab.lalteer.model.target.OutletTarget;
 import com.humaclab.lalteer.model.advance_payment.AdvancePaymentsItem;
 import com.humaclab.lalteer.model.advance_payment.AdvancedPaymentResponse;
 import com.humaclab.lalteer.utils.Constants;
@@ -49,8 +49,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
-import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 
 public class OutletDetailsActivity extends AppCompatActivity {

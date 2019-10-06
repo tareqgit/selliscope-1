@@ -17,8 +17,8 @@ import com.humaclab.lalteer.R;
 import com.humaclab.lalteer.SelliscopeApiEndpointInterface;
 import com.humaclab.lalteer.SelliscopeApplication;
 import com.humaclab.lalteer.databinding.ActivityChangePasswordBinding;
-import com.humaclab.lalteer.model.UpdatePassword.ChangePassword;
-import com.humaclab.lalteer.model.UpdatePassword.ChangePasswordResponse;
+import com.humaclab.lalteer.model.update_password.ChangePassword;
+import com.humaclab.lalteer.model.update_password.ChangePasswordResponse;
 import com.humaclab.lalteer.utils.SessionManager;
 
 import retrofit2.Call;

@@ -6,8 +6,10 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.os.Bundle;
+
 import androidx.core.app.ActivityCompat;
 import androidx.appcompat.app.AppCompatActivity;
+
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
@@ -61,6 +63,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private Realm realm;
     private Login.Successful.LoginResult loginResult;
     private CompositeDisposable mCompositeDisposable = new CompositeDisposable();
+
     public final static boolean isValidEmail(CharSequence target) {
         if (target == null) {
             return false;
@@ -170,37 +173,34 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         apiService = SelliscopeApplication.getRetrofitInstance(email, password, true)
                 .create(SelliscopeApiEndpointInterface.class);
         apiService.getUser().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new SingleObserver<Response<ResponseBody>>() {
+                .subscribe(new SingleObserver<Response<Login.Successful>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
-                        if(mCompositeDisposable!=null) mCompositeDisposable.add(d);
+                        if (mCompositeDisposable != null) mCompositeDisposable.add(d);
                     }
 
                     @Override
-                    public void onSuccess(Response<ResponseBody> response) {
+                    public void onSuccess(Response<Login.Successful> response) {
                         Gson gson = new Gson();
                         if (response.code() == 200) {
-                            try {
-
-                                loginResult = new Login.Successful().result;
-
-                                Login.Successful loginSuccessful = gson.fromJson(response.body().string()
-                                        , Login.Successful.class);
 
 
-                                loginResult = loginSuccessful.result;
-
+                            if (response.body() != null) {
                                 realm.beginTransaction();
-                                realm.copyToRealmOrUpdate(loginSuccessful.result.access);
+
+                                realm.copyToRealmOrUpdate(response.body().result.access);
+
                                 realm.commitTransaction();
-                                realm.close();
+                                if (!realm.isClosed()) realm.close();
+
+
                                 sessionManager.createLoginSession(
-                                        loginSuccessful.result.user.name,
-                                        loginSuccessful.result.clientId,
-                                        loginSuccessful.result.user.profilePictureUrl,
-                                        loginSuccessful.result.user.dob,
-                                        loginSuccessful.result.user.gender,
-                                        loginSuccessful.result.user.address,
+                                        response.body().result.user.name,
+                                        response.body().result.clientId,
+                                        response.body().result.user.profilePictureUrl,
+                                        response.body().result.user.dob,
+                                        response.body().result.user.gender,
+                                        response.body().result.user.address,
                                         email,
                                         password
                                 );
@@ -214,11 +214,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                 sendIMEIAndVersion();
                                 startActivity(new Intent(LoginActivity.this, LoadingActivity.class));
                                 finish();
-
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                                Toast.makeText(LoginActivity.this, "Exc: "+ e.getMessage(), Toast.LENGTH_SHORT).show();
                             }
+
                         } else if (response.code() == 401) {
                             try {
                                 loginProgresssBar.setVisibility(View.INVISIBLE);
@@ -230,7 +227,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         } else {
                             loginProgresssBar.setVisibility(View.INVISIBLE);
                             Toast.makeText(LoginActivity.this,
-                                    response.code()+
+                                    response.code() +
                                             " Server Error! Try Again Later!", Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -245,24 +242,24 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             imeIandVerison.setIMEIcode(telephonyManager.getDeviceId());
                             imeIandVerison.setAppVersion(BuildConfig.VERSION_NAME);
                             System.out.println("IMEI and version: " + new Gson().toJson(imeIandVerison));
-                             apiService.sendIMEIAndVersion(imeIandVerison).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                                     .subscribe(new SingleObserver<Response<ResponseBody>>() {
-                                         @Override
-                                         public void onSubscribe(Disposable d) {
-                                             if(mCompositeDisposable!=null)
-                                                 mCompositeDisposable.add(d);
-                                         }
+                            apiService.sendIMEIAndVersion(imeIandVerison).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                                    .subscribe(new SingleObserver<Response<ResponseBody>>() {
+                                        @Override
+                                        public void onSubscribe(Disposable d) {
+                                            if (mCompositeDisposable != null)
+                                                mCompositeDisposable.add(d);
+                                        }
 
-                                         @Override
-                                         public void onSuccess(Response<ResponseBody> response) {
-                                             Log.d("tareq_test", "LoginActivity #255: onSuccess:  Success");
-                                         }
+                                        @Override
+                                        public void onSuccess(Response<ResponseBody> response) {
+                                            Log.d("tareq_test", "LoginActivity #255: onSuccess:  Success");
+                                        }
 
-                                         @Override
-                                         public void onError(Throwable e) {
+                                        @Override
+                                        public void onError(Throwable e) {
 
-                                         }
-                                     });
+                                        }
+                                    });
 
                         }
                     }
@@ -271,9 +268,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     public void onError(Throwable e) {
                         loginProgresssBar.setVisibility(View.INVISIBLE);
                         Log.e("tareq_test", "Error on Login: " + e.getMessage());
-                        if(Constants.BASE_URL.equals(Constants.BASE_URL_HTTPS)) {
+                        if (Constants.BASE_URL.equals(Constants.BASE_URL_HTTPS)) {
                             Constants.BASE_URL = Constants.BASE_URL_HTTP;
-                        }else{
+                        } else {
                             Constants.BASE_URL = Constants.BASE_URL_HTTPS;
                         }
                         getUser(email.trim(), password.trim());

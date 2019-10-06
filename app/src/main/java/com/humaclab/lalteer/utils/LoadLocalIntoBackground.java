@@ -8,17 +8,16 @@ import com.humaclab.lalteer.SelliscopeApiEndpointInterface;
 import com.humaclab.lalteer.SelliscopeApplication;
 import com.humaclab.lalteer.model.BrandResponse;
 import com.humaclab.lalteer.model.CategoryResponse;
-import com.humaclab.lalteer.model.District.DistrictResponse;
-import com.humaclab.lalteer.model.OutletType.OutletTypeResponse;
-import com.humaclab.lalteer.model.Outlets;
-import com.humaclab.lalteer.model.Products.Product;
-import com.humaclab.lalteer.model.Products.ProductResponse;
-import com.humaclab.lalteer.model.RoutePlan.RouteDetailsResponse;
-import com.humaclab.lalteer.model.Thana.ThanaResponse;
+import com.humaclab.lalteer.model.district.DistrictResponse;
+import com.humaclab.lalteer.model.outlet_type.OutletTypeResponse;
+import com.humaclab.lalteer.model.outlets.Outlets;
+import com.humaclab.lalteer.model.products.Product;
+import com.humaclab.lalteer.model.products.ProductResponse;
+import com.humaclab.lalteer.model.route_plan.RouteDetailsResponse;
+import com.humaclab.lalteer.model.thana.ThanaResponse;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 import javax.annotation.Nullable;
@@ -29,10 +28,7 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
-import timber.log.Timber;
 
 /**
  * Created by leon on 29/11/17.
@@ -337,24 +333,24 @@ public class LoadLocalIntoBackground {
         apiService.getOutlets()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new SingleObserver<Response<ResponseBody>>() {
+                .subscribe(new SingleObserver<Response<Outlets>>() {
                     @Override
                     public void onSubscribe(Disposable d) {
                         if (mCompositeDisposable != null) mCompositeDisposable.add(d);
                     }
 
                     @Override
-                    public void onSuccess(Response<ResponseBody> response) {
+                    public void onSuccess(Response<Outlets> response) {
                         Gson gson = new Gson();
                         if (response.code() == 200) {
-                            try {
+                    //        try {
 
                                 if (response.body() != null) {
-                                    final   Outlets      getOutletListSuccessful = gson.fromJson(response.body().string(), Outlets.class);
+                                    //final   Outlets      getOutletListSuccessful = gson.fromJson(response.body().string(), Outlets.class);
 
-                                    if (getOutletListSuccessful != null) {
+                                    if (response.body().outletsResult.outlets != null) {
                                         Executors.newSingleThreadExecutor().execute(() -> {
-                                            databaseHandler.addOutlet(getOutletListSuccessful.outletsResult.outlets);
+                                            databaseHandler.addOutlet(response.body().outletsResult.outlets);
                                         });
 
                                     }
@@ -377,11 +373,11 @@ public class LoadLocalIntoBackground {
 
                                 if (loadCompleteListener != null)
                                     loadCompleteListener.onLoadComplete();
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                                if (loadCompleteListener != null)
-                                    loadCompleteListener.onLoadFailed("Load Outlets: " + e.getMessage());
-                            }
+                         //   } catch (IOException e) {
+                          //      e.printStackTrace();
+                         //       if (loadCompleteListener != null)
+                         //           loadCompleteListener.onLoadFailed("Load Outlets: " + e.getMessage());
+                        //    }
                         }
                     }
 

@@ -9,7 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.humaclab.lalteer.R;
-import com.humaclab.lalteer.model.District.District;
+import com.humaclab.lalteer.model.district.District;
 
 import java.util.List;
 

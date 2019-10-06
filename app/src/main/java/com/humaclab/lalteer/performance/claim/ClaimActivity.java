@@ -64,15 +64,15 @@ public class ClaimActivity extends AppCompatActivity {
             @Override
             public void onChanged(List<ReasonItem> reasonItems) {
                 mBinding.radioGroup.removeAllViews();
-                int i=1;
+
                 for (ReasonItem reasonItem : reasonItems) {
                     AppCompatRadioButton radioButton = new AppCompatRadioButton(mContext);
-                    radioButton.setId(i);
+                    radioButton.setId(reasonItem.getId());
                     radioButton.setText(reasonItem.getName());
                     LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, 1f);
                     radioButton.setLayoutParams(params);
                     mBinding.radioGroup.addView(radioButton);
-                    i++;
+
                 }
                 AppCompatRadioButton radioButton = new AppCompatRadioButton(mContext);
                 radioButton.setId(0);

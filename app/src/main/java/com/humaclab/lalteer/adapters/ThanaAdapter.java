@@ -9,7 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.humaclab.lalteer.R;
-import com.humaclab.lalteer.model.Thana.Thana;
+import com.humaclab.lalteer.model.thana.Thana;
 
 import java.util.List;
 

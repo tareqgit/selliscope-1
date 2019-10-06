@@ -21,7 +21,7 @@ import com.humaclab.lalteer.performance.claim.repository.dao.ClaimReasonDAO;
  * Created by mtita on 30,September,2019.
  */
 
-@Database(entities = {ReasonItem.class, Claim.class}, version = 1)
+@Database(entities = {ReasonItem.class, Claim.class}, version = 1, exportSchema = false)
 public abstract class LalteerRoomDb extends RoomDatabase {
 
     private static volatile RoomDatabase INSTANCE;

@@ -21,7 +21,6 @@ import android.provider.Settings;
 import androidx.annotation.ColorInt;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.appcompat.app.AlertDialog;
@@ -33,10 +32,6 @@ import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.awareness.Awareness;
-import com.google.android.gms.awareness.snapshot.LocationResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdate;
@@ -56,7 +51,7 @@ import com.google.gson.Gson;
 import com.humaclab.lalteer.R;
 import com.humaclab.lalteer.SelliscopeApiEndpointInterface;
 import com.humaclab.lalteer.SelliscopeApplication;
-import com.humaclab.lalteer.model.Outlets;
+import com.humaclab.lalteer.model.outlets.Outlets;
 import com.humaclab.lalteer.utils.SessionManager;
 
 import java.io.IOException;
@@ -68,8 +63,6 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 import timber.log.Timber;
 
@@ -224,20 +217,23 @@ public class OutletMapActivity extends AppCompatActivity implements OnMapReadyCa
 
        apiService.getOutlets().subscribeOn(Schedulers.io())
                .observeOn(AndroidSchedulers.mainThread())
-               .subscribe(new SingleObserver<Response<ResponseBody>>() {
+               .subscribe(new SingleObserver<Response<Outlets>>() {
                    @Override
                    public void onSubscribe(Disposable d) {
                        mCompositeDisposable.add(d);
                    }
 
                    @Override
-                   public void onSuccess(Response<ResponseBody> response) {
-                       Gson gson = new Gson();
+                   public void onSuccess(Response<Outlets> response) {
+
                        if (response.code() == 200) {
-                           try {
-                               Outlets getOutletListSuccessful = gson.fromJson(response.body().string(), Outlets.class);
-                               List<Outlets.Outlet> outlets = getOutletListSuccessful
-                                       .outletsResult.outlets;
+
+                            //   Outlets getOutletListSuccessful = gson.fromJson(response.body().string(), Outlets.class);
+                           List<Outlets.Outlet> outlets = null;
+                           if (response.body() != null) {
+                               outlets = response.body().outletsResult.outlets;
+
+
                                for (int i = 0; i < outlets.size(); i++) {
                                    mMap.addMarker(new MarkerOptions().position(
                                            new LatLng(outlets.get(i).outletLatitude,
@@ -246,10 +242,8 @@ public class OutletMapActivity extends AppCompatActivity implements OnMapReadyCa
                                                    R.drawable.ic_dokan, 0))
                                            .title(outlets.get(i).outletName));
                                }
-
-                           } catch (IOException e) {
-                               e.printStackTrace();
                            }
+
                        } else if (response.code() == 401) {
                            Toast.makeText(OutletMapActivity.this,
                                    "Invalid Response from server.", Toast.LENGTH_SHORT).show();
@@ -264,6 +258,8 @@ public class OutletMapActivity extends AppCompatActivity implements OnMapReadyCa
                        Log.d("Response", e.toString());
                    }
                });
+
+
        /* call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {

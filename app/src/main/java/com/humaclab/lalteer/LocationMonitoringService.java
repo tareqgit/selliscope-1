@@ -327,19 +327,15 @@ public class LocationMonitoringService extends Service implements
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                Timber.d("Code:" + response.code());
                 Gson gson = new Gson();
                 if (response.code() == 200) {
-                    try {
-                        UserLocation.Successful userLocationSuccess = gson.fromJson(response.body().string(), UserLocation.Successful.class);
+
+                    //    UserLocation.Successful userLocationSuccess = gson.fromJson(response.body().toString(), UserLocation.Successful.class);
 
                      //   if (fromDB)
                         dbHandler.deleteUserVisit();
                         Log.d("tareq_test", "Data send and deleted from db");
-                    } catch (IOException e) {
-                        Timber.d("Error:" + e.toString());
-                        e.printStackTrace();
-                    }
+
                 } else if (response.code() == 400) {
                     Toast.makeText(getApplicationContext(), response.code() + " Can't Send user location request invalid", Toast.LENGTH_SHORT).show();
 

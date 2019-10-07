@@ -296,7 +296,8 @@ public class LocationMonitoringService extends Service implements
 
     public void onLocationChanged(Location location) {
 
-        if (location != null && location.getAccuracy() < 200) {
+        if (location != null && location.getAccuracy() < 30) {
+
             sLocation = location;
 
             utilityDatabase = (UtilityDatabase) UtilityDatabase.getInstance(getApplicationContext());
@@ -326,7 +327,7 @@ public class LocationMonitoringService extends Service implements
                 //  if ( CurrentTimeUtilityClass.getDiffbetweenTimeStamps(lastTime) >= 5 || (CurrentTimeUtilityClass.getDiffbetweenTimeStamps(lastTime) >= -55 && CurrentTimeUtilityClass.getDiffbetweenTimeStamps(lastTime) <0) ) {
                 if (CurrentTimeUtilityClass.getDiffBetween(lastTime) >= 5) {
                     Log.d("tareq_test", "Filtered_addr_if: " + GetAddressFromLatLang.getAddressFromLatLan(getApplicationContext(), location.getLatitude(), location.getLongitude()) + " acc: " + location.getAccuracy() + " T: " + CurrentTimeUtilityClass.getCurrentTimeStamp());
-
+                    prefs.edit().putString("times",prefs.getString("times","")+CurrentTimeUtilityClass.getCurrentTimeStamp()).commit();
 
                     //region Distance
                     Location prevLocation = new Location("");

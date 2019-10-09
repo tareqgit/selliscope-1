@@ -5,19 +5,17 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
-import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.core.app.ActivityCompat;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.telephony.TelephonyManager;
+import android.util.Base64;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -34,13 +32,29 @@ import com.humaclab.selliscope.model.IMEIandVerison;
 import com.humaclab.selliscope.model.Login;
 import com.humaclab.selliscope.utils.AccessPermission;
 import com.humaclab.selliscope.utils.Constants;
+import com.humaclab.selliscope.utils.JavaEncryption;
 import com.humaclab.selliscope.utils.NetworkUtility;
 import com.humaclab.selliscope.utils.SessionManager;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
+import java.security.GeneralSecurityException;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.Locale;
+import java.util.Objects;
 
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+
+import co.infinum.goldfinger.Goldfinger;
+import co.infinum.goldfinger.rx.RxGoldfinger;
+
+import io.reactivex.observers.DisposableObserver;
 import jp.wasabeef.blurry.Blurry;
 import lib.kingja.switchbutton.SwitchMultiButton;
 import okhttp3.ResponseBody;
@@ -60,6 +74,9 @@ public class LoginActivity extends AppCompatActivity {
     private RadioButton rbEnglish, rbBangla;
     final String KEY_SAVED_RADIO_BUTTON_INDEX = "SAVED_RADIO_BUTTON_INDEX";
 
+    RxGoldfinger mGoldfinger;
+    private Goldfinger.PromptParams mParams;
+
 
     public final static boolean isValidEmail(CharSequence target) {
         if (target == null) {
@@ -75,6 +92,13 @@ public class LoginActivity extends AppCompatActivity {
         //For Bangla
         LoadLocale();
         setContentView(R.layout.activity_login);
+
+        sessionManager = new SessionManager(this);
+        mGoldfinger = new RxGoldfinger.Builder(this).logEnabled(BuildConfig.DEBUG).build();
+
+        if (mGoldfinger.canAuthenticate()) {
+            /* Authenticate */
+        }
 
         Blurry.with(this).radius(10).sampling(8).async().onto(findViewById(R.id.back));
         //For Bangla
@@ -127,6 +151,58 @@ public class LoginActivity extends AppCompatActivity {
             }
             return false;
         });
+
+        mParams = new Goldfinger.PromptParams.Builder(this)
+                .title("Hello")
+                .negativeButtonText("Cancel")
+
+                .description(new SessionManager(LoginActivity.this).getUserEmail() != null ? new SessionManager(LoginActivity.this).getUserEmail() : "User")
+                .build();
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (sessionManager.getUserPassword() != null) {
+            mGoldfinger.authenticate(mParams).subscribe(new DisposableObserver<Goldfinger.Result>() {
+                @Override
+                public void onNext(Goldfinger.Result result) {
+
+                    if (result.type() == Goldfinger.Type.SUCCESS) {
+                        Log.d("tareq_test", "MainActivity #40: onNext:  Success" + result);
+                        Objects.requireNonNull(email.getEditText()).setText(sessionManager.getUserEmail());
+                       /* decryptedPassword(sessionManager.getUserPassword(), res ->{
+                            Objects.requireNonNull(password.getEditText()).setText(res);
+                            login_validate();
+                        });*/
+
+                        try {
+                            Objects.requireNonNull(password.getEditText()).setText(new JavaEncryption().decrypt(sessionManager.getUserPassword(),"password"));
+                        } catch (GeneralSecurityException e) {
+                            e.printStackTrace();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        login_validate();
+
+
+
+                    }
+                }
+
+                @Override
+                public void onError(Throwable e) {
+                    Log.d("tareq_test", "MainActivity #45: onError:  " + e.getMessage());
+                }
+
+                @Override
+                public void onComplete() {
+                    Log.d("tareq_test", "MainActivity #39: onNext:  Fringerprint authentication is finished");
+
+                }
+            });
+        }
     }
 
     private void login_validate() {
@@ -150,8 +226,7 @@ public class LoginActivity extends AppCompatActivity {
         if (isValidEmail && isValidPassword) {
             if (NetworkUtility.isNetworkAvailable(LoginActivity.this) == true) {
                 loginProgresssBar.setVisibility(View.VISIBLE);
-                getUser(email.getEditText().getText().toString().trim(), password.getEditText().getText().toString()
-                        .trim());
+                getUser(email.getEditText().getText().toString().trim(), password.getEditText().getText().toString().trim());
             } else {
                 Toast.makeText(LoginActivity.this, "Network Unavailable.Please, connect " +
                         "to wifi or use mobile data.", Toast.LENGTH_SHORT).show();
@@ -162,98 +237,105 @@ public class LoginActivity extends AppCompatActivity {
 
     void getUser(final String email, final String password) {
 
-        sessionManager = new SessionManager(this);
-        apiService = SelliscopeApplication.getRetrofitInstance(email, password, true)
-                .create(SelliscopeApiEndpointInterface.class);
 
-        Call<ResponseBody> call = apiService.getUser();
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                Gson gson = new Gson();
-                if (response.code() == 202) {
-                    try {
-                        Login.Successful loginSuccessful = gson.fromJson(response.body().string()
-                                , Login.Successful.class);
 
-                        sessionManager.createLoginSession(
-                                loginSuccessful.result.user.name,
-                                loginSuccessful.result.clientId,
-                                loginSuccessful.result.user.profilePictureUrl,
-                                loginSuccessful.result.user.dob,
-                                loginSuccessful.result.user.gender,
-                                email,
-                                password
-                        );
-                        loginProgresssBar.setVisibility(View.INVISIBLE);
 
-                        SharedPreferences sharedPreferencesLanguage = getSharedPreferences("Settings", MODE_PRIVATE);
-                        SharedPreferences.Editor editor = sharedPreferencesLanguage.edit();
-                        editor.putString("BASE_URL", Constants.BASE_URL);
-                        editor.apply();
+            apiService = SelliscopeApplication.getRetrofitInstance(email, password, true)
+                    .create(SelliscopeApiEndpointInterface.class);
 
-                        sendIMEIAndVersion();
+            Call<ResponseBody> call = apiService.getUser();
+            call.enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                    Gson gson = new Gson();
+                    if (response.code() == 202) {
+                        try {
+                            Login.Successful loginSuccessful = gson.fromJson(response.body().string()
+                                    , Login.Successful.class);
 
-                        startActivity(new Intent(LoginActivity.this, LoadingActivity.class));
-                        finish();
+                            sessionManager.createLoginSession(
+                                    loginSuccessful.result.user.name,
+                                    loginSuccessful.result.clientId,
+                                    loginSuccessful.result.user.profilePictureUrl,
+                                    loginSuccessful.result.user.dob,
+                                    loginSuccessful.result.user.gender,
+                                    email,
+                                    new JavaEncryption().encrypt(password,"password")
 
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                } else if (response.code() == 401) {
-                    try {
+                            );
+
+
+
+
+                            loginProgresssBar.setVisibility(View.INVISIBLE);
+
+                            SharedPreferences sharedPreferencesLanguage = getSharedPreferences("Settings", MODE_PRIVATE);
+                            SharedPreferences.Editor editor = sharedPreferencesLanguage.edit();
+                            editor.putString("BASE_URL", Constants.BASE_URL);
+                            editor.apply();
+
+                            sendIMEIAndVersion();
+
+                                startActivity(new Intent(LoginActivity.this, LoadingActivity.class));
+                                 finish();
+
+                        } catch (IOException | InvalidKeyException | NoSuchAlgorithmException | NoSuchPaddingException | InvalidAlgorithmParameterException | IllegalBlockSizeException | BadPaddingException e) {
+                            e.printStackTrace();
+                        }
+                    } else if (response.code() == 401) {
+                        try {
+                            loginProgresssBar.setVisibility(View.INVISIBLE);
+                            Toast.makeText(LoginActivity.this,
+                                    response.errorBody().string() + "code: " + response.code(), Toast.LENGTH_SHORT).show();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    } else {
                         loginProgresssBar.setVisibility(View.INVISIBLE);
                         Toast.makeText(LoginActivity.this,
-                                response.errorBody().string() + "code: " + response.code(), Toast.LENGTH_SHORT).show();
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                                "Server Error! Try Again Later! +\"code: \"+ response.code()", Toast.LENGTH_SHORT).show();
                     }
-                } else {
-                    loginProgresssBar.setVisibility(View.INVISIBLE);
-                    Toast.makeText(LoginActivity.this,
-                            "Server Error! Try Again Later! +\"code: \"+ response.code()", Toast.LENGTH_SHORT).show();
                 }
-            }
 
-            private void sendIMEIAndVersion() {
-                TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-                if (ActivityCompat.checkSelfPermission(LoginActivity.this, android.Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-                    checkPermission();
-                    sendIMEIAndVersion();
-                } else {
-                    IMEIandVerison imeIandVerison = new IMEIandVerison();
-                    imeIandVerison.setIMEIcode(telephonyManager.getDeviceId());
-                    imeIandVerison.setAppVersion(BuildConfig.VERSION_NAME);
-                    System.out.println("IMEI and version: " + new Gson().toJson(imeIandVerison));
-                    Call<ResponseBody> call = apiService.sendIMEIAndVersion(imeIandVerison);
-                    call.enqueue(new Callback<ResponseBody>() {
-                        @Override
-                        public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                            Timber.d("Status code: " + response.code());
-                        }
+                private void sendIMEIAndVersion() {
+                    TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+                    if (ActivityCompat.checkSelfPermission(LoginActivity.this, android.Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+                        checkPermission();
+                        sendIMEIAndVersion();
+                    } else {
+                        IMEIandVerison imeIandVerison = new IMEIandVerison();
+                        imeIandVerison.setIMEIcode(telephonyManager.getDeviceId());
+                        imeIandVerison.setAppVersion(BuildConfig.VERSION_NAME);
+                        System.out.println("IMEI and version: " + new Gson().toJson(imeIandVerison));
+                        Call<ResponseBody> call = apiService.sendIMEIAndVersion(imeIandVerison);
+                        call.enqueue(new Callback<ResponseBody>() {
+                            @Override
+                            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                                Timber.d("Status code: " + response.code());
+                            }
 
-                        @Override
-                        public void onFailure(Call<ResponseBody> call, Throwable t) {
-                            t.printStackTrace();
-                        }
-                    });
+                            @Override
+                            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                                t.printStackTrace();
+                            }
+                        });
+                    }
                 }
-            }
 
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                loginProgresssBar.setVisibility(View.VISIBLE);
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    loginProgresssBar.setVisibility(View.VISIBLE);
 
-                Log.e("tareq_test", "Error on Login: " + t.getMessage());
-                if (Constants.BASE_URL.equals(Constants.BASE_URL_HTTPS))
-                    Constants.BASE_URL = Constants.BASE_URL_HTTP;
-                else
-                    Constants.BASE_URL = Constants.BASE_URL_HTTPS;
+                    Log.e("tareq_test", "Error on Login: " + t.getMessage());
+                    if (Constants.BASE_URL.equals(Constants.BASE_URL_HTTPS))
+                        Constants.BASE_URL = Constants.BASE_URL_HTTP;
+                    else
+                        Constants.BASE_URL = Constants.BASE_URL_HTTPS;
 
 
-                getUser(email.trim(), password.trim());
-            }
-        });
+                    getUser(email.trim(), password.trim());
+                }
+            });
 
     }
 
@@ -320,4 +402,63 @@ public class LoginActivity extends AppCompatActivity {
         setLocale(language);
     }
 
+
+
+    private void encryptPassword(String password, ProcessListener callback) {
+
+        mGoldfinger.encrypt(mParams, "password", password).subscribe(new DisposableObserver<Goldfinger.Result>() {
+            @Override
+            public void onNext(Goldfinger.Result result) {
+                if (result.type() == Goldfinger.Type.SUCCESS) {
+                    {
+
+                        callback.onComplete(result.value());
+                    }
+                }
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        });
+    }
+
+
+
+    private void decryptedPassword(String password,ProcessListener callback) {
+        mGoldfinger.decrypt(mParams, "password", password).subscribe(new DisposableObserver<Goldfinger.Result>() {
+            @Override
+            public void onNext(Goldfinger.Result result) {
+                if (result.type() == Goldfinger.Type.SUCCESS) {
+                    {
+                        callback.onComplete(result.value());
+                    }
+                }
+            }
+
+            @Override
+            public void onError(Throwable e) {
+
+            }
+
+            @Override
+            public void onComplete() {
+
+            }
+        });
+    }
+
+
+    interface ProcessListener {
+        void onComplete(String res);
+
+    }
+
 }
+

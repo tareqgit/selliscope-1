@@ -7,11 +7,12 @@ import android.content.SharedPreferences.Editor;
 import android.util.Log;
 
 import com.humaclab.selliscope.activity.HomeActivity;
-import com.humaclab.selliscope.activity.LoadingActivity;
 import com.humaclab.selliscope.activity.LoginActivity;
 import com.humaclab.selliscope.model.update_profile.UpdateProfileResponse;
 
 import java.util.HashMap;
+
+
 
 /**
  * Created by leon on 8/22/17.
@@ -124,8 +125,9 @@ public class SessionManager {
      * Clear session details
      */
     public void logoutUser(boolean hasUpdate) {
-        editor.clear();
-        editor.commit();
+      /*  editor.clear();
+        editor.commit();*/
+      SetLogOut();
         if (!hasUpdate) {
             Intent i = new Intent(_context, LoginActivity.class);
             i.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
@@ -140,6 +142,10 @@ public class SessionManager {
      **/
     public boolean isLoggedIn() {
         return pref.getBoolean(IS_LOGGED_IN, false);
+    }
+
+    public void SetLogOut() {
+        pref.edit().putBoolean (IS_LOGGED_IN, false).apply();
     }
 
     public String getFcmToken() {

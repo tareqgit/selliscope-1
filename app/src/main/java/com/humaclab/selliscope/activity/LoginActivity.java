@@ -177,16 +177,10 @@ public class LoginActivity extends AppCompatActivity {
                             login_validate();
                         });*/
 
-                        try {
-                            Objects.requireNonNull(password.getEditText()).setText(new JavaEncryption().decrypt(sessionManager.getUserPassword(),"password"));
-                        } catch (GeneralSecurityException e) {
-                            e.printStackTrace();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+                        //  String password = new JavaEncryption().decrypt(sessionManager.getUserPassword(), "password");
+                        Objects.requireNonNull(LoginActivity.this.password.getEditText()).setText(sessionManager.getUserPassword());
+
                         login_validate();
-
-
 
                     }
                 }
@@ -238,104 +232,112 @@ public class LoginActivity extends AppCompatActivity {
     void getUser(final String email, final String password) {
 
 
+        apiService = SelliscopeApplication.getRetrofitInstance(email, password, true)
+                .create(SelliscopeApiEndpointInterface.class);
 
+        Call<ResponseBody> call = apiService.getUser();
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                Gson gson = new Gson();
+                if (response.code() == 202) {
+                    try {
+                        Login.Successful loginSuccessful = gson.fromJson(response.body().string()
+                                , Login.Successful.class);
 
-            apiService = SelliscopeApplication.getRetrofitInstance(email, password, true)
-                    .create(SelliscopeApiEndpointInterface.class);
+                        sessionManager.createLoginSession(
+                                loginSuccessful.result.user.name,
+                                loginSuccessful.result.clientId,
+                                loginSuccessful.result.user.profilePictureUrl,
+                                loginSuccessful.result.user.dob,
+                                loginSuccessful.result.user.gender,
+                                email,
+                                new JavaEncryption().encrypt(password, "password")
+                                // password
 
-            Call<ResponseBody> call = apiService.getUser();
-            call.enqueue(new Callback<ResponseBody>() {
-                @Override
-                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                    Gson gson = new Gson();
-                    if (response.code() == 202) {
-                        try {
-                            Login.Successful loginSuccessful = gson.fromJson(response.body().string()
-                                    , Login.Successful.class);
+                        );
 
-                            sessionManager.createLoginSession(
-                                    loginSuccessful.result.user.name,
-                                    loginSuccessful.result.clientId,
-                                    loginSuccessful.result.user.profilePictureUrl,
-                                    loginSuccessful.result.user.dob,
-                                    loginSuccessful.result.user.gender,
-                                    email,
-                                    new JavaEncryption().encrypt(password,"password")
+                        loginProgresssBar.setVisibility(View.INVISIBLE);
 
-                            );
+                        SharedPreferences sharedPreferencesLanguage = getSharedPreferences("Settings", MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPreferencesLanguage.edit();
+                        editor.putString("BASE_URL", Constants.BASE_URL);
+                        editor.apply();
 
+                        sendIMEIAndVersion();
 
+                        startActivity(new Intent(LoginActivity.this, LoadingActivity.class));
+                        finish();
 
-
-                            loginProgresssBar.setVisibility(View.INVISIBLE);
-
-                            SharedPreferences sharedPreferencesLanguage = getSharedPreferences("Settings", MODE_PRIVATE);
-                            SharedPreferences.Editor editor = sharedPreferencesLanguage.edit();
-                            editor.putString("BASE_URL", Constants.BASE_URL);
-                            editor.apply();
-
-                            sendIMEIAndVersion();
-
-                                startActivity(new Intent(LoginActivity.this, LoadingActivity.class));
-                                 finish();
-
-                        } catch (IOException | InvalidKeyException | NoSuchAlgorithmException | NoSuchPaddingException | InvalidAlgorithmParameterException | IllegalBlockSizeException | BadPaddingException e) {
-                            e.printStackTrace();
-                        }
-                    } else if (response.code() == 401) {
-                        try {
-                            loginProgresssBar.setVisibility(View.INVISIBLE);
-                            Toast.makeText(LoginActivity.this,
-                                    response.errorBody().string() + "code: " + response.code(), Toast.LENGTH_SHORT).show();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    } else {
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (NoSuchAlgorithmException e) {
+                        e.printStackTrace();
+                    } catch (InvalidKeyException e) {
+                        e.printStackTrace();
+                    } catch (InvalidAlgorithmParameterException e) {
+                        e.printStackTrace();
+                    } catch (NoSuchPaddingException e) {
+                        e.printStackTrace();
+                    } catch (BadPaddingException e) {
+                        e.printStackTrace();
+                    } catch (IllegalBlockSizeException e) {
+                        e.printStackTrace();
+                    }
+                } else if (response.code() == 401) {
+                    try {
                         loginProgresssBar.setVisibility(View.INVISIBLE);
                         Toast.makeText(LoginActivity.this,
-                                "Server Error! Try Again Later! +\"code: \"+ response.code()", Toast.LENGTH_SHORT).show();
+                                response.errorBody().string() + "code: " + response.code(), Toast.LENGTH_SHORT).show();
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
+                } else {
+                    loginProgresssBar.setVisibility(View.INVISIBLE);
+                    Toast.makeText(LoginActivity.this,
+                            "Server Error! Try Again Later! +\"code: \"+ response.code()", Toast.LENGTH_SHORT).show();
                 }
+            }
 
-                private void sendIMEIAndVersion() {
-                    TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-                    if (ActivityCompat.checkSelfPermission(LoginActivity.this, android.Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-                        checkPermission();
-                        sendIMEIAndVersion();
-                    } else {
-                        IMEIandVerison imeIandVerison = new IMEIandVerison();
-                        imeIandVerison.setIMEIcode(telephonyManager.getDeviceId());
-                        imeIandVerison.setAppVersion(BuildConfig.VERSION_NAME);
-                        System.out.println("IMEI and version: " + new Gson().toJson(imeIandVerison));
-                        Call<ResponseBody> call = apiService.sendIMEIAndVersion(imeIandVerison);
-                        call.enqueue(new Callback<ResponseBody>() {
-                            @Override
-                            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                                Timber.d("Status code: " + response.code());
-                            }
+            private void sendIMEIAndVersion() {
+                TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+                if (ActivityCompat.checkSelfPermission(LoginActivity.this, android.Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+                    checkPermission();
+                    sendIMEIAndVersion();
+                } else {
+                    IMEIandVerison imeIandVerison = new IMEIandVerison();
+                    imeIandVerison.setIMEIcode(telephonyManager.getDeviceId());
+                    imeIandVerison.setAppVersion(BuildConfig.VERSION_NAME);
+                    System.out.println("IMEI and version: " + new Gson().toJson(imeIandVerison));
+                    Call<ResponseBody> call = apiService.sendIMEIAndVersion(imeIandVerison);
+                    call.enqueue(new Callback<ResponseBody>() {
+                        @Override
+                        public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                            Timber.d("Status code: " + response.code());
+                        }
 
-                            @Override
-                            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                                t.printStackTrace();
-                            }
-                        });
-                    }
+                        @Override
+                        public void onFailure(Call<ResponseBody> call, Throwable t) {
+                            t.printStackTrace();
+                        }
+                    });
                 }
+            }
 
-                @Override
-                public void onFailure(Call<ResponseBody> call, Throwable t) {
-                    loginProgresssBar.setVisibility(View.VISIBLE);
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                loginProgresssBar.setVisibility(View.VISIBLE);
 
-                    Log.e("tareq_test", "Error on Login: " + t.getMessage());
-                    if (Constants.BASE_URL.equals(Constants.BASE_URL_HTTPS))
-                        Constants.BASE_URL = Constants.BASE_URL_HTTP;
-                    else
-                        Constants.BASE_URL = Constants.BASE_URL_HTTPS;
+                Log.e("tareq_test", "Error on Login: " + t.getMessage());
+                if (Constants.BASE_URL.equals(Constants.BASE_URL_HTTPS))
+                    Constants.BASE_URL = Constants.BASE_URL_HTTP;
+                else
+                    Constants.BASE_URL = Constants.BASE_URL_HTTPS;
 
 
-                    getUser(email.trim(), password.trim());
-                }
-            });
+                getUser(email.trim(), password.trim());
+            }
+        });
 
     }
 
@@ -403,7 +405,6 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 
-
     private void encryptPassword(String password, ProcessListener callback) {
 
         mGoldfinger.encrypt(mParams, "password", password).subscribe(new DisposableObserver<Goldfinger.Result>() {
@@ -430,8 +431,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 
-
-    private void decryptedPassword(String password,ProcessListener callback) {
+    private void decryptedPassword(String password, ProcessListener callback) {
         mGoldfinger.decrypt(mParams, "password", password).subscribe(new DisposableObserver<Goldfinger.Result>() {
             @Override
             public void onNext(Goldfinger.Result result) {

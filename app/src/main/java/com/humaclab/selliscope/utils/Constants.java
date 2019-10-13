@@ -13,4 +13,12 @@ public class Constants {
     public static  String BASE_URL = "https://app.selliscope.com/api/";
     public static final String userAgent = System.getProperty("http.agent");
     public static final String databaseName = "selliscopedb";
+
+
+    public static final String EXTRA_TITLE = "title";
+    public static final String EXTRA_TEXT = "text";
+    public static final String EXTRA_ID = "id";
+
+    public static final String TITLE = "Sleeping time";
+    public static final String TEXT = "Hello, this is to reminder of your sleeping time";
 }

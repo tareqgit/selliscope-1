@@ -47,6 +47,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.work.Data;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
@@ -80,14 +81,20 @@ import com.humaclab.selliscope.model.app_version.AppVersion;
 import com.humaclab.selliscope.model.diameter.DiameterResponse;
 import com.humaclab.selliscope.receiver.InternetConnectivityChangeReceiver;
 
+import com.humaclab.selliscope.service.NotificationHandler;
 import com.humaclab.selliscope.utility_db.db.UtilityDatabase;
 import com.humaclab.selliscope.utils.Constants;
 import com.humaclab.selliscope.utils.DatabaseHandler;
 import com.humaclab.selliscope.utils.LoadLocalIntoBackground;
+import com.humaclab.selliscope.utils.ReloadDataService;
 import com.humaclab.selliscope.utils.SessionManager;
 import com.humaclab.selliscope.utils.UpLoadDataService;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -163,6 +170,14 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
     private LocalBroadcastManager mLocalBroadcastManager;
 
+    private Data createWorkInputData(String title, String text, int id) {
+        return new Data.Builder()
+                .putString(Constants.EXTRA_TITLE, title)
+                .putString(Constants.EXTRA_TEXT, text)
+                .putInt(Constants.EXTRA_ID, id)
+                .build();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -171,6 +186,35 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         LoadLocale();
         setContentView(R.layout.activity_home);
         context = this;
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+        // Time to show notification at
+
+      //  LocalDateTime  timeAt = LocalDate.now().atTime(18, 00);
+     //       LocalDateTime timeNow = LocalDateTime.now();
+        //    long duration = Duration.between(timeNow, timeAt).toMillis();
+            try {
+                Date time_at= sdf.parse("18:00:00");
+
+                Date now=Calendar.getInstance().getTime();
+                String mNow= sdf.format(now);
+                Date now_at= sdf.parse(mNow);
+
+
+           //     Log.d("tareq_test", "HomeActivity #198: onCreate:  duration: "+ duration +" "+ (now_at.getTime() -time_at.getTime()));
+
+                NotificationHandler.cancelReminder(this, "notification");
+
+
+                long duration = time_at.getTime()- now_at.getTime() ;
+                if(duration<0){
+                    duration+= (24*60*60*1000);
+                }
+                NotificationHandler.scheduleReminder(this, duration, createWorkInputData("Please", "Update data", 1), "notification");
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+
+
 
 
 
@@ -196,7 +240,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
 
         manufacturer = android.os.Build.MANUFACTURER;
-        modelHandset= Build.MODEL;
+        modelHandset = Build.MODEL;
 
         //registerReceiver();
         ////I think this is redundent now ///    sendLocationDataService = new SendLocationDataService();
@@ -280,7 +324,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             public void onTabReselected(TabLayout.Tab tab) {
             }
         });
-*/
+    */
 
         BottomNavigationView navigation = findViewById(R.id.navigation);
 
@@ -500,7 +544,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     }
 
 
-    private void get_FCM_Token(){
+    private void get_FCM_Token() {
         FirebaseInstanceId.getInstance().getInstanceId()
                 .addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
                     @Override
@@ -514,9 +558,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                         String token = task.getResult().getToken();
 
 
-                        Log.d("FCM", "InstanceID Token: "+ token);
+                        Log.d("FCM", "InstanceID Token: " + token);
 
-                   //     Toast.makeText(HomeActivity.this, msg, Toast.LENGTH_SHORT).show();
+                        //     Toast.makeText(HomeActivity.this, msg, Toast.LENGTH_SHORT).show();
                     }
                 });
 
@@ -702,10 +746,10 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 pd.dismiss();
 
                 try {
-                    if(internetBroadcastReciever!=null)
-                    unregisterReceiver(internetBroadcastReciever);
+                    if (internetBroadcastReciever != null)
+                        unregisterReceiver(internetBroadcastReciever);
                 } catch (Exception e) {
-                    Log.d("tareq_test", "HomeActivity #704: onNavigationItemSelected:  "+ e.getMessage());
+                    Log.d("tareq_test", "HomeActivity #704: onNavigationItemSelected:  " + e.getMessage());
                 }
 
                 finish();
@@ -816,27 +860,25 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                     pd.setCancelable(false);
                     pd.show();
 
-                    DatabaseHandler databaseHandler = new DatabaseHandler(HomeActivity.this);
+                   new ReloadDataService(context).reloadData(new ReloadDataService.ReloadDataListener() {
+                       @Override
+                       public void onComplete() {
+                           Log.d("tareq_test", "Data refresh complete");
+                           runOnUiThread(() -> Toast.makeText(getApplicationContext(), "Data Load Complete", Toast.LENGTH_SHORT).show());
+
+                           pd.dismiss();
+                       }
+
+                       @Override
+                       public void onFailed(String reason) {
+                           pd.dismiss();
+                           Log.d("tareq_test", "Data refresh failed" + reason);
+                           runOnUiThread(() -> Toast.makeText(getApplicationContext(), "failed: " + reason + "\n Please Try Again", Toast.LENGTH_SHORT).show());
+
+                       }
+                   });
 
 
-                    databaseHandler.deleteAllData();
-                    loadLocalIntoBackground.loadAll(new LoadLocalIntoBackground.LoadCompleteListener() {
-                        @Override
-                        public void onLoadComplete() {
-                            Log.d("tareq_test", "Data refresh complete");
-                            runOnUiThread(() -> Toast.makeText(getApplicationContext(), "Data Load Complete", Toast.LENGTH_SHORT).show());
-
-                            pd.dismiss();
-                        }
-
-                        @Override
-                        public void onLoadFailed(String msg) {
-                            pd.dismiss();
-                            Log.d("tareq_test", "Data refresh failed" + msg);
-                            runOnUiThread(() -> Toast.makeText(getApplicationContext(), "failed: " + msg + "\n Please Try Again", Toast.LENGTH_SHORT).show());
-
-                        }
-                    });
                 });
 
 

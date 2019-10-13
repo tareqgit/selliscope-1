@@ -10,6 +10,8 @@ import com.humaclab.selliscope.activity.HomeActivity;
 import com.humaclab.selliscope.activity.LoginActivity;
 import com.humaclab.selliscope.model.update_profile.UpdateProfileResponse;
 
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.util.HashMap;
 
 
@@ -117,8 +119,21 @@ public class SessionManager {
         return pref.getString(KEY_USER_EMAIL, null);
     }
 
-    public String getUserPassword() {
-        return pref.getString(KEY_USER_PASSWORD, null);
+    public String getUserPassword()  {
+
+        try {
+            String prefString = pref.getString(KEY_USER_PASSWORD, null);
+            if(prefString!=null) {
+                return new JavaEncryption().decrypt(prefString, "password");
+            }else{
+                return null;
+            }
+        } catch (GeneralSecurityException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     /**

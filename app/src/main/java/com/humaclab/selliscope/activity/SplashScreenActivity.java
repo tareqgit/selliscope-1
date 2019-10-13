@@ -2,10 +2,14 @@ package com.humaclab.selliscope.activity;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.humaclab.selliscope.utils.ReloadDataService;
 import com.humaclab.selliscope.utils.SessionManager;
+
+import java.util.Objects;
 
 public class SplashScreenActivity extends AppCompatActivity {
     private SessionManager sessionManager;
@@ -13,8 +17,7 @@ public class SplashScreenActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        sessionManager = new SessionManager(this);
-        sessionManager.checkLogin();
+
         // If a notification message is tapped, any data accompanying the notification
         // message is available in the intent extras. In this sample the launcher
         // intent is fired when the notification is tapped, so any accompanying data would
@@ -30,9 +33,27 @@ public class SplashScreenActivity extends AppCompatActivity {
                 Object value = getIntent().getExtras().get(key);
                 Log.d("FCM", "Key: " + key + " Value: " + value);
             }
+
+            if(getIntent().getExtras().get("action")!=null){
+                if(Objects.requireNonNull(getIntent().getExtras().get("action")).toString().equals("actionReload")){
+                    new ReloadDataService(this).reloadData(new ReloadDataService.ReloadDataListener() {
+                        @Override
+                        public void onComplete() {
+                            Toast.makeText(SplashScreenActivity.this, "Reload data Complete", Toast.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        public void onFailed(String reason) {
+                            Toast.makeText(SplashScreenActivity.this, "Reload data Failed; "+ reason , Toast.LENGTH_SHORT).show();
+
+                        }
+                    });
+                }
+            }
         }
 
-
+        sessionManager = new SessionManager(this);
+        sessionManager.checkLogin();
         finish();
     }
 }

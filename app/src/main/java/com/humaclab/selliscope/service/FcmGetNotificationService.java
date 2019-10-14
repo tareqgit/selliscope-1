@@ -137,7 +137,8 @@ public class FcmGetNotificationService extends FirebaseMessagingService {
         if(bigImage!=null)  builder.setLargeIcon(bigImage);
         builder.setAutoCancel(true);
         builder.setSound(defaultSoundUri);
-        builder.setContentIntent(pendingIntent);
+        builder.setContentIntent(pendingIntent)
+        .setOngoing(true);
 
 
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);

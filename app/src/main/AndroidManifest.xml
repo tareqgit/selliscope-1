@@ -145,7 +145,10 @@
 
         <service
             android:name=".LocationMonitoringService"
-            android:enabled="true" /> <!-- File Provider for saving image in storage and getting that image back -->
+            android:enabled="true"
+            android:exported="true"
+            android:foregroundServiceType="location"
+           /> <!-- File Provider for saving image in storage and getting that image back -->
         <uses-library
             android:name="org.apache.http.legacy"
             android:required="false" />
@@ -173,7 +176,8 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
-
+    <!-- Required for foreground services on P+. -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
 </manifest>

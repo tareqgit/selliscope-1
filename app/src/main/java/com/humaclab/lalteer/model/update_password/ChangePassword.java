@@ -12,7 +12,7 @@ public class ChangePassword implements Serializable {
     @SerializedName("current_password")
     private String currentPassword;
 
-    @SerializedName("new_password")
+    @SerializedName("password")
     private String newPassword;
 
     public String getCurrentPassword() {

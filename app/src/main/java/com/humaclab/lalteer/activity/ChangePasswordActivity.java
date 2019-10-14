@@ -2,6 +2,9 @@ package com.humaclab.lalteer.activity;
 
 import android.app.ProgressDialog;
 import androidx.databinding.DataBindingUtil;
+
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -19,6 +22,7 @@ import com.humaclab.lalteer.SelliscopeApplication;
 import com.humaclab.lalteer.databinding.ActivityChangePasswordBinding;
 import com.humaclab.lalteer.model.update_password.ChangePassword;
 import com.humaclab.lalteer.model.update_password.ChangePasswordResponse;
+import com.humaclab.lalteer.utils.NetworkUtility;
 import com.humaclab.lalteer.utils.SessionManager;
 
 import retrofit2.Call;
@@ -30,12 +34,14 @@ public class ChangePasswordActivity extends AppCompatActivity {
     private SelliscopeApiEndpointInterface apiService;
     private SessionManager sessionManager;
     private ProgressDialog pd;
+    private Context mContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_change_password);
 
+        mContext=this;
         sessionManager = new SessionManager(this);
         apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(), sessionManager.getUserPassword(), false).create(SelliscopeApiEndpointInterface.class);
 
@@ -69,38 +75,49 @@ public class ChangePasswordActivity extends AppCompatActivity {
     }
 
     private void updatePassword() {
+
         final ChangePassword changePassword = new ChangePassword();
         changePassword.setCurrentPassword(binding.etCurrentPassword.getText().toString());
         changePassword.setNewPassword(binding.etNewPassword.getText().toString());
         Log.d("tareq_test" , "pass-body "+ new Gson().toJson(changePassword));
-        Call<ChangePasswordResponse> call = apiService.changePassword(changePassword);
-        call.enqueue(new Callback<ChangePasswordResponse>() {
-            @Override
-            public void onResponse(Call<ChangePasswordResponse> call, Response<ChangePasswordResponse> response) {
-                pd.dismiss();
-                 try {
-                     Log.d("tareq_test" , "change pass "+new Gson().toJson(response));
 
-                     ChangePasswordResponse changePasswordResponse = response.body();
-                    if (!changePasswordResponse.isError()) {
-                        sessionManager.setNewPassword(changePassword.getNewPassword());
-                        Toast.makeText(getApplicationContext(), changePasswordResponse.getMessage(), Toast.LENGTH_SHORT).show();
-                        finish();
+        if(NetworkUtility.isNetworkAvailable(mContext)) {
+            Call<ChangePasswordResponse> call = apiService.changePassword(changePassword);
+            call.enqueue(new Callback<ChangePasswordResponse>() {
+                @Override
+                public void onResponse(Call<ChangePasswordResponse> call, Response<ChangePasswordResponse> response) {
+                    pd.dismiss();
+
+                    if (response.isSuccessful()) {
+                        //    ChangePasswordResponse changePasswordResponse = response.body();
+                        if (response.body() != null) {
+                            if (!response.body().isError()) {
+                                sessionManager.setNewPassword(changePassword.getNewPassword());
+                                Toast.makeText(getApplicationContext(), response.body().getResult(), Toast.LENGTH_SHORT).show();
+                                startActivity(new Intent(ChangePasswordActivity.this, LoginActivity.class));
+                                finish();
+                            } else {
+                                Toast.makeText(getApplicationContext(), response.body().getResult(), Toast.LENGTH_SHORT).show();
+                                sessionManager.logoutUser(true);
+                            }
+                        } else {
+                            Toast.makeText(ChangePasswordActivity.this, "No response from server", Toast.LENGTH_SHORT).show();
+                        }
                     } else {
-                        Toast.makeText(getApplicationContext(), changePasswordResponse.getMessage(), Toast.LENGTH_SHORT).show();
-                        sessionManager.logoutUser(true);
+                        Toast.makeText(ChangePasswordActivity.this, "Response failed", Toast.LENGTH_SHORT).show();
                     }
-                } catch (Exception e) {
-                   Log.d("tareq_test" , "Change Pass error: "+ e.getMessage());
                 }
-            }
 
-            @Override
-            public void onFailure(Call<ChangePasswordResponse> call, Throwable t) {
-                pd.dismiss();
-                Log.d("tareq_test" , "Change Pass failed: ");
-            }
-        });
+                @Override
+                public void onFailure(Call<ChangePasswordResponse> call, Throwable t) {
+                    pd.dismiss();
+                    Log.d("tareq_test", "Change Pass failed: ");
+                    Toast.makeText(ChangePasswordActivity.this, "Change Password failed due to Server communication failed. \n please check your network connection", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }else{
+            Toast.makeText(mContext, "Netword Connection not Available please turn your network connection", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override

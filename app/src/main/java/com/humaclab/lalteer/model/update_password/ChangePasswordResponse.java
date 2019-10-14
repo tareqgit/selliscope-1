@@ -12,8 +12,8 @@ public class ChangePasswordResponse implements Serializable {
     @SerializedName("error")
     private boolean error;
 
-    @SerializedName("message")
-    private String message;
+    @SerializedName("result")
+    private String result;
 
     public boolean isError() {
         return error;
@@ -23,11 +23,11 @@ public class ChangePasswordResponse implements Serializable {
         this.error = error;
     }
 
-    public String getMessage() {
-        return message;
+    public String getResult() {
+        return result;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
+    public void setResult(String result) {
+        this.result = result;
     }
 }

@@ -259,7 +259,7 @@ public class ActivityCart extends AppCompatActivity implements SelectedProductRe
                     @Override
                     public void onFailure(Call<AddNewOrder.OrderResponse> call, Throwable t) {
                         pd.dismiss();
-                        Log.e("tareq_test" , "Order error: "+ t.getMessage());
+                        Log.e("tareq_test" , "Order error: "+ t.getResult());
                     }
                 });
             } else */{

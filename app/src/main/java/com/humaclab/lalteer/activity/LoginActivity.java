@@ -212,7 +212,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                 editor.apply();
 
                                 sendIMEIAndVersion();
-                                startActivity(new Intent(LoginActivity.this, LoadingActivity.class));
+                                startActivity(new Intent(LoginActivity.this, LoadingActivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP));
                                 finish();
                             }
 
@@ -294,7 +294,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         final Spinner spinner1 = (Spinner) dialogView.findViewById(R.id.spinner1);
 
         dialogBuilder.setTitle(getResources().getString(R.string.language_setting));
-        dialogBuilder.setMessage(getResources().getString(R.string.language_setting_additional));
+        dialogBuilder.setResult(getResources().getString(R.string.language_setting_additional));
         dialogBuilder.setPositiveButton("Change", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 int langpos = spinner1.getSelectedItemPosition();

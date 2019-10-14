@@ -256,47 +256,47 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
                                         .duration(3000)
                                         .build().show();
                                 progressbar.setVisibility(View.INVISIBLE);
-                            }
 
-                        } else {
-                            SendUserLocationData sendUserLocationData = new SendUserLocationData(context);
-                            sendUserLocationData.getInstantLocation(activity, new SendUserLocationData.OnGetLocation() {
-                                @Override
-                                public void getLocation(Double latitude, Double longitude) {
 
-                                    Location location = new Location("");
-                                    location.setLatitude(latitude);
-                                    location.setLongitude(longitude);
-                                    if (location.distanceTo(outletLocation) <= sessionManager.getDiameter()) {
-                                        if (NetworkUtility.isNetworkAvailable(context)) {
-                                            sendUserLocation(location, outletId, progressbar);
+                            } else {
+                                SendUserLocationData sendUserLocationData = new SendUserLocationData(context);
+                                sendUserLocationData.getInstantLocation(activity, new SendUserLocationData.OnGetLocation() {
+                                    @Override
+                                    public void getLocation(Double latitude, Double longitude) {
+
+                                        Location location = new Location("");
+                                        location.setLatitude(latitude);
+                                        location.setLongitude(longitude);
+                                        if (location.distanceTo(outletLocation) <= sessionManager.getDiameter()) {
+                                            if (NetworkUtility.isNetworkAvailable(context)) {
+                                                sendUserLocation(location, outletId, progressbar);
+                                            } else {
+                                                progressbar.setVisibility(View.INVISIBLE);
+                                                Toast.makeText(context, "Enable Wifi or Mobile data.", Toast.LENGTH_SHORT).show();
+                                            }
                                         } else {
                                             progressbar.setVisibility(View.INVISIBLE);
-                                            Toast.makeText(context, "Enable Wifi or Mobile data.", Toast.LENGTH_SHORT).show();
+                                            // Toast.makeText(context, "You are not within 70m radius of the outlet.", Toast.LENGTH_SHORT).show();
+                                            new Flashbar.Builder(activity)
+                                                    .gravity(Flashbar.Gravity.TOP)
+                                                    .title("Sorry!")
+                                                    .message("You are not within 70m radius of the outlet.")
+                                                    .duration(3000)
+                                                    .backgroundDrawable(R.drawable.moss_gradient2)
+                                                    .build().show();
 
                                         }
-                                    } else {
-                                        progressbar.setVisibility(View.INVISIBLE);
-                                        // Toast.makeText(context, "You are not within 70m radius of the outlet.", Toast.LENGTH_SHORT).show();
-                                        new Flashbar.Builder(activity)
-                                                .gravity(Flashbar.Gravity.TOP)
-                                                .title("Sorry!")
-                                                .message("You are not within 70m radius of the outlet.")
-                                                .duration(3000)
-                                                .backgroundDrawable(R.drawable.moss_gradient2)
-                                                .build().show();
-
                                     }
-                                }
-                            });
+                                });
+                            }
                         }
-
 
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         Log.e("tareq_test", "OutletRecyclerViewAdapter #276: onError:  " + e.getMessage());
+                        Toast.makeText(context, ""+e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
 
@@ -304,51 +304,55 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
     }
 
     private void sendUserLocation(Location location, final int outletId, final ProgressBar progressBar) {
+
         SessionManager sessionManager = new SessionManager(context);
         apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(),
                 sessionManager.getUserPassword(), false)
                 .create(SelliscopeApiEndpointInterface.class);
         List<UserLocation.Visit> userLocationVisits = new ArrayList<>();
         userLocationVisits.add(new UserLocation.Visit(location.getLatitude(), location.getLongitude(), GetAddressFromLatLang.getAddressFromLatLan(context, location.getLatitude(), location.getLongitude()), outletId));
+        Log.d("tareq_test", "OutletRecyclerViewAdapter #314: sendUserLocation:  "+new Gson().toJson( new UserLocation(userLocationVisits)));
+
         Call<ResponseBody> call = apiService.sendUserLocation(new UserLocation(userLocationVisits));
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                Timber.d("Code:" + response.code());
+              //  Toast.makeText(context, "Response "+ response.code() +" " , Toast.LENGTH_SHORT).show();
                 Gson gson = new Gson();
                 if (response.code() == 200) {
                     try {
                         UserLocation.Successful userLocationSuccess = null;
                         if (response.body() != null) {
                             userLocationSuccess = gson.fromJson(response.body().string(), UserLocation.Successful.class);
-                        }
 
-                        progressBar.setVisibility(View.INVISIBLE);
 
-                        if (userLocationSuccess != null) {
-                            if (userLocationSuccess.msg.equals("")) { // To check if the user already checked in the outlet
-                                //   Toast.makeText(context, "You are checked in.", Toast.LENGTH_SHORT).show();
+                            progressBar.setVisibility(View.INVISIBLE);
 
-                                new Flashbar.Builder(activity)
-                                        .gravity(Flashbar.Gravity.TOP)
-                                        .title("Congrats!")
-                                        .message("You are successfully checked in.")
-                                        .backgroundDrawable(R.drawable.moss_gradient)
-                                        .duration(3000)
-                                        .build().show();
+                            if (userLocationSuccess.msg != null) {
+                                if (userLocationSuccess.msg.equals("")) { // To check if the user already checked in the outlet
+                                    //   Toast.makeText(context, "You are checked in.", Toast.LENGTH_SHORT).show();
 
-                                databaseHandler.afterCheckinUpdateOutletRoutePlan(outletId);
+                                    new Flashbar.Builder(activity)
+                                            .gravity(Flashbar.Gravity.TOP)
+                                            .title("Congrats!")
+                                            .message("You are successfully checked in.")
+                                            .backgroundDrawable(R.drawable.moss_gradient)
+                                            .duration(3000)
+                                            .build().show();
 
-                                ((OutletActivity) context).getRoute();//For reloading the outlet recycler view
-                                ((OutletActivity) context).getOutlets();//For reloading the outlet recycler view
-                            } else {
-                                //          Toast.makeText(context, "You already checked in.", Toast.LENGTH_SHORT).show();
-                                new Flashbar.Builder(activity)
-                                        .gravity(Flashbar.Gravity.TOP)
-                                        .message("You already checked in.")
-                                        .backgroundDrawable(R.drawable.moss_gradient)
-                                        .duration(3000)
-                                        .build().show();
+                                    databaseHandler.afterCheckinUpdateOutletRoutePlan(outletId);
+
+                                    ((OutletActivity) context).getRoute();//For reloading the outlet recycler view
+                                    ((OutletActivity) context).getOutlets();//For reloading the outlet recycler view
+                                } else {
+                                    //          Toast.makeText(context, "You already checked in.", Toast.LENGTH_SHORT).show();
+                                    new Flashbar.Builder(activity)
+                                            .gravity(Flashbar.Gravity.TOP)
+                                            .message("You already checked in.")
+                                            .backgroundDrawable(R.drawable.moss_gradient)
+                                            .duration(3000)
+                                            .build().show();
+                                }
                             }
                         }
                     } catch (IOException e) {

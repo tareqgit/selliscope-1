@@ -267,7 +267,7 @@ public class LoadLocalIntoBackground {
                             if (loadCompleteListener != null) loadCompleteListener.onLoadComplete();
                         }
                     } catch (Exception e) {
-                        Log.d("tareq_test", "Categories error: " + e.getMessage());
+                        Log.d("tareq_test", "Categories error: " + e.getResult());
                         e.printStackTrace();
                     }
                 }
@@ -277,7 +277,7 @@ public class LoadLocalIntoBackground {
             public void onFailure(Call<CategoryResponse> call, Throwable t) {
                 Log.d("tareq_test", "Caregories failed");
                 t.printStackTrace();
-                if (loadCompleteListener != null) loadCompleteListener.onLoadFailed("load category: "+t.getMessage());
+                if (loadCompleteListener != null) loadCompleteListener.onLoadFailed("load category: "+t.getResult());
             }
         });*/
 
@@ -376,7 +376,7 @@ public class LoadLocalIntoBackground {
                          //   } catch (IOException e) {
                           //      e.printStackTrace();
                          //       if (loadCompleteListener != null)
-                         //           loadCompleteListener.onLoadFailed("Load Outlets: " + e.getMessage());
+                         //           loadCompleteListener.onLoadFailed("Load Outlets: " + e.getResult());
                         //    }
                         }
                     }

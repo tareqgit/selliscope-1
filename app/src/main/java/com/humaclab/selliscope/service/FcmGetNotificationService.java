@@ -15,6 +15,7 @@ import androidx.core.app.NotificationCompat;
 
 import android.os.Build;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
@@ -22,10 +23,12 @@ import com.google.gson.Gson;
 import com.humaclab.selliscope.R;
 import com.humaclab.selliscope.SelliscopeApplication;
 import com.humaclab.selliscope.activity.HomeActivity;
+import com.humaclab.selliscope.utils.ReloadDataService;
 
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -45,6 +48,26 @@ public class FcmGetNotificationService extends FirebaseMessagingService {
         // Check if message contains a data payload.
         if (remoteMessage.getData().size() > 0) {
             Log.d("FCM", "Message data payload: " + remoteMessage.getData());
+
+
+            //region Reload data if you get payload key as "action" and payload value of that key as "actionReload"
+            if(remoteMessage.getData().containsKey("action")){
+                if(remoteMessage.getData().get("action").toString().equals("actionReload")){
+                    Log.d("FCM", "FcmGetNotificationService #56: onMessageReceived:  ");
+                    new ReloadDataService(getApplicationContext()).reloadData(new ReloadDataService.ReloadDataListener() {
+                        @Override
+                        public void onComplete() {
+                            Toast.makeText(FcmGetNotificationService.this, "Data reload complete", Toast.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        public void onFailed(String reason) {
+                            Toast.makeText(FcmGetNotificationService.this, "Reload data failed", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+            }
+            //endregion
 
           /*  if (*//* Check if data needs to be processed by long running job *//* true) {
                 // For long-running tasks (10 seconds or more) use WorkManager.

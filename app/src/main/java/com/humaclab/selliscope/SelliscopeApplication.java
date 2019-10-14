@@ -26,6 +26,9 @@ import timber.log.Timber;
  */
 
 public class SelliscopeApplication extends Application {
+    public static final String CHANNEL_ID = "testServiceChannel";
+
+
     private static Retrofit retrofitInstance;
     private FirebaseAnalytics mFirebaseAnalytics;
 
@@ -83,8 +86,6 @@ public class SelliscopeApplication extends Application {
 
     }
 
-
-    public static final String CHANNEL_ID = "testServiceChannel";
 
 
     private void createNotificationChannel() {

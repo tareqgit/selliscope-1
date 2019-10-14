@@ -31,9 +31,11 @@ public class SplashScreenActivity extends AppCompatActivity {
 
             for (String key : getIntent().getExtras().keySet()) {
                 Object value = getIntent().getExtras().get(key);
-                Log.d("FCM", "Key: " + key + " Value: " + value);
+                Log.d("tareq_test", "Key: " + key + " Value: " + value);
             }
 
+
+            //region Reload data if you get payload key as "action" and payload value of that key as "actionReload"
             if(getIntent().getExtras().get("action")!=null){
                 if(Objects.requireNonNull(getIntent().getExtras().get("action")).toString().equals("actionReload")){
                     new ReloadDataService(this).reloadData(new ReloadDataService.ReloadDataListener() {
@@ -50,6 +52,7 @@ public class SplashScreenActivity extends AppCompatActivity {
                     });
                 }
             }
+            //endregion
         }
 
         sessionManager = new SessionManager(this);

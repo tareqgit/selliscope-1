@@ -92,8 +92,9 @@ public class NotificationHandler extends Worker {
                 .setColor(ContextCompat.getColor(getApplicationContext(), R.color.danger))
                 //.setContentIntent(pendingIntent)
                  .setSmallIcon(R.drawable.ic_selliscope_icon)
-                .setAutoCancel(true)
-                .addAction(R.drawable.ic_file_upload_black_24dp, "Upload Data", pendingIntent);
+            //    .setAutoCancel(true)
+                .addAction(R.drawable.ic_file_upload_black_24dp, "Upload Data", pendingIntent)
+                .setOngoing(true);
 
 
         Objects.requireNonNull(notificationManager).notify(id, notification.build());

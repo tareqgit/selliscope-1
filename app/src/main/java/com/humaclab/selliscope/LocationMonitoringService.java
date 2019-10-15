@@ -80,12 +80,11 @@ public class LocationMonitoringService extends Service implements
 
     private static final String TAG = LocationMonitoringService.class.getSimpleName();
     GoogleApiClient mLocationClient;
-    LocationRequest mLocationRequest = new LocationRequest();
-    private DatabaseHandler dbHandler = new DatabaseHandler(this);
+
     private SessionManager sessionManager;
     // public static final String ACTION_LOCATION_BROADCAST = LocationMonitoringService.class.getName() + "LocationBroadcast";
-    public static final String EXTRA_LATITUDE = "extra_latitude";
-    public static final String EXTRA_LONGITUDE = "extra_longitude";
+   // public static final String EXTRA_LATITUDE = "extra_latitude";
+   // public static final String EXTRA_LONGITUDE = "extra_longitude";
     SharedPreferences prefs;
 
     public static MediaPlayer sMediaPlayerService;
@@ -93,6 +92,8 @@ public class LocationMonitoringService extends Service implements
 
     LocationCallback mLocationCallback;
     private static volatile PowerManager.WakeLock wakeLock;
+    private DatabaseHandler mDbHandler;
+    private LocationRequest mMLocationRequest;
 
 
     public LocationMonitoringService() {
@@ -120,14 +121,14 @@ public class LocationMonitoringService extends Service implements
             wakeLock.acquire();
         }
 
-        mLocationRequest.setInterval(30 * 1000);
-        mLocationRequest.setFastestInterval(15 * 1000);
+        mMLocationRequest.setInterval(30 * 1000);
+        mMLocationRequest.setFastestInterval(15 * 1000);
 
         int priority = LocationRequest.PRIORITY_HIGH_ACCURACY; //by default
         //PRIORITY_BALANCED_POWER_ACCURACY, PRIORITY_LOW_POWER, PRIORITY_NO_POWER are the other priority modes
 
 
-        mLocationRequest.setPriority(priority);
+        mMLocationRequest.setPriority(priority);
         mLocationClient.connect();
         //Declare the timer
         myTimer = new Timer();
@@ -162,6 +163,9 @@ public class LocationMonitoringService extends Service implements
     @Override
     public void onCreate() {
         super.onCreate();
+        mMLocationRequest = new LocationRequest();
+        mDbHandler = new DatabaseHandler(this);
+
         sessionManager = new SessionManager(this);
         lastTimeMediaPlayed = Calendar.getInstance().getTime().toString(); //for Media player concurrency playing prblme resolve
 
@@ -225,7 +229,7 @@ public class LocationMonitoringService extends Service implements
         //LocalBroadCastManager for sharing data from service to activity
         Intent intent = new Intent("GPS");
         intent.putExtra("accuracy", location.getAccuracy());
-        intent.putExtra("obj", mLocationRequest);
+        intent.putExtra("obj", mMLocationRequest);
         LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
 
         if (CurrentTimeUtilityClass.getDiffBetween(lastTimeMediaPlayed) >= 1) {
@@ -275,7 +279,7 @@ public class LocationMonitoringService extends Service implements
             return;
         }
         // LocationServices.FusedLocationApi.requestLocationUpdates(mLocationClient, mLocationRequest, this);
-        LocationServices.getFusedLocationProviderClient(this).requestLocationUpdates(mLocationRequest, mLocationCallback, null);
+        LocationServices.getFusedLocationProviderClient(this).requestLocationUpdates(mMLocationRequest, mLocationCallback, null);
 
         Log.d(TAG, "Connected to Google API");
     }
@@ -296,7 +300,7 @@ public class LocationMonitoringService extends Service implements
 
     public void onLocationChanged(Location location) {
 
-        if (location != null && location.getAccuracy() < 30) {
+        if (location != null && location.getAccuracy() < 300) {
 
             sLocation = location;
 
@@ -394,7 +398,7 @@ public class LocationMonitoringService extends Service implements
                         prefs.edit().putString("last_pos_long", String.valueOf(longitude)).apply();
                         //endregion
                     } else {
-                        dbHandler.addUserVisits(new UserVisit(latitude, longitude, CurrentTimeUtilityClass.getCurrentTimeStamp()));
+                        mDbHandler.addUserVisits(new UserVisit(latitude, longitude, CurrentTimeUtilityClass.getCurrentTimeStamp()));
 
                         Log.d("tareq_test", "User location saved in Database");
                         lastTime = Calendar.getInstance().getTime().toString();
@@ -451,7 +455,7 @@ public class LocationMonitoringService extends Service implements
         List<UserLocation.Visit> userLocationVisits = new ArrayList<>();
         //getting data from sqlite database
 
-        for (UserVisit userVisit : dbHandler.getUSerVisits()) {
+        for (UserVisit userVisit : mDbHandler.getUSerVisits()) {
             userLocationVisits.add(new UserLocation.Visit(userVisit.getLatitude(), userVisit.getLongitude(), GetAddressFromLatLang.getAddressFromLatLan(getApplicationContext(), userVisit.getLatitude(), userVisit.getLongitude()), userVisit.getTimeStamp()));
         }
 
@@ -469,7 +473,7 @@ public class LocationMonitoringService extends Service implements
                 if (response.code() == 201) {
 
 
-                    dbHandler.deleteUserVisit();
+                    mDbHandler.deleteUserVisit();
                     Log.d("tareq_test", "Data send and deleted from db");
 
                /* } else if (response.code() == 400) {
@@ -479,7 +483,7 @@ public class LocationMonitoringService extends Service implements
 
                     UserVisit currentUserVisit = new UserVisit(latitude, longitude, timeStamp);
 
-                    dbHandler.addUserVisits(currentUserVisit);
+                    mDbHandler.addUserVisits(currentUserVisit);
 
 
                     Toast.makeText(getApplicationContext(), response.code() + " Can't Send user location So stored in Dbs", Toast.LENGTH_SHORT).show();

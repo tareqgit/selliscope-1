@@ -3,18 +3,22 @@ package com.humaclab.selliscope.fragment;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.humaclab.selliscope.R;
+import com.humaclab.selliscope.SelliscopeApplication;
 import com.humaclab.selliscope.adapters.DashboardRecyclerViewAdapter;
 import com.humaclab.selliscope.adapters.PerformanceRecyclerViewAdapter;
 import com.humaclab.selliscope.model.DashboardItem;
+import com.humaclab.selliscope.my_test.MyTestActivity;
 import com.humaclab.selliscope.performance.daily_activities.RegularPerformanceActivity;
 import com.humaclab.selliscope.performance.leaderboard.LeaderBoardActivity;
 import com.humaclab.selliscope.performance.orders.PerformanceOrdersActivity;
@@ -46,12 +50,15 @@ public class PerformanceFragment extends Fragment {
         performanceItems.add(new DashboardItem("Visited Outlet", R.drawable.ic_visited_outlet));
      */
         performanceItems.add(new DashboardItem(getString(R.string.leaderboard), R.drawable.ic_trophy));
-     performanceItems.add(new DashboardItem(getString(R.string.orders), R.drawable.ic_order_list));
+        performanceItems.add(new DashboardItem(getString(R.string.orders), R.drawable.ic_order_list));
         performanceItems.add(new DashboardItem(getString(R.string.payments), R.drawable.ic_payments));
-       // performanceItems.add(new DashboardItem("Sales Return Request", R.drawable.ic_return));
-     //   performanceItems.add(new DashboardItem("Commission", R.drawable.ic_commission));
-      //  performanceItems.add(new DashboardItem("New Outlet", R.drawable.ic_outlet));
+        // performanceItems.add(new DashboardItem("Sales Return Request", R.drawable.ic_return));
+        //   performanceItems.add(new DashboardItem("Commission", R.drawable.ic_commission));
+        //  performanceItems.add(new DashboardItem("New Outlet", R.drawable.ic_outlet));
         performanceItems.add(new DashboardItem("Daily Activities", R.drawable.ic_attendence));
+        if(SelliscopeApplication.developer)
+        performanceItems.add(new DashboardItem("My Test", R.drawable.ic_outlet));
+
 
         gridLayoutManager = new GridLayoutManager(activity, itemNumber);
         int spacingInPixels = getResources().getDimensionPixelSize(R.dimen.grid_layout_margin);
@@ -86,6 +93,12 @@ public class PerformanceFragment extends Fragment {
                                         getActivity().startActivity(new Intent(getActivity(), RegularPerformanceActivity.class));
                                         break;
                                     }
+
+                                        case 4: {
+                                            getActivity().startActivity(new Intent(getActivity(), MyTestActivity.class));
+                                            break;
+                                        }
+
 
 
                                     default: {

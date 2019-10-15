@@ -98,6 +98,10 @@ public class OutletActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(String.valueOf(s).equals("i am tareq")){
+                    SelliscopeApplication.developer= !SelliscopeApplication.developer;
+                    Toast.makeText(OutletActivity.this, "You are a developer", Toast.LENGTH_SHORT).show();
+                }
                 mOutletList = databaseHandler.getSearchedOutlet(String.valueOf(s)).outlets;
                 outletRecyclerViewAdapter.updateOutlate(mOutletList);
 

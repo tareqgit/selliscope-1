@@ -27,6 +27,7 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
 
     <application
         android:name=".SelliscopeApplication"
@@ -37,9 +38,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <receiver
-            android:name=".receiver.ActionReceiver"
-          />
+        <activity android:name=".my_test.MyTestActivity"></activity>
+
+        <receiver android:name=".receiver.ActionReceiver" />
 
         <activity android:name=".activity.SelfieCheck_inActivity" />
         <activity android:name=".activity.LoadingActivity" />
@@ -160,7 +161,8 @@
         </service> <!-- ****************Pos Activities************************** -->
         <service
             android:name=".LocationMonitoringService"
-            android:enabled="true" />
+            android:enabled="true"
+            android:exported="true" />
         <service
             android:name=".job_sheduler.MyJobScheduler"
             android:exported="true"

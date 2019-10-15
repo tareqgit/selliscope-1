@@ -28,6 +28,7 @@ import timber.log.Timber;
 public class SelliscopeApplication extends Application {
     public static final String CHANNEL_ID = "testServiceChannel";
 
+    public static boolean developer=false;
 
     private static Retrofit retrofitInstance;
     private FirebaseAnalytics mFirebaseAnalytics;

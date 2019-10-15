@@ -9,7 +9,7 @@ import androidx.room.RoomDatabase;
 /***
  * Created by mtita on 11,July,2019.
  */
-@Database(entities = {ReturnProductEntity.class}, version = 1)
+@Database(entities = {ReturnProductEntity.class}, version = 1, exportSchema = false)
 public abstract class ReturnProductDatabase extends RoomDatabase {
 
     private static volatile RoomDatabase INSTANCE;

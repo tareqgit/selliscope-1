@@ -16,6 +16,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.os.Looper;
 import android.os.PowerManager;
 import android.provider.Settings;
 import android.util.Log;
@@ -31,6 +32,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResolvableApiException;
+import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
@@ -79,7 +81,7 @@ public class LocationMonitoringService extends Service implements
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
 
     private static final String TAG = LocationMonitoringService.class.getSimpleName();
-    GoogleApiClient mLocationClient;
+    GoogleApiClient mGoogleApiClient;
 
     private SessionManager sessionManager;
     // public static final String ACTION_LOCATION_BROADCAST = LocationMonitoringService.class.getName() + "LocationBroadcast";
@@ -94,6 +96,7 @@ public class LocationMonitoringService extends Service implements
     private static volatile PowerManager.WakeLock wakeLock;
     private DatabaseHandler mDbHandler;
     private LocationRequest mMLocationRequest;
+    private FusedLocationProviderClient mFusedLocationProviderClient;
 
 
     public LocationMonitoringService() {
@@ -102,6 +105,76 @@ public class LocationMonitoringService extends Service implements
     public Timer myTimer;
 
     public static Location sLocation;
+
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+
+        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+
+
+        mDbHandler = new DatabaseHandler(this);
+
+        sessionManager = new SessionManager(this);
+        lastTimeMediaPlayed = Calendar.getInstance().getTime().toString(); //for Media player concurrency playing prblme resolve
+
+        Intent notificationIntent = new Intent(this, HomeActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this,
+                0, notificationIntent, 0);
+        Notification notification = null;
+
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            notification = new Notification.Builder(this, CHANNEL_ID)
+                    .setContentTitle("Hello " + sessionManager.getUserDetails().get("userName"))
+                    .setSmallIcon(R.drawable.ic_selliscope_icon)
+                    .setColor(ContextCompat.getColor(this, R.color.colorDefault))
+                    .setContentIntent(pendingIntent)
+                    .build();
+        } else {
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
+                    .setSmallIcon(R.drawable.ic_selliscope_icon)
+                    .setContentTitle("Hello " + sessionManager.getUserDetails().get("userName"))
+                    .setColor(ContextCompat.getColor(this, R.color.colorDefault))
+                    .setTicker("TICKER")
+                    .setContentIntent(pendingIntent);
+            notification = builder.build();
+        }
+
+        if(mGoogleApiClient==null) {
+            mGoogleApiClient = new GoogleApiClient.Builder(this)
+                    .addConnectionCallbacks(this)
+                    .addOnConnectionFailedListener(this)
+                    .addApi(LocationServices.API)
+                    .build();
+            mGoogleApiClient.connect();
+        }
+
+
+        mLocationCallback = new LocationCallback() {
+            @Override
+            public void onLocationResult(LocationResult locationResult) {
+                if (locationResult == null) {
+                    return;
+                }
+
+                for (Location location : locationResult.getLocations()) {
+                    // Update UI  and sound with location data
+                    //   updateUIandSoundonAccuracyChanges(location); //turn on if you need location accuracy update
+                    onLocationChanged(location);
+
+                }
+            }
+        };
+        requestLocationUpdates();
+
+        prefs = getSharedPreferences("ServiceRunning", MODE_PRIVATE);
+        startForeground(1, notification);
+    }
+
+
+
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
@@ -112,7 +185,7 @@ public class LocationMonitoringService extends Service implements
         if (wakeLock == null) {
             PowerManager pm = (PowerManager) this.getSystemService(Context.POWER_SERVICE);
 
-            /* we don't need the screen on */
+           /// we don't need the screen on
             wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "Selliscope::MyWakeLockTag");
             wakeLock.setReferenceCounted(true);
         }
@@ -121,15 +194,7 @@ public class LocationMonitoringService extends Service implements
             wakeLock.acquire();
         }
 
-        mMLocationRequest.setInterval(30 * 1000);
-        mMLocationRequest.setFastestInterval(15 * 1000);
-
-        int priority = LocationRequest.PRIORITY_HIGH_ACCURACY; //by default
-        //PRIORITY_BALANCED_POWER_ACCURACY, PRIORITY_LOW_POWER, PRIORITY_NO_POWER are the other priority modes
-
-
-        mMLocationRequest.setPriority(priority);
-        mLocationClient.connect();
+        mGoogleApiClient.connect();
         //Declare the timer
         myTimer = new Timer();
         //Set the schedule function and rate
@@ -160,65 +225,19 @@ public class LocationMonitoringService extends Service implements
     }
 
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
+  
+
+    public void requestLocationUpdates(){
         mMLocationRequest = new LocationRequest();
-        mDbHandler = new DatabaseHandler(this);
-
-        sessionManager = new SessionManager(this);
-        lastTimeMediaPlayed = Calendar.getInstance().getTime().toString(); //for Media player concurrency playing prblme resolve
-
-        Intent notificationIntent = new Intent(this, HomeActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this,
-                0, notificationIntent, 0);
-        Notification notification = null;
-
-
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            notification = new Notification.Builder(this, CHANNEL_ID)
-                    .setContentTitle("Hello " + sessionManager.getUserDetails().get("userName"))
-
-                    .setSmallIcon(R.drawable.ic_selliscope_icon)
-                    .setColor(ContextCompat.getColor(this, R.color.colorDefault))
-                    .setContentIntent(pendingIntent)
-                    .build();
-        } else {
-            NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
-                    .setSmallIcon(R.drawable.ic_selliscope_icon)
-                    .setContentTitle("Hello " + sessionManager.getUserDetails().get("userName"))
-                    .setColor(ContextCompat.getColor(this, R.color.colorDefault))
-                    .setTicker("TICKER")
-                    .setContentIntent(pendingIntent);
-            notification = builder.build();
+        mMLocationRequest.setInterval(30 * 1000);
+        mMLocationRequest.setFastestInterval(15 * 1000);
+        mMLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            mFusedLocationProviderClient.requestLocationUpdates(mMLocationRequest, mLocationCallback, Looper.myLooper());
         }
 
-        mLocationClient = new GoogleApiClient.Builder(this)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .addApi(LocationServices.API)
-                .build();
-
-        mLocationCallback = new LocationCallback() {
-            @Override
-            public void onLocationResult(LocationResult locationResult) {
-                if (locationResult == null) {
-                    return;
-                }
-
-                for (Location location : locationResult.getLocations()) {
-                    // Update UI  and sound with location data
-                    //   updateUIandSoundonAccuracyChanges(location); //turn on if you need location accuracy update
-
-
-                    onLocationChanged(location);
-
-                }
-            }
-        };
-
-        prefs = getSharedPreferences("ServiceRunning", MODE_PRIVATE);
-        startForeground(1, notification);
     }
 
     private void updateUIandSoundonAccuracyChanges(Location location) {
@@ -278,9 +297,8 @@ public class LocationMonitoringService extends Service implements
 
             return;
         }
-        // LocationServices.FusedLocationApi.requestLocationUpdates(mLocationClient, mLocationRequest, this);
-        LocationServices.getFusedLocationProviderClient(this).requestLocationUpdates(mMLocationRequest, mLocationCallback, null);
-
+        // LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+        requestLocationUpdates();
         Log.d(TAG, "Connected to Google API");
     }
 
@@ -292,6 +310,8 @@ public class LocationMonitoringService extends Service implements
     @Override
     public void onConnectionSuspended(int i) {
         Log.d("tareq_test", "Connection suspended");
+        mGoogleApiClient.reconnect();
+
     }
 
     UtilityDatabase utilityDatabase;
@@ -300,7 +320,7 @@ public class LocationMonitoringService extends Service implements
 
     public void onLocationChanged(Location location) {
 
-        if (location != null && location.getAccuracy() < 300) {
+        if (location != null && location.getAccuracy() < 35) {
 
             sLocation = location;
 
@@ -444,6 +464,7 @@ public class LocationMonitoringService extends Service implements
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
         Log.d("tareq_test", "Failed to connect to Google API");
+        mGoogleApiClient.reconnect();
 
     }
 

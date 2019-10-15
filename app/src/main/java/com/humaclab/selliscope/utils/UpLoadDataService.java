@@ -9,16 +9,20 @@ import android.widget.Toast;
 import com.google.gson.Gson;
 import com.humaclab.selliscope.SelliscopeApiEndpointInterface;
 import com.humaclab.selliscope.SelliscopeApplication;
+import com.humaclab.selliscope.activity.InspectionActivity;
 import com.humaclab.selliscope.model.AddNewOrder;
+import com.humaclab.selliscope.model.InspectionResponse;
 import com.humaclab.selliscope.sales_return.db.ReturnProductDatabase;
 import com.humaclab.selliscope.sales_return.db.ReturnProductEntity;
 import com.humaclab.selliscope.sales_return.model.post.JsonMemberReturn;
 import com.humaclab.selliscope.sales_return.model.post.SalesReturn2019Response;
 import com.humaclab.selliscope.sales_return.model.post.SalesReturn2019SelectedProduct;
 import com.humaclab.selliscope.sales_return.model.post.SalesReturnPostBody;
+import com.humaclab.selliscope.utility_db.db.UtilityDatabase;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Executors;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -30,31 +34,26 @@ import retrofit2.Response;
 public class UpLoadDataService {
     private Context context;
     private DatabaseHandler databaseHandler;
-    private SessionManager sessionManager;
     private SelliscopeApiEndpointInterface apiService;
-    ReturnProductDatabase returnProductDatabase;
+    private ReturnProductDatabase returnProductDatabase;
+    private UtilityDatabase mUtilityDatabase;
 
     public UpLoadDataService(Context context) {
         this.context = context;
         this.databaseHandler = new DatabaseHandler(context);
-        this.sessionManager = new SessionManager(context);
+        SessionManager sessionManager = new SessionManager(context);
         this.apiService = SelliscopeApplication.getRetrofitInstance(
-                this.sessionManager.getUserEmail(),
-                this.sessionManager.getUserPassword(),
+                sessionManager.getUserEmail(),
+                sessionManager.getUserPassword(),
                 false)
                 .create(SelliscopeApiEndpointInterface.class);
     }
 
-    public void uploadData(UploadCompleteListener uploadCompleteListener) {
+    public void uploadOrder_and_ReturnData(UploadCompleteListener uploadCompleteListener) {
 
 
-        final ConnectivityManager connMgr = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 
-        final NetworkInfo wifi = connMgr.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-
-        final NetworkInfo mobile = connMgr.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
-
-        if (wifi.isConnected() || mobile.isConnected()) {
+        if (NetworkUtility.isNetworkAvailable(context)) {
 
             try {
                 if (databaseHandler.getOrder().size() != 0) {
@@ -76,14 +75,21 @@ public class UpLoadDataService {
                     });
                 } else {
 
+
+
                     if (uploadCompleteListener != null)
                         uploadCompleteListener.uploadFailed("No offline order is available.");
 
 
                 }
+
+
+
             } catch (Exception e) {
                 e.printStackTrace();
             }
+
+
 
         } else {
 
@@ -92,6 +98,46 @@ public class UpLoadDataService {
 //            Toast.makeText(context, "Network disabled", Toast.LENGTH_SHORT).show();
         }
     }
+
+    public void uploadInspectionData(UploadCompleteListener uploadCompleteListener){
+        mUtilityDatabase= (UtilityDatabase) UtilityDatabase.getInstance(context);
+        Executors.newSingleThreadExecutor().execute(()->{
+            List<InspectionResponse.Inspection> inspectionList = mUtilityDatabase.returnInspectionDao().getInspections();
+
+            if(!inspectionList.isEmpty()){
+                if(NetworkUtility.isNetworkAvailable(context)) {
+                    for (InspectionResponse.Inspection inspection : inspectionList  ) {
+
+
+                        Call<InspectionResponse> call = apiService.inspectOutlet(inspection);
+                        call.enqueue(new Callback<InspectionResponse>() {
+                            @Override
+                            public void onResponse(Call<InspectionResponse> call, Response<InspectionResponse> response) {
+
+                                if (response.code() == 201) {
+
+                                    Executors.newSingleThreadExecutor().execute(() -> mUtilityDatabase.returnInspectionDao().deleteInspection(inspection));
+
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<InspectionResponse> call, Throwable t) {
+
+                                t.printStackTrace();
+                            }
+                        });
+                    }
+                    uploadCompleteListener.uploadComplete(); //as for loop ends
+                }else{
+                    uploadCompleteListener.uploadFailed("Internet connection not available");
+                }
+            }else{
+                uploadCompleteListener.uploadFailed("No Inspection on local DB");
+            }
+        });
+    }
+
 
 
     private void uploadOrderToServer(UploadCompleteListener uploadCompleteListener) {
@@ -105,7 +151,7 @@ public class UpLoadDataService {
                 @Override
                 public void onResponse(Call<AddNewOrder.OrderResponse> call, Response<AddNewOrder.OrderResponse> response) {
                     Log.d("tareq_test", "Offline order: Order completed." + response.code());
-                    if (response.code() == 201 ) {
+                    if (response.code() == 201) {
 
 
                         new Thread(() -> {
@@ -113,10 +159,10 @@ public class UpLoadDataService {
                                 Log.d("tareq_test", "Sales Return Item found with " + addNewOrder.newOrder.products.get(0).order_return_id + " is " + returnProductDatabase.returnProductDao().getAllReturnProduct(addNewOrder.newOrder.products.get(0).order_return_id).size());
 
 
-                                    postSalesRetunModule(response);
+                                postSalesRetunModule(response);
 
-                            }else{
-                                Log.d("tareq_test" , "No Return Product found");
+                            } else {
+                                Log.d("tareq_test", "No Return Product found");
                                 if (uploadCompleteListener != null)
                                     uploadCompleteListener.uploadComplete();
                             }
@@ -124,9 +170,9 @@ public class UpLoadDataService {
 
                         databaseHandler.removeOrder(addNewOrder.newOrder.outletId);
                         Log.d("tareq_test", "Offline order: Order removed.");
-                    }else{
+                    } else {
                         if (uploadCompleteListener != null)
-                            uploadCompleteListener.uploadFailed("Order Failed Bad response:"+ response.code());
+                            uploadCompleteListener.uploadFailed("Order Failed Bad response:" + response.code());
                     }
                 }
 
@@ -144,7 +190,7 @@ public class UpLoadDataService {
                             @Override
                             public void uploadFailed(String reason) {
                                 if (uploadCompleteListener != null)
-                                    uploadCompleteListener.uploadFailed(reason +"trying again sales return");
+                                    uploadCompleteListener.uploadFailed(reason + "trying again sales return");
 
                                 postSalesRetunModule(response);
 
@@ -165,10 +211,7 @@ public class UpLoadDataService {
     }
 
 
-
-
-
-    void postSalesReturn(SelliscopeApiEndpointInterface apiService, int orderId, int outletId, int order_return_id, UploadCompleteListener uploadCompleteListener) {
+    private void postSalesReturn(SelliscopeApiEndpointInterface apiService, int orderId, int outletId, int order_return_id, UploadCompleteListener uploadCompleteListener) {
         List<SalesReturn2019SelectedProduct> salesReturn2019SelectedProductList = new ArrayList<>();
         for (ReturnProductEntity salesreturnProduct : returnProductDatabase.returnProductDao().getAllReturnProduct(order_return_id)) {
             salesReturn2019SelectedProductList.add(new SalesReturn2019SelectedProduct.Builder()
@@ -222,7 +265,6 @@ public class UpLoadDataService {
             }
         });
     }
-
 
     public interface UploadCompleteListener {
 

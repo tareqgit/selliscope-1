@@ -16,10 +16,8 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.net.ConnectivityManager;
-import android.net.NetworkCapabilities;
 import android.net.NetworkInfo;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -35,7 +33,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
-import androidx.annotation.UiThread;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -51,7 +48,6 @@ import androidx.work.Data;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
-import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.ResolvableApiException;
@@ -59,7 +55,6 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResponse;
-import com.google.android.gms.location.LocationSettingsStates;
 import com.google.android.gms.location.SettingsClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -92,14 +87,10 @@ import com.humaclab.selliscope.utils.UpLoadDataService;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.Duration;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -487,7 +478,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
                 UpLoadDataService upLoadDataService = new UpLoadDataService(context);
 
-                upLoadDataService.uploadData(new UpLoadDataService.UploadCompleteListener() {
+                upLoadDataService.uploadOrder_and_ReturnData(new UpLoadDataService.UploadCompleteListener() {
                     @Override
                     public void uploadComplete() {
                         Log.d("tareq_test", "Upload complete");
@@ -777,13 +768,17 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             case R.id.nav_update_data:
                 pd.setMessage("Offline data is Uploading to Server.\nPlease be patient....");
                 pd.setCancelable(false);
+
                 pd.show();
                 UpLoadDataService upLoadDataService = new UpLoadDataService(HomeActivity.this);
-                upLoadDataService.uploadData(new UpLoadDataService.UploadCompleteListener() {
+
+                //region Upload Order Data
+                pd.show();
+                upLoadDataService.uploadOrder_and_ReturnData(new UpLoadDataService.UploadCompleteListener() {
                     @Override
                     public void uploadComplete() {
                         pd.dismiss();
-                        Log.d("tareq_test", "Upload data complete");
+                        Log.d("tareq_test", "Upload order data complete");
                     }
 
                     @Override
@@ -793,6 +788,26 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                         Toast.makeText(HomeActivity.this, "" + reason, Toast.LENGTH_SHORT).show();
                     }
                 });
+                //endregion
+
+                //region for uploading inspection we need to show pd again
+                pd.show();
+                upLoadDataService.uploadInspectionData(new UpLoadDataService.UploadCompleteListener() {
+                    @Override
+                    public void uploadComplete() {
+                        pd.dismiss();
+                        Log.d("tareq_test", "Upload inspection data complete");
+                    }
+
+                    @Override
+                    public void uploadFailed(String reason) {
+
+                        pd.dismiss();
+                        runOnUiThread(()-> Toast.makeText(HomeActivity.this, "" + reason, Toast.LENGTH_SHORT).show());
+
+                    }
+                });
+                //endregion
 
 
 

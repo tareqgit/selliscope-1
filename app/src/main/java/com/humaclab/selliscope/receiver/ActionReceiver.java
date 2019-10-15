@@ -7,9 +7,6 @@ import android.content.Intent;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.humaclab.selliscope.activity.HomeActivity;
-import com.humaclab.selliscope.utils.DatabaseHandler;
-import com.humaclab.selliscope.utils.LoadLocalIntoBackground;
 import com.humaclab.selliscope.utils.ReloadDataService;
 import com.humaclab.selliscope.utils.UpLoadDataService;
 
@@ -39,7 +36,7 @@ public class ActionReceiver extends BroadcastReceiver {
     public void performActionUpload(Context context, Intent intent){
 
        UpLoadDataService upLoadDataService = new UpLoadDataService(context);
-        upLoadDataService.uploadData(new UpLoadDataService.UploadCompleteListener() {
+        upLoadDataService.uploadOrder_and_ReturnData(new UpLoadDataService.UploadCompleteListener() {
             @Override
             public void uploadComplete() {
                 Log.d("tareq_test", "Upload complete");

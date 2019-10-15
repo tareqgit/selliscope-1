@@ -3,31 +3,28 @@ package com.humaclab.selliscope.activity;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.Intent;
-
-import androidx.core.content.FileProvider;
-import androidx.databinding.DataBindingUtil;
-
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.FileProvider;
+import androidx.databinding.DataBindingUtil;
+
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.google.gson.Gson;
 import com.humaclab.selliscope.R;
 import com.humaclab.selliscope.SelliscopeApiEndpointInterface;
@@ -35,6 +32,9 @@ import com.humaclab.selliscope.SelliscopeApplication;
 import com.humaclab.selliscope.databinding.ActivityInspectionBinding;
 import com.humaclab.selliscope.model.InspectionResponse;
 import com.humaclab.selliscope.model.Outlets;
+import com.humaclab.selliscope.utility_db.db.UtilityDatabase;
+import com.humaclab.selliscope.utils.DatabaseHandler;
+import com.humaclab.selliscope.utils.NetworkUtility;
 import com.humaclab.selliscope.utils.SessionManager;
 
 import java.io.ByteArrayOutputStream;
@@ -46,6 +46,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.Executors;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -64,11 +65,14 @@ public class InspectionActivity extends AppCompatActivity {
    public static final String AUTHORITY = "com.humaclab.selliscope.fileprovider";
     private File output=null;
 
+    private Context mContext;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_inspection);
 
+        mContext=this;
         pd = new ProgressDialog(this);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -78,7 +82,9 @@ public class InspectionActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        getOutlets();
+        UtilityDatabase utilityDatabase = (UtilityDatabase) UtilityDatabase.getInstance(getApplicationContext());
+       // getOutlets();
+        getOutletsFromDb();
 
         binding.ivTakeImage.setOnClickListener(v -> {
             Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -105,7 +111,7 @@ public class InspectionActivity extends AppCompatActivity {
         });
 
         binding.btnSubmitInspection.setOnClickListener(v -> {
-            pd.setMessage("Submitting your inspection......");
+            pd.setMessage("Submitting your inspection....");
             pd.setCancelable(false);
             pd.show();
 
@@ -113,6 +119,7 @@ public class InspectionActivity extends AppCompatActivity {
             inspection.image = promotionImage;
             inspection.condition = binding.spCondition.getSelectedItem().toString();
             inspection.iDamaged = binding.spIsDamaged.getSelectedItem().toString().equals("Yes");
+
             inspection.outletID = outletIDs.get(binding.spOutlets.getSelectedItemPosition());
             try {
                 inspection.quantity = Integer.parseInt(binding.etQty.getText().toString());
@@ -126,29 +133,62 @@ public class InspectionActivity extends AppCompatActivity {
                     sessionManager.getUserPassword(), false).create(SelliscopeApiEndpointInterface.class);
 
             Log.d("tareq_test", "InspectionActivity #126: onCreate:  "+ new Gson().toJson(inspection));
-
-            Call<InspectionResponse> call = apiService.inspectOutlet(inspection);
-            call.enqueue(new Callback<InspectionResponse>() {
-                @Override
-                public void onResponse(Call<InspectionResponse> call, Response<InspectionResponse> response) {
-                    pd.dismiss();
-                    if (response.code() == 201) {
-                        Toast.makeText(InspectionActivity.this, "Inspection sent successfully", Toast.LENGTH_SHORT).show();
-                        finish();
-                    } else if (response.code() == 401) {
-                        Toast.makeText(InspectionActivity.this, "Invalid Response from server.", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(InspectionActivity.this, "Server Error! Try Again Later!", Toast.LENGTH_SHORT).show();
+            if(NetworkUtility.isNetworkAvailable(mContext)) {
+                Call<InspectionResponse> call = apiService.inspectOutlet(inspection);
+                call.enqueue(new Callback<InspectionResponse>() {
+                    @Override
+                    public void onResponse(Call<InspectionResponse> call, Response<InspectionResponse> response) {
+                        pd.dismiss();
+                        if (response.code() == 201) {
+                            Toast.makeText(InspectionActivity.this, "Inspection sent successfully", Toast.LENGTH_SHORT).show();
+                            finish();
+                        } else if (response.code() == 401) {
+                            Toast.makeText(InspectionActivity.this, "Invalid Response from server.", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(InspectionActivity.this, "Server Error! Try Again Later!", Toast.LENGTH_SHORT).show();
+                        }
                     }
-                }
 
-                @Override
-                public void onFailure(Call<InspectionResponse> call, Throwable t) {
-                    pd.dismiss();
-                    t.printStackTrace();
-                }
-            });
+                    @Override
+                    public void onFailure(Call<InspectionResponse> call, Throwable t) {
+                        pd.dismiss();
+                        t.printStackTrace();
+                    }
+                });
+            }else{
+                Executors.newSingleThreadExecutor().execute(()->{
+                    utilityDatabase.returnInspectionDao().addInspection(inspection);
+                    runOnUiThread(()->{
+                        pd.dismiss();
+                        Toast.makeText(InspectionActivity.this, "Inspection saved successfully", Toast.LENGTH_SHORT).show();
+                        finish();
+                    });
+
+                });
+
+            }
         });
+    }
+
+
+    void getOutletsFromDb(){
+        DatabaseHandler databaseHandler= new DatabaseHandler(mContext);
+
+      List<Outlets.Outlet> outletList = databaseHandler.getAllOutlet().outlets;
+      if(!outletList.isEmpty()){
+          outletIDs = new ArrayList<>();
+          outletNames = new ArrayList<>();
+
+          for (Outlets.Outlet outlet : outletList) {
+              outletIDs.add(outlet.outletId);
+              outletNames.add(outlet.outletName);
+          }
+          binding.spOutlets.setAdapter(new ArrayAdapter<>(InspectionActivity.this, R.layout.color_spinner_layout_black, outletNames));
+          if (getIntent().hasExtra("outletName")) {
+              binding.spOutlets.setSelection(outletNames.indexOf(getIntent().getStringExtra("outletName")));
+          }
+      }
+
     }
 
     void getOutlets() {

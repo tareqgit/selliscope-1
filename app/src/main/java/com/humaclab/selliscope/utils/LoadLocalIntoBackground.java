@@ -391,42 +391,36 @@ public class LoadLocalIntoBackground {
     }
 
     public void loadOutlet(LoadCompleteListener callback) {
-        Call<ResponseBody> call = apiService.getOutlets();
-        call.enqueue(new Callback<ResponseBody>() {
+        Call<Outlets> call = apiService.getOutlets();
+        call.enqueue(new Callback<Outlets>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                Gson gson = new Gson();
+            public void onResponse(Call<Outlets> call, Response<Outlets> response) {
+               // Gson gson = new Gson();
                 if (response.code() == 200) {
-                    try {
-                        String string;
-                        if (response.body() != null) {
-                            string = response.body().string();
+                    //  String string;
+                    if (response.body() != null) {
+                       // string = response.body().string();
 
-                            Outlets getOutletListSuccessful = gson.fromJson(string, Outlets.class);
-                            /* if (!fullUpdate) {
-                                if (getOutletListSuccessful.outletsResult.outlets.size() != databaseHandler.getSizeOfOutlet()) {
-                                databaseHandler.removeOutlet();
-                                databaseHandler.addOutlet(getOutletListSuccessful.outletsResult.outlets);
-                              }
-                          } else {
-                            databaseHandler.removeOutlet();*/
+                      //  Outlets getOutletListSuccessful = gson.fromJson(string, Outlets.class);
+                        /* if (!fullUpdate) {
+                            if (getOutletListSuccessful.outletsResult.outlets.size() != databaseHandler.getSizeOfOutlet()) {
+                            databaseHandler.removeOutlet();
                             databaseHandler.addOutlet(getOutletListSuccessful.outletsResult.outlets);
-                            if (callback != null) callback.onLoadComplete();
-                            //}
-                        } else {
-                            if (callback != null)
-                                callback.onLoadFailed("Null response from Server");
-                        }
-                    } catch (IOException e) {
-                        Log.e("tareq_test", "LoadLocalIntoBackground #403: onResponse:  " + e.getMessage());
+                          }
+                      } else {
+                        databaseHandler.removeOutlet();*/
+                        databaseHandler.addOutlet(response.body().outletsResult.outlets);
+                        if (callback != null) callback.onLoadComplete();
+                        //}
+                    } else {
                         if (callback != null)
-                            callback.onLoadFailed("Couldn't load data as " + e.getMessage());
+                            callback.onLoadFailed("Null response from Server");
                     }
                 }
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            public void onFailure(Call<Outlets> call, Throwable t) {
                 t.printStackTrace();
                 if (callback != null) callback.onLoadFailed("load outlet: " + t.getMessage());
             }

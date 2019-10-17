@@ -199,31 +199,27 @@ public class InspectionActivity extends AppCompatActivity {
 
 
 
-        Call<ResponseBody> call = apiService.getOutlets();
-        call.enqueue(new Callback<ResponseBody>() {
+        Call<Outlets> call = apiService.getOutlets();
+        call.enqueue(new Callback<Outlets>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                Gson gson = new Gson();
+            public void onResponse(Call<Outlets> call, Response<Outlets> response) {
+          //      Gson gson = new Gson();
                 if (response.code() == 200) {
-                    try {
-                        Outlets getOutletListSuccessful = gson.fromJson(response.body().string(), Outlets.class);
-                        if (!getOutletListSuccessful.outletsResult.outlets.isEmpty()) {
-                            outletIDs = new ArrayList<>();
-                            outletNames = new ArrayList<>();
+                    //  Outlets getOutletListSuccessful = gson.fromJson(response.body().string(), Outlets.class);
+                    if (!response.body().outletsResult.outlets.isEmpty()) {
+                        outletIDs = new ArrayList<>();
+                        outletNames = new ArrayList<>();
 
-                            for (Outlets.Outlet outlet : getOutletListSuccessful.outletsResult.outlets) {
-                                outletIDs.add(outlet.outletId);
-                                outletNames.add(outlet.outletName);
-                            }
-                            binding.spOutlets.setAdapter(new ArrayAdapter<>(InspectionActivity.this, R.layout.color_spinner_layout_black, outletNames));
-                            if (getIntent().hasExtra("outletName")) {
-                                binding.spOutlets.setSelection(outletNames.indexOf(getIntent().getStringExtra("outletName")));
-                            }
-                        } else {
-                            Toast.makeText(getApplicationContext(), "You don't have any outlet in your list.", Toast.LENGTH_LONG).show();
+                        for (Outlets.Outlet outlet : response.body().outletsResult.outlets) {
+                            outletIDs.add(outlet.outletId);
+                            outletNames.add(outlet.outletName);
                         }
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                        binding.spOutlets.setAdapter(new ArrayAdapter<>(InspectionActivity.this, R.layout.color_spinner_layout_black, outletNames));
+                        if (getIntent().hasExtra("outletName")) {
+                            binding.spOutlets.setSelection(outletNames.indexOf(getIntent().getStringExtra("outletName")));
+                        }
+                    } else {
+                        Toast.makeText(getApplicationContext(), "You don't have any outlet in your list.", Toast.LENGTH_LONG).show();
                     }
                 } else if (response.code() == 401) {
                     Toast.makeText(InspectionActivity.this, "Invalid Response from server.", Toast.LENGTH_SHORT).show();
@@ -233,7 +229,7 @@ public class InspectionActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            public void onFailure(Call<Outlets> call, Throwable t) {
             }
         });
     }
@@ -253,7 +249,7 @@ public class InspectionActivity extends AppCompatActivity {
                 Bitmap photo = BitmapFactory.decodeStream(imageStream);
 
                 int factor = 10;
-                while (photo.getWidth() > 600) {
+                while (photo.getWidth() > 1200) {
                     photo = Bitmap.createScaledBitmap(photo, (Math.round(photo.getWidth() * 0.1f * factor)), (Math.round(photo.getHeight() * 0.1f * factor)), false);
                     factor--;
                 }

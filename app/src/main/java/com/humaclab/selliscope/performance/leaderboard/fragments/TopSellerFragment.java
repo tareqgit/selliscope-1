@@ -235,7 +235,7 @@ public class TopSellerFragment extends Fragment {
                 if(response.isSuccessful()){
 
                     if (response.body() != null && response.body().getData() != null) {
-                        Glide.with(mBinding.imageViewFirst)
+                        Glide.with(getContext().getApplicationContext())
 
                                 .load(response.body().getData().size() > 0 ? response.body().getData().get(0).getImageUrl() : "")
                                 .placeholder(R.drawable.ic_man)
@@ -247,7 +247,7 @@ public class TopSellerFragment extends Fragment {
 
                         mBinding.firstTotal.setText(String.format("1st\n%s", MyMath.round(response.body().getData().size() > 0 ? response.body().getData().get(0).getGrandTotal() : 0, 2)));
 
-                        Glide.with(mBinding.imageViewSecond)
+                        Glide.with(getContext().getApplicationContext())
                                 .load(response.body().getData().size() > 1 ? response.body().getData().get(1).getImageUrl() : "")
                                 .placeholder(R.drawable.ic_girl)
                                 .transform(new CircleCrop())
@@ -256,7 +256,7 @@ public class TopSellerFragment extends Fragment {
                         mBinding.secondName.setText(response.body().getData().size() > 1 ? response.body().getData().get(1).getName() : "None");
                         mBinding.secondTotal.setText(String.format("2nd\n%s", String.valueOf(MyMath.round(response.body().getData().size() > 1 ? response.body().getData().get(1).getGrandTotal() : 0, 2))));
 
-                        Glide.with(mBinding.imageViewThird)
+                        Glide.with(getContext().getApplicationContext())
                                 .load(response.body().getData().size() > 2 ? response.body().getData().get(2).getImageUrl() : "")
                                 .placeholder(R.drawable.ic_old_man)
                                 .transform(new CircleCrop())

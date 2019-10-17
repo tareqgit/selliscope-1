@@ -205,32 +205,27 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
         SelliscopeApiEndpointInterface apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(),
                 sessionManager.getUserPassword(), false)
                 .create(SelliscopeApiEndpointInterface.class);
-        Call<ResponseBody> call = apiService.getOutlets();
-        call.enqueue(new Callback<ResponseBody>() {
+        Call<Outlets> call = apiService.getOutlets();
+        call.enqueue(new Callback<Outlets>() {
             @Override
-            public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
-                Gson gson = new Gson();
+            public void onResponse(@NonNull Call<Outlets> call, @NonNull Response<Outlets> response) {
+             //   Gson gson = new Gson();
                 if (response.code() == 200) {
-                    try {
-                        Outlets getOutletListSuccessful ;
-                        if (response.body() != null) {
-                            getOutletListSuccessful = gson.fromJson(response.body().string(), Outlets.class);
+                    //       Outlets getOutletListSuccessful ;
+                    if (response.body() != null) {
+               //         getOutletListSuccessful = gson.fromJson(response.body().string(), Outlets.class);
 
-                            List<Outlets.Outlet> outlets = getOutletListSuccessful
-                                    .outletsResult.outlets;
-                            for (int i = 0; i < outlets.size(); i++) {
-                                mMap.addMarker(new MarkerOptions().position(
-                                        new LatLng(outlets.get(i).outletLatitude,
-                                                outlets.get(i).outletLongitude))
-                                        .icon(vectorToBitmap(
-                                                R.drawable.ic_dokan, 0))
-                                        .title(outlets.get(i).outletName));
-                            }
+                        List<Outlets.Outlet> outlets = response.body().outletsResult.outlets;
+                        for (int i = 0; i < outlets.size(); i++) {
+                            mMap.addMarker(new MarkerOptions().position(
+                                    new LatLng(outlets.get(i).outletLatitude,
+                                            outlets.get(i).outletLongitude))
+                                    .icon(vectorToBitmap(
+                                            R.drawable.ic_dokan, 0))
+                                    .title(outlets.get(i).outletName));
                         }
-
-                    } catch (IOException e) {
-                        e.printStackTrace();
                     }
+
                 } else if (response.code() == 401) {
                     Toast.makeText(RouteActivity.this,
                             "Invalid Response from server.", Toast.LENGTH_SHORT).show();
@@ -241,7 +236,7 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
             }
 
             @Override
-            public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
+            public void onFailure(@NonNull Call<Outlets> call, @NonNull Throwable t) {
                 Log.d("Response", t.toString());
             }
         });

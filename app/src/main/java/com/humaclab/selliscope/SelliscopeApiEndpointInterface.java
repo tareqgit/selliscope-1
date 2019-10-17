@@ -1,6 +1,7 @@
 package com.humaclab.selliscope;
 
 import com.humaclab.selliscope.model.AddNewOrder;
+import com.humaclab.selliscope.model.Outlets;
 import com.humaclab.selliscope.model.app_version.AppVersion;
 import com.humaclab.selliscope.model.BrandResponse;
 import com.humaclab.selliscope.model.CategoryResponse;
@@ -76,7 +77,7 @@ public interface SelliscopeApiEndpointInterface {
     Call<TradePromotion> getTradePromotion();
 
     @GET("v1/outlet")
-    Call<ResponseBody> getOutlets();
+    Call<Outlets> getOutlets();
 
     @GET("v1/product/category")
     Call<CategoryResponse> getCategories();

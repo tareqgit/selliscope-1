@@ -24,6 +24,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.Settings;
+
 import androidx.annotation.ColorInt;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
@@ -33,6 +34,7 @@ import androidx.core.content.res.ResourcesCompat;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -109,7 +111,7 @@ public class OutletMapActivity extends AppCompatActivity implements OnMapReadyCa
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        Log.d("tareq_test" , ""+getIntent().getDoubleExtra("outletLat",0));
+        Log.d("tareq_test", "" + getIntent().getDoubleExtra("outletLat", 0));
     }
 
     @Override
@@ -185,8 +187,8 @@ public class OutletMapActivity extends AppCompatActivity implements OnMapReadyCa
                         mLastKnownLocation = task.getResult();
                         LatLng currentLocation = new LatLng(mLastKnownLocation.getLatitude(), mLastKnownLocation.getLongitude());
 
-                        LatLng outletLocation = new LatLng(getIntent().getDoubleExtra("outletLat",0),
-                                getIntent().getDoubleExtra("outletLong",0));
+                        LatLng outletLocation = new LatLng(getIntent().getDoubleExtra("outletLat", 0),
+                                getIntent().getDoubleExtra("outletLong", 0));
 
                         mMap.addMarker(new MarkerOptions().position(currentLocation)
                                 .title("You are here!")
@@ -195,7 +197,7 @@ public class OutletMapActivity extends AppCompatActivity implements OnMapReadyCa
                         CameraPosition cameraPosition = new CameraPosition(
                                 outletLocation, 15, 70, 0);
                         CameraUpdate yourLocation = CameraUpdateFactory
-                                .newLatLngZoom(outletLocation,21f);
+                                .newLatLngZoom(outletLocation, 21f);
 
 
                         mMap.animateCamera(yourLocation);
@@ -220,16 +222,17 @@ public class OutletMapActivity extends AppCompatActivity implements OnMapReadyCa
         SelliscopeApiEndpointInterface apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(),
                 sessionManager.getUserPassword(), false)
                 .create(SelliscopeApiEndpointInterface.class);
-        Call<ResponseBody> call = apiService.getOutlets();
-        call.enqueue(new Callback<ResponseBody>() {
+        Call<Outlets> call = apiService.getOutlets();
+        call.enqueue(new Callback<Outlets>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                Gson gson = new Gson();
+            public void onResponse(Call<Outlets> call, Response<Outlets> response) {
+                //   Gson gson = new Gson();
                 if (response.code() == 200) {
-                    try {
-                        Outlets getOutletListSuccessful = gson.fromJson(response.body().string(), Outlets.class);
-                        List<Outlets.Outlet> outlets = getOutletListSuccessful
-                                .outletsResult.outlets;
+                    //   Outlets getOutletListSuccessful = gson.fromJson(response.body().string(), Outlets.class);
+                    List<Outlets.Outlet> outlets = null;
+                    if (response.body() != null) {
+                        outlets = response.body().outletsResult.outlets;
+
                         for (int i = 0; i < outlets.size(); i++) {
                             mMap.addMarker(new MarkerOptions().position(
                                     new LatLng(outlets.get(i).outletLatitude,
@@ -238,10 +241,8 @@ public class OutletMapActivity extends AppCompatActivity implements OnMapReadyCa
                                             R.drawable.ic_dokan, 0))
                                     .title(outlets.get(i).outletName));
                         }
-
-                    } catch (IOException e) {
-                        e.printStackTrace();
                     }
+
                 } else if (response.code() == 401) {
                     Toast.makeText(OutletMapActivity.this,
                             "Invalid Response from server.", Toast.LENGTH_SHORT).show();
@@ -252,7 +253,7 @@ public class OutletMapActivity extends AppCompatActivity implements OnMapReadyCa
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            public void onFailure(Call<Outlets> call, Throwable t) {
                 //Toast.makeText(LoginActivity.this, t.toString(), Toast.LENGTH_SHORT).show();
                 Log.d("Response", t.toString());
             }

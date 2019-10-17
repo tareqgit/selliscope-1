@@ -235,7 +235,7 @@ public class LocationMonitoringService extends Service implements
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
-            mFusedLocationProviderClient.requestLocationUpdates(mMLocationRequest, mLocationCallback, Looper.myLooper());
+            mFusedLocationProviderClient.requestLocationUpdates(mMLocationRequest, mLocationCallback, null);
         }
 
     }
@@ -320,7 +320,7 @@ public class LocationMonitoringService extends Service implements
 
     public void onLocationChanged(Location location) {
 
-        if (location != null && location.getAccuracy() < 35) {
+        if (location != null && location.getAccuracy() < 350) {
 
             sLocation = location;
 

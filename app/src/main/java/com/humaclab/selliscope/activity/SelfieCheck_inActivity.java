@@ -189,7 +189,7 @@ public class SelfieCheck_inActivity extends AppCompatActivity {
                 Bitmap photo = BitmapFactory.decodeStream(imageStream);
 
                 int factor = 10;
-                while (photo.getWidth() > 600) {
+                while (photo.getWidth() >= 1200) {
                     photo = Bitmap.createScaledBitmap(photo, (Math.round(photo.getWidth() * 0.1f * factor)), (Math.round(photo.getHeight() * 0.1f * factor)), false);
                     factor--;
                 }

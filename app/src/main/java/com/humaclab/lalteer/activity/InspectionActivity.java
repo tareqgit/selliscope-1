@@ -233,24 +233,25 @@ public class InspectionActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-            Uri outputUri=FileProvider.getUriForFile(this, AUTHORITY, output);
+            Uri outputUri = FileProvider.getUriForFile(this, AUTHORITY, output);
 
-            final Uri imageUri =outputUri;
+            final Uri imageUri = outputUri;
             final InputStream imageStream;
             try {
                 imageStream = getContentResolver().openInputStream(imageUri);
                 Bitmap photo = BitmapFactory.decodeStream(imageStream);
 
-                int factor=10;
-                while(photo.getWidth()>600){
-                    photo=Bitmap.createScaledBitmap(photo, (Math.round(photo.getWidth()*0.1f * factor)), (Math.round(photo.getHeight()*0.1f * factor)), false);
+                int factor = 10;
+                while (photo.getWidth() >= 1200) {
+                    photo = Bitmap.createScaledBitmap(photo, (Math.round(photo.getWidth() * 0.1f * factor)), (Math.round(photo.getHeight() * 0.1f * factor)), false);
                     factor--;
                 }
 
 
-                Log.d("tareq_test", "InspectionActivity #205: onActivityResult:  "+ photo.getHeight() +" , "+ photo.getWidth());
+                Log.d("tareq_test", "InspectionActivity #205: onActivityResult:  " + photo.getHeight() + " , " + photo.getWidth());
                 photo.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
                 promotionImage = Base64.encodeToString(outputStream.toByteArray(), Base64.DEFAULT);
 
@@ -259,7 +260,6 @@ public class InspectionActivity extends AppCompatActivity {
                         .load(decodeBase64(promotionImage))
                         // .transform(new CircleCrop())
                         .into(binding.ivTakeImage);
-
 
 
                 SharedPreferences sharedPreferencesLanguage = getSharedPreferences("Settings", MODE_PRIVATE);

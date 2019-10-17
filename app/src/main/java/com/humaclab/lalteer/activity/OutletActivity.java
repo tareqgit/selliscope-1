@@ -55,10 +55,10 @@ public class OutletActivity extends AppCompatActivity {
     private OutletRecyclerViewAdapter outletRecyclerViewAdapter;
     private DatabaseHandler databaseHandler;
     private SessionManager sessionManager;
-    List<Outlets.Outlet> outlets =new ArrayList<>();
+    List<Outlets.Outlet> outlets = new ArrayList<>();
     private LoadLocalIntoBackground loadLocalIntoBackground;
     private CompositeDisposable mCompositeDisposable = new CompositeDisposable();
-   private   MutableLiveData<Integer> sTotalCheckIn= new MutableLiveData<>();
+    private MutableLiveData<Integer> sTotalCheckIn = new MutableLiveData<>();
 
     // Save state
     private Parcelable recyclerViewState; //for storing recycler scroll postion
@@ -86,19 +86,20 @@ public class OutletActivity extends AppCompatActivity {
             }
         });
 
+        //  new AddOutletActivity().setOnOutletCreateListener(this);
 
         getRoute(); // For getting route plan data
 
         binding.rvOutlet.addItemDecoration(new VerticalSpaceItemDecoration(20));
         binding.rvOutlet.setLayoutManager(new LinearLayoutManager(this));
 
-     //   outlets = new ArrayList<>();
+        //   outlets = new ArrayList<>();
         outletRecyclerViewAdapter = new OutletRecyclerViewAdapter(OutletActivity.this, OutletActivity.this, outlets);
         binding.rvOutlet.setAdapter(outletRecyclerViewAdapter);
 
-        if (!NetworkUtility.isNetworkAvailable(this)) {
+       /* if (!NetworkUtility.isNetworkAvailable(this)) {
             Toast.makeText(this, "Connect to Wifi or Mobile Data for better performance.", Toast.LENGTH_SHORT).show();
-        }
+        }*/
 
         binding.tvSearchOutlet.addTextChangedListener(new TextWatcher() {
             @Override
@@ -143,6 +144,16 @@ public class OutletActivity extends AppCompatActivity {
             }
         });
 
+
+        binding.tvCheckInCount.setOnClickListener(v -> startActivity(new Intent(OutletActivity.this, ClaimActivity.class)));
+
+
+        //  getOutlets();
+
+
+    }
+
+    private void loadOutlets() {
         if (NetworkUtility.isNetworkAvailable(OutletActivity.this)) {
             loadLocalIntoBackground.loadOutlet(new LoadLocalIntoBackground.LoadCompleteListener() {
                 @Override
@@ -160,17 +171,9 @@ public class OutletActivity extends AppCompatActivity {
             getOutlets();
             Toast.makeText(getApplicationContext(), "Connect to Wifi or Mobile Data for better performance.", Toast.LENGTH_SHORT).show();
         }
-
-
-        binding.tvCheckInCount.setOnClickListener(v -> startActivity(new Intent(OutletActivity.this, ClaimActivity.class)));
-
-
-      //  getOutlets();
-
-
     }
 
-    private void getTotalCheckIn(){
+    private void getTotalCheckIn() {
         apiService.getCheckedInDealers().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new SingleObserver<Response<CheckedInDealerResponse>>() {
             @Override
             public void onSubscribe(Disposable d) {
@@ -192,14 +195,14 @@ public class OutletActivity extends AppCompatActivity {
 
             @Override
             public void onError(Throwable e) {
-                Log.e("tareq_test", "OutletActivity #194: onError:  "+ e);
+                Log.e("tareq_test", "OutletActivity #194: onError:  " + e);
             }
         });
     }
 
 
     public void getOutlets() {
-       outlets.clear();
+        outlets.clear();
         outlets = databaseHandler.getAllOutlet().outlets;
         if (!outlets.isEmpty()) {
             if (binding.srlOutlet.isRefreshing())
@@ -235,10 +238,10 @@ public class OutletActivity extends AppCompatActivity {
 
                     @Override
                     public void onSuccess(Response<RouteResponse> response) {
-                        if (response.body() != null ) {
-                            binding.tvToolbarTitle.setText(response.body().getResult().getRoute().size()!=0 ? response.body().getResult().getRoute().get(0).getName() : "Dealers");
+                        if (response.body() != null) {
+                            binding.tvToolbarTitle.setText(response.body().getResult().getRoute().size() != 0 ? response.body().getResult().getRoute().get(0).getName() : "Dealers");
 
-                                getRouteDetails(response.body().getResult().getRoute().size()!=0 ? response.body().getResult().getRoute().get(0).getId() : 0);
+                            getRouteDetails(response.body().getResult().getRoute().size() != 0 ? response.body().getResult().getRoute().get(0).getId() : 0);
 
                         } else {
                             binding.tvToolbarTitle.setText("Outlet");
@@ -247,7 +250,7 @@ public class OutletActivity extends AppCompatActivity {
 
                     @Override
                     public void onError(Throwable e) {
-                        Log.d("tareq_test", "OutletActivity #209: onError:  "+e.getMessage());
+                        Log.d("tareq_test", "OutletActivity #209: onError:  " + e.getMessage());
                     }
                 });
 
@@ -270,7 +273,7 @@ public class OutletActivity extends AppCompatActivity {
                     public void onSuccess(Response<RouteDetailsResponse> response) {
                         final List<RouteDetailsResponse.OutletItem> check = response.body() != null ? response.body().getResult().getOutletItemList() : null;
                         if (response.isSuccessful()) {
-                            Log.d("tareq_test", "OutletActivity #231: onSuccess:  "+ response.body().getResult());
+                            Log.d("tareq_test", "OutletActivity #231: onSuccess:  " + response.body().getResult());
                             binding.tvCheckInCount.setText(String.format(Locale.ENGLISH, "%d / %d", response.body() != null ? response.body().getResult().getCheckedOutlet() : 0, response.body() != null ? response.body().getResult().getTotalOutlet() : 0));
                             loadLocalIntoBackground.saveOutletRoutePlan(check);
                             getOutlets(); //For reloading the outlet recycler view
@@ -279,7 +282,7 @@ public class OutletActivity extends AppCompatActivity {
 
                     @Override
                     public void onError(Throwable e) {
-                        Log.d("tareq_test", "OutletActivity #237: onError:  "+ e.getMessage());
+                        Log.d("tareq_test", "OutletActivity #237: onError:  " + e.getMessage());
                     }
                 });
 
@@ -309,3 +312,4 @@ public class OutletActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 }
+

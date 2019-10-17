@@ -122,8 +122,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="16dp"
                     android:layout_marginEnd="8dp"
+                    android:visibility="visible"
                     app:cardCornerRadius="5dp"
                     app:cardElevation="3dp"
                     app:cardPreventCornerOverlap="true"
@@ -177,10 +178,10 @@
                                     android:layout_marginTop="8dp"
                                     android:layout_marginEnd="8dp"
                                     android:layout_marginBottom="8dp"
+                                    android:textColorHint="#00BCD4"
                                     app:layout_constraintBottom_toBottomOf="parent"
                                     app:layout_constraintEnd_toStartOf="@+id/add_advanceMoney"
                                     app:layout_constraintStart_toStartOf="parent"
-                                    android:textColorHint="#00BCD4"
                                     app:layout_constraintTop_toBottomOf="@+id/textView3">
 
                                     <com.google.android.material.textfield.TextInputEditText
@@ -192,8 +193,7 @@
                                         android:hint="Amount:"
 
 
-
-                                       />
+                                        />
                                 </com.google.android.material.textfield.TextInputLayout>
 
 
@@ -251,12 +251,13 @@
 
                 </androidx.cardview.widget.CardView>
 
+
                 <androidx.cardview.widget.CardView
-                    android:id="@+id/cardView"
+                    android:id="@+id/cardViewOutstandingPayment"
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="16dp"
                     android:layout_marginEnd="8dp"
                     android:visibility="visible"
                     app:cardCornerRadius="5dp"
@@ -265,6 +266,194 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/cardView2">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
+
+                        <com.github.florent37.expansionpanel.ExpansionHeader
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:elevation="5dp"
+                            android:translationZ="5dp"
+                            app:expansion_headerIndicator="@id/headerIndicator"
+                            app:expansion_layout="@id/expansionLayout"
+                            app:expansion_toggleOnClick="true">
+
+                            <androidx.constraintlayout.widget.ConstraintLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent">
+
+
+                                <TextView
+                                    android:id="@+id/textViewOutstandingPayment"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+
+                                    android:background="#2196F3"
+                                    android:gravity="center"
+                                    android:padding="8dp"
+                                    android:text="Outstanding Payment"
+                                    android:textColor="@color/white"
+                                    android:textSize="18sp"
+                                    android:textStyle="bold"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent" />
+
+                                <TextView
+                                    android:id="@+id/textViewDue"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="8dp"
+                                    android:layout_marginTop="8dp"
+                                    android:fontFamily="@font/abelregular"
+                                    android:text="@string/due"
+                                    android:textSize="18sp"
+                                    android:textStyle="bold"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toBottomOf="@+id/textViewOutstandingPayment" />
+
+                                <TextView
+                                    android:id="@+id/textViewDueInput"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginEnd="16dp"
+                                    android:text="0"
+                                    android:textSize="18sp"
+                                    app:layout_constraintBottom_toBottomOf="@+id/textViewDue"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintTop_toTopOf="@+id/textViewDue" />
+
+                                <TextView
+                                    android:id="@+id/textView_paid"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="8dp"
+                                    android:layout_marginTop="8dp"
+                                    android:fontFamily="@font/latobold"
+                                    android:text="@string/paid"
+                                    android:textSize="18sp"
+                                    android:textStyle="bold"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toBottomOf="@+id/textViewDue" />
+
+                                <TextView
+                                    android:id="@+id/textViewPaidInp"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginEnd="16dp"
+                                    android:text="0"
+                                    android:textSize="18sp"
+                                    android:textStyle="bold"
+                                    app:layout_constraintBottom_toBottomOf="@+id/textView_paid"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintTop_toTopOf="@+id/textView_paid" />
+
+                                <com.google.android.material.textfield.TextInputLayout
+                                    android:id="@+id/textInputLayou_total_amount_OutstandingPayment"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_margin="8dp"
+                                    android:layout_marginStart="8dp"
+                                    android:layout_marginTop="8dp"
+                                    android:layout_marginEnd="8dp"
+                                    android:layout_marginBottom="8dp"
+                                    android:textColorHint="#03A9F4"
+                                    android:hint="@string/pay"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintEnd_toStartOf="@+id/add_OutstandingPayment"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toBottomOf="@+id/textView_paid">
+
+                                    <com.google.android.material.textfield.TextInputEditText
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:inputType="numberDecimal"
+                                        />
+                                </com.google.android.material.textfield.TextInputLayout>
+
+
+                                <ImageView
+                                    android:id="@+id/headerIndicatorOutstandingPayment"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center_vertical|right"
+                                    android:layout_marginTop="8dp"
+                                    android:layout_marginEnd="8dp"
+                                    android:adjustViewBounds="true"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent"
+                                    app:srcCompat="@drawable/ic_keyboard_arrow_right_white_24dp" />
+
+                                <TextView
+                                    android:id="@+id/add_OutstandingPayment"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginEnd="8dp"
+                                    android:background="@drawable/button_shape"
+                                    android:padding="8dp"
+                                    android:paddingStart="16dp"
+                                    android:paddingEnd="16dp"
+                                    android:text="Submit"
+                                    android:textAlignment="center"
+                                    android:textColor="#FFFFFF"
+                                    android:textSize="18sp"
+                                    android:textStyle="bold"
+                                    app:layout_constraintBottom_toTopOf="@+id/dividerOutstandingPayment"
+
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintTop_toTopOf="@+id/textInputLayou_total_amount_OutstandingPayment"
+                                    app:layout_constraintVertical_bias="0.78"
+                                    app:srcCompat="@drawable/add"
+                                    android:elevation="3dp"/>
+
+                                <View
+                                    android:id="@+id/dividerOutstandingPayment"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="1dp"
+                                    android:background="?android:attr/listDivider"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintStart_toStartOf="parent" />
+
+                            </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        </com.github.florent37.expansionpanel.ExpansionHeader>
+
+                        <com.github.florent37.expansionpanel.ExpansionLayout
+                            android:id="@+id/expansionLayoutOutstandingPayment"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/recycler_paymentsOutstandingPayment"
+                                android:layout_width="match_parent"
+                                android:layout_height="200dp">
+
+                            </androidx.recyclerview.widget.RecyclerView>
+
+                        </com.github.florent37.expansionpanel.ExpansionLayout>
+                    </LinearLayout>
+
+
+                </androidx.cardview.widget.CardView>
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cardView"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="8dp"
+                    android:visibility="visible"
+                    app:cardCornerRadius="5dp"
+                    app:cardElevation="3dp"
+                    app:cardPreventCornerOverlap="true"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/cardViewOutstandingPayment">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
@@ -422,7 +611,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="16dp"
                     android:layout_marginEnd="8dp"
                     android:layout_marginBottom="8dp"
                     app:cardCornerRadius="5dp"

@@ -18,6 +18,9 @@ package com.humaclab.lalteer;
         import com.humaclab.lalteer.model.Payment;
         import com.humaclab.lalteer.model.PaymentResponse;
         import com.humaclab.lalteer.model.outlets.Outlets;
+        import com.humaclab.lalteer.model.outstanding_payment.OutstandingDueResponse;
+        import com.humaclab.lalteer.model.outstanding_payment.OutstandingPaymentBody;
+        import com.humaclab.lalteer.model.outstanding_payment.OutstandingPostResponse;
         import com.humaclab.lalteer.model.products.ProductResponse;
         import com.humaclab.lalteer.model.promotional_ads.PromotionalAds;
         import com.humaclab.lalteer.model.advance_payment.AdvancePaymentPostResponse;
@@ -203,4 +206,12 @@ public interface SelliscopeApiEndpointInterface {
 
     @POST("claim/store")
     Call<ClaimPostResponse> sendClaim(@Body Claim claim);
+
+
+    @GET("dealer/{outlet_id}/outstanding-due")
+    Single<Response<OutstandingDueResponse>> getOutstandingDues(@Path("outlet_id") int outletId);
+
+
+    @POST("dealer/{outlet_id}/outstanding-due")
+    Single<Response<OutstandingPostResponse>> postOutstandingPayments(@Path("outlet_id") int outletId, @Body OutstandingPaymentBody outstandingPaymentBody);
 }

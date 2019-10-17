@@ -83,6 +83,12 @@ public class AddOutletActivity extends AppCompatActivity {
     private int MAP_LOCATION = 512;
 
     private CompositeDisposable mCompositeDisposable = new CompositeDisposable();
+    
+    private OnOutletCreateListener mOnOutletCreateListener;
+
+    public void setOnOutletCreateListener(AddOutletActivity.OnOutletCreateListener onOutletCreateListener) {
+        mOnOutletCreateListener = onOutletCreateListener;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -382,7 +388,8 @@ public class AddOutletActivity extends AppCompatActivity {
 
     private void addOutlet(int outletTypeId, String outletName,
                            String ownerName, String address, int thanaId, String phone,
-                           double latitude, double longitude, int creditLimit) {
+                           double latitude, double longitude, int creditLimit
+                          ) {
         pd.setMessage(getString(R.string.creating_Dealer));
         pd.setCancelable(false);
         pd.show();
@@ -414,6 +421,8 @@ public class AddOutletActivity extends AppCompatActivity {
                                 if (createOutletResult != null) {
                                     Toast.makeText(AddOutletActivity.this, createOutletResult.result, Toast.LENGTH_SHORT).show();
                                 }
+
+                                if(mOnOutletCreateListener!=null) mOnOutletCreateListener.onSuccess();
                                 submit.setEnabled(false);
                                 Intent intent = new Intent(getApplicationContext(), OutletActivity.class);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -423,15 +432,17 @@ public class AddOutletActivity extends AppCompatActivity {
                             }
                         } else if (response.code() == 401) {
                             Toast.makeText(AddOutletActivity.this, "Invalid Response from server.", Toast.LENGTH_SHORT).show();
+                            if(mOnOutletCreateListener!=null) mOnOutletCreateListener.onFailure("Invalid Response from server");
                         } else {
                             Toast.makeText(AddOutletActivity.this, "Server Error! Try Again Later!", Toast.LENGTH_SHORT).show();
+                            if(mOnOutletCreateListener!=null) mOnOutletCreateListener.onFailure("Server Error! Try Again Later!");
                         }
                     }
 
                     @Override
                     public void onError(Throwable e) {
                         Log.d("Response", e.toString());
-
+                        if(mOnOutletCreateListener!=null) mOnOutletCreateListener.onFailure("Res! "+ e.toString());
                     }
                 });
 
@@ -475,6 +486,7 @@ public class AddOutletActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             Bitmap photo = (Bitmap) data.getExtras().get("data");
@@ -515,5 +527,11 @@ public class AddOutletActivity extends AppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+
+    public interface OnOutletCreateListener{
+        void onSuccess();
+        void onFailure(String reason);
     }
 }

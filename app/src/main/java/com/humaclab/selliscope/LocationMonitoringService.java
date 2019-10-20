@@ -2,7 +2,9 @@ package com.humaclab.selliscope;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.ActivityManager;
 import android.app.Notification;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.ActivityNotFoundException;
@@ -15,6 +17,8 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.HandlerThread;
 import android.os.IBinder;
 import android.os.Looper;
 import android.os.PowerManager;
@@ -22,12 +26,14 @@ import android.provider.Settings;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
+import com.airbnb.lottie.utils.Utils;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -40,6 +46,7 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResponse;
 import com.google.android.gms.location.LocationSettingsStatusCodes;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.perf.FirebasePerformance;
 import com.google.firebase.perf.metrics.Trace;
@@ -57,6 +64,7 @@ import com.humaclab.selliscope.utils.GetAddressFromLatLang;
 import com.humaclab.selliscope.utils.NetworkUtility;
 import com.humaclab.selliscope.utils.SessionManager;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -77,27 +85,30 @@ import static com.humaclab.selliscope.SelliscopeApplication.CHANNEL_ID;
  * Created by anam on 27-09-2018.
  */
 
-public class LocationMonitoringService extends Service implements
-        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+public class LocationMonitoringService extends Service  {
+    private static final String PACKAGE_NAME =
+            "com.humaclab.selliscope.locationMonitoringService";
 
     private static final String TAG = LocationMonitoringService.class.getSimpleName();
-    GoogleApiClient mGoogleApiClient;
+    private static final String EXTRA_STARTED_FROM_NOTIFICATION = "started_from_notification" ;
+    static final String ACTION_BROADCAST = PACKAGE_NAME + ".broadcast";
+
+    static final String EXTRA_LOCATION = PACKAGE_NAME + ".location";
 
     private SessionManager sessionManager;
-    // public static final String ACTION_LOCATION_BROADCAST = LocationMonitoringService.class.getName() + "LocationBroadcast";
-   // public static final String EXTRA_LATITUDE = "extra_latitude";
-   // public static final String EXTRA_LONGITUDE = "extra_longitude";
+  
     SharedPreferences prefs;
-
+    private NotificationManager mNotificationManager;
     public static MediaPlayer sMediaPlayerService;
     public static String lastTimeMediaPlayed = "";
 
     LocationCallback mLocationCallback;
-    private static volatile PowerManager.WakeLock wakeLock;
+
     private DatabaseHandler mDbHandler;
     private LocationRequest mMLocationRequest;
     private FusedLocationProviderClient mFusedLocationProviderClient;
 
+    private Handler mServiceHandler;
 
     public LocationMonitoringService() {
     }
@@ -105,6 +116,10 @@ public class LocationMonitoringService extends Service implements
     public Timer myTimer;
 
     public static Location sLocation;
+    /**
+     * The current location.
+     */
+    private Location mLocation;
 
 
     @Override
@@ -112,89 +127,120 @@ public class LocationMonitoringService extends Service implements
         super.onCreate();
 
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+        mLocationCallback = new LocationCallback() {
+            @Override
+            public void onLocationResult(LocationResult locationResult) {
+                super.onLocationResult(locationResult);
 
+                      // Update UI  and sound with location data
+                    //   updateUIandSoundonAccuracyChanges(location); //turn on if you need location accuracy update
+                    onNewLocation(locationResult.getLastLocation());
+
+              
+            }
+        };
+
+        createLocationRequest();
+        getLastLocation();
+
+        HandlerThread handlerThread = new HandlerThread(TAG);
+        handlerThread.start();
+        mServiceHandler = new Handler(handlerThread.getLooper());
+        mNotificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 
         mDbHandler = new DatabaseHandler(this);
 
         sessionManager = new SessionManager(this);
         lastTimeMediaPlayed = Calendar.getInstance().getTime().toString(); //for Media player concurrency playing prblme resolve
 
-        Intent notificationIntent = new Intent(this, HomeActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this,
-                0, notificationIntent, 0);
+
+
+
+
+        prefs = getSharedPreferences("ServiceRunning", MODE_PRIVATE);
+        startForeground(1,  getNotification());
+
+        requestLocationUpdates();
+    }
+
+    private Notification getNotification() {
+        Intent notificationIntent = new Intent(this, LocationMonitoringService.class);
+        CharSequence text =getLocationText(mLocation);
+
+        // Extra to help us figure out if we arrived in onStartCommand via the notification or not.
+        notificationIntent.putExtra(EXTRA_STARTED_FROM_NOTIFICATION, true);
+
+        // The PendingIntent that leads to a call to onStartCommand() in this service.
+        PendingIntent servicePendingIntent = PendingIntent.getService(this, 0, notificationIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT);
+
+        // The PendingIntent to launch activity.
+        PendingIntent activityPendingIntent = PendingIntent.getActivity(this, 0,
+                new Intent(this, HomeActivity.class), 0);
+
         Notification notification = null;
 
 
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             notification = new Notification.Builder(this, CHANNEL_ID)
-                    .setContentTitle("Hello " + sessionManager.getUserDetails().get("userName"))
+                    .setContentTitle("Hello " + sessionManager.getUserDetails().get("userName") + " "+ getLocationTitle(this))
                     .setSmallIcon(R.drawable.ic_selliscope_icon)
                     .setColor(ContextCompat.getColor(this, R.color.colorDefault))
-                    .setContentIntent(pendingIntent)
+                    .setContentIntent(activityPendingIntent)
+                    .setContentText(text)
+                    .setOngoing(true)
+                    .setPriority(Notification.PRIORITY_HIGH)
+                    .setTicker(text)
+                    .setWhen(System.currentTimeMillis())
                     .build();
         } else {
             NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
                     .setSmallIcon(R.drawable.ic_selliscope_icon)
                     .setContentTitle("Hello " + sessionManager.getUserDetails().get("userName"))
                     .setColor(ContextCompat.getColor(this, R.color.colorDefault))
-                    .setTicker("TICKER")
-                    .setContentIntent(pendingIntent);
+                    .setTicker(text)
+                    .setContentText(text)
+                    .setOngoing(true)
+                    .setPriority(Notification.PRIORITY_HIGH)
+                    .setWhen(System.currentTimeMillis())
+                    .setContentIntent(activityPendingIntent);
             notification = builder.build();
         }
-
-        if(mGoogleApiClient==null) {
-            mGoogleApiClient = new GoogleApiClient.Builder(this)
-                    .addConnectionCallbacks(this)
-                    .addOnConnectionFailedListener(this)
-                    .addApi(LocationServices.API)
-                    .build();
-            mGoogleApiClient.connect();
-        }
-
-
-        mLocationCallback = new LocationCallback() {
-            @Override
-            public void onLocationResult(LocationResult locationResult) {
-                if (locationResult == null) {
-                    return;
-                }
-
-                for (Location location : locationResult.getLocations()) {
-                    // Update UI  and sound with location data
-                    //   updateUIandSoundonAccuracyChanges(location); //turn on if you need location accuracy update
-                    onLocationChanged(location);
-
-                }
-            }
-        };
-        requestLocationUpdates();
-
-        prefs = getSharedPreferences("ServiceRunning", MODE_PRIVATE);
-        startForeground(1, notification);
+        return notification;
     }
 
 
+    /**
+     * Makes a request for location updates. Note that in this sample we merely log the
+     * {@link SecurityException}.
+     */
+    public void requestLocationUpdates() {
+        Log.i(TAG, "Requesting location updates");
 
+        startService(new Intent(getApplicationContext(), LocationMonitoringService.class));
+
+        if (ContextCompat.checkSelfPermission(getApplicationContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+
+
+            try {
+                mFusedLocationProviderClient.requestLocationUpdates(mMLocationRequest,
+                        mLocationCallback, Looper.myLooper());
+            } catch (SecurityException unlikely) {
+
+                Log.e(TAG, "Lost location permission. Could not request updates. " + unlikely);
+            }
+        }
+    }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        Log.i(TAG, "Service started");
 
-        super.onStartCommand(intent, flags, startId);
 
-        /* Wake up */
-        if (wakeLock == null) {
-            PowerManager pm = (PowerManager) this.getSystemService(Context.POWER_SERVICE);
 
-           /// we don't need the screen on
-            wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "Selliscope::MyWakeLockTag");
-            wakeLock.setReferenceCounted(true);
-        }
-
-        if (!wakeLock.isHeld()) {
-            wakeLock.acquire();
-        }
-
-        mGoogleApiClient.connect();
+    
         //Declare the timer
         myTimer = new Timer();
         //Set the schedule function and rate
@@ -221,22 +267,40 @@ public class LocationMonitoringService extends Service implements
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
+        // Called when a client (MainActivity in case of this sample) comes to the foreground
+        // and binds with this service. The service should cease to be a foreground service
+        // when that happens.
         return null;
     }
 
 
-  
-
-    public void requestLocationUpdates(){
-        mMLocationRequest = new LocationRequest();
-        mMLocationRequest.setInterval(30 * 1000);
-        mMLocationRequest.setFastestInterval(15 * 1000);
-        mMLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED) {
-            mFusedLocationProviderClient.requestLocationUpdates(mMLocationRequest, mLocationCallback, null);
+    private void getLastLocation() {
+        try {
+            mFusedLocationProviderClient.getLastLocation()
+                    .addOnCompleteListener(new OnCompleteListener<Location>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Location> task) {
+                            if (task.isSuccessful() && task.getResult() != null) {
+                                mLocation = task.getResult();
+                            } else {
+                                Log.w(TAG, "Failed to get location.");
+                            }
+                        }
+                    });
+        } catch (SecurityException unlikely) {
+            Log.e(TAG, "Lost location permission." + unlikely);
         }
+    }
+
+
+
+    public void createLocationRequest(){
+        mMLocationRequest = new LocationRequest();
+        mMLocationRequest.setInterval(10 * 1000);
+        mMLocationRequest.setFastestInterval(5 * 1000);
+        mMLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
+
 
     }
 
@@ -278,49 +342,27 @@ public class LocationMonitoringService extends Service implements
 
     private static float lastAccuracy = 0; //this the trigger for not playing restored again and again
 
-    /*
-     * LOCATION CALLBACKS
-     */
-    @Override
-    public void onConnected(Bundle dataBundle) {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-
-            Log.d(TAG, "== Error On onConnected() Permission not granted");
-            //Permission not granted by user so cancel the further execution.
-
-            return;
-        }
-        // LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
-        requestLocationUpdates();
-        Log.d(TAG, "Connected to Google API");
-    }
-
-
-    /*
-     * Called by Location Services if the connection to the
-     * location client drops because of an error.
-     */
-    @Override
-    public void onConnectionSuspended(int i) {
-        Log.d("tareq_test", "Connection suspended");
-        mGoogleApiClient.reconnect();
-
-    }
-
+    
     UtilityDatabase utilityDatabase;
     //to get the location change
 
 
-    public void onLocationChanged(Location location) {
+    public void onNewLocation(Location location) {
 
+        mLocation= location;
         if (location != null && location.getAccuracy() < 350) {
+
+
+
+            // Notify anyone listening for broadcasts about the new location.
+            Intent intent = new Intent(ACTION_BROADCAST);
+            intent.putExtra(EXTRA_LOCATION, location);
+            LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
+
+            // Update notification content if running as a foreground service.
+            if (serviceIsRunningInForeground(this)) {
+                mNotificationManager.notify(1, getNotification());
+            }
 
             sLocation = location;
 
@@ -461,13 +503,7 @@ public class LocationMonitoringService extends Service implements
 
     }*/
 
-    @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
-        Log.d("tareq_test", "Failed to connect to Google API");
-        mGoogleApiClient.reconnect();
-
-    }
-
+ 
 
     private void sendUserLocation(double latitude, double longitude, String timeStamp, final int visitId) {
         SelliscopeApiEndpointInterface apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(),
@@ -577,14 +613,45 @@ public class LocationMonitoringService extends Service implements
         super.onDestroy();
         if (sessionManager.isLoggedIn()) {
 
-            if(wakeLock.isHeld()){
-                wakeLock.release();
-            }
+
 
             Log.d("tareq_test", "OnDestroy Service");
             Intent bintent = new Intent(this, LocationServiceRestarterBroadcastReceiver.class);
             sendBroadcast(bintent);
+            mServiceHandler.removeCallbacksAndMessages(null);
             //     myTimer.cancel();
         }
+    }
+
+    /**
+     * Returns the {@code location} object as a human readable string.
+     * @param location  The {@link Location}.
+     */
+    static String getLocationText(Location location) {
+        return location == null ? "Unknown location" :
+                "(" + location.getLatitude() + ", " + location.getLongitude() + ")";
+    }
+
+    /**
+     * Returns true if this is a foreground service.
+     *
+     * @param context The {@link Context}.
+     */
+    public boolean serviceIsRunningInForeground(Context context) {
+        ActivityManager manager = (ActivityManager) context.getSystemService(
+                Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(
+                Integer.MAX_VALUE)) {
+            if (getClass().getName().equals(service.service.getClassName())) {
+                if (service.foreground) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    static String getLocationTitle(Context context) {
+        return context.getString(R.string.location_updated,
+                DateFormat.getDateTimeInstance().format(new Date()));
     }
 }

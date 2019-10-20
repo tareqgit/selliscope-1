@@ -38,6 +38,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
@@ -1242,23 +1243,31 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
         //And it will be keep running until you close the entire application from task manager.
         //This method will executed only once.
-        LocationMonitoringService locationMonitoringService = new LocationMonitoringService();
-        locationServiceIntent = new Intent(this, locationMonitoringService.getClass());
-        if (!mAlreadyStartedService) {
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+
+            LocationMonitoringService locationMonitoringService = new LocationMonitoringService();
+            locationServiceIntent = new Intent(this, locationMonitoringService.getClass());
+            if (!mAlreadyStartedService) {
 
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 
-                startForegroundService(locationServiceIntent);
+                    startForegroundService(locationServiceIntent);
+                }
+
+                //mMsgView.setText("msg_location_service_started");
+
+                //Start location sharing service to app server.........
+                startService(locationServiceIntent);
+             //  locationMonitoringService.requestLocationUpdates();
+                mAlreadyStartedService = true;
+                //Ends................................................
+
             }
-
-            //mMsgView.setText("msg_location_service_started");
-
-            //Start location sharing service to app server.........
-            startService(locationServiceIntent);
-            mAlreadyStartedService = true;
-            //Ends................................................
-
+        }else{
+            Toast.makeText(context, "Please accept location Updates", Toast.LENGTH_SHORT).show();
         }
     }
 

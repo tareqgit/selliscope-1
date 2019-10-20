@@ -173,6 +173,7 @@
     <string name="reason">Reason:</string>
     <string name="sku_no">SKU No:</string>
     <string name="refresh_data">Refresh Data</string>
+    <string name="location_updated" translatable="false"> : %1$s</string>
 
 
     <string-array name="paymentType">

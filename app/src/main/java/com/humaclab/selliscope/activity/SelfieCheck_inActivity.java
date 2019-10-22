@@ -8,7 +8,6 @@ import androidx.databinding.DataBindingUtil;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -24,19 +23,21 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.google.gson.Gson;
 import com.humaclab.selliscope.LocationMonitoringService;
 import com.humaclab.selliscope.R;
 import com.humaclab.selliscope.SelliscopeApiEndpointInterface;
 import com.humaclab.selliscope.SelliscopeApplication;
 import com.humaclab.selliscope.databinding.ActivitySelfieCheckInBinding;
+import com.humaclab.selliscope.model.Outlets;
 import com.humaclab.selliscope.model.UserLocation;
+import com.humaclab.selliscope.performance.daily_activities.model.OutletWithCheckInTime;
 import com.humaclab.selliscope.utility_db.db.UtilityDatabase;
+import com.humaclab.selliscope.utility_db.model.RegularPerformanceEntity;
 import com.humaclab.selliscope.utils.CurrentTimeUtilityClass;
 import com.humaclab.selliscope.utils.GetAddressFromLatLang;
 import com.humaclab.selliscope.utils.NetworkUtility;
 import com.humaclab.selliscope.utils.SessionManager;
-import com.mti.pushdown_ext_onclick_single.PushDown;
-import com.mti.pushdown_ext_onclick_single.PushDownAnim;
 import com.mti.pushdown_ext_onclick_single.SingleClick;
 
 import java.io.ByteArrayOutputStream;
@@ -46,8 +47,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.Executors;
 
 import okhttp3.ResponseBody;
@@ -65,6 +68,7 @@ public class SelfieCheck_inActivity extends AppCompatActivity {
     UtilityDatabase mUtilityDatabase;
     private SelliscopeApiEndpointInterface apiService;
     public int outletId;
+    public Outlets.Outlet outlet;
     public Context mContext;
 
     @Override
@@ -81,6 +85,7 @@ public class SelfieCheck_inActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         outletId = getIntent().getIntExtra("outletId", -1);
+        outlet= (Outlets.Outlet) getIntent().getSerializableExtra("outlet");
 
 
         Log.d("tareq_test", "SelfieCheck_inActivity #67: onCreate:  " + outletId);
@@ -131,15 +136,22 @@ public class SelfieCheck_inActivity extends AppCompatActivity {
                         public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                             if(response.isSuccessful()){
                                 Toast.makeText(mContext, "Selfie Check-in Successful", Toast.LENGTH_SHORT).show();
+                                //region Update checkedin for Activities
+                                updateRegularPerformance(SelfieCheck_inActivity.this.mContext, SelfieCheck_inActivity.this.outlet);
 
-                                startActivity(new Intent(SelfieCheck_inActivity.this, OutletActivity.class));
+
+                               // startActivity(new Intent(SelfieCheck_inActivity.this, OutletActivity.class));
                                 finish();
 
                             }else if(response.code()>=500 && response.code()<=599){
+                                //region Update checkedin for Activities
+                                updateRegularPerformance(SelfieCheck_inActivity.this.mContext, SelfieCheck_inActivity.this.outlet);
+
+
                                 Executors.newSingleThreadExecutor().execute(()->{
                                     mUtilityDatabase.returnCheckInDao().addCheck_In(new UserLocation.Visit(LocationMonitoringService.sLocation.getLatitude(), LocationMonitoringService.sLocation.getLongitude(), "", CurrentTimeUtilityClass.getCurrentTimeStamp(), outletId, selfieImage, mActivitySelfieCheckInBinding.tvComment.getEditText().getText().toString()));
                                     runOnUiThread(()->Toast.makeText(SelfieCheck_inActivity.this, "Selfie check-in Queued", Toast.LENGTH_SHORT).show());
-                                    startActivity(new Intent(SelfieCheck_inActivity.this, OutletActivity.class));
+                                  //  startActivity(new Intent(SelfieCheck_inActivity.this, OutletActivity.class));
                                     finish();
 
                                 });
@@ -148,10 +160,15 @@ public class SelfieCheck_inActivity extends AppCompatActivity {
 
                         @Override
                         public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+                            //region Update checkedin for Activities
+                            updateRegularPerformance(SelfieCheck_inActivity.this.mContext, SelfieCheck_inActivity.this.outlet);
+
+
                             Executors.newSingleThreadExecutor().execute(()->{
                                 mUtilityDatabase.returnCheckInDao().addCheck_In(new UserLocation.Visit(LocationMonitoringService.sLocation.getLatitude(), LocationMonitoringService.sLocation.getLongitude(), "", CurrentTimeUtilityClass.getCurrentTimeStamp(), outletId, selfieImage, mActivitySelfieCheckInBinding.tvComment.getEditText().getText().toString()));
                                 runOnUiThread(()->Toast.makeText(SelfieCheck_inActivity.this, "Selfie check-in Queued", Toast.LENGTH_SHORT).show());
-                                startActivity(new Intent(SelfieCheck_inActivity.this, OutletActivity.class));
+                             //   startActivity(new Intent(SelfieCheck_inActivity.this, OutletActivity.class));
                                 finish();
 
                             });
@@ -161,17 +178,46 @@ public class SelfieCheck_inActivity extends AppCompatActivity {
                     Toast.makeText(SelfieCheck_inActivity.this, "Please wait a while and try again after some minutes", Toast.LENGTH_SHORT).show();
 
             } else {
+                //region Update checkedin for Activities
+                updateRegularPerformance(SelfieCheck_inActivity.this.mContext, SelfieCheck_inActivity.this.outlet);
+
+
                 Executors.newSingleThreadExecutor().execute(() -> {
                     if (LocationMonitoringService.sLocation != null) {
                         mUtilityDatabase.returnCheckInDao().addCheck_In(new UserLocation.Visit(LocationMonitoringService.sLocation.getLatitude(), LocationMonitoringService.sLocation.getLongitude(), "", CurrentTimeUtilityClass.getCurrentTimeStamp(), outletId, selfieImage, mActivitySelfieCheckInBinding.tvComment.getEditText().getText().toString()));
                         runOnUiThread(()->Toast.makeText(SelfieCheck_inActivity.this, "Selfie check-in Queued", Toast.LENGTH_SHORT).show());
-                        startActivity(new Intent(SelfieCheck_inActivity.this, OutletActivity.class));
+                       // startActivity(new Intent(SelfieCheck_inActivity.this, OutletActivity.class));
                         finish();
                     } else
                         runOnUiThread(()->  Toast.makeText(SelfieCheck_inActivity.this, "Please wait a while and try again after some minutes", Toast.LENGTH_SHORT).show());
                 });
             }
         });
+    }
+
+    private void updateRegularPerformance(Context context, Outlets.Outlet outlet) {
+
+        UtilityDatabase utilityDatabase = (UtilityDatabase) UtilityDatabase.getInstance(context);
+        Date d = Calendar.getInstance().getTime();
+        SimpleDateFormat formatDate = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+        String date = formatDate.format(d);
+        SimpleDateFormat formathour = new SimpleDateFormat("HH-mm", Locale.ENGLISH);
+        String hour = formathour.format(d);
+        outlet.setSelfie(true); //as this is selfie check_in
+        OutletWithCheckInTime outletWithCheckInTime = new OutletWithCheckInTime(outlet, hour);
+
+        new Thread(() -> {
+            List<RegularPerformanceEntity> regularPerformanceEntities = utilityDatabase.returnUtilityDao().getRegularPerformance(date);
+            if (regularPerformanceEntities.size() == 0) {
+                utilityDatabase.returnUtilityDao().insertRegularPerformance(new RegularPerformanceEntity.Builder().withDate(date).withDistance(0).withOutlets_checked_in(new Gson().toJson(outletWithCheckInTime) + "~;~").build());
+            } else {
+
+                String outlets = regularPerformanceEntities.get(0).outlets_checked_in + new Gson().toJson(outletWithCheckInTime) + "~;~";
+
+
+                utilityDatabase.returnUtilityDao().updateRegularPerformanceOutlets(outlets, date);
+            }
+        }).start();
     }
 
     @Override

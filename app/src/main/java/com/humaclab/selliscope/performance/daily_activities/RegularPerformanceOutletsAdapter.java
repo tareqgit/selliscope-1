@@ -1,6 +1,7 @@
 package com.humaclab.selliscope.performance.daily_activities;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.gson.Gson;
 import com.humaclab.selliscope.R;
 import com.humaclab.selliscope.databinding.ActivityRegularPerformanceOutletModelBinding;
 import com.humaclab.selliscope.performance.daily_activities.model.OutletWithCheckInTime;
@@ -38,7 +40,15 @@ public class RegularPerformanceOutletsAdapter  extends RecyclerView.Adapter<Regu
     @Override
     public void onBindViewHolder(@NonNull TViewHolder holder, int position) {
         OutletWithCheckInTime outlet=mOutletWithCheckInTimeList.get(position);
+
         holder.getBinding().setOutlet(outlet);
+
+        Log.d("tareq_test", "RegularPerformanceOutletsAdapter #44: onBindViewHolder:  "+ new Gson().toJson(outlet));
+       if( outlet.getOutlet()!=null) {
+            if (outlet.getOutlet().isSelfie()) {
+                holder.getBinding().textViewSelfie.setVisibility(View.VISIBLE);
+            }
+        }
     }
 
     @Override

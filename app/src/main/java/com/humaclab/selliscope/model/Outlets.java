@@ -56,7 +56,13 @@ public class Outlets implements Serializable {
         @SerializedName("refphone")
         public String outletrefPhoneNumber;
 
+        public boolean selfie= false;
+
         private double distance_from_cur_location; //only for sorting lists according to distance
+
+
+        public Outlet() {
+        }
 
         public String getClientID() {
             return ClientID;
@@ -74,6 +80,34 @@ public class Outlets implements Serializable {
         public void setOutlet_routeplan(String outlet_routeplan) {
             if(outlet_routeplan==null) this.outlet_routeplan="0";
             else   this.outlet_routeplan = outlet_routeplan;
+        }
+
+        public boolean isSelfie() {
+            return selfie;
+        }
+
+        public void setSelfie(boolean selfie) {
+            this.selfie = selfie;
+        }
+
+
+        public Outlet(int outletId, String outletType, String outletName, String clientID, String ownerName, String outletAddress, String district, String thana, String phone, @Nullable String outletImgUrl, Double outletLatitude, Double outletLongitude, String outletDue, String outlet_routeplan, String outletrefPhoneNumber, double distance_from_cur_location) {
+            this.outletId = outletId;
+            this.outletType = outletType;
+            this.outletName = outletName;
+            ClientID = clientID;
+            this.ownerName = ownerName;
+            this.outletAddress = outletAddress;
+            this.district = district;
+            this.thana = thana;
+            this.phone = phone;
+            this.outletImgUrl = outletImgUrl;
+            this.outletLatitude = outletLatitude;
+            this.outletLongitude = outletLongitude;
+            this.outletDue = outletDue;
+            this.outlet_routeplan = outlet_routeplan;
+            this.outletrefPhoneNumber = outletrefPhoneNumber;
+            this.distance_from_cur_location = distance_from_cur_location;
         }
 
         @Override

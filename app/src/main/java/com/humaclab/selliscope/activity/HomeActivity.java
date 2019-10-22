@@ -18,6 +18,7 @@ import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.BatteryManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -180,6 +181,14 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
         get_FCM_Token(); ///Should be called  Once app open for the first time as this token naturally static if it changes new token can be found from FCMNotificationService-> newToken().
         // [END handle_data_extras]
+
+
+        //region Battery Percentage
+        BatteryManager bm = (BatteryManager)getSystemService(BATTERY_SERVICE);
+        int batLevel = bm.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY);
+
+        Log.d("tareq_test", "HomeActivity #189: onCreate:  "+ batLevel);
+        //endregion
 
 
         //

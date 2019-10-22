@@ -211,6 +211,7 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
                                    flashbar.dismiss();
                                    Intent intent = new Intent(context, SelfieCheck_inActivity.class);
                                    intent.putExtra("outletId",outlet.outletId);
+                                   intent.putExtra("outlet", outlet);
                                    context.startActivity(intent);
                                }
                            })
@@ -231,6 +232,7 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
                                 flashbar.dismiss();
                                Intent intent = new Intent(context, SelfieCheck_inActivity.class);
                                intent.putExtra("outletId",outlet.outletId);
+                               intent.putExtra("outlet", outlet);
                                context.startActivity(intent);
                            }
                        })
@@ -254,7 +256,8 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
         Log.d("tareq_test", "OutletRecyclerViewAdapter #244: sendUserLocation:  "+ new Gson().toJson(new UserLocation(userLocationVisits)));
         Call<ResponseBody> call = apiService.sendUserLocation(new UserLocation(userLocationVisits));
         call.enqueue(new Callback<ResponseBody>() {
-            private final Intent intent = new Intent(context, SelfieCheck_inActivity.class).putExtra("outletId",outlet.outletId);
+            private final Intent intent = new Intent(context, SelfieCheck_inActivity.class).putExtra("outletId",outlet.outletId).putExtra("outlet", outlet);
+
 
 
             @Override

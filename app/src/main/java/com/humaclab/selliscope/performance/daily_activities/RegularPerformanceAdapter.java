@@ -83,11 +83,8 @@ public class RegularPerformanceAdapter extends RecyclerView.Adapter<RegularPerfo
         public TViewHolder(View itemView) {
             super(itemView);
             mBinding = DataBindingUtil.bind(itemView);
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                 if(mOnOutletItemClickListener!=null)   mOnOutletItemClickListener.onOutletClick(mDatumList.get(getAdapterPosition()));
-                }
+            itemView.setOnClickListener(v -> {
+             if(mOnOutletItemClickListener!=null)   mOnOutletItemClickListener.onOutletClick(mDatumList.get(getAdapterPosition()));
             });
         }
     }

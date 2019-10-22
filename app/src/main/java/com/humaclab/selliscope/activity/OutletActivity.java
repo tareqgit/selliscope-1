@@ -132,7 +132,7 @@ public class OutletActivity extends AppCompatActivity {
                     pd.setMessage("Local data is updating.\nPlease be patient....");
                     pd.setCancelable(false);
                     pd.show();
-*/
+            */
                 LoadLocalIntoBackground loadLocalIntoBackground = new LoadLocalIntoBackground(this);
                 binding.srlOutlet.setRefreshing(true);
 

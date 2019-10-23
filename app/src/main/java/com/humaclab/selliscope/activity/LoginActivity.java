@@ -70,8 +70,7 @@ public class LoginActivity extends AppCompatActivity {
     private ProgressBar loginProgresssBar;
     //For Bangla
     private SwitchMultiButton mSwitchMultiButton;
-    private RadioGroup rg_language;
-    private RadioButton rbEnglish, rbBangla;
+
     final String KEY_SAVED_RADIO_BUTTON_INDEX = "SAVED_RADIO_BUTTON_INDEX";
 
     RxGoldfinger mGoldfinger;
@@ -128,6 +127,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+        mSwitchMultiButton.setVisibility(View.INVISIBLE);
 
         checkPermission();
 

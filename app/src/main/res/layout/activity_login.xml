@@ -26,7 +26,8 @@
         app:strokeRadius="8dp"
         app:strokeWidth="2dp"
         app:switchTabs="@array/my_lang"
-        app:textSize="14sp" />
+        app:textSize="14sp"
+        tools:visibility="invisible" />
 
 
 

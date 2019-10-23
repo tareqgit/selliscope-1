@@ -1172,7 +1172,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
         Thana thana1 = new Thana();
         thana1.setId(0);
-        thana1.setName("Select Thana");
+        thana1.setName("Select District");
         thana1.setDistrictId(0);
         thanaList.add(thana1);
 

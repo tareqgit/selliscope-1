@@ -427,7 +427,7 @@ public class AddOutletActivity extends AppCompatActivity {
     void getDistricts() {
         District district1 = new District();
         district1.setId(0);
-        district1.setName("Select district");
+        district1.setName("Select Zone");
         ArrayList<District> arrayListDistrict = new ArrayList<>();
         arrayListDistrict.add(district1);
         arrayListDistrict.addAll(databaseHandler.getDistrict());

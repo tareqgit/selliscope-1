@@ -20,9 +20,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            xmlns:tools="http://schemas.android.com/tools"
+        <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
 
@@ -250,7 +248,7 @@
                         android:background="@drawable/border"
                         android:fontFamily="@font/latobold"
                         android:padding="4dp"
-                        android:text="District:"
+                        android:text="Zone:"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                         android:textColor="#000000"
                         android:textStyle="bold" />
@@ -279,7 +277,7 @@
                         android:background="@drawable/border"
                         android:fontFamily="@font/latobold"
                         android:padding="4dp"
-                        android:text="Thana:"
+                        android:text="District:"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                         android:textColor="#000000"
                         android:textStyle="bold" />

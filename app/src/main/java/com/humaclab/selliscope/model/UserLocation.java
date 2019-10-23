@@ -53,12 +53,12 @@ public class UserLocation {
         public int outletId;
 
         @Nullable
-        @SerializedName("img")
+        @SerializedName("selfie")
         @ColumnInfo(name = "img")
         public String img;
 
         @Nullable
-        @SerializedName("comment")
+        @SerializedName("comments")
         @ColumnInfo(name = "comment")
         public String comment;
 

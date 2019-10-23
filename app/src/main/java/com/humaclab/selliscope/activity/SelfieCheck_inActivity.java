@@ -98,28 +98,25 @@ public class SelfieCheck_inActivity extends AppCompatActivity {
 
         mUtilityDatabase = (UtilityDatabase) UtilityDatabase.getInstance(this);
 
-        mActivitySelfieCheckInBinding.imageViewSelfie.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                // Ensure that there's a camera activity to handle the intent
-                if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-                    // Create the File where the photo should go
-                    File photoFile = null;
-                    try {
-                        output = createImageFile();
-                    } catch (IOException ex) {
-                        // Error occurred while creating the File
-                        Log.d("tareq_test", "InspectionActivity #87: onCreate:  " + ex.getMessage());
-                    }
-                    // Continue only if the File was successfully created
-                    if (output != null) {
+        mActivitySelfieCheckInBinding.imageViewSelfie.setOnClickListener(v -> {
+            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            // Ensure that there's a camera activity to handle the intent
+            if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+                // Create the File where the photo should go
+                File photoFile = null;
+                try {
+                    output = createImageFile();
+                } catch (IOException ex) {
+                    // Error occurred while creating the File
+                    Log.d("tareq_test", "InspectionActivity #87: onCreate:  " + ex.getMessage());
+                }
+                // Continue only if the File was successfully created
+                if (output != null) {
 
-                        Uri photoURI = FileProvider.getUriForFile(SelfieCheck_inActivity.this, AUTHORITY, output);
-                        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                        takePictureIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                        startActivityForResult(takePictureIntent, CAMERA_REQUEST);
-                    }
+                    Uri photoURI = FileProvider.getUriForFile(SelfieCheck_inActivity.this, AUTHORITY, output);
+                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                    takePictureIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                    startActivityForResult(takePictureIntent, CAMERA_REQUEST);
                 }
             }
         });
@@ -131,6 +128,9 @@ public class SelfieCheck_inActivity extends AppCompatActivity {
                     List<UserLocation.Visit> visitList = new ArrayList<UserLocation.Visit>() ;
 
                     visitList.add(  new UserLocation.Visit(LocationMonitoringService.sLocation.getLatitude(),LocationMonitoringService.sLocation.getLongitude(), GetAddressFromLatLang.getAddressFromLatLan(mContext,LocationMonitoringService.sLocation.getLatitude(),LocationMonitoringService.sLocation.getLongitude()),CurrentTimeUtilityClass.getCurrentTimeStamp(),outletId,selfieImage,mActivitySelfieCheckInBinding.tvComment.getEditText().getText().toString()));
+
+                    Log.d("tareq_test", "SelfieCheck_inActivity #132: onCreate:  "+ new Gson().toJson(new UserLocation(visitList)));
+
                     apiService.sendUserLocation(new UserLocation(visitList)).enqueue(new Callback<ResponseBody>() {
                         @Override
                         public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {

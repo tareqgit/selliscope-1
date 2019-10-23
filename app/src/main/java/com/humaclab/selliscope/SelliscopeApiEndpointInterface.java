@@ -157,7 +157,7 @@ public interface SelliscopeApiEndpointInterface {
     @POST("v1/outlet/store")
     Call<ResponseBody> createOutlet(@Body CreateOutlet createOutlet);
 
-    @POST("v1/visit/store")
+    @POST("v2/visit/store")
     Call<ResponseBody> sendUserLocation(@Body UserLocation userLocation);
 
     @POST("v1/order/variant/store")

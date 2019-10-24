@@ -12,6 +12,7 @@ import com.humaclab.selliscope.SelliscopeApplication;
 import com.humaclab.selliscope.dbmodel.UserVisit;
 import com.humaclab.selliscope.model.UserLocation;
 import com.humaclab.selliscope.utility_db.db.UtilityDatabase;
+import com.humaclab.selliscope.utils.BatteryUtils;
 import com.humaclab.selliscope.utils.DatabaseHandler;
 import com.humaclab.selliscope.utils.GetAddressFromLatLang;
 import com.humaclab.selliscope.utils.SessionManager;
@@ -32,8 +33,11 @@ public class LocationSyncerWorker extends Worker {
     UtilityDatabase mUtilityDatabase;
     SessionManager sessionManager;
     private DatabaseHandler dbHandler ;
+    Context mContext;
+
     public LocationSyncerWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
+        mContext=context;
         sessionManager = new SessionManager(context);
         dbHandler= new DatabaseHandler(context);
         mUtilityDatabase = (UtilityDatabase) UtilityDatabase.getInstance(context);
@@ -80,12 +84,12 @@ public class LocationSyncerWorker extends Worker {
         List<UserLocation.Visit> userLocationVisits = new ArrayList<>();
         //getting data from sqlite database
         for (UserVisit userVisit : dbHandler.getUSerVisits()) {
-            userLocationVisits.add(new UserLocation.Visit(userVisit.getLatitude(), userVisit.getLongitude(), GetAddressFromLatLang.getAddressFromLatLan(getApplicationContext(), userVisit.getLatitude(), userVisit.getLongitude()), userVisit.getTimeStamp()));
+            userLocationVisits.add(new UserLocation.Visit(userVisit.getLatitude(), userVisit.getLongitude(), GetAddressFromLatLang.getAddressFromLatLan(getApplicationContext(), userVisit.getLatitude(), userVisit.getLongitude()), userVisit.getTimeStamp(),userVisit.getBattery_status()));
         }
 
         if( mUtilityDatabase.returnCheckInDao().getCheckInList().size()>0){
             for (UserLocation.Visit userVisit :  mUtilityDatabase.returnCheckInDao().getCheckInList()) {
-                userLocationVisits.add(new UserLocation.Visit(userVisit.latitude, userVisit.longitude, GetAddressFromLatLang.getAddressFromLatLan(getApplicationContext(), userVisit.latitude, userVisit.longitude), userVisit.timeStamp, userVisit.outletId,userVisit.img, userVisit.comment));
+                userLocationVisits.add(new UserLocation.Visit(userVisit.latitude, userVisit.longitude, GetAddressFromLatLang.getAddressFromLatLan(getApplicationContext(), userVisit.latitude, userVisit.longitude), userVisit.timeStamp, userVisit.outletId,userVisit.img, userVisit.comment, BatteryUtils.getBatteryLevelPercentage(mContext)));
             }
         }
         return userLocationVisits;

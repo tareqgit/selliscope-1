@@ -6,17 +6,18 @@ package com.humaclab.selliscope.dbmodel;
 
 public class UserVisit {
     private double latitude, longitude;
-    private String timeStamp;
+    private String timeStamp, battery_status;
     private int visitId = -1;
 
-    public UserVisit(double latitude, double longitude, String timeStamp) {
+    public UserVisit(double latitude, double longitude, String timeStamp, String battery_status) {
         this.latitude = latitude;
         this.longitude = longitude;
         this.timeStamp = timeStamp;
+        this.battery_status= battery_status;
     }
 
-    public UserVisit(double latitude, double longitude, String timeStamp, int visitId) {
-        this(latitude, longitude, timeStamp);
+    public UserVisit(double latitude, double longitude, String timeStamp, int visitId, String battery_status) {
+        this(latitude, longitude, timeStamp, battery_status);
         this.visitId = visitId;
     }
 
@@ -50,5 +51,13 @@ public class UserVisit {
 
     public void setTimeStamp(String timeStamp) {
         this.timeStamp = timeStamp;
+    }
+
+    public String getBattery_status() {
+        return battery_status;
+    }
+
+    public void setBattery_status(String battery_status) {
+        this.battery_status = battery_status;
     }
 }

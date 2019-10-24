@@ -41,6 +41,7 @@ import com.humaclab.selliscope.model.UserLocation;
 import com.humaclab.selliscope.performance.daily_activities.model.OutletWithCheckInTime;
 import com.humaclab.selliscope.utility_db.model.RegularPerformanceEntity;
 import com.humaclab.selliscope.utility_db.db.UtilityDatabase;
+import com.humaclab.selliscope.utils.BatteryUtils;
 import com.humaclab.selliscope.utils.DatabaseHandler;
 import com.humaclab.selliscope.utils.GetAddressFromLatLang;
 import com.humaclab.selliscope.utils.NetworkUtility;
@@ -252,7 +253,7 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
                 sessionManager.getUserPassword(), false)
                 .create(SelliscopeApiEndpointInterface.class);
         List<UserLocation.Visit> userLocationVisits = new ArrayList<>();
-        userLocationVisits.add(new UserLocation.Visit(location.getLatitude(), location.getLongitude(), GetAddressFromLatLang.getAddressFromLatLan(context, location.getLatitude(), location.getLongitude()), outlet.outletId));
+        userLocationVisits.add(new UserLocation.Visit(location.getLatitude(), location.getLongitude(), GetAddressFromLatLang.getAddressFromLatLan(context, location.getLatitude(), location.getLongitude()), outlet.outletId, BatteryUtils.getBatteryLevelPercentage(context)));
         Log.d("tareq_test", "OutletRecyclerViewAdapter #244: sendUserLocation:  "+ new Gson().toJson(new UserLocation(userLocationVisits)));
         Call<ResponseBody> call = apiService.sendUserLocation(new UserLocation(userLocationVisits));
         call.enqueue(new Callback<ResponseBody>() {

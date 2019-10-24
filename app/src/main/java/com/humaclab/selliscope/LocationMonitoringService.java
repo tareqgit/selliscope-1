@@ -13,6 +13,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.BatteryManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -51,6 +52,7 @@ import com.humaclab.selliscope.model.UserLocation;
 import com.humaclab.selliscope.service.LocationServiceRestarterBroadcastReceiver;
 import com.humaclab.selliscope.utility_db.model.RegularPerformanceEntity;
 import com.humaclab.selliscope.utility_db.db.UtilityDatabase;
+import com.humaclab.selliscope.utils.BatteryUtils;
 import com.humaclab.selliscope.utils.CurrentTimeUtilityClass;
 import com.humaclab.selliscope.utils.DatabaseHandler;
 import com.humaclab.selliscope.utils.GetAddressFromLatLang;
@@ -106,11 +108,13 @@ public class LocationMonitoringService extends Service implements
 
     public static Location sLocation;
 
+    Context mContext;
+
 
     @Override
     public void onCreate() {
         super.onCreate();
-
+        mContext=this;
         mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
 
@@ -418,7 +422,7 @@ public class LocationMonitoringService extends Service implements
                         prefs.edit().putString("last_pos_long", String.valueOf(longitude)).apply();
                         //endregion
                     } else {
-                        mDbHandler.addUserVisits(new UserVisit(latitude, longitude, CurrentTimeUtilityClass.getCurrentTimeStamp()));
+                        mDbHandler.addUserVisits(new UserVisit(latitude, longitude, CurrentTimeUtilityClass.getCurrentTimeStamp(), BatteryUtils.getBatteryLevelPercentage(mContext)));
 
                         Log.d("tareq_test", "User location saved in Database");
                         lastTime = Calendar.getInstance().getTime().toString();
@@ -477,11 +481,11 @@ public class LocationMonitoringService extends Service implements
         //getting data from sqlite database
 
         for (UserVisit userVisit : mDbHandler.getUSerVisits()) {
-            userLocationVisits.add(new UserLocation.Visit(userVisit.getLatitude(), userVisit.getLongitude(), GetAddressFromLatLang.getAddressFromLatLan(getApplicationContext(), userVisit.getLatitude(), userVisit.getLongitude()), userVisit.getTimeStamp()));
+            userLocationVisits.add(new UserLocation.Visit(userVisit.getLatitude(), userVisit.getLongitude(), GetAddressFromLatLang.getAddressFromLatLan(getApplicationContext(), userVisit.getLatitude(), userVisit.getLongitude()), userVisit.getTimeStamp(), userVisit.getBattery_status()));
         }
 
 
-        userLocationVisits.add(new UserLocation.Visit(latitude, longitude, GetAddressFromLatLang.getAddressFromLatLan(getApplicationContext(), latitude, longitude), timeStamp));
+        userLocationVisits.add(new UserLocation.Visit(latitude, longitude, GetAddressFromLatLang.getAddressFromLatLan(getApplicationContext(), latitude, longitude), timeStamp, BatteryUtils.getBatteryLevelPercentage(mContext)));
 
         Log.d("tareq_test", "" + new Gson().toJson(new UserLocation(userLocationVisits)));
 
@@ -502,7 +506,7 @@ public class LocationMonitoringService extends Service implements
                 } else {
 
 
-                    UserVisit currentUserVisit = new UserVisit(latitude, longitude, timeStamp);
+                    UserVisit currentUserVisit = new UserVisit(latitude, longitude, timeStamp, BatteryUtils.getBatteryLevelPercentage(mContext));
 
                     mDbHandler.addUserVisits(currentUserVisit);
 

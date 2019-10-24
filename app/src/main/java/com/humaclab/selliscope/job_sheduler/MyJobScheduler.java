@@ -11,6 +11,7 @@ import com.google.gson.Gson;
 import com.humaclab.selliscope.SelliscopeApiEndpointInterface;
 import com.humaclab.selliscope.SelliscopeApplication;
 import com.humaclab.selliscope.model.UserLocation;
+import com.humaclab.selliscope.utils.BatteryUtils;
 import com.humaclab.selliscope.utils.CurrentTimeUtilityClass;
 import com.humaclab.selliscope.utils.GetAddressFromLatLang;
 import com.humaclab.selliscope.utils.NetworkUtility;
@@ -122,7 +123,7 @@ public class MyJobScheduler extends JobService {
                 sessionManager.getUserPassword(), false)
                 .create(SelliscopeApiEndpointInterface.class);
         List<UserLocation.Visit> userLocationVisits = new ArrayList<>();
-        userLocationVisits.add(new UserLocation.Visit(latitude, longitude, GetAddressFromLatLang.getAddressFromLatLan(getApplicationContext(), latitude, longitude), timeStamp));
+        userLocationVisits.add(new UserLocation.Visit(latitude, longitude, GetAddressFromLatLang.getAddressFromLatLan(getApplicationContext(), latitude, longitude), timeStamp, BatteryUtils.getBatteryLevelPercentage(context)));
         Call<ResponseBody> call = apiService.sendUserLocation(new UserLocation(userLocationVisits));
         call.enqueue(new Callback<ResponseBody>() {
             @Override

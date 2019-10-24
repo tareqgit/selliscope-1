@@ -41,7 +41,7 @@ import java.util.Map;
  */
 
 public class DatabaseHandler extends SQLiteOpenHelper {
-    private static final int DATABASE_VERSION = 20;
+    private static final int DATABASE_VERSION = 21;
 
     // Database Tables
     private static final String TABLE_TARGET = "targets";
@@ -73,6 +73,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String KEY_LONGITUDE = "longitude";
     private static final String KEY_TIMESTAMP = "timeStamp";
     private static final String KEY_IS_UPDATED = "isUpdated";
+    private static final String KEY_BATTERY_STATUS = "battery_status";
 
     //product table column names
     private static final String KEY_PRODUCT_ID = "product_id";
@@ -188,7 +189,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + KEY_LATITUDE + " REAL,"
                 + KEY_LONGITUDE + " REAL,"
                 + KEY_TIMESTAMP + " TEXT,"
-                + KEY_IS_UPDATED + " INTEGER" + ")";
+                + KEY_IS_UPDATED + " INTEGER,"
+                + KEY_BATTERY_STATUS + " TEXT"           + ")";
 
         String CREATE_PRODUCT_TABLE = "CREATE TABLE " + TABLE_PRODUCT + "("
                 + "ID INTEGER PRIMARY KEY,"
@@ -371,6 +373,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.put(KEY_LONGITUDE, userVisit.getLongitude());
         values.put(KEY_TIMESTAMP, userVisit.getTimeStamp());
         values.put(KEY_IS_UPDATED, 0);
+        values.put(KEY_BATTERY_STATUS, userVisit.getBattery_status());
         db.insert(TABLE_USER_VISITS, null, values);
         values.clear();
         db.close(); // Closing database connection
@@ -392,7 +395,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                         cursor.getDouble(cursor.getColumnIndex(KEY_LATITUDE)),
                         cursor.getDouble(cursor.getColumnIndex(KEY_LONGITUDE)),
                         cursor.getString(cursor.getColumnIndex(KEY_TIMESTAMP)),
-                        cursor.getInt(cursor.getColumnIndex(KEY_USER_VISIT_ID))
+                        cursor.getInt(cursor.getColumnIndex(KEY_USER_VISIT_ID)),
+                        cursor.getString(cursor.getColumnIndex(KEY_BATTERY_STATUS))
                 );
                 visitList.add(visit);
             } while (cursor.moveToNext());

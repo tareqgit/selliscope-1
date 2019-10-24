@@ -4,6 +4,8 @@ import android.content.Context;
 import android.os.BatteryManager;
 
 
+import java.util.Locale;
+
 import static android.content.Context.BATTERY_SERVICE;
 
 
@@ -18,6 +20,15 @@ public class BatteryUtils {
         int batLevel = bm.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY);
 
         return batLevel;
+        //endregion
+    }
+
+    public static String getBatteryLevelPercentage(Context context){
+        //region Battery Percentage
+        BatteryManager bm = (BatteryManager)context.getSystemService(BATTERY_SERVICE);
+        int batLevel = bm.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY);
+
+        return batLevel+"%";
         //endregion
     }
 }

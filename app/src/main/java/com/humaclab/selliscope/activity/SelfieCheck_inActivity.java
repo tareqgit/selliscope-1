@@ -34,6 +34,7 @@ import com.humaclab.selliscope.model.UserLocation;
 import com.humaclab.selliscope.performance.daily_activities.model.OutletWithCheckInTime;
 import com.humaclab.selliscope.utility_db.db.UtilityDatabase;
 import com.humaclab.selliscope.utility_db.model.RegularPerformanceEntity;
+import com.humaclab.selliscope.utils.BatteryUtils;
 import com.humaclab.selliscope.utils.CurrentTimeUtilityClass;
 import com.humaclab.selliscope.utils.GetAddressFromLatLang;
 import com.humaclab.selliscope.utils.NetworkUtility;
@@ -127,7 +128,7 @@ public class SelfieCheck_inActivity extends AppCompatActivity {
                 if (LocationMonitoringService.sLocation != null) {
                     List<UserLocation.Visit> visitList = new ArrayList<UserLocation.Visit>() ;
 
-                    visitList.add(  new UserLocation.Visit(LocationMonitoringService.sLocation.getLatitude(),LocationMonitoringService.sLocation.getLongitude(), GetAddressFromLatLang.getAddressFromLatLan(mContext,LocationMonitoringService.sLocation.getLatitude(),LocationMonitoringService.sLocation.getLongitude()),CurrentTimeUtilityClass.getCurrentTimeStamp(),outletId,selfieImage,mActivitySelfieCheckInBinding.tvComment.getEditText().getText().toString()));
+                    visitList.add(  new UserLocation.Visit(LocationMonitoringService.sLocation.getLatitude(),LocationMonitoringService.sLocation.getLongitude(), GetAddressFromLatLang.getAddressFromLatLan(mContext,LocationMonitoringService.sLocation.getLatitude(),LocationMonitoringService.sLocation.getLongitude()),CurrentTimeUtilityClass.getCurrentTimeStamp(),outletId,selfieImage,mActivitySelfieCheckInBinding.tvComment.getEditText().getText().toString(), BatteryUtils.getBatteryLevelPercentage(mContext)));
 
                     Log.d("tareq_test", "SelfieCheck_inActivity #132: onCreate:  "+ new Gson().toJson(new UserLocation(visitList)));
 
@@ -149,7 +150,7 @@ public class SelfieCheck_inActivity extends AppCompatActivity {
 
 
                                 Executors.newSingleThreadExecutor().execute(()->{
-                                    mUtilityDatabase.returnCheckInDao().addCheck_In(new UserLocation.Visit(LocationMonitoringService.sLocation.getLatitude(), LocationMonitoringService.sLocation.getLongitude(), "", CurrentTimeUtilityClass.getCurrentTimeStamp(), outletId, selfieImage, mActivitySelfieCheckInBinding.tvComment.getEditText().getText().toString()));
+                                    mUtilityDatabase.returnCheckInDao().addCheck_In(new UserLocation.Visit(LocationMonitoringService.sLocation.getLatitude(), LocationMonitoringService.sLocation.getLongitude(), "", CurrentTimeUtilityClass.getCurrentTimeStamp(), outletId, selfieImage, mActivitySelfieCheckInBinding.tvComment.getEditText().getText().toString(), BatteryUtils.getBatteryLevelPercentage(mContext)));
                                     runOnUiThread(()->Toast.makeText(SelfieCheck_inActivity.this, "Selfie check-in Queued", Toast.LENGTH_SHORT).show());
                                   //  startActivity(new Intent(SelfieCheck_inActivity.this, OutletActivity.class));
                                     finish();
@@ -166,7 +167,7 @@ public class SelfieCheck_inActivity extends AppCompatActivity {
 
 
                             Executors.newSingleThreadExecutor().execute(()->{
-                                mUtilityDatabase.returnCheckInDao().addCheck_In(new UserLocation.Visit(LocationMonitoringService.sLocation.getLatitude(), LocationMonitoringService.sLocation.getLongitude(), "", CurrentTimeUtilityClass.getCurrentTimeStamp(), outletId, selfieImage, mActivitySelfieCheckInBinding.tvComment.getEditText().getText().toString()));
+                                mUtilityDatabase.returnCheckInDao().addCheck_In(new UserLocation.Visit(LocationMonitoringService.sLocation.getLatitude(), LocationMonitoringService.sLocation.getLongitude(), "", CurrentTimeUtilityClass.getCurrentTimeStamp(), outletId, selfieImage, mActivitySelfieCheckInBinding.tvComment.getEditText().getText().toString(), BatteryUtils.getBatteryLevelPercentage(mContext)));
                                 runOnUiThread(()->Toast.makeText(SelfieCheck_inActivity.this, "Selfie check-in Queued", Toast.LENGTH_SHORT).show());
                              //   startActivity(new Intent(SelfieCheck_inActivity.this, OutletActivity.class));
                                 finish();
@@ -184,7 +185,7 @@ public class SelfieCheck_inActivity extends AppCompatActivity {
 
                 Executors.newSingleThreadExecutor().execute(() -> {
                     if (LocationMonitoringService.sLocation != null) {
-                        mUtilityDatabase.returnCheckInDao().addCheck_In(new UserLocation.Visit(LocationMonitoringService.sLocation.getLatitude(), LocationMonitoringService.sLocation.getLongitude(), "", CurrentTimeUtilityClass.getCurrentTimeStamp(), outletId, selfieImage, mActivitySelfieCheckInBinding.tvComment.getEditText().getText().toString()));
+                        mUtilityDatabase.returnCheckInDao().addCheck_In(new UserLocation.Visit(LocationMonitoringService.sLocation.getLatitude(), LocationMonitoringService.sLocation.getLongitude(), "", CurrentTimeUtilityClass.getCurrentTimeStamp(), outletId, selfieImage, mActivitySelfieCheckInBinding.tvComment.getEditText().getText().toString(), BatteryUtils.getBatteryLevelPercentage(mContext)));
                         runOnUiThread(()->Toast.makeText(SelfieCheck_inActivity.this, "Selfie check-in Queued", Toast.LENGTH_SHORT).show());
                        // startActivity(new Intent(SelfieCheck_inActivity.this, OutletActivity.class));
                         finish();

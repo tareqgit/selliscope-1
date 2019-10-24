@@ -128,7 +128,7 @@ public class SendUserLocationData {
                                     longitude,
                                     CurrentTimeUtilityClass.getCurrentTimeStamp(),
                                     false,
-                                    -1);
+                                    -1, BatteryUtils.getBatteryLevelPercentage(context));
                             List<UserVisit> userVisits = dbHandler.getUSerVisits();
                             if (!userVisits.isEmpty())
                                 for (UserVisit userVisit : userVisits) {
@@ -137,11 +137,12 @@ public class SendUserLocationData {
                                             userVisit.getLongitude(),
                                             userVisit.getTimeStamp(),
                                             true,
-                                            userVisit.getVisitId()
+                                            userVisit.getVisitId(),
+                                            userVisit.getBattery_status()
                                     );
                                 }
                         } else {
-                            dbHandler.addUserVisits(new UserVisit(latitude, longitude, CurrentTimeUtilityClass.getCurrentTimeStamp()));
+                            dbHandler.addUserVisits(new UserVisit(latitude, longitude, CurrentTimeUtilityClass.getCurrentTimeStamp(), BatteryUtils.getBatteryLevelPercentage(context)));
                             Timber.d("User Location Saved in Database");
                         }
 
@@ -150,12 +151,12 @@ public class SendUserLocationData {
         return true;
     }
 
-    private void sendUserLocation(double latitude, double longitude, String timeStamp, final boolean fromDB, final int visitId) {
+    private void sendUserLocation(double latitude, double longitude, String timeStamp, final boolean fromDB, final int visitId, String battery_status) {
         SelliscopeApiEndpointInterface apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(),
                 sessionManager.getUserPassword(), false)
                 .create(SelliscopeApiEndpointInterface.class);
         List<UserLocation.Visit> userLocationVisits = new ArrayList<>();
-        userLocationVisits.add(new UserLocation.Visit(latitude, longitude, GetAddressFromLatLang.getAddressFromLatLan(this.context, latitude, longitude), timeStamp));
+        userLocationVisits.add(new UserLocation.Visit(latitude, longitude, GetAddressFromLatLang.getAddressFromLatLan(this.context, latitude, longitude), timeStamp, battery_status));
         Call<ResponseBody> call = apiService.sendUserLocation(new UserLocation(userLocationVisits));
         call.enqueue(new Callback<ResponseBody>() {
             @Override

@@ -82,6 +82,7 @@ import com.humaclab.selliscope.utility_db.db.UtilityDatabase;
 import com.humaclab.selliscope.utils.Constants;
 import com.humaclab.selliscope.utils.DatabaseHandler;
 import com.humaclab.selliscope.utils.LoadLocalIntoBackground;
+import com.humaclab.selliscope.utils.LogoutService;
 import com.humaclab.selliscope.utils.ReloadDataService;
 import com.humaclab.selliscope.utils.SessionManager;
 import com.humaclab.selliscope.utils.UpLoadDataService;
@@ -729,6 +730,11 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 pd.setMessage("Login out...");
                 pd.show();
 
+                new LogoutService(context).logoutDataUpload(()->{
+                   if(new DatabaseHandler(context).getOrder().isEmpty())
+                    HomeActivity.this.deleteDatabase(Constants.databaseName);
+                });
+
                 //      jobScheduler.cancel(JOB_ID);
                 //Stop Android Service for sending location to service
                 stopService(new Intent(HomeActivity.this, LocationMonitoringService.class));
@@ -744,7 +750,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
 
                 /*stopService(new Intent(HomeActivity.this, SendLocationDataService.class));*/
-                HomeActivity.this.deleteDatabase(Constants.databaseName);
+
                 pd.dismiss();
 
                 try {

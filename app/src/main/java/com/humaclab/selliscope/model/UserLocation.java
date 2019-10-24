@@ -57,6 +57,12 @@ public class UserLocation {
         @ColumnInfo(name = "img")
         public String img;
 
+
+        @Nullable
+        @SerializedName("battery_status")
+        @ColumnInfo(name = "battery_status")
+        public String battery_status;
+
         @Nullable
         @SerializedName("comments")
         @ColumnInfo(name = "comment")
@@ -66,31 +72,38 @@ public class UserLocation {
         public Visit(double latitude, double longitude) {
             this.latitude = latitude;
             this.longitude = longitude;
-            this.address = address;
+
         }
 
-        public Visit(double latitude, double longitude, String address, @Nullable String timeStamp, int outletId, @Nullable String img, @Nullable String comment) {
+
+
+        public Visit(double latitude, double longitude, String address, @Nullable String timeStamp, int outletId, @Nullable String img, @Nullable String battery_status, @Nullable String comment) {
             this.latitude = latitude;
             this.longitude = longitude;
             this.address = address;
             this.timeStamp = timeStamp;
             this.outletId = outletId;
             this.img = img;
+            this.battery_status = battery_status;
             this.comment = comment;
         }
+
         @Ignore
-        public Visit(double latitude, double longitude, String address, String timeStamp) {
+        public Visit(double latitude, double longitude, String address, @Nullable String timeStamp, @Nullable String battery_status) {
             this.latitude = latitude;
             this.longitude = longitude;
             this.address = address;
             this.timeStamp = timeStamp;
+            this.battery_status = battery_status;
         }
+
         @Ignore
-        public Visit(double latitude, double longitude, String address, int outletId) {
+        public Visit(double latitude, double longitude, String address, int outletId, @Nullable String battery_status) {
             this.latitude = latitude;
             this.longitude = longitude;
             this.address = address;
             this.outletId = outletId;
+            this.battery_status = battery_status;
         }
     }
 

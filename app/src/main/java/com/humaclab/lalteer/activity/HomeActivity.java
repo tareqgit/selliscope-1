@@ -276,7 +276,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
-    //    final LocationSettingsStates states = LocationSettingsStates.fromIntent(intent);
+        //    final LocationSettingsStates states = LocationSettingsStates.fromIntent(intent);
+        super.onActivityResult(requestCode, resultCode, intent);
         switch (requestCode) {
             case REQUEST_CHECK_SETTINGS:
                 switch (resultCode) {
@@ -527,6 +528,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             Log.e("tareq_test", "Stop location Service intent: " + e.getMessage());
         }
         super.onDestroy();
+
+        unregisterReceiver(receiver); //extra
+
         if (sessionManager.isLoggedIn()) {
 
             if (manufacturer.equals("Xiaomi"))

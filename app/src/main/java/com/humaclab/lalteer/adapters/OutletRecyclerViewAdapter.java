@@ -313,52 +313,46 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
         userLocationVisits.add(new UserLocation.Visit(location.getLatitude(), location.getLongitude(), GetAddressFromLatLang.getAddressFromLatLan(context, location.getLatitude(), location.getLongitude()), outletId));
         Log.d("tareq_test", "OutletRecyclerViewAdapter #314: sendUserLocation:  "+new Gson().toJson( new UserLocation(userLocationVisits)));
 
-        Call<ResponseBody> call = apiService.sendUserLocation(new UserLocation(userLocationVisits));
-        call.enqueue(new Callback<ResponseBody>() {
+        Call<UserLocation.Successful> call = apiService.sendUserLocation(new UserLocation(userLocationVisits));
+        call.enqueue(new Callback<UserLocation.Successful>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onResponse(Call<UserLocation.Successful> call, Response<UserLocation.Successful> response) {
               //  Toast.makeText(context, "Response "+ response.code() +" " , Toast.LENGTH_SHORT).show();
                 Gson gson = new Gson();
                 if (response.code() == 200) {
-                    try {
-                        UserLocation.Successful userLocationSuccess = null;
-                        if (response.body() != null) {
-                            userLocationSuccess = gson.fromJson(response.body().string(), UserLocation.Successful.class);
+                    UserLocation.Successful userLocationSuccess = null;
+                    if (response.body() != null) {
+                        userLocationSuccess = response.body();
 
 
-                            progressBar.setVisibility(View.INVISIBLE);
+                        progressBar.setVisibility(View.INVISIBLE);
 
-                            if (userLocationSuccess.msg != null) {
-                                if (userLocationSuccess.msg.equals("")) { // To check if the user already checked in the outlet
-                                    //   Toast.makeText(context, "You are checked in.", Toast.LENGTH_SHORT).show();
+                        if (userLocationSuccess.msg != null) {
+                            if (userLocationSuccess.msg.equals("")) { // To check if the user already checked in the outlet
+                                //   Toast.makeText(context, "You are checked in.", Toast.LENGTH_SHORT).show();
 
-                                    new Flashbar.Builder(activity)
-                                            .gravity(Flashbar.Gravity.TOP)
-                                            .title("Congrats!")
-                                            .message("You are successfully checked in.")
-                                            .backgroundDrawable(R.drawable.moss_gradient)
-                                            .duration(3000)
-                                            .build().show();
+                                new Flashbar.Builder(activity)
+                                        .gravity(Flashbar.Gravity.TOP)
+                                        .title("Congrats!")
+                                        .message("You are successfully checked in.")
+                                        .backgroundDrawable(R.drawable.moss_gradient)
+                                        .duration(3000)
+                                        .build().show();
 
-                                    databaseHandler.afterCheckinUpdateOutletRoutePlan(outletId);
+                                databaseHandler.afterCheckinUpdateOutletRoutePlan(outletId);
 
-                                    ((OutletActivity) context).getRoute();//For reloading the outlet recycler view
-                                    ((OutletActivity) context).getOutlets();//For reloading the outlet recycler view
-                                } else {
-                                    //          Toast.makeText(context, "You already checked in.", Toast.LENGTH_SHORT).show();
-                                    new Flashbar.Builder(activity)
-                                            .gravity(Flashbar.Gravity.TOP)
-                                            .message("You already checked in.")
-                                            .backgroundDrawable(R.drawable.moss_gradient)
-                                            .duration(3000)
-                                            .build().show();
-                                }
+                                ((OutletActivity) context).getRoute();//For reloading the outlet recycler view
+                                ((OutletActivity) context).getOutlets();//For reloading the outlet recycler view
+                            } else {
+                                //          Toast.makeText(context, "You already checked in.", Toast.LENGTH_SHORT).show();
+                                new Flashbar.Builder(activity)
+                                        .gravity(Flashbar.Gravity.TOP)
+                                        .message("You already checked in.")
+                                        .backgroundDrawable(R.drawable.moss_gradient)
+                                        .duration(3000)
+                                        .build().show();
                             }
                         }
-                    } catch (IOException e) {
-                        progressBar.setVisibility(View.INVISIBLE);
-                        Toast.makeText(context, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
-                        e.printStackTrace();
                     }
                 } else if (response.code() == 400) {
                     progressBar.setVisibility(View.INVISIBLE);
@@ -371,7 +365,7 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            public void onFailure(Call<UserLocation.Successful> call, Throwable t) {
                 //Toast.makeText(LoginActivity.this, t.toString(), Toast.LENGTH_SHORT).show();
                 Log.d("Response", t.toString());
                 progressBar.setVisibility(View.INVISIBLE);

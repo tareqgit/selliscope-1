@@ -18,9 +18,9 @@ package com.humaclab.lalteer;
         import com.humaclab.lalteer.model.Payment;
         import com.humaclab.lalteer.model.PaymentResponse;
         import com.humaclab.lalteer.model.outlets.Outlets;
-        import com.humaclab.lalteer.model.outstanding_payment.OutstandingDueResponse;
-        import com.humaclab.lalteer.model.outstanding_payment.OutstandingPaymentBody;
-        import com.humaclab.lalteer.model.outstanding_payment.OutstandingPostResponse;
+        import com.humaclab.lalteer.outstanding_payment.model.OutstandingDueResponse;
+        import com.humaclab.lalteer.outstanding_payment.model.OutstandingPaymentBody;
+        import com.humaclab.lalteer.outstanding_payment.model.OutstandingPostResponse;
         import com.humaclab.lalteer.model.products.ProductResponse;
         import com.humaclab.lalteer.model.promotional_ads.PromotionalAds;
         import com.humaclab.lalteer.model.advance_payment.AdvancePaymentPostResponse;
@@ -158,7 +158,7 @@ public interface SelliscopeApiEndpointInterface {
 
 
     @POST("visit/store/")
-    Call<ResponseBody> sendUserLocation(@Body UserLocation userLocation);
+    Call<UserLocation.Successful> sendUserLocation(@Body UserLocation userLocation);
 
     @POST("order/store/")
     Call<AddNewOrder.OrderResponse> addOrder(@Body AddNewOrder order);

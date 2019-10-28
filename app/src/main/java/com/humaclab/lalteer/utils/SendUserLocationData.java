@@ -127,22 +127,17 @@ public class SendUserLocationData {
                 .create(SelliscopeApiEndpointInterface.class);
         List<UserLocation.Visit> userLocationVisits = new ArrayList<>();
         userLocationVisits.add(new UserLocation.Visit(latitude, longitude, GetAddressFromLatLang.getAddressFromLatLan(this.context, latitude, longitude), timeStamp));
-        Call<ResponseBody> call = apiService.sendUserLocation(new UserLocation(userLocationVisits));
-        call.enqueue(new Callback<ResponseBody>() {
+        Call<UserLocation.Successful> call = apiService.sendUserLocation(new UserLocation(userLocationVisits));
+        call.enqueue(new Callback<UserLocation.Successful>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onResponse(Call<UserLocation.Successful> call, Response<UserLocation.Successful> response) {
                 Timber.d("Code:" + response.code());
                 Gson gson = new Gson();
                 if (response.code() == 201) {
-                    try {
-                        UserLocation.Successful userLocationSuccess = gson.fromJson(response.body().string(), UserLocation.Successful.class);
-                        Timber.d("Result:" + userLocationSuccess.result);
-                        if (fromDB)
-                            dbHandler.deleteUserVisit(visitId);
-                    } catch (IOException e) {
-                        Timber.d("Error:" + e.toString());
-                        e.printStackTrace();
-                    }
+                    UserLocation.Successful userLocationSuccess =response.body();
+                    Timber.d("Result:" + userLocationSuccess.result);
+                    if (fromDB)
+                        dbHandler.deleteUserVisit(visitId);
                 } else if (response.code() == 400) {
 
                 } else {
@@ -151,7 +146,7 @@ public class SendUserLocationData {
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            public void onFailure(Call<UserLocation.Successful> call, Throwable t) {
                 Log.d("Response", t.toString());
             }
         });

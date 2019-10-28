@@ -120,35 +120,32 @@ public class OutletActivity extends AppCompatActivity {
             }
         });
 
-        binding.srlOutlet.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                if (!NetworkUtility.isNetworkAvailable(OutletActivity.this)) {
-                    Toast.makeText(getApplicationContext(), "Connect to Wifi or Mobile Data for better performance.", Toast.LENGTH_SHORT).show();
-                    binding.srlOutlet.setRefreshing(false);
+        binding.srlOutlet.setOnRefreshListener(() -> {
+            if (!NetworkUtility.isNetworkAvailable(OutletActivity.this)) {
+                Toast.makeText(getApplicationContext(), "Connect to Wifi or Mobile Data for better performance.", Toast.LENGTH_SHORT).show();
+                binding.srlOutlet.setRefreshing(false);
+            }
+
+            loadLocalIntoBackground.loadOutlet(new LoadLocalIntoBackground.LoadCompleteListener() {
+                @Override
+                public void onLoadComplete() {
+                    Toast.makeText(OutletActivity.this, "Data load complete", Toast.LENGTH_SHORT).show();
+                    getOutlets();
                 }
 
-                loadLocalIntoBackground.loadOutlet(new LoadLocalIntoBackground.LoadCompleteListener() {
-                    @Override
-                    public void onLoadComplete() {
-                        Toast.makeText(OutletActivity.this, "Data load complete", Toast.LENGTH_SHORT).show();
-                        getOutlets();
-                    }
+                @Override
+                public void onLoadFailed(String reason) {
+                    Toast.makeText(OutletActivity.this, "Data Load failed: " + reason, Toast.LENGTH_SHORT).show();
+                }
+            });
 
-                    @Override
-                    public void onLoadFailed(String reason) {
-                        Toast.makeText(OutletActivity.this, "Data Load failed: " + reason, Toast.LENGTH_SHORT).show();
-                    }
-                });
-
-            }
         });
 
 
         binding.tvCheckInCount.setOnClickListener(v -> startActivity(new Intent(OutletActivity.this, ClaimActivity.class)));
 
 
-        //  getOutlets();
+          getOutlets();
 
 
     }

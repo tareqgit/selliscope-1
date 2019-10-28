@@ -174,12 +174,13 @@ public class PaymentActivity extends AppCompatActivity {
    // public static Bitmap sBitmap;
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
 
-            Uri outputUri= FileProvider.getUriForFile(this, AUTHORITY, output);
-            final Uri imageUri =outputUri;
+            Uri outputUri = FileProvider.getUriForFile(this, AUTHORITY, output);
+            final Uri imageUri = outputUri;
             final InputStream imageStream;
             try {
                 imageStream = getContentResolver().openInputStream(imageUri);

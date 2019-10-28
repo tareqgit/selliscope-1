@@ -352,26 +352,22 @@
                                     app:layout_constraintTop_toTopOf="@+id/textView_paid" />
 
                                 <com.google.android.material.textfield.TextInputLayout
-                                    android:id="@+id/textInputLayou_total_amount_OutstandingPayment"
+                                    android:id="@+id/et_payment"
                                     android:layout_width="0dp"
                                     android:layout_height="wrap_content"
                                     android:layout_margin="8dp"
                                     android:layout_marginStart="8dp"
                                     android:layout_marginTop="8dp"
-                                    android:layout_marginEnd="8dp"
-                                    android:layout_marginBottom="8dp"
-                                    android:textColorHint="#03A9F4"
                                     android:hint="@string/pay"
-                                    app:layout_constraintBottom_toBottomOf="parent"
-                                    app:layout_constraintEnd_toStartOf="@+id/add_OutstandingPayment"
+                                    android:textColorHint="#03A9F4"
+                                    app:layout_constraintEnd_toStartOf="@+id/sp_payment_type"
                                     app:layout_constraintStart_toStartOf="parent"
                                     app:layout_constraintTop_toBottomOf="@+id/textView_paid">
 
                                     <com.google.android.material.textfield.TextInputEditText
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
-                                        android:inputType="numberDecimal"
-                                        />
+                                        android:inputType="numberDecimal" />
                                 </com.google.android.material.textfield.TextInputLayout>
 
 
@@ -387,12 +383,116 @@
                                     app:layout_constraintTop_toTopOf="parent"
                                     app:srcCompat="@drawable/ic_keyboard_arrow_right_white_24dp" />
 
+
+                                <Spinner
+                                    android:id="@+id/sp_payment_type"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="8dp"
+                                    android:layout_marginEnd="8dp"
+                                    android:entries="@array/paymentType"
+                                    android:spinnerMode="dropdown"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintTop_toBottomOf="@+id/textViewPaidInp" />
+
+                                <EditText
+                                    android:id="@+id/et_deposit_to"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="8dp"
+                                    android:ems="10"
+                                    android:hint="@string/deposit_to"
+                                    android:inputType="textPersonName"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toBottomOf="@+id/et_payment" />
+
+
+                                <EditText
+                                    android:id="@+id/et_branch_name"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="8dp"
+                                    android:layout_marginTop="8dp"
+                                    android:ems="10"
+                                    android:hint="Branch Name"
+                                    android:inputType="textPersonName"
+                                    android:visibility="visible"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toBottomOf="@+id/et_deposit_to" />
+
+                                <EditText
+                                    android:id="@+id/et_cheque_no"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="8dp"
+                                    android:layout_marginTop="8dp"
+                                    android:ems="10"
+                                    android:hint="@string/cheque_no"
+                                    android:inputType="textPersonName"
+
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toBottomOf="@+id/et_branch_name" />
+
+
+                                <EditText
+                                    android:id="@+id/et_deposit_slip"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="8dp"
+                                    android:ems="10"
+                                    android:hint="@string/deposit_slip"
+                                    android:inputType="textPersonName"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toBottomOf="@+id/et_cheque_no" />
+
+                                <Spinner
+                                    android:id="@+id/spinner_bank_name"
+                                    android:layout_width="0dp"
+                                    android:layout_height="0dp"
+                                    android:entries="@array/bankType"
+                                    android:visibility="visible"
+                                    app:layout_constraintBottom_toBottomOf="@+id/et_branch_name"
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintStart_toEndOf="@+id/et_branch_name"
+                                    app:layout_constraintTop_toTopOf="@+id/et_branch_name" />
+
+
+                                <TextView
+                                    android:id="@+id/textView_date"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="8dp"
+                                    android:layout_marginTop="8dp"
+                                    android:background="@drawable/custom_background_selector"
+                                    android:drawableStart="@drawable/ic_date_range_black_24dp"
+                                    android:drawablePadding="4dp"
+                                    android:hint="@string/cheque_date"
+
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toBottomOf="@+id/et_deposit_slip" />
+
+
+                                <ImageView
+                                    android:id="@+id/imageButton"
+                                    android:layout_width="60dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="8dp"
+                                    android:layout_marginTop="8dp"
+                                    android:adjustViewBounds="true"
+                                    android:scaleType="fitCenter"
+                                    android:visibility="visible"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toBottomOf="@+id/textView_date"
+                                    app:srcCompat="@drawable/addimage" />
+
                                 <TextView
                                     android:id="@+id/add_OutstandingPayment"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
+                                    android:layout_marginTop="8dp"
                                     android:layout_marginEnd="8dp"
                                     android:background="@drawable/button_shape"
+                                    android:elevation="3dp"
                                     android:padding="8dp"
                                     android:paddingStart="16dp"
                                     android:paddingEnd="16dp"
@@ -400,14 +500,13 @@
                                     android:textAlignment="center"
                                     android:textColor="#FFFFFF"
                                     android:textSize="18sp"
+
                                     android:textStyle="bold"
                                     app:layout_constraintBottom_toTopOf="@+id/dividerOutstandingPayment"
-
                                     app:layout_constraintEnd_toEndOf="parent"
-                                    app:layout_constraintTop_toTopOf="@+id/textInputLayou_total_amount_OutstandingPayment"
-                                    app:layout_constraintVertical_bias="0.78"
-                                    app:srcCompat="@drawable/add"
-                                    android:elevation="3dp"/>
+                                    app:layout_constraintTop_toBottomOf="@+id/sp_payment_type"
+                                    app:layout_constraintVertical_bias="0.98"
+                                    app:srcCompat="@drawable/add" />
 
                                 <View
                                     android:id="@+id/dividerOutstandingPayment"

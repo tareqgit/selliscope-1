@@ -323,10 +323,10 @@ public class LocationMonitoringService extends Service implements
         userLocationVisits.add(new UserLocation.Visit(latitude, longitude, GetAddressFromLatLang.getAddressFromLatLan(getApplicationContext(), latitude, longitude), timeStamp));
         Log.d("tareq_test", "" + new Gson().toJson(new UserLocation(userLocationVisits)));
 
-        Call<ResponseBody> call = apiService.sendUserLocation(new UserLocation(userLocationVisits));
-        call.enqueue(new Callback<ResponseBody>() {
+        Call<UserLocation.Successful> call = apiService.sendUserLocation(new UserLocation(userLocationVisits));
+        call.enqueue(new Callback<UserLocation.Successful>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onResponse(Call<UserLocation.Successful> call, Response<UserLocation.Successful> response) {
                 Gson gson = new Gson();
                 if (response.code() == 200) {
 
@@ -345,7 +345,7 @@ public class LocationMonitoringService extends Service implements
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            public void onFailure(Call<UserLocation.Successful> call, Throwable t) {
                 Log.d("Response", t.toString());
             }
         });

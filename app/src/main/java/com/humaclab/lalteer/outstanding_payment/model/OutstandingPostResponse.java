@@ -1,4 +1,10 @@
-package com.humaclab.lalteer.model.outstanding_payment;
+/*
+ * Created by Tareq Islam on 10/28/19 2:29 PM
+ *
+ *  Last modified 10/16/19 2:04 PM
+ */
+
+package com.humaclab.lalteer.outstanding_payment.model;
 
 import javax.annotation.Generated;
 import com.google.gson.annotations.SerializedName;

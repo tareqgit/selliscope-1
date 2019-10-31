@@ -19,8 +19,10 @@ public class CreateOutlet {
     public int outletThanaId;
     @SerializedName("phone")
     public String outletPhoneNumber;
+
     @SerializedName("refphone")
     public String outletrefPhoneNumber;
+
     @SerializedName("latitude")
     public double outletLatitude;
     @SerializedName("longitude")

@@ -1,31 +1,25 @@
 package com.humaclab.selliscope.activity;
 
-import android.app.ProgressDialog;
-import android.content.DialogInterface;
+import android.content.Context;
 import android.content.Intent;
-
-import androidx.appcompat.app.AlertDialog;
-import androidx.databinding.DataBindingUtil;
-
 import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
-
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-
 import android.os.Parcelable;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Toast;
 
-import com.humaclab.selliscope.LocationMonitoringService;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
+import androidx.recyclerview.widget.LinearLayoutManager;
+
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.humaclab.selliscope.R;
 import com.humaclab.selliscope.SelliscopeApiEndpointInterface;
 import com.humaclab.selliscope.SelliscopeApplication;
@@ -37,15 +31,13 @@ import com.humaclab.selliscope.model.route_plan.RouteResponse;
 import com.humaclab.selliscope.utils.DatabaseHandler;
 import com.humaclab.selliscope.utils.LoadLocalIntoBackground;
 import com.humaclab.selliscope.utils.NetworkUtility;
+import com.humaclab.selliscope.utils.SendUserLocationData;
 import com.humaclab.selliscope.utils.SessionManager;
 import com.humaclab.selliscope.utils.VerticalSpaceItemDecoration;
 
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -59,8 +51,10 @@ public class OutletActivity extends AppCompatActivity {
     private SessionManager sessionManager;
     public List<Outlets.Outlet> mOutletList;
     private LoadLocalIntoBackground loadLocalIntoBackground;
+    Location mLocation;
 
 
+    private Context mContext;
     // Save state
     private Parcelable recyclerViewState; //for storing recycler scroll postion
 
@@ -69,6 +63,11 @@ public class OutletActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_outlet);
+
+        mContext=this;
+
+        createGpsConnection();
+
         databaseHandler = new DatabaseHandler(this);
         sessionManager = new SessionManager(this);
         apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(), sessionManager.getUserPassword(), true).create(SelliscopeApiEndpointInterface.class);
@@ -187,6 +186,34 @@ public class OutletActivity extends AppCompatActivity {
 
     }
 
+
+    void createGpsConnection(){
+        GoogleApiClient googleApiClient= new GoogleApiClient.Builder(mContext)
+                .addApi(LocationServices.API)
+                .build();
+        googleApiClient.connect();
+
+        googleApiClient.registerConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
+            @Override
+            public void onConnected(@Nullable Bundle bundle) {
+               new SendUserLocationData(mContext).getInstantLocation(OutletActivity.this,(latitude, longitude) -> {
+                   Location location= new Location("current_location");
+                   location.setLatitude(latitude);
+                   location.setLongitude(longitude);
+                   mLocation=location;
+               });
+            }
+
+            @Override
+            public void onConnectionSuspended(int i) {
+
+            }
+        });
+
+    }
+
+
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -200,18 +227,18 @@ public class OutletActivity extends AppCompatActivity {
     public void getOutlets() {
         mOutletList = databaseHandler.getAllOutlet().outlets;
         if (!mOutletList.isEmpty()) {
-            if(LocationMonitoringService.sLocation!=null) {
+            if(mLocation!=null) {
 
-                Location location = new Location("");
+            /*    Location location = new Location("");
                 location.setLatitude(LocationMonitoringService.sLocation.getLatitude());
                 location.setLongitude(LocationMonitoringService.sLocation.getLongitude());
-
+*/
                 for (Outlets.Outlet outlet : mOutletList) {
                     Location loca = new Location("");
                     loca.setLatitude(outlet.outletLatitude);
                     loca.setLongitude(outlet.outletLongitude);
 
-                    outlet.setDistance_from_cur_location(location.distanceTo(loca));
+                    outlet.setDistance_from_cur_location(mLocation.distanceTo(loca));
 
                 }
 
@@ -223,7 +250,7 @@ public class OutletActivity extends AppCompatActivity {
 
             }else {
                 outletRecyclerViewAdapter.updateOutlate(mOutletList);
-                Toast.makeText(this, "Can't sort  outlet yet. Need some time", Toast.LENGTH_SHORT).show();
+               // Toast.makeText(this, "Can't sort  outlet yet. Need some time", Toast.LENGTH_SHORT).show();
             }
 
         }
@@ -271,7 +298,6 @@ public class OutletActivity extends AppCompatActivity {
                 final List<RouteDetailsResponse.OutletItem> check;
                 if (response.body() != null) {
                     check = response.body().getResult().getOutletItemList();
-
 
                         binding.tvCheckInCount.setText(String.format(Locale.ENGLISH,"%d / %d", response.body().getResult().getCheckedOutlet(), response.body().getResult().getTotalOutlet()));
                         loadLocalIntoBackground.saveOutletRoutePlan(check);

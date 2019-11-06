@@ -270,7 +270,7 @@ public class OutletActivity extends AppCompatActivity {
                     public void onSuccess(Response<RouteDetailsResponse> response) {
                         final List<RouteDetailsResponse.OutletItem> check = response.body() != null ? response.body().getResult().getOutletItemList() : null;
                         if (response.isSuccessful()) {
-                            Log.d("tareq_test", "OutletActivity #231: onSuccess:  " + response.body().getResult());
+
                             binding.tvCheckInCount.setText(String.format(Locale.ENGLISH, "%d / %d", response.body() != null ? response.body().getResult().getCheckedOutlet() : 0, response.body() != null ? response.body().getResult().getTotalOutlet() : 0));
                             loadLocalIntoBackground.saveOutletRoutePlan(check);
                             getOutlets(); //For reloading the outlet recycler view

@@ -15,12 +15,14 @@ import androidx.lifecycle.ViewModelProviders;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.humaclab.lalteer.R;
 import com.humaclab.lalteer.activity.OutletActivity;
@@ -30,7 +32,9 @@ import com.humaclab.lalteer.performance.claim.model.ReasonItem;
 import com.humaclab.lalteer.performance.claim.repository.ClaimRepository;
 import com.humaclab.lalteer.performance.claim.ui.ClaimViewModel;
 import com.humaclab.lalteer.utils.CurrentTimeUtilityClass;
+import com.humaclab.lalteer.utils.DateDiffUtils;
 
+import java.text.ParseException;
 import java.util.List;
 
 public class ClaimActivity extends AppCompatActivity {
@@ -85,32 +89,47 @@ public class ClaimActivity extends AppCompatActivity {
         });
 
         mBinding.radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
-            if(checkedId==0){
+            if (checkedId == 0) {
                 mBinding.opinionTx.setVisibility(View.VISIBLE);
-            }else{
+            } else {
                 mBinding.opinionTx.setVisibility(View.GONE);
             }
         });
 
         mBinding.sendTxt.setOnClickListener(v -> {
-           // Toast.makeText(this, "" + mBinding.radioGroup.getCheckedRadioButtonId(), Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(ClaimActivity.this, OutletActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            if(mBinding.radioGroup.getCheckedRadioButtonId()==0) {
-                mClaimViewModel.sendClaim(new Claim(mBinding.opinionTx.getEditText().getText().toString(), CurrentTimeUtilityClass.getCurrentTimeStampDate(), 0), new ClaimRepository.ClaimPostListener() {
-                    @Override
-                    public void onComplete() {
-                        finish();
+            SharedPreferences prefs = getSharedPreferences("SelliscopePref", MODE_PRIVATE);
+            SharedPreferences.Editor editor = prefs.edit();
+            String last_claim_time = prefs.getString("last_claim_time", "2018-01-01");
+            try {
+                if (DateDiffUtils.getDifferenceDays(last_claim_time, CurrentTimeUtilityClass.getCurrentTimeStampDate(), "yyyy-MM-dd") > 0) {
+                    Intent intent = new Intent(ClaimActivity.this, OutletActivity.class);
+
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    if (mBinding.radioGroup.getCheckedRadioButtonId() == 0) {
+                        mClaimViewModel.sendClaim(
+                                new Claim(mBinding.opinionTx.getEditText().getText().toString(), CurrentTimeUtilityClass.getCurrentTimeStampDate(), 0), () -> {
+
+                                    editor.putString("last_claim_time", CurrentTimeUtilityClass.getCurrentTimeStamp());
+                                    editor.apply();
+                                    finish();
+
+                                });
+                    } else {
+                        mClaimViewModel.sendClaim(
+                                new Claim("", CurrentTimeUtilityClass.getCurrentTimeStampDate(), mBinding.radioGroup.getCheckedRadioButtonId()), () -> {
+
+                                    editor.putString("last_claim_time", CurrentTimeUtilityClass.getCurrentTimeStamp());
+                                    editor.apply();
+
+                                    mContext.startActivity(intent);
+                                    finish();
+                                });
                     }
-                });
-            }else{
-                mClaimViewModel.sendClaim(new Claim("", CurrentTimeUtilityClass.getCurrentTimeStampDate(), mBinding.radioGroup.getCheckedRadioButtonId()), new ClaimRepository.ClaimPostListener() {
-                    @Override
-                    public void onComplete() {
-                        mContext.startActivity(intent);
-                        finish();
-                    }
-                });
+                } else {
+                    Toast.makeText(mContext, "You have already claimed Today", Toast.LENGTH_SHORT).show();
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
             }
         });
     }

@@ -57,12 +57,11 @@ public abstract class LalteerRoomDb extends RoomDatabase {
     private   static final Migration MIGRATION_1_2 = new Migration(1,2) {
         @Override
         public void migrate(@NonNull SupportSQLiteDatabase database) {
-            database.execSQL(" CREATE TABLE `OutstandingPaymentBody` (`id` INTEGER NOT NULL, `outlet_id` INTEGER NOT NULL, `amount` REAL NOT NULL, `paymentDate` TEXT, `img` TEXT, `comments` TEXT, `type` INTEGER NOT NULL, `cheque_no` TEXT, `bank_name` TEXT, `deposit_to` TEXT, `deposit_from` TEXT, `depositedSlipNumber` TEXT, `cheque_date` TEXT, PRIMARY KEY(`id`))");
-            database.execSQL(" CREATE TABLE `OutstandingPaymentLedger` (`id` INTEGER NOT NULL, `outlet_id` INTEGER NOT NULL, `paid` REAL NOT NULL, `due` REAL NOT NULL, PRIMARY KEY(`id`))");
+            database.execSQL(" CREATE TABLE `OutstandingPaymentBody` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `outlet_id` INTEGER NOT NULL, `amount` REAL NOT NULL, `paymentDate` TEXT, `img` TEXT, `comments` TEXT, `type` INTEGER NOT NULL, `cheque_no` TEXT, `bank_name` TEXT, `deposit_to` TEXT, `deposit_from` TEXT, `depositedSlipNumber` TEXT, `cheque_date` TEXT, PRIMARY KEY(`id`))");
+            database.execSQL(" CREATE TABLE `OutstandingPaymentLedger` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `outlet_id` INTEGER NOT NULL, `paid` REAL NOT NULL, `due` REAL NOT NULL, PRIMARY KEY(`id`))");
 
         }
     };
-
 
     public abstract ClaimReasonDAO returnClaimReasonsDao();
     public abstract ClaimDAO returnClaimDao();

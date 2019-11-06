@@ -286,8 +286,12 @@ public class OutletDetailsActivity extends AppCompatActivity {
         PushDownAnim.setPushDownAnimTo(binding.addOutstandingPayment).setOnSingleClickListener(v->{
             v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY); //for onclick vibration
 
-
-            postOutstandingPayment();
+            double amount =Double.parseDouble( binding.etPayment.getEditText().getText().toString());
+            if(amount<=Double.parseDouble(binding.textViewDueInput.getText().toString())) {
+                postOutstandingPayment();
+            }else{
+                binding.etPayment.setError("Payment can't exit due amount");
+            }
 
 
         });

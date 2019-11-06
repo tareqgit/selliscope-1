@@ -255,7 +255,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             filter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
             registerReceiver(receiver, filter);
         } catch (Exception e) {
-            Log.d("tareq_test", "" + e.getMessage());
+            Log.e("tareq_test", "Register reviever error" + e.getMessage());
         }
 
         // For Shared Preferrence to Language
@@ -529,7 +529,12 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         }
         super.onDestroy();
 
-        unregisterReceiver(receiver); //extra
+
+        try {
+            unregisterReceiver(receiver); //extra
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         if (sessionManager.isLoggedIn()) {
 

@@ -18,7 +18,7 @@ import com.google.gson.annotations.SerializedName;
 @Entity
 public class OutstandingPaymentLedger {
 
-    @PrimaryKey
+    @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
     @SerializedName("id")
     private int id;

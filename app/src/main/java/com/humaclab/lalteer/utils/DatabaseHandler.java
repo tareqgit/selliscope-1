@@ -356,9 +356,13 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     public void deleteUserVisit() {
-        SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(TABLE_USER_VISITS, null, null);
-        db.close();
+        try {
+            SQLiteDatabase db = this.getWritableDatabase();
+            db.delete(TABLE_USER_VISITS, null, null);
+            db.close();
+        } catch (Exception e) {
+            Log.e("tareq_test", "DatabaseHandler #364: deleteUserVisit: Error on deleting TABLE_USER_VISITS");
+        }
     }
 
 

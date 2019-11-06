@@ -21,7 +21,7 @@ import java.util.Objects;
 @Generated("com.robohorse.robopojogenerator")
 public class OutstandingPaymentBody implements Serializable {
 
-	@PrimaryKey
+	@PrimaryKey(autoGenerate = true)
 	@ColumnInfo(name = "id")
 	@SerializedName("id")
 	private int id;

@@ -15,9 +15,9 @@ import javax.annotation.Generated;
 @SuppressWarnings("unused")
 public class Datum {
 
-    @SerializedName("dealer_name")
+    @SerializedName("outlet_name")
     private String mOutletName;
-    @SerializedName("total_amount")
+    @SerializedName("grand_total")
     private Double mTotalAmount;
 
     public String getOutletName() {

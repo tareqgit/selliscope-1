@@ -13,11 +13,11 @@ import java.util.List;
 
 public class Order {
 
-    @SerializedName("grand_total")
+    @SerializedName("amount")
     private Double mGrandTotal;
     @SerializedName("order_date")
     private String mOrderDate;
-    @SerializedName("order_id")
+    @SerializedName("id")
     private Long mOrderId;
     @SerializedName("products")
     private List<Product> mProducts;

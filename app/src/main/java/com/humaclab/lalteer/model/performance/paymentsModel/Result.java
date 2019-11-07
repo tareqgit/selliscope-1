@@ -17,7 +17,7 @@ import javax.annotation.Generated;
 @SuppressWarnings("unused")
 public class Result {
 
-    @SerializedName("data")
+    @SerializedName("orders")
     private List<Datum> mData;
 
     public List<Datum> getData() {

@@ -17,7 +17,7 @@ public class Product implements Serializable {
 
     @SerializedName("amount")
     private Double mAmount;
-    @SerializedName("name")
+    @SerializedName("product_name")
     private String mName;
     @SerializedName("qty")
     private Long mQty;

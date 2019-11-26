@@ -37,6 +37,7 @@ import com.humaclab.selliscope.utility_db.model.RegularPerformanceEntity;
 import com.humaclab.selliscope.utils.BatteryUtils;
 import com.humaclab.selliscope.utils.CurrentTimeUtilityClass;
 import com.humaclab.selliscope.utils.GetAddressFromLatLang;
+import com.humaclab.selliscope.utils.LoadingDialog;
 import com.humaclab.selliscope.utils.NetworkUtility;
 import com.humaclab.selliscope.utils.SessionManager;
 import com.mti.pushdown_ext_onclick_single.SingleClick;
@@ -125,6 +126,10 @@ public class SelfieCheck_inActivity extends AppCompatActivity {
        SingleClick.get(mActivitySelfieCheckInBinding.tvSend).setOnSingleClickListener(v -> {
            v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY); //for onclick vibration
             if (NetworkUtility.isNetworkAvailable(getApplicationContext())) {
+
+                LoadingDialog loadingDialog= new LoadingDialog(this);
+                loadingDialog.showDialog();
+
                 if (LocationMonitoringService.sLocation != null) {
                     List<UserLocation.Visit> visitList = new ArrayList<UserLocation.Visit>() ;
 
@@ -135,6 +140,7 @@ public class SelfieCheck_inActivity extends AppCompatActivity {
                     apiService.sendUserLocation(new UserLocation(visitList)).enqueue(new Callback<ResponseBody>() {
                         @Override
                         public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                            loadingDialog.hideDialog();
                             if(response.isSuccessful()){
                                 Toast.makeText(mContext, "Selfie Check-in Successful", Toast.LENGTH_SHORT).show();
                                 //region Update checkedin for Activities

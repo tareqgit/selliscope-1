@@ -1,14 +1,19 @@
 package com.humaclab.selliscope.activity;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.location.Location;
+import android.media.Image;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.provider.ContactsContract;
 import android.provider.MediaStore;
 
 import androidx.annotation.Nullable;
@@ -49,6 +54,7 @@ import com.humaclab.selliscope.utils.DatabaseHandler;
 import com.humaclab.selliscope.utils.LoadLocalIntoBackground;
 import com.humaclab.selliscope.utils.NetworkUtility;
 import com.humaclab.selliscope.utils.SessionManager;
+import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -76,9 +82,10 @@ public class AddOutletActivity extends AppCompatActivity {
     private SelliscopeApiEndpointInterface apiService;
     private SessionManager sessionManager;
     private EditText outletName, outletAddress, outletOwner, outletContactNumber, outletrefnumber;
+    ImageView getLocation;
     private Spinner outletType, district, thana;
     private ImageView iv_outlet;
-    private Button submit, cancel, getLocation;
+    private Button submit, cancel;
     private OutletTypeAdapter outletTypeAdapter;
     private ThanaAdapter thanaAdapter;
     private DistrictAdapter districtAdapter;
@@ -88,6 +95,7 @@ public class AddOutletActivity extends AppCompatActivity {
 
     private ProgressDialog pd;
     private int MAP_LOCATION = 512;
+    private static final int REQUEST_CODE_PICK_CONTACTS = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -182,61 +190,67 @@ public class AddOutletActivity extends AppCompatActivity {
 
             }
         });
-        getLocation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(AddOutletActivity.this, LocationFromMapActivity.class);
-           //     intent.putExtra("latitude", mCurrentLatitude);
-             //   intent.putExtra("longitude", mCurrentLongitude);
-                startActivityForResult(intent, MAP_LOCATION);
-            }
+        getLocation.setOnClickListener(v -> {
+            Intent intent = new Intent(AddOutletActivity.this, LocationFromMapActivity.class);
+       //     intent.putExtra("latitude", mCurrentLatitude);
+         //   intent.putExtra("longitude", mCurrentLongitude);
+            startActivityForResult(intent, MAP_LOCATION);
         });
-        cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-        submit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
-                if (!isEmpty()) {
-               //     if (mLatitude != 0.0 && mLongitude != 0.0) {
+        RxPermissions rxPermissions= new RxPermissions(this);
+        findViewById(R.id.btn_getContact).setOnClickListener(v->{
+            rxPermissions.request(Manifest.permission.READ_CONTACTS)
+                    .subscribe(granted->{
+                        if(granted){
+                            startActivityForResult(new Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI), REQUEST_CODE_PICK_CONTACTS);
 
-                        if (NetworkUtility.isNetworkAvailable(AddOutletActivity.this)) {
-                         /*   Location currentLocation = new Location("");
-                            currentLocation.setLatitude(mCurrentLatitude);
-                            currentLocation.setLongitude(mCurrentLongitude);
+                        }else{
+                            Toast.makeText(this, "Need to accept Contact Permission", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+          });
+
+        cancel.setOnClickListener(v -> finish());
+
+
+
+        submit.setOnClickListener(v -> {
+
+            if (!isEmpty()) {
+           //     if (mLatitude != 0.0 && mLongitude != 0.0) {
+
+                    if (NetworkUtility.isNetworkAvailable(AddOutletActivity.this)) {
+                     /*   Location currentLocation = new Location("");
+                        currentLocation.setLatitude(mCurrentLatitude);
+                        currentLocation.setLongitude(mCurrentLongitude);
 */
-                            Location mapLocation = new Location("");
-                            mapLocation.setLatitude(mLatitude);
-                            mapLocation.setLongitude(mLongitude);
+                        Location mapLocation = new Location("");
+                        mapLocation.setLatitude(mLatitude);
+                        mapLocation.setLongitude(mLongitude);
 
-                          //  if (mapLocation.distanceTo(currentLocation) <= 100) {
-                                if (thanaId != 0) {
-                                    addOutlet(
-                                            outletTypeId, outletName.getText().toString().trim(),
-                                            outletOwner.getText().toString().trim(),
-                                            outletAddress.getText().toString().trim(),
-                                            thanaId,
-                                            outletContactNumber.getText().toString().trim(),
-                                            mLatitude,
-                                            mLongitude,
-                                            outletrefnumber.getText().toString().trim()
-                                    );
-                                } else {
-                                    Toast.makeText(AddOutletActivity.this, "Please select a thana first ", Toast.LENGTH_SHORT).show();
-                                }
-                      //      } else {
-                         //       Toast.makeText(AddOutletActivity.this, "Outlet location is not within your 100 meter radius . "+mapLocation.distanceTo(currentLocation), Toast.LENGTH_SHORT).show();
-                       //     }
-                        } else
-                            Toast.makeText(AddOutletActivity.this, "Connect to Wifi or Mobile Data", Toast.LENGTH_SHORT).show();
-                 //   } else {
-                //        Toast.makeText(AddOutletActivity.this, "Could not found any location yet.\nPlease try again.", Toast.LENGTH_SHORT).show();
-              //      }
-                }
+                      //  if (mapLocation.distanceTo(currentLocation) <= 100) {
+                            if (thanaId != 0) {
+                                addOutlet(
+                                        outletTypeId, outletName.getText().toString().trim(),
+                                        outletOwner.getText().toString().trim(),
+                                        outletAddress.getText().toString().trim(),
+                                        thanaId,
+                                        outletContactNumber.getText().toString().trim(),
+                                        mLatitude,
+                                        mLongitude,
+                                        outletrefnumber.getText().toString().trim()
+                                );
+                            } else {
+                                Toast.makeText(AddOutletActivity.this, "Please select a thana first ", Toast.LENGTH_SHORT).show();
+                            }
+                  //      } else {
+                     //       Toast.makeText(AddOutletActivity.this, "Outlet location is not within your 100 meter radius . "+mapLocation.distanceTo(currentLocation), Toast.LENGTH_SHORT).show();
+                   //     }
+                    } else
+                        Toast.makeText(AddOutletActivity.this, "Connect to Wifi or Mobile Data", Toast.LENGTH_SHORT).show();
+             //   } else {
+            //        Toast.makeText(AddOutletActivity.this, "Could not found any location yet.\nPlease try again.", Toast.LENGTH_SHORT).show();
+          //      }
             }
         });
 
@@ -462,6 +476,7 @@ public class AddOutletActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             Bitmap photo = (Bitmap) data.getExtras().get("data");
@@ -483,7 +498,66 @@ public class AddOutletActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
+
+        if (requestCode == REQUEST_CODE_PICK_CONTACTS && resultCode == RESULT_OK) {
+            Log.d(getClass().getName(), "Response: " + data.toString());
+            uriContact = data.getData();
+
+            try {
+
+                retrieveContactNumber();
+
+
+            } catch (Exception e) {
+                Log.d("" + getClass().getName(), "Excemption: " + e.getMessage());
+            }
+
+        }
     }
+
+    private Uri uriContact;
+    private String contactID;     // contacts unique ID
+
+    private void retrieveContactNumber() {
+
+        String contactNumber = null;
+
+        // getting contacts ID
+        Cursor cursorID = getContentResolver().query(uriContact,
+                new String[]{ContactsContract.Contacts._ID},
+                null, null, null);
+
+        if (cursorID.moveToFirst()) {
+
+            contactID = cursorID.getString(cursorID.getColumnIndex(ContactsContract.Contacts._ID));
+        }
+
+        cursorID.close();
+
+        Log.d(getClass().getName(), "Contact ID: " + contactID);
+
+        // Using the contact ID now we will get contact phone number
+        Cursor cursorPhone = getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                new String[]{ContactsContract.CommonDataKinds.Phone.NUMBER},
+
+                ContactsContract.CommonDataKinds.Phone.CONTACT_ID + " = ? AND " +
+                        ContactsContract.CommonDataKinds.Phone.TYPE + " = " +
+                        ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE,
+
+                new String[]{contactID},
+                null);
+
+        if (cursorPhone.moveToFirst()) {
+            contactNumber = cursorPhone.getString(cursorPhone.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+        }
+
+        cursorPhone.close();
+        outletrefnumber.setText(contactNumber);
+        Log.d(getClass().getName(), "Contact Phone Number: " + contactNumber);
+    }
+
+
+
 
     @Override
     public void onDestroy() {

@@ -28,6 +28,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
 
     <application
         android:name=".SelliscopeApplication"
@@ -38,7 +39,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".my_test.MyTestActivity"></activity>
+        <activity android:name=".activity.VerificationActivity"></activity>
+        <activity android:name=".my_test.MyTestActivity" />
 
         <receiver android:name=".receiver.ActionReceiver" />
 

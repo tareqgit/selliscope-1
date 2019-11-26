@@ -22,7 +22,7 @@
         android:layout_height="36dp"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:src="@drawable/outlet_marker"
+        android:src="@drawable/ic_address"
 
         app:layout_constraintEnd_toEndOf="@+id/dragg_result"
         app:layout_constraintStart_toStartOf="@+id/dragg_result"

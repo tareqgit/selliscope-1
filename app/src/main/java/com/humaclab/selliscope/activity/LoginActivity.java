@@ -5,11 +5,13 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.core.app.ActivityCompat;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.util.Base64;
 import android.util.Log;
@@ -68,6 +70,9 @@ public class LoginActivity extends AppCompatActivity {
     private SelliscopeApiEndpointInterface apiService;
     private SessionManager sessionManager;
     private ProgressBar loginProgresssBar;
+
+    Context mContext;
+
     //For Bangla
     private SwitchMultiButton mSwitchMultiButton;
     private RadioGroup rg_language;
@@ -93,6 +98,7 @@ public class LoginActivity extends AppCompatActivity {
         LoadLocale();
         setContentView(R.layout.activity_login);
 
+        mContext=this;
         sessionManager = new SessionManager(this);
         mGoldfinger = new RxGoldfinger.Builder(this).logEnabled(BuildConfig.DEBUG).build();
 
@@ -266,7 +272,7 @@ public class LoginActivity extends AppCompatActivity {
 
                         sendIMEIAndVersion();
 
-                        startActivity(new Intent(LoginActivity.this, LoadingActivity.class));
+                        startActivity(new Intent(LoginActivity.this, VerificationActivity.class));
                         finish();
 
                     } catch (IOException e) {
@@ -306,14 +312,24 @@ public class LoginActivity extends AppCompatActivity {
                     sendIMEIAndVersion();
                 } else {
                     IMEIandVerison imeIandVerison = new IMEIandVerison();
-                    imeIandVerison.setIMEIcode(telephonyManager.getDeviceId());
+
+                     final    String deviceId ;
+                  //  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        deviceId = Settings.Secure.getString(mContext.getContentResolver(), Settings.Secure.ANDROID_ID);
+             //       } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                ///       deviceId = telephonyManager.getDeviceId(0);
+                 //   } else {
+                 //       deviceId = telephonyManager.getDeviceId();
+                 //   }
+                    imeIandVerison.setIMEIcode(deviceId);
+
                     imeIandVerison.setAppVersion(BuildConfig.VERSION_NAME);
-                    System.out.println("IMEI and version: " + new Gson().toJson(imeIandVerison));
+                    Log.d("tareq_test", "LoginActivity #327: sendIMEIAndVersion:  "  + new Gson().toJson(imeIandVerison));
                     Call<ResponseBody> call = apiService.sendIMEIAndVersion(imeIandVerison);
                     call.enqueue(new Callback<ResponseBody>() {
                         @Override
                         public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                            Timber.d("Status code: " + response.code());
+
                         }
 
                         @Override

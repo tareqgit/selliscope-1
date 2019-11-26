@@ -59,24 +59,25 @@ public class LocationSyncerWorker extends Worker {
         Response<ResponseBody> response = null;
         try {
             response = apiService.sendUserLocation(new UserLocation(userLocationVisits)).execute();
-        } catch (IOException e) {
-            Log.d("tareq_test", "LocationSyncerWorker #54: doWork:  " + e.getMessage());
-            e.printStackTrace();
-        }
-
-        if(response.isSuccessful()){
-            Log.d("tareq_test", "LocationSyncerWorker #60: doWork:   success");
-            dbHandler.deleteUserVisit();
-            mUtilityDatabase.returnCheckInDao().deleteAllCheck_In();
-            return Result.success();
+            if(response.isSuccessful()){
+                Log.d("tareq_test", "LocationSyncerWorker #60: doWork:   success");
+                dbHandler.deleteUserVisit();
+                mUtilityDatabase.returnCheckInDao().deleteAllCheck_In();
+                return Result.success();
             }else{
                 if(response.code() >=500 && response.code()<=599){
                     Log.d("tareq_test", "LocationSyncerWorker #64: doWork:   retry");
                     return Result.retry();
                 }
-            Log.d("tareq_test", "LocationSyncerWorker #67: doWork:  failed");
-            return  Result.failure();
+                Log.d("tareq_test", "LocationSyncerWorker #67: doWork:  failed");
+                return  Result.failure();
             }
+        } catch (IOException e) {
+            Log.d("tareq_test", "LocationSyncerWorker #54: doWork:  " + e.getMessage());
+            e.printStackTrace();
+        }
+
+      return Result.failure();
 
     }
 

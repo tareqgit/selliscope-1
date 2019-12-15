@@ -17,7 +17,9 @@ public class AddNewOrder implements Serializable {
         @SerializedName("outlet_id")
         public int outletId;
         @SerializedName("discount")
-        public int discount;
+        public Double discount;
+
+
         @SerializedName("products")
         public List<Product> products;
 
@@ -30,6 +32,12 @@ public class AddNewOrder implements Serializable {
         @SerializedName("long")
         public String longitude;
 
+        @SerializedName("orderTotal")
+        public Double orderTotal;
+
+        @SerializedName("orderGrandTotal")
+        public Double orderGrandTotal;
+
         public static class Product {
             @SerializedName("id")
             public int id;
@@ -41,6 +49,20 @@ public class AddNewOrder implements Serializable {
             public String price;
             @SerializedName("discount")
             public Double discount;
+            @SerializedName("tpDiscount")
+            public Double tpDiscount;
+
+            @SerializedName("productTotal")
+            public Double productTotal;
+
+            @SerializedName("productSubTotal")
+            public Double productSubTotal;
+
+            @SerializedName("is_free")
+            public int is_free;
+
+            @SerializedName("order_return_id")
+            public int order_return_id;
         }
     }
 
@@ -60,7 +82,9 @@ public class AddNewOrder implements Serializable {
                 @SerializedName("outlet_id")
                 public int outlet_id;
                 @SerializedName("discount")
-                public int discount;
+                public Double discount;
+                @SerializedName("amount")
+                public Double amount;
             }
         }
     }

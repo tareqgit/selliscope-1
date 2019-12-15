@@ -1,10 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                                 android:layout_width="match_parent"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
                                                  android:layout_height="match_parent"
                                                  android:fitsSystemWindows="true">
 
-    <include layout="@layout/toolbar_layout"/>
+    <include
+        android:id="@+id/include5"
+        layout="@layout/toolbar_layout"
 
-    <include layout="@layout/content_home"/>l
-</android.support.design.widget.CoordinatorLayout>
+        app:layout_anchor="@+id/include4"
+        app:layout_anchorGravity="end|top" />
+
+    <include
+        android:id="@+id/include4"
+        layout="@layout/content_home" />
+
+    <TextView
+        android:id="@+id/textview_greeting"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Good"
+        android:background="@drawable/moss_back2"
+        android:elevation="4dp"
+
+        android:paddingStart="3dp"
+        android:paddingEnd="3dp"
+        android:paddingTop="2dp"
+        android:paddingBottom="2dp"
+        app:layout_anchor="@+id/include4"
+        app:layout_anchorGravity="top|center" />
+
+    <ImageView
+        android:id="@+id/gps_signal_image"
+        android:layout_width="47dp"
+        android:layout_height="31dp"
+        android:adjustViewBounds="true"
+        android:elevation="4dp"
+        app:layout_anchor="@+id/include5"
+        app:layout_anchorGravity="end|center"
+        app:srcCompat="@drawable/ic_high_signal"
+        tools:srcCompat="@drawable/ic_high_signal" />
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

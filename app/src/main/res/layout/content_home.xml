@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 xmlns:tools="http://schemas.android.com/tools"
                 android:id="@+id/content_home"
@@ -9,7 +9,17 @@
                 tools:context="com.humaclab.selliscope.activity.HomeActivity"
                 tools:showIn="@layout/app_bar_home">
 
-    <android.support.design.widget.TabLayout
+    <RelativeLayout
+        android:id="@+id/content_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+
+        app:layout_constraintBottom_toTopOf="@+id/navigation"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+   <!-- <android.support.design.widget.TabLayout
         android:id="@+id/sliding_tabs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -17,6 +27,7 @@
         android:background="@color/colorPrimary"
         app:tabIndicatorColor="@color/white"
         app:tabMode="fixed"
+        android:fontFamily="@font/latobold"
         app:tabSelectedTextColor="@color/white"
         app:tabTextColor="#b3ffffff">
 
@@ -24,19 +35,50 @@
             android:id="@+id/tab_item_target"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/target"/>
+            android:icon="@drawable/ic_target_sales_white"
+            android:text="@string/target"
+            android:fontFamily="@font/latobold"/>
 
         <android.support.design.widget.TabItem
             android:id="@+id/tab_item_dashboard"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/latobold"
             android:text="@string/dashboard"/>
+        <android.support.design.widget.TabItem
+            android:id="@+id/tab_item_performance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/latobold"
+            android:text="@string/performance"/>
     </android.support.design.widget.TabLayout>
+-->
 
-    <RelativeLayout
-        android:id="@+id/content_fragment"
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/navigation"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@id/sliding_tabs"/>
+        android:layout_gravity="bottom"
+        android:background="@color/colorPrimary"
 
-</RelativeLayout>
+        app:itemIconTint="@drawable/selector"
+        app:itemTextColor="@android:color/white"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:menu="@menu/bottom_navigation"
+
+      />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="4dp"
+        android:layout_above="@id/navigation"
+        android:background="@drawable/reverse_shadow"
+        app:layout_constraintBottom_toTopOf="@+id/navigation"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <!--android:foreground="?attr/selectableItemBackground"
+        app:itemBackground="@color/colorPrimary"-->
+</androidx.constraintlayout.widget.ConstraintLayout>

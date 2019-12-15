@@ -1,39 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
         <variable
             name="purchaseHistory"
-            type="com.humaclab.selliscope.model.PurchaseHistory.PurchaseHistoryItem" />
+            type="com.humaclab.selliscope.model.purchase_history.PurchaseHistoryItem" />
     </data>
 
-    <android.support.v7.widget.CardView
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
         android:foreground="?android:attr/selectableItemBackground"
         app:cardCornerRadius="5dp">
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:orientation="vertical">
+
+            >
 
             <LinearLayout
+                android:id="@+id/linearLayout10"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:hint="Order ID"
+                    android:fontFamily="@font/latobold"
+                    android:hint="@string/order_id"
                     android:padding="10dp"
-                    android:text="Order ID:"
+                    android:text="@string/order_id"
                     android:textColor="#000" />
 
                 <TextView
@@ -41,7 +47,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:hint="Order ID"
+                    android:fontFamily="@font/latoregular"
+                    android:hint="@string/order_id"
                     android:padding="10dp"
                     android:text='@{purchaseHistory.orderId}'
                     android:textColor="#000" />
@@ -51,7 +58,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center|end"
-                    android:hint="Order Date"
+                    android:fontFamily="@font/latobold"
+                    android:hint="@string/order_date"
                     android:padding="10dp"
                     android:text='@{purchaseHistory.orderDate}'
                     android:textAlignment="textEnd" />
@@ -60,7 +68,12 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:layout_marginBottom="8dp"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/linearLayout10">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -73,10 +86,10 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_weight="1"
-                        android:hint="Paid"
+                        android:fontFamily="@font/latobold"
+                        android:hint="@string/paid"
                         android:padding="2dp"
-                        android:text="Paid"
-                        android:textColor="#000" />
+                        android:text="@string/paid" />
 
                     <TextView
                         android:id="@+id/tv_paid"
@@ -84,11 +97,11 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center|end"
                         android:layout_weight="3"
-                        android:hint="Paid"
+                        android:fontFamily="@font/latoregular"
+                        android:hint="@string/paid"
                         android:padding="2dp"
                         android:text='@{purchaseHistory.paid}'
-                        android:textAlignment="textEnd"
-                        android:textColor="#000" />
+                        android:textAlignment="textEnd" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -102,9 +115,10 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center|end"
                         android:layout_weight="1"
-                        android:hint="Due"
+                        android:fontFamily="@font/latobold"
+                        android:hint="@string/due"
                         android:padding="2dp"
-                        android:text="Discount:" />
+                        android:text="@string/discount" />
 
                     <TextView
                         android:id="@+id/tv_discount"
@@ -112,6 +126,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center|end"
                         android:layout_weight="3"
+                        android:fontFamily="@font/latoregular"
                         android:hint="100"
                         android:padding="2dp"
                         android:text='@{purchaseHistory.discount}'
@@ -130,9 +145,10 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center|end"
                         android:layout_weight="1"
-                        android:hint="Due"
+                        android:fontFamily="@font/latobold"
+                        android:hint="@string/due"
                         android:padding="2dp"
-                        android:text="Due:" />
+                        android:text="@string/due" />
 
                     <TextView
                         android:id="@+id/tv_due"
@@ -140,13 +156,54 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center|end"
                         android:layout_weight="3"
-                        android:hint="Due"
+                        android:fontFamily="@font/latoregular"
+                        android:hint="@string/due"
                         android:padding="2dp"
                         android:text='@{purchaseHistory.due}'
                         android:textAlignment="textEnd" />
                 </LinearLayout>
 
             </LinearLayout>
-        </LinearLayout>
-    </android.support.v7.widget.CardView>
+
+            <TextView
+                android:id="@+id/textViewReturn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:background="@drawable/moss_gradient3"
+                android:padding="2dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="24dp"
+                android:shadowColor="@color/text_shadow"
+                android:shadowDx="1"
+                android:shadowDy="1"
+                android:shadowRadius="2"
+                android:text="Return"
+                android:textColor="@color/light_font"
+                android:visibility="gone"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/textViewFree"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:background="@drawable/moss_gradient_blue_free"
+                android:padding="2dp"
+                android:paddingStart="8dp"
+                android:paddingEnd="24dp"
+                android:shadowColor="@color/text_shadow"
+                android:shadowDx="1"
+                android:shadowDy="1"
+                android:shadowRadius="2"
+                android:text="Free"
+                android:textColor="@color/light_font"
+
+                android:visibility="gone"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
 </layout>

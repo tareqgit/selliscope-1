@@ -14,42 +14,47 @@
         android:orientation="horizontal">
 
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:layout_margin=".5dp"
+            android:layout_margin="1dp"
             android:layout_weight="1"
             android:background="#fff"
+            android:textColor="#000000"
             android:gravity="center"
-            android:padding="10dp"
+            android:padding="5dp"
             android:text="@{product.name}"
+            android:fontFamily="@font/latoregular"
             android:textAlignment="center"/>
 
-        <Spinner
+        <!--<Spinner
             android:id="@+id/sp_godown"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:layout_margin=".5dp"
+            android:layout_margin="1dp"
             android:layout_weight="1"
             android:clickable="true"
             android:gravity="center"
-            android:spinnerMode="dropdown"/>
+            android:fontFamily="@font/latoregular"
+            android:spinnerMode="dropdown"/>-->
 
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:layout_margin=".5dp"
+            android:textColor="#000000"
+            android:layout_margin="1dp"
             android:layout_weight="1"
             android:background="#fff"
             android:gravity="center"
-            android:padding="10dp"
+            android:padding="5dp"
             android:text="@{Integer.toString(product.qty - Integer.parseInt(product.dQty))}"
+            android:fontFamily="@font/latoregular"
             android:textAlignment="center"/>
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:layout_margin=".5dp"
@@ -57,51 +62,55 @@
             android:background="#fff"
             android:gravity="center"
             android:orientation="horizontal"
-            android:paddingLeft="@dimen/margin_10"
-            android:paddingRight="@dimen/margin_10">
+            android:paddingLeft="5dp"
+            android:paddingRight="5dp">
 
             <Button
                 android:id="@+id/btn_decrease"
-                android:layout_width="80dp"
+                android:layout_width="0dp"
                 android:layout_height="30dp"
                 android:layout_weight="1"
                 android:background="#ddd"
                 android:text="-"
+                android:fontFamily="@font/latoregular"
                 android:textColor="#000"
                 android:textSize="20sp"/>
 
             <EditText
                 android:id="@+id/et_qty"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_weight="2"
                 android:hint="Qty."
+                android:fontFamily="@font/latoregular"
                 android:imeOptions="actionDone"
                 android:inputType="number"
-                android:text="0"
+                android:text="@{Integer.toString(product.qty - Integer.parseInt(product.dQty))}"
                 android:textAlignment="center"
                 android:textColor="#000"/>
 
             <Button
                 android:id="@+id/btn_increase"
-                android:layout_width="80dp"
+                android:layout_width="0dp"
                 android:layout_height="30dp"
                 android:layout_weight="1"
                 android:background="#ddd"
                 android:text="+"
+                android:fontFamily="@font/latoregular"
                 android:textColor="#000"
                 android:textSize="20sp"/>
         </LinearLayout>
 
-        <Button
+        <!--<Button
             android:id="@+id/btn_deliver"
             style="@android:style/Widget.Button.Small"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="40dp"
             android:layout_margin="10dp"
             android:layout_weight="1"
             android:background="@drawable/button_shape"
             android:text="Deliver"
-            android:textColor="#fff"/>
+            android:fontFamily="@font/latobold"
+            android:textColor="#fff"/>-->
     </LinearLayout>
 </layout>

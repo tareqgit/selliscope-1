@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -10,20 +11,28 @@
 
         <include
             android:id="@+id/tl"
-            layout="@layout/toolbar_layout" />
+            layout="@layout/toolbar_layout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <LinearLayout
             android:id="@+id/ll_outlet"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/tl"
-            android:orientation="horizontal">
+            android:layout_marginTop="8dp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@+id/tl">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/latobold"
                 android:padding="5dp"
-                android:text="Outlet:"
+                android:text="@string/outlet"
                 android:textColor="#000"
                 android:textStyle="bold" />
 
@@ -31,20 +40,23 @@
                 android:id="@+id/tv_outlet_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:fontFamily="@font/latoregular"
                 android:hint="Outlet Name"
                 android:padding="5dp"
                 android:textColor="#000" />
         </LinearLayout>
 
-        <LinearLayout
+      <!--  <LinearLayout
             android:id="@+id/ll_header"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="2dp"
             android:layout_below="@+id/ll_outlet"
+            android:layout_marginTop="8dp"
             android:background="#ddd"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            app:layout_constraintTop_toBottomOf="@+id/ll_outlet">
 
-            <TextView
+            &lt;!&ndash;<TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_margin="1dp"
@@ -99,57 +111,84 @@
                 android:padding="5dp"
                 android:text="Remove"
                 android:textAlignment="center"
-                android:textColor="#000" />
-        </LinearLayout>
+                android:textColor="#000" />&ndash;&gt;
+        </LinearLayout>-->
 
-        <android.support.v7.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rl_selected_products"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
             android:layout_above="@id/ll_bottom"
-            android:layout_below="@+id/ll_header"
-            android:background="#ddd" />
 
-        <LinearLayout
+            android:padding="8dp"
+            android:clipToPadding="false"
+            android:layout_marginBottom="8dp"
+            android:background="#fff"
+            app:layout_constraintBottom_toTopOf="@+id/ll_bottom"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ll_outlet" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/ll_bottom"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
             android:layout_alignParentStart="true"
-            android:orientation="vertical">
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="8dp"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toTopOf="@+id/linearLayout7"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
+                    android:fontFamily="@font/latobold"
                     android:padding="5dp"
-                    android:text="Total: "
+                    android:text="@string/total"
                     android:textColor="#000"
                     android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/tv_total"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Total "
+                    android:fontFamily="@font/latoregular"
+                    android:gravity="end"
+                    android:hint="0"
                     android:padding="5dp"
-                    android:textColor="#000" />
+                    android:textColor="#000"
+                    android:textStyle="bold" />
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/linearLayout7"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:layout_marginBottom="8dp"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toTopOf="@+id/linearLayout9"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/latobold"
                     android:padding="5dp"
-                    android:text="Discount: "
+                    android:text="@string/discount"
                     android:textColor="#000"
                     android:textStyle="bold" />
 
@@ -157,43 +196,60 @@
                     android:id="@+id/et_discount"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Discount"
-                    android:text="0"
+                    android:fontFamily="@font/latoregular"
+                    android:gravity="end"
+                    android:hint="0"
+                    android:inputType="numberDecimal"
+
                     android:textColor="#000" />
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/linearLayout9"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:layout_marginBottom="8dp"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toTopOf="@+id/linearLayout8"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/latobold"
                     android:padding="5dp"
-                    android:text="Grand Total: "
+                    android:text="@string/grand_total"
                     android:textColor="#000"
                     android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/tv_grand_total"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Grand Total"
+                    android:fontFamily="@font/latoregular"
+                    android:gravity="end"
+                    android:hint="0"
                     android:padding="5dp"
                     android:textColor="#000" />
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/linearLayout8"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:layout_marginBottom="8dp"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toTopOf="@+id/btn_order"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/latobold"
                     android:padding="5dp"
-                    android:text="Comment:"
+                    android:text="@string/comment"
                     android:textColor="#000"
                     android:textStyle="bold" />
 
@@ -201,22 +257,40 @@
                     android:id="@+id/et_comments"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Comment" />
+                    android:fontFamily="@font/latoregular"
+                    android:gravity="end"
+                    android:hint="Urgent, Query" />
             </LinearLayout>
 
             <Button
                 android:id="@+id/btn_order"
+                style="@style/Widget.AppCompat.Button.Colored"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginTop="10dp"
-                android:background="@drawable/button_background"
-                android:drawablePadding="5dp"
-                android:drawableRight="@drawable/check"
-                android:drawableTint="#fff"
-                android:padding="5dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="8dp"
+                android:drawableRight="@drawable/ic_if_circle_check"
+                android:elevation="5dp"
+                android:fontFamily="@font/latobold"
                 android:text="Order"
-                android:textColor="#fff" />
-        </LinearLayout>
-    </RelativeLayout>
+                android:textAllCaps="false"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <Button
+                android:id="@+id/return_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginBottom="8dp"
+                android:text="Return"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

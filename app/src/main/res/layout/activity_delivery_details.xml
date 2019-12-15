@@ -1,27 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
         <variable
             name="deliveryDetails"
-            type="com.humaclab.selliscope.model.DeliveryResponse.DeliveryList"/>
+            type="com.humaclab.selliscope.model.DeliveryResponse.DeliveryList" />
     </data>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
+        android:background="#fff"
         tools:context="com.humaclab.selliscope.activity.DeliveryDetailsActivity">
 
         <include
             android:id="@+id/include"
-            layout="@layout/toolbar_layout"/>
+            layout="@layout/toolbar_layout" />
 
         <LinearLayout
+            android:id="@+id/layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_above="@+id/buttonPanel"
             android:layout_below="@+id/include"
             android:orientation="vertical">
 
@@ -29,7 +32,8 @@
                 android:id="@+id/linearLayout2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:padding="@dimen/elevation_5">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -41,10 +45,12 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:padding="5dp"
+                        android:fontFamily="@font/latoregular"
+                        android:padding="2dp"
                         android:text='@{deliveryDetails.outletName}'
                         android:textColor="#000"
-                        android:textSize="18sp"/>
+                        android:textSize="18sp" />
+
 
                     <TextView
                         android:id="@+id/tv_order_id"
@@ -52,33 +58,34 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="end"
                         android:layout_weight="1"
-                        android:padding="5dp"
+                        android:fontFamily="@font/latoregular"
+                        android:padding="2dp"
                         android:text='@{"Order id: " + deliveryDetails.deliveryId}'
                         android:textAlignment="textEnd"
                         android:textColor="#000"
-                        android:textSize="18sp"/>
+                        android:textSize="18sp" />
                 </LinearLayout>
 
                 <TextView
                     android:id="@+id/tv_order_date"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="5dp"
+                    android:fontFamily="@font/latoregular"
                     android:text='@{"Order Date: " + deliveryDetails.deliveryDate}'
-                    android:textSize="17sp"/>
+                    android:textSize="13sp" />
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="2dp"
                     android:layout_marginBottom="5dp"
-                    android:background="#ddd"/>
+                    android:background="#ddd" />
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/linearLayout3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="#ddd"
+                android:background="#88aba7a7"
                 android:orientation="horizontal">
 
                 <TextView
@@ -86,72 +93,134 @@
                     android:layout_height="wrap_content"
                     android:layout_margin=".5dp"
                     android:layout_weight="1"
-                    android:background="#fff"
+                    android:fontFamily="@font/latobold"
                     android:padding="10dp"
                     android:text="Items"
                     android:textAlignment="center"
                     android:textColor="#000"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold" />
+
+                <!-- <TextView
+                     android:layout_width="match_parent"
+                     android:layout_height="wrap_content"
+                     android:layout_margin=".5dp"
+                     android:layout_weight="1"
+                     android:background="#fff"
+                     android:padding="10dp"
+                     android:text="Godwon"
+                     android:fontFamily="@font/latobold"
+                     android:textAlignment="center"
+                     android:textColor="#000"
+                     android:textStyle="bold"/>-->
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin=".5dp"
                     android:layout_weight="1"
-                    android:background="#fff"
-                    android:padding="10dp"
-                    android:text="Godwon"
-                    android:textAlignment="center"
-                    android:textColor="#000"
-                    android:textStyle="bold"/>
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin=".5dp"
-                    android:layout_weight="1"
-                    android:background="#fff"
+                    android:fontFamily="@font/latobold"
                     android:padding="10dp"
                     android:text="O.Qty."
                     android:textAlignment="center"
                     android:textColor="#000"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin=".5dp"
                     android:layout_weight="1"
-                    android:background="#fff"
+                    android:fontFamily="@font/latobold"
                     android:padding="10dp"
                     android:text="D.Qty."
                     android:textAlignment="center"
                     android:textColor="#000"
-                    android:textStyle="bold"/>
+                    android:textStyle="bold" />
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin=".5dp"
-                    android:layout_weight="1"
-                    android:background="#fff"
-                    android:padding="10dp"
-                    android:text="Deliver"
-                    android:textAlignment="center"
-                    android:textColor="#000"
-                    android:textStyle="bold"/>
+                <!--                <TextView
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_margin=".5dp"
+                                    android:layout_weight="1"
+                                    android:background="#fff"
+                                    android:padding="10dp"
+                                    android:text="Deliver"
+                                    android:fontFamily="@font/latobold"
+                                    android:textAlignment="center"
+                                    android:textColor="#000"
+                                    android:textStyle="bold"/>-->
             </LinearLayout>
 
-            <android.support.v4.widget.SwipeRefreshLayout
+            <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
                 android:id="@+id/srl_delivery_details"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <android.support.v7.widget.RecyclerView
+                <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rv_delivery_details"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
-            </android.support.v4.widget.SwipeRefreshLayout>
+                    android:background="#3ec6c2c2"
+                    android:layout_height="wrap_content" />
+            </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
         </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/buttonPanel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentBottom="true"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="#82000000" />
+
+            <EditText
+                android:id="@+id/deliveryComment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:hint="Comment" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center">
+
+                <Button
+                    android:id="@+id/btn_deliver_cancel"
+                    style="@android:style/Widget.Button.Small"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="@drawable/button_cancel"
+                    android:fontFamily="@font/latobold"
+                    android:text="Cancel"
+                    android:textColor="#fff" />
+
+                <View
+                    android:layout_width="10dp"
+                    android:layout_height="match_parent" />
+
+                <Button
+                    android:id="@+id/btnDelivery"
+                    style="@android:style/Widget.Button.Small"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:background="@drawable/button_done"
+                    android:fontFamily="@font/latobold"
+                    android:text="Deliver"
+                    android:textColor="#fff" />
+            </LinearLayout>
+
+
+        </LinearLayout>
+
     </RelativeLayout>
 </layout>

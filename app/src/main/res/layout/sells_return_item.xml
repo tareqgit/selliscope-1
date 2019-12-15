@@ -5,11 +5,11 @@
     <data>
 
         <variable
-            name="deliveryDetails"
-            type="com.humaclab.selliscope.model.DeliveryResponse.DeliveryList"/>
+            name="sellsReturnOrder"
+            type="com.humaclab.selliscope.model.sales_return.SalesReturnResponse.DeliveryList"/>
     </data>
 
-    <android.support.v7.widget.CardView
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
@@ -25,24 +25,47 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:orientation="vertical">
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/iv_outlet"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:layout_gravity="center"
+                    android:layout_margin="10dp"
+                    android:src="@drawable/ic_outlet"
+                   />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:gravity="center"
+                    android:layout_gravity="center"
+                    android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/tv_outlet_name"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:padding="10dp"
-                        android:text='@{deliveryDetails.outletName}'
+                        android:hint="Shop Name"
+                        android:text='@{sellsReturnOrder.outletName}'
+                        android:fontFamily="@font/latobold"
+                        android:textStyle="bold"
                         android:textColor="#000"
                         android:textSize="18sp"/>
-
                     <TextView
+                        android:id="@+id/tv_user_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:hint="User Name"
+                        android:text='@{"Delivered By: "+sellsReturnOrder.user}'
+                        android:fontFamily="@font/latoregular"
+                        android:textColor="#000"
+                        android:textSize="15sp"/>
+
+                    <!--<TextView
                         android:id="@+id/tv_order_id"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -50,18 +73,20 @@
                         android:layout_weight="1"
                         android:padding="10dp"
                         android:text='@{"Order id: " + deliveryDetails.deliveryId}'
+                        android:fontFamily="@font/latoregular"
                         android:textAlignment="textEnd"
                         android:textColor="#000"
-                        android:textSize="18sp"/>
+                        android:textSize="18sp"/>-->
                 </LinearLayout>
 
-                <TextView
+                <!--<TextView
                     android:id="@+id/tv_order_date"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="10dp"
                     android:text='@{"Order Date: " + deliveryDetails.deliveryDate}'
-                    android:textSize="17sp"/>
+                    android:fontFamily="@font/latoregular"
+                    android:textSize="17sp"/>-->
             </LinearLayout>
 
             <ImageView
@@ -70,5 +95,5 @@
                 android:layout_gravity="center"
                 app:srcCompat="@drawable/next"/>
         </LinearLayout>
-    </android.support.v7.widget.CardView>
+    </androidx.cardview.widget.CardView>
 </layout>

@@ -2,11 +2,11 @@ package com.humaclab.selliscope.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.viewpager.widget.PagerAdapter;
+import androidx.viewpager.widget.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,7 +50,7 @@ public class TargetFragment extends Fragment {
 
         @Override
         public int getCount() {
-            return (3);
+            return (1);
         }
 
         @Override
@@ -58,10 +58,10 @@ public class TargetFragment extends Fragment {
             switch (position) {
                 case 0:
                     return (DailyTargetFragment.newInstance(position));
-                case 1:
-                    return (WeeklyTargetFragment.newInstance(position));
-                case 2:
-                    return (MonthlyTargetFragment.newInstance(position));
+//                case 1:
+//                    return (WeeklyTargetFragment.newInstance(position));
+//                case 2:
+//                    return (MonthlyTargetFragment.newInstance(position));
             }
             return null;
 
@@ -72,11 +72,11 @@ public class TargetFragment extends Fragment {
             //return(TargetFragment.getTitle(ctxt, position));
             switch (position) {
                 case 0:
-                    return "Daily";
-                case 1:
-                    return "Weekly";
-                case 2:
-                    return "Monthly";
+                    return "Target Plan";
+//                case 1:
+//                    return "Weekly";
+//                case 2:
+//                    return "Monthly";
                 default:
                     return "Nothing";
             }

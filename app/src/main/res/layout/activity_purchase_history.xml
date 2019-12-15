@@ -14,17 +14,17 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <android.support.v4.widget.SwipeRefreshLayout
+            <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
                 android:id="@+id/srl_purchase_history"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_above="@id/ll">
 
-                <android.support.v7.widget.RecyclerView
+                <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rl_purchase_history"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" />
-            </android.support.v4.widget.SwipeRefreshLayout>
+            </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
             <LinearLayout
                 android:id="@+id/ll"
@@ -32,6 +32,8 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:orientation="vertical"
+                android:elevation="5dp"
+                android:background="@drawable/cus_shadow"
                 android:padding="10dp">
 
                 <LinearLayout
@@ -50,15 +52,17 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:padding="5dp"
-                            android:text="Total Paid:"
+                            android:text="@string/total_paid"
+                            android:fontFamily="@font/latobold"
                             android:textStyle="bold" />
 
                         <TextView
                             android:id="@+id/tv_total_paid"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:fontFamily="@font/latoregular"
                             android:padding="5dp"
-                            android:text="paid"
+                            android:text="0"
                             android:textStyle="bold" />
                     </LinearLayout>
 
@@ -72,15 +76,17 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:padding="5dp"
-                            android:text="Total Due:"
+                            android:text="@string/total_due"
+                            android:fontFamily="@font/latobold"
                             android:textStyle="bold" />
 
                         <TextView
                             android:id="@+id/tv_total_due"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:fontFamily="@font/latoregular"
                             android:padding="5dp"
-                            android:text="due"
+                            android:text="0"
                             android:textStyle="bold" />
                     </LinearLayout>
                 </LinearLayout>
@@ -97,7 +103,8 @@
                         android:layout_width="82dp"
                         android:layout_height="35dp"
                         android:background="@drawable/button_shape"
-                        android:text="Payment"
+                        android:text="@string/payment"
+                        android:fontFamily="@font/latobold"
                         android:textColor="@color/white" />
 
                     <Button
@@ -109,7 +116,8 @@
                         android:layout_alignParentTop="true"
                         android:layout_gravity="right"
                         android:background="@drawable/button_shape"
-                        android:text="Order"
+                        android:text="@string/order"
+                        android:fontFamily="@font/latobold"
                         android:textColor="@color/white"
                         android:visibility="visible" />
                 </RelativeLayout>

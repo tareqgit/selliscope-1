@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+    android:id="@+id/sort"
+    android:title="sort"
+    android:icon="@drawable/ic_sort_white_24dp"
+
+
+        app:showAsAction="always"
+        />
+    <item
+        android:id="@+id/sort_day"
+        android:title="Today"
+
+        app:showAsAction="never"
+
+        />
+    <item
+        android:id="@+id/sort_week"
+        android:title="week"
+
+
+        app:showAsAction="never"
+
+        />
+    <item
+        android:id="@+id/sort_month"
+        android:title="Month"
+
+
+        app:showAsAction="never"
+
+        />
+
+    <item
+        android:id="@+id/sort_quarterly"
+        android:title="quarterly"
+
+        app:showAsAction="never"
+
+        />
+</menu>

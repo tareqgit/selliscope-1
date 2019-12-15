@@ -2,16 +2,15 @@ package com.humaclab.selliscope.adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.databinding.DataBindingUtil;
-import android.databinding.ViewDataBinding;
-import android.support.v7.widget.RecyclerView;
+import androidx.databinding.DataBindingUtil;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.humaclab.selliscope.BR;
 import com.humaclab.selliscope.R;
 import com.humaclab.selliscope.activity.DeliveryDetailsActivity;
+import com.humaclab.selliscope.databinding.DeliveryListItemBinding;
 import com.humaclab.selliscope.model.DeliveryResponse;
 
 import java.util.List;
@@ -38,7 +37,7 @@ public class DeliveryListRecyclerAdapter extends RecyclerView.Adapter<DeliveryLi
     @Override
     public void onBindViewHolder(DeliveryListViewHolder holder, int position) {
         DeliveryResponse.DeliveryList delivery = deliveryLists.get(position);
-        holder.getBinding().setVariable(BR.deliveryDetails, delivery);
+        holder.getBinding().setDeliveryDetails ( delivery);
         holder.getBinding().executePendingBindings();
     }
 
@@ -48,7 +47,7 @@ public class DeliveryListRecyclerAdapter extends RecyclerView.Adapter<DeliveryLi
     }
 
     public class DeliveryListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        private ViewDataBinding binding;
+        private DeliveryListItemBinding binding;
 
         public DeliveryListViewHolder(View itemView) {
             super(itemView);
@@ -56,7 +55,7 @@ public class DeliveryListRecyclerAdapter extends RecyclerView.Adapter<DeliveryLi
             itemView.setOnClickListener(this);
         }
 
-        public ViewDataBinding getBinding() {
+        public DeliveryListItemBinding getBinding() {
             return binding;
         }
 

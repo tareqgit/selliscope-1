@@ -27,26 +27,216 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:padding="10dp">
-
-                <ImageView
-                    android:id="@+id/iv_add_outlet_image"
+                <LinearLayout
+                    android:background="#9ed4caca"
                     android:layout_width="match_parent"
-                    android:layout_height="200dp"
-                    android:layout_gravity="center"
-                    android:layout_margin="10dp"
-                    app:srcCompat="@drawable/ic_add_outlet" />
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:fontFamily="@font/latobold"
+                        android:hint="Outlet Name"
+                        android:layout_weight="3"
+                        android:padding="10dp"
+                        android:text="@{outletDetails.outletName}"
+                        android:textAlignment="center"
+                        android:textColor="#000000"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+                    <Button
+                        android:id="@+id/btn_edit_outlet"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_gravity="end"
+                        android:background="@drawable/button_shape"
+                        android:padding="4dp"
+                        android:text="@string/edit"
+                        android:drawableStart="@drawable/ic_if_edit"
+                        android:fontFamily="@font/latoregular"
+                        android:textAllCaps="false"
+                        android:textColor="#fff" />
 
-                <TextView
+
+                </LinearLayout>
+
+                <androidx.coordinatorlayout.widget.CoordinatorLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:hint="Outlet Name"
-                    android:padding="10dp"
-                    android:text="@{outletDetails.outletName}"
-                    android:textAlignment="center"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
+                    android:layout_gravity="center">
 
+                    <ImageView
+                        android:id="@+id/iv_add_outlet_image"
+                        android:layout_width="104dp"
+                        android:layout_height="104dp"
+                        android:layout_gravity="center"
+                        android:layout_margin="10dp"
+                        android:src="@drawable/app_logo"
+                        />
+
+                </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/target_details"
+                    android:background="@color/colorPrimary"
+                    android:layout_gravity="center"
+                    android:textColor="#fff"
+                    android:fontFamily="@font/latobold"
+                    android:textSize="20sp"
+                    android:gravity="center"/>
+
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cv_target_item"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true"
+                    app:cardCornerRadius="@dimen/radius_3"
+                    app:cardElevation="@dimen/elevation_5">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="?android:attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:padding="10dp">
+
+
+                        <ImageView
+                            android:id="@+id/icon_target"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_marginBottom="@dimen/margin_5"
+                            android:src="@drawable/ic_target_sales" />
+
+                        <TextView
+                            android:id="@+id/tv_target_label"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/margin_5"
+                            android:layout_marginLeft="5dp"
+                            android:layout_toRightOf="@id/icon_target"
+                            android:text="@string/sales_target"
+                            android:fontFamily="@font/latobold"
+                            android:textStyle="bold" />
+
+
+                        <TextView
+                            android:id="@+id/tv_achieved"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignBottom="@+id/circle_progress_view"
+                            android:layout_alignStart="@+id/icon_target"
+                            android:text="@string/completed"
+                            android:fontFamily="@font/latoregular"/>
+
+                        <TextView
+                            android:id="@+id/tv_target_achieved"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_above="@+id/tv_achieved"
+                            android:layout_alignStart="@+id/icon_target"
+                            android:text="0.0"
+                            android:fontFamily="@font/latoregular"
+                            android:textColor="@color/colorPrimary"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/tv_target_total"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/tv_target_label"
+                            android:layout_centerHorizontal="true"
+                            android:text="0.0"
+                            android:fontFamily="@font/latoregular"
+                            android:textColor="#000000"
+                            android:textSize="24sp"
+                            android:textStyle="bold" />
+
+
+                        <com.eralp.circleprogressview.CircleProgressView
+                            android:id="@+id/circle_progress_view"
+                            android:layout_width="80dp"
+                            android:layout_height="81dp"
+                            android:layout_below="@id/tv_target_total"
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginTop="9dp"
+                            app:cpv_background_circle_color="@color/red"
+                            app:cpv_background_circle_width="7dp"
+                            app:cpv_circle_color="@color/colorPrimary"
+                            app:cpv_circle_width="10dp"
+                            app:cpv_text_color="@color/colorPrimary"
+                            app:cpv_text_prefix="%"
+
+                            app:cpv_text_size="15" />
+
+                        <TextView
+                            android:id="@+id/tv_remaining"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignEnd="@+id/tv_visited"
+                            android:layout_alignTop="@+id/tv_achieved"
+                            android:text="@string/remaining"
+                            android:fontFamily="@font/latoregular"/>
+
+                        <TextView
+                            android:id="@+id/tv_target_remaining"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_above="@+id/tv_achieved"
+                            android:layout_alignEnd="@+id/tv_remaining"
+                            android:text="0.0"
+                            android:fontFamily="@font/latoregular"
+                            android:textColor="@color/red"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:textColor="#2c4ffc"
+                            android:id="@+id/tv_visited"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_alignTop="@+id/icon_target"
+                            android:hint="0"
+                            android:fontFamily="@font/latobolditalic"
+                            android:textAllCaps="true"
+                            android:textSize="18sp"
+                            android:textStyle="bold|italic" />
+
+                        <ImageView
+                            android:id="@+id/imageView3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignTop="@+id/icon_target"
+                            android:layout_toStartOf="@+id/tv_visited"
+                            app:srcCompat="@drawable/ic_visited" />
+
+                        <ProgressBar
+                            android:id="@+id/progressBar"
+                            style="?android:attr/progressBarStyle"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_centerInParent="true" />
+
+                    </RelativeLayout>
+                </androidx.cardview.widget.CardView>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/outlet_details"
+                    android:background="@color/colorPrimary"
+                    android:layout_gravity="center"
+                    android:textColor="#fff"
+                    android:fontFamily="@font/latobold"
+                    android:textSize="20sp"
+                    android:gravity="center"/>
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -56,14 +246,15 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:padding="10dp"
-                        android:text="Owner Name" />
+                        android:padding="2dp"
+                        android:text="@string/owner_name" />
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:padding="10dp"
+                        android:padding="2dp"
+                        android:fontFamily="@font/latoregular"
                         android:text="@{outletDetails.ownerName}" />
                 </LinearLayout>
 
@@ -76,14 +267,16 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:padding="10dp"
-                        android:text="Contact No." />
+                        android:padding="2dp"
+                        android:fontFamily="@font/latoregular"
+                        android:text="@string/contact_number" />
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:padding="10dp"
+                        android:padding="2dp"
+                        android:fontFamily="@font/latoregular"
                         android:text="@{outletDetails.phone}" />
                 </LinearLayout>
 
@@ -96,14 +289,16 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:padding="10dp"
-                        android:text="Address" />
+                        android:padding="2dp"
+                        android:fontFamily="@font/latoregular"
+                        android:text="@string/address" />
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:padding="10dp"
+                        android:padding="2dp"
+                        android:fontFamily="@font/latoregular"
                         android:text="@{outletDetails.outletAddress}" />
                 </LinearLayout>
 
@@ -116,14 +311,16 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:padding="10dp"
-                        android:text="Outlet Type" />
+                        android:padding="2dp"
+                        android:fontFamily="@font/latoregular"
+                        android:text="@string/outlet_type" />
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:padding="10dp"
+                        android:padding="2dp"
+                        android:fontFamily="@font/latoregular"
                         android:text="@{outletDetails.outletType}" />
                 </LinearLayout>
 
@@ -133,27 +330,19 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:background="@drawable/red_background_border"
-                    android:padding="10dp"
+                    android:fontFamily="@font/latoregular"
+                    android:padding="4dp"
                     android:text='@{"Due in BDT " + outletDetails.outletDue}'
                     android:textAlignment="center"
-                    android:textStyle="bold" />
+                    android:textStyle="bold"
+                    android:visibility="gone" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="2dp"
                     android:orientation="vertical">
 
-                    <Button
-                        android:id="@+id/btn_edit_outlet"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="end"
-                        android:background="#b7a639"
-                        android:padding="10dp"
-                        android:text="Edit"
-                        android:textAllCaps="false"
-                        android:textColor="#fff" />
 
                     <Button
                         android:id="@+id/btn_call_card"

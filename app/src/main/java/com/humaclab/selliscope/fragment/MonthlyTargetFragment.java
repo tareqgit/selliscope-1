@@ -1,10 +1,10 @@
 package com.humaclab.selliscope.fragment;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.fragment.app.Fragment;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -60,7 +60,7 @@ public class MonthlyTargetFragment extends Fragment {
                              ViewGroup container,
                              Bundle savedInstanceState) {
         View monthlyTargetView = inflater.inflate(R.layout.target_layout, container, false);
-        recyclerView = (RecyclerView) monthlyTargetView.findViewById(R.id.rv_target);
+        //recyclerView = (RecyclerView) monthlyTargetView.findViewById(R.id.rv_target);
         swipeRefreshLayout = (SwipeRefreshLayout) monthlyTargetView.findViewById(R.id.srl_target);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override

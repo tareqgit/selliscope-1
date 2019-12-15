@@ -2,29 +2,30 @@ package com.humaclab.selliscope.adapters;
 
 import android.content.Context;
 import android.content.Intent;
-import android.databinding.DataBindingUtil;
-import android.databinding.ViewDataBinding;
-import android.support.v7.widget.RecyclerView;
+import androidx.databinding.DataBindingUtil;
+import androidx.databinding.ViewDataBinding;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.humaclab.selliscope.BR;
 import com.humaclab.selliscope.R;
 import com.humaclab.selliscope.activity.SalesReturnDetailsActivity;
-import com.humaclab.selliscope.model.DeliveryResponse;
+import com.humaclab.selliscope.databinding.SellsReturnItemBinding;
+import com.humaclab.selliscope.model.sales_return.SalesReturnResponse;
 
 import java.util.List;
 
 /**
  * Created by tonmoy on 5/16/17.
+ * Updated by anam on 09/10/2018.
  */
 
 public class SellsReturnRecyclerAdapter extends RecyclerView.Adapter<SellsReturnRecyclerAdapter.DeliveryListViewHolder> {
     private Context context;
-    private List<DeliveryResponse.DeliveryList> deliveryLists;
+    private List<SalesReturnResponse.DeliveryList> deliveryLists;
 
-    public SellsReturnRecyclerAdapter(Context context, List<DeliveryResponse.DeliveryList> deliveryLists) {
+    public SellsReturnRecyclerAdapter(Context context, List<SalesReturnResponse.DeliveryList> deliveryLists) {
         this.context = context;
         this.deliveryLists = deliveryLists;
     }
@@ -37,8 +38,8 @@ public class SellsReturnRecyclerAdapter extends RecyclerView.Adapter<SellsReturn
 
     @Override
     public void onBindViewHolder(DeliveryListViewHolder holder, int position) {
-        DeliveryResponse.DeliveryList delivery = deliveryLists.get(position);
-        holder.getBinding().setVariable(BR.deliveryDetails, delivery);
+        SalesReturnResponse.DeliveryList delivery = deliveryLists.get(position);
+        holder.getBinding().setSellsReturnOrder(delivery);
         holder.getBinding().executePendingBindings();
     }
 
@@ -48,7 +49,7 @@ public class SellsReturnRecyclerAdapter extends RecyclerView.Adapter<SellsReturn
     }
 
     public class DeliveryListViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        private ViewDataBinding binding;
+        private SellsReturnItemBinding binding;
 
         public DeliveryListViewHolder(View itemView) {
             super(itemView);
@@ -56,7 +57,7 @@ public class SellsReturnRecyclerAdapter extends RecyclerView.Adapter<SellsReturn
             itemView.setOnClickListener(this);
         }
 
-        public ViewDataBinding getBinding() {
+        public SellsReturnItemBinding getBinding() {
             return binding;
         }
 

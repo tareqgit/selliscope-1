@@ -34,9 +34,10 @@
         app:stl_overlineThickness="0dp"
         app:stl_titleOffset="24dp"
         app:stl_underlineColor="#4D000000"
+        android:visibility="gone"
         app:stl_underlineThickness="1dp"/>
 
-    <android.support.v4.view.ViewPager
+    <androidx.viewpager.widget.ViewPager
         android:id="@+id/viewpager"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

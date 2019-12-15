@@ -2,10 +2,12 @@ package com.humaclab.selliscope.fragment;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,8 +17,8 @@ import com.humaclab.selliscope.R;
 import com.humaclab.selliscope.activity.DeliveryListActivity;
 import com.humaclab.selliscope.activity.InspectionActivity;
 import com.humaclab.selliscope.activity.OutletActivity;
-import com.humaclab.selliscope.activity.PaymentActivity;
 import com.humaclab.selliscope.activity.RouteActivity;
+import com.humaclab.selliscope.activity.activity_salesReturnOld.SalesReturnActivityOld;
 import com.humaclab.selliscope.adapters.DashboardRecyclerViewAdapter;
 import com.humaclab.selliscope.model.DashboardItem;
 import com.humaclab.selliscope.utils.RecyclerItemClickListener;
@@ -42,14 +44,19 @@ public class DashboardFragment extends Fragment {
         View dashboardView = inflater.inflate(R.layout.fragment_dashboard, container, false);
         RecyclerView recyclerView = dashboardView.findViewById(R.id.rv_dashboard);
         dashboadItems = new ArrayList<>();
-        dashboadItems.add(new DashboardItem("Route", R.drawable.ic_route));
-        dashboadItems.add(new DashboardItem("Outlet", R.drawable.ic_outlet));
+        dashboadItems.add(new DashboardItem(getString(R.string.route), R.drawable.ic_route));
+        dashboadItems.add(new DashboardItem(getString(R.string.outlet), R.drawable.ic_outlet));
 //        dashboadItems.add(new DashboardItem("Product", R.drawable.ic_products));
 //        dashboadItems.add(new DashboardItem("Order", R.drawable.ic_order));
-        dashboadItems.add(new DashboardItem("Deliver", R.drawable.ic_view_orders));
-        dashboadItems.add(new DashboardItem("Payment", R.drawable.ic_payments));
-        dashboadItems.add(new DashboardItem("Inspection", R.drawable.ic_inspection));
-        dashboadItems.add(new DashboardItem("Insights", R.drawable.ic_insights));
+        dashboadItems.add(new DashboardItem(getString(R.string.deliver), R.drawable.ic_view_orders));
+//        dashboadItems.add(new DashboardItem("Payment", R.drawable.ic_payments));
+        dashboadItems.add(new DashboardItem(getString(R.string.inspection), R.drawable.ic_inspection));
+        dashboadItems.add(new DashboardItem("Promotional Products", R.drawable.ic_insights));
+        dashboadItems.add(new DashboardItem("Help", R.drawable.ic_help_icon));
+
+
+ //       dashboadItems.add(new DashboardItem(getString(R.string.sales_return), R.drawable.ic_sales_return));
+//        dashboadItems.add(new DashboardItem("Insights", R.drawable.ic_insights));
         gridLayoutManager = new GridLayoutManager(activity, itemNumber);
         recyclerView.setLayoutManager(gridLayoutManager);
         dashboardRecyclerViewAdapter = new DashboardRecyclerViewAdapter(activity, dashboadItems);
@@ -64,11 +71,15 @@ public class DashboardFragment extends Fragment {
                             public void onItemClick(View view, int position) {
                                 switch (position) {
                                     case 0: {
-                                        getActivity().startActivity(new Intent(getActivity(),
-                                                RouteActivity.class));
+
+
+                                            getActivity().startActivity(new Intent(getActivity(),
+                                                    RouteActivity.class));
+
                                         break;
                                     }
                                     case 1: {
+                                        Log.d("tareq_test" , "Clicked");
                                         getActivity().startActivity(new Intent(getActivity(),
                                                 OutletActivity.class));
                                         break;
@@ -88,20 +99,35 @@ public class DashboardFragment extends Fragment {
                                                 DeliveryListActivity.class));
                                         break;
                                     }
-                                    case 3: {
+/*                                    case 3: {
                                         getActivity().startActivity(new Intent(getActivity(),
                                                 PaymentActivity.class));
                                         break;
-                                    }
-                                    case 4: {
+                                    }*/
+                                    case 3: {
                                         getActivity().startActivity(new Intent(getActivity(),
                                                 InspectionActivity.class));
                                         break;
                                     }
-                                    case 5: {
-                                        Toast.makeText(getActivity(), "This feature is under development.",
+                                    /*
+                                    //new Sales Return
+                                    case 4: {
+                                        getActivity().startActivity(new Intent(getActivity(),
+                                                SalesReturnActivity.class));
+                                        break;
+                                    }*/
+
+                                    //old Sales Return
+                                    case 4: {
+                                        Toast.makeText(getActivity(), "Coming soon",
                                                 Toast.LENGTH_SHORT).show();
                                         break;
+                                    }
+                                   case 5: {
+                                       BottomSheetHelpDialogFragment bottomSheetHelpDialogFragment = new BottomSheetHelpDialogFragment();
+                                       assert getFragmentManager() != null;
+                                       bottomSheetHelpDialogFragment.show(getFragmentManager(),bottomSheetHelpDialogFragment.getTag() );
+                                       break;
                                     }
                                     default: {
                                         Toast.makeText(getActivity(), "Please upgrade your package" +

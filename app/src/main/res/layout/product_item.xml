@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
                                     xmlns:app="http://schemas.android.com/apk/res-auto"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
@@ -48,6 +48,7 @@
                         android:layout_marginTop="8dp"
                         android:layout_weight="1"
                         android:text="Product Name"
+                        android:fontFamily="@font/latobold"
                         android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"/>
 
                     <ImageView
@@ -67,6 +68,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="8dp"
+                        android:fontFamily="@font/latobold"
                         android:text="Category: "/>
 
                     <TextView
@@ -74,6 +76,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="8dp"
+                        android:fontFamily="@font/latoregular"
                         android:text="Category"/>
                 </LinearLayout>
 
@@ -86,6 +89,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="8dp"
+                        android:fontFamily="@font/latobold"
                         android:text="Brand: "/>
 
                     <TextView
@@ -93,6 +97,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="8dp"
+                        android:fontFamily="@font/latoregular"
                         android:text="Brand Name: "/>
                 </LinearLayout>
 
@@ -106,6 +111,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="8dp"
+                        android:fontFamily="@font/latobold"
                         android:text="Price: "/>
 
                     <TextView
@@ -113,6 +119,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="8dp"
+                        android:fontFamily="@font/latoregular"
                         android:text="Price: "/>
                 </LinearLayout>
             </LinearLayout>
@@ -126,10 +133,11 @@
                 android:layout_marginRight="8dp"
                 android:background="@drawable/button_shape"
                 android:text="Order"
+                android:fontFamily="@font/latobold"
                 android:textColor="@color/white"/>
         </LinearLayout>
     </LinearLayout>
-</android.support.v7.widget.CardView>
+</androidx.cardview.widget.CardView>
 
     <!--<?xml version="1.0" encoding="utf-8"?>
     <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"

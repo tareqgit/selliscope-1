@@ -1,31 +1,49 @@
 package com.humaclab.selliscope;
 
 import com.humaclab.selliscope.model.AddNewOrder;
+import com.humaclab.selliscope.model.Outlets;
+import com.humaclab.selliscope.model.app_version.AppVersion;
 import com.humaclab.selliscope.model.BrandResponse;
 import com.humaclab.selliscope.model.CategoryResponse;
 import com.humaclab.selliscope.model.CreateOutlet;
 import com.humaclab.selliscope.model.DeliverProductResponse;
 import com.humaclab.selliscope.model.DeliveryResponse;
-import com.humaclab.selliscope.model.Diameter.DiameterResponse;
-import com.humaclab.selliscope.model.District.DistrictResponse;
+import com.humaclab.selliscope.model.model_sales_return_old.DeliveryResponseOld;
+import com.humaclab.selliscope.model.diameter.DiameterResponse;
+import com.humaclab.selliscope.model.district.DistrictResponse;
 import com.humaclab.selliscope.model.GodownRespons;
 import com.humaclab.selliscope.model.IMEIandVerison;
 import com.humaclab.selliscope.model.InspectionResponse;
 import com.humaclab.selliscope.model.OrderResponse;
-import com.humaclab.selliscope.model.OutletType.OutletTypeResponse;
+import com.humaclab.selliscope.model.outlet_type.OutletTypeResponse;
 import com.humaclab.selliscope.model.Payment;
 import com.humaclab.selliscope.model.PaymentResponse;
-import com.humaclab.selliscope.model.PurchaseHistory.PurchaseHistoryResponse;
-import com.humaclab.selliscope.model.RoutePlan.RouteDetailsResponse;
-import com.humaclab.selliscope.model.RoutePlan.RouteResponse;
-import com.humaclab.selliscope.model.SellsReturnResponse;
-import com.humaclab.selliscope.model.Thana.ThanaResponse;
-import com.humaclab.selliscope.model.UpdatePassword.ChangePassword;
-import com.humaclab.selliscope.model.UpdatePassword.ChangePasswordResponse;
-import com.humaclab.selliscope.model.UpdateProfile.UpdateProfile;
-import com.humaclab.selliscope.model.UpdateProfile.UpdateProfileResponse;
+import com.humaclab.selliscope.model.performance.orders_model.PerformanceOrderResponse;
+import com.humaclab.selliscope.model.purchase_history.PurchaseHistoryResponse;
+import com.humaclab.selliscope.model.reason.ReasonResponse;
+import com.humaclab.selliscope.model.route_plan.RouteDetailsResponse;
+import com.humaclab.selliscope.model.route_plan.RouteResponse;
+import com.humaclab.selliscope.model.sales_return.SalesReturnHistory;
+import com.humaclab.selliscope.model.sales_return.SalesReturnResponse;
+import com.humaclab.selliscope.model.sales_return.SellsReturnResponsePost;
+import com.humaclab.selliscope.model.model_sales_return_old.SellsReturnResponseOld;
+import com.humaclab.selliscope.model.target.OutletTarget;
+import com.humaclab.selliscope.model.thana.ThanaResponse;
+import com.humaclab.selliscope.model.trade_promotion.TradePromotion;
+import com.humaclab.selliscope.model.update_password.ChangePassword;
+import com.humaclab.selliscope.model.update_password.ChangePasswordResponse;
+import com.humaclab.selliscope.model.update_profile.UpdateProfile;
+import com.humaclab.selliscope.model.update_profile.UpdateProfileResponse;
 import com.humaclab.selliscope.model.UserLocation;
-import com.humaclab.selliscope.model.VariantProduct.VariantProductResponse;
+import com.humaclab.selliscope.model.price_variation.PriceVariationResponse;
+import com.humaclab.selliscope.model.variant_product.VariantProductResponse;
+import com.humaclab.selliscope.model.performance.payments_model.PaymentsResponse;
+import com.humaclab.selliscope.performance.leaderboard.db_model.LeaderboardTotalPerticipatesResponse;
+import com.humaclab.selliscope.performance.leaderboard.db_model.ranking.RankingResponse;
+import com.humaclab.selliscope.performance.leaderboard.db_model.top_user.LeaderboardTopUserPositionResponse;
+import com.humaclab.selliscope.sales_return.model.get.SalesReturnGetResponse;
+import com.humaclab.selliscope.sales_return.model.post.SalesReturn2019Response;
+import com.humaclab.selliscope.sales_return.model.post.SalesReturnPostBody;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -43,101 +61,180 @@ import retrofit2.http.Query;
 public interface SelliscopeApiEndpointInterface {
     //GET methods
 
-    @GET("outlet")
-    Call<ResponseBody> getOutlets();
+    @GET("v1/delivery/order")
+    Call<SalesReturnResponse> getSalesReturnDAta();
 
-    @GET("product/category")
+    @GET("v1/sales-return/reason")
+    Call<ReasonResponse> getSalesReturnReasony();
+
+    @GET("v1/sales-return")
+    Call<SalesReturnHistory> getSalesReturnHistory();
+
+    @GET("v1/product/price-variation")
+    Call<PriceVariationResponse> getPriceVariation();
+
+    @GET("v1/product/trade-promotion")
+    Call<TradePromotion> getTradePromotion();
+
+    @GET("v1/outlet")
+    Call<Outlets> getOutlets();
+
+    @GET("v1/product/category")
     Call<CategoryResponse> getCategories();
 
-    @GET("product/brand")
+    @GET("v1/product/brand")
     Call<BrandResponse> getBrands();
 
     /*@GET("product")
     Call<ProductResponse> getProducts();*/
-    @GET("variant-product")
+
+    @GET("v1/variant-product")
     Call<VariantProductResponse> getProducts();
 
-    @GET("order")
+    @GET("v1/order")
     Call<OrderResponse> getOrders();
 
-    @GET("payment/{outlet_id}")
+    @GET("v1/payment/{outlet_id}")
     Call<Payment> getPayment(@Path("outlet_id") int outletId);
 
-    @GET("payment")
+
+    //Outlet Wise Target
+    @GET("v1/target/outlet/{outlet_id}")
+    Call<OutletTarget> getPutletTarget(@Path("outlet_id") int outletId);
+
+    @GET("v1/payment")
     Call<Payment> getPayment();
 
-    @GET("delivery")
+    @GET("v1/delivery")
     Call<DeliveryResponse> getDelivery();
+    //for old sellisreturn Mode
+    @GET("v1/return-products")
+    Call<DeliveryResponseOld> getSalesReturnOld(@Query("outlet_id") int outletID);
 
-    @GET("delivery")
-    Call<DeliveryResponse> getSalesReturn(@Query("outlet_id") int outletID);
+    @GET("v1/return-products")
+    Call<DeliveryResponse> getSalesReturn();
 
-    @GET("godown")
+    @GET("v1/godown")
     Call<GodownRespons> getGodown();
 
-    @GET("district")
+    @GET("v1/district")
     Call<DistrictResponse> getDistricts();
 
-    @GET("thana")
+    @GET("v1/thana")
     Call<ThanaResponse> getThanas();
 
-    @GET("outlet/type")
+    @GET("v1/outlet/type")
     Call<OutletTypeResponse> getOutletTypes();
 
-    @GET("visit")
+    @GET("v1/visit")
     Call<ResponseBody> getVisits();
 
-    @GET("target")
+    @GET("v1/target")
     Call<ResponseBody> getTargets();
 
-    @GET("diameter")
+    @GET("v1/target/user")
+    Call<OutletTarget> getTarget();
+
+    @GET("v1/diameter")
     Call<DiameterResponse> getDiameter();
 
-    @GET("outlet/{outlet_id}/purchase-history")
+    @GET("v1/outlet/{outlet_id}/purchase-history")
     Call<PurchaseHistoryResponse> getPurchaseHistory(@Path("outlet_id") int outletID);
 
-    @GET("route-plan")
+    @GET("v1/route-plan")
     Call<RouteResponse> getRoutes();
 
-    @GET("route-plan/{route_id}")
+    @GET("v1/route-plan/{route_id}")
     Call<RouteDetailsResponse> getRouteDetails(@Path("route_id") int routeId);
+
+    @GET("v1/app-version")
+    Call<AppVersion> getAppsversion();
     //POST methods
 
-    @POST("login")
+    @POST("v1/login")
     Call<ResponseBody> getUser();
 
-    @POST("outlet/store")
+    @POST("v1/outlet/store")
     Call<ResponseBody> createOutlet(@Body CreateOutlet createOutlet);
 
-    @POST("visit/store")
+    @POST("v2/visit/store")
     Call<ResponseBody> sendUserLocation(@Body UserLocation userLocation);
 
-    @POST("order/variant/store")
+    @POST("v1/order/variant/store")
     Call<AddNewOrder.OrderResponse> addOrder(@Body AddNewOrder order);
     /*@POST("order/store")
     Call<AddNewOrder.OrderResponse> addOrder(@Body AddNewOrder order);*/
 
-    @POST("payment/collect")
+    @POST("v1/payment/collect")
     Call<PaymentResponse.PaymentSucessfull> payNow(@Body PaymentResponse payment);
 
-    @POST("delivery/store")
+    @POST("v1/delivery/store")
     Call<DeliverProductResponse> deliverProduct(@Body DeliverProductResponse deliverProduct);
 
-    @POST("return-product")
-    Call<SellsReturnResponse> returnProduct(@Body SellsReturnResponse.SellsReturn returnProduct);
-
-    @POST("inspection/store")
+/*    @POST("return-product")
+    Call<SellsReturnResponsePost> returnProduct(@Body SellsReturnResponsePost.SellsReturn returnProduct);*/
+    @POST("v1/sales-return/store ")
+    Call<SellsReturnResponsePost> returnProduct(@Body SellsReturnResponsePost.SellsReturn returnProduct);
+    //for ols sellisreturn Model
+    @POST("v1/return-product")
+    Call<SellsReturnResponseOld> returnProductOld(@Body SellsReturnResponseOld.SellsReturn returnProduct);
+    @POST("v1/inspection/store")
     Call<InspectionResponse> inspectOutlet(@Body InspectionResponse.Inspection inspection);
 
-    @POST("version-imei")
+    @POST("v1/version-imei")
     Call<ResponseBody> sendIMEIAndVersion(@Body IMEIandVerison imeIandVerison);
 
-    @POST("change-password")
+    @POST("v1/change-password")
     Call<ChangePasswordResponse> changePassword(@Body ChangePassword changePassword);
 
-    @PUT("outlet/{id}/update")
+    @PUT("v1/outlet/{id}/update")
     Call<ResponseBody> updateOutlet(@Path("id") int outletID, @Body CreateOutlet createOutlet);
 
-    @POST("profile/update")
+    @POST("v1/profile/update")
     Call<UpdateProfileResponse> updateProfile(@Body UpdateProfile updateProfile);
+
+    @GET("v1/performance/order")
+    Call<PerformanceOrderResponse> performanceOrder(@Query("date_from") String date_from, @Query("date_to") String date_to);
+
+    @GET("v1/performance/payment")
+    Call<PaymentsResponse> performancePayments(@Query("date_from") String date_from, @Query("date_to") String date_to);
+
+
+    @POST("v2/sales-return/store")
+    Call<SalesReturn2019Response> postSalesReturn(@Body SalesReturnPostBody salesReturn);
+
+    @GET("v2/sales-return/{outlet_id}")
+    Call<SalesReturnGetResponse> getSalesReturn(@Path("outlet_id") int outletId);
+
+
+
+    //For LeaderBoard
+    @GET("v1/leaderboard-checker-user-position")
+    Call<LeaderboardTopUserPositionResponse> getTopCheckerUserPosition(@Query("time") String time);
+    @GET("v1/leaderboard-collector_user_position")
+    Call<LeaderboardTopUserPositionResponse> getTopCollectorUserPosition(@Query("time") String time);
+    @GET("v1/leaderboard-user-position")
+    Call<LeaderboardTopUserPositionResponse> getTopInvoicerUserPosition(@Query("time") String time);
+
+
+    @GET("v1/leaderboard-total-collector-perticipates")
+    Call<LeaderboardTotalPerticipatesResponse> getTotalCollectorPerticipants(@Query("time") String time);
+    @GET("v1/leaderboard-total-checker-perticipates")
+    Call<LeaderboardTotalPerticipatesResponse> getTotalCheckerPerticipants(@Query("time") String time);
+    @GET("v1/leaderboard-total-perticipates")
+    Call<LeaderboardTotalPerticipatesResponse> getTotalInvoicerPerticipants(@Query("time") String time);
+
+
+
+    @GET("v1/leaderboard-user-ranking")
+    Call<RankingResponse> getInvoicerUserRanking(@Query("time") String time);
+
+    @GET("v1/leaderboard-collector_user_ranking")
+    Call<RankingResponse> getCollectorUserRanking(@Query("time") String time);
+
+    @GET("v1/leaderboard-checker_user_ranking")
+    Call<RankingResponse> getCheckerUserRanking(@Query("time") String time);
+
+
+
 }

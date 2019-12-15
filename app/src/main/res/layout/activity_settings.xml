@@ -17,6 +17,7 @@
             android:foreground="?android:attr/selectableItemBackground"
             android:padding="15dp"
             android:text="Change Password"
+            android:fontFamily="@font/latobold"
             android:textColor="#4e4e4e"
             android:textStyle="bold" />
 

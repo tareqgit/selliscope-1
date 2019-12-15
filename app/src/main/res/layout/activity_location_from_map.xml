@@ -1,5 +1,7 @@
-<RelativeLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:name="com.google.android.gms.maps.SupportMapFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -8,7 +10,11 @@
         android:id="@+id/map"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:layout_marginTop="16dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/imageView2"
@@ -17,7 +23,10 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:src="@drawable/outlet_marker"
-        android:text="TextView"/>
+
+        app:layout_constraintEnd_toEndOf="@+id/dragg_result"
+        app:layout_constraintStart_toStartOf="@+id/dragg_result"
+        app:layout_constraintTop_toBottomOf="@+id/dragg_result" />
 
     <TextView
         android:id="@+id/dragg_result"
@@ -26,11 +35,17 @@
         android:layout_above="@+id/imageView2"
         android:layout_centerHorizontal="true"
         android:background="#8c000000"
+        android:fontFamily="@font/latoregular"
         android:gravity="center_horizontal"
         android:padding="10dp"
         android:text="Please drag map to your address.."
         android:textColor="#ffffff"
-        android:textSize="18dp"/>
+        android:textSize="18dp"
+        app:layout_constraintBottom_toTopOf="@+id/btn_select_location"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.45" />
 
     <Button
         android:id="@+id/btn_select_location"
@@ -39,9 +54,14 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:background="#85558b2f"
+        android:fontFamily="@font/latobold"
         android:padding="10dp"
-        android:text="Select This Location"
+        android:text="Select this Location"
         android:textAllCaps="false"
         android:textColor="#ffffff"
-        android:textSize="18dp"/>
-</RelativeLayout>
+        android:textSize="18dp"
+        app:layout_constraintBottom_toBottomOf="@+id/map"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

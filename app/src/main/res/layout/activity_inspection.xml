@@ -1,18 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
+
         tools:context="com.humaclab.selliscope.activity.InspectionActivity">
 
-        <include layout="@layout/toolbar_layout"/>
+        <include
+            android:id="@+id/include6"
+            layout="@layout/toolbar_layout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:visibility="visible" />
 
         <ScrollView
+            android:id="@+id/scrollView2"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/include6">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -23,108 +35,151 @@
                 <Spinner
                     android:id="@+id/sp_outlets"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5dp"/>
+                    android:layout_height="40dp"
+
+                    android:layout_margin="8dp"
+
+                    android:backgroundTint="#6D6D6D"
+
+                    android:foreground="@drawable/moss_stroke_corner_5"
+
+                    android:tooltipText="Outlet Name" />
 
                 <ImageView
                     android:id="@+id/iv_take_image"
-                    android:layout_width="wrap_content"
-                    android:layout_height="200dp"
+                    android:layout_width="150dp"
+                    android:layout_height="150dp"
                     android:layout_gravity="center"
-                    android:src="@drawable/ic_add_outlet"/>
+                    app:srcCompat="@drawable/ic_if_capture_store" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:orientation="vertical">
 
                     <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
 
                         <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_gravity="end"
+                            android:layout_weight="1"
+                            android:fontFamily="@font/latoregular"
                             android:gravity="end"
                             android:padding="10dp"
-                            android:text="Quentity : "
+                            android:text="@string/quantity"
                             android:textAlignment="textEnd"
                             android:textColor="#000000"
-                            android:textSize="16sp"/>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="end"
-                            android:gravity="end"
-                            android:padding="10dp"
-                            android:text="Promotion Type : "
-                            android:textAlignment="textEnd"
-                            android:textColor="#000000"
-                            android:textSize="16sp"/>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="end"
-                            android:gravity="end"
-                            android:padding="10dp"
-                            android:text="Is Damaged : "
-                            android:textAlignment="textEnd"
-                            android:textColor="#000000"
-                            android:textSize="16sp"/>
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="end"
-                            android:gravity="end"
-                            android:padding="10dp"
-                            android:text="Condition : "
-                            android:textAlignment="textEnd"
-                            android:textColor="#000000"
-                            android:textSize="16sp"/>
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
+                            android:textSize="16sp" />
 
                         <EditText
                             android:id="@+id/et_qty"
-                            android:layout_width="match_parent"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:hint="Qty."
+                            android:layout_gravity="center"
+                            android:layout_weight="2"
+                            android:fontFamily="@font/latoregular"
+                            android:gravity="center"
+                            android:hint="@string/quantity"
                             android:inputType="numberSigned"
-                            android:padding="10dp"/>
+                            android:padding="10dp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="end"
+                            android:layout_weight="1"
+                            android:fontFamily="@font/latoregular"
+                            android:gravity="end"
+                            android:padding="10dp"
+                            android:text="@string/type"
+                            android:textAlignment="textEnd"
+                            android:textColor="#000000"
+                            android:textSize="16sp" />
 
                         <Spinner
                             android:id="@+id/sp_promotion_type"
-                            android:layout_width="match_parent"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
+                            android:layout_weight="2"
+                            android:backgroundTint="#6D6D6D"
                             android:entries="@array/promotion_type"
-                            android:padding="10dp"/>
+                            android:fontFamily="@font/latoregular"
+                            android:padding="10dp" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="end"
+                            android:layout_weight="1"
+                            android:fontFamily="@font/latoregular"
+                            android:gravity="end"
+                            android:padding="10dp"
+                            android:text="@string/is_damaged"
+                            android:textAlignment="textEnd"
+                            android:textColor="#000000"
+                            android:textSize="16sp" />
 
                         <Spinner
                             android:id="@+id/sp_is_damaged"
-                            android:layout_width="match_parent"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
+                            android:layout_weight="2"
+
+                            android:backgroundTint="#6D6D6D"
+
                             android:entries="@array/is_damaged"
-                            android:padding="10dp"/>
+
+                            android:fontFamily="@font/latoregular"
+                            android:padding="10dp"
+                            android:tooltipText="Outlet Name" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="end"
+                            android:layout_weight="1"
+                            android:fontFamily="@font/latoregular"
+                            android:gravity="end"
+                            android:padding="10dp"
+                            android:text="@string/condition"
+                            android:textAlignment="textEnd"
+                            android:textColor="#000000"
+                            android:textSize="16sp" />
 
                         <Spinner
                             android:id="@+id/sp_condition"
-                            android:layout_width="match_parent"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
+                            android:layout_weight="2"
+                            android:backgroundTint="#6D6D6D"
                             android:entries="@array/condition"
-                            android:padding="10dp"/>
+                            android:fontFamily="@font/latoregular"
+                            android:padding="10dp" />
+
                     </LinearLayout>
+
+
                 </LinearLayout>
 
                 <Button
@@ -133,10 +188,21 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_margin="10dp"
-                    android:padding="20dp"
-                    android:text="Submit Inspection"
-                    android:textAllCaps="false"/>
+                    android:layout_marginStart="32dp"
+                    android:layout_marginEnd="32dp"
+                    android:layout_marginBottom="32dp"
+                    android:background="@drawable/button_shape"
+                    android:fontFamily="@font/latobold"
+                    android:padding="10dp"
+                    android:text="@string/submit_inspection"
+                    android:textAllCaps="false"
+                    android:textColor="#fff" />
+
             </LinearLayout>
         </ScrollView>
-    </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
 </layout>

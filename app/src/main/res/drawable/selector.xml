@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Created by Tareq Islam on 4/18/19 7:17 PM
+  ~
+  ~  Last modified 4/18/19 7:14 PM
+  -->
+
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+<item android:color ="@color/white" android:state_checked="true" />
+    <item android:color ="@color/cardview_shadow_start_color"  />
+</selector>

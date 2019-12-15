@@ -1,14 +1,14 @@
 package com.humaclab.selliscope.fragment;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.fragment.app.Fragment;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -17,16 +17,17 @@ import com.humaclab.selliscope.SelliscopeApiEndpointInterface;
 import com.humaclab.selliscope.SelliscopeApplication;
 import com.humaclab.selliscope.adapters.TargetRecyclerViewAdapter;
 import com.humaclab.selliscope.dbmodel.Target;
+import com.humaclab.selliscope.model.target.OutletTarget;
 import com.humaclab.selliscope.model.TargetItem;
 import com.humaclab.selliscope.model.Targets;
 import com.humaclab.selliscope.utils.DatabaseHandler;
 import com.humaclab.selliscope.utils.NetworkUtility;
 import com.humaclab.selliscope.utils.SessionManager;
-import com.humaclab.selliscope.utils.VerticalSpaceItemDecoration;
+import com.liulishuo.magicprogresswidget.MagicProgressCircle;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -46,7 +47,9 @@ public class DailyTargetFragment extends Fragment {
     List<Target> targets;
     private TargetRecyclerViewAdapter targetRecyclerViewAdapter;
     private List<TargetItem> targetItems;
+    private TextView tv_total,tv_target_achieved,tv_target_remaining,tv_target_label,tv_date,percentView;
 
+    private MagicProgressCircle circle_progress_view;
     public static DailyTargetFragment newInstance(int position) {
         DailyTargetFragment frag = new DailyTargetFragment();
         Bundle args = new Bundle();
@@ -65,26 +68,36 @@ public class DailyTargetFragment extends Fragment {
                              ViewGroup container,
                              Bundle savedInstanceState) {
         View dailyTargetView = inflater.inflate(R.layout.target_layout, container, false);
-        dbHandler = new DatabaseHandler(getContext());
-        targets = new ArrayList<>();
-        recyclerView = (RecyclerView) dailyTargetView.findViewById(R.id.rv_target);
+        tv_total = dailyTargetView.findViewById(R.id.tv_target_total);
+        tv_date = dailyTargetView.findViewById(R.id.tv_date);
+        tv_target_achieved = dailyTargetView.findViewById(R.id.tv_target_achieved);
+        tv_target_remaining = dailyTargetView.findViewById(R.id.tv_target_remaining);
+        tv_target_label = dailyTargetView.findViewById(R.id.tv_target_label);
+
+        circle_progress_view = dailyTargetView.findViewById(R.id.circle_progress_view);
+        percentView=dailyTargetView.findViewById(R.id.percentView);
+//        dbHandler = new DatabaseHandler(getContext());
+//        targets = new ArrayList<>();
+//        recyclerView = (RecyclerView) dailyTargetView.findViewById(R.id.rv_target);
         swipeRefreshLayout = (SwipeRefreshLayout) dailyTargetView.findViewById(R.id.srl_target);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 if (NetworkUtility.isNetworkAvailable(getActivity()))
-                    getTargets();
+                    //getTargets();
+                    loadTargetOutlet();
                 else
                     Toast.makeText(getActivity(), "Connect to Wifi or Mobile Data",
                             Toast.LENGTH_SHORT).show();
             }
         });
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        recyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
-        });
-        recyclerView.addItemDecoration(new VerticalSpaceItemDecoration(20));
+//        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+//        recyclerView.addItemDecoration(new RecyclerView.ItemDecoration() {
+//        });
+//        recyclerView.addItemDecoration(new VerticalSpaceItemDecoration(20));
         if (NetworkUtility.isNetworkAvailable(getActivity()))
-            getTargets();
+           //getTargets();
+            loadTargetOutlet();
         else
             Toast.makeText(getActivity(), "Connect to Wifi or Mobile Data",
                     Toast.LENGTH_SHORT).show();
@@ -138,6 +151,63 @@ public class DailyTargetFragment extends Fragment {
                 //Toast.makeText(LoginActivity.this, t.toString(), Toast.LENGTH_SHORT).show();
                 Log.d("Response", t.toString());
 
+            }
+        });
+
+    }
+    private void loadTargetOutlet(){
+        SessionManager sessionManager = new SessionManager(getContext());
+        apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(),sessionManager.getUserPassword(),false).create(SelliscopeApiEndpointInterface.class);
+        Call<OutletTarget> call = apiService.getTarget();
+        call.enqueue(new Callback<OutletTarget>() {
+            @Override
+            public void onResponse(Call<OutletTarget> call, Response<OutletTarget> response) {
+                if(response.code() == 200) {
+                    if (swipeRefreshLayout.isRefreshing())
+                        swipeRefreshLayout.setRefreshing(false);
+                    System.out.println("Response " + new Gson().toJson(response.body()));
+
+                    String sales_types = response.body().getResult().getSalesTypes().replace("Quantity","qt");
+                    Double total = Double.valueOf(response.body().getResult().getSalesTarget().replace(",",""));
+                    Double achieved = Double.valueOf(response.body().getResult().getAchieved().replace(",",""));
+                    Double remaining = total-achieved;
+                    int completePersentage = (int) ((achieved * 100)/total);
+
+                    tv_date.setText(response.body().getResult().getDate());
+                    tv_target_label.setText(response.body().getResult().getTargetType());
+                    tv_target_achieved.setText(String.format(Locale.ENGLISH,"%,.2f %s",achieved,sales_types));
+                    tv_total.setText(String.format(Locale.ENGLISH,"%,.2f %s",total,sales_types));
+                    //tv_visited.setText(response.body().getResult().getVisited());
+                    tv_target_remaining.setText(String.format(Locale.ENGLISH,"%,.2f %s",remaining, sales_types));
+                 //   circle_progress_view.setTextEnabled(true);
+                 //   circle_progress_view.setInterpolator(new AccelerateDecelerateInterpolator());
+                 //   circle_progress_view.setStartAngle(90);
+                  //  circle_progress_view.setProgressWithAnimation(completePersentage,2000);
+                   circle_progress_view.setSmoothPercent(completePersentage*.01f);
+                   percentView.setText(completePersentage+"%");
+
+
+
+                }else if (response.code() == 401) {
+
+                    if (swipeRefreshLayout.isRefreshing())
+                        swipeRefreshLayout.setRefreshing(false);
+
+
+                } else {
+
+                    if (swipeRefreshLayout.isRefreshing())
+                        swipeRefreshLayout.setRefreshing(false);
+
+
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<OutletTarget> call, Throwable t) {
+                if (swipeRefreshLayout.isRefreshing())
+                    swipeRefreshLayout.setRefreshing(false);
             }
         });
 

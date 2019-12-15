@@ -12,15 +12,17 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.support.annotation.ColorInt;
-import android.support.annotation.DrawableRes;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.res.ResourcesCompat;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+
+import androidx.annotation.ColorInt;
+import androidx.annotation.DrawableRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.res.ResourcesCompat;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -31,6 +33,8 @@ import com.google.android.gms.awareness.Awareness;
 import com.google.android.gms.awareness.snapshot.LocationResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -42,6 +46,8 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.gson.Gson;
 import com.humaclab.selliscope.R;
 import com.humaclab.selliscope.SelliscopeApiEndpointInterface;
@@ -51,6 +57,8 @@ import com.humaclab.selliscope.utils.SessionManager;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Locale;
+import java.util.Objects;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -62,7 +70,12 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
         LocationSource.OnLocationChangedListener {
 
     private GoogleMap mMap;
-    private GoogleApiClient googleApiClient;
+
+    // The entry point to the Fused Location Provider.
+    private FusedLocationProviderClient mFusedLocationProviderClient;
+    private Location mLastKnownLocation;
+    private final LatLng mDefaultLocation = new LatLng(-33.8523341, 151.2106085);
+    private static final int DEFAULT_ZOOM = 15;
 
     public static boolean checkPermission(final Context context) {
         return ActivityCompat.checkSelfPermission(context,
@@ -78,45 +91,38 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
         TextView toolbarTitle = findViewById(R.id.tv_toolbar_title);
         toolbarTitle.setText(getResources().getString(R.string.route));
         setSupportActionBar(toolbar);
-        googleApiClient = new GoogleApiClient.Builder(RouteActivity.this)
-                .addApi(Awareness.API)
-                .build();
-        googleApiClient.connect();
-        googleApiClient.registerConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
-            @Override
-            public void onConnected(@Nullable Bundle bundle) {
+        // Construct a FusedLocationProviderClient.
+        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
-                getLocation();
-            }
 
-            @Override
-            public void onConnectionSuspended(int i) {
-
-            }
-        });
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
+        if (mapFragment != null) {
+            mapFragment.getMapAsync(this);
+        }
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         if (checkPermission(RouteActivity.this))
-            mMap.getUiSettings().setMapToolbarEnabled(true);
+
+        mMap.setMyLocationEnabled(true);
+        mMap.getUiSettings().setMyLocationButtonEnabled(true);
+        mMap.getUiSettings().setMapToolbarEnabled(true);
+
         if (isGPSEnabled()) {
             getLocation();
+
+
         } else {
             final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
             alertDialog.setTitle("Enable GPS");
             alertDialog.setMessage("Enable GPS to get current location.");
-            alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, "OK", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
-                    alertDialog.dismiss();
-                }
+            alertDialog.setButton(DialogInterface.BUTTON_POSITIVE, "OK", (dialog, which) -> {
+                startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                alertDialog.dismiss();
             });
             alertDialog.show();
         }
@@ -124,15 +130,19 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
 
     public void getLocation() {
         if (checkPermission(RouteActivity.this)) {
-            Awareness.SnapshotApi.getLocation(googleApiClient)
+          /*  Awareness.SnapshotApi.getLocation(googleApiClient)
                     .setResultCallback(new ResultCallback<LocationResult>() {
                         @Override
                         public void onResult(@NonNull LocationResult locationResult) {
                             if (locationResult.getStatus().isSuccess()) {
                                 Location location = locationResult.getLocation();
                                 if (mMap != null) {
-                                    LatLng currentLocation = new LatLng(Double.parseDouble(String.format("%.05f", location.getLatitude())),
-                                            Double.parseDouble(String.format("%.05f", location.getLongitude())));
+                                    Log.d("tareq_test" , ""+location.getLatitude());
+                                            Double lat=Double.parseDouble(String.format(Locale.US,"%.05f",  location.getLatitude()));
+                                            Double lon= Double.parseDouble(String.format(Locale.US,"%.05f", location.getLongitude()));
+                               Log.d("tareq_test" , ""+lat+" - "+lon);
+                                    LatLng currentLocation = new LatLng(lat,
+                                           lon);
                                     mMap.addMarker(new MarkerOptions().position(currentLocation)
                                             .title("You are here!")
                                             .icon(BitmapDescriptorFactory.fromResource(
@@ -148,7 +158,43 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
                                 Timber.d("Didn't get Location Data");
                             }
                         }
-                    });
+                    });*/
+
+            Task<Location> locationResult = mFusedLocationProviderClient.getLastLocation();
+            locationResult.addOnCompleteListener(this, task -> {
+                if (task.isSuccessful()) {
+                    // Set the map's camera position to the current location of the device.
+                    mLastKnownLocation = task.getResult();
+                    LatLng currentLocation;
+                    if (mLastKnownLocation != null) {
+                        currentLocation = new LatLng(mLastKnownLocation.getLatitude(), mLastKnownLocation.getLongitude());
+                        mMap.clear();
+
+                        mMap.addMarker(new MarkerOptions().position(currentLocation)
+                                .title("You are here!")
+                                .icon(BitmapDescriptorFactory.fromResource(
+                                        R.drawable.ic_user_current_location)));
+
+
+                  /*  mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
+                            new LatLng(mLastKnownLocation.getLatitude(),
+                                    mLastKnownLocation.getLongitude()), DEFAULT_ZOOM));*/
+                        CameraPosition cameraPosition = new CameraPosition(
+                                currentLocation, 15, 70, 0);
+
+                        CameraUpdate yourLocation = CameraUpdateFactory
+                                .newCameraPosition(cameraPosition);
+                        mMap.animateCamera(yourLocation);
+                        getVisits();
+                    }
+                } else {
+                    Log.d("tareq_test", "Current location is null. Using defaults.");
+                    Log.e("tareq_test", "Exception: %s", task.getException());
+                    mMap.moveCamera(CameraUpdateFactory
+                            .newLatLngZoom(mDefaultLocation, DEFAULT_ZOOM));
+                    mMap.getUiSettings().setMyLocationButtonEnabled(false);
+                }
+            });
         } else {
             Timber.d("Location Permission is not enabled.");
         }
@@ -159,28 +205,27 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
         SelliscopeApiEndpointInterface apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(),
                 sessionManager.getUserPassword(), false)
                 .create(SelliscopeApiEndpointInterface.class);
-        Call<ResponseBody> call = apiService.getOutlets();
-        call.enqueue(new Callback<ResponseBody>() {
+        Call<Outlets> call = apiService.getOutlets();
+        call.enqueue(new Callback<Outlets>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                Gson gson = new Gson();
+            public void onResponse(@NonNull Call<Outlets> call, @NonNull Response<Outlets> response) {
+             //   Gson gson = new Gson();
                 if (response.code() == 200) {
-                    try {
-                        Outlets getOutletListSuccessful = gson.fromJson(response.body().string(), Outlets.class);
-                        List<Outlets.Outlet> outlets = getOutletListSuccessful
-                                .outletsResult.outlets;
+                    //       Outlets getOutletListSuccessful ;
+                    if (response.body() != null) {
+               //         getOutletListSuccessful = gson.fromJson(response.body().string(), Outlets.class);
+
+                        List<Outlets.Outlet> outlets = response.body().outletsResult.outlets;
                         for (int i = 0; i < outlets.size(); i++) {
                             mMap.addMarker(new MarkerOptions().position(
                                     new LatLng(outlets.get(i).outletLatitude,
                                             outlets.get(i).outletLongitude))
                                     .icon(vectorToBitmap(
-                                            R.drawable.store_location_marker, 0))
+                                            R.drawable.ic_dokan, 0))
                                     .title(outlets.get(i).outletName));
                         }
-
-                    } catch (IOException e) {
-                        e.printStackTrace();
                     }
+
                 } else if (response.code() == 401) {
                     Toast.makeText(RouteActivity.this,
                             "Invalid Response from server.", Toast.LENGTH_SHORT).show();
@@ -191,8 +236,7 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                //Toast.makeText(LoginActivity.this, t.toString(), Toast.LENGTH_SHORT).show();
+            public void onFailure(@NonNull Call<Outlets> call, @NonNull Throwable t) {
                 Log.d("Response", t.toString());
             }
         });
@@ -201,7 +245,7 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
 
     private BitmapDescriptor vectorToBitmap(@DrawableRes int id, @ColorInt int color) {
         Drawable vectorDrawable = ResourcesCompat.getDrawable(getResources(), id, null);
-        Bitmap bitmap = Bitmap.createBitmap(vectorDrawable.getIntrinsicWidth(),
+        Bitmap bitmap = Bitmap.createBitmap(Objects.requireNonNull(vectorDrawable).getIntrinsicWidth(),
                 vectorDrawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
         vectorDrawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
@@ -211,23 +255,22 @@ public class RouteActivity extends AppCompatActivity implements OnMapReadyCallba
     }
 
     public boolean isGPSEnabled() {
-
         LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-
         return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
     }
 
     @Override
     public void onDestroy() {
-        googleApiClient.disconnect();
         super.onDestroy();
     }
+
 
     @Override
     public void onLocationChanged(Location location) {
         mMap.clear();
         getLocation();
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

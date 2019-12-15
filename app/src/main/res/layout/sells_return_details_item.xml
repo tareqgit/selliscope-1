@@ -1,120 +1,245 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
         <variable
             name="product"
-            type="com.humaclab.selliscope.model.DeliveryResponse.Product"/>
+            type="com.humaclab.selliscope.model.sales_return.SalesReturnResponse.Product" />
     </data>
 
-    <LinearLayout
+
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#ddd"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:layout_margin=".5dp"
-            android:layout_weight="1"
-            android:background="#fff"
-            android:gravity="center"
-            android:padding="10dp"
-            android:text="@{product.name}"
-            android:textAlignment="center"/>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:layout_margin=".5dp"
-            android:layout_weight="1"
-            android:background="#fff"
-            android:gravity="center"
-            android:padding="10dp"
-            android:text="@{Integer.toString(product.qty)}"
-            android:textAlignment="center"/>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:layout_margin=".5dp"
-            android:layout_weight="1"
-            android:background="#fff"
-            android:gravity="center"
-            android:padding="10dp"
-            android:text="@{product.dQty}"
-            android:textAlignment="center"/>
+        android:layout_margin="@dimen/margin_10"
+        android:padding="@dimen/margin_10"
+        app:cardCornerRadius="@dimen/radius_10"
+        app:cardElevation="@dimen/elevation_5">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:layout_margin=".5dp"
-            android:layout_weight="1"
+            android:layout_height="wrap_content"
             android:background="#fff"
-            android:gravity="center"
-            android:orientation="horizontal"
-            android:paddingLeft="@dimen/margin_10"
-            android:paddingRight="@dimen/margin_10">
+            android:orientation="vertical"
+            android:padding="@dimen/padding_5">
 
-            <Button
-                android:id="@+id/btn_decrease"
-                android:layout_width="80dp"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="30dp"
-                android:layout_weight="1"
-                android:background="#ddd"
-                android:text="-"
-                android:textColor="#000"
-                android:textSize="20sp"/>
+                android:layout_gravity="center"
+                android:gravity="center">
 
-            <EditText
-                android:id="@+id/et_qty"
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="#fff"
+                    android:text="Name: " />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center|end"
+                    android:textAlignment="textEnd"
+                    android:layout_weight="2"
+                    android:background="#fff"
+                    android:fontFamily="@font/latoregular"
+                    android:gravity="start"
+                    android:hint="Name"
+                    android:text="@{product.name}"
+                    android:textColor="#000000"
+                    tools:ignore="RtlCompat" />
+
+
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:layout_height="30dp">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="#fff"
+                    android:text="Delivered:" />
+
+                <TextView
+                    android:layout_gravity="center|end"
+                    android:textAlignment="textEnd"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2"
+                    android:background="#fff"
+                    android:fontFamily="@font/latoregular"
+                    android:gravity="start"
+                    android:hint="12"
+                    android:text="@{Integer.toString(product.deliveryQty)}" />
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:hint="Qty."
-                android:imeOptions="actionDone"
-                android:inputType="number"
-                android:text="0"
-                android:textAlignment="center"
-                android:textColor="#000"/>
+                android:layout_gravity="center"
+                android:gravity="center">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity=""
+                    android:background="#fff"
+                    android:text="Return:" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="2"
+                    android:background="#fff"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/btn_decrease"
+                        android:layout_width="30dp"
+                        android:background="@drawable/ic_decrease"
+                        android:layout_height="30dp"
+
+                        android:fontFamily="@font/latoregular"
+                        android:textColor="#000"
+                        android:textSize="20sp" />
+
+                    <EditText
+                        android:id="@+id/et_qty"
+                        android:layout_width="80dp"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/latoregular"
+                        android:hint="Qty."
+                        android:imeOptions="actionDone"
+                        android:inputType="number"
+                        android:text="0"
+                        android:textAlignment="center"
+                        android:textColor="#000" />
+
+                    <Button
+                        android:id="@+id/btn_increase"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:background="@drawable/ic_increase"
+                        android:fontFamily="@font/latoregular"
+                        android:textColor="#000"
+                        android:textSize="20sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_gravity="center"
+                android:gravity="center">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="start"
+                    android:layout_weight="1"
+                    android:background="#fff"
+                    android:gravity="start"
+                    android:text="Return Date: " />
+
+                <TextView
+                    android:id="@+id/btn_dob"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="2"
+                    android:layout_gravity="right"
+                    android:textColor="#000000"
+                    android:background="#fff"
+                    android:gravity="center"
+                    android:text="Click Date" />
+                <ImageButton
+                    android:id="@+id/btn_cng_date_of_birth"
+                    android:layout_width="20dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:background="#00ffffff"
+                    app:srcCompat="@drawable/edit" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="#fff"
+                    android:gravity=""
+                    android:text="Cause: " />
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight="2"
+                    android:layout_height="match_parent">
+                    <Spinner
+                        android:id="@+id/sp_return_cause"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:background="#fff"
+                        android:spinnerMode="dropdown"
+                        android:fontFamily="@font/latoregular" />
+                    <ImageButton
+                        android:layout_width="20dp"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:background="#00ffffff"
+                        app:srcCompat="@drawable/ic_if_arrow" />
+
+                </LinearLayout>
+
+
+
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center">
+
+                <EditText
+                    android:id="@+id/note"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:hint="Note"/>
+
+
+            </LinearLayout>
 
             <Button
-                android:id="@+id/btn_increase"
-                android:layout_width="80dp"
-                android:layout_height="30dp"
+                android:id="@+id/btn_return"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/elevation_5"
                 android:layout_weight="1"
-                android:background="#ddd"
-                android:text="+"
-                android:textColor="#000"
-                android:textSize="20sp"/>
+                android:background="@drawable/button_done"
+                android:fontFamily="@font/latobold"
+                android:gravity="center"
+                android:text="Return"
+                android:textColor="#fff" />
         </LinearLayout>
 
-        <Spinner
-            android:id="@+id/sp_return_cause"
-            style="@style/Base.Widget.AppCompat.DropDownItem.Spinner"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:layout_margin=".5dp"
-            android:layout_weight="1"
-            android:background="#fff"
-            android:entries="@array/returnCause"/>
+    </androidx.cardview.widget.CardView>
 
-        <Button
-            android:id="@+id/btn_return"
-            style="@android:style/Widget.Button.Small"
-            android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:layout_margin="10dp"
-            android:layout_weight="1"
-            android:background="@drawable/button_shape"
-            android:text="Return"
-            android:textColor="#fff"/>
-    </LinearLayout>
+
 </layout>

@@ -1,33 +1,43 @@
 package com.humaclab.selliscope.activity;
 
+import android.content.Context;
 import android.content.Intent;
-import android.databinding.DataBindingUtil;
+import android.graphics.Color;
+import android.location.Location;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
+import android.os.Parcelable;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
+import androidx.recyclerview.widget.LinearLayoutManager;
+
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.humaclab.selliscope.R;
 import com.humaclab.selliscope.SelliscopeApiEndpointInterface;
 import com.humaclab.selliscope.SelliscopeApplication;
 import com.humaclab.selliscope.adapters.OutletRecyclerViewAdapter;
 import com.humaclab.selliscope.databinding.ActivityOutletBinding;
 import com.humaclab.selliscope.model.Outlets;
-import com.humaclab.selliscope.model.RoutePlan.RouteDetailsResponse;
-import com.humaclab.selliscope.model.RoutePlan.RouteResponse;
+import com.humaclab.selliscope.model.route_plan.RouteDetailsResponse;
+import com.humaclab.selliscope.model.route_plan.RouteResponse;
 import com.humaclab.selliscope.utils.DatabaseHandler;
 import com.humaclab.selliscope.utils.LoadLocalIntoBackground;
 import com.humaclab.selliscope.utils.NetworkUtility;
+import com.humaclab.selliscope.utils.SendUserLocationData;
 import com.humaclab.selliscope.utils.SessionManager;
 import com.humaclab.selliscope.utils.VerticalSpaceItemDecoration;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -39,14 +49,25 @@ public class OutletActivity extends AppCompatActivity {
     private OutletRecyclerViewAdapter outletRecyclerViewAdapter;
     private DatabaseHandler databaseHandler;
     private SessionManager sessionManager;
-    private Outlets.OutletsResult outletsResult;
+    public List<Outlets.Outlet> mOutletList;
     private LoadLocalIntoBackground loadLocalIntoBackground;
+    Location mLocation;
+
+
+    private Context mContext;
+    // Save state
+    private Parcelable recyclerViewState; //for storing recycler scroll postion
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_outlet);
+
+        mContext=this;
+
+        createGpsConnection();
+
         databaseHandler = new DatabaseHandler(this);
         sessionManager = new SessionManager(this);
         apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(), sessionManager.getUserPassword(), true).create(SelliscopeApiEndpointInterface.class);
@@ -58,21 +79,15 @@ public class OutletActivity extends AppCompatActivity {
 
         FloatingActionButton addOutlet = findViewById(R.id.fab_add_outlet);
 
-        addOutlet.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(OutletActivity.this, AddOutletActivity.class));
-            }
-        });
-
-        getRoute(); // For getting route plan data
+        addOutlet.setOnClickListener(v -> startActivity(new Intent(OutletActivity.this, AddOutletActivity.class)));
 
         binding.rvOutlet.addItemDecoration(new VerticalSpaceItemDecoration(20));
         binding.rvOutlet.setLayoutManager(new LinearLayoutManager(this));
+        binding.rvOutlet.setHasFixedSize(true);
 
-        if (!NetworkUtility.isNetworkAvailable(this)) {
-            Toast.makeText(this, "Connect to Wifi or Mobile Data for better performance.", Toast.LENGTH_SHORT).show();
-        }
+        outletRecyclerViewAdapter = new OutletRecyclerViewAdapter(OutletActivity.this, OutletActivity.this, mOutletList);
+        binding.rvOutlet.setAdapter(outletRecyclerViewAdapter);
+
 
         binding.tvSearchOutlet.addTextChangedListener(new TextWatcher() {
             @Override
@@ -82,9 +97,13 @@ public class OutletActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                Outlets.OutletsResult outletsResult = databaseHandler.getSearchedOutlet(String.valueOf(s));
-                outletRecyclerViewAdapter = new OutletRecyclerViewAdapter(OutletActivity.this, OutletActivity.this, outletsResult);
-                binding.rvOutlet.setAdapter(outletRecyclerViewAdapter);
+                if(String.valueOf(s).equals("i am tareq")){
+                    SelliscopeApplication.developer= !SelliscopeApplication.developer;
+                    Toast.makeText(OutletActivity.this, "You are a developer", Toast.LENGTH_SHORT).show();
+                }
+                mOutletList = databaseHandler.getSearchedOutlet(String.valueOf(s)).outlets;
+                outletRecyclerViewAdapter.updateOutlate(mOutletList);
+
             }
 
             @Override
@@ -93,29 +112,150 @@ public class OutletActivity extends AppCompatActivity {
             }
         });
 
-        binding.srlOutlet.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                if (!NetworkUtility.isNetworkAvailable(OutletActivity.this)) {
-                    Toast.makeText(getApplicationContext(), "Connect to Wifi or Mobile Data for better performance.", Toast.LENGTH_SHORT).show();
+        binding.srlOutlet.setColorSchemeColors(Color.parseColor("#EA5455"), Color.parseColor("#FCCF31"), Color.parseColor("#F55555"));
+
+        binding.srlOutlet.setOnRefreshListener(() -> {
+            if (NetworkUtility.isNetworkAvailable(OutletActivity.this)) {
+
+             /*   final AlertDialog alertDialogRefresh = new AlertDialog.Builder(this).create();
+                alertDialogRefresh.setTitle("Confirm");
+                alertDialogRefresh.setMessage("Are you sure? \n\nYou want to Update all Outlet. ");
+                alertDialogRefresh.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                    @Override
+                    public void onDismiss(DialogInterface dialog) {
+                        binding.srlOutlet.setRefreshing(false);
+                    }
+                });
+                alertDialogRefresh.setButton(DialogInterface.BUTTON_POSITIVE, "Yes", (dialog, which) -> {
+                    ProgressDialog pd = new ProgressDialog(OutletActivity.this);
+                    pd.setMessage("Local data is updating.\nPlease be patient....");
+                    pd.setCancelable(false);
+                    pd.show();
+            */
+                LoadLocalIntoBackground loadLocalIntoBackground = new LoadLocalIntoBackground(this);
+                binding.srlOutlet.setRefreshing(true);
+
+                loadLocalIntoBackground.loadOutlet(new LoadLocalIntoBackground.LoadCompleteListener() {
+                    @Override
+                    public void onLoadComplete() {
+                        getOutlets();
+                        binding.srlOutlet.setRefreshing(false);
+                        Log.d("tareq_test", "Outlets updated from Server");
+                        //    pd.dismiss();
+                    }
+
+                    @Override
+                    public void onLoadFailed(String reason) {
+                        binding.srlOutlet.setRefreshing(false);
+                        //     pd.dismiss();
+                        Log.d("tareq_test", "Outlets couldn't updated from Server");
+                    }
+                });
+
+
+              /*  });
+                if (!alertDialogRefresh.isShowing()) alertDialogRefresh.show();
+*/
+
+
+            } else {
+                Toast.makeText(getApplicationContext(), "Connect to Wifi or Mobile Data for better performance.", Toast.LENGTH_SHORT).show();
+            }
+
+
+        });
+
+        //if network is Available then update the data again
+    /*    if (NetworkUtility.isNetworkAvailable(this)) {
+            LoadLocalIntoBackground loadLocalIntoBackground = new LoadLocalIntoBackground(this);
+            binding.srlOutlet.setRefreshing(true);
+            loadLocalIntoBackground.loadOutlet(new LoadLocalIntoBackground.LoadCompleteListener() {
+                @Override
+                public void onLoadComplete() {
+                    getOutlets();
+                    Log.d("tareq_test" , "Outlets updated from Server");
+                    binding.srlOutlet.setRefreshing(false);
                 }
-                getOutlets();
+
+                @Override
+                public void onLoadFailed(String reason) {
+                    Log.d("tareq_test" , "Outlets updated from Server");
+                }
+            });
+        }*/
+
+    }
+
+
+    void createGpsConnection(){
+        GoogleApiClient googleApiClient= new GoogleApiClient.Builder(mContext)
+                .addApi(LocationServices.API)
+                .build();
+        googleApiClient.connect();
+
+        googleApiClient.registerConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
+            @Override
+            public void onConnected(@Nullable Bundle bundle) {
+               new SendUserLocationData(mContext).getInstantLocation(OutletActivity.this,(latitude, longitude) -> {
+                   Location location= new Location("current_location");
+                   location.setLatitude(latitude);
+                   location.setLongitude(longitude);
+                   mLocation=location;
+               });
+            }
+
+            @Override
+            public void onConnectionSuspended(int i) {
+
             }
         });
+
+    }
+
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         getOutlets();
+        getRoute(); // For getting route plan data
+        // Restore state
+        binding.rvOutlet.getLayoutManager().onRestoreInstanceState(recyclerViewState); //we are restoring recycler position
+
     }
 
     public void getOutlets() {
-        outletsResult = databaseHandler.getAllOutlet();
-        if (!outletsResult.outlets.isEmpty()) {
-            if (binding.srlOutlet.isRefreshing())
-                binding.srlOutlet.setRefreshing(false);
-            outletRecyclerViewAdapter = new OutletRecyclerViewAdapter(OutletActivity.this, OutletActivity.this, outletsResult);
-            binding.rvOutlet.setAdapter(outletRecyclerViewAdapter);
-        } else {
-            Toast.makeText(getApplicationContext(), "You don't have any outlet in your list.", Toast.LENGTH_LONG).show();
+        mOutletList = databaseHandler.getAllOutlet().outlets;
+        if (!mOutletList.isEmpty()) {
+            if(mLocation!=null) {
+
+            /*    Location location = new Location("");
+                location.setLatitude(LocationMonitoringService.sLocation.getLatitude());
+                location.setLongitude(LocationMonitoringService.sLocation.getLongitude());
+*/
+                for (Outlets.Outlet outlet : mOutletList) {
+                    Location loca = new Location("");
+                    loca.setLatitude(outlet.outletLatitude);
+                    loca.setLongitude(outlet.outletLongitude);
+
+                    outlet.setDistance_from_cur_location(mLocation.distanceTo(loca));
+
+                }
+
+                Collections.sort(mOutletList, (o1, o2) -> Double.compare(o1.getDistance_from_cur_location(), o2.getDistance_from_cur_location()));
+
+
+
+                outletRecyclerViewAdapter.updateOutlate(mOutletList);
+
+            }else {
+                outletRecyclerViewAdapter.updateOutlate(mOutletList);
+               // Toast.makeText(this, "Can't sort  outlet yet. Need some time", Toast.LENGTH_SHORT).show();
+            }
+
         }
     }
+
 
     /**
      * For getting route-plan data
@@ -125,11 +265,14 @@ public class OutletActivity extends AppCompatActivity {
         call.enqueue(new Callback<RouteResponse>() {
             @Override
             public void onResponse(Call<RouteResponse> call, Response<RouteResponse> response) {
-                if (!response.body().getResult().getRoute().isEmpty()) {
-                    binding.tvToolbarTitle.setText(response.body().getResult().getRoute().get(0).getName());
-                    getRouteDetails(response.body().getResult().getRoute().get(0).getId());
-                } else {
-                    binding.tvToolbarTitle.setText("Outlet");
+                if (response.body() != null) {
+                    if (!response.body().getResult().getRoute().isEmpty()) {
+                        // Toast.makeText(OutletActivity.this, ""+response.body().getResult().getRoute().get(0).getName(), Toast.LENGTH_SHORT).show();
+                        binding.tvToolbarTitle.setText(response.body().getResult().getRoute().get(0).getName());
+                        getRouteDetails(response.body().getResult().getRoute().get(0).getId());
+                    } else {
+                        binding.tvToolbarTitle.setText(getString(R.string.outlet));
+                    }
                 }
             }
 
@@ -139,6 +282,8 @@ public class OutletActivity extends AppCompatActivity {
             }
         });
     }
+
+
 
     /**
      * For getting the details of route-plan by its ID
@@ -150,11 +295,16 @@ public class OutletActivity extends AppCompatActivity {
         call.enqueue(new Callback<RouteDetailsResponse>() {
             @Override
             public void onResponse(Call<RouteDetailsResponse> call, Response<RouteDetailsResponse> response) {
-                final List<RouteDetailsResponse.OutletItem> check = response.body().getResult().getOutletItemList();
-                if (response.isSuccessful()) {
-                    binding.tvCheckInCount.setText(response.body().getResult().getCheckedOutlet() + " / " + response.body().getResult().getTotalOutlet());
-                    loadLocalIntoBackground.saveOutletRoutePlan(check);
-                    getOutlets(); //For reloading the outlet recycler view
+                final List<RouteDetailsResponse.OutletItem> check;
+                if (response.body() != null) {
+                    check = response.body().getResult().getOutletItemList();
+
+                        binding.tvCheckInCount.setText(String.format(Locale.ENGLISH,"%d / %d", response.body().getResult().getCheckedOutlet(), response.body().getResult().getTotalOutlet()));
+                        loadLocalIntoBackground.saveOutletRoutePlan(check);
+                        getOutlets(); //For reloading the outlet recycler view
+
+                }else{
+                    Toast.makeText(OutletActivity.this, "Null Response from Server", Toast.LENGTH_SHORT).show();
                 }
             }
 

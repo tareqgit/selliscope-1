@@ -2,35 +2,25 @@ package com.humaclab.selliscope.adapters;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.databinding.DataBindingUtil;
-import android.databinding.ViewDataBinding;
-import android.graphics.Color;
-import android.support.v7.widget.RecyclerView;
+import androidx.databinding.DataBindingUtil;
+import androidx.recyclerview.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.Toast;
 
-import com.google.gson.Gson;
-import com.humaclab.selliscope.BR;
 import com.humaclab.selliscope.R;
-import com.humaclab.selliscope.SelliscopeApiEndpointInterface;
-import com.humaclab.selliscope.SelliscopeApplication;
-import com.humaclab.selliscope.model.DeliverProductResponse;
+import com.humaclab.selliscope.databinding.DeliveryDetailsItemBinding;
 import com.humaclab.selliscope.model.DeliveryResponse;
 import com.humaclab.selliscope.model.GodownRespons;
-import com.humaclab.selliscope.utils.SessionManager;
+import com.humaclab.selliscope.utils.ImportentFunction;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 /**
  * Created by tonmoy on 5/18/17.
@@ -62,7 +52,7 @@ public class DeliveryRecyclerAdapter extends RecyclerView.Adapter<DeliveryRecycl
     @Override
     public void onBindViewHolder(final DeliveryDetailsViewHolder holder, int position) {
         final DeliveryResponse.Product product = products.get(position);
-        holder.getBinding().setVariable(BR.product, product);
+        holder.getBinding().setProduct(product);
         holder.getBinding().executePendingBindings();
 
         pd = new ProgressDialog(context);
@@ -78,8 +68,8 @@ public class DeliveryRecyclerAdapter extends RecyclerView.Adapter<DeliveryRecycl
             godownId.add(godown.getId());
             godownName.add(godown.getName());
         }
-        holder.sp_godown.setAdapter(new ArrayAdapter<>(context, R.layout.spinner_item, godownName));
-        holder.sp_godown.setSelection(0);
+        /*holder.sp_godown.setAdapter(new ArrayAdapter<>(context, R.layout.spinner_item, godownName));
+        holder.sp_godown.setSelection(0);*/
         //For godwon spinner
 
         //For qty increase and decrease
@@ -89,11 +79,14 @@ public class DeliveryRecyclerAdapter extends RecyclerView.Adapter<DeliveryRecycl
             public void onClick(View view) {
                 if (qty[0] < product.qty) {
                     holder.et_qty.setText(String.valueOf(qty[0] + 1));
+                    ImportentFunction.deliveryArrayList.set(holder.getAdapterPosition(),Integer.parseInt(String.valueOf(qty[0] + 1)));
                     qty[0] = qty[0] + 1;
                 } else {
                     holder.et_qty.setText("1");
+                    ImportentFunction.deliveryArrayList.set(holder.getAdapterPosition(),Integer.parseInt(String.valueOf("1")));
                     qty[0] = 1;
                 }
+
             }
         });
         holder.btn_decrease.setOnClickListener(new View.OnClickListener() {
@@ -101,16 +94,37 @@ public class DeliveryRecyclerAdapter extends RecyclerView.Adapter<DeliveryRecycl
             public void onClick(View view) {
                 if (qty[0] > 1) {
                     holder.et_qty.setText(String.valueOf(qty[0] - 1));
+                    ImportentFunction.deliveryArrayList.set(holder.getAdapterPosition(),Integer.parseInt(String.valueOf(qty[0] - 1)));
                     qty[0] = qty[0] - 1;
                 } else {
                     holder.et_qty.setText("0");
+                    ImportentFunction.deliveryArrayList.set(holder.getAdapterPosition(),Integer.parseInt(String.valueOf("0")));
                     qty[0] = 0;
                 }
+
             }
         });
         //For qty increase and decrease
 
-        holder.btn_deliver.setOnClickListener(new View.OnClickListener() {
+        holder.et_qty.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if(!s.toString().equals(""))
+                {
+                ImportentFunction.deliveryArrayList.set(holder.getAdapterPosition(),Integer.parseInt(s.toString()));
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
+        /*holder.btn_deliver.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (holder.sp_godown.getSelectedItemPosition() != 0) {
@@ -145,12 +159,13 @@ public class DeliveryRecyclerAdapter extends RecyclerView.Adapter<DeliveryRecycl
                                     holder.btn_deliver.setEnabled(false);
                                     holder.btn_deliver.setBackgroundColor(Color.parseColor("#dddddd"));
                                     Toast.makeText(context, "Product delivered successfully", Toast.LENGTH_SHORT).show();
+                                    ((Activity)context).finish();
                                 } else if (response.code() == 200) {
                                     Toast.makeText(context, response.body().result, Toast.LENGTH_LONG).show();
                                 } else if (response.code() == 401) {
                                     Toast.makeText(context, "Invalid Response from server.", Toast.LENGTH_SHORT).show();
                                 } else {
-                                    Toast.makeText(context, "Server Error! Try Again Later!", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(context, response.code()+"Server Error! Try Again Later!", Toast.LENGTH_SHORT).show();
                                 }
                             }
 
@@ -169,16 +184,19 @@ public class DeliveryRecyclerAdapter extends RecyclerView.Adapter<DeliveryRecycl
                     Toast.makeText(context, "Please select a godown.", Toast.LENGTH_SHORT).show();
                 }
             }
-        });
+        });*/
     }
 
     @Override
     public int getItemCount() {
+        if(products!=null)
         return products.size();
+        else
+            return 0;
     }
 
     public class DeliveryDetailsViewHolder extends RecyclerView.ViewHolder {
-        private ViewDataBinding binding;
+        private DeliveryDetailsItemBinding binding;
         private Spinner sp_godown;
         private Button btn_decrease, btn_increase, btn_deliver;
         private EditText et_qty;
@@ -186,14 +204,14 @@ public class DeliveryRecyclerAdapter extends RecyclerView.Adapter<DeliveryRecycl
         public DeliveryDetailsViewHolder(View itemView) {
             super(itemView);
             binding = DataBindingUtil.bind(itemView);
-            sp_godown = itemView.findViewById(R.id.sp_godown);
+           /* sp_godown = itemView.findViewById(R.id.sp_godown);*/
             btn_decrease = itemView.findViewById(R.id.btn_decrease);
             btn_increase = itemView.findViewById(R.id.btn_increase);
-            btn_deliver = itemView.findViewById(R.id.btn_deliver);
+           /* btn_deliver = itemView.findViewById(R.id.btn_deliver);*/
             et_qty = itemView.findViewById(R.id.et_qty);
         }
 
-        public ViewDataBinding getBinding() {
+        public DeliveryDetailsItemBinding getBinding() {
             return binding;
         }
     }

@@ -2,11 +2,13 @@ package com.humaclab.selliscope.activity;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.widget.Toolbar;
+
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -47,8 +49,9 @@ public class DeliveryListActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("");
         TextView toolbarTitle = (TextView) findViewById(R.id.tv_toolbar_title);
-        toolbarTitle.setText("Delivery List");
+        toolbarTitle.setText(getString(R.string.deliveryList));
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         databaseHandler = new DatabaseHandler(DeliveryListActivity.this);
         sessionManager = new SessionManager(DeliveryListActivity.this);
@@ -129,7 +132,11 @@ public class DeliveryListActivity extends AppCompatActivity {
         final List<String> outletIDs = outlets.get("outletID");
         List<String> outletNames = outlets.get("outletName");
 
-        sp_outlet_list.setAdapter(new ArrayAdapter<>(DeliveryListActivity.this, R.layout.spinner_item, outletNames));
+        ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<>(DeliveryListActivity.this, R.layout.color_spinner_layout_black, outletNames);
+        spinnerArrayAdapter.setDropDownViewResource(R.layout.color_spinner_layout_black);
+        sp_outlet_list.setAdapter(spinnerArrayAdapter);
+
+      //    sp_outlet_list.setAdapter(new ArrayAdapter<>(DeliveryListActivity.this, R.layout.spinner_item, outletNames));
         sp_outlet_list.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
             @Override
@@ -148,5 +155,21 @@ public class DeliveryListActivity extends AppCompatActivity {
 
             }
         });
+    }
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                pd.dismiss();
+                onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

@@ -1,14 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <color name="colorPrimary">#1976d2</color>
-    <color name="colorPrimaryDark">#0D47A1</color>
-    <color name="colorAccent">#1976D2</color>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <color name="colorPrimary">#2196F3</color>
+    <color name="colorPrimaryDark">#1976D2</color>
+    <color name="colorAccent">#90CAF9</color><!--
+    <color name="colorPrimary">#325E94</color>
+    <color name="colorPrimaryDark">#284879</color>
+    <color name="colorAccent">#1976D2</color>-->
     <color name="white">#FFFFFF</color>
     <color name="red">#e06165</color>
+    <color name="danger">#FF5722</color>
     <color name="background">#EEEFEF</color>
+    <color name="cart_button_shape">#e3e8f7</color>
 
     <!-- Button color -->
     <color name="colorDefault">@color/colorPrimary</color>
     <color name="colorPressed">@color/colorPrimaryDark</color>
     <color name="colorFocused">@color/colorPrimaryDark</color>
+
+
+
+    <color name="background_shimmer">#dddddd</color>
+
+
+    <!--For Text color-->
+    <color name="light_font">#FBFBFB</color>
+    <color name="grey_font">#ff9e9e9e</color>
+    <color name="text_shadow">#7F000000</color>
+    <color name="text_shadow_white">#FFFFFF</color>
+
+    <color name="text_black"> #212121</color>
+    <color name="text_blue">#448AFF</color>
+
+    <color name="white_back">#ECEFF1</color>
+    <color name="white_mid">#FAFAFA</color>
+
+
+
+    <color name="mtrl_textinput_default_box_stroke_color" tools:override="true">#fff</color>
 </resources>

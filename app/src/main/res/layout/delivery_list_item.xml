@@ -9,7 +9,7 @@
             type="com.humaclab.selliscope.model.DeliveryResponse.DeliveryList"/>
     </data>
 
-    <android.support.v7.widget.CardView
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="5dp"
@@ -39,6 +39,7 @@
                         android:layout_weight="1"
                         android:padding="10dp"
                         android:text='@{deliveryDetails.outletName}'
+                        android:fontFamily="@font/latoregular"
                         android:textColor="#000"
                         android:textSize="18sp"/>
 
@@ -49,7 +50,8 @@
                         android:layout_gravity="end"
                         android:layout_weight="1"
                         android:padding="10dp"
-                        android:text='@{"Order id: " + deliveryDetails.deliveryId}'
+                        android:text="@{@string/order_id_t(deliveryDetails.deliveryId)}"
+                        android:fontFamily="@font/latoregular"
                         android:textAlignment="textEnd"
                         android:textColor="#000"
                         android:textSize="18sp"/>
@@ -60,7 +62,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="10dp"
-                    android:text='@{"Order Date: " + deliveryDetails.deliveryDate}'
+                    android:text="@{@string/order_date_t(deliveryDetails.deliveryDate)}"
+                    android:fontFamily="@font/latoregular"
                     android:textSize="17sp"/>
             </LinearLayout>
 
@@ -70,5 +73,5 @@
                 android:layout_gravity="center"
                 app:srcCompat="@drawable/next"/>
         </LinearLayout>
-    </android.support.v7.widget.CardView>
+    </androidx.cardview.widget.CardView>
 </layout>

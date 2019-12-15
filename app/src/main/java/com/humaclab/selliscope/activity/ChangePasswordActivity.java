@@ -1,22 +1,22 @@
 package com.humaclab.selliscope.activity;
 
 import android.app.ProgressDialog;
-import android.databinding.DataBindingUtil;
+import androidx.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
+import com.bumptech.glide.Glide;
 import com.humaclab.selliscope.R;
 import com.humaclab.selliscope.SelliscopeApiEndpointInterface;
 import com.humaclab.selliscope.SelliscopeApplication;
 import com.humaclab.selliscope.databinding.ActivityChangePasswordBinding;
-import com.humaclab.selliscope.model.UpdatePassword.ChangePassword;
-import com.humaclab.selliscope.model.UpdatePassword.ChangePasswordResponse;
+import com.humaclab.selliscope.model.update_password.ChangePassword;
+import com.humaclab.selliscope.model.update_password.ChangePasswordResponse;
 import com.humaclab.selliscope.utils.SessionManager;
 
 import retrofit2.Call;
@@ -64,6 +64,9 @@ public class ChangePasswordActivity extends AppCompatActivity {
                 }
             }
         });
+        Glide.with(getApplicationContext()).load(sessionManager.getUserDetails().get("profilePictureUrl"))
+                .thumbnail(0.5f)
+                .into(binding.ivProfileImage);
     }
 
     private void updatePassword() {

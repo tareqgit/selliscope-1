@@ -1,10 +1,244 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Selliscope</string>
-    <string name="email">ই-মেইল</string>
-    <string name="language_setting">ভাষা পরিবর্তন</string>
-    <string name="sp_thana_title">থানা</string>
-    <string name="target">টার্গেট</string>
+  <string name="target">টার্গেট</string>
     <string name="dashboard">ড্যাশবোর্ড</string>
-    <string name="password">পাসওয়ার্ড</string>
+
+
+    <string name="target_navigation_item">টার্গেট</string>
+    <string name="dashboard_navigation_item">ড্যাশবোর্ড</string>
+    <string name="title_activity_login">সাইন ইন</string>
+    <string name="language_setting">ভাষা পরিবর্তন</string>
+    <string name="language_setting_additional">ভাষা নির্বাচন যদি আপনি চান</string>
+    <!-- Strings related to login -->
+    <string name="prompt_email">ই-মেইল</string>
+    <string name="prompt_password">পাসওয়ার্ড (ঐচ্ছিক)</string>
+    <string name="action_sign_in">সাইন ইন করুন অথবা নিবন্ধন করুন</string>
+    <string name="action_sign_in_short">সাইন ইন</string>
+    <string name="error_invalid_email">এই ইমেইল ঠিকানা সঠিক নয়</string>
+    <string name="error_invalid_password">এই পাসওয়ার্ড খুব ছোট</string>
+    <string name="error_incorrect_password">এই পাসওয়ার্ড সঠিক নয়</string>
+    <string name="error_field_required">ঘরটি অবশ্যই পূরণ করতে হবে</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email
+        completions."
+    </string>
+    <string name="sign_in">সাইন ইন</string>
+    <string name="email">ই-মেইল</string>
+    <string name="password">পাসওয়ার্ড</string>
+    <string name="title_activity_home">HomeActivity</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">সেটিংস</string>
+    <string name="name">নাম</string>
+    <string name="completed">সম্পন্ন</string>
+    <string name="sales_target">বিক্রয় টার্গেট </string>
+    <string name="remaining">অবশিষ্ট</string>
+    <string name="title_activity_route">Route</string>
+    <!-- Page Titles -->
+  <string name="route">যাত্রাপথ</string>
+  <string name="products">পণ্য</string>
+
+    <string name="home">হোম</string>
+    <string name="title_activity_add_outlet">" "</string>
+    <!-- Spinner title -->
+    <string name="sp_thana_title">Thana</string>
+    <string name="sp_outlet_type">Type</string>
+    <string name="stock">মজুত</string>
+    <string name="dashBoard_map">ম্যাপ</string>
+    <string name="dashboard_Dealer">ডিলার</string>
+    <string name="dashboard_delivery">ডেলিভারি</string>
+    <string name="dashboard_inspection">পরিদর্শন</string>
+    <string name="dashboard_productList">পণ্য তালিকা</string>
+    <string name="dashboard_promotionAds">নতুন অফার</string>
+    <string name="btn_update_profile">প্রোফাইল আপডেট</string>
+    <string name="search_outlet">প্রতিষ্ঠান অনুসন্ধান করুন</string>
+  <string name="permission_denied_explanation">permission denied</string>
+    <string name="settings">সেটিংস</string>
+    <string name="txtPromotionalAdsTitle">নতুন অফার</string>
+    <string name="profile">প্রোফাইল</string>
+    <string name="updating_profile">প্রোফাইল আপডেট হচ্ছে…</string>
+    <string name="GoodMorning">শুভ সকাল</string>
+    <string name="GoodAfternoon">শুভ বিকাল</string>
+    <string name="GoodEvening">শুভ সন্ধ্যা</string>
+    <string name="GoodNight">শুভ রাত্রি</string>
+    <string name="logout">লগ আউট</string>
+    <string name="upload_data">ডেটা আপলোড</string>
+    <string name="contact_us">আমাদের সাথে যোগাযোগ করুন</string>
+    <string name="privacy_policy">প্রাইভেসি পলিসি</string>
+    <string name="about_us">আমাদের সম্পর্কে জানুন</string>
+    <string name="myPerformance">আমার অর্জন</string>
+    <string name="search_dealer">ডিলার অনুসন্ধান করুন </string>
+    <string name="add_dealer">ডিলার তৈরি করুন </string>
+    <string name="dealer_name">ডিলার নাম</string>
+    <string name="owner_name">মালিকের নাম</string>
+    <string name="contact_number">যোগাযোগ নাম্বার</string>
+    <string name="credit">ক্রেডিট</string>
+    <string name="dealer_address">ডিলারের ঠিকানা</string>
+    <string name="cancel">বাতিল</string>
+    <string name="add">সম্পন্ন</string>
+    <string name="dealer_type">ডিলার ধরণ:</string>
+    <string name="district">জেলা:</string>
+    <string name="thana">থানা:</string>
+    <string name="Please_select_a_thana">প্রথমে একটি থানা নির্বাচন করুন</string>
+    <string name="Dealer_location_is">ডিলার অবস্থান আপনার 100 মিটার ব্যাসার্ধ এর মধ্যে নেই।</string>
+    <string name="connect">ওয়াইফাই বা মোবাইল ডেটা সংযোগ করুন</string>
+    <string name="Could_not_found">এখনও কোনো অবস্থান খুঁজে পাওয়া যায়নি। আবার চেষ্টা করুন</string>
+    <string name="creating_Dealer">ডিলার তৈরি করা হচ্ছে …</string>
+    <string name="Dealer_Information">ডিলারের তথ্য </string>
+    <string name="dealer_created_msg">ডিলার সফলভাবে তৈরি</string>
+    <string name="dealer_details">ডিলার বিবরণ</string>
+    <string name="target_details">টার্গেট বিবরণ</string>
+    <string name="edit">এডিট</string>
+    <string name="update">আপডেট</string>
+    <string name="check_in">উপস্থিতি</string>
+    <string name="map">ম্যাপ</string>
+    <string name="history">বিবরণ</string>
+    <string name="payment">টাকা পরিশোধ</string>
+    <string name="total_paid">মোট পরিশোধিত:</string>
+    <string name="total_due">মোট বাকি:</string>
+    <string name="Purchase_History">ক্রয় বিবরণ-</string>
+    <string name="order">অর্ডার </string>
+    <string name="order_id">অর্ডার আইডি</string>
+     <string name="order_id_t">অর্ডার আইডি: %s</string>
+    <string name="paid">পরিশোধ</string>
+    <string name="discount">ডিসকাউন্ট:</string>
+    <string name="due">বাকি:</string>
+    <string name="product_name">পণ্যের নাম:</string>
+    <string name="quantity">সংখ্যা:</string>
+    <string name="rate">হার:</string>
+    <string name="price">দাম:</string>
+    <string name="order_no">অর্ডার নং:</string>
+    <string name="pay">পরিশোধ</string>
+    <string name="sub_total">মোট:</string>
+    <string name="grand_total">সর্বমোট:</string>
+    <string name="pay_now">এখন পরিশোধ করুন</string>
+    <string name="search_product">পণ্য অনুসন্ধান করুন</string>
+    <string name="total">মোট:</string>
+    <string name="transport">পরিবহন</string>
+    <string name="select_category">ক্যাটাগরি নির্বাচন করুন</string>
+    <string name="select_brand">ব্র্যান্ড নির্বাচন করুন</string>
+    <string name="select_payment">চালান প্রকার</string>
+    <string name="select_payment_cash">নগদ</string>
+    <string name="select_payment_credit">ধার</string>
+    <string name="select_payment_advance">আগাম</string>
+
+    <string name="stockDialogue">স্টক:</string>
+    <string name="total_price">মোট দাম:</string>
+    <string name="select">সিলেক্ট</string>
+    <string name="change_password">পাসওয়ার্ড পরিবর্তন</string>
+    <string name="comment">মন্তব্য:</string>
+    <string name="creatingOrder">অর্ডার তৈরি করা হচ্ছে …</string>
+    <string name="deliveryList">ডেলিভারি তালিকা</string>
+    <string name="loadingDeliveryList">বিতরণ তালিকা লোড .....</string>
+    <string name="type">ধরণ :</string>
+    <string name="is_damaged">নষ্ট :</string>
+    <string name="condition">অবস্থা :</string>
+    <string name="qty">সংখ্যা</string>
+    <string name="submit_inspection">পরিদর্শন জমা দিন</string>
+    <string name="product_list">পণ্য তালিকা</string>
+    <string name="contactAdmin">Please contact to your admin.</string>
+    <string name="passwordRequire">Password is required!</string>
+    <string name="emailRequired">Email is required!</string>
+    <string name="bank_name">ব্যাংকের নাম</string>
+    <string name="cheque_no">চেক নম্বর</string>
+    <string name="deposit_slip">জমা স্লিপ</string>
+    <string name="cheque_date">চেক তারিখ</string>
+    <string name="performance">অর্জন</string>
+    <string name="good_morning">সুপ্রভাত</string>
+  <string name="good_afternoon">শুভ অপরাহ্ন</string>
+  <string name="good_evening">শুভ সন্ধ্যা</string>
+  <string name="good_night">শুভ রাত্রি</string>
+  <string name="target_plan">লক্ষ্য পরিকল্পনা</string>
+
+  <string name="outlet">প্রতিষ্ঠান</string>
+  <string name="deliver">প্রদান</string>
+  <string name="inspection">পরিদর্শন</string>
+  <string name="sales_return">বিক্রয় ফেরত</string>
+  <string name="orders">অর্ডার</string>
+  <string name="payments">আদায়/পেমেন্ট </string>
+  <string name="purchase_history">ক্রয় বিবরণ-</string>
+  <string name="offer">অফার:</string>
+  <string name="order_date">অর্ডারের তারিখ</string>
+  <string name="order_date_t">অর্ডারের তারিখ: %s</string>
+  <string name="promotional_discount">প্রচারমূলক ডিসকাউন্ট</string>
+  <string name="outlet_information">আউটলেট তথ্য</string>
+  <string name="outlet_details">আউটলেট বিবরণ</string>
+  <string name="address">ঠিকানা</string>
+  <string name="outlet_type">আউটলেট প্রকার</string>
+  <string name="sells_return_list">বিক্রয় ফেরৎ তালিকা</string>
+  <string name="toatal">মোট:</string>
+  <string name="end_date">শেষ তারিখ</string>
+  <string name="start_date">শুরুর তারিখ</string>
+    <string name="leaderboard">লিডারবোর্ড</string>
+    <string name="selesReturn">বিক্রয় ফেরত</string>
+    <string name="reason">কারণ:</string>
+  <string name="sku_no">SKU No:</string>
+  <string name="refresh_data">রিফ্রেশ ডেটা</string>
+
+    <string-array name="paymentType">
+        <item>পরিশোধ নগদ</item>
+        <item>চেক </item>
+
+    </string-array>
+
+  <string-array name="gender">
+    <item>Male</item>
+    <item>Female</item>
+  </string-array>
+
+  <string-array name="my_lang">
+    <item>Eng</item>
+    <item>বাংলা</item>
+  </string-array>
+
+  <string-array name="salesReturnReason">
+    <item>খারাপ</item>
+    <item>মেয়াদোত্তীর্ণ</item>
+    <item>অপর্যাপ্ত টাকা</item>
+    <item>বদলি</item>
+  </string-array>
+
+
+  <string-array name="returnCause">
+        <item>Select cause of return</item>
+        <item>Damaged product</item>
+        <item>Change of product (For example, returning 1 Litre coke bottle for ordering 2.25 liter coke bottle)</item>
+        <item>Cancellation of order while delivery</item>
+        <item>Incorrect Product or Size Ordered</item>
+        <item>Product No Longer Needed</item>
+        <item>Product Did Not Match Description on Catalog</item>
+        <item>Late Delivery of Items</item>
+        <item>Wrong item ordered</item>
+        <item>Faulty product</item>
+    </string-array>
+    <string-array name="promotion_type">
+        <item>প্রচারের ধরণ</item>
+        <item>ব্যানার</item>
+        <item>ডিলার পরিদর্শন </item>
+        <item>চেক মেমো</item>
+        <item>ড্রাইভ ফোকাস SKU</item>
+    </string-array>
+    <string-array name="is_damaged">
+        <item>নষ্ট?</item>
+        <item>হ্যা</item>
+        <item>না</item>
+    </string-array>
+    <string-array name="visibility">
+        <item>Select Visibility</item>
+        <item>Visible</item>
+        <item>Not Visible</item>
+    </string-array>
+    <string-array name="condition">
+        <item>অবস্থা নির্বাচন করুন</item>
+        <item>ভালো</item>
+        <item>খারাপ</item>
+        <item>মাঝামাঝি</item>
+    </string-array>
+    <!-- Language select dialog -->
+    <string-array name="lang_select">
+        <item>English</item>
+        <item>বাংলা</item>
+    </string-array>
 </resources>

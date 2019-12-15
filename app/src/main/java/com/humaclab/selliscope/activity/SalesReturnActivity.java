@@ -1,12 +1,16 @@
 package com.humaclab.selliscope.activity;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -15,7 +19,7 @@ import com.humaclab.selliscope.R;
 import com.humaclab.selliscope.SelliscopeApiEndpointInterface;
 import com.humaclab.selliscope.SelliscopeApplication;
 import com.humaclab.selliscope.adapters.SellsReturnRecyclerAdapter;
-import com.humaclab.selliscope.model.DeliveryResponse;
+import com.humaclab.selliscope.model.sales_return.SalesReturnResponse;
 import com.humaclab.selliscope.utils.NetworkUtility;
 import com.humaclab.selliscope.utils.SessionManager;
 
@@ -41,8 +45,9 @@ public class SalesReturnActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("");
         TextView toolbarTitle = (TextView) findViewById(R.id.tv_toolbar_title);
-        toolbarTitle.setText("Sells Return List");
+        toolbarTitle.setText(getString(R.string.sells_return_list));
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         sessionManager = new SessionManager(SalesReturnActivity.this);
         pd = new ProgressDialog(this);
@@ -76,10 +81,11 @@ public class SalesReturnActivity extends AppCompatActivity {
 
         apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(),
                 sessionManager.getUserPassword(), false).create(SelliscopeApiEndpointInterface.class);
-        Call<DeliveryResponse> call = apiService.getSalesReturn(outletID);
-        call.enqueue(new Callback<DeliveryResponse>() {
+       // Call<DeliveryResponse> call = apiService.getSalesReturn();
+       Call<SalesReturnResponse> call = apiService.getSalesReturnDAta();
+        call.enqueue(new Callback<SalesReturnResponse>() {
             @Override
-            public void onResponse(Call<DeliveryResponse> call, Response<DeliveryResponse> response) {
+            public void onResponse(Call<SalesReturnResponse> call, Response<SalesReturnResponse> response) {
                 pd.dismiss();
                 if (response.code() == 200) {
                     try {
@@ -87,8 +93,8 @@ public class SalesReturnActivity extends AppCompatActivity {
                             srl_sells_return.setRefreshing(false);
 
                         System.out.println("Return Response " + new Gson().toJson(response.body()));
-                        List<DeliveryResponse.DeliveryList> delivers = response.body().result.deliveryList;
-                        rv_return_list.setAdapter(new SellsReturnRecyclerAdapter(getApplication(), delivers));
+                        List<SalesReturnResponse.DeliveryList> salesReturnOrder = response.body().result.deliveryList;
+                        rv_return_list.setAdapter(new SellsReturnRecyclerAdapter(getApplication(), salesReturnOrder));
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -97,15 +103,40 @@ public class SalesReturnActivity extends AppCompatActivity {
                             "Invalid Response from server.", Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(SalesReturnActivity.this,
-                            "Server Error! Try Again Later!", Toast.LENGTH_SHORT).show();
+                            response.code()+" Server Error! Try Again Later!", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
-            public void onFailure(Call<DeliveryResponse> call, Throwable t) {
+            public void onFailure(Call<SalesReturnResponse> call, Throwable t) {
                 pd.dismiss();
                 t.printStackTrace();
             }
         });
+    }
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            case R.id.actionHistory:
+                Intent intent = new Intent(this, SalesReturnHistoryActivity.class);
+                startActivity(intent);
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_history, menu);
+        return true;
     }
 }

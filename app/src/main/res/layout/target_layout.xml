@@ -1,14 +1,218 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                              android:id="@+id/srl_target"
-                                              android:layout_width="match_parent"
-                                              android:layout_height="match_parent"
-                                              android:background="@color/background"
-                                              android:padding="@dimen/padding_10">
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/srl_target"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rv_target"
+  >
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scrollbars="none"/>
-</android.support.v4.widget.SwipeRefreshLayout>
+        android:background="?android:attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true"
+        >
+
+
+        <TextView
+            android:id="@+id/tv_target_label"
+            android:layout_width="wrap_content"
+            android:layout_height="31dp"
+
+            android:background="@drawable/moss_back"
+            android:drawableStart="@drawable/ic_target_sales"
+            android:drawablePadding="2dp"
+
+            android:gravity="center"
+            android:padding="5dp"
+            android:text="@string/sales_target"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <TextView
+            android:id="@+id/tv_completed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="8dp"
+            android:layout_marginBottom="8dp"
+            android:fontFamily="@font/latoregular"
+            android:text="@string/completed"
+
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:drawableLeft="@drawable/ic_completed_tasks"
+            android:gravity="center"
+            android:drawablePadding="2dp"
+            app:layout_constraintBottom_toTopOf="@+id/tv_target_achieved"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_target_achieved"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/tv_completed"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="8dp"
+            android:layout_marginBottom="8dp"
+            android:fontFamily="@font/latoregular"
+            android:text="0.0"
+            android:textColor="@color/colorPrimary"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/tv_completed"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_target_total"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/circle_progress_view"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/moss_gradient5"
+            android:drawableStart="@drawable/ic_target_sales_white"
+            android:drawablePadding="2dp"
+            android:gravity="center"
+            android:padding="6dp"
+            android:shadowColor="@color/text_shadow"
+
+            android:shadowDx="1"
+            android:shadowDy="1"
+
+            android:shadowRadius="2"
+            android:text="0.0"
+            android:textColor="@color/light_font"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:translationZ="3dp"
+            android:visibility="visible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView5" />
+
+        <TextView
+            android:id="@+id/imageView5"
+            android:layout_width="162dp"
+            android:layout_height="162dp"
+            android:adjustViewBounds="true"
+            app:layout_constraintBottom_toBottomOf="@+id/circle_progress_view"
+            app:layout_constraintEnd_toEndOf="@+id/circle_progress_view"
+            app:layout_constraintStart_toStartOf="@+id/circle_progress_view"
+            app:layout_constraintTop_toTopOf="@+id/circle_progress_view"
+            android:background="@drawable/moss_back3"
+            android:elevation="2dp"/>
+
+        <com.liulishuo.magicprogresswidget.MagicProgressCircle
+            android:id="@+id/circle_progress_view"
+            android:layout_width="150dp"
+
+            android:layout_height="150dp"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center"
+            android:layout_marginStart="8dp"
+
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:translationZ="2dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.41000003"
+            app:mpc_default_color="#9E9E9E"
+            app:mpc_end_color="@color/mpc_end_color"
+            app:mpc_percent="0"
+            app:mpc_start_color="@color/mpc_start_color"
+            app:mpc_stroke_width="18dp" />
+      <!--  <com.eralp.circleprogressview.CircleProgressView
+            android:id="@+id/circle_progress_view"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center"
+            app:cpv_background_circle_color="@color/red"
+            app:cpv_circle_color="@color/colorPrimary"
+            app:cpv_text_color="@color/colorPrimary"
+            app:cpv_text_prefix="%"
+            android:fontFamily="@font/latoregular"
+            app:cpv_text_size="20" />-->
+
+        <TextView
+            android:id="@+id/tv_remaining"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/tv_completed"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:drawableStart="@drawable/ic_task_left"
+            android:drawablePadding="2dp"
+            android:fontFamily="@font/latoregular"
+            android:gravity="center"
+            android:text="@string/remaining"
+
+            android:textAlignment="textEnd"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/tv_target_remaining"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_target_remaining"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/tv_completed"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:fontFamily="@font/latoregular"
+            android:text="0.0"
+            android:textAlignment="textEnd"
+            android:textColor="@color/red"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/tv_remaining" />
+
+        <TextView
+            android:id="@+id/tv_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:fontFamily="@font/latoregular"
+            android:text=""
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/percentView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0%"
+
+            android:shadowDx="1"
+
+            android:shadowDy="1"
+            android:shadowRadius="1"
+            android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+            app:layout_constraintBottom_toBottomOf="@+id/circle_progress_view"
+            app:layout_constraintEnd_toEndOf="@+id/circle_progress_view"
+            app:layout_constraintStart_toStartOf="@+id/circle_progress_view"
+            app:layout_constraintTop_toTopOf="@+id/circle_progress_view"
+            android:translationZ="3dp"/>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

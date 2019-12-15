@@ -5,10 +5,11 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import android.util.Base64;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -26,10 +27,10 @@ import com.humaclab.selliscope.adapters.DistrictAdapter;
 import com.humaclab.selliscope.adapters.OutletTypeAdapter;
 import com.humaclab.selliscope.adapters.ThanaAdapter;
 import com.humaclab.selliscope.model.CreateOutlet;
-import com.humaclab.selliscope.model.District.District;
-import com.humaclab.selliscope.model.OutletType.OutletType;
+import com.humaclab.selliscope.model.district.District;
+import com.humaclab.selliscope.model.outlet_type.OutletType;
 import com.humaclab.selliscope.model.Outlets;
-import com.humaclab.selliscope.model.Thana.Thana;
+import com.humaclab.selliscope.model.thana.Thana;
 import com.humaclab.selliscope.utils.AccessPermission;
 import com.humaclab.selliscope.utils.DatabaseHandler;
 import com.humaclab.selliscope.utils.NetworkUtility;
@@ -53,7 +54,7 @@ public class EditOutletActivity extends AppCompatActivity {
     boolean isValidPhone = true;
     //    double latitude, longitude = 0.0;
     int outletTypeId, thanaId = -1;
-    private EditText outletName, outletAddress, outletOwner, outletContactNumber;
+    private EditText outletName, outletAddress, outletOwner, outletContactNumber,outletrefnumber;
     private Spinner outletType, district, thana;
     private ImageView iv_outlet;
     private Button submit, cancel;
@@ -83,8 +84,9 @@ public class EditOutletActivity extends AppCompatActivity {
         email = sessionManager.getUserEmail();
         password = sessionManager.getUserPassword();
         Toolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle("Add Outlet");
+        toolbar.setTitle("Update Outlet");
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         outletName = findViewById(R.id.et_outlet_name);
         outletName.setText(outlet.outletName);
 
@@ -96,6 +98,9 @@ public class EditOutletActivity extends AppCompatActivity {
 
         outletContactNumber = findViewById(R.id.et_outlet_contact_number);
         outletContactNumber.setText(outlet.phone);
+
+        outletrefnumber = findViewById(R.id.et_outlet_ref_number);
+        //outletrefnumber.setText(outlet.phone);
 
         district = findViewById(R.id.sp_district);
         thana = findViewById(R.id.sp_thana);
@@ -110,13 +115,10 @@ public class EditOutletActivity extends AppCompatActivity {
                 .thumbnail(0.5f)
                 .into(iv_outlet);
 
-        iv_outlet.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                if (cameraIntent.resolveActivity(getPackageManager()) != null) {
-                    startActivityForResult(cameraIntent, CAMERA_REQUEST);
-                }
+        iv_outlet.setOnClickListener(v -> {
+            Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+            if (cameraIntent.resolveActivity(getPackageManager()) != null) {
+                startActivityForResult(cameraIntent, CAMERA_REQUEST);
             }
         });
 
@@ -189,24 +191,17 @@ public class EditOutletActivity extends AppCompatActivity {
                 } else {
                     isValidAddress = true;
                 }
-                Timber.d("Valid Address" + isValidAddress);
-                Timber.d("Valid Outle Name" + isValidOutletName);
-                Timber.d("valid owner naem" + isValidOwnerName);
-                Timber.d("Valid phone" + isValidPhone);
-                Timber.d("Latitude" + outlet.outletLatitude);
-                Timber.d("Long" + outlet.outletLongitude);
-                Timber.d("Type id" + outletTypeId);
-                Timber.d("Thana id" + thanaId);
+
 
                 if (isValidAddress && isValidOutletName && isValidOwnerName
                         && isValidPhone && outlet.outletLatitude != 0.0 && outlet.outletLongitude != 0.0
                         && outletTypeId != -1 && thanaId != -1) {
-                    Timber.d("addOutletRun");
+
                     if (NetworkUtility.isNetworkAvailable(EditOutletActivity.this)) {
                         updatedOutlet(email, password, outletTypeId, outletName.getText().toString().trim(),
                                 outletOwner.getText().toString().trim(),
                                 outletAddress.getText().toString().trim(), thanaId,
-                                outletContactNumber.getText().toString().trim(), outlet.outletLatitude, outlet.outletLongitude);
+                                outletContactNumber.getText().toString().trim(), outlet.outletLatitude, outlet.outletLongitude,outletrefnumber.getText().toString().trim());
                     } else
                         Toast.makeText(EditOutletActivity.this, "Connect to Wifi or Mobile Data",
                                 Toast.LENGTH_SHORT).show();
@@ -217,14 +212,14 @@ public class EditOutletActivity extends AppCompatActivity {
 
     private void updatedOutlet(String email, String password, int outletTypeId, String outletName,
                                String ownerName, String address, int thanaId, String phone,
-                               double latitude, double longitude) {
+                               double latitude, double longitude,String outletrefnumber) {
         pd.setMessage("Outlet updating.....");
         pd.setCancelable(false);
         pd.show();
 
         apiService = SelliscopeApplication.getRetrofitInstance(email, password, false).create(SelliscopeApiEndpointInterface.class);
         Call<ResponseBody> call = apiService.updateOutlet(outlet.outletId,
-                new CreateOutlet(outletTypeId, outletName, ownerName, address, thanaId, phone, latitude, longitude, outletImage));
+                new CreateOutlet(outletTypeId, outletName, ownerName, address, thanaId, phone, latitude, longitude, outletImage, outletrefnumber));
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -250,8 +245,9 @@ public class EditOutletActivity extends AppCompatActivity {
                             "Server Error! Try Again Later!", Toast.LENGTH_SHORT).show();
                 }
 
-                finish();
+
                 startActivity(new Intent(EditOutletActivity.this, OutletActivity.class));
+                finish();
             }
 
             @Override
@@ -325,5 +321,14 @@ public class EditOutletActivity extends AppCompatActivity {
     @Override
     public void onDestroy() {
         super.onDestroy();
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

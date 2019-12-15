@@ -1,23 +1,23 @@
 package com.humaclab.selliscope.activity;
 
-import android.databinding.DataBindingUtil;
+import androidx.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.Toolbar;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.appcompat.widget.Toolbar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.humaclab.selliscope.R;
 import com.humaclab.selliscope.adapters.SellsReturnDetailsRecyclerAdapter;
 import com.humaclab.selliscope.databinding.ActivitySalesReturnDetailsBinding;
-import com.humaclab.selliscope.model.DeliveryResponse;
+import com.humaclab.selliscope.model.sales_return.SalesReturnResponse;
 import com.humaclab.selliscope.utils.NetworkUtility;
 
 public class SalesReturnDetailsActivity extends AppCompatActivity {
     private ActivitySalesReturnDetailsBinding binding;
-    private DeliveryResponse.DeliveryList deliveryList;
+    private SalesReturnResponse.DeliveryList deliveryList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +30,7 @@ public class SalesReturnDetailsActivity extends AppCompatActivity {
         toolbarTitle.setText("Return Product");
         setSupportActionBar(toolbar);
 
-        deliveryList = (DeliveryResponse.DeliveryList) getIntent().getSerializableExtra("deliveryList");
+        deliveryList = (SalesReturnResponse.DeliveryList) getIntent().getSerializableExtra("deliveryList");
 
         binding.rvDeliveryDetails.setLayoutManager(new LinearLayoutManager(this));
         binding.setVariable(com.humaclab.selliscope.BR.deliveryDetails, deliveryList);

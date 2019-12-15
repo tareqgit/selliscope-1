@@ -1,17 +1,21 @@
 package com.humaclab.selliscope;
 
-import android.app.Application;
-import android.support.v7.app.AppCompatDelegate;
 
-import com.crashlytics.android.Crashlytics;
+import android.app.Application;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.content.IntentFilter;
+import android.location.LocationManager;
+import android.os.Build;
+import androidx.appcompat.app.AppCompatDelegate;
 import com.facebook.stetho.Stetho;
 import com.facebook.stetho.okhttp3.StethoInterceptor;
+import com.google.firebase.analytics.FirebaseAnalytics;
+import com.humaclab.selliscope.receiver.GpsLocationBroadcastReceiver;
+import com.humaclab.selliscope.utility_db.db.UtilityDatabase;
 import com.humaclab.selliscope.utils.Constants;
 import com.humaclab.selliscope.utils.HttpAuthInterceptor;
-
 import java.util.concurrent.TimeUnit;
-
-import io.fabric.sdk.android.Fabric;
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -22,11 +26,19 @@ import timber.log.Timber;
  */
 
 public class SelliscopeApplication extends Application {
+    public static final String CHANNEL_ID = "testServiceChannel";
+
+    public static boolean developer=false;
+
     private static Retrofit retrofitInstance;
+    private FirebaseAnalytics mFirebaseAnalytics;
+
 
     static {
         AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
     }
+
+
 
     /**
      * @param email
@@ -39,8 +51,11 @@ public class SelliscopeApplication extends Application {
 
             OkHttpClient client = new OkHttpClient.Builder()
                     .addInterceptor(new HttpAuthInterceptor(email.toLowerCase(), password))
-                    .connectTimeout(100000, TimeUnit.SECONDS)
-                    .readTimeout(100000, TimeUnit.SECONDS)
+                    .connectTimeout(70, TimeUnit.SECONDS)
+                    .readTimeout(120, TimeUnit.SECONDS)
+                    .writeTimeout(120, TimeUnit.SECONDS)
+                    .retryOnConnectionFailure(true)
+
                     .addNetworkInterceptor(new StethoInterceptor())
                     .build();
 
@@ -60,7 +75,28 @@ public class SelliscopeApplication extends Application {
         if (BuildConfig.DEBUG) {
             Timber.plant(new Timber.DebugTree());
         }
+        // Obtain the FirebaseAnalytics instance.
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
+        createNotificationChannel();
         Stetho.initializeWithDefaults(this);
-        Fabric.with(this, new Crashlytics());
+
+        //receiver for having gps
+        registerReceiver(GpsLocationBroadcastReceiver.getInstance(), new IntentFilter(LocationManager.PROVIDERS_CHANGED_ACTION));
+
+        UtilityDatabase utilityDatabase = (UtilityDatabase) UtilityDatabase.getInstance(getApplicationContext());
+
+    }
+
+
+
+    private void createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel serviceChannel = new NotificationChannel(
+                    CHANNEL_ID, "Test Service Channel",
+                    NotificationManager.IMPORTANCE_LOW
+            );
+            NotificationManager manager = getSystemService(NotificationManager.class);
+            manager.createNotificationChannel(serviceChannel);
+        }
     }
 }

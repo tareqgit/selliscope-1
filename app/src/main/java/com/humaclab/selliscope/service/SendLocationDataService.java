@@ -37,7 +37,7 @@ public class SendLocationDataService extends Service {
             PowerManager pm = (PowerManager) this.getSystemService(Context.POWER_SERVICE);
 
 			/* we don't need the screen on */
-            wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "locationtracker");
+            wakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "Selliscope::MyWakeLockTag");
             wakeLock.setReferenceCounted(true);
         }
 
@@ -57,10 +57,13 @@ public class SendLocationDataService extends Service {
 
     @Override
     public void onDestroy() {
-        SessionManager sessionManager = new SessionManager(getApplicationContext());
+        super.onDestroy();
+        scheduler.shutdownNow();
+        Timber.d("SendLocation service is stopped.");
+/*        SessionManager sessionManager = new SessionManager(getApplicationContext());
         Timber.d("SendLocation service is stopped.");
         if (sessionManager.isLoggedIn()) {
             startService(new Intent(SendLocationDataService.this, SendLocationDataService.class));
-        }
+        }*/
     }
 }

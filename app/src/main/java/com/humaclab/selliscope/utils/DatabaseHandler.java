@@ -17,15 +17,6 @@ import com.humaclab.selliscope.model.DeliveryResponse;
 import com.humaclab.selliscope.model.district.District;
 import com.humaclab.selliscope.model.outlet_type.OutletType;
 import com.humaclab.selliscope.model.Outlets;
-<<<<<<< HEAD:app/src/main/java/com/humaclab/selliscope/Utils/DatabaseHandler.java
-import com.humaclab.selliscope.model.Thana.Thana;
-import com.humaclab.selliscope.model.VariantProduct.Brand;
-import com.humaclab.selliscope.model.VariantProduct.Category;
-import com.humaclab.selliscope.model.VariantProduct.GodownItem;
-import com.humaclab.selliscope.model.VariantProduct.ProductsItem;
-import com.humaclab.selliscope.model.VariantProduct.VariantDetailsItem;
-import com.humaclab.selliscope.model.VariantProduct.VariantsItem;
-=======
 import com.humaclab.selliscope.model.reason.ReasonResponse;
 import com.humaclab.selliscope.model.route_plan.RouteDetailsResponse;
 import com.humaclab.selliscope.model.thana.Thana;
@@ -39,7 +30,6 @@ import com.humaclab.selliscope.model.price_variation.PriceVariation;
 import com.humaclab.selliscope.model.variant_product.ProductsItem;
 import com.humaclab.selliscope.model.variant_product.VariantDetailsItem;
 import com.humaclab.selliscope.model.variant_product.VariantsItem;
->>>>>>> Selliscope-2.38:app/src/main/java/com/humaclab/selliscope/utils/DatabaseHandler.java
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -51,11 +41,7 @@ import java.util.Map;
  */
 
 public class DatabaseHandler extends SQLiteOpenHelper {
-<<<<<<< HEAD:app/src/main/java/com/humaclab/selliscope/Utils/DatabaseHandler.java
-    private static final int DATABASE_VERSION = 8;
-=======
     private static final int DATABASE_VERSION = 21;
->>>>>>> Selliscope-2.38:app/src/main/java/com/humaclab/selliscope/utils/DatabaseHandler.java
 
     // Database Tables
     private static final String TABLE_TARGET = "targets";
@@ -129,11 +115,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String KEY_OUTLET_LONGITUDE = "outlet_longitude";
     private static final String KEY_OUTLET_LATITUDE = "outlet_latitude";
     private static final String KEY_OUTLET_DUE = "outlet_due";
-<<<<<<< HEAD:app/src/main/java/com/humaclab/selliscope/Utils/DatabaseHandler.java
-=======
     private static final String KEY_OUTLET_ROUTEPLAN = "outlet_routeplan";
     private static final String KEY_OUTLET_CLIENTID = "ClientID";
->>>>>>> Selliscope-2.38:app/src/main/java/com/humaclab/selliscope/utils/DatabaseHandler.java
 
     //Thana table column name
     private static final String KEY_THANA_ID = "thana_id";
@@ -187,7 +170,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String KEY_TP_OFFER_PRODUCT_ID = "free_product_id";
 
     public DatabaseHandler(Context context) {
-        super(context, Constants.databaseName, null, DATABASE_VERSION);
+        super(context, com.humaclab.selliscope.utils.Constants.databaseName, null, DATABASE_VERSION);
     }
 
 
@@ -265,13 +248,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + KEY_OUTLET_IMAGE + " TEXT,"
                 + KEY_OUTLET_LATITUDE + " TEXT,"
                 + KEY_OUTLET_LONGITUDE + " TEXT,"
-<<<<<<< HEAD:app/src/main/java/com/humaclab/selliscope/Utils/DatabaseHandler.java
-                + KEY_OUTLET_DUE + " TEXT"
-=======
                 + KEY_OUTLET_DUE + " TEXT,"
                 + KEY_OUTLET_ROUTEPLAN + " TEXT,"
                 + KEY_OUTLET_CLIENTID + " TEXT"
->>>>>>> Selliscope-2.38:app/src/main/java/com/humaclab/selliscope/utils/DatabaseHandler.java
                 + ")";
 
         String CREATE_DISTRICT_TABLE = "CREATE TABLE " + TABLE_DISTRICT + "("
@@ -426,16 +405,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return visitList;
     }
 
-    public int updateUserVisit(int visitId) {
-        SQLiteDatabase db = this.getWritableDatabase();
-
-        ContentValues values = new ContentValues();
-        values.put(KEY_IS_UPDATED, 1);
-        // updating row
-        return db.update(TABLE_USER_VISITS, values, KEY_USER_VISIT_ID + " = ?",
-                new String[]{String.valueOf(visitId)});
-    }
-
     public void deleteUserVisit(int visitId) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_USER_VISITS, KEY_USER_VISIT_ID + " = ?",
@@ -548,20 +517,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         values.clear();
 
         db.close(); // Closing database connection
-    }
-
-    public void updateProductStock(int productId, String stock) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put(KEY_PRODUCT_ID, productId);
-        values.put(KEY_PRODUCT_STOCK, stock);
-        try {
-            db.update(TABLE_PRODUCT, values, KEY_PRODUCT_ID + "=" + productId, null);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        values.clear();
-        db.close();
     }
 
     public void removeProductCategoryBrand() {
@@ -709,41 +664,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
             } while (cursor.moveToNext());
         }
         return productList;
-    }
-
-    public int getSizeOfProduct() {
-        List<ProductsItem> productsItemList = new ArrayList<>();
-        // Select All Query
-        String selectQuery = "SELECT  * FROM " + TABLE_PRODUCT + " ORDER BY " + KEY_PRODUCT_NAME + " ASC";
-
-        SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cursor = db.rawQuery(selectQuery, null);
-
-        // looping through all rows and adding to list
-        if (cursor.moveToFirst()) {
-            do {
-                cursor.getColumnNames();
-                ProductsItem productsItem = new ProductsItem();
-                Category category = new Category();
-                Brand brand = new Brand();
-
-                productsItem.setId(cursor.getInt(cursor.getColumnIndex(KEY_PRODUCT_ID)));
-                productsItem.setName(cursor.getString(cursor.getColumnIndex(KEY_PRODUCT_NAME)));
-                productsItem.setPrice(cursor.getString(cursor.getColumnIndex(KEY_PRODUCT_PRICE)));
-                productsItem.setImg(cursor.getString(cursor.getColumnIndex(KEY_PRODUCT_IMAGE)));
-
-                category.setId(String.valueOf(cursor.getInt(cursor.getColumnIndex(KEY_CATEGORY_ID))));
-                category.setName(cursor.getString(cursor.getColumnIndex(KEY_CATEGORY_NAME)));
-                productsItem.setCategory(category);
-
-                brand.setId(String.valueOf(cursor.getInt(cursor.getColumnIndex(KEY_BRAND_ID))));
-                brand.setName(cursor.getString(cursor.getColumnIndex(KEY_BRAND_NAME)));
-                productsItem.setBrand(brand);
-
-                productsItemList.add(productsItem);
-            } while (cursor.moveToNext());
-        }
-        return productsItemList.size();
     }
 
     public List<Category> getCategory() {
@@ -926,9 +846,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.close();
     }
 
-<<<<<<< HEAD:app/src/main/java/com/humaclab/selliscope/Utils/DatabaseHandler.java
-    public void addOutlet(List<Outlets.Successful.Outlet> outletList) {
-=======
     //For outlet
     public void removeOutletWithId(int outletId) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -937,31 +854,11 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     public void addOutlet(List<Outlets.Outlet> outletList) {
->>>>>>> Selliscope-2.38:app/src/main/java/com/humaclab/selliscope/utils/DatabaseHandler.java
         SQLiteDatabase db = this.getWritableDatabase();
-     /*   db.beginTransaction();*/
+        /*   db.beginTransaction();*/
         ContentValues values = new ContentValues();
 
         try {
-<<<<<<< HEAD:app/src/main/java/com/humaclab/selliscope/Utils/DatabaseHandler.java
-            for (Outlets.Successful.Outlet outlet : outletList) {
-                values.put(KEY_OUTLET_ID, outlet.outletId);
-                values.put(KEY_OUTLET_NAME, outlet.outletName);
-                values.put(KEY_OUTLET_TYPE, outlet.outletType);
-                values.put(KEY_OUTLET_OWNER_NAME, outlet.ownerName);
-                values.put(KEY_OUTLET_ADDRESS, outlet.outletAddress);
-                values.put(KEY_OUTLET_DISTRICT, outlet.district);
-                values.put(KEY_OUTLET_THANA, outlet.thana);
-                values.put(KEY_OUTLET_PHONE, outlet.phone);
-                values.put(KEY_OUTLET_IMAGE, outlet.outletImgUrl);
-                values.put(KEY_OUTLET_LONGITUDE, outlet.outletLongitude);
-                values.put(KEY_OUTLET_LATITUDE, outlet.outletLatitude);
-                values.put(KEY_OUTLET_DUE, outlet.outletDue);
-                try {
-                    db.insert(TABLE_OUTLET, null, values);
-                } catch (Exception e) {
-                    e.printStackTrace();
-=======
             List<Outlets.Outlet> outlets = getAllOutlet().outlets;
             for (Outlets.Outlet outlet : outletList) {
                 if (!outlets.contains(outlet)) {
@@ -989,7 +886,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
->>>>>>> Selliscope-2.38:app/src/main/java/com/humaclab/selliscope/utils/DatabaseHandler.java
                 }
             }
         } catch (Exception e) {
@@ -1002,11 +898,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.close();
     }
 
-<<<<<<< HEAD:app/src/main/java/com/humaclab/selliscope/Utils/DatabaseHandler.java
-    public Outlets.Successful.OutletsResult getAllOutlet() {
-        Outlets.Successful.OutletsResult outletsResult = new Outlets.Successful.OutletsResult();
-        List<Outlets.Successful.Outlet> outletList = new ArrayList<>();
-=======
     /**
      * For adding extra temporary outlet which is added into from plan but not in the personal
      * outlet list
@@ -1130,9 +1021,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     public Outlets.OutletsResult getAllOutlet() {
         Outlets.OutletsResult outletsResult = new Outlets.OutletsResult();
         List<Outlets.Outlet> outletList = new ArrayList<>();
->>>>>>> Selliscope-2.38:app/src/main/java/com/humaclab/selliscope/utils/DatabaseHandler.java
         // Select All Query
-        String selectQuery = "SELECT * FROM " + TABLE_OUTLET + " ORDER BY " + KEY_OUTLET_NAME + " ASC";
+        String selectQuery = "SELECT * FROM " + TABLE_OUTLET + " ORDER BY " + KEY_OUTLET_ROUTEPLAN + " DESC";
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
 
@@ -1140,7 +1030,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             do {
                 cursor.getColumnNames();
-                Outlets.Successful.Outlet outlet = new Outlets.Successful.Outlet();
+                Outlets.Outlet outlet = new Outlets.Outlet();
                 outlet.outletId = cursor.getInt(cursor.getColumnIndex(KEY_OUTLET_ID));
                 outlet.outletName = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_NAME));
                 outlet.outletType = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_TYPE));
@@ -1153,11 +1043,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 outlet.outletLongitude = Double.parseDouble(cursor.getString(cursor.getColumnIndex(KEY_OUTLET_LONGITUDE)));
                 outlet.outletLatitude = Double.parseDouble(cursor.getString(cursor.getColumnIndex(KEY_OUTLET_LATITUDE)));
                 outlet.outletDue = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_DUE));
-<<<<<<< HEAD:app/src/main/java/com/humaclab/selliscope/Utils/DatabaseHandler.java
-=======
                 outlet.setOutlet_routeplan(cursor.getString(cursor.getColumnIndex(KEY_OUTLET_ROUTEPLAN)));
                 outlet.setClientID(cursor.getString(cursor.getColumnIndex(KEY_OUTLET_CLIENTID)));
->>>>>>> Selliscope-2.38:app/src/main/java/com/humaclab/selliscope/utils/DatabaseHandler.java
 
                 outletList.add(outlet);
             } while (cursor.moveToNext());
@@ -1167,7 +1054,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     public int getSizeOfOutlet() {
-        List<Outlets.Successful.Outlet> outletList = new ArrayList<>();
+        List<Outlets.Outlet> outletList = new ArrayList<>();
         // Select All Query
         String selectQuery = "SELECT * FROM " + TABLE_OUTLET + " ORDER BY " + KEY_OUTLET_NAME + " ASC";
         SQLiteDatabase db = this.getWritableDatabase();
@@ -1177,7 +1064,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             do {
                 cursor.getColumnNames();
-                Outlets.Successful.Outlet outlet = new Outlets.Successful.Outlet();
+                Outlets.Outlet outlet = new Outlets.Outlet();
                 outlet.outletId = cursor.getInt(cursor.getColumnIndex(KEY_OUTLET_ID));
                 outlet.outletName = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_NAME));
                 outlet.outletType = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_TYPE));
@@ -1197,9 +1084,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return outletList.size();
     }
 
-    public Outlets.Successful.OutletsResult getSearchedOutlet(String outletName) {
-        Outlets.Successful.OutletsResult outletsResult = new Outlets.Successful.OutletsResult();
-        List<Outlets.Successful.Outlet> outletList = new ArrayList<>();
+    public Outlets.OutletsResult getSearchedOutlet(String outletName) {
+        Outlets.OutletsResult outletsResult = new Outlets.OutletsResult();
+        List<Outlets.Outlet> outletList = new ArrayList<>();
         // Select All Query
         String selectQuery = "SELECT * FROM " + TABLE_OUTLET + " WHERE " + KEY_OUTLET_NAME + " LIKE  '%" + outletName + "%' OR " + KEY_OUTLET_CLIENTID + " LIKE '%" + outletName + "%' ORDER BY " + KEY_OUTLET_NAME + " ASC";
         SQLiteDatabase db = this.getWritableDatabase();
@@ -1209,7 +1096,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             do {
                 cursor.getColumnNames();
-                Outlets.Successful.Outlet outlet = new Outlets.Successful.Outlet();
+                Outlets.Outlet outlet = new Outlets.Outlet();
                 outlet.outletId = cursor.getInt(cursor.getColumnIndex(KEY_OUTLET_ID));
                 outlet.outletName = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_NAME));
                 outlet.outletType = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_TYPE));
@@ -1222,12 +1109,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 outlet.outletLongitude = Double.parseDouble(cursor.getString(cursor.getColumnIndex(KEY_OUTLET_LONGITUDE)));
                 outlet.outletLatitude = Double.parseDouble(cursor.getString(cursor.getColumnIndex(KEY_OUTLET_LATITUDE)));
                 outlet.outletDue = cursor.getString(cursor.getColumnIndex(KEY_OUTLET_DUE));
-<<<<<<< HEAD:app/src/main/java/com/humaclab/selliscope/Utils/DatabaseHandler.java
-
-=======
                 outlet.setOutlet_routeplan(cursor.getString(cursor.getColumnIndex(KEY_OUTLET_ROUTEPLAN)));
                 outlet.setClientID(cursor.getString(cursor.getColumnIndex(KEY_OUTLET_CLIENTID)));
->>>>>>> Selliscope-2.38:app/src/main/java/com/humaclab/selliscope/utils/DatabaseHandler.java
                 outletList.add(outlet);
             } while (cursor.moveToNext());
         }
@@ -1517,20 +1400,6 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
     //Offline order taking
 
-<<<<<<< HEAD:app/src/main/java/com/humaclab/selliscope/Utils/DatabaseHandler.java
-    public boolean removeAll() {
-        SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(TABLE_OUTLET, KEY_OUTLET_ID + " > ?", new String[]{String.valueOf(-1)});
-        db.delete(TABLE_DELIVERY, KEY_ORDER_ID + " > ?", new String[]{String.valueOf(-1)});
-        db.delete(TABLE_DELIVERY_PRODUCT, KEY_DELIVERY_PRODUCT_ID + " > ?", new String[]{String.valueOf(-1)});
-        db.delete(TABLE_PRODUCT, KEY_PRODUCT_ID + " > ?", new String[]{String.valueOf(-1)});
-        db.delete(TABLE_CATEGORY, KEY_CATEGORY_ID + " > ?", new String[]{String.valueOf(-1)});
-        db.delete(TABLE_BRAND, KEY_BRAND_ID + " > ?", new String[]{String.valueOf(-1)});
-        db.close();
-        return true;
-    }
-}
-=======
     //Price Variation
     public void add_price_Variation(List<Product> products) {
 
@@ -1679,4 +1548,3 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
 }
->>>>>>> Selliscope-2.38:app/src/main/java/com/humaclab/selliscope/utils/DatabaseHandler.java

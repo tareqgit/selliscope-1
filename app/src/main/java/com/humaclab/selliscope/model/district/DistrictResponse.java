@@ -1,11 +1,10 @@
 package com.humaclab.selliscope.model.district;
-
 import com.google.gson.annotations.SerializedName;
 
 public class DistrictResponse {
 
     @SerializedName("result")
-    private Result result;
+    private com.humaclab.selliscope.model.district.Result result;
 
     @SerializedName("error")
     private boolean error;

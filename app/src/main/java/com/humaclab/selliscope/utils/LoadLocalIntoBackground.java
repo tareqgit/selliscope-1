@@ -4,9 +4,6 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
-import android.widget.Toast;
-
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.gson.Gson;
 import com.humaclab.selliscope.SelliscopeApiEndpointInterface;
@@ -26,12 +23,10 @@ import com.humaclab.selliscope.model.trade_promotion.TradePromotion;
 import com.humaclab.selliscope.model.variant_product.ProductsItem;
 import com.humaclab.selliscope.model.variant_product.VariantProductResponse;
 
-import java.io.IOException;
 import java.util.List;
 
 import javax.annotation.Nullable;
 
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -42,13 +37,13 @@ import timber.log.Timber;
  */
 
 public class LoadLocalIntoBackground {
-    private SessionManager sessionManager;
+    private com.humaclab.selliscope.utils.SessionManager sessionManager;
     private DatabaseHandler databaseHandler;
     private SelliscopeApiEndpointInterface apiService;
     private Context mContext;
     public LoadLocalIntoBackground(Context context) {
         mContext=context;
-        this.sessionManager = new SessionManager(context);
+        this.sessionManager = new com.humaclab.selliscope.utils.SessionManager(context);
         this.databaseHandler = new DatabaseHandler(context);
         this.apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(), sessionManager.getUserPassword(), false).create(SelliscopeApiEndpointInterface.class);
     }

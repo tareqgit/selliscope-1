@@ -5,11 +5,13 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.core.app.ActivityCompat;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.util.Base64;
 import android.util.Log;
@@ -62,6 +64,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import timber.log.Timber;
+
+import static java.security.AccessController.getContext;
 
 public class LoginActivity extends AppCompatActivity {
     private TextInputLayout email, password;
@@ -306,7 +310,10 @@ public class LoginActivity extends AppCompatActivity {
                     sendIMEIAndVersion();
                 } else {
                     IMEIandVerison imeIandVerison = new IMEIandVerison();
-                    imeIandVerison.setIMEIcode(telephonyManager.getDeviceId());
+                 //   imeIandVerison.setIMEIcode(telephonyManager.getDeviceId());
+                     String android_id = Settings.Secure.getString(getContentResolver(),
+                            Settings.Secure.ANDROID_ID);
+                    imeIandVerison.setIMEIcode(android_id);
                     imeIandVerison.setAppVersion(BuildConfig.VERSION_NAME);
                     System.out.println("IMEI and version: " + new Gson().toJson(imeIandVerison));
                     Call<ResponseBody> call = apiService.sendIMEIAndVersion(imeIandVerison);

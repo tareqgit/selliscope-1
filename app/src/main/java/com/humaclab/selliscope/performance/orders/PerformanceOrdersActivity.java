@@ -21,6 +21,7 @@ import android.widget.DatePicker;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.humaclab.selliscope.R;
 import com.humaclab.selliscope.SelliscopeApiEndpointInterface;
 import com.humaclab.selliscope.SelliscopeApplication;
@@ -144,7 +145,9 @@ public class PerformanceOrdersActivity extends AppCompatActivity implements Perf
                         Log.d("tareq_test" , ""+response.code());
 
                         if(response.code()==200) {
-                            Log.d("" + getClass().getName(), "" + response.code());
+                            Log.d("tareq_test", "" + new Gson().toJson(response.body()));
+
+
                             mActivityPerformanceOrdersBinding.ordersRecycler.setAdapter(new PerformenceOrdersAdapter(PerformanceOrdersActivity.this, response.body().getResult().getOrders(), PerformanceOrdersActivity.this));
                             mActivityPerformanceOrdersBinding.totalAmountTextView.setText(getString(R.string.toatal)+ response.body().getTotalAmount());
                             mActivityPerformanceOrdersBinding.recyclerLoader.setRefreshing(false);

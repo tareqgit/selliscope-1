@@ -14,13 +14,13 @@ public class Promotion {
 
     @SerializedName("promotion_value")
 
-    private Integer promotionValue;
+    private Double promotionValue;
     @SerializedName("offer_type")
 
     private String offerType;
     @SerializedName("offer_value")
 
-    private Integer offerValue;
+    private Double offerValue;
     @SerializedName("offer_product")
 
     private List<OfferProduct> offerProduct;
@@ -41,11 +41,11 @@ public class Promotion {
         this.promotionType = promotionType;
     }
 
-    public Integer getPromotionValue() {
+    public Double getPromotionValue() {
         return promotionValue;
     }
 
-    public void setPromotionValue(Integer promotionValue) {
+    public void setPromotionValue(Double promotionValue) {
         this.promotionValue = promotionValue;
     }
 
@@ -57,11 +57,11 @@ public class Promotion {
         this.offerType = offerType;
     }
 
-    public Integer getOfferValue() {
+    public Double getOfferValue() {
         return offerValue;
     }
 
-    public void setOfferValue(Integer offerValue) {
+    public void setOfferValue(Double offerValue) {
         this.offerValue = offerValue;
     }
 

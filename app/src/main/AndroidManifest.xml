@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.humaclab.selliscope">
+    package="com.easyopstech.easyops">
 
     <uses-feature
         android:name="android.hardware.camera.any"
@@ -31,7 +31,7 @@
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
 
     <application
-        android:name=".SelliscopeApplication"
+        android:name="com.easyopstech.easyops.RootApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -39,17 +39,17 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".my_test.MyTestActivity"></activity>
+        <activity android:name="com.easyopstech.easyops.my_test.MyTestActivity"></activity>
 
-        <receiver android:name=".receiver.ActionReceiver" />
+        <receiver android:name="com.easyopstech.easyops.receiver.ActionReceiver" />
 
-        <activity android:name=".activity.SelfieCheck_inActivity" />
-        <activity android:name=".activity.LoadingActivity" />
-        <activity android:name=".performance.daily_activities.RegularPerformanceOutlets" />
-        <activity android:name=".performance.daily_activities.RegularPerformanceActivity" /> <!-- android:networkSecurityConfig="@xml/network_security_config" -->
-        <activity android:name=".sales_return.SalesReturn_2019_Activity" />
+        <activity android:name="com.easyopstech.easyops.activity.SelfieCheck_inActivity" />
+        <activity android:name="com.easyopstech.easyops.activity.LoadingActivity" />
+        <activity android:name="com.easyopstech.easyops.performance.daily_activities.RegularPerformanceOutlets" />
+        <activity android:name="com.easyopstech.easyops.performance.daily_activities.RegularPerformanceActivity" /> <!-- android:networkSecurityConfig="@xml/network_security_config" -->
+        <activity android:name="com.easyopstech.easyops.sales_return.SalesReturn_2019_Activity" />
         <activity
-            android:name=".activity.SplashScreenActivity"
+            android:name="com.easyopstech.easyops.activity.SplashScreenActivity"
             android:theme="@style/SplashScreenTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -58,51 +58,51 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.LoginActivity" />
+        <activity android:name="com.easyopstech.easyops.activity.LoginActivity" />
         <activity
-            android:name=".activity.HomeActivity"
+            android:name="com.easyopstech.easyops.activity.HomeActivity"
             android:configChanges="orientation|screenSize" />
-        <activity android:name=".activity.RouteActivity" />
-        <activity android:name=".activity.OutletMapActivity" />
-        <activity android:name=".activity.OutletActivity" />
-        <activity android:name=".activity.AddOutletActivity" />
-        <activity android:name=".activity.OutletDetailsActivity" />
-        <activity android:name=".activity.PrivacyPolicyActivity" />
-        <activity android:name=".activity.ProductActivity" />
+        <activity android:name="com.easyopstech.easyops.activity.RouteActivity" />
+        <activity android:name="com.easyopstech.easyops.activity.OutletMapActivity" />
+        <activity android:name="com.easyopstech.easyops.activity.OutletActivity" />
+        <activity android:name="com.easyopstech.easyops.activity.AddOutletActivity" />
+        <activity android:name="com.easyopstech.easyops.activity.OutletDetailsActivity" />
+        <activity android:name="com.easyopstech.easyops.activity.PrivacyPolicyActivity" />
+        <activity android:name="com.easyopstech.easyops.activity.ProductActivity" />
         <activity
-            android:name=".activity.OrderActivity"
+            android:name="com.easyopstech.easyops.activity.OrderActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:label="Order" />
         <activity
-            android:name=".activity.ActivityCart"
+            android:name="com.easyopstech.easyops.activity.ActivityCart"
             android:configChanges="orientation|screenSize|keyboardHidden" />
-        <activity android:name=".activity.DeliveryListActivity" />
-        <activity android:name=".activity.DeliveryDetailsActivity" />
-        <activity android:name=".activity.PaymentActivity" />
-        <activity android:name=".activity.DueActivity" />
-        <activity android:name=".activity.EditOutletActivity" />
-        <activity android:name=".activity.CallCardActivity" />
-        <activity android:name=".activity.InspectionActivity" />
-        <activity android:name=".activity.SalesReturnActivity" />
-        <activity android:name=".activity.LocationFromMapActivity" />
-        <activity android:name=".activity.SalesReturnDetailsActivity" />
-        <activity android:name=".activity.PurchaseHistoryActivity" />
-        <activity android:name=".activity.ChangePasswordActivity" />
-        <activity android:name=".activity.PurchasedProductListActivity" />
-        <activity android:name=".activity.SettingsActivity" />
-        <activity android:name=".activity.ProfileActivity" />
-        <activity android:name=".performance.leaderboard.LeaderBoardActivity" />
+        <activity android:name="com.easyopstech.easyops.activity.DeliveryListActivity" />
+        <activity android:name="com.easyopstech.easyops.activity.DeliveryDetailsActivity" />
+        <activity android:name="com.easyopstech.easyops.activity.PaymentActivity" />
+        <activity android:name="com.easyopstech.easyops.activity.DueActivity" />
+        <activity android:name="com.easyopstech.easyops.activity.EditOutletActivity" />
+        <activity android:name="com.easyopstech.easyops.activity.CallCardActivity" />
+        <activity android:name="com.easyopstech.easyops.activity.InspectionActivity" />
+        <activity android:name="com.easyopstech.easyops.activity.SalesReturnActivity" />
+        <activity android:name="com.easyopstech.easyops.activity.LocationFromMapActivity" />
+        <activity android:name="com.easyopstech.easyops.activity.SalesReturnDetailsActivity" />
+        <activity android:name="com.easyopstech.easyops.activity.PurchaseHistoryActivity" />
+        <activity android:name="com.easyopstech.easyops.activity.ChangePasswordActivity" />
+        <activity android:name="com.easyopstech.easyops.activity.PurchasedProductListActivity" />
+        <activity android:name="com.easyopstech.easyops.activity.SettingsActivity" />
+        <activity android:name="com.easyopstech.easyops.activity.ProfileActivity" />
+        <activity android:name="com.easyopstech.easyops.performance.leaderboard.LeaderBoardActivity" />
         <activity
-            android:name=".activity.activity_salesReturnOld.SalesReturnDetailsActivityOld"
+            android:name="com.easyopstech.easyops.activity.activity_salesReturnOld.SalesReturnDetailsActivityOld"
             android:screenOrientation="landscape" />
-        <activity android:name=".activity.activity_salesReturnOld.SalesReturnActivityOld" />
-        <activity android:name=".activity.SalesReturnHistoryActivity" />
-        <activity android:name=".performance.payments.PerformancePaymentsActivity" /> <!-- for ols sells return Model -->
-        <activity android:name=".performance.orders.PerformanceOrdersProductsActivity" />
-        <activity android:name=".performance.orders.PerformanceOrdersActivity" />
-        <activity android:name=".pos_sdk.PosActivity" />
+        <activity android:name="com.easyopstech.easyops.activity.activity_salesReturnOld.SalesReturnActivityOld" />
+        <activity android:name="com.easyopstech.easyops.activity.SalesReturnHistoryActivity" />
+        <activity android:name="com.easyopstech.easyops.performance.payments.PerformancePaymentsActivity" /> <!-- for ols sells return Model -->
+        <activity android:name="com.easyopstech.easyops.performance.orders.PerformanceOrdersProductsActivity" />
+        <activity android:name="com.easyopstech.easyops.performance.orders.PerformanceOrdersActivity" />
+        <activity android:name="com.easyopstech.easyops.pos_sdk.PosActivity" />
         <activity
-            android:name=".pos_sdk.DeviceListActivity"
+            android:name="com.easyopstech.easyops.pos_sdk.DeviceListActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="Select the connected device"
             android:theme="@android:style/Theme.Dialog" />
@@ -125,7 +125,7 @@
         -->
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="com.humaclab.selliscope.fileprovider"
+            android:authorities="com.easyopstech.easyops.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
@@ -137,20 +137,20 @@
              notification message. See README(https://goo.gl/6BKBk7) for more.
         -->
         <receiver
-            android:name=".service.LocationServiceRestarterBroadcastReceiver"
+            android:name="com.easyopstech.easyops.service.LocationServiceRestarterBroadcastReceiver"
             android:enabled="true"
             android:exported="true"
             android:label="RestartServiceWhenStopped" />
 
         <service
-            android:name=".service.FcmGetNotificationService"
+            android:name="com.easyopstech.easyops.service.FcmGetNotificationService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
         <service
-            android:name=".service.SendLocationDataService"
+            android:name="com.easyopstech.easyops.service.SendLocationDataService"
             android:exported="false"
             android:permission="android.permission.RECEIVE_BOOT_COMPLETED"
             android:process=":selliscope_process">
@@ -161,11 +161,11 @@
             </intent-filter>
         </service> <!-- ****************Pos Activities************************** -->
         <service
-            android:name=".LocationMonitoringService"
+            android:name="com.easyopstech.easyops.LocationMonitoringService"
             android:enabled="true"
             android:exported="true" />
         <service
-            android:name=".job_sheduler.MyJobScheduler"
+            android:name="com.easyopstech.easyops.job_sheduler.MyJobScheduler"
             android:exported="true"
             android:permission="android.permission.BIND_JOB_SERVICE" />
 

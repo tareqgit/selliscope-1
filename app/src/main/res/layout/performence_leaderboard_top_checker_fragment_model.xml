@@ -8,7 +8,7 @@
 
         <variable
             name="Data"
-            type="com.humaclab.selliscope.model.performance.leaderboard_model.TopCheckerModel" />
+            type="com.easyopstech.easyops.model.performance.leaderboard_model.TopCheckerModel" />
     </data>
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"

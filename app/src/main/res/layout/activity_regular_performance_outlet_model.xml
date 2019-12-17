@@ -8,7 +8,7 @@
 
         <variable
             name="outlet"
-            type="com.humaclab.selliscope.performance.daily_activities.model.OutletWithCheckInTime" />
+            type="com.easyopstech.easyops.performance.daily_activities.model.OutletWithCheckInTime" />
     </data>
 
     <androidx.cardview.widget.CardView

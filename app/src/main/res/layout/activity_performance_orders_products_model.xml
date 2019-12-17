@@ -11,7 +11,7 @@
     <data>
         <variable
             name="Product"
-            type="com.humaclab.selliscope.model.performance.orders_model.Product" />
+            type="com.easyopstech.easyops.model.performance.orders_model.Product" />
 
     </data>
 

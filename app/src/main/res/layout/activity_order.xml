@@ -14,7 +14,7 @@
         android:layout_height="match_parent"
         android:focusableInTouchMode="true"
         android:orientation="vertical"
-        tools:context="com.humaclab.selliscope.activity.OrderActivity">
+        tools:context="com.easyopstech.easyops.activity.OrderActivity">
 
         <!--<include
 

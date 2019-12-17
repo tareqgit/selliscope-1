@@ -6,7 +6,7 @@
 
         <variable
             name="deliveryDetails"
-            type="com.humaclab.selliscope.model.DeliveryResponse.DeliveryList"/>
+            type="com.easyopstech.easyops.model.DeliveryResponse.DeliveryList"/>
     </data>
 
     <androidx.cardview.widget.CardView

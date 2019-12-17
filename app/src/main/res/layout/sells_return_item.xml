@@ -6,7 +6,7 @@
 
         <variable
             name="sellsReturnOrder"
-            type="com.humaclab.selliscope.model.sales_return.SalesReturnResponse.DeliveryList"/>
+            type="com.easyopstech.easyops.model.sales_return.SalesReturnResponse.DeliveryList"/>
     </data>
 
     <androidx.cardview.widget.CardView

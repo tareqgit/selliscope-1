@@ -109,10 +109,10 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyBXkKu_nToPi7wW1oyHEnkrG4MpjuJBTxw" />
+            android:value="AIzaSyAsMVTh_B5miPzBM7kLADTFW9Vy5kWq8uw" />
         <meta-data
             android:name="com.google.android.awareness.API_KEY"
-            android:value="AIzaSyBXkKu_nToPi7wW1oyHEnkrG4MpjuJBTxw" />
+            android:value="AIzaSyAsMVTh_B5miPzBM7kLADTFW9Vy5kWq8uw" />
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@drawable/ic_selliscope_icon" />

@@ -170,7 +170,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String KEY_TP_OFFER_PRODUCT_ID = "free_product_id";
 
     public DatabaseHandler(Context context) {
-        super(context, Constants.databaseName, null, DATABASE_VERSION);
+        super(context, com.humaclab.selliscope.utils.Constants.databaseName, null, DATABASE_VERSION);
     }
 
 
@@ -298,9 +298,9 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + KEY_TP_PRODUCT_ID + " INTEGER,"
                 + KEY_TP_PROMOTIONAL_TITLE + " TEXT,"
                 + KEY_TP_OFFER_TYPE + " TEXT,"
-                + KEY_TP_PROMOTION_VALUE + " INTEGER,"
+                + KEY_TP_PROMOTION_VALUE + " DOUBLE,"
                 + KEY_TP_PROMOTION_TYPE + " TEXT,"
-                + KEY_TP_OFFER_VALUE + " INTEGER,"
+                + KEY_TP_OFFER_VALUE + " DOUBLE,"
                 + KEY_TP_OFFER_PRODUCT_NAME + " TEXT,"
                 + KEY_TP_OFFER_PRODUCT_QTY + " INTEGER,"
                 + KEY_TP_OFFER_PRODUCT_ID + " INTEGER"
@@ -380,6 +380,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     }
 
     public List<UserVisit> getUSerVisits() {
+
         List<UserVisit> visitList = new ArrayList<UserVisit>();
         // Select All Query
         String selectQuery = "SELECT  * FROM " + TABLE_USER_VISITS
@@ -388,20 +389,27 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
 
-        // looping through all rows and adding to list
-        if (cursor.moveToFirst()) {
-            do {
-                UserVisit visit = new UserVisit(
-                        cursor.getDouble(cursor.getColumnIndex(KEY_LATITUDE)),
-                        cursor.getDouble(cursor.getColumnIndex(KEY_LONGITUDE)),
-                        cursor.getString(cursor.getColumnIndex(KEY_TIMESTAMP)),
-                        cursor.getInt(cursor.getColumnIndex(KEY_USER_VISIT_ID)),
-                        cursor.getString(cursor.getColumnIndex(KEY_BATTERY_STATUS))
-                );
-                visitList.add(visit);
-            } while (cursor.moveToNext());
+        try {
+
+
+            // looping through all rows and adding to list
+            if (cursor.moveToFirst()) {
+                do {
+                    UserVisit visit = new UserVisit(
+                            cursor.getDouble(cursor.getColumnIndex(KEY_LATITUDE)),
+                            cursor.getDouble(cursor.getColumnIndex(KEY_LONGITUDE)),
+                            cursor.getString(cursor.getColumnIndex(KEY_TIMESTAMP)),
+                            cursor.getInt(cursor.getColumnIndex(KEY_USER_VISIT_ID)),
+                            cursor.getString(cursor.getColumnIndex(KEY_BATTERY_STATUS))
+                    );
+                    visitList.add(visit);
+                } while (cursor.moveToNext());
+            }
+        }finally {
+            cursor.close();
         }
         // return visit list
+        db.close();
         return visitList;
     }
 
@@ -450,6 +458,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                         values.clear();
                     } catch (Exception e) {
                         e.printStackTrace();
+                        Log.e("tareq_test", "addProduct: " + e.getMessage());
                     }
                 } else {
                     for (VariantsItem variants : product.getVariants()) {
@@ -474,6 +483,8 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                             productName = product.getName();
                         } catch (Exception e) {
                             e.printStackTrace();
+                            Log.e("tareq_test", "addProduct: " + e.getMessage());
+
                         }
                     }
                 }
@@ -855,7 +866,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
 
     public void addOutlet(List<Outlets.Outlet> outletList) {
         SQLiteDatabase db = this.getWritableDatabase();
-     /*   db.beginTransaction();*/
+        /*   db.beginTransaction();*/
         ContentValues values = new ContentValues();
 
         try {

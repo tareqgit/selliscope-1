@@ -65,14 +65,13 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import timber.log.Timber;
 
+import static java.security.AccessController.getContext;
+
 public class LoginActivity extends AppCompatActivity {
     private TextInputLayout email, password;
     private SelliscopeApiEndpointInterface apiService;
     private SessionManager sessionManager;
     private ProgressBar loginProgresssBar;
-
-    Context mContext;
-
     //For Bangla
     private SwitchMultiButton mSwitchMultiButton;
     private RadioGroup rg_language;
@@ -98,7 +97,6 @@ public class LoginActivity extends AppCompatActivity {
         LoadLocale();
         setContentView(R.layout.activity_login);
 
-        mContext=this;
         sessionManager = new SessionManager(this);
         mGoldfinger = new RxGoldfinger.Builder(this).logEnabled(BuildConfig.DEBUG).build();
 
@@ -272,7 +270,7 @@ public class LoginActivity extends AppCompatActivity {
 
                         sendIMEIAndVersion();
 
-                        startActivity(new Intent(LoginActivity.this, VerificationActivity.class));
+                        startActivity(new Intent(LoginActivity.this, LoadingActivity.class));
                         finish();
 
                     } catch (IOException e) {
@@ -312,24 +310,17 @@ public class LoginActivity extends AppCompatActivity {
                     sendIMEIAndVersion();
                 } else {
                     IMEIandVerison imeIandVerison = new IMEIandVerison();
-
-                     final    String deviceId ;
-                  //  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                        deviceId = Settings.Secure.getString(mContext.getContentResolver(), Settings.Secure.ANDROID_ID);
-             //       } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                ///       deviceId = telephonyManager.getDeviceId(0);
-                 //   } else {
-                 //       deviceId = telephonyManager.getDeviceId();
-                 //   }
-                    imeIandVerison.setIMEIcode(deviceId);
-
+                 //   imeIandVerison.setIMEIcode(telephonyManager.getDeviceId());
+                     String android_id = Settings.Secure.getString(getContentResolver(),
+                            Settings.Secure.ANDROID_ID);
+                    imeIandVerison.setIMEIcode(android_id);
                     imeIandVerison.setAppVersion(BuildConfig.VERSION_NAME);
-                    Log.d("tareq_test", "LoginActivity #327: sendIMEIAndVersion:  "  + new Gson().toJson(imeIandVerison));
+                    System.out.println("IMEI and version: " + new Gson().toJson(imeIandVerison));
                     Call<ResponseBody> call = apiService.sendIMEIAndVersion(imeIandVerison);
                     call.enqueue(new Callback<ResponseBody>() {
                         @Override
                         public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-
+                            Timber.d("Status code: " + response.code());
                         }
 
                         @Override

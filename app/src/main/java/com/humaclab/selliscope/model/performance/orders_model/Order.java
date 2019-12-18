@@ -12,6 +12,10 @@ public class Order {
     private String mOrderDate;
     @SerializedName("order_id")
     private Long mOrderId;
+
+    @SerializedName("outlet_name")
+    private String outletName;
+
     @SerializedName("products")
     private List<Product> mProducts;
 
@@ -21,6 +25,14 @@ public class Order {
 
     public void setGrandTotal(Double grandTotal) {
         mGrandTotal = grandTotal;
+    }
+
+    public String getOutletName() {
+        return outletName;
+    }
+
+    public void setOutletName(String outletName) {
+        this.outletName = outletName;
     }
 
     public String getOrderDate() {

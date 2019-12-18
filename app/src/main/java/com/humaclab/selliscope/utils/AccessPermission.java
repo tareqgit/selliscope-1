@@ -18,7 +18,8 @@ public class AccessPermission {
                 Manifest.permission.ACCESS_COARSE_LOCATION,
                 Manifest.permission.CALL_PHONE,
                 Manifest.permission.RECEIVE_BOOT_COMPLETED,
-                Manifest.permission.WAKE_LOCK
+                Manifest.permission.WAKE_LOCK,
+                Manifest.permission.ACCESS_BACKGROUND_LOCATION,
         };
         if (ActivityCompat.checkSelfPermission(activity, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED
                 || ActivityCompat.checkSelfPermission(activity, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED
@@ -26,7 +27,9 @@ public class AccessPermission {
                 || ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
                 || ActivityCompat.checkSelfPermission(activity, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED
                 || ActivityCompat.checkSelfPermission(activity, Manifest.permission.RECEIVE_BOOT_COMPLETED) != PackageManager.PERMISSION_GRANTED
-                || ActivityCompat.checkSelfPermission(activity, Manifest.permission.WAKE_LOCK) != PackageManager.PERMISSION_GRANTED) {
+                || ActivityCompat.checkSelfPermission(activity, Manifest.permission.WAKE_LOCK) != PackageManager.PERMISSION_GRANTED
+                || ActivityCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_BACKGROUND_LOCATION) != PackageManager.PERMISSION_GRANTED
+        ) {
             ActivityCompat.requestPermissions(activity, permissions, 404);
         }
     }

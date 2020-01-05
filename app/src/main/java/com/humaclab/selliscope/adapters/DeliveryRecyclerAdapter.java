@@ -6,6 +6,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 
+import com.google.gson.Gson;
 import com.humaclab.selliscope.R;
 import com.humaclab.selliscope.databinding.DeliveryDetailsItemBinding;
 import com.humaclab.selliscope.model.DeliveryResponse;
@@ -52,6 +54,8 @@ public class DeliveryRecyclerAdapter extends RecyclerView.Adapter<DeliveryRecycl
     @Override
     public void onBindViewHolder(final DeliveryDetailsViewHolder holder, int position) {
         final DeliveryResponse.Product product = products.get(position);
+
+        Log.d("tareq_test", "DeliveryRecyclerAdapter #56: onBindViewHolder:  "+ new Gson().toJson(product));
         holder.getBinding().setProduct(product);
         holder.getBinding().executePendingBindings();
 

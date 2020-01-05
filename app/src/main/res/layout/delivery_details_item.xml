@@ -39,6 +39,7 @@
             android:fontFamily="@font/latoregular"
             android:spinnerMode="dropdown"/>-->
 
+        <!-- android:text="@{Integer.toString(product.qty - Integer.parseInt(product.dQty))}"-->
         <TextView
             android:layout_width="0dp"
             android:layout_height="match_parent"
@@ -49,7 +50,7 @@
             android:background="#fff"
             android:gravity="center"
             android:padding="5dp"
-            android:text="@{Integer.toString(product.qty - Integer.parseInt(product.dQty))}"
+            android:text="@{Integer.toString(product.qty - 0)}"
             android:fontFamily="@font/latoregular"
             android:textAlignment="center"/>
 
@@ -76,6 +77,8 @@
                 android:textColor="#000"
                 android:textSize="20sp"/>
 
+
+           <!-- android:text="@{Integer.toString(product.qty - Integer.parseInt(product.dQty))}"-->
             <EditText
                 android:id="@+id/et_qty"
                 android:layout_width="0dp"
@@ -85,7 +88,8 @@
                 android:fontFamily="@font/latoregular"
                 android:imeOptions="actionDone"
                 android:inputType="number"
-                android:text="@{Integer.toString(product.qty - Integer.parseInt(product.dQty))}"
+
+                android:text="@{Integer.toString(product.qty - 0)}"
                 android:textAlignment="center"
                 android:textColor="#000"/>
 

@@ -18,7 +18,7 @@ public class DataItem implements Serializable {
 	private String product;
 
 	@SerializedName("rate")
-	private int rate;
+	private double rate;
 
 	@SerializedName("qty")
 	private int qty;
@@ -52,7 +52,7 @@ public class DataItem implements Serializable {
 		this.rate = rate;
 	}
 
-	public int getRate(){
+	public double getRate(){
 		return rate;
 	}
 

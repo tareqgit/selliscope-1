@@ -86,7 +86,6 @@ public class SelliscopeApplication extends Application {
     }
 
 
-
     private void createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel serviceChannel = new NotificationChannel(
@@ -97,4 +96,5 @@ public class SelliscopeApplication extends Application {
             manager.createNotificationChannel(serviceChannel);
         }
     }
+
 }

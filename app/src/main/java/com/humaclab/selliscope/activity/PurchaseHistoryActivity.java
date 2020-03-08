@@ -18,6 +18,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.humaclab.selliscope.R;
 import com.humaclab.selliscope.SelliscopeApiEndpointInterface;
 import com.humaclab.selliscope.SelliscopeApplication;
@@ -51,6 +52,7 @@ public class PurchaseHistoryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_purchase_history);
         outlet = (Outlets.Outlet) getIntent().getSerializableExtra("outletDetails");
+        Log.d("tareq_test", "PurchaseHistoryActivity #54: onCreate:  "+ new Gson().toJson(outlet));
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("");
@@ -88,6 +90,8 @@ public class PurchaseHistoryActivity extends AppCompatActivity {
     }
 
     private void getPurchaseHistory() {
+        Log.d("tareq_test", "PurchaseHistoryActivity #92: getPurchaseHistory:  "+ outlet.outletId);
+
         Call<PurchaseHistoryResponse> call = apiService.getPurchaseHistory(outlet.outletId);
         call.enqueue(new Callback<PurchaseHistoryResponse>() {
             @Override

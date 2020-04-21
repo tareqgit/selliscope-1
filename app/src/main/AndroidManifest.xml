@@ -18,23 +18,13 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <!--For debug APK-->
-        <!--<meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyBZ5heET41mdUTW5UOouLZFn56kGsAocbM" />
-        <meta-data
-            android:name="com.google.android.awareness.API_KEY"
-            android:value="AIzaSyBZ5heET41mdUTW5UOouLZFn56kGsAocbM" />-->
-        <!--For debug APK-->
 
-        <!--For signed APK-->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyAhsz4pX62D7yu8twGT4ydn-_DRVB3p6_Y"/>
+            android:value="AIzaSyBXkKu_nToPi7wW1oyHEnkrG4MpjuJBTxw"/>
         <meta-data
             android:name="com.google.android.awareness.API_KEY"
-            android:value="AIzaSyAhsz4pX62D7yu8twGT4ydn-_DRVB3p6_Y"/>
-        <!--For signed APK-->
+            android:value="AIzaSyBXkKu_nToPi7wW1oyHEnkrG4MpjuJBTxw"/>
 
         <meta-data
             android:name="io.fabric.ApiKey"
@@ -83,7 +73,7 @@
             android:theme="@style/SplashScreenTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
-
+                <action android:name="android.intent.action.VIEW"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>

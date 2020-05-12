@@ -237,4 +237,18 @@
         <item>English</item>
         <item>Bangla</item>
     </string-array>
+
+
+    <string name="geofence_unknown_error" translatable="false">
+    Unknown error: the Geofence service is not available now.
+  </string>
+    <string name="geofence_not_available" translatable="false">
+    Geofence service is not available now. Go to Settings>Location>Mode and choose High accuracy.
+  </string>
+    <string name="geofence_too_many_geofences" translatable="false">
+    Your app has registered too many geofences.
+  </string>
+    <string name="geofence_too_many_pending_intents" translatable="false">
+    You have provided too many PendingIntents to the addGeofences() call.
+  </string>
 </resources>

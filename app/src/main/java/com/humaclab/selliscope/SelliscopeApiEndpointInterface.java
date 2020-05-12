@@ -1,5 +1,6 @@
 package com.humaclab.selliscope;
 
+import com.humaclab.selliscope.geo_fence.model.GeoResponse;
 import com.humaclab.selliscope.model.AddNewOrder;
 import com.humaclab.selliscope.model.Outlets;
 import com.humaclab.selliscope.model.app_version.AppVersion;
@@ -235,6 +236,9 @@ public interface SelliscopeApiEndpointInterface {
     @GET("v1/leaderboard-checker_user_ranking")
     Call<RankingResponse> getCheckerUserRanking(@Query("time") String time);
 
+
+    @POST("v1/geo-fencing")
+    Call<GeoResponse> postGeoFence(@Query("outletId") int outletId,  @Query("getoutTime") String getOutTime, @Query("getinTime") String getInTime);
 
 
 }

@@ -109,6 +109,7 @@ public class SessionManager {
         user.put(KEY_USER_EMAIL, pref.getString(KEY_USER_EMAIL, null));
         user.put(KEY_USER_DOB, pref.getString(KEY_USER_DOB, null));
         user.put(KEY_USER_GENDER, pref.getString(KEY_USER_GENDER, null));
+        user.put(KEY_CLIENT_ID, pref.getString(KEY_CLIENT_ID,null));
         user.put(KEY_USER_PROFILE_PIC_URL, pref.getString(KEY_USER_PROFILE_PIC_URL, null));
         return user;
     }

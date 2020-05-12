@@ -31,6 +31,8 @@ public class SelliscopeApplication extends Application {
     public static boolean developer=false;
 
     private static Retrofit retrofitInstance;
+
+    private static Retrofit retrofitInstance2;
     private FirebaseAnalytics mFirebaseAnalytics;
 
 
@@ -65,6 +67,27 @@ public class SelliscopeApplication extends Application {
                     .build();
         }
         return retrofitInstance;
+    }
+
+    public static Retrofit getRetrofitInstance2(String email, String password, boolean isForLogin) {
+        if (retrofitInstance2 == null || isForLogin) {
+
+            OkHttpClient client = new OkHttpClient.Builder()
+                    .addInterceptor(new HttpAuthInterceptor(email.toLowerCase(), password))
+                    .connectTimeout(70, TimeUnit.SECONDS)
+                    .readTimeout(120, TimeUnit.SECONDS)
+                    .writeTimeout(30, TimeUnit.SECONDS)
+                    .addNetworkInterceptor(new StethoInterceptor())
+                    .build();
+
+            retrofitInstance2 = new Retrofit.Builder()
+                    .baseUrl("http://1ac7e944.ngrok.io/api/")
+                    .addConverterFactory(GsonConverterFactory.create())
+                    //.addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                    .client(client)
+                    .build();
+        }
+        return retrofitInstance2;
     }
 
     @Override

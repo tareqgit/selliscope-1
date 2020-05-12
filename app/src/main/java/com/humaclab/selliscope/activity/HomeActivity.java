@@ -15,6 +15,7 @@ import android.content.IntentSender;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
+import android.location.Location;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -57,6 +58,7 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.LocationSettingsResponse;
 import com.google.android.gms.location.SettingsClient;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -73,6 +75,9 @@ import com.humaclab.selliscope.SelliscopeApplication;
 import com.humaclab.selliscope.fragment.DashboardFragment;
 import com.humaclab.selliscope.fragment.PerformanceFragment;
 import com.humaclab.selliscope.fragment.TargetFragment;
+import com.humaclab.selliscope.geo_fence.Reminder;
+import com.humaclab.selliscope.geo_fence.ReminderRepository;
+import com.humaclab.selliscope.model.Outlets;
 import com.humaclab.selliscope.model.app_version.AppVersion;
 import com.humaclab.selliscope.model.diameter.DiameterResponse;
 import com.humaclab.selliscope.receiver.InternetConnectivityChangeReceiver;
@@ -90,6 +95,7 @@ import com.humaclab.selliscope.utils.UpLoadDataService;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -97,6 +103,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import kotlin.Unit;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -165,7 +172,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     private LocalBroadcastManager mLocalBroadcastManager;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -174,6 +180,11 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         LoadLocale();
         setContentView(R.layout.activity_home);
         context = this;
+
+
+
+
+
 
         //region Set Alarm for dataUpload
         setAlarmForDataUpload();
@@ -185,10 +196,10 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
 
         //region Battery Percentage
-        BatteryManager bm = (BatteryManager)getSystemService(BATTERY_SERVICE);
+        BatteryManager bm = (BatteryManager) getSystemService(BATTERY_SERVICE);
         int batLevel = bm.getIntProperty(BatteryManager.BATTERY_PROPERTY_CAPACITY);
 
-        Log.d("tareq_test", "HomeActivity #189: onCreate:  "+ batLevel);
+        Log.d("tareq_test", "HomeActivity #189: onCreate:  " + batLevel);
         //endregion
 
 
@@ -442,6 +453,42 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             int upSpeed = nc.getLinkUpstreamBandwidthKbps();
             Log.d("tareq_test", "HomeActivity #416: onCreate:  "+ downSpeed +" , "+ upSpeed );
         }*/
+
+        setGeoFenceAroundOutlet(databaseHandler);
+
+    }
+
+    public void setGeoFenceAroundOutlet(DatabaseHandler databaseHandler) {
+
+        List<Outlets.Outlet> mOutletList = databaseHandler.getAllOutlet().outlets;
+        if (!mOutletList.isEmpty()) {
+            this.getSharedPreferences("ReminderRepository", MODE_PRIVATE).edit().clear().apply();
+
+
+            for (Outlets.Outlet outlet : mOutletList) {
+                //private fun addReminder(reminder:Reminder) {
+                new ReminderRepository(this).add(new Reminder(""+outlet.outletId, new LatLng(outlet.outletLatitude, outlet.outletLongitude), 50.0, outlet.outletName),
+
+                        () -> {
+                            setResult(Activity.RESULT_OK);
+                            //finish();
+                            return Unit.INSTANCE;
+                        },
+                        (failure) -> {
+                            // Snackbar.make(, failure.toString(), Snackbar.LENGTH_LONG).show();
+                            Log.d("tareq_test", "HomeActivity #196: onCreate:  " + failure);
+                            return Unit.INSTANCE;
+                        }
+                );
+            }
+
+
+
+        } else {
+
+             Toast.makeText(this, "Can't sort  outlet yet. Need some time", Toast.LENGTH_SHORT).show();
+        }
+
 
     }
 
@@ -730,9 +777,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 pd.setMessage("Login out...");
                 pd.show();
 
-                new LogoutService(context).logoutDataUpload(()->{
-                   if(new DatabaseHandler(context).getOrder().isEmpty())
-                    HomeActivity.this.deleteDatabase(Constants.databaseName);
+                new LogoutService(context).logoutDataUpload(() -> {
+                    if (new DatabaseHandler(context).getOrder().isEmpty())
+                        HomeActivity.this.deleteDatabase(Constants.databaseName);
                 });
 
                 //      jobScheduler.cancel(JOB_ID);
@@ -818,7 +865,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                     public void uploadFailed(String reason) {
 
                         pd.dismiss();
-                        runOnUiThread(()-> Toast.makeText(HomeActivity.this, "" + reason, Toast.LENGTH_SHORT).show());
+                        runOnUiThread(() -> Toast.makeText(HomeActivity.this, "" + reason, Toast.LENGTH_SHORT).show());
 
                     }
                 });
@@ -1406,7 +1453,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                 startActivity(intent);
                             }
-                        });
+                });
             }
         }
     }

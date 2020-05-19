@@ -10,6 +10,7 @@ import android.os.Bundle;
 import androidx.core.app.ActivityCompat;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
@@ -239,7 +240,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             sendIMEIAndVersion();
                         } else {
                             IMEIandVerison imeIandVerison = new IMEIandVerison();
-                            imeIandVerison.setIMEIcode(telephonyManager.getDeviceId());
+                          //  imeIandVerison.setIMEIcode(telephonyManager.getDeviceId());
+                            String android_id = Settings.Secure.getString(getContentResolver(),
+                                    Settings.Secure.ANDROID_ID);
+                            imeIandVerison.setIMEIcode(android_id);
                             imeIandVerison.setAppVersion(BuildConfig.VERSION_NAME);
                             System.out.println("IMEI and version: " + new Gson().toJson(imeIandVerison));
                             apiService.sendIMEIAndVersion(imeIandVerison).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())

@@ -179,10 +179,10 @@ public class PaymentActivity extends AppCompatActivity {
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 
 
-            Uri outputUri = FileProvider.getUriForFile(this, AUTHORITY, output);
-            final Uri imageUri = outputUri;
-            final InputStream imageStream;
+
             try {
+                final Uri imageUri = FileProvider.getUriForFile(this, AUTHORITY, output);
+                final InputStream imageStream;
                 imageStream = getContentResolver().openInputStream(imageUri);
                 Bitmap photo = BitmapFactory.decodeStream(imageStream);
 

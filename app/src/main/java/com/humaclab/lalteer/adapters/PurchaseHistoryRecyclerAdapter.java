@@ -5,6 +5,8 @@ import android.content.Intent;
 import androidx.databinding.DataBindingUtil;
 import androidx.databinding.library.baseAdapters.BR;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,9 +36,13 @@ public class PurchaseHistoryRecyclerAdapter extends RecyclerView.Adapter<Purchas
     }
 
     public void updateData(List<PurchaseHistoryItem> purchaseHistoryItemList){
-        this.purchaseHistoryItemList.clear();
-        this.purchaseHistoryItemList.addAll(purchaseHistoryItemList);
-        this.notifyDataSetChanged();
+        try {
+            this.purchaseHistoryItemList.clear();
+            this.purchaseHistoryItemList.addAll(purchaseHistoryItemList);
+            this.notifyDataSetChanged();
+        } catch (Exception e){
+            Log.d("" +getClass().getName(), ""+ e.getMessage());
+        }
 
     }
 

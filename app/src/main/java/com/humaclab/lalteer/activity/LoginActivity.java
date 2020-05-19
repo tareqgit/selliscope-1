@@ -241,8 +241,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         } else {
                             IMEIandVerison imeIandVerison = new IMEIandVerison();
                           //  imeIandVerison.setIMEIcode(telephonyManager.getDeviceId());
-                            String android_id = Settings.Secure.getString(getContentResolver(),
-                                    Settings.Secure.ANDROID_ID);
+                            String android_id = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
                             imeIandVerison.setIMEIcode(android_id);
                             imeIandVerison.setAppVersion(BuildConfig.VERSION_NAME);
                             System.out.println("IMEI and version: " + new Gson().toJson(imeIandVerison));

@@ -286,7 +286,7 @@ public class OutletDetailsActivity extends AppCompatActivity {
         PushDownAnim.setPushDownAnimTo(binding.addOutstandingPayment).setOnSingleClickListener(v->{
             v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY); //for onclick vibration
 
-            double amount =Double.parseDouble( binding.etPayment.getEditText().getText().toString());
+            double amount =Double.parseDouble( binding.etPayment.getEditText()==null?"0":binding.etPayment.getEditText().getText().toString());
             if(amount<=Double.parseDouble(binding.textViewDueInput.getText().toString())) {
                 postOutstandingPayment();
             }else{

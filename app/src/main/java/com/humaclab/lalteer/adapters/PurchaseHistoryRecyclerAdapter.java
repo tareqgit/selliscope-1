@@ -37,8 +37,10 @@ public class PurchaseHistoryRecyclerAdapter extends RecyclerView.Adapter<Purchas
 
     public void updateData(List<PurchaseHistoryItem> purchaseHistoryItemList){
         try {
-            this.purchaseHistoryItemList.clear();
-            this.purchaseHistoryItemList.addAll(purchaseHistoryItemList);
+            if(this.purchaseHistoryItemList!=null && purchaseHistoryItemList!=null) {
+                this.purchaseHistoryItemList.clear();
+                this.purchaseHistoryItemList.addAll(purchaseHistoryItemList);
+            }
             this.notifyDataSetChanged();
         } catch (Exception e){
             Log.d("" +getClass().getName(), ""+ e.getMessage());

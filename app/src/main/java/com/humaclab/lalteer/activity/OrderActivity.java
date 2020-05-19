@@ -43,6 +43,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 
 import io.reactivex.Observer;
 import io.reactivex.SingleObserver;
@@ -298,7 +299,7 @@ public class OrderActivity extends AppCompatActivity implements OrderProductRecy
             mOrderProductRecyclerAdapter.notifyDataSetChanged(); //we are Notify to update recycler view cz if we delete any Item from cart should be live in this activity also
 
             // Restore state
-            binding.rvProduct.getLayoutManager().onRestoreInstanceState(recyclerViewState); //we are restoring recycler position
+            Objects.requireNonNull(binding.rvProduct.getLayoutManager()).onRestoreInstanceState(recyclerViewState); //we are restoring recycler position
         }
         updateTotal_Discount_Grnd(); //need to update snackbar on resume
     }

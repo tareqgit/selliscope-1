@@ -187,12 +187,16 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
 
                             if (response.body() != null) {
-                                realm.beginTransaction();
+                                try {
+                                    realm.beginTransaction();
 
-                                realm.copyToRealmOrUpdate(response.body().result.access);
+                                    realm.copyToRealmOrUpdate(response.body().result.access);
 
-                                realm.commitTransaction();
-                                if (!realm.isClosed()) realm.close();
+                                    realm.commitTransaction();
+                                    if (!realm.isClosed()) realm.close();
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
 
 
                                 sessionManager.createLoginSession(

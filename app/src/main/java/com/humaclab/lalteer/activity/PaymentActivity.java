@@ -105,7 +105,7 @@ public class PaymentActivity extends AppCompatActivity {
         pd.setMessage("Loading payment list.....");
         pd.show();
 
-        SessionManager sessionManager = new SessionManager(PaymentActivity.this);
+        SessionManager sessionManager = new SessionManager(getApplicationContext());
         apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(),
                 sessionManager.getUserPassword(), false).create(SelliscopeApiEndpointInterface.class);
         apiService.getPayment(outletId).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())

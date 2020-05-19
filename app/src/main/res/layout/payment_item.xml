@@ -137,23 +137,34 @@
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:orientation="horizontal">
+                android:foregroundGravity="right"
+                android:orientation="horizontal"
+                android:weightSum="10">
+
+                <TextView
+                    android:id="@+id/view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="4"
+                    android:visibility="invisible"
+                    tools:visibility="invisible" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_weight="3"
                     android:padding="5dp"
                     android:text="@string/grand_total"
+                    android:textAlignment="textEnd"
                     android:textColor="#000" />
 
                 <TextView
                     android:id="@+id/tv_grand_total"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight="3"
                     android:padding="5dp"
                     android:text='@{Double.toString(Double.parseDouble(payments.amount.replace(",","")) - Double.parseDouble(payments.discount.replace(",","")))}' />
             </LinearLayout>

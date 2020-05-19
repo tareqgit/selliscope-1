@@ -15,6 +15,7 @@ import com.humaclab.lalteer.utils.HttpAuthInterceptor;
 
 import java.util.concurrent.TimeUnit;
 
+import io.reactivex.plugins.RxJavaPlugins;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import okhttp3.OkHttpClient;
@@ -68,6 +69,7 @@ public class SelliscopeApplication extends Application {
         if (BuildConfig.DEBUG) {
             Timber.plant(new Timber.DebugTree());
         }
+        RxJavaPlugins.setErrorHandler(throwable -> {}); // nothing or some logging //for stackOverflow error
         // Obtain the FirebaseAnalytics instance.
         mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
         createNotificationChannel();

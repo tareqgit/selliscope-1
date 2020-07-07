@@ -9,6 +9,7 @@
     <color name="white">#FFFFFF</color>
     <color name="red">#e06165</color>
     <color name="danger">#FF5722</color>
+    <color name="success">#4CAF50</color>
     <color name="background">#EEEFEF</color>
     <color name="cart_button_shape">#e3e8f7</color>
 

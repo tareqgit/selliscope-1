@@ -37,6 +37,7 @@ public class SessionManager {
     private static final String KEY_DIAMETER = "diameter";
     private static final String IS_LOGGED_IN = "IsLoggedIn";
     private static final String IS_ALL_DATA_LOADADE = "IsAllDataLoaded";
+    private static final String LAST_CHECK_IN_DATE = "lastCheckInDate";
 
     // Shared Preferences
     private SharedPreferences pref;
@@ -73,6 +74,15 @@ public class SessionManager {
         editor.putString(KEY_USER_DOB, user.getDob());
         editor.putString(KEY_USER_GENDER, user.getGender());
         editor.putString(KEY_USER_PROFILE_PIC_URL, user.getImage());
+    }
+
+    public void updateLastCheckInDate(String date){
+        editor.putString(LAST_CHECK_IN_DATE, date);
+        editor.commit();
+    }
+
+    public String getLastCheckInDate() {
+        return pref.getString(LAST_CHECK_IN_DATE, null);
     }
 
     public void setNewPassword(String password) {
@@ -119,6 +129,11 @@ public class SessionManager {
      */
     public String getUserEmail() {
         return pref.getString(KEY_USER_EMAIL, null);
+    }
+
+
+    public String getClientID() {
+        return pref.getString(KEY_CLIENT_ID, null);
     }
 
     public String getUserPassword()  {

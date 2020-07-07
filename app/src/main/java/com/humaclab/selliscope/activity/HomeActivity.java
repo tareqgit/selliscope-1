@@ -3,6 +3,7 @@ package com.humaclab.selliscope.activity;
 import android.Manifest;
 import android.app.Activity;
 import android.app.ActivityManager;
+import android.app.NotificationManager;
 import android.app.ProgressDialog;
 import android.app.job.JobInfo;
 import android.app.job.JobScheduler;
@@ -99,6 +100,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -507,7 +509,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
             long duration = time_at.getTime() - now_at.getTime();
             if (duration < 0) {
-                duration += (24 * 60 * 60 * 1000);
+                duration += (24 * 60 * 60 * 1000); //1 day
             }
             NotificationHandler.scheduleReminder(this, duration, createWorkInputData("Please", "Update data", 1), "notification");
         } catch (ParseException e) {
@@ -814,6 +816,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 startActivity(new Intent(HomeActivity.this, PrivacyPolicyActivity.class));
                 break;
             case R.id.nav_about_us:
+
+
+
                 final AlertDialog alertDialog = new AlertDialog.Builder(this).create();
                 alertDialog.setTitle("About Us");
                 alertDialog.setMessage("ICT Incubator,\nSoftware Technology Park (4th Floor), Janata Tower,\nKawranbazar, Dhaka 1215, Bangladesh\ninfo@humaclab.com\nMobile: +8801711505322");

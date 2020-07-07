@@ -1,16 +1,21 @@
 package com.humaclab.selliscope.activity;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.FileProvider;
 import androidx.databinding.DataBindingUtil;
+import androidx.work.Data;
 
 import android.app.Activity;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.ExifInterface;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -32,9 +37,11 @@ import com.humaclab.selliscope.databinding.ActivitySelfieCheckInBinding;
 import com.humaclab.selliscope.model.Outlets;
 import com.humaclab.selliscope.model.UserLocation;
 import com.humaclab.selliscope.performance.daily_activities.model.OutletWithCheckInTime;
+import com.humaclab.selliscope.service.NotificationHandler;
 import com.humaclab.selliscope.utility_db.db.UtilityDatabase;
 import com.humaclab.selliscope.utility_db.model.RegularPerformanceEntity;
 import com.humaclab.selliscope.utils.BatteryUtils;
+import com.humaclab.selliscope.utils.Constants;
 import com.humaclab.selliscope.utils.CurrentTimeUtilityClass;
 import com.humaclab.selliscope.utils.GetAddressFromLatLang;
 import com.humaclab.selliscope.utils.LoadingDialog;
@@ -53,12 +60,15 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.concurrent.Executors;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static com.bumptech.glide.load.resource.bitmap.TransformationUtils.rotateImage;
 
 public class SelfieCheck_inActivity extends AppCompatActivity {
 
@@ -125,15 +135,16 @@ public class SelfieCheck_inActivity extends AppCompatActivity {
 
        SingleClick.get(mActivitySelfieCheckInBinding.tvSend).setOnSingleClickListener(v -> {
            v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY); //for onclick vibration
-            if (NetworkUtility.isNetworkAvailable(getApplicationContext())) {
+            if (NetworkUtility.isNetworkAvailable(getApplicationContext())) { //if Internet is available
 
                 LoadingDialog loadingDialog= new LoadingDialog(this);
-                loadingDialog.showDialog();
+                loadingDialog.showDialog(); //show loading
 
                 if (LocationMonitoringService.sLocation != null) {
                     List<UserLocation.Visit> visitList = new ArrayList<UserLocation.Visit>() ;
 
-                    visitList.add(  new UserLocation.Visit(LocationMonitoringService.sLocation.getLatitude(),LocationMonitoringService.sLocation.getLongitude(), GetAddressFromLatLang.getAddressFromLatLan(mContext,LocationMonitoringService.sLocation.getLatitude(),LocationMonitoringService.sLocation.getLongitude()),CurrentTimeUtilityClass.getCurrentTimeStamp(),outletId,selfieImage,mActivitySelfieCheckInBinding.tvComment.getEditText().getText().toString(), BatteryUtils.getBatteryLevelPercentage(mContext)));
+                    //ready payload
+                    visitList.add(  new UserLocation.Visit(LocationMonitoringService.sLocation.getLatitude(),LocationMonitoringService.sLocation.getLongitude(), GetAddressFromLatLang.getAddressFromLatLan(mContext,LocationMonitoringService.sLocation.getLatitude(),LocationMonitoringService.sLocation.getLongitude()),CurrentTimeUtilityClass.getCurrentTimeStamp(),outletId,selfieImage, BatteryUtils.getBatteryLevelPercentage(mContext),mActivitySelfieCheckInBinding.tvComment.getEditText().getText().toString()));
 
                     Log.d("tareq_test", "SelfieCheck_inActivity #132: onCreate:  "+ new Gson().toJson(new UserLocation(visitList)));
 
@@ -141,7 +152,16 @@ public class SelfieCheck_inActivity extends AppCompatActivity {
                         @Override
                         public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                             loadingDialog.hideDialog();
+
+                            //for checking last check-In time for first-check-in-selfie-check-in feature
+                            new SessionManager(SelfieCheck_inActivity.this.mContext).updateLastCheckInDate(CurrentTimeUtilityClass.getCurrentTimeStampDate());
+
+
+                            scheduleNotification();
+
+
                             if(response.isSuccessful()){
+
                                 Toast.makeText(mContext, "Selfie Check-in Successful", Toast.LENGTH_SHORT).show();
                                 //region Update checkedin for Activities
                                 updateRegularPerformance(SelfieCheck_inActivity.this.mContext, SelfieCheck_inActivity.this.outlet);
@@ -151,12 +171,13 @@ public class SelfieCheck_inActivity extends AppCompatActivity {
                                 finish();
 
                             }else if(response.code()>=500 && response.code()<=599){
-                                //region Update checkedin for Activities
+
+                                //region Update checked-in for Activities
                                 updateRegularPerformance(SelfieCheck_inActivity.this.mContext, SelfieCheck_inActivity.this.outlet);
 
 
                                 Executors.newSingleThreadExecutor().execute(()->{
-                                    mUtilityDatabase.returnCheckInDao().addCheck_In(new UserLocation.Visit(LocationMonitoringService.sLocation.getLatitude(), LocationMonitoringService.sLocation.getLongitude(), "", CurrentTimeUtilityClass.getCurrentTimeStamp(), outletId, selfieImage, mActivitySelfieCheckInBinding.tvComment.getEditText().getText().toString(), BatteryUtils.getBatteryLevelPercentage(mContext)));
+                                    mUtilityDatabase.returnCheckInDao().addCheck_In(new UserLocation.Visit(LocationMonitoringService.sLocation.getLatitude(), LocationMonitoringService.sLocation.getLongitude(), "", CurrentTimeUtilityClass.getCurrentTimeStamp(), outletId, selfieImage, BatteryUtils.getBatteryLevelPercentage(mContext) ,mActivitySelfieCheckInBinding.tvComment.getEditText().getText().toString()));
                                     runOnUiThread(()->Toast.makeText(SelfieCheck_inActivity.this, "Selfie check-in Queued", Toast.LENGTH_SHORT).show());
                                   //  startActivity(new Intent(SelfieCheck_inActivity.this, OutletActivity.class));
                                     finish();
@@ -168,12 +189,19 @@ public class SelfieCheck_inActivity extends AppCompatActivity {
                         @Override
                         public void onFailure(Call<ResponseBody> call, Throwable t) {
 
-                            //region Update checkedin for Activities
+                            //for checking last check-In time for first-check-in-selfie-check-in feature
+                            new SessionManager(SelfieCheck_inActivity.this.mContext).updateLastCheckInDate(CurrentTimeUtilityClass.getCurrentTimeStampDate());
+
+
+                          scheduleNotification();
+
+
+                            //region Update checked-in for Activities
                             updateRegularPerformance(SelfieCheck_inActivity.this.mContext, SelfieCheck_inActivity.this.outlet);
 
 
                             Executors.newSingleThreadExecutor().execute(()->{
-                                mUtilityDatabase.returnCheckInDao().addCheck_In(new UserLocation.Visit(LocationMonitoringService.sLocation.getLatitude(), LocationMonitoringService.sLocation.getLongitude(), "", CurrentTimeUtilityClass.getCurrentTimeStamp(), outletId, selfieImage, mActivitySelfieCheckInBinding.tvComment.getEditText().getText().toString(), BatteryUtils.getBatteryLevelPercentage(mContext)));
+                                mUtilityDatabase.returnCheckInDao().addCheck_In(new UserLocation.Visit(LocationMonitoringService.sLocation.getLatitude(), LocationMonitoringService.sLocation.getLongitude(), "", CurrentTimeUtilityClass.getCurrentTimeStamp(), outletId, selfieImage, BatteryUtils.getBatteryLevelPercentage(mContext),mActivitySelfieCheckInBinding.tvComment.getEditText().getText().toString()));
                                 runOnUiThread(()->Toast.makeText(SelfieCheck_inActivity.this, "Selfie check-in Queued", Toast.LENGTH_SHORT).show());
                              //   startActivity(new Intent(SelfieCheck_inActivity.this, OutletActivity.class));
                                 finish();
@@ -188,10 +216,11 @@ public class SelfieCheck_inActivity extends AppCompatActivity {
                 //region Update checkedin for Activities
                 updateRegularPerformance(SelfieCheck_inActivity.this.mContext, SelfieCheck_inActivity.this.outlet);
 
+                scheduleNotification();
 
                 Executors.newSingleThreadExecutor().execute(() -> {
                     if (LocationMonitoringService.sLocation != null) {
-                        mUtilityDatabase.returnCheckInDao().addCheck_In(new UserLocation.Visit(LocationMonitoringService.sLocation.getLatitude(), LocationMonitoringService.sLocation.getLongitude(), "", CurrentTimeUtilityClass.getCurrentTimeStamp(), outletId, selfieImage, mActivitySelfieCheckInBinding.tvComment.getEditText().getText().toString(), BatteryUtils.getBatteryLevelPercentage(mContext)));
+                        mUtilityDatabase.returnCheckInDao().addCheck_In(new UserLocation.Visit(LocationMonitoringService.sLocation.getLatitude(), LocationMonitoringService.sLocation.getLongitude(), "", CurrentTimeUtilityClass.getCurrentTimeStamp(), outletId, selfieImage, BatteryUtils.getBatteryLevelPercentage(mContext), mActivitySelfieCheckInBinding.tvComment.getEditText().getText().toString()));
                         runOnUiThread(()->Toast.makeText(SelfieCheck_inActivity.this, "Selfie check-in Queued", Toast.LENGTH_SHORT).show());
                        // startActivity(new Intent(SelfieCheck_inActivity.this, OutletActivity.class));
                         finish();
@@ -200,6 +229,22 @@ public class SelfieCheck_inActivity extends AppCompatActivity {
                 });
             }
         });
+    }
+
+    private void scheduleNotification() {
+        NotificationManager notificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
+        Objects.requireNonNull(notificationManager).cancel( 2); //we had used tag mti and for selfie reminder id has been used 2
+        Objects.requireNonNull(notificationManager).cancelAll();
+
+
+        //add a notification scheduler for next checkIn request
+        NotificationHandler.cancelReminder(SelfieCheck_inActivity.this.mContext, "check_in_reminder");
+        //2 hr schedule /// 30 sec
+        NotificationHandler.scheduleReminder(SelfieCheck_inActivity.this.mContext, 15*60*1000, new Data.Builder()
+                .putString(Constants.EXTRA_TITLE, "Warning!")
+                .putString(Constants.EXTRA_TEXT, "You hadn't given any Selfie for last 2 hours, please make sure next check-in is Selfie check-in")
+                .putInt(Constants.EXTRA_ID, 2)//for selfie reminder id has been used 2
+                .build(), "check_in_reminder" );
     }
 
     private void updateRegularPerformance(Context context, Outlets.Outlet outlet) {
@@ -240,14 +285,16 @@ public class SelfieCheck_inActivity extends AppCompatActivity {
             try {
                 imageStream = getContentResolver().openInputStream(imageUri);
                 Bitmap photo = BitmapFactory.decodeStream(imageStream);
-
+              /*  if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    photo = rotateImageIfRequired(getApplicationContext(),photo, imageUri );
+                }
                 int factor = 10;
                 while (photo.getWidth() >= 1200) {
                     photo = Bitmap.createScaledBitmap(photo, (Math.round(photo.getWidth() * 0.1f * factor)), (Math.round(photo.getHeight() * 0.1f * factor)), false);
                     factor--;
                 }
-
-
+*/
+              photo= handleSamplingAndRotationBitmap(getApplicationContext(), outputUri);
                 photo.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
                 selfieImage = Base64.encodeToString(outputStream.toByteArray(), Base64.DEFAULT);
 
@@ -258,7 +305,7 @@ public class SelfieCheck_inActivity extends AppCompatActivity {
                         .into(mActivitySelfieCheckInBinding.imageViewStore);
 
 
-            } catch (FileNotFoundException e) {
+            } catch (IOException e) {
                 e.printStackTrace();
             }
 
@@ -294,6 +341,122 @@ public class SelfieCheck_inActivity extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         finish();
+    }
+
+
+    /**
+     * This method is responsible for solving the rotation issue if exist. Also scale the images to
+     * 1024x1024 resolution
+     *
+     * @param context       The current context
+     * @param selectedImage The Image URI
+     * @return Bitmap image results
+     * @throws IOException
+     */
+    public static Bitmap handleSamplingAndRotationBitmap(Context context, Uri selectedImage)
+            throws IOException {
+        int MAX_HEIGHT = 1024;
+        int MAX_WIDTH = 1024;
+
+        // First decode with inJustDecodeBounds=true to check dimensions
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        InputStream imageStream = context.getContentResolver().openInputStream(selectedImage);
+        BitmapFactory.decodeStream(imageStream, null, options);
+        imageStream.close();
+
+        // Calculate inSampleSize
+        options.inSampleSize = calculateInSampleSize(options, MAX_WIDTH, MAX_HEIGHT);
+
+        // Decode bitmap with inSampleSize set
+        options.inJustDecodeBounds = false;
+        imageStream = context.getContentResolver().openInputStream(selectedImage);
+        Bitmap img = BitmapFactory.decodeStream(imageStream, null, options);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            img = rotateImageIfRequired(context, img, selectedImage);
+        }
+        return img;
+    }
+
+
+    /**
+     * Calculate an inSampleSize for use in a {@link BitmapFactory.Options} object when decoding
+     * bitmaps using the decode* methods from {@link BitmapFactory}. This implementation calculates
+     * the closest inSampleSize that will result in the final decoded bitmap having a width and
+     * height equal to or larger than the requested width and height. This implementation does not
+     * ensure a power of 2 is returned for inSampleSize which can be faster when decoding but
+     * results in a larger bitmap which isn't as useful for caching purposes.
+     *
+     * @param options   An options object with out* params already populated (run through a decode*
+     *                  method with inJustDecodeBounds==true
+     * @param reqWidth  The requested width of the resulting bitmap
+     * @param reqHeight The requested height of the resulting bitmap
+     * @return The value to be used for inSampleSize
+     */
+    private static int calculateInSampleSize(BitmapFactory.Options options,
+                                             int reqWidth, int reqHeight) {
+        // Raw height and width of image
+        final int height = options.outHeight;
+        final int width = options.outWidth;
+        int inSampleSize = 1;
+
+        if (height > reqHeight || width > reqWidth) {
+
+            // Calculate ratios of height and width to requested height and width
+            final int heightRatio = Math.round((float) height / (float) reqHeight);
+            final int widthRatio = Math.round((float) width / (float) reqWidth);
+
+            // Choose the smallest ratio as inSampleSize value, this will guarantee a final image
+            // with both dimensions larger than or equal to the requested height and width.
+            inSampleSize = heightRatio < widthRatio ? heightRatio : widthRatio;
+
+            // This offers some additional logic in case the image has a strange
+            // aspect ratio. For example, a panorama may have a much larger
+            // width than height. In these cases the total pixels might still
+            // end up being too large to fit comfortably in memory, so we should
+            // be more aggressive with sample down the image (=larger inSampleSize).
+
+            final float totalPixels = width * height;
+
+            // Anything more than 2x the requested pixels we'll sample down further
+            final float totalReqPixelsCap = reqWidth * reqHeight * 2;
+
+            while (totalPixels / (inSampleSize * inSampleSize) > totalReqPixelsCap) {
+                inSampleSize++;
+            }
+        }
+        return inSampleSize;
+    }
+    /**
+     * Rotate an image if required.
+     *
+     * @param img           The image bitmap
+     * @param selectedImage Image URI
+     * @return The resulted Bitmap after manipulation
+     */
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private static Bitmap rotateImageIfRequired(Context context, Bitmap img, Uri selectedImage) throws IOException {
+
+        InputStream input = context.getContentResolver().openInputStream(selectedImage);
+        ExifInterface ei;
+        if (Build.VERSION.SDK_INT > 23)
+            ei = new ExifInterface(input);
+        else
+            ei = new ExifInterface(selectedImage.getPath());
+
+        int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+
+        switch (orientation) {
+            case ExifInterface.ORIENTATION_ROTATE_90:
+                return rotateImage(img, 90);
+            case ExifInterface.ORIENTATION_ROTATE_180:
+                return rotateImage(img, 180);
+            case ExifInterface.ORIENTATION_ROTATE_270:
+                return rotateImage(img, 270);
+            default:
+                return img;
+        }
     }
 
     @Override

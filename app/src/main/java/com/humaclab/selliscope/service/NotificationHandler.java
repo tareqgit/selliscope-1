@@ -5,6 +5,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.renderscript.RenderScript;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
@@ -27,7 +28,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class NotificationHandler extends Worker {
 
-        //constructor
+    //constructor
     public NotificationHandler(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
 
@@ -36,19 +37,19 @@ public class NotificationHandler extends Worker {
 
     public static void scheduleReminder(Context context, long duration, Data data, String tag) {
 
-        OneTimeWorkRequest notificationWork= new OneTimeWorkRequest.Builder(NotificationHandler.class)
-        //periodicWorkRequest
-   //     PeriodicWorkRequest notificationWork = new PeriodicWorkRequest.Builder(NotificationHandler.class,1,TimeUnit.DAYS)
+        OneTimeWorkRequest notificationWork = new OneTimeWorkRequest.Builder(NotificationHandler.class)
+                //periodicWorkRequest
+                //     PeriodicWorkRequest notificationWork = new PeriodicWorkRequest.Builder(NotificationHandler.class,1,TimeUnit.DAYS)
                 .setInitialDelay(duration, TimeUnit.MILLISECONDS)
                 .addTag(tag)
                 .setInputData(data).build();
         WorkManager instance = WorkManager.getInstance(context);
-      //  instance.enqueueUniquePeriodicWork("notification", ExistingPeriodicWorkPolicy.REPLACE,notificationWork);
+        //  instance.enqueueUniquePeriodicWork("notification", ExistingPeriodicWorkPolicy.REPLACE,notificationWork);
         instance.enqueue(notificationWork);
     }
 
 
-    public static void cancelReminder(Context context,String tag) {
+    public static void cancelReminder(Context context, String tag) {
         WorkManager instance = WorkManager.getInstance(context);
         instance.cancelAllWorkByTag(tag);
     }
@@ -71,32 +72,47 @@ public class NotificationHandler extends Worker {
         intent.putExtra(Constants.EXTRA_ID, id);
 
         //This is optional if you have more than one buttons and want to differentiate between two
-        intent.putExtra("notificationId",id);
-        intent.putExtra("action","actionUpload");
+        intent.putExtra("notificationId", id);
+        intent.putExtra("action", "actionUpload");
 
         //PendingIntent pendingIntent  = PendingIntent.getActivity(getApplicationContext(), 0, intent, PendingIntent.FLAG_ONE_SHOT|PendingIntent.FLAG_UPDATE_CURRENT);
 
-        PendingIntent pendingIntent =PendingIntent.getBroadcast(getApplicationContext(),1,intent,PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 1, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        NotificationManager notificationManager = (NotificationManager)getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
+        NotificationManager notificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
 
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel("default", "Default", NotificationManager.IMPORTANCE_HIGH);
             Objects.requireNonNull(notificationManager).createNotificationChannel(channel);
         }
+        NotificationCompat.Builder notification;
+        if (id == 1) {
+            notification = new NotificationCompat.Builder(getApplicationContext(), "default")
 
-        NotificationCompat.Builder notification = new NotificationCompat.Builder(getApplicationContext(), "default")
+                    .setContentTitle(title)
+                    .setContentText(text)
+                    .setColor(ContextCompat.getColor(getApplicationContext(), R.color.danger))
+                    //.setContentIntent(pendingIntent)
+                    .setSmallIcon(R.drawable.ic_selliscope_icon)
+                    //    .setAutoCancel(true)
 
-                .setContentTitle(title)
-                .setContentText(text)
-                .setColor(ContextCompat.getColor(getApplicationContext(), R.color.danger))
-                //.setContentIntent(pendingIntent)
-                 .setSmallIcon(R.drawable.ic_selliscope_icon)
-            //    .setAutoCancel(true)
-                .addAction(R.drawable.ic_file_upload_black_24dp, "Upload Data", pendingIntent)
-                .setOngoing(true);
+                    .addAction(R.drawable.ic_file_upload_black_24dp, "Upload Data", pendingIntent)
+                    .setOngoing(true);
 
+        } else {
+            notification = new NotificationCompat.Builder(getApplicationContext(), "default")
 
+                    .setContentTitle(title)
+                    .setContentText(text)
+                    .setColor(ContextCompat.getColor(getApplicationContext(), R.color.danger))
+                    //.setContentIntent(pendingIntent)
+                    .setSmallIcon(R.drawable.ic_selliscope_icon)
+                    .setSubText("Alert")
+                        .setAutoCancel(true)
+                    .setStyle(new NotificationCompat.BigTextStyle().bigText(text))
+
+                    .setOngoing(true);
+        }
         Objects.requireNonNull(notificationManager).notify(id, notification.build());
     }
 

@@ -9,6 +9,7 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.work.Data;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.airbnb.lottie.parser.IntegerParser;
 import com.andrognito.flashbar.Flashbar;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -39,16 +41,22 @@ import com.humaclab.selliscope.databinding.OutletItemBinding;
 import com.humaclab.selliscope.model.Outlets;
 import com.humaclab.selliscope.model.UserLocation;
 import com.humaclab.selliscope.performance.daily_activities.model.OutletWithCheckInTime;
+import com.humaclab.selliscope.service.NotificationHandler;
 import com.humaclab.selliscope.utility_db.model.RegularPerformanceEntity;
 import com.humaclab.selliscope.utility_db.db.UtilityDatabase;
 import com.humaclab.selliscope.utils.BatteryUtils;
+import com.humaclab.selliscope.utils.Constants;
+import com.humaclab.selliscope.utils.CurrentTimeUtilityClass;
 import com.humaclab.selliscope.utils.DatabaseHandler;
 import com.humaclab.selliscope.utils.GetAddressFromLatLang;
 import com.humaclab.selliscope.utils.NetworkUtility;
 import com.humaclab.selliscope.utils.SessionManager;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -139,6 +147,7 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
             @Override
             public void onClick(View v) {
                 holder.getBinding().pbCheckIn.setVisibility(View.VISIBLE);
+
                 googleApiClient = new GoogleApiClient.Builder(context)
                         .addApi(LocationServices.API)
                         .build();
@@ -191,27 +200,54 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
     //    SendUserLocationData sendUserLocationData = new SendUserLocationData(context);
      //   sendUserLocationData.getInstantLocation(activity, (latitude, longitude) -> {
        if( LocationMonitoringService.sLocation!=null) {
-           Log.d("tareq_test", "OutletRecyclerViewAdapter #200: getLocation:  "+ LocationMonitoringService.sLocation.getLatitude() +" , "+ LocationMonitoringService.sLocation.getLongitude());
+           Log.d("tareq_test", "OutletRecyclerViewAdapter #200: getLocation:  " + LocationMonitoringService.sLocation.getLatitude() + " , " + LocationMonitoringService.sLocation.getLongitude());
            Location location = new Location("");
            location.setLatitude(LocationMonitoringService.sLocation.getLatitude());
            location.setLongitude(LocationMonitoringService.sLocation.getLongitude());
-           if (location.distanceTo(outletLocation) <= sessionManager.getDiameter()) {
+
+           /*If client is not BIRGH then act as normal*/
+           if (Integer.parseInt(new SessionManager(context).getClientID()) != 1) { //change 1 into birgh ID
+
+
+
+           if (location.distanceTo(outletLocation) <= sessionManager.getDiameter())
+           {
+
+
                if (NetworkUtility.isNetworkAvailable(context)) {
                    sendUserLocation(location, outlet, progressbar);
                } else {
+                   //if internet not available
                    progressbar.setVisibility(View.INVISIBLE);
-                   new  Flashbar.Builder(activity)
+                   new Flashbar.Builder(activity)
                            .gravity(Flashbar.Gravity.TOP)
                            .title("Sorry!")
                            .message("Internet Connection not available.")
                            .castShadow()
+                           .enableSwipeToDismiss()
+                           .barDismissListener(new Flashbar.OnBarDismissListener() {
+                               @Override
+                               public void onDismissing(@NotNull Flashbar flashbar, boolean b) {
+
+                               }
+
+                               @Override
+                               public void onDismissProgress(@NotNull Flashbar flashbar, float v) {
+
+                               }
+
+                               @Override
+                               public void onDismissed(@NotNull Flashbar flashbar, Flashbar.@NotNull DismissEvent dismissEvent) {
+                                   progressbar.setVisibility(View.INVISIBLE);
+                               }
+                           })
                            .primaryActionText("Selfie")
                            .primaryActionTapListener(new Flashbar.OnActionTapListener() {
                                @Override
                                public void onActionTapped(Flashbar flashbar) {
                                    flashbar.dismiss();
                                    Intent intent = new Intent(context, SelfieCheck_inActivity.class);
-                                   intent.putExtra("outletId",outlet.outletId);
+                                   intent.putExtra("outletId", outlet.outletId);
                                    intent.putExtra("outlet", outlet);
                                    context.startActivity(intent);
                                }
@@ -219,26 +255,226 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
                            .backgroundDrawable(R.drawable.moss_gradient2)
                            .build().show();
                }
-           } else {
+           } else
+               {
+               //if not within redius
                progressbar.setVisibility(View.INVISIBLE);
-               new  Flashbar.Builder(activity)
+               new Flashbar.Builder(activity)
                        .gravity(Flashbar.Gravity.TOP)
                        .title("Sorry!")
                        .message("You are not within 70 meter.")
                        .castShadow()
+                       .enableSwipeToDismiss()
+                       .barDismissListener(new Flashbar.OnBarDismissListener() {
+                           @Override
+                           public void onDismissing(@NotNull Flashbar flashbar, boolean b) {
+
+                           }
+
+                           @Override
+                           public void onDismissProgress(@NotNull Flashbar flashbar, float v) {
+
+                           }
+
+                           @Override
+                           public void onDismissed(@NotNull Flashbar flashbar, Flashbar.@NotNull DismissEvent dismissEvent) {
+                               progressbar.setVisibility(View.INVISIBLE);
+                           }
+                       })
                        .primaryActionText("Selfie")
                        .primaryActionTapListener(new Flashbar.OnActionTapListener() {
                            @Override
                            public void onActionTapped(Flashbar flashbar) {
-                                flashbar.dismiss();
+                               flashbar.dismiss();
                                Intent intent = new Intent(context, SelfieCheck_inActivity.class);
-                               intent.putExtra("outletId",outlet.outletId);
+                               intent.putExtra("outletId", outlet.outletId);
                                intent.putExtra("outlet", outlet);
                                context.startActivity(intent);
                            }
                        })
                        .backgroundDrawable(R.drawable.moss_gradient2)
                        .build().show();
+           }
+       }else{
+
+               //if client is BIRGH ^^
+               //first check-in would be selfie check-IN,
+
+               if(new SessionManager(context).getLastCheckInDate() == null
+                       || CurrentTimeUtilityClass.getDiffBetweenTwoDate( new SessionManager(context).getLastCheckInDate(), CurrentTimeUtilityClass.getCurrentTimeStampDate()) >0){
+              if(new SessionManager(context).getLastCheckInDate() != null)     Log.d("tareq_test", "OutletRecyclerViewAdapter #264: getLocation:  "+ CurrentTimeUtilityClass.getDiffBetweenTwoDate( new SessionManager(context).getLastCheckInDate(), CurrentTimeUtilityClass.getCurrentTimeStampDate()));
+
+
+                   progressbar.setVisibility(View.INVISIBLE);
+                   new Flashbar.Builder(activity)
+                           .gravity(Flashbar.Gravity.TOP)
+                           .title("Please!")
+                           .message("Give a Selfie check-in as this is your first check-in")
+                           .castShadow()
+                           .enableSwipeToDismiss()
+                           .barDismissListener(new Flashbar.OnBarDismissListener() {
+                               @Override
+                               public void onDismissing(@NotNull Flashbar flashbar, boolean b) {
+
+                               }
+
+                               @Override
+                               public void onDismissProgress(@NotNull Flashbar flashbar, float v) {
+
+                               }
+
+                               @Override
+                               public void onDismissed(@NotNull Flashbar flashbar, Flashbar.@NotNull DismissEvent dismissEvent) {
+                                   progressbar.setVisibility(View.INVISIBLE);
+                               }
+                           })
+                           .positiveActionTextColor(R.color.success)
+                           .positiveActionText("Selfie")
+                           .positiveActionTapListener(new Flashbar.OnActionTapListener() {
+                               @Override
+                               public void onActionTapped(Flashbar flashbar) {
+                                   flashbar.dismiss();
+                                   Intent intent = new Intent(context, SelfieCheck_inActivity.class);
+                                   intent.putExtra("outletId", outlet.outletId);
+                                   intent.putExtra("outlet", outlet);
+                                   context.startActivity(intent);
+                               }
+                           })
+                           .backgroundDrawable(R.drawable.moss_gradient2)
+                           .build().show();
+               }else{ //from second check-in we will ask for check-in or selfie check-in
+
+                   new Flashbar.Builder(activity)
+                           .gravity(Flashbar.Gravity.TOP)
+                           .title("Please!")
+                           .message("Chose a option from below. if your last check-in interval was more than 2 hour, Please, submit Selfie check-in ")
+                           .castShadow()
+                           .enableSwipeToDismiss()
+                           .barDismissListener(new Flashbar.OnBarDismissListener() {
+                               @Override
+                               public void onDismissing(@NotNull Flashbar flashbar, boolean b) {
+
+                               }
+
+                               @Override
+                               public void onDismissProgress(@NotNull Flashbar flashbar, float v) {
+
+                               }
+
+                               @Override
+                               public void onDismissed(@NotNull Flashbar flashbar, Flashbar.@NotNull DismissEvent dismissEvent) {
+                                   progressbar.setVisibility(View.INVISIBLE);
+                               }
+                           })
+                           .positiveActionText("Selfie")
+                           .positiveActionTextColorRes(R.color.success)
+                           .negativeActionTextColorRes(R.color.colorPrimaryDark)
+                           .negativeActionText("Normal")
+                           .positiveActionTapListener(new Flashbar.OnActionTapListener() {
+                               @Override
+                               public void onActionTapped(Flashbar flashbar) {
+                                   flashbar.dismiss();
+
+                                   Intent intent = new Intent(context, SelfieCheck_inActivity.class);
+                                   intent.putExtra("outletId", outlet.outletId);
+                                   intent.putExtra("outlet", outlet);
+                                   context.startActivity(intent);
+                               }
+                           })
+                           .negativeActionTapListener(new Flashbar.OnActionTapListener() {
+                               @Override
+                               public void onActionTapped(@NotNull Flashbar flashbar) {
+                                   flashbar.dismiss();
+                                   if (location.distanceTo(outletLocation) <= sessionManager.getDiameter())
+                                   {
+
+
+                                       if (NetworkUtility.isNetworkAvailable(context)) {
+                                           sendUserLocation(location, outlet, progressbar);
+                                       } else {
+                                           //if internet not available
+                                           progressbar.setVisibility(View.INVISIBLE);
+                                           new Flashbar.Builder(activity)
+                                                   .gravity(Flashbar.Gravity.TOP)
+                                                   .title("Sorry!")
+                                                   .message("Internet Connection not available.")
+                                                   .castShadow()
+                                                   .enableSwipeToDismiss()
+                                                   .barDismissListener(new Flashbar.OnBarDismissListener() {
+                                                       @Override
+                                                       public void onDismissing(@NotNull Flashbar flashbar, boolean b) {
+
+                                                       }
+
+                                                       @Override
+                                                       public void onDismissProgress(@NotNull Flashbar flashbar, float v) {
+
+                                                       }
+
+                                                       @Override
+                                                       public void onDismissed(@NotNull Flashbar flashbar, Flashbar.@NotNull DismissEvent dismissEvent) {
+                                                           progressbar.setVisibility(View.INVISIBLE);
+                                                       }
+                                                   })
+                                                   .positiveActionText("Selfie")
+                                                   .positiveActionTapListener(new Flashbar.OnActionTapListener() {
+                                                       @Override
+                                                       public void onActionTapped(Flashbar flashbar) {
+                                                           flashbar.dismiss();
+                                                           Intent intent = new Intent(context, SelfieCheck_inActivity.class);
+                                                           intent.putExtra("outletId", outlet.outletId);
+                                                           intent.putExtra("outlet", outlet);
+                                                           context.startActivity(intent);
+                                                       }
+                                                   })
+                                                   .backgroundDrawable(R.drawable.moss_gradient2)
+                                                   .build().show();
+                                       }
+                                   } else
+                                   {
+                                       //if not within redius
+                                       progressbar.setVisibility(View.INVISIBLE);
+                                       new Flashbar.Builder(activity)
+                                               .gravity(Flashbar.Gravity.TOP)
+                                               .title("Sorry!")
+                                               .message("You are not within 70 meter.")
+                                               .castShadow()
+                                               .enableSwipeToDismiss()
+                                               .barDismissListener(new Flashbar.OnBarDismissListener() {
+                                                   @Override
+                                                   public void onDismissing(@NotNull Flashbar flashbar, boolean b) {
+
+                                                   }
+
+                                                   @Override
+                                                   public void onDismissProgress(@NotNull Flashbar flashbar, float v) {
+
+                                                   }
+
+                                                   @Override
+                                                   public void onDismissed(@NotNull Flashbar flashbar, Flashbar.@NotNull DismissEvent dismissEvent) {
+                                                       progressbar.setVisibility(View.INVISIBLE);
+                                                   }
+                                               })
+                                               .positiveActionText("Selfie")
+                                               .positiveActionTapListener(new Flashbar.OnActionTapListener() {
+                                                   @Override
+                                                   public void onActionTapped(Flashbar flashbar) {
+                                                       flashbar.dismiss();
+                                                       Intent intent = new Intent(context, SelfieCheck_inActivity.class);
+                                                       intent.putExtra("outletId", outlet.outletId);
+                                                       intent.putExtra("outlet", outlet);
+                                                       context.startActivity(intent);
+                                                   }
+                                               })
+                                               .backgroundDrawable(R.drawable.moss_gradient2)
+                                               .build().show();
+                                   }
+                               }
+                           })
+                           .backgroundDrawable(R.drawable.moss_gradient2)
+                           .build().show();
+               }
            }
        }else{
            progressbar.setVisibility(View.INVISIBLE);
@@ -273,6 +509,9 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
                         progressBar.setVisibility(View.INVISIBLE);
                         if (userLocationSuccess != null) {
                             if (userLocationSuccess.msg.equals("")) { // To check if the user already checked in the outlet
+                                new SessionManager(context).updateLastCheckInDate(CurrentTimeUtilityClass.getCurrentTimeStampDate());
+
+
                                 new  Flashbar.Builder(activity)
                                         .gravity(Flashbar.Gravity.TOP)
                                         .message("You have successfully checked in.")

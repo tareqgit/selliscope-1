@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by dipu_ on 4/22/2017.
@@ -37,4 +38,25 @@ public class CurrentTimeUtilityClass {
         return diff;
 
     }
+
+    public static long getDiffBetweenTwoDate(String date1, String date2){
+
+        long diff=-1;
+        try {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-M-d", Locale.ENGLISH);
+            Date dateF1 = dateFormat.parse(date1);
+            Date dateF2 = dateFormat.parse(date2);
+            long diffInMillies = Math.abs(dateF2.getTime() - dateF1.getTime());
+            diff=   TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+
+        return diff;
+
+    }
+
+
 }
+

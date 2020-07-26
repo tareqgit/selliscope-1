@@ -809,6 +809,10 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                     Log.d("tareq_test", "HomeActivity #704: onNavigationItemSelected:  " + e.getMessage());
                 }
 
+                NotificationManager notificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
+                Objects.requireNonNull(notificationManager).cancel( 2); //we had used tag mti and for selfie reminder id has been used 2
+                Objects.requireNonNull(notificationManager).cancelAll();
+
                 finish();
 //                }
                 break;
@@ -816,6 +820,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 startActivity(new Intent(HomeActivity.this, PrivacyPolicyActivity.class));
                 break;
             case R.id.nav_about_us:
+
 
 
 

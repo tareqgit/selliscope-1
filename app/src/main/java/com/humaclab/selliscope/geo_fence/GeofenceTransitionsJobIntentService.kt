@@ -96,7 +96,7 @@ class GeofenceTransitionsJobIntentService : JobIntentService() {
         sendNotification(this, message, latLng)
 
         val sessionManager = SessionManager(this)
-        val apiService = SelliscopeApplication.getRetrofitInstance2(sessionManager.getUserEmail(), sessionManager.getUserPassword(), false).create(SelliscopeApiEndpointInterface::class.java)
+        val apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(), sessionManager.getUserPassword(), false).create(SelliscopeApiEndpointInterface::class.java)
 
         apiService.postGeoFence(reminder.id.toInt(),  CurrentTimeUtilityClass.getCurrentTimeStamp(),   getSharedPreferences("ReminderRepository", Context.MODE_PRIVATE).getString("getIn",null))
                 .enqueue(object : retrofit2.Callback<GeoResponse> {

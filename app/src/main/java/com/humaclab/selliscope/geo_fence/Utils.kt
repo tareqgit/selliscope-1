@@ -112,7 +112,7 @@ fun sendNotification(context: Context, message: String, latLng: LatLng) {
     val name = context.getString(R.string.app_name)
     val channel = NotificationChannel(NOTIFICATION_CHANNEL_ID,
         name,
-        NotificationManager.IMPORTANCE_DEFAULT)
+        NotificationManager.IMPORTANCE_HIGH)
 
     notificationManager.createNotificationChannel(channel)
   }
@@ -127,9 +127,14 @@ fun sendNotification(context: Context, message: String, latLng: LatLng) {
       .getPendingIntent(getUniqueId(), PendingIntent.FLAG_UPDATE_CURRENT)
 
   val notification = NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID)
-      .setSmallIcon(R.mipmap.ic_launcher)
+          .setSmallIcon(R.drawable.ic_selliscope_icon)
       .setContentTitle(message)
       .setContentIntent(notificationPendingIntent)
+
+          .setColor(ContextCompat.getColor(context, R.color.success))
+          .setPriority(NotificationCompat.PRIORITY_MAX)
+          .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+          .setCategory(NotificationCompat.CATEGORY_ALARM)
       .setAutoCancel(true)
       .build()
 

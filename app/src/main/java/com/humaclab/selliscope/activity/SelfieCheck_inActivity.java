@@ -240,7 +240,7 @@ public class SelfieCheck_inActivity extends AppCompatActivity {
         //add a notification scheduler for next checkIn request
         NotificationHandler.cancelReminder(SelfieCheck_inActivity.this.mContext, "check_in_reminder");
         //2 hr schedule /// 30 sec
-        NotificationHandler.scheduleReminder(SelfieCheck_inActivity.this.mContext, 5*60*1000, new Data.Builder()
+        NotificationHandler.scheduleReminder(SelfieCheck_inActivity.this.mContext, 60*60*1000, new Data.Builder()
                 .putString(Constants.EXTRA_TITLE, "Warning!")
                 .putString(Constants.EXTRA_TEXT, "You hadn't given any Selfie for last 2 hours, please make sure next check-in is Selfie check-in")
                 .putInt(Constants.EXTRA_ID, 2)//for selfie reminder id has been used 2

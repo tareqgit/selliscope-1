@@ -38,6 +38,7 @@ public class SessionManager {
     private static final String IS_LOGGED_IN = "IsLoggedIn";
     private static final String IS_ALL_DATA_LOADADE = "IsAllDataLoaded";
     private static final String LAST_CHECK_IN_DATE = "lastCheckInDate";
+    private static final String LAST_CHECK_IN_TIME = "lastCheckInTime";
 
     // Shared Preferences
     private SharedPreferences pref;
@@ -80,9 +81,16 @@ public class SessionManager {
         editor.putString(LAST_CHECK_IN_DATE, date);
         editor.commit();
     }
+   public void updateLastCheckInTime(String time){
+        editor.putString(LAST_CHECK_IN_TIME, time);
+        editor.commit();
+    }
 
     public String getLastCheckInDate() {
         return pref.getString(LAST_CHECK_IN_DATE, null);
+    }
+    public String getLastCheckInTime() {
+        return pref.getString(LAST_CHECK_IN_TIME, null);
     }
 
     public void setNewPassword(String password) {

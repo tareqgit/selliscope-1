@@ -15,6 +15,10 @@ public class CurrentTimeUtilityClass {
     public static String getCurrentTimeStamp() {
         return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss",Locale.ENGLISH).format(Calendar.getInstance().getTime());
     }
+    public static String getCurrentTimeStamp2() {
+        return new SimpleDateFormat("E MMM dd HH:mm:ss z yyyy",Locale.ENGLISH).format(Calendar.getInstance().getTime());
+    }
+
     public static String getCurrentTimeStampDate() {
         return new SimpleDateFormat("yyyy-M-d",Locale.ENGLISH).format(Calendar.getInstance().getTime());
     }

@@ -299,17 +299,23 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
 
                //if client is BIRGH ^^
                //first check-in would be selfie check-IN,
+               if(new SessionManager(context).getLastCheckInTime() != null)       Log.d("tareq_test", "OutletRecyclerViewAdapter #310: getLocation:  "+ CurrentTimeUtilityClass.getDiffBetween( new SessionManager(context).getLastCheckInTime()));
 
                if(new SessionManager(context).getLastCheckInDate() == null
-                       || CurrentTimeUtilityClass.getDiffBetweenTwoDate( new SessionManager(context).getLastCheckInDate(), CurrentTimeUtilityClass.getCurrentTimeStampDate()) >0){
-              if(new SessionManager(context).getLastCheckInDate() != null)     Log.d("tareq_test", "OutletRecyclerViewAdapter #264: getLocation:  "+ CurrentTimeUtilityClass.getDiffBetweenTwoDate( new SessionManager(context).getLastCheckInDate(), CurrentTimeUtilityClass.getCurrentTimeStampDate()));
+                       || CurrentTimeUtilityClass.getDiffBetweenTwoDate( new SessionManager(context).getLastCheckInDate(), CurrentTimeUtilityClass.getCurrentTimeStampDate()) >0
+                       ||  CurrentTimeUtilityClass.getDiffBetween( new SessionManager(context).getLastCheckInTime())>= Constants.SCHEDULER_INTERVAL_BIR){ //change time distance to 120 for 2 hour
 
+
+
+           if(new SessionManager(context).getLastCheckInDate() != null)      Log.d("tareq_test", "OutletRecyclerViewAdapter #264: getLocation:  "+ CurrentTimeUtilityClass.getDiffBetweenTwoDate( new SessionManager(context).getLastCheckInDate(), CurrentTimeUtilityClass.getCurrentTimeStampDate()));
+
+           if(new SessionManager(context).getLastCheckInTime() != null)       Log.d("tareq_test", "OutletRecyclerViewAdapter #310: getLocation:  "+ CurrentTimeUtilityClass.getDiffBetween( new SessionManager(context).getLastCheckInTime()));
 
                    progressbar.setVisibility(View.INVISIBLE);
                    new Flashbar.Builder(activity)
                            .gravity(Flashbar.Gravity.TOP)
                            .title("Please!")
-                           .message("Give a Selfie check-in as this is your first check-in")
+                           .message("Give a Selfie check-in")
                            .castShadow()
                            .enableSwipeToDismiss()
                            .barDismissListener(new Flashbar.OnBarDismissListener() {
@@ -510,6 +516,7 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
                         if (userLocationSuccess != null) {
                             if (userLocationSuccess.msg.equals("")) { // To check if the user already checked in the outlet
                                 new SessionManager(context).updateLastCheckInDate(CurrentTimeUtilityClass.getCurrentTimeStampDate());
+                                new SessionManager(context).updateLastCheckInTime(CurrentTimeUtilityClass.getCurrentTimeStamp2());
 
 
                                 new  Flashbar.Builder(activity)

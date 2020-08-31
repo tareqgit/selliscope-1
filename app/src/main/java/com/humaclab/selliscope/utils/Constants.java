@@ -21,4 +21,5 @@ public class Constants {
 
     public static final String TITLE = "Sleeping time";
     public static final String TEXT = "Hello, this is to reminder of your sleeping time";
+    public static final int SCHEDULER_INTERVAL_BIR= 30; //minute
 }

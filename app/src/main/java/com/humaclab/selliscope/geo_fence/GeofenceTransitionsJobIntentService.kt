@@ -74,13 +74,23 @@ class GeofenceTransitionsJobIntentService : JobIntentService() {
   }
 
   private fun handleEvent(event: GeofencingEvent) {
-    Log.d("tareq_test","event: "+event.geofenceTransition)
+    Log.d("tareq_geo","event: "+event.geofenceTransition)
     if (event.geofenceTransition == Geofence.GEOFENCE_TRANSITION_ENTER  ) {
       val reminder = getFirstReminder(event.triggeringGeofences)
       val message = reminder?.message +" Entered"
       val latLng = reminder?.latLng
       if (message != null && latLng != null) {
-        sendNotification(this, message, latLng)
+        //sendNotification(this, message, latLng) //todo: stopped showing notification
+        getSharedPreferences("ReminderRepository", Context.MODE_PRIVATE).edit().putString("getIn", CurrentTimeUtilityClass.getCurrentTimeStamp() ).apply()
+      }
+    }
+
+    if (event.geofenceTransition == Geofence.GEOFENCE_TRANSITION_DWELL  ) {
+      val reminder = getFirstReminder(event.triggeringGeofences)
+      val message = reminder?.message +" Dwell"
+      val latLng = reminder?.latLng
+      if (message != null && latLng != null) {
+        //sendNotification(this, message, latLng) //todo: stopped showing notification
         getSharedPreferences("ReminderRepository", Context.MODE_PRIVATE).edit().putString("getIn", CurrentTimeUtilityClass.getCurrentTimeStamp() ).apply()
       }
     }
@@ -93,7 +103,7 @@ class GeofenceTransitionsJobIntentService : JobIntentService() {
 
       val latLng = reminder?.latLng
       if (message != null && latLng != null) {
-        sendNotification(this, message, latLng)
+      //  sendNotification(this, message, latLng)        //todo: stopped showing notification
 
         val sessionManager = SessionManager(this)
         val apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(), sessionManager.getUserPassword(), false).create(SelliscopeApiEndpointInterface::class.java)
@@ -103,14 +113,14 @@ class GeofenceTransitionsJobIntentService : JobIntentService() {
                   override fun onFailure(call: Call<GeoResponse>, t: Throwable) {
                   //  TODO("Not yet implemented")
 
-                    Log.d("tareq_test", "OnFail:" + t.message)
+                    Log.d("tareq_geo", "OnSebdFail:" + t.message)
 
 
                   }
 
                   override fun onResponse(call: Call<GeoResponse>, response: Response<GeoResponse>) {
                    // TODO("Not yet implemented")
-                    Log.d("tareq_test","onRes: "+ Gson().toJson(response.body()))
+                    Log.d("tareq_res","onSendResFail: "+ Gson().toJson(response.body()))
                     getSharedPreferences("ReminderRepository", Context.MODE_PRIVATE).edit().remove("getIn").apply()
 
                   }

@@ -463,22 +463,26 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     public void setGeoFenceAroundOutlet(DatabaseHandler databaseHandler) {
 
         List<Outlets.Outlet> mOutletList = databaseHandler.getAllOutlet().outlets;
+        Log.d("tareq_geo", "HomeActivity #466: setGeoFenceAroundOutlet:  "+mOutletList.size());
         if (!mOutletList.isEmpty()) {
             this.getSharedPreferences("ReminderRepository", MODE_PRIVATE).edit().clear().apply();
 
 
             for (Outlets.Outlet outlet : mOutletList) {
+
                 //private fun addReminder(reminder:Reminder) {
-                new ReminderRepository(this).add(new Reminder(""+outlet.outletId, new LatLng(outlet.outletLatitude, outlet.outletLongitude), 50.0, outlet.outletName),
+                new ReminderRepository(this).add(new Reminder(""+outlet.outletId, new LatLng(outlet.outletLatitude, outlet.outletLongitude), 101.0, outlet.outletName),
 
                         () -> {
                             setResult(Activity.RESULT_OK);
                             //finish();
+                            Log.d("tareq_geo", "HomeActivity #196: onCreate:  geo fences added " +outlet.outletName );
+
                             return Unit.INSTANCE;
                         },
                         (failure) -> {
                             // Snackbar.make(, failure.toString(), Snackbar.LENGTH_LONG).show();
-                            Log.d("tareq_test", "HomeActivity #196: onCreate:  " + failure);
+                            Log.d("tareq_geo", "HomeActivity #196: onCreate:  geo fences add failure" + failure.toString());
                             return Unit.INSTANCE;
                         }
                 );

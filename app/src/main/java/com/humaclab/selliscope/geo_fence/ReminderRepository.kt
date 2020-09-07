@@ -73,6 +73,7 @@ class ReminderRepository(private val context: Context) {
         && ContextCompat.checkSelfPermission(
             context,
             Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+
       // 2
       geofencingClient
           .addGeofences(buildGeofencingRequest(geofence), geofencePendingIntent)
@@ -101,11 +102,11 @@ class ReminderRepository(private val context: Context) {
               longitude,
               radius.toFloat()
           )
-              .setNotificationResponsiveness(0)
-          .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_EXIT or Geofence . GEOFENCE_TRANSITION_ENTER /*or
-                  Geofence . GEOFENCE_TRANSITION_EXIT*/)
+        //      .setNotificationResponsiveness(0)
+          .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_EXIT or Geofence . GEOFENCE_TRANSITION_ENTER or
+                  Geofence . GEOFENCE_TRANSITION_DWELL)
           .setExpirationDuration(8*60*60*1000)
-              .setLoiteringDelay(1)
+              .setLoiteringDelay(5000)
 
           .build()
     }
@@ -115,7 +116,7 @@ class ReminderRepository(private val context: Context) {
 
   private fun buildGeofencingRequest(geofence: Geofence): GeofencingRequest {
     return GeofencingRequest.Builder()
-        .setInitialTrigger(0)
+        .setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER)
         .addGeofences(listOf(geofence))
         .build()
   }

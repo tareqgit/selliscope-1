@@ -34,10 +34,11 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.util.Log
+import android.widget.Toast
 
 class GeofenceBroadcastReceiver : BroadcastReceiver() {
   override fun onReceive(context: Context, intent: Intent) {
-    Log.d("tareq_test2" , "on receive");
+    Log.d("tareq_geo" , "on receive");
     GeofenceTransitionsJobIntentService.enqueueWork(context, intent)
   }
 }

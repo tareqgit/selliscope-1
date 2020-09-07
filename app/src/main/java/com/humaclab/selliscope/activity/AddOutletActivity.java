@@ -395,6 +395,11 @@ public class AddOutletActivity extends AppCompatActivity {
     private void addOutlet(int outletTypeId, String outletName,
                            String ownerName, String address, int thanaId, String phone,
                            double latitude, double longitude, String outletrefnumber) {
+        if(latitude ==0.0 || longitude==0.0){
+            Toast.makeText(AddOutletActivity.this, "You must set Location", Toast.LENGTH_SHORT).show();
+
+            return;
+        }
         pd.setMessage("Creating outlet......");
         pd.setCancelable(false);
         pd.show();

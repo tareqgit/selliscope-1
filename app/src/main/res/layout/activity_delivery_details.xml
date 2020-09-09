@@ -6,7 +6,7 @@
 
         <variable
             name="deliveryDetails"
-            type="com.humaclab.selliscope.model.DeliveryResponse.DeliveryList" />
+            type="com.sokrio.sokrio_classic.model.DeliveryResponse.DeliveryList" />
     </data>
 
     <RelativeLayout
@@ -14,7 +14,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:background="#fff"
-        tools:context="com.humaclab.selliscope.activity.DeliveryDetailsActivity">
+        tools:context="com.sokrio.sokrio_classic.activity.DeliveryDetailsActivity">
 
         <include
             android:id="@+id/include"

@@ -7,14 +7,14 @@
 
         <variable
             name="deliveryDetails"
-            type="com.humaclab.selliscope.model.sales_return.SalesReturnResponse.DeliveryList"/>
+            type="com.sokrio.sokrio_classic.model.sales_return.SalesReturnResponse.DeliveryList"/>
     </data>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        tools:context="com.humaclab.selliscope.activity.SalesReturnDetailsActivity">
+        tools:context="com.sokrio.sokrio_classic.activity.SalesReturnDetailsActivity">
 
         <include
             android:id="@+id/include"

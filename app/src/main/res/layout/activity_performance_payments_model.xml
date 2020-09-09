@@ -12,7 +12,7 @@
 
         <variable
             name="Data"
-            type="com.humaclab.selliscope.model.performance.payments_model.Datum" />
+            type="com.sokrio.sokrio_classic.model.performance.payments_model.Datum" />
     </data>
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"

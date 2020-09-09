@@ -6,14 +6,14 @@
 
         <variable
             name="deliveryDetails"
-            type="com.humaclab.selliscope.model.model_sales_return_old.DeliveryResponseOld.DeliveryList"/>
+            type="com.sokrio.sokrio_classic.model.model_sales_return_old.DeliveryResponseOld.DeliveryList"/>
     </data>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        tools:context="com.humaclab.selliscope.activity.activity_salesReturnOld.SalesReturnActivityOld">
+        tools:context="com.sokrio.sokrio_classic.activity.activity_salesReturnOld.SalesReturnActivityOld">
 
         <include
             android:id="@+id/include"

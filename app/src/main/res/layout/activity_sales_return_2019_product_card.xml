@@ -7,7 +7,7 @@
 
         <variable
             name="product"
-            type="com.humaclab.selliscope.model.variant_product.ProductsItem" />
+            type="com.sokrio.sokrio_classic.model.variant_product.ProductsItem" />
     </data>
 
     <androidx.cardview.widget.CardView

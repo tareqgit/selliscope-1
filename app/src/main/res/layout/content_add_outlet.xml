@@ -25,7 +25,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:context="com.humaclab.selliscope.activity.AddOutletActivity"
+            tools:context="com.sokrio.sokrio_classic.activity.AddOutletActivity"
             tools:showIn="@layout/activity_add_outlet">
 
 

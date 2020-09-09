@@ -7,7 +7,7 @@
 
         <variable
             name="purchaseHistory"
-            type="com.humaclab.selliscope.model.purchase_history.PurchaseHistoryItem" />
+            type="com.sokrio.sokrio_classic.model.purchase_history.PurchaseHistoryItem" />
     </data>
 
     <androidx.cardview.widget.CardView

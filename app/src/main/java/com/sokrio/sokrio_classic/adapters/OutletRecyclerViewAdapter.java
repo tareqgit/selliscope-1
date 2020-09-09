@@ -202,7 +202,7 @@ public class OutletRecyclerViewAdapter extends RecyclerView.Adapter<OutletRecycl
            location.setLongitude(LocationMonitoringService.sLocation.getLongitude());
 
            /*If client is not BIRGH then act as normal*/
-           if (Integer.parseInt(new SessionManager(context).getClientID()) != 1) { //change 1 into birgh ID for birgh 5
+           if (Integer.parseInt(new SessionManager(context).getClientID()) != 5) { //change 1 into birgh ID for birgh 5
 
 
 

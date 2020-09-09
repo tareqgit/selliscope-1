@@ -129,7 +129,7 @@ public class FcmGetNotificationService extends FirebaseMessagingService {
 
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, SelliscopeApplication.CHANNEL_ID);
-        builder.setSmallIcon(R.drawable.ic_selliscope_icon);
+        builder.setSmallIcon(R.drawable.ic_sokrio_classic);
         builder.setContentTitle(titleBody);
         builder.setContentTitle(messageBody);
         if(bigImage!=null)  builder.setLargeIcon(bigImage);

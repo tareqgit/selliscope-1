@@ -102,7 +102,7 @@ public class NotificationHandler extends Worker {
                     .setContentText(text)
                     .setColor(ContextCompat.getColor(getApplicationContext(), R.color.danger))
                    // .setContentIntent(pendingIntent)
-                    .setSmallIcon(R.drawable.ic_selliscope_icon)
+                    .setSmallIcon(R.drawable.ic_sokrio_classic)
                      //   .setAutoCancel(true)
 
                     .addAction(R.drawable.ic_file_upload_black_24dp, "Upload Data", pendingIntent)
@@ -115,7 +115,7 @@ public class NotificationHandler extends Worker {
                     .setContentText(text)
                     .setColor(ContextCompat.getColor(getApplicationContext(), R.color.danger))
                     //.setContentIntent(pendingIntent)
-                    .setSmallIcon(R.drawable.ic_selliscope_icon)
+                    .setSmallIcon(R.drawable.ic_sokrio_classic)
                     .setSubText("Alert")
                         .setAutoCancel(true)
                     .setStyle(new NotificationCompat.BigTextStyle().bigText(text))

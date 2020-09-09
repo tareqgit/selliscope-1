@@ -8,9 +8,9 @@ public class Constants {
     //    public static final String BASE_URL = "http://139.59.107.229/api/v1/";
 //    public static final String BASE_URL = "http://devsnet.com/api/v1/";
 
-    public static final String BASE_URL_HTTP = "http://app.selliscope.com/api/";
-    public static final String BASE_URL_HTTPS = "https://app.selliscope.com/api/";
-    public static  String BASE_URL = "https://app.selliscope.com/api/";
+    public static final String BASE_URL_HTTP = "http://account.sokrio.com/api/";
+    public static final String BASE_URL_HTTPS = "https://account.sokrio.com/api/";
+    public static  String BASE_URL = "https://account.sokrio.com/api/";
     public static final String userAgent = System.getProperty("http.agent");
     public static final String databaseName = "selliscopedb";
 

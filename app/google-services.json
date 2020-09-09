@@ -15,11 +15,80 @@
       },
       "oauth_client": [
         {
+          "client_id": "113519282843-22njh5iee6spo5f8vqm4vqj1ui02tuvi.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.humaclab.apexselliscope",
+            "certificate_hash": "f2297c0384aaf0eb0cfc9670d57150ffdaf5e1ba"
+          }
+        },
+        {
+          "client_id": "113519282843-e8m3c3h44kj6sn53r83ls7bbc2ntigdv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.humaclab.apexselliscope",
+            "certificate_hash": "08af21da0512b0b48e97382d3e80ac652f244da3"
+          }
+        },
+        {
+          "client_id": "113519282843-f6kli08nnnh0pqinhg7vudng2nra39np.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.humaclab.apexselliscope",
+            "certificate_hash": "537a8c3d63481ec6d5ec558a408e78e05b25a64f"
+          }
+        },
+        {
           "client_id": "113519282843-975ffo1lo1v26t2p5hm2mt5sbrdvq3ku.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.humaclab.apexselliscope",
             "certificate_hash": "86f22322851060b0b72596eeb2d7b4e9b35eafe4"
+          }
+        },
+        {
+          "client_id": "113519282843-3e8ihd241pttkurv27qomble2l8t3g06.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAt0TMOGj4mlEhQPYDNWV8tEw1UWOBYV8Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "113519282843-3e8ihd241pttkurv27qomble2l8t3g06.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:113519282843:android:235f378bb1a1e6be",
+        "android_client_info": {
+          "package_name": "com.humaclab.lalteer"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "113519282843-ehh394tmupsab9k9p417mld38hshpnek.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.humaclab.lalteer",
+            "certificate_hash": "7cbb17ef004facd234bce8794e04434da17adf76"
+          }
+        },
+        {
+          "client_id": "113519282843-uf2t91d0lt5po769tsofpte8krothvaf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.humaclab.lalteer",
+            "certificate_hash": "8378d41ffd70b5dad938b2582a26f5573cbb8747"
           }
         },
         {
@@ -73,6 +142,117 @@
           "android_info": {
             "package_name": "com.humaclab.selliscope",
             "certificate_hash": "86f22322851060b0b72596eeb2d7b4e9b35eafe4"
+          }
+        },
+        {
+          "client_id": "113519282843-3e8ihd241pttkurv27qomble2l8t3g06.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAt0TMOGj4mlEhQPYDNWV8tEw1UWOBYV8Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "113519282843-3e8ihd241pttkurv27qomble2l8t3g06.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:113519282843:android:06e2c6e551b3e140",
+        "android_client_info": {
+          "package_name": "com.humaclab.selliscope_mohammadi"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "113519282843-2kanmd865or5gjcqo9kd1f0rbjj62d9i.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.humaclab.selliscope_mohammadi",
+            "certificate_hash": "8378d41ffd70b5dad938b2582a26f5573cbb8747"
+          }
+        },
+        {
+          "client_id": "113519282843-3e8ihd241pttkurv27qomble2l8t3g06.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAt0TMOGj4mlEhQPYDNWV8tEw1UWOBYV8Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "113519282843-3e8ihd241pttkurv27qomble2l8t3g06.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:113519282843:android:eae3c684cf86c6b0f9d43e",
+        "android_client_info": {
+          "package_name": "com.humaclab.selliscope_nepal"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "113519282843-ebgg2nug36ipm87jjokcceot4o27aipn.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.humaclab.selliscope_nepal",
+            "certificate_hash": "8378d41ffd70b5dad938b2582a26f5573cbb8747"
+          }
+        },
+        {
+          "client_id": "113519282843-3e8ihd241pttkurv27qomble2l8t3g06.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAt0TMOGj4mlEhQPYDNWV8tEw1UWOBYV8Q"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "113519282843-3e8ihd241pttkurv27qomble2l8t3g06.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:113519282843:android:e3537549c1655974f9d43e",
+        "android_client_info": {
+          "package_name": "com.sokrio.sokrio_classic"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "113519282843-45venqqj56ko6n0dunl8qfr4flpco3cu.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.sokrio.sokrio_classic",
+            "certificate_hash": "537a8c3d63481ec6d5ec558a408e78e05b25a64f"
           }
         },
         {

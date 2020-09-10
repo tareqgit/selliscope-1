@@ -33,7 +33,7 @@ public class CurrentTimeUtilityClass {
         try {
             Date preTime = new SimpleDateFormat("E MMM dd HH:mm:ss z yyyy").parse(preTime1);
             Date nowTime = Calendar.getInstance().getTime();
-            diff=   (nowTime.getTime() - preTime.getTime())  / (60 * 1000) % 60 ;
+            diff=   (nowTime.getTime() - preTime.getTime())  / (60 * 1000);
         } catch (ParseException e) {
             e.printStackTrace();
         }

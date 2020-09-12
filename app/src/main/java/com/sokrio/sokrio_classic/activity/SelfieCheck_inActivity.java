@@ -72,7 +72,7 @@ public class SelfieCheck_inActivity extends AppCompatActivity {
 
     ActivitySelfieCheckInBinding mActivitySelfieCheckInBinding;
     private File output = null;
-    public static final String AUTHORITY = "com.humaclab.selliscope.fileprovider";
+    public static final String AUTHORITY = "com.sokrio.sokrio_classic.fileprovider";
     private final int CAMERA_REQUEST = 3214;
     public String selfieImage;
     UtilityDatabase mUtilityDatabase;

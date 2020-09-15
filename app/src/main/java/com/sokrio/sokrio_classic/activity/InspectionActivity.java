@@ -61,7 +61,7 @@ public class InspectionActivity extends AppCompatActivity {
 
     private List<Integer> outletIDs;
     private List<String> outletNames;
-   public static final String AUTHORITY = "com.humaclab.selliscope.fileprovider";
+   public static final String AUTHORITY = "com.sokrio.sokrio_classic.fileprovider";
     private File output=null;
 
     private Context mContext;

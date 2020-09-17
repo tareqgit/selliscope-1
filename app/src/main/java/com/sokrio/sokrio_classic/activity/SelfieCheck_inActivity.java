@@ -133,6 +133,10 @@ public class SelfieCheck_inActivity extends AppCompatActivity {
 
        SingleClick.get(mActivitySelfieCheckInBinding.tvSend).setOnSingleClickListener(v -> {
            v.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY); //for onclick vibration
+           if(selfieImage==null){
+               Toast.makeText(mContext, "Please add a Selfie", Toast.LENGTH_SHORT).show();
+               return;
+           }
             if (NetworkUtility.isNetworkAvailable(getApplicationContext())) { //if Internet is available
 
                 LoadingDialog loadingDialog= new LoadingDialog(this);
@@ -140,6 +144,7 @@ public class SelfieCheck_inActivity extends AppCompatActivity {
 
                 if (LocationMonitoringService.sLocation != null) {
                     List<UserLocation.Visit> visitList = new ArrayList<UserLocation.Visit>() ;
+
 
                     //ready payload
                     visitList.add(  new UserLocation.Visit(LocationMonitoringService.sLocation.getLatitude(),LocationMonitoringService.sLocation.getLongitude(), GetAddressFromLatLang.getAddressFromLatLan(mContext,LocationMonitoringService.sLocation.getLatitude(),LocationMonitoringService.sLocation.getLongitude()),CurrentTimeUtilityClass.getCurrentTimeStamp(),outletId,selfieImage, BatteryUtils.getBatteryLevelPercentage(mContext),mActivitySelfieCheckInBinding.tvComment.getEditText().getText().toString()));
@@ -150,10 +155,6 @@ public class SelfieCheck_inActivity extends AppCompatActivity {
                         @Override
                         public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                             loadingDialog.hideDialog();
-
-                            //for checking last check-In time for first-check-in-selfie-check-in feature
-                            new SessionManager(SelfieCheck_inActivity.this.mContext).updateLastCheckInDate(CurrentTimeUtilityClass.getCurrentTimeStampDate());
-                            new SessionManager(SelfieCheck_inActivity.this.mContext).updateLastCheckInTime(CurrentTimeUtilityClass.getCurrentTimeStamp2());
 
 
                             scheduleNotification();
@@ -188,9 +189,6 @@ public class SelfieCheck_inActivity extends AppCompatActivity {
                         @Override
                         public void onFailure(Call<ResponseBody> call, Throwable t) {
 
-                            //for checking last check-In time for first-check-in-selfie-check-in feature
-                            new SessionManager(SelfieCheck_inActivity.this.mContext).updateLastCheckInDate(CurrentTimeUtilityClass.getCurrentTimeStampDate());
-                            new SessionManager(SelfieCheck_inActivity.this.mContext).updateLastCheckInTime(CurrentTimeUtilityClass.getCurrentTimeStamp2());
 
 
                           scheduleNotification();
@@ -232,6 +230,15 @@ public class SelfieCheck_inActivity extends AppCompatActivity {
     }
 
     private void scheduleNotification() {
+
+        //for checking last check-In time for first-check-in-selfie-check-in feature
+        new SessionManager(SelfieCheck_inActivity.this.mContext).updateLastCheckInDate(CurrentTimeUtilityClass.getCurrentTimeStampDate());
+        new SessionManager(SelfieCheck_inActivity.this.mContext).updateLastSelfieCheckInTime(CurrentTimeUtilityClass.getCurrentTimeStamp2());
+        new SessionManager(SelfieCheck_inActivity.this.mContext).updateLastCheckInTime(CurrentTimeUtilityClass.getCurrentTimeStamp2());
+
+
+
+
         NotificationManager notificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
         Objects.requireNonNull(notificationManager).cancel( 2); //we had used tag mti and for selfie reminder id has been used 2
         Objects.requireNonNull(notificationManager).cancelAll();

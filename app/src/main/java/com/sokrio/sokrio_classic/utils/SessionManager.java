@@ -39,6 +39,7 @@ public class SessionManager {
     private static final String IS_ALL_DATA_LOADADE = "IsAllDataLoaded";
     private static final String LAST_CHECK_IN_DATE = "lastCheckInDate";
     private static final String LAST_CHECK_IN_TIME = "lastCheckInTime";
+    private static final String LAST_SELFIE_CHECK_IN_TIME = "lastSelfieCheckInTime";
 
     // Shared Preferences
     private SharedPreferences pref;
@@ -86,11 +87,19 @@ public class SessionManager {
         editor.commit();
     }
 
+    public void updateLastSelfieCheckInTime(String time){
+        editor.putString(LAST_SELFIE_CHECK_IN_TIME, time);
+        editor.commit();
+    }
+
     public String getLastCheckInDate() {
         return pref.getString(LAST_CHECK_IN_DATE, null);
     }
     public String getLastCheckInTime() {
         return pref.getString(LAST_CHECK_IN_TIME, null);
+    }
+    public String getLastSelfieCheckInTime() {
+        return pref.getString(LAST_SELFIE_CHECK_IN_TIME, null);
     }
 
     public void setNewPassword(String password) {

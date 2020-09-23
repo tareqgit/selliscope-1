@@ -133,7 +133,7 @@ public class LocationMonitoringService extends Service implements
                     .build();
         } else {
             NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
-                    .setSmallIcon(R.drawable.ic_sokrio_classic)
+                    .setSmallIcon(R.drawable.sokrio_icon)
                     .setContentTitle("Hello " + sessionManager.getUserDetails().get("userName"))
                     .setColor(ContextCompat.getColor(this, R.color.colorDefault))
                     .setTicker("TICKER")

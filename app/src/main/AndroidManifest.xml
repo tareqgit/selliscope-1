@@ -120,7 +120,7 @@
             android:value="AIzaSyC8O8Otnurx9RIq30HYvqqYcroCm-dENJs" />
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
-            android:resource="@drawable/ic_sokrio_classic" />
+            android:resource="@drawable/sokrio_icon" />
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_color"
             android:resource="@color/colorAccent" />

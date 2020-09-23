@@ -230,28 +230,29 @@ public class SelfieCheck_inActivity extends AppCompatActivity {
     }
 
     private void scheduleNotification() {
+        /*If client is not BIRGH then act as normal*/
+        if (Integer.parseInt(new SessionManager(this).getClientID()) == 5) { //change 1 into birgh ID for birgh 5
 
-        //for checking last check-In time for first-check-in-selfie-check-in feature
-        new SessionManager(SelfieCheck_inActivity.this.mContext).updateLastCheckInDate(CurrentTimeUtilityClass.getCurrentTimeStampDate());
-        new SessionManager(SelfieCheck_inActivity.this.mContext).updateLastSelfieCheckInTime(CurrentTimeUtilityClass.getCurrentTimeStamp2());
-        new SessionManager(SelfieCheck_inActivity.this.mContext).updateLastCheckInTime(CurrentTimeUtilityClass.getCurrentTimeStamp2());
-
-
-
-
-        NotificationManager notificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
-        Objects.requireNonNull(notificationManager).cancel( 2); //we had used tag mti and for selfie reminder id has been used 2
-        Objects.requireNonNull(notificationManager).cancelAll();
+            //for checking last check-In time for first-check-in-selfie-check-in feature
+            new SessionManager(SelfieCheck_inActivity.this.mContext).updateLastCheckInDate(CurrentTimeUtilityClass.getCurrentTimeStampDate());
+            new SessionManager(SelfieCheck_inActivity.this.mContext).updateLastSelfieCheckInTime(CurrentTimeUtilityClass.getCurrentTimeStamp2());
+            new SessionManager(SelfieCheck_inActivity.this.mContext).updateLastCheckInTime(CurrentTimeUtilityClass.getCurrentTimeStamp2());
 
 
-        //add a notification scheduler for next checkIn request
-        NotificationHandler.cancelReminder(SelfieCheck_inActivity.this.mContext, "check_in_reminder");
-        //2 hr schedule /// 30 sec
-        NotificationHandler.scheduleReminder(SelfieCheck_inActivity.this.mContext, Constants.SCHEDULER_INTERVAL_BIR*60*1000, new Data.Builder()
-                .putString(Constants.EXTRA_TITLE, "Warning!")
-                .putString(Constants.EXTRA_TEXT, "You hadn't given any Selfie for last 2 hours, please make sure next check-in is Selfie check-in")
-                .putInt(Constants.EXTRA_ID, 2)//for selfie reminder id has been used 2
-                .build(), "check_in_reminder" );
+            NotificationManager notificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
+            Objects.requireNonNull(notificationManager).cancel(2); //we had used tag mti and for selfie reminder id has been used 2
+            Objects.requireNonNull(notificationManager).cancelAll();
+
+
+            //add a notification scheduler for next checkIn request
+            NotificationHandler.cancelReminder(SelfieCheck_inActivity.this.mContext, "check_in_reminder");
+            //2 hr schedule /// 30 sec
+            NotificationHandler.scheduleReminder(SelfieCheck_inActivity.this.mContext, Constants.SCHEDULER_INTERVAL_BIR * 60 * 1000, new Data.Builder()
+                    .putString(Constants.EXTRA_TITLE, "Warning!")
+                    .putString(Constants.EXTRA_TEXT, "You hadn't given any Selfie for last 2 hours, please make sure next check-in is Selfie check-in")
+                    .putInt(Constants.EXTRA_ID, 2)//for selfie reminder id has been used 2
+                    .build(), "check_in_reminder");
+        }
     }
 
     private void updateRegularPerformance(Context context, Outlets.Outlet outlet) {

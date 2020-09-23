@@ -127,7 +127,7 @@ fun sendNotification(context: Context, message: String, latLng: LatLng) {
       .getPendingIntent(getUniqueId(), PendingIntent.FLAG_UPDATE_CURRENT)
 
   val notification = NotificationCompat.Builder(context, NOTIFICATION_CHANNEL_ID)
-          .setSmallIcon(R.drawable.ic_sokrio_classic)
+          .setSmallIcon(R.drawable.sokrio_icon)
       .setContentTitle(message)
       .setContentIntent(notificationPendingIntent)
 

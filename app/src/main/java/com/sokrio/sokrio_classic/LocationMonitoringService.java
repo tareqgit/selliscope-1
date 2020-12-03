@@ -527,8 +527,12 @@ public class LocationMonitoringService extends Service {
         super.onDestroy();
         if (sessionManager.isLoggedIn()) {
 
-            if(wakeLock.isHeld()){
-                wakeLock.release();
+            try {
+                if(wakeLock.isHeld()){
+                    wakeLock.release();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
 
             Log.d("tareq_test", "OnDestroy Service");

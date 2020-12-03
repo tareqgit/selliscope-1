@@ -14,8 +14,8 @@ android {
         applicationId "com.sokrio.sokrio_classic"
         minSdkVersion 21
         targetSdkVersion 29
-        versionCode 42
-        versionName "2.42"
+        versionCode 43
+        versionName "2.43"
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

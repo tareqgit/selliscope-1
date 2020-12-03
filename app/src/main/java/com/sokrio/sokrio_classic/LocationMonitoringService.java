@@ -27,6 +27,7 @@ import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.common.api.GoogleApi;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -74,11 +75,9 @@ import static com.sokrio.sokrio_classic.SelliscopeApplication.CHANNEL_ID;
  * Created by anam on 27-09-2018.
  */
 
-public class LocationMonitoringService extends Service implements
-        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+public class LocationMonitoringService extends Service {
 
     private static final String TAG = LocationMonitoringService.class.getSimpleName();
-    GoogleApiClient mGoogleApiClient;
 
     private SessionManager sessionManager;
     // public static final String ACTION_LOCATION_BROADCAST = LocationMonitoringService.class.getName() + "LocationBroadcast";
@@ -141,14 +140,7 @@ public class LocationMonitoringService extends Service implements
             notification = builder.build();
         }
 
-        if(mGoogleApiClient==null) {
-            mGoogleApiClient = new GoogleApiClient.Builder(this)
-                    .addConnectionCallbacks(this)
-                    .addOnConnectionFailedListener(this)
-                    .addApi(LocationServices.API)
-                    .build();
-            mGoogleApiClient.connect();
-        }
+
 
 
         mLocationCallback = new LocationCallback() {
@@ -193,7 +185,6 @@ public class LocationMonitoringService extends Service implements
             wakeLock.acquire();
         }
 
-        mGoogleApiClient.connect();
         //Declare the timer
         myTimer = new Timer();
         //Set the schedule function and rate
@@ -234,7 +225,7 @@ public class LocationMonitoringService extends Service implements
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
-            mFusedLocationProviderClient.requestLocationUpdates(mMLocationRequest, mLocationCallback, null);
+            mFusedLocationProviderClient.requestLocationUpdates(mMLocationRequest, mLocationCallback, null);// Looper.myLooper()
         }
 
     }
@@ -277,41 +268,7 @@ public class LocationMonitoringService extends Service implements
 
     private static float lastAccuracy = 0; //this the trigger for not playing restored again and again
 
-    /*
-     * LOCATION CALLBACKS
-     */
-    @Override
-    public void onConnected(Bundle dataBundle) {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
 
-            Log.d(TAG, "== Error On onConnected() Permission not granted");
-            //Permission not granted by user so cancel the further execution.
-
-            return;
-        }
-        // LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
-        requestLocationUpdates();
-        Log.d(TAG, "Connected to Google API");
-    }
-
-
-    /*
-     * Called by Location Services if the connection to the
-     * location client drops because of an error.
-     */
-    @Override
-    public void onConnectionSuspended(int i) {
-        Log.d("tareq_test", "Connection suspended");
-        mGoogleApiClient.reconnect();
-
-    }
 
     UtilityDatabase utilityDatabase;
     //to get the location change
@@ -460,12 +417,6 @@ public class LocationMonitoringService extends Service implements
 
     }*/
 
-    @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
-        Log.d("tareq_test", "Failed to connect to Google API");
-        mGoogleApiClient.reconnect();
-
-    }
 
 
     private void sendUserLocation(double latitude, double longitude, String timeStamp, final int visitId) {

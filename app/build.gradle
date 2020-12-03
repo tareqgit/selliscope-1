@@ -1,9 +1,12 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-android'
-apply plugin: 'io.fabric'
+//apply plugin: 'io.fabric'
 // Apply the Performance Monitoring plugin
 apply plugin: 'com.google.firebase.firebase-perf'
+
+// Apply the Crashlytics Gradle plugin
+apply plugin: 'com.google.firebase.crashlytics'
 
 android {
     compileSdkVersion 29
@@ -54,9 +57,9 @@ dependencies {
     androidTestImplementation('androidx.test.espresso:espresso-core:3.2.0', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    implementation('com.crashlytics.sdk.android:crashlytics:2.10.1@aar') {
-        transitive = true
-    }
+//    implementation('com.crashlytics.sdk.android:crashlytics:2.10.1@aar') {
+//        transitive = true
+//    }
 
     // Room dependencies
     implementation 'androidx.room:room-runtime:2.2.0'
@@ -103,7 +106,14 @@ dependencies {
 
     implementation 'com.google.firebase:firebase-analytics:17.2.0'
     // Add dependency
-    implementation 'com.crashlytics.sdk.android:crashlytics:2.10.1'
+//    implementation 'com.crashlytics.sdk.android:crashlytics:2.10.1'
+    // Import the BoM for the Firebase platform
+    implementation platform('com.google.firebase:firebase-bom:26.1.0')
+
+    // Declare the dependencies for the Crashlytics and Analytics libraries
+    // When using the BoM, you don't specify versions in Firebase library dependencies
+    implementation 'com.google.firebase:firebase-crashlytics'
+    implementation 'com.google.firebase:firebase-analytics'
 
     // Add the dependency for the Performance Monitoring library
     implementation 'com.google.firebase:firebase-perf:19.0.1'
@@ -128,9 +138,9 @@ dependencies {
     }
     testImplementation 'junit:junit:4.12'
     annotationProcessor 'com.github.hotchemi:permissionsdispatcher-processor:2.3.2'
-    implementation('com.crashlytics.sdk.android:answers:1.4.7@aar') {
-        transitive = true
-    }
+//    implementation('com.crashlytics.sdk.android:answers:1.4.7@aar') {
+//        transitive = true
+//    }
 
     implementation 'com.liulishuo.magicprogresswidget:library:1.1.1'
     implementation 'cn.dreamtobe.percentsmoothhandler:library:0.1.1'

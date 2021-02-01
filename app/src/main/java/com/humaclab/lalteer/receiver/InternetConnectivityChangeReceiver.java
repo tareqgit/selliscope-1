@@ -32,17 +32,21 @@ public class InternetConnectivityChangeReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
 
-        UploadDataService uploadDataService = new UploadDataService(context);
-        uploadDataService.uploadData(new UploadDataService.UploadCompleteListener() {
-            @Override
-            public void uploadComplete() {
-                Log.d("tareq_test", "InternetConnectivityChangeReceiver #40: uploadComplete:  Upload Complete");
-            }
+        try {
+            UploadDataService uploadDataService = new UploadDataService(context);
+            uploadDataService.uploadData(new UploadDataService.UploadCompleteListener() {
+                @Override
+                public void uploadComplete() {
+                    Log.d("tareq_test", "InternetConnectivityChangeReceiver #40: uploadComplete:  Upload Complete");
+                }
 
-            @Override
-            public void uploadFailed(String reason) {
-                Log.d("tareq_test", "InternetConnectivityChangeReceiver #45: uploadFailed: "+ reason);
-            }
-        });
+                @Override
+                public void uploadFailed(String reason) {
+                    Log.d("tareq_test", "InternetConnectivityChangeReceiver #45: uploadFailed: "+ reason);
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

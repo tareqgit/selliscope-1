@@ -3,6 +3,33 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.humaclab.lalteer">
 
+    <uses-feature
+        android:name="android.hardware.camera.any"
+        android:required="true" />
+    <uses-feature
+        android:name="android.hardware.camera.autofocus"
+        android:required="true" />
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" /> <!-- Required for foreground services on P+. -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
     <application
         android:name=".SelliscopeApplication"
         android:allowBackup="true"
@@ -11,7 +38,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".performance.claim.ClaimActivity"></activity>
+
+        <activity android:name=".performance.claim.ClaimActivity" />
         <activity android:name=".activity.LoadingActivity" />
         <activity
             android:name=".activity.SplashScreenActivity"
@@ -116,6 +144,7 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
+
         <receiver
             android:name=".receiver.InternetConnectivityChangeReceiver"
             android:enabled="true">
@@ -125,12 +154,12 @@
                     tools:ignore="BatteryLife" />
             </intent-filter>
         </receiver>
-
         <receiver
             android:name=".service.LocationServiceRestarterBroadcastReceiver"
             android:enabled="true"
             android:exported="true"
             android:label="RestartServiceWhenStopped" />
+
         <service
             android:name=".service.SendLocationDataService"
             android:exported="false"
@@ -142,43 +171,14 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </service>
-
         <service
             android:name=".LocationMonitoringService"
             android:enabled="true"
             android:exported="true"
-            android:foregroundServiceType="location"
-           /> <!-- File Provider for saving image in storage and getting that image back -->
+            android:foregroundServiceType="location" /> <!-- File Provider for saving image in storage and getting that image back -->
         <uses-library
             android:name="org.apache.http.legacy"
             android:required="false" />
     </application>
-    <uses-feature
-        android:name="android.hardware.camera.any"
-        android:required="true" />
-
-    <uses-feature
-        android:name="android.hardware.camera.autofocus"
-        android:required="true" />
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
-    <uses-permission android:name="android.permission.CALL_PHONE" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
-    <!-- Required for foreground services on P+. -->
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
 </manifest>

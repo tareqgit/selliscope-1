@@ -19,8 +19,10 @@ import com.humaclab.lalteer.activity.OutletActivity;
 import com.humaclab.lalteer.activity.ProductListActivity;
 import com.humaclab.lalteer.activity.PromotionalAdsActivity;
 import com.humaclab.lalteer.activity.RouteActivity;
+import com.humaclab.lalteer.activity.SalesReturnActivity;
 import com.humaclab.lalteer.adapters.DashboardRecyclerViewAdapter;
 import com.humaclab.lalteer.model.DashboardItem;
+import com.humaclab.lalteer.sales_return.outlet.SalesReturnOutletActivity;
 import com.humaclab.lalteer.utils.RealmHelper;
 import com.humaclab.lalteer.utils.RecyclerItemClickListener;
 
@@ -57,7 +59,7 @@ public class DashboardFragment extends Fragment {
         dashboadItems = new ArrayList<>();
         dashboadItems.add(new DashboardItem(getString(R.string.dashBoard_map), R.drawable.ic_map));
         dashboadItems.add(new DashboardItem(getString(R.string.dashboard_Dealer), R.drawable.ic_outlet));
-//        dashboadItems.add(new DashboardItem("Product", R.drawable.ic_products));
+        dashboadItems.add(new DashboardItem("Sales Return", R.drawable.ic_products));
 //        dashboadItems.add(new DashboardItem("Order", R.drawable.ic_order));
 //        dashboadItems.add(new DashboardItem(getString(R.string.dashboard_delivery), R.drawable.ic_view_orders));
 //        dashboadItems.add(new DashboardItem("Payment", R.drawable.ic_payments));
@@ -103,12 +105,12 @@ public class DashboardFragment extends Fragment {
 
                                         break;
                                     }
-                                    /*case 2: {
+                                    case 2: {
                                         getActivity().startActivity(new Intent(getActivity(),
-                                                ProductActivity.class));
+                                                SalesReturnOutletActivity.class));
                                         break;
                                     }
-                                    case 3: {
+                                    /*case 3: {
                                         getActivity().startActivity(new Intent(getActivity(),
                                                 OrderActivity.class));
                                         break;
@@ -130,7 +132,7 @@ public class DashboardFragment extends Fragment {
                                                 PaymentActivity.class));
                                         break;
                                     }*/
-                                    case 2: {
+                                    case 3: {
                                         int access = helper.accessList("Inspection");
                                         if (access == 1) {
                                             getActivity().startActivity(new Intent(getActivity(),
@@ -142,7 +144,7 @@ public class DashboardFragment extends Fragment {
 
                                         break;
                                     }
-                                    case 3: {
+                                    case 4: {
                                         int access = helper.accessList("Map");
                                         if (access == 1) {
                                             getActivity().startActivity(new Intent(getActivity(), ProductListActivity.class));
@@ -153,7 +155,7 @@ public class DashboardFragment extends Fragment {
 
                                         break;
                                     }
-                                    case 4: {
+                                    case 5: {
                                         int access = helper.accessList("Map");
                                         if (access == 1) {
                                             getActivity().startActivity(new Intent(getActivity(), PromotionalAdsActivity.class));
@@ -163,7 +165,7 @@ public class DashboardFragment extends Fragment {
 
                                         break;
                                     }
-                                    case 5: {
+                                    case 6: {
                                         BottomSheetHelpDialogFragment bottomSheetHelpDialogFragment = new BottomSheetHelpDialogFragment();
                                         assert getFragmentManager() != null;
                                         bottomSheetHelpDialogFragment.show(getFragmentManager(),bottomSheetHelpDialogFragment.getTag() );

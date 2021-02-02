@@ -61,7 +61,7 @@ public class OutletActivity extends AppCompatActivity {
     private MutableLiveData<Integer> sTotalCheckIn = new MutableLiveData<>();
 
     // Save state
-    private Parcelable recyclerViewState; //for storing recycler scroll postion
+    private Parcelable recyclerViewState; //for storing recycler scroll position
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

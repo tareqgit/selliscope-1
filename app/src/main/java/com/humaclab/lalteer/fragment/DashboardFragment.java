@@ -106,8 +106,9 @@ public class DashboardFragment extends Fragment {
                                         break;
                                     }
                                     case 2: {
-                                        getActivity().startActivity(new Intent(getActivity(),
-                                                SalesReturnOutletActivity.class));
+                                        Toast.makeText(getActivity(), "You Don't Have access", Toast.LENGTH_SHORT).show();
+                                       /* getActivity().startActivity(new Intent(getActivity(),
+                                                SalesReturnOutletActivity.class));*/
                                         break;
                                     }
                                     /*case 3: {

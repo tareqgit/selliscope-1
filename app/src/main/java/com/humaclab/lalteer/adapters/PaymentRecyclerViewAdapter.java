@@ -38,6 +38,7 @@ import com.humaclab.lalteer.R;
 import com.humaclab.lalteer.SelliscopeApiEndpointInterface;
 import com.humaclab.lalteer.SelliscopeApplication;
 import com.humaclab.lalteer.activity.InspectionActivity;
+import com.humaclab.lalteer.activity.OutletDetailsActivity;
 import com.humaclab.lalteer.activity.PaymentActivity;
 import com.humaclab.lalteer.model.Payment;
 import com.humaclab.lalteer.model.PaymentResponse;
@@ -259,6 +260,10 @@ public class PaymentRecyclerViewAdapter extends RecyclerView.Adapter<PaymentRecy
         });
 
         holder.btn_pay.setOnClickListener(v -> {
+            if(orderList.getImg()==null){
+                Toast.makeText(context, "You must add an Image", Toast.LENGTH_SHORT).show();
+                return;
+            }
             pd.show();
             SessionManager sessionManager = new SessionManager(context);
             apiService = SelliscopeApplication.getRetrofitInstance(sessionManager.getUserEmail(),
@@ -361,6 +366,8 @@ public class PaymentRecyclerViewAdapter extends RecyclerView.Adapter<PaymentRecy
 
             }
             payment.deposit_slip = holder.depositSlip.getText().toString();
+
+
 
             payment.img = orderList.getImg(); //as this is getting from activity using listener
             paymentResponse.payment = payment;

@@ -114,9 +114,14 @@ public class InspectionActivity extends AppCompatActivity {
         binding.btnSubmitInspection.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(promotionImage==null){
+                    Toast.makeText(InspectionActivity.this, "You must add an Image", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 pd.setMessage("Submitting your inspection......");
                 pd.setCancelable(false);
                 pd.show();
+
 
                 InspectionResponse.Inspection inspection = new InspectionResponse.Inspection();
                 inspection.img = String.valueOf(promotionImage);

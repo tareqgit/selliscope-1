@@ -419,6 +419,11 @@ public class OutletDetailsActivity extends AppCompatActivity {
 
             }
 
+                if(outstandingPaymentImg==null){
+                    Toast.makeText(OutletDetailsActivity.this, "You must add an Image", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
             outstandingPaymentBody.setDepositedSlipNumber(binding.etDepositSlip.getText().toString());
             outstandingPaymentBody.setImg(outstandingPaymentImg);
 
